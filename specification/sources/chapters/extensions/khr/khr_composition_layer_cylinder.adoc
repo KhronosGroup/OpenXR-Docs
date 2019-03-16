@@ -1,0 +1,110 @@
+include::../meta/XR_KHR_composition_layer_cylinder.adoc[]
+
+*Last Modified Date*::
+    2019-01-24
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    James Hughes, Oculus +
+    Paul Pedriana, Oculus +
+    Martin Renschler, Qualcomm
+*Contacts*::
+    Paul Pedriana, Oculus +
+    Cass Everitt, Oculus
+
+*Overview*
+
+This extension adds an additional layer type where the XR runtime must: map a texture stemming from a swapchain onto the inside of a cylinder section. 
+It can be imagined much the same way a curved television display looks to a viewer. 
+This is not a projection type of layer but rather an object-in-world type of layer, similar to slink:XrCompositionLayerQuad.
+Only the interior of the cylinder surface must: be visible; the exterior of the cylinder is not visible and must: not be drawn by the runtime.
+
+The cylinder characteristics are specified by the following parameters:
+
+[source,listing]
+----
+     XrPosef           pose;
+     float             radius;
+     float             centralAngle;
+     float             aspectRatio;
+----
+
+These can be understood via the following diagram, which is a top-down view of a horizontally oriented cylinder. 
+The aspect ratio drives how tall the cylinder will appear based on the other parameters. 
+Typically the aspectRatio would be set to be the aspect ratio of the texture being used, 
+so that it looks the same within the cylinder as it does in 2D.
+
+              -z                                          +y                                
+       U=0  +--+--+  U=1                 +-----------------+  - V=0            
+        +---+  |  +---+                  |                 |  |                
+     +--+ \    |    / +--+               |                 |  |               
+   +-+     \       /     +-+             |                 |  |                
+  ++        \  a  /        ++            |                 |  |                 
+ ++          \---/          ++           | -x           +x |  |                
+ |            \ /            |           +--------p--------+  |     
+ +-------------p------r------+ +x        |                 |  |            
+     (+y is out of screen)               |                 |  |                 
+                                         |                 |  |                
+ r = Radius                              |                 |  |              
+ a = Central Angle (0,2*Pi)              |                 |  |               
+ p = Pose Transform                      +-----------------+  - V=1          
+ U/V = UV Coordinates                                     -y
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_CYLINDER_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrCompositionLayerCylinderKHR',desc='Cylindrical layer composition info',type='structs',xrefs='XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
+--
+The slink:XrCompositionLayerCylinderKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerCylinderKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerFlags specifies options for the layer.
+* pname:space is the slink:XrSpace in which the pname:pose of the cylinder layer is evaluated over time.
+* pname:eye is the eye represented by this layer.
+* pname:subImage identifies the image slink:XrSwapchainSubImage to use.
+* pname:pose is an slink:XrPosef defining the position and orientation of the center point of the 
+view of the cylinder within the reference frame of the pname:space.
+* pname:radius is the radius of the cylinder.
+* pname:centralAngle is the angle of the visible section of the cylinder,
+based at 0 radians, in the range of [eq]#[0, 2*Pi)#. It grows symmetrically
+around the 0 radian angle.
+* pname:aspectRatio is the ratio of the visible cylinder section
+[eq]#width / height#. The height of the cylinder is given by:
+[eq]#(cylinder radius * cylinder angle) / aspectRatio#.
+****
+
+slink:XrCompositionLayerCylinderKHR contains the information needed to render a texture onto a cylinder when calling flink:xrEndFrame. slink:XrCompositionLayerCylinderKHR is an alias type for the base struct slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
+
+include::../../../../generated/validity/structs/XrCompositionLayerCylinderKHR.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-05-19 (Paul Pedriana)
+** Initial version. This was originally part of a single extension which supported multiple such extension layer types.
+* Revision 2, 2017-12-07 (Paul Pedriana)
+** Updated to use transform components instead of transform matrices.
+* Revision 3, 2018-03-05 (Paul Pedriana)
+** Added improved documentation and brought the documentation in line with the existing core spec. 
+* Revision 4, 2019-01-24 (Martin Renschler)
+** Reformatted, spec language changes, eye parameter description update 

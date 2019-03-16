@@ -1,0 +1,84 @@
+
+include::../meta/XR_KHR_android_surface_swapchain.adoc[]
+
+*Last Modified Date*::
+    2019-01-24
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Krzysztof Kosiński +
+    Johannes van Waveren, Oculus +
+    Martin Renschler, Qualcomm
+*Contacts*::
+    Krzysztof Kosiński
+
+*Overview*
+
+A common activity in XR is to view an image stream.
+Image streams are often the result of camera previews or decoded video streams.
+On Android, the basic primitive representing the producer end of an image queue is the class `android.view.Surface`.
+This extension provides a special swapchain that uses an `android.view.Surface` as its producer end.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+[open,refpage='xrCreateSwapchainAndroidSurfaceKHR',desc='Creates a swapchain and an Android Surface',type='protos',xrefs='xrDestroySwapchain']
+--
+To create an slink:XrSwapchain object and an Android Surface object call:
+
+include::../../../../generated/api/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with flink:xrCreateSession.
+* pname:info is a pointer to an slink:XrSwapchainCreateInfo structure.
+* pname:swapchain is a pointer to a handle in which the created slink:XrSwapchain is returned.
+* pname:surface is a pointer to a `jobject` where the created Android Surface is returned.
+****
+
+flink:xrCreateSwapchainAndroidSurfaceKHR creates an slink:XrSwapchain object returned in pname:swapchain and an Android Surface `jobject` returned in pname:surface.
+The `jobject` must: be valid to be passed back to Java code using JNI and must: be valid to be used
+with ordinary Android APIs for submitting images to Surfaces.
+The returned slink:XrSwapchain must: be valid to be referenced in slink:XrSwapchainSubImage structures to show content on the screen.
+The width and height passed in slink:XrSwapchainCreateInfo may: not be persistent throughout the life cycle of the created swapchain, since on Android,
+the size of the images is controlled by the producer and possibly changes at any time.
+
+The only function that is allowed to be called on the slink:XrSwapchain returned from this function is flink:xrDestroySwapchain.
+For example calling any of the functions flink:xrEnumerateSwapchainImages, flink:xrAcquireSwapchainImage,
+flink:xrWaitSwapchainImage or flink:xrReleaseSwapchainImage is invalid.
+
+The XR runtime must: destroy the provided Surface on calling flink:xrDestroySwapchain. Applications writing frames to the Surface thereafter leads to undefined behavior.
+
+flink:xrCreateSwapchainAndroidSurfaceKHR must: return the same set of error codes as flink:xrCreateSwapchain under same circumstances plus ename:XR_ERROR_FUNCTION_UNSUPPORTED in case the function is not supported.
+
+.Valid Usage of slink:XrSwapchainCreateInfo members
+****
+* The slink:XrSwapchainCreateInfo::pname:format, +
+  slink:XrSwapchainCreateInfo::pname:sampleCount, +
+  slink:XrSwapchainCreateInfo::pname:faceCount, +
+  slink:XrSwapchainCreateInfo::pname:arraySize and +
+  slink:XrSwapchainCreateInfo::pname:mipCount +
+  members of the structure passed as the pname:info parameter must: be zero.
+****
+include::../../../../generated/validity/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
+--
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-01-17 (Johannes van Waveren)
+** Initial draft
+* Revision 2, 2017-10-30 (Kaye Mason)
+** Changed images to swapchains, used snippet includes.  Added issue for Surfaces.
+* Revision 3, 2018-05-16 (Krzysztof Kosiński)
+** Refactored to use Surface instead of SurfaceTexture.
+* Revision 4, 2019-01-24 (Martin Renschler)
+** Refined the specification of the extension

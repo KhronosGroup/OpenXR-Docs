@@ -1,0 +1,69 @@
+include::../meta/XR_EXT_thermal_query.adoc[]
+
+*Last Modified Date*::
+    2017-11-30
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Armelle Laine, Qualcomm Technologies Inc, on behalf of Qualcomm Innovation Center, Inc
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright  license to incorporate this submission into
+// other works it controls as it desires."
+
+:INCS-VAR: ../../../../generated
+
+==== Overview
+
+This extension provides an API to query a domain's current thermal warning level and current thermal trend.
+
+==== Querying the current thermal level and trend
+
+This query allows to determine the extent and urgency of the needed workload reduction 
+and to verify that the mitigation measures efficiently reduce the temperature. +
+This query allows the application to retrieve the current pname:notificationLevel, 
+allowing to quickly verify whether the underlying system's thermal throttling is still in effect. +
+It also provides the application with the remaining temperature headroom (ename:tempHeadroom) until
+thermal throttling occurs, and the current rate of change (ename:tempSlope). +
+The most critical temperature of the domain is the one which is currently most likely to be
+relevant for thermal throttling. +
+
+To query the status of a given domain:
+include::{INCS-VAR}/api/protos/xrThermalGetTemperatureTrendEXT.no-xref.txt[]
+
+include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+
+include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+
+For the definition of the notification levels, see  <<performance-settings-notification-levels>>
+
+[thermal-early-warnings-api]
+==== Thermal Query API Reference
+
+===== [big]#xrThermalGetTemperatureTrendEXT#
+
+include::{INCS-VAR}/api/protos/xrThermalGetTemperatureTrendEXT.txt[]
+Allows to query the current temperature warning level of a domain, the remaining headroom and the trend.
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:domain : the processing domain
+* pname:notificationLevel : the current warning level
+* pname:tempHeadroom : temperature headroom in degrees Celsius, expressing how far
+  the most-critical temperature of the domain is from its thermal throttling threshold temperature.
+* pname:tempSlope : the current trend in degrees Celsius per second of the most critical temperature of the domain.
+****
+
+include::{INCS-VAR}/validity/protos/xrThermalGetTemperatureTrendEXT.txt[]
+
+include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+
+include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+
+*Version History*
+
+* Revision 1, 2017-11-30 (Armelle Laine)
++
++

@@ -1,0 +1,78 @@
+include::../meta/XR_KHR_headless.adoc[]
+
+*Last Modified Date*::
+    2018-06-21
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Krzysztof Kosiński, Google +
+    Mark Young, LunarG +
+    Ryan Pavlik, Collabora +
+    Bryce Hutchings, Microsoft +
+    Lachlan Ford, Microsoft
+
+*Overview*
+
+This extension enables headless operation, i.e., without interacting with
+any display devices or initializing the OpenXR compositor.
+It is intended to facilitate novel uses of OpenXR devices not covered by
+this specification.
+
+Note that the term "headless" is used here as a term of art referring to
+not outputting to a display. It does not refer to the presence or absence
+of a head tracker, head-mounted display, or anything else related to
+a human head.
+
+When this extension is enabled, the behavior of existing functions that
+interact with the graphics subsystem is altered.
+When calling the function flink:xrCreateSession with no graphics binding
+structure, the session will be created as headless.
+
+When operating with a headless session, the function flink:xrEnumerateSwapchainFormats
+must: return an empty list of formats.
+Calls to functions flink:xrCreateSwapchain, flink:xrDestroySwapchain,
+flink:xrAcquireSwapchainImage, flink:xrWaitFrame are invalid.
+All other functions, including those related to tracking, input and
+haptics, are unaffected.
+
+In addition to this application-facing behavior, the runtime must: not interact
+with any display devices on behalf of a headless session.
+The runtime should: avoid performing any initialization or resource
+acquisition related to graphics or composition.
+
+If the runtime supports transitions between multiple sessions, then
+the runtime should: prevent users from transitioning to a headless
+session from a regular session and vice versa.
+The latter is assumed to be trivial, since the runtime is not allowed to
+interact with display devices and therefore prohibited from displaying any
+sort of user interface.
+If the runtime supports multiple concurrent sessions running at the
+same time, it should: allow headless sessions to run concurrently with
+regular sessions.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-09-30 (Krzysztof Kosiński)
+** Initial version.
+* Revision 2, 2018-05-07 (Mark Young)
+** Remove `XR_GRAPHICS_API_NONE_KHR` and replace it with a mention of the
+new `XrGraphicsApi` value of `XR_GRAPHICS_API_UNKNOWN`
+* Revision 3, 2018-06-21 (Bryce Hutchings)
+** Remove `XR_GRAPHICS_API_UNKNOWN` and replace it with a mention of the
+new `XrGraphicsBindingHeadlessKHR` structure.
+* Revision 3, 2019-01-04 (Bryce Hutchings)
+** Change from headless applications to headless sessions.

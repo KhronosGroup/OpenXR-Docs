@@ -1,0 +1,263 @@
+[[view_configurations]]
+== View Configurations
+
+A **view configuration** is a semantically meaningful set of one or more views for which an application can render images.
+A **primary view configuration** is a view configuration intended to be presented to the viewer interacting with the XR application.
+This distinction allows the later addition of additional views, for example views which are intended for spectators.
+
+A typical head-mounted VR system has a view configuration with two views, while a typical phone-based AR system has a view configuration with a single view.
+A simple multi-wall projection-based (CAVE-like) VR system may have a view configuration with at least one view for each display surface (wall, floor, ceiling) in the room.
+
+For any supported form factor, a system will support one or more primary view configurations.
+Supporting more than one primary view configuration can be useful if a system supports a special view configuration optimized for the hardware but also supports a more broadly used view configuration as a compatibility fallback.
+
+View configurations are identified with an elink:XrViewConfigurationType.
+
+[[primary_view_configurations]]
+=== Primary View Configurations
+
+[open,refpage='XrViewConfigurationType',desc='Supported view configuration type',type='enums']
+--
+include::../../generated/api/enums/XrViewConfigurationType.txt[]
+
+The application selects its primary view configuration type when calling flink:xrBeginSession,
+and that configuration remains constant for the lifetime of the session, until flink:xrEndSession is called.
+
+The number of views and the semantic meaning of each view index within a given view configuration is well-defined,
+specified below for all core view configurations.
+The predefined primary view configuration types are:
+
+.Enumerant Descriptions
+****
+* ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_MONO. One view representing the form factor's one primary display. For example, an AR phone's screen.
+  This configuration requires one element in slink:XrViewConfigurationProperties and one projection in each slink:XrCompositionLayerProjection layer.
+* ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO. Two views representing the form factor's two primary displays, which map to a left-eye and
+  right-eye view. This configuration requires two views in slink:XrViewConfigurationProperties and two views in each slink:XrCompositionLayerProjection layer. 
+  View index 0 must: represent the left eye and view index 1 must: represent the right eye.
+****
+--
+
+[[view_configuration_api]]
+=== View Configuration API
+
+First an application needs to select which primary view configuration it wants to use.
+If it supports multiple configurations, an application can: call flink:xrEnumerateViewConfigurations before creating an slink:XrSession
+to get a list of the view configuration types supported for a given system.
+
+The application can: then call flink:xrGetViewConfigurationProperties and flink:xrEnumerateViewConfigurationViews to get detailed information
+about each view configuration type and its individual views.
+
+==== xrEnumerateViewConfigurations
+
+[open,refpage='xrEnumerateViewConfigurations',desc='Enumerates supported view configurations',type='protos',xrefs='XrViewConfigurationType']
+--
+The flink:xrEnumerateViewConfigurations is defined as follows:
+
+include::../../generated/api/protos/xrEnumerateViewConfigurations.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:systemId is the basetype:XrSystemId whose view configurations will be enumerated.
+* pname:viewConfigurationsTypeCapacityInput is the capacity of the pname:viewConfigurations array, or 0 to indicate a request to retrieve the required capacity.
+* pname:viewConfigurationsTypeCountOutput is a pointer to the count of pname:viewConfigurations written, or a pointer to the required capacity in the case that pname:viewConfigurationsTypeCapacityInput is 0.
+* pname:viewConfigurationsTypes is a pointer to an array of elink:XrViewConfigurationType values, but can: be code:NULL if pname:viewConfigurationsTypeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:viewConfigurations size.
+****
+
+flink:xrEnumerateViewConfigurations enumerates the view configuration types supported by the basetype:XrSystemId.
+The supported set for that system must: not change during the lifetime of its slink:XrInstance.
+The returned list of primary view configurations should: be in order from what the runtime considered highest to lowest user preference.
+Thus the first enumerated view configuration type should: be the one the runtime prefers the application to use if possible.
+
+include::../../generated/validity/protos/xrEnumerateViewConfigurations.txt[]
+--
+
+==== xrGetViewConfigurationProperties
+
+[open,refpage='xrGetViewConfigurationProperties',desc='Gets information for a view configuration',type='protos',xrefs='XrViewConfigurationType XrViewConfigurationProperties']
+--
+The flink:xrGetViewConfigurationProperties function is defined as:
+
+include::../../generated/api/protos/xrGetViewConfigurationProperties.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:systemId is the basetype:XrSystemId whose view configuration is being queried.
+* pname:viewConfigurationType is the elink:XrViewConfigurationType of the configuration to get.
+* pname:configurationProperties is a pointer to view configuration properties to return.
+****
+
+flink:xrGetViewConfigurationProperties queries properties of an individual view configuration.
+Applications must: use one of the supported view configuration types returned by flink:xrEnumerateViewConfigurations.
+If pname:viewConfigurationType is not supported by this slink:XrInstance the runtime must: return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
+
+include::../../generated/validity/protos/xrGetViewConfigurationProperties.txt[]
+--
+
+==== XrViewConfigurationProperties
+
+[open,refpage='XrViewConfigurationProperties',desc='Detailed configuration properties for an XrViewConfigurationProperties',type='structs',xrefs='XrViewConfigurationType xrGetViewConfigurationProperties XrViewConfigurationView']
+--
+
+The slink:XrViewConfigurationProperties structure is defined as:
+include::../../generated/api/structs/XrViewConfigurationProperties.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:viewConfigurationType is the elink:XrViewConfigurationType of the configuration.
+* pname:fovMutable indicates if the view field of view can be modified by the application.
+****
+
+include::../../generated/validity/structs/XrViewConfigurationProperties.txt[]
+--
+
+==== xrEnumerateViewConfigurationViews
+
+[open,refpage='xrEnumerateViewConfigurationViews',desc='Gets view configuration views',type='protos',xrefs='XrViewConfigurationType xrGetViewConfigurationProperties XrViewConfigurationView']
+--
+The function flink:xrEnumerateViewConfigurationViews is defined as:
+
+include::../../generated/api/protos/xrEnumerateViewConfigurationViews.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:systemId is the basetype:XrSystemId whose view configuration is being queried.
+* pname:viewConfigurationType is the elink:XrViewConfigurationType of the configuration to get.
+* pname:viewCapacityInput is the capacity of the pname:views array, or 0 to indicate a request to retrieve the required capacity.
+* pname:viewCountOutput is a pointer to the count of pname:views written, or a pointer to the required capacity in the case that pname:viewCapacityInput is 0.
+* pname:views is a pointer to an array of slink:XrViewConfigurationView values, but can: be code:NULL if pname:viewCapacityInput is 0.
+****
+
+Each elink:XrViewConfigurationType defines the number of views associated with it.
+Applications can query more details of each view element using flink:xrEnumerateViewConfigurationViews.
+If the supplied pname:viewConfigurationType is not supported by this
+slink:XrInstance and basetype:XrSystemId, the
+runtime must: return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
+
+include::../../generated/validity/protos/xrEnumerateViewConfigurationViews.txt[]
+--
+
+==== XrViewConfigurationView
+
+[open,refpage='XrViewConfigurationView',desc='Individual view configuration',type='structs',xrefs='XrViewConfigurationType xrEnumerateViewConfigurationViews XrViewConfigurationProperties']
+--
+Each slink:XrViewConfigurationView specifies properties related to rendering of an individual view within a view configuration.
+
+The slink:XrViewConfigurationView structure is defined as:
+include::../../generated/api/structs/XrViewConfigurationView.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:recommendedImageRectWidth is the optimal width of pname:imageRect to use when rendering this view into a swapchain.
+* pname:maxImageRectWidth is the maximum width of pname:imageRect supported when rendering this view into a swapchain.
+* pname:recommendedImageRectHeight is the optimal height of pname:imageRect to use when rendering this view into a swapchain.
+* pname:maxImageRectHeight is the maximum height of pname:imageRect supported when rendering this view into a swapchain.
+* pname:recommendedSwapchainSampleCount is the recommended number of sub-data element samples to create for each swapchain image that will be rendered into for this view.
+* pname:maxSwapchainSampleCount is the maximum number of sub-data element samples supported for swapchain images that will be rendered into for this view.
+****
+
+See slink:XrSwapchainSubImage for more information about pname:imageRect values, and slink:XrSwapchainCreateInfo for more information about creating swapchains appropriately sized to support those pname:imageRect values.
+
+The array of slink:XrViewConfigurationView returned by the runtime must: adhere to the rules defined in <<primary_view_configurations, elink:XrViewConfigurationType>>, such as the count and association to the left and right eyes.
+
+include::../../generated/validity/structs/XrViewConfigurationView.txt[]
+--
+
+[[example_view_configurations_code]]
+=== Example View Configuration Code
+
+// see view_configuration.0.h
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId system; // previously initialized
+XrSession session; // previously initialized
+
+// Enumerate the view configurations paths.
+uint32_t configurationCount;
+CHK_XR(xrEnumerateViewConfigurations(instance, system, 0, &configurationCount, nullptr));
+
+std::vector<XrViewConfigurationType> configurationTypes(configurationCount);
+CHK_XR(xrEnumerateViewConfigurations(instance, system, configurationCount, &configurationCount, configurationTypes.data()));
+
+bool configFound = false;
+for(uint32_t i = 0; i < configurationCount; ++i)
+{
+    if (configurationTypes[i] == XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO)
+    {
+        configFound = true;
+        break;  // Pick the first supported, i.e. preferred, view configuration.
+    }
+}
+
+if (!configFound) 
+    return;   // Cannot support any view configuration of this system.
+
+// Get detailed information of each view element.
+uint32_t viewCount;
+CHK_XR(xrEnumerateViewConfigurationViews(instance, system,
+    XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
+    0,
+    &viewCount,
+    nullptr));
+
+std::vector<XrViewConfigurationView> configViews(viewCount, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
+CHK_XR(xrEnumerateViewConfigurationViews(instance, system,
+    XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
+    viewCount,
+    &viewCount,
+    configViews.data()));
+
+// Set the primary view configuration for the session.
+XrSessionBeginInfo beginInfo = {XR_TYPE_SESSION_BEGIN_INFO, nullptr, XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO };
+CHK_XR(xrBeginSession(session, &beginInfo));
+
+XrCompositionLayerFlags layerFlags; // previously initialized
+
+// Allocate a buffer according to viewCount.
+std::vector<XrView> views(viewCount, {XR_TYPE_VIEW});
+
+// Get views
+XrTime displayTime; // previously initialized
+XrSpace space; // previously initialized
+
+// Run a per-frame loop.
+while (!quit)
+{
+    XrViewLocateInfo viewLocateInfo{XR_TYPE_VIEW_LOCATE_INFO};
+    viewLocateInfo.displayTime = displayTime;
+    viewLocateInfo.space = space;
+
+    XrViewState viewState{};
+    uint32_t viewCountOutput;
+    CHK_XR(xrLocateViews(session, &viewLocateInfo, &viewState, configViews.size(), &viewCountOutput, views.data()));
+
+    // Wait for beginning the next frame.
+    XrFrameWaitInfo frameWaitInfo{XR_TYPE_FRAME_WAIT_INFO};
+    XrFrameState frameState{XR_TYPE_FRAME_STATE};
+    CHK_XR(xrWaitFrame(session, &frameWaitInfo, &frameState));
+
+    // Begin frame
+    XrFrameBeginInfo frameBeginInfo { XR_TYPE_FRAME_BEGIN_INFO };
+    CHK_XR(xrBeginFrame(session, &frameBeginInfo));
+
+    // ...
+    // Use view and frameState for scene render.
+
+    // End frame
+    XrCompositionLayerProjectionView views[2] = { /*...*/ };
+    XrCompositionLayerProjection layerProj{ XR_TYPE_COMPOSITION_LAYER_PROJECTION, nullptr, layerFlags, space, 2, views };
+    XrCompositionLayerBaseHeader* layers[1] = { reinterpret_cast<XrCompositionLayerBaseHeader*>(&layerProj) };
+    XrFrameEndInfo frameEndInfo{ XR_TYPE_FRAME_END_INFO, nullptr, displayTime, XR_ENVIRONMENT_BLEND_MODE_OPAQUE, 1, layers };
+    CHK_XR(xrEndFrame(session, &frameEndInfo));
+}
+
+----
+

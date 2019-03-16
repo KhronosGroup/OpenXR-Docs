@@ -1,0 +1,51 @@
+// Copyright (c) 2017-2019 The Khronos Group Inc.
+// Copyright notice at https://www.khronos.org/registry/speccopyright.html
+
+= The OpenXR Specification [PROVISIONAL RELEASE]
+Copyright (c) 2017-2019 The Khronos Group Inc.
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 2
+:max-width: 100
+:numbered:
+:imagewidth: 800
+:fullimagewidth: width="800"
+:source-highlighter: prettify
+
+Copyright (c) 2017-2019 The Khronos Group Inc. All Rights reserved.
+
+toc::[]
+
+include::chapters/introduction.adoc[]
+
+include::chapters/fundamentals.adoc[]
+
+include::chapters/api_initialization.adoc[]
+
+include::chapters/instance.adoc[]
+
+include::chapters/system.adoc[]
+
+include::chapters/semantic_paths.adoc[]
+
+include::chapters/spaces.adoc[]
+
+include::chapters/view_configurations.adoc[]
+
+include::chapters/session.adoc[]
+
+include::chapters/rendering.adoc[]
+
+include::chapters/input.adoc[]
+
+// Extension process removed from provisional specificaion
+// per discussion.  See (i/863) for issue involving adding
+// it back after release.
+// include::chapters/extensions/extension_process.adoc[]
+
+include::chapters/extensions/meta/current_extensions_appendix.adoc[]
+
+:numbered!:
+
+include::chapters/appendix.adoc[]

@@ -1,0 +1,1144 @@
+[[rendering]]
+== Rendering
+
+[[swapchain-image-management]]
+=== Swapchain Image Management
+
+[open,refpage='XrSwapchain',desc='Opaque handle to a swapchain object',type='handles',xrefs='xrEnumerateSwapchainFormats']
+--
+include::../../generated/api/handles/XrSwapchain.txt[]
+
+Normal XR applications will want to present rendered images to the user.
+To allow this, the runtime provides images organized in swapchains for the application to render into.
+The runtime must: allow applications to create multiple swapchains.
+
+Swapchain image format support by the runtime is specified by the
+flink:xrEnumerateSwapchainFormats function. Runtimes should: support code:R8G8B8A8
+and code:R8G8B8A8 code:sRGB formats if possible.
+
+Swapchain images can: be 2D or 2D Array.
+
+Rendering operations involving composition of submitted layers should be
+assumed to be internally performed by the runtime in linear color space.
+Images submitted in sRGB color space must be created using an API-specific sRGB
+format (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, ename:GL_SRGBA,
+ename:VK_FORMAT_R8G8B8A8_SRGB) to apply automatic sRGB-to-linear conversion
+when read by the runtime. All other formats will be treated as linear values.
+
+[NOTE]
+.Note
+====
+DXGI resources will be created with their associated TYPELESS format,
+but the runtime will use the application-specified format for reading the data.
+====
+--
+
+[open,refpage='xrEnumerateSwapchainFormats',desc='Enumerates swapchain formats',type='protos',xrefs='xrCreateSwapchain']
+--
+The flink:xrEnumerateSwapchainFormats is defined as:
+
+include::../../generated/api/protos/xrEnumerateSwapchainFormats.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that enumerates the supported formats.
+* pname:formatCapacityInput is the capacity of the pname:formats,
+or 0 to retrieve the required capacity.
+* pname:formatCountOutput is a pointer to the count of code:uint64_t formats written,
+or a pointer to the required capacity in the case that pname:formatCapacityInput is 0.
+* pname:formats is a pointer to an array of code:int64_t format ids,
+but can: be code:NULL if pname:formatCapacityInput is 0. The format ids are specific
+to the specified graphics API.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:formats size.
+****
+
+flink:xrEnumerateSwapchainFormats enumerates the texture formats supported by the
+current session.
+The type of formats returned are dependent on the graphics
+API specified in flink:xrCreateSession.
+For example, if a DirectX graphics API
+was specified, then the enumerated formats correspond to the DXGI formats, such
+as ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB.
+
+With an OpenGL-based graphics API, the texture formats correspond to OpenGL internal formats.
+
+With a Direct3D-based graphics API, flink:xrEnumerateSwapchainFormats
+never returns typeless formats (e.g. ename:DXGI_FORMAT_R8G8B8A8_TYPELESS).
+Only concrete formats are returned, and only concrete formats may be
+specified by applications for swapchain creation.
+
+include::../../generated/validity/protos/xrEnumerateSwapchainFormats.txt[]
+--
+
+[open,refpage='XrSwapchainUsageFlags',desc='Swapchain usage flags',type='flags',xrefs='xrCreateSwapchain xrEnumerateSwapchainFormats']
+--
+elink:XrSwapchainUsageFlags Specify the intended usage of the swapchain images. When images are created,
+the runtime needs to know how the images are used in a way that requires more information than
+simply the image format.
+The slink:XrSwapchainCreateInfo passed to flink:xrCreateSwapchain should
+match the intended usage or else undefined behavior may result when the
+application works with the images.
+
+Flags include:
+
+include::../../generated/api/enums/XrSwapchainUsageFlagBits.txt[]
+
+.Flag Descriptions
+****
+* ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT indicates that the image may be a color rendering target.
+* ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT indicates that the image may be a depth/stencil rendering target.
+* ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT indicates that the image may be used as data source.
+* ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT indicates that the image may be the source of a copy operation.
+* ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT indicates that the image may be the destination of a copy operation.
+* ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT indicates that the image may sampled by a shader.
+* ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT indicates that the image format may be reinterpreted.
+****
+--
+
+[open,refpage='xrCreateSwapchain',desc='Creates an XrSwapchain',type='protos',xrefs='xrEnumerateSwapchainFormats XrSwapchainCreateInfo xrEnumerateSwapchainImages xrAcquireSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
+--
+The flink:xrCreateSwapchain function is defined as:
+
+include::../../generated/api/protos/xrCreateSwapchain.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that creates the image.
+* pname:createInfo is a pointer to an slink:XrSwapchainCreateInfo structure containing
+parameters to be used to create the image.
+* pname:swapchain is a pointer to a handle in which the created slink:XrSwapchain is
+returned.
+****
+
+Creates an slink:XrSwapchain handle.
+The returned swapchain handle may: be subsequently used in API calls.
+Multiple slink:XrSwapchain handles may exist simultaneously, up to some limit imposed by the runtime.
+The slink:XrSwapchain handle must: be eventually freed via the flink:xrDestroySwapchain function.
+The runtime must: return ename:XR_ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED if the image format specified
+in the slink:XrSwapchainCreateInfo is unsupported.
+
+include::../../generated/validity/protos/xrCreateSwapchain.txt[]
+--
+
+[open,refpage='XrSwapchainCreateInfo',desc='Creation info for a swapchain',type='structs',xrefs='xrEnumerateSwapchainFormats xrCreateSession XrSessionCreateFlags']
+--
+
+The slink:XrSwapchainCreateInfo structure is defined as:
+include::../../generated/api/structs/XrSwapchainCreateInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:createFlags is a bitmask of elink:XrSwapchainCreateFlagBits describing additional properties of the swapchain.
+* pname:usageFlags is a bitmask of elink:XrSwapchainUsageFlagBits describing the intended usage of the swapchain's images.
+  The usage flags define how the corresponding graphics API objects are created.
+  A mismatch may: result in swapchain images that do not support the application's usage.
+* pname:format is a graphics API-specific texture format identifier.
+  For example, if the graphics API specified in flink:xrCreateSession is
+  Vulkan, then this format is a Vulkan format such as
+  ename:VK_FORMAT_R8G8B8A8_SRGB.
+  The format identifies the format that the runtime will interpret the texture
+  as upon submission. Valid formats are indicated by
+  flink:xrEnumerateSwapchainFormats.
+* pname:sampleCount is the number of sub-data element samples in the
+  image.
+* pname:width is the width of the image.
+* pname:height is the height of the image.
+* pname:faceCount is the number of faces, which can be either 6 (for cubemaps) or 1.
+* pname:arraySize is the number of array layers in the image.
+* pname:mipCount describes the number of levels of detail available for
+  minified sampling of the image.
+****
+
+include::../../generated/validity/structs/XrSwapchainCreateInfo.txt[]
+--
+
+[open,refpage='XrSwapchainCreateFlags',desc='Swapchain creation flags',type='flags',xrefs='xrCreateSwapchain XrSwapchainCreateInfo']
+--
+The pname:createFlags are a combination of the following:
+
+include::../../generated/api/enums/XrSwapchainCreateFlagBits.txt[]
+
+.Flag Descriptions
+****
+* ename:XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT indicates that the swapchain's images
+will be protected from CPU access, using a mechanism such as Vulkan protected memory.
+* ename:XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT indicates that the application will
+acquire and release only one image to this swapchain over its entire lifetime.
+When this flag is present, runtimes should: allocate fewer images
+than for regular swapchains to reduce memory use.
+****
+
+A runtime may: implement any of these, but is not required to.
+--
+
+The number of images in each swapchain is implementation-defined.
+To obtain the number of images actually allocated,
+call flink:xrEnumerateSwapchainImages.
+
+With a Direct3D-based graphics API, the swapchain returned by
+flink:xrCreateSwapchain will be a typeless format if the requested format has
+a typeless analogue.
+Applications are required to reinterpret the swapchain as a compatible non-typeless
+type.
+Upon submitting such swapchains to the runtime, they are interpreted as the
+format specified by the application in the slink:XrSwapchainCreateInfo.
+
+Swapchains will be created with graphics API-specific flags appropriate to the
+type of underlying image and its usage.
+Extensions may exist to further assist the
+runtime in choosing how to create swapchains.
+
+flink:xrEnumerateSwapchainFormats never returns
+typeless formats (e.g. code:DXGI_FORMAT_R8G8B8A8_TYPELESS).
+Only concrete formats
+are returned, and only concrete formats may be specified by applications for
+swapchain creation.
+
+[open,refpage='xrDestroySwapchain',desc='Destroys an XrSwapchain',type='protos',xrefs='xrCreateSwapchain']
+--
+The flink:xrDestroySwapchain function is defined as:
+
+include::../../generated/api/protos/xrDestroySwapchain.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the swapchain to destroy.
+****
+
+All submitted graphics API commands that refer to pname:swapchain must: have completed execution.
+Runtimes may: continue to utilize swapchain images after flink:xrDestroySwapchain is called.
+
+include::../../generated/validity/protos/xrDestroySwapchain.txt[]
+--
+
+Swapchain images are acquired, waited on, and released by index,
+but the number of images in a swapchain is implementation-defined.
+Additionally, rendering to images requires access to the underlying image primitive of the graphics API being used.
+Applications may query and cache the images at any time after swapchain creation.
+
+[open,refpage='xrEnumerateSwapchainImages',desc='Gets images from an XrSwapchain',type='protos',xrefs='xrCreateSwapchain XrSwapchainImageBaseHeader']
+--
+The flink:xrEnumerateSwapchainImages function is defined as:
+
+include::../../generated/api/protos/xrEnumerateSwapchainImages.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the slink:XrSwapchain to get images from.
+* pname:imageCapacityInput is the capacity of the pname:images array, or 0 to indicate a request to retrieve the required capacity.
+* pname:imageCountOutput is a pointer to the count of pname:images written, or a pointer to the required capacity in the case that pname:imageCapacityInput is 0.
+* pname:images is a pointer to an array of graphics API-specific `XrSwapchainImage` structures based off of slink:XrSwapchainImageBaseHeader.
+  It can: be code:NULL if pname:imageCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:images size.
+****
+
+Fills an array of graphics API-specific `XrSwapchainImage` structures.
+The resources must: be constant and valid for the lifetime of the slink:XrSwapchain.
+
+Note: pname:images is a pointer to an array of structures of graphics API-specific type, not an array of structure pointers.
+
+include::../../generated/validity/protos/xrEnumerateSwapchainImages.txt[]
+--
+
+[open,refpage='XrSwapchainImageBaseHeader',desc='Image base header for a swapchain image',type='structs',xrefs='xrEnumerateSwapchainImages']
+--
+
+The slink:XrSwapchainImageBaseHeader structure is defined as follows:
+include::../../generated/api/structs/XrSwapchainImageBaseHeader.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+The slink:XrSwapchainImageBaseHeader is a base structure that can be overridden
+by a graphics API-specific stext:XrSwapchainImage* child structure.
+
+include::../../generated/validity/structs/XrSwapchainImageBaseHeader.txt[]
+--
+
+Before an application can start building graphics API command buffers that refer to an image in a swapchain, it must acquire the image from the swapchain.
+The acquire operation determines the index of the next image that will be used in the swapchain.
+The order in which images are acquired is undefined.
+The runtime must: allow the application to acquire more than one image from a single swapchain at a time,
+for example if the application implements a multiple frame deep rendering pipeline.
+
+[open,refpage='xrAcquireSwapchainImage',desc='Acquire a swapchain image',type='protos',xrefs='xrCreateSwapchain xrEnumerateSwapchainImages xrWaitSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
+--
+The flink:xrAcquireSwapchainImage function is defined as:
+
+include::../../generated/api/protos/xrAcquireSwapchainImage.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the swapchain from which to acquire an image.
+* pname:acquireInfo is for extensibility purposes.
+* pname:index is a pointer to the image index that was acquired.
+****
+
+Acquires the image corresponding to the pname:index position in the array
+returned by flink:xrEnumerateSwapchainImages.
+The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if
+pname:index has already been acquired and
+not yet released with flink:xrReleaseSwapchainImage.
+If the pname:swapchain was created with the
+ename:XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT set in
+slink:XrSwapchainCreateInfo::pname:createFlags, this function must: not have
+been previously called for this swapchain.
+
+include::../../generated/validity/protos/xrAcquireSwapchainImage.txt[]
+--
+
+[open,refpage='XrSwapchainImageAcquireInfo',desc='Describes a swapchain image acquisition',type='structs',xrefs='xrAcquireSwapchainImage']
+--
+
+The slink:XrSwapchainImageAcquireInfo structure is available for extensibility
+purposes.
+It is defined as:
+
+include::../../generated/api/structs/XrSwapchainImageAcquireInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+include::../../generated/validity/structs/XrSwapchainImageAcquireInfo.txt[]
+--
+
+[open,refpage='xrWaitSwapchainImage',desc='Wait for a swapchain image to be available',type='protos',xrefs='xrCreateSwapchain xrEnumerateSwapchainImages xrAcquireSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
+--
+The flink:xrWaitSwapchainImage function is defined as:
+
+include::../../generated/api/protos/xrWaitSwapchainImage.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the swapchain from which to wait for an image.
+* pname:waitInfo is a pointer to an slink:XrSwapchainImageWaitInfo struct.
+****
+
+Before an application can begin writing to a swapchain image, it must first
+wait on the image to avoid writing to it before the compositor has finished
+reading from it.  flink:xrWaitSwapchainImage will implicitly wait on the oldest
+acquired swapchain image which has not yet been successfully waited on.
+Once a swapchain image has been successfully waited on, it must: be released
+before waiting on the next acquired swapchain image.
+
+This function may block for longer than the timeout specified in
+slink:XrSwapchainImageWaitInfo due to scheduling or contention.
+
+If the timeout expires without the image becoming available for writing,
+ename:XR_TIMEOUT_EXPIRED is returned.
+If flink:xrWaitSwapchainImage returns ename:XR_TIMEOUT_EXPIRED, the next call
+to flink:xrWaitSwapchainImage will wait on the same image index again until the
+function succeeds with ename:XR_SUCCESS.
+Note that this is not an error code; `XR_SUCCEEDED(ename:XR_TIMEOUT_EXPIRED)`
+is code:true.
+
+The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if no image has
+been acquired by calling flink:xrAcquireSwapchainImage.
+
+include::../../generated/validity/protos/xrWaitSwapchainImage.txt[]
+--
+
+[open,refpage='XrSwapchainImageWaitInfo',desc='Describes a swapchain image wait operation',type='structs',xrefs='xrWaitSwapchainImage']
+--
+
+The slink:XrSwapchainImageWaitInfo structure describes a swapchain image wait
+operation.
+It is defined as:
+
+include::../../generated/api/structs/XrSwapchainImageWaitInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:timeout indicates how many nanoseconds the call should block waiting for the image to become available for writing.
+****
+
+include::../../generated/validity/structs/XrSwapchainImageWaitInfo.txt[]
+--
+
+Once an application is done writing to a swapchain image, it is released.
+flink:xrReleaseSwapchainImage will implicitly release the oldest swapchain image which has been acquired.
+The swapchain image must: have been successfully waited on before it is released.
+flink:xrEndFrame will use the most recently released swapchain image.
+In each frame submitted to the compositor only one image index from each swapchain will be used.
+Note that in case the swapchain contains 2D image arrays, one array is referenced per swapchain index
+and thus the whole image array can be used in one frame.
+
+[open,refpage='xrReleaseSwapchainImage',desc='Release a swapchain image',type='protos',xrefs='xrCreateSwapchain xrEnumerateSwapchainImages xrAcquireSwapchainImage xrWaitSwapchainImage xrDestroySwapchain']
+--
+The flink:xrReleaseSwapchainImage function is defined as:
+
+include::../../generated/api/protos/xrReleaseSwapchainImage.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the slink:XrSwapchain from which to release an image.
+* pname:releaseInfo is for extensibility purposes.
+****
+
+If the pname:swapchain was created with the ename:XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
+set in slink:XrSwapchainCreateInfo::pname:createFlags structure,
+this function must: not have been previously called for this swapchain.
+
+The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if no image has
+been waited on by calling flink:xrWaitSwapchainImage.
+
+include::../../generated/validity/protos/xrReleaseSwapchainImage.txt[]
+--
+
+[open,refpage='XrSwapchainImageReleaseInfo',desc='Describes a swapchain image release',type='structs',xrefs='xrReleaseSwapchainImage']
+--
+The slink:XrSwapchainImageReleaseInfo structure is intended for extensibility
+purposes.
+It is defined as as:
+
+include::../../generated/api/structs/XrSwapchainImageReleaseInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+include::../../generated/validity/structs/XrSwapchainImageReleaseInfo.txt[]
+--
+
+
+[[view-projections]]
+=== View and Projection State
+
+An application uses flink:xrLocateViews to retrieve the viewer pose and projection parameters needed to
+render each composition view returned by flink:xrEnumerateViewConfigurationViews.
+
+[open,refpage='xrLocateViews',desc='Gets view and projection info',type='protos',xrefs='XrView XrViewState XrViewLocateInfo']
+--
+The flink:xrLocateViews function is defined as:
+
+include::../../generated/api/protos/xrLocateViews.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to the provided slink:XrSession.
+* pname:viewLocateInfo is a pointer to a valid slink:XrViewLocateInfo structure.
+* pname:viewState is the output structure with the viewer state information.
+* pname:viewCapacityInput is an input parameter which specifies the capacity of the pname:views array.
+The required capacity is no more than slink:XrSystemGraphicsProperties::maxViewCount
+* pname:viewCountOutput is an output parameter which identifies the valid count of pname:views.
+* pname:views is an array of slink:XrView.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:views size.
+****
+
+.Valid Usage
+****
+* pname:displayTime should: be a valid time in the future.
+****
+
+The function flink:xrLocateViews returns the view and projection info for a particular display time.
+This time is typically the slink:XrFrameState::pname:predictedDisplayTime for a given frame.
+Repeatedly calling flink:xrLocateViews with the same time may: not necessarily return the same result.
+Instead the prediction gets increasingly accurate as the function is called closer to the given time for which a prediction is made.
+This allows an application to get the predicted views as late as possible in its pipeline to get the least amount of latency and prediction error.
+
+flink:xrLocateViews returns an array of slink:XrView elements, one for each view of the running session's active view configuration, along with an slink:XrViewState containing additional state data shared across all views for the primary viewer.
+The eye each view corresponds to is statically defined in <<primary_view_configurations, elink:XrViewConfigurationType>> in case the application wants to apply eye-specific rendering traits.
+The slink:XrViewState and slink:XrView member data may change on subsequent calls to flink:xrLocateViews, and so applications must: not assume it to be constant.
+
+include::../../generated/validity/protos/xrLocateViews.txt[]
+--
+
+[open,refpage='XrViewLocateInfo',desc='Struct containing view locate information',type='structs',xrefs='xrLocateViews XrViewState XrView']
+--
+
+The slink:XrViewLocateInfo structure is defined as:
+include::../../generated/api/structs/XrViewLocateInfo.txt[]
+
+.Member Descriptions
+****
+* pname:displayTime is the time for which the view poses are predicted.
+* pname:space is the slink:XrSpace in which the pname:pose in each slink:XrView is expressed.
+****
+
+The slink:XrViewLocateInfo structure contains the display time and space used to locate the view slink:XrView structures.
+
+include::../../generated/validity/structs/XrViewLocateInfo.txt[]
+--
+
+[open,refpage='XrView',desc='Struct containing view projection state',type='structs',xrefs='xrLocateViews XrViewState XrViewLocateInfo']
+--
+
+The slink:XrView structure is defined as:
+include::../../generated/api/structs/XrView.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:pose is an slink:XrPosef defining the location and orientation of the view in the pname:space specified by the flink:xrLocateViews function.
+* pname:fov is the slink:XrFovf for the four sides of the projection.
+****
+
+The slink:XrView structure contains view pose and projection state
+necessary to render a single view in the view configuration.
+
+include::../../generated/validity/structs/XrView.txt[]
+--
+
+[open,refpage='XrViewState',desc='Struct containing additional view state',type='structs',xrefs='xrLocateViews XrView']
+--
+
+The slink:XrViewState structure is defined as:
+include::../../generated/api/structs/XrViewState.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:viewStateFlags is a bitmask of elink:XrViewStateFlagBits indicating state that spans all views.
+****
+
+The slink:XrViewState contains additional view state from flink:xrLocateViews common to all views of the active view configuration.
+
+include::../../generated/validity/structs/XrViewState.txt[]
+--
+
+[open,refpage='XrViewStateFlags',desc='View state flags',type='flags',xrefs='xrLocateViews XrViewState XrView']
+--
+The elink:XrViewStateFlags specifies the validity and quality of the corresponding slink:XrView array
+returned by flink:xrLocateViews.
+
+Flags include:
+
+include::../../generated/api/enums/XrViewStateFlagBits.txt[]
+
+.Flag Descriptions
+****
+* ename:XR_VIEW_STATE_ORIENTATION_VALID_BIT indicates whether all slink:XrView orientations contain valid data.
+  ename:XR_VIEW_STATE_ORIENTATION_TRACKED_BIT should: generally remain set when this bit is set for views on a tracked headset or handheld device.
+* ename:XR_VIEW_STATE_POSITION_VALID_BIT indicates whether all slink:XrView positions contain valid data.
+  When a view loses tracking, runtimes should: continue to provide valid but untracked view pname:position values that are inferred or last-known,
+  so long as it's still meaningful for the application to render content using that position, clearing ename:XR_VIEW_STATE_POSITION_TRACKED_BIT until tracking is recovered.
+* ename:XR_VIEW_STATE_ORIENTATION_TRACKED_BIT indicates whether all slink:XrView orientations represent an actively tracked orientation.
+  This bit should: generally remain set when ename:XR_VIEW_STATE_ORIENTATION_VALID_BIT is set for views on a tracked headset or handheld device.
+* ename:XR_VIEW_STATE_POSITION_TRACKED_BIT indicates whether all slink:XrView positions represent an actively tracked position.
+  When a view loses tracking, runtimes should: continue to provide valid but untracked view pname:position values that are inferred or last-known,
+  e.g. based on neck model updates, inertial dead reckoning, or a last-known position, so long as it's still meaningful for the application to render content using that position.
+****
+--
+
+[[ipd-iad-er]]
+==== IPD / IAD / ER
+
+The Inter Pupillary Distance (IPD), the distance between the user's
+eyes, the Inter Axial Distance (IAD), the distance between the lenses,
+and the Eye Relief (ER), the distance from the pupil of the eye to the
+nearest surface of the lens, are all properties of the user and/or a
+typical VR headset.
+
+image::images/ipd.svg[align="center", title="Inter Pupillary Distance"]
+
+On some headsets the IAD and/or the ER can be dynamically adjusted at
+run-time. The application, however, is not explicitly exposed to these
+values. CAVE-like VR systems do not use lenses and are not concerned
+with the IAD and ER, in which case exposing these values to the
+application makes no sense.
+
+Instead, with a predicted head pose, the application gets a view pose
+for each eye, the direction in which each eye is looking, and the
+suggested FOV for each eye from which the application can trivially
+derive a projection matrix. It is important to get all this data as an
+atomic package with the same prediction for the same time, in particular
+when using a VR headset that allows the IAD and/or ER to be adjusted at
+run-time.
+
+[[display-timing]]
+=== Display Timing
+
+Instead of just using the latest tracking data, an application uses predicted tracking data for the middle of the time period during which the new swapchains will be displayed.
+The function flink:xrWaitFrame returns a predicted display time for the time that the runtime predicts the swapchain images will be displayed.
+The application should: use the predicted display time when requesting space relationships and view poses for rendering.
+
+flink:xrEndFrame may return immediately to the application, but flink:xrWaitFrame will block for an amount of time that depends on throttling of the application by the runtime.
+There is no strong coupling between a specific call to flink:xrWaitFrame, and a specific frame description in flink:xrEndFrame.
+However, slink:XrFrameEndInfo does include a display time, which should: be computed using values returned by flink:xrWaitFrame.
+The runtime may: affect this computation by changing the return values of flink:xrWaitFrame in response to feedback from frame submission and completion times in flink:xrEndFrame.
+This results in a consistent predicted display time at every stage in the engine pipeline without being affected by oscillation in a deep threaded pipeline.
+Note that, if the application has multiple pipeline stages, the application must: pass the predicted display time through its pipeline, as flink:xrWaitFrame should: not be called more than once per frame.
+However, the runtime should: be robust against variations in the timing of calls to flink:xrWaitFrame, since a pipelined system may: call flink:xrWaitFrame on a separate thread from flink:xrBeginFrame and flink:xrEndFrame without any synchronization guarantees.
+
+An accurate predicted display time is very important to avoid black pull-in by reprojection and to reduce motion judder in case the runtime does not implement a translational reprojection.
+Reprojection should: never display images before the display refresh period they were predicted for, even if they are completed early, because this will cause motion judder just the same.
+In other words, the better the predicted display time, the less latency experienced by the user.
+The engine simulation also needs to advance based on the time it will be displayed.
+Every stage in the engine pipeline should: use the exact same predicted display time for one particular frame.
+An accurate and consistent predicted display time across all stages and threads in the engine pipeline is important to avoid object motion judder.
+
+[[frame-waiting]]
+=== Frame Waiting
+
+An application synchronizes its rendering loop to the compositor by calling flink:xrWaitFrame.
+
+[open,refpage='xrWaitFrame',desc='Frame timing function',type='protos',xrefs='xrBeginFrame xrEndFrame XrFrameWaitInfo XrFrameState']
+--
+The flink:xrWaitFrame function is defined as:
+
+include::../../generated/api/protos/xrWaitFrame.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:frameWaitInfo is a pointer to a valid slink:XrFrameWaitInfo.
+* pname:frameState is a pointer to a valid slink:XrFrameState, an output parameter.
+****
+
+If a frame submitted to flink:xrEndFrame is consumed by the compositor before its target
+display time, a subsequent call to flink:xrWaitFrame must: block the caller until the start of
+the next rendering interval after the frame's target display time as determined by the runtime.
+
+If a frame submitted to flink:xrEndFrame misses its target display time, a subsequent call to
+flink:xrWaitFrame must: block the caller until that frame is consumed by the compositor, at
+which point it must: return immediately.
+
+If no frame has been submitted to flink:xrEndFrame since any prior call to flink:xrWaitFrame,
+a subsequent call to flink:xrWaitFrame must: block the caller until the start of the next rendering
+interval time as determined by the runtime.
+
+The runtime may: dynamically adjust the start time of the rendering interval
+relative to the display hardware's refresh cycle to minimize graphics processor
+contention between the application and the compositor.
+
+flink:xrWaitFrame must: be callable from any thread, including a different thread than
+flink:xrBeginFrame/flink:xrEndFrame are being called from.
+
+Calling flink:xrWaitFrame must: be externally synchronized by the application, concurrent calls
+may: result in undefined behavior.
+
+The runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING if pname:session is not in the ename:XR_SESSION_STATE_RUNNING,
+ename:XR_SESSION_STATE_VISIBLE or ename:XR_SESSION_STATE_FOCUSED elink:XrSessionState.
+
+include::../../generated/validity/protos/xrWaitFrame.txt[]
+--
+
+[open,refpage='XrFrameWaitInfo',desc='Wait frame information structure',type='structs',xrefs='xrWaitFrame XrFrameState']
+--
+
+The slink:XrFrameWaitInfo structure is defined as:
+include::../../generated/api/structs/XrFrameWaitInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+Because this structure only exists to support extension-specific structures,
+flink:xrWaitFrame will accept a code:NULL argument for
+pname:frameWaitInfo for applications that are not using any relevant
+extensions.
+
+include::../../generated/validity/structs/XrFrameWaitInfo.txt[]
+--
+
+[open,refpage='XrFrameState',desc='Frame prediction structure',type='structs',xrefs='xrWaitFrame XrFrameWaitInfo']
+--
+
+The slink:XrFrameState structure is defined as:
+include::../../generated/api/structs/XrFrameState.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:predictedDisplayTime is the anticipated display basetype:XrTime for the next application-generated frame.
+* pname:predictedDisplayPeriod is the basetype:XrDuration of the display period for the next application-generated frame,
+  for use in predicting display times beyond the next one.
+****
+
+slink:XrFrameState describes the time at which the next frame submitted to flink:xrEndFrame will be displayed to the user.
+pname:predictedDisplayTime must: refer to the midpoint of the interval during which the frame is displayed.
+The runtime may: report a different pname:predictedDisplayPeriod from the hardware's refresh cycle when interpolating
+submitted frames.
+
+include::../../generated/validity/structs/XrFrameState.txt[]
+--
+
+[[frame-submission]]
+=== Frame Submission
+
+Every application must: call flink:xrBeginFrame before calling flink:xrEndFrame, and should: call flink:xrEndFrame before calling flink:xrBeginFrame again.
+Calling flink:xrEndFrame again without a prior call toflink:xrBeginFrame will result in ename:XR_ERROR_CALL_ORDER_INVALID being returned by flink:xrEndFrame.
+An application may: call flink:xrBeginFrame again if the prior flink:xrEndFrame fails or if the application wishes to discard an in-progress frame.
+Calling flink:xrBeginFrame again with no intervening flink:xrEndFrame call will result in the success code ename:XR_FRAME_DISCARDED being returned from flink:xrBeginFrame.
+In this case it is assumed that the flink:xrBeginFrame refers to the next frame and the previously begun frame is forfeited by the application.
+Applications should: call flink:xrBeginFrame right before executing any graphics device work for a given frame, as opposed to calling it afterwards.
+The runtime must: only compose frames whose flink:xrBeginFrame and flink:xrEndFrame both return success codes.
+While flink:xrBeginFrame and flink:xrEndFrame do not need to be called on the
+same thread, the application must: handle synchronization if they are called on
+separate threads.
+
+[open,refpage='xrBeginFrame',desc='Marks a frame's beginning',type='protos',xrefs='xrEndFrame xrWaitFrame XrFrameBeginInfo']
+--
+The flink:xrBeginFrame function is defined as:
+
+include::../../generated/api/protos/xrBeginFrame.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:frameBeginInfo is code:NULL or a pointer to a valid
+  slink:XrFrameBeginInfo.
+****
+
+flink:xrBeginFrame is called prior to the the start of frame rendering.
+
+The runtime must: return the success code ename:XR_FRAME_DISCARDED if a prior flink:xrBeginFrame has been called without an
+intervening call to flink:xrEndFrame.
+
+The runtime may: return the success code ename:XR_SESSION_VISIBILITY_UNAVAILABLE if it determines that the current frame
+will not be visible. In this case the application may: elect to omit rendering work for the frame, but should: still call flink:xrEndFrame.
+
+The runtime must: consider the frame in-progress and ready for an flink:xrEndFrame call if a success code is returned.
+
+The runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING if pname:session is not in the ename:XR_SESSION_STATE_RUNNING,
+ename:XR_SESSION_STATE_VISIBLE or ename:XR_SESSION_STATE_FOCUSED elink:XrSessionState.
+
+include::../../generated/validity/protos/xrBeginFrame.txt[]
+--
+
+[open,refpage='XrFrameBeginInfo',desc='Begin frame information',type='structs',xrefs='xrWaitFrame xrBeginFrame']
+--
+
+The slink:XrFrameBeginInfo structure is defined as:
+include::../../generated/api/structs/XrFrameBeginInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+Because this structure only exists to support extension-specific structures,
+flink:xrBeginFrame will accept a code:NULL argument for
+pname:frameBeginInfo for applications that are not using any relevant
+extensions.
+
+include::../../generated/validity/structs/XrFrameBeginInfo.txt[]
+--
+
+[open,refpage='xrEndFrame',desc='Marks a frame's end',type='protos',xrefs='xrBeginFrame xrWaitFrame XrFrameEndInfo']
+--
+The flink:xrEndFrame function is defined as:
+
+include::../../generated/api/protos/xrEndFrame.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:frameEndInfo is a pointer to a valid slink:XrFrameEndInfo.
+****
+
+Every call to flink:xrEndFrame must: be preceded by a successful call to flink:xrBeginFrame.
+Failure to do so will result in ename:XR_ERROR_CALL_ORDER_INVALID being returned by flink:xrEndFrame.
+slink:XrFrameEndInfo may: reference swapchains into which the application has rendered for this frame.
+From each slink:XrSwapchain only one image index is implicitly referenced per frame, the one corresponding to the last call to flink:xrReleaseSwapchainImage.
+However, a specific swapchain (and by extension a specific swapchain image index) may: be referenced in slink:XrFrameEndInfo multiple times.
+This can be used for example to render a side by side image into a single swapchain image and referencing it twice with differing image rectangles in different layers.
+
+ename:XR_ERROR_LAYER_INVALID will be returned if an unknown or unsupported layer type is passed as one of the slink:XrFrameEndInfo::layers.
+
+ename:XR_ERROR_LAYER_LIMIT_EXCEEDED will be returned if slink:XrFrameEndInfo::layerCount exceeds slink:XrSystemGraphicsProperties::maxLayerCount
+or if the runtime is unable to composite the specified layers due to resource constraints.
+
+ename:XR_ERROR_SWAPCHAIN_RECT_INVALID will be returned if slink:XrFrameEndInfo::layers contains a composition layer which references pixels outside
+of the associated swapchain image.
+
+ename:XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED will be returned if slink:XrFrameEndInfo::environmentBlendMode is not supported.
+
+The runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING if pname:session is not in the ename:XR_SESSION_STATE_RUNNING,
+ename:XR_SESSION_STATE_VISIBLE or ename:XR_SESSION_STATE_FOCUSED elink:XrSessionState.
+
+The runtime must: return ename:XR_ERROR_POSE_INVALID if any pose
+passed in slink:XrFrameEndInfo contains non-unit quaternions.
+
+include::../../generated/validity/protos/xrEndFrame.txt[]
+--
+
+[open,refpage='XrFrameEndInfo',desc='End frame information',type='structs',xrefs='xrEndFrame']
+--
+
+The slink:XrFrameEndInfo structure is defined as:
+include::../../generated/api/structs/XrFrameEndInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:displayTime is the basetype:XrTime at which this frame should: be displayed.
+* pname:environmentBlendMode is the elink:XrEnvironmentBlendMode value representing the desired <<environment_blend_mode, environment blend mode>> for this frame.
+* pname:layerCount is the number of composition layers in this frame.
+  The maximum supported layer count is identified by slink:XrSystemGraphicsProperties::maxLayerCount.
+  If layerCount is greater than the maximum supported layer count then ename:XR_ERROR_LAYER_LIMIT_EXCEEDED is returned.
+  The runtime must: support at least ename:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
+* pname:layers is a pointer to an array of slink:XrCompositionLayerBaseHeader
+pointers.
+****
+
+include::../../generated/validity/structs/XrFrameEndInfo.txt[]
+--
+
+
+All layers submitted to flink:xrEndFrame will be presented to the primary view configuration of the running session
+unless otherwise specified by extension functionality.
+
+[[frame-rate]]
+==== Frame Rate
+
+For every application-generated frame, the application may: call flink:xrEndFrame to submit the application-generated composition layers.
+In addition, the application must: call flink:xrWaitFrame when the application is ready to begin preparing the next set of frame layers.
+flink:xrEndFrame may return immediately to the application, but flink:xrWaitFrame will block for an amount of time that depends on throttling of the application by the runtime.
+The earliest the runtime will return from flink:xrWaitFrame is when it determines that the application should: start drawing the next frame.
+
+[[compositing]]
+==== Compositing
+
+Composition layers are submitted by the application via the flink:xrEndFrame call.
+All composition layers to be drawn must: be submitted with every flink:xrEndFrame call.
+A layer that is omitted in this call will not be drawn by the runtime layer compositor.
+All views associated with projection layers must: be supplied or
+ename:XR_ERROR_VALIDATION_FAILURE will be returned by flink:xrEndFrame.
+
+Composition layers are drawn in the same order as they are specified in via slink:XrFrameEndInfo,
+with the 0th layer drawn first.
+Layers are drawn with a "painter's algorithm," with each successive layer potentially overwriting
+the destination layers whether or not the new layers are virtually closer to the viewer.
+
+[[composition-layer-flags]]
+==== Composition Layer Flags
+
+[open,refpage='XrCompositionLayerFlags',desc='Composition layer flags',type='flags',xrefs='XrCompositionLayerProjection XrCompositionLayerQuad']
+--
+
+The elink:XrCompositionLayerFlagBits bitfield is specified as:
+include::../../generated/api/enums/XrCompositionLayerFlagBits.txt[]
+
+elink:XrCompositionLayerFlags specify options for individual composition layers.
+
+.Flag Descriptions
+****
+* ename:XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT enables optical chromatic aberration correction for the layer when not done by default.
+* ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT enables the layer's texture alpha channel.
+****
+--
+
+[[composition-layer-blending]]
+==== Composition Layer Blending
+
+All types of composition layers are subject to blending with other layers.
+Blending of layers can be controlled by layer per-texel source alpha.
+Destination alpha is not supported.
+Layer swapchain textures may contain an alpha channel, depending on the image format.
+If a submitted swapchain's texture format includes an alpha channel, and if the
+ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT is enabled, then the layer composition uses
+the alpha channel to modulate the blending of the swapchain texture against the destination.
+Swapchain texture color channels must be encoded with premultiplied alpha.
+If the ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT is enabled and the swapchain texture
+has no alpha channel then the bit is effectively ignored and the texture is treated as if it is
+opaque (has alpha channel values of one).
+If the ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT is not enabled, then the swapchain
+texture is treated as if each texel has an alpha value of 1, regardless of the presence of a texture
+swapchain alpha.
+Texture color and alpha channels are clamped to a range of [eq]#[0.0, 1.0]# as input to the blending operation.
+
+The blending operation between the source and destination is an addition.
+The blending factor for the source texture color and alpha channels is one [eq]#(1, 1, 1, 1)#.
+The blending factor for the destination texture color and alpha channels is one minus source
+alpha (1-SRC_ALPHA). The result is:
+
+```
+Destination red   = (source red   + (destination red   * (1 - source alpha))
+Destination green = (source green + (destination green * (1 - source alpha))
+Destination blue  = (source blue  + (destination blue  * (1 - source alpha))
+```
+
+Textures that use color encoding other than RGB (e.g. YUV) are blended in a way equivalent to if
+the encoding was converted to RGB.
+
+[[composition-layer-behavior]]
+==== Composition Layer Behavior
+
+The behavior of flink:xrEndFrame with respect to layers includes the
+following behavior, evaluated in the order given:
+
+* flink:xrEndFrame with a layer count of 0 results in a return of ename:XR_SUCCESS and the VR display cleared.
+* flink:xrEndFrame with a layer count greater than slink:XrSystemGraphicsProperties::maxLayerCount results in a return of ename:XR_ERROR_LAYER_LIMIT_EXCEEDED.
+* flink:xrEndFrame with any code:NULL pointer to slink:XrCompositionLayerBaseHeader layer entries is invalid and results in a return of ename:XR_ERROR_LAYER_INVALID.
+* flink:xrEndFrame with any code:NULL image is invalid and results in a return of ename:XR_ERROR_HANDLE_INVALID.
+* flink:xrEndFrame with an empty layer pname:imageRect results in ename:XR_SUCCESS but nothing drawn.
+* flink:xrEndFrame with a negatively sized pname:imageRect results in ename:XR_ERROR_SWAPCHAIN_RECT_INVALID.
+
+
+[[composition-layer-types]]
+==== Composition Layer Types
+
+Composition layers allow an application to offload the composition of the
+final image to a runtime-supplied compositor. This reduces the application's
+rendering complexity since details such as frame-rate interpolation and
+distortion correction can be performed by the runtime. The core specification
+defines slink:XrCompositionLayerProjection and slink:XrCompositionLayerQuad
+layer types.
+
+The projection layer type represents planar projected images rendered
+from the eye point of each eye using a perspective projection.
+This layer type is typically use to render the virtual world from
+the user's perspective.
+
+The quad layer type describes a posable planar rectangle
+in the virtual world for displaying two-dimensional content.
+Quad layers can subtend a smaller portion of the display's field of view,
+allowing a better match between the resolutions of the slink:XrSwapchain image
+and footprint of that image in the final composition. This improves
+legibility for user interface elements or heads-up displays and allows
+optimal sampling during any composition distortion corrections the runtime might
+employ.
+
+The classes below describe the layer types in the layer composition system.
+
+[open,refpage='XrCompositionLayerBaseHeader',desc='Composition layer base header',type='structs',xrefs='XrFrameEndInfo XrSwapchainSubImage']
+--
+
+The slink:XrCompositionLayerBaseHeader structure is defined as:
+include::../../generated/api/structs/XrCompositionLayerBaseHeader.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits describing flags to apply to the layer.
+* pname:space is the slink:XrSpace in which the layer will be kept stable over time.
+****
+
+All composition layer structures begin with the elements described in the
+slink:XrCompositionLayerBaseHeader.
+The slink:XrCompositionLayerBaseHeader struct is not intended to be
+directly used, but forms a basis for defining current and future
+structures containing composition layer information.
+The slink:XrFrameEndInfo structure contains an array of
+pointers to these polymorphic header structures. All composition
+layer type pointers must: be type-castable as
+an slink:XrCompositionLayerBaseHeader pointer.
+
+include::../../generated/validity/structs/XrCompositionLayerBaseHeader.txt[]
+--
+
+Many composition layer structures also contain one or more references to generic
+layer data stored in an slink:XrSwapchainSubImage structure.
+
+[open,refpage='XrSwapchainSubImage',desc='Composition layer data',type='structs',xrefs='XrFrameEndInfo']
+--
+
+The slink:XrSwapchainSubImage structure is defined as:
+include::../../generated/api/structs/XrSwapchainSubImage.txt[]
+
+.Member Descriptions
+****
+* pname:swapchain is the slink:XrSwapchain to be displayed.
+* pname:imageRect is an slink:XrRect2Di representing the valid portion of the image to use, in pixels. Note that the compositor may: bleed in pixels from outside the bounds in some cases, for instance due to mipmapping.
+* pname:imageArrayIndex is the image array index, with 0 meaning the first or only array element.
+****
+
+include::../../generated/validity/structs/XrSwapchainSubImage.txt[]
+--
+
+[[projection-composition]]
+===== Projection Composition
+
+The slink:XrCompositionLayerProjection layer represents planar projected images rendered from the eye point of each eye using a standard perspective projection.
+
+[open,refpage='XrCompositionLayerProjection',desc='Composition layer for projection',type='structs',xrefs='XrCompositionLayerBaseHeader XrSwapchainSubImage XrCompositionLayerProjectionView']
+--
+
+The slink:XrCompositionLayerProjection structure is defined as:
+include::../../generated/api/structs/XrCompositionLayerProjection.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits describing flags to apply to the layer.
+* pname:space is the slink:XrSpace in which the pname:pose of each slink:XrCompositionLayerProjectionView is evaluated over time.
+* pname:viewCount is the count of views in the pname:views array.
+  This must: be equal to the number of view poses returned by flink:xrLocateViews.
+* pname:views is the array of type slink:XrCompositionLayerProjectionView
+  containing each projection layer view.
+****
+
+[NOTE]
+.Note
+====
+Because a runtime may reproject the layer over time, a projection layer should specify an slink:XrSpace in which to maximize stability
+of the layer content.
+For example, a projection layer containing world-locked content should use a slink:XrSpace which is also world-locked, such as the `LOCAL` or `STAGE` reference spaces.
+In the case that the projection layer should be head-locked, such as a heads up display, the `VIEW` reference space would provide the highest quality layer reprojection.
+====
+
+include::../../generated/validity/structs/XrCompositionLayerProjection.txt[]
+--
+
+
+[open,refpage='XrCompositionLayerProjectionView',desc='Projection layer element',type='structs',xrefs='XrCompositionLayerProjection']
+--
+
+The slink:XrCompositionLayerProjectionView structure is defined as:
+include::../../generated/api/structs/XrCompositionLayerProjectionView.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:pose is an slink:XrPosef defining the location and orientation of this projection element in the pname:space of the corresponding slink:XrCompositionLayerProjectionView. 
+* pname:fov is the slink:XrFovf for this projection element.
+* pname:subImage is the image layer slink:XrSwapchainSubImage to use.
+****
+
+The count and order of view poses submitted with slink:XrCompositionLayerProjection
+must: be the same order as that returned by flink:xrLocateViews.
+The slink:XrCompositionLayerProjectionView::pname:pose and
+slink:XrCompositionLayerProjectionView::pname:fov
+should: almost always derive from slink:XrView::pname:pose and
+slink:XrView::pname:fov as found in the
+flink:xrLocateViews::pname:views array.
+However, applications may: submit an slink:XrCompositionLayerProjectionView
+which has a different view or FOV than that from flink:xrLocateViews.
+In this case, the runtime will map the view and FOV to the system display appropriately.
+In the case that two submitted views within a single layer overlap, they are composited in view array order.
+In the case that submitted projection layers overlap, they are composited in layer array order.
+
+include::../../generated/validity/structs/XrCompositionLayerProjectionView.txt[]
+--
+
+[[quad-layer-composition]]
+===== Quad Layer Composition
+
+[open,refpage='XrCompositionLayerQuad',desc='Quad composition layer',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+
+The slink:XrCompositionLayerQuad structure defined as:
+include::../../generated/api/structs/XrCompositionLayerQuad.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits describing flags to apply to the layer.
+* pname:space is the slink:XrSpace in which the pname:pose of the quad layer is evaluated over time.
+* pname:eyeVisibility is the elink:XrEyeVisibility for this layer.
+* pname:subImage is the image layer slink:XrSwapchainSubImage to use.
+* pname:pose is an slink:XrPosef defining the position and orientation of the quad in the reference frame of the pname:space.
+* pname:size is the x and y size of the quad.
+****
+
+The slink:XrCompositionLayerQuad layer is useful for user interface elements or 2D content
+rendered into the virtual world.
+The layer's slink:XrSwapchainSubImage::swapchain image is applied to a quad in the virtual world space.
+Only front face of the quad surface is visible; the back face is not visible and must: not be drawn by the runtime.
+A quad layer has no thickness; it is a two-dimensional object positioned and oriented in 3D space.
+The position of a quad refers to the center of the quad within the given slink:XrSpace.
+The orientation of the quad refers to the orientation of the normal vector from the front face.
+The size of a quad refers to the quad's size in the [eq]#x-y# plane of the given slink:XrSpace's coordinate system.
+A quad with a position of {0,0,0}, rotation of {0,0,0,1} (no rotation), and a size of {1,1} refers
+to a 1 meter x 1 meter quad centered at {0,0,0} with its front face normal vector coinciding with the +z axis.
+
+include::../../generated/validity/structs/XrCompositionLayerQuad.txt[]
+--
+
+
+[open,refpage='XrEyeVisibility',desc='Eye visibility selector',type='enums',xrefs='XrCompositionLayerQuad']
+--
+The elink:XrEyeVisibility enum selects which of the viewer's eyes to display a layer to:
+
+include::../../generated/api/enums/XrEyeVisibility.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_EYE_VISIBILITY_BOTH displays the layer to both eyes.
+* ename:XR_EYE_VISIBILITY_LEFT displays the layer to the viewer's physical left eye.
+* ename:XR_EYE_VISIBILITY_RIGHT displays the layer to the viewer's physical right eye.
+****
+--
+
+
+[[environment_blend_mode]]
+==== Environment Blend Mode
+
+After the compositor has blended and flattened all layers (including any layers added by the runtime itself), it will then present this image to the system's display.
+The composited image will then blend with the user's view of the physical world behind the displays in one of three modes,
+based on the application's chosen **environment blend mode**.
+VR applications will generally choose the ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE blend mode,
+while AR applications will generally choose either the ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE or ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND mode.
+
+Applications select their environment blend mode each frame as part of their call to flink:xrEndFrame.
+The application can inspect the set of supported environment blend modes for
+a given system using flink:xrEnumerateEnvironmentBlendModes, and prepare their assets and rendering techniques differently based on the blend mode they choose.  For example, a
+black shadow rendered using the ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE blend mode will appear transparent, and so an app in that mode may: render a glow as a grounding effect
+around the black shadow to ensure the shadow can be seen.
+Similarly, an app designed for ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE rendering may: choose to leave garbage in their
+alpha channel as a side effect of a rendering optimization, but this garbage would appear as visible display artifacts if the environment blend mode was instead
+ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND.
+
+Not all systems will support all environment blend modes.
+For example, a VR headset may not support the ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE or
+ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes unless it has video passthrough, while an AR headset with an additive display may not support the the
+ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE or ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes.
+
+For devices that can support multiple environment blend modes, such as AR phones with video passthrough, the runtime may: optimize power consumption on the device in response to the
+environment blend mode that the app chooses each frame.
+For example, if an app on a video passthrough phone knows that it is currently rendering a 360-degree background covering all
+screen pixels, it can submit frames with an environment blend mode of ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE, saving the runtime the cost of compositing a camera-based underlay of
+the physical world behind the app's layers.
+
+
+[open,refpage='xrEnumerateEnvironmentBlendModes',desc='Lists environment blend modes',type='protos',xrefs='XrEnvironmentBlendMode']
+--
+The flink:xrEnumerateEnvironmentBlendModes function is defined as follows.
+
+include::../../generated/api/protos/xrEnumerateEnvironmentBlendModes.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:systemId is the basetype:XrSystemId whose environment blend modes will be enumerated.
+* pname:environmentBlendModeCapacityInput is the capacity of the pname:environmentBlendModes array, or 0 to indicate a request to retrieve the required capacity.
+* pname:environmentBlendModeCountOutput is a pointer to the count of pname:environmentBlendModes written, or a pointer to the required capacity in the case that pname:environmentBlendModeCapacityInput is 0.
+* pname:environmentBlendModes is a pointer to an array of elink:XrEnvironmentBlendMode values, but can: be code:NULL if pname:environmentBlendModeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:environmentBlendModes size.
+****
+
+Enumerates the set of environment blend modes that this runtime supports for a given system.
+
+include::../../generated/validity/protos/xrEnumerateEnvironmentBlendModes.txt[]
+--
+
+
+[open,refpage='XrEnvironmentBlendMode',desc='Environment blend modes',type='enums',xrefs='xrEnumerateEnvironmentBlendModes XrFrameEndInfo']
+--
+
+The possible blend modes are specified by the elink:XrEnvironmentBlendMode enumeration:
+include::../../generated/api/enums/XrEnvironmentBlendMode.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE. The composition layers will be displayed with no view of the physical world behind them.  The composited image will be interpreted as an RGB image, ignoring the composited alpha channel.  This is the typical mode for VR experiences, although this mode can also be supported on devices that support video passthrough.
+* ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE. The composition layers will be additively blended with the real world behind the display.  The composited image will be interpreted as an RGB image, ignoring the composited alpha channel during the additive blending.  This will cause black composited pixels to appear transparent.  This is the typical mode for an AR experience on a see-through headset with an additive display, although this mode can also be supported on devices that support video passthrough.
+* ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND. The composition layers will be alpha-blended with the real world behind the display.  The composited image will be interpreted as an RGBA image, with the composited alpha channel determining each pixel's level of blending with the real world behind the display.  This is the typical mode for an AR experience on a phone or headset that supports video passthrough.
+****
+--

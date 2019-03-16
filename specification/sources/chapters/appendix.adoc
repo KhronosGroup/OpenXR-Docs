@@ -1,0 +1,577 @@
+[[appendix]]
+== Appendix
+
+
+[[code-style-conventions]]
+=== Code Style Conventions
+
+These are the code style conventions used in this
+specification to define the API.
+
+.Conventions
+****
+* Enumerants and defines are all upper case with words separated by an
+  underscore.
+* Neither type, function or member names contain underscores.
+* Structure members start with a lower case character and each
+  consecutive word starts with a capital.
+* A structure that has a pointer to an array includes a structure
+  member named pname:fooCount of type
+  code:uint32_t to denote the number of elements in the array of pname:foo.
+* A structure that has a pointer to an array lists the pname:fooCount
+  member first and then the array pointer.
+* Unless a negative value has a clearly defined meaning all pname:fooCount
+  variables are unsigned.
+* Function parameters that are modified are always listed last.
+****
+
+Prefixes are used in the API to denote specific semantic meaning of
+names, or as a label to avoid name clashes, and are explained here:
+
+[cols=",",options="header",]
+|===================================================================
+|Prefix   |Description
+|`XR_`    |Enumerants and defines are prefixed with these characters.
+|`Xr`     |Non-function-pointer types are prefixed with these characters.
+|`xr`     |Functions are prefixed with these characters.
+|`PFN_xr` | Function pointer types are prefixed with these characters.
+|===================================================================
+
+
+[[applicationbinaryinterface]]
+=== Application Binary Interface
+This section describes additional definitions and conventions that
+define the application binary interface.
+
+
+[[structure-types]]
+==== Structure Types
+
+
+[open,refpage='XrStructureType',type='enums',desc='Values for type members of structs']
+--
+include::../../generated/api/enums/XrStructureType.txt[]
+
+Most structures containing pname:type members have a value of pname:type
+matching the type of the structure, as described more fully in
+<<valid-usage-for-structure-types,Valid Usage for Structure Types>>.
+
+Note that all extension enums begin at the extension
+enum base of [eq]#1^10^# (base 10).
+Each extension is assigned a block of 1000 enums,
+starting at the enum base and arranged by the extension's index.
+--
+
+For example, if an extension with index 5 wants to use an enum value of 3,
+the final enum is computed by:
+
+[eq]#enum = enum_base + (enum_index - 1) * 1000 + enum_value#
+[eq]#1000004003 = 1000000000 + 4 * 1000 + 3#
+
+
+[[flag-types]]
+==== Flag Types
+
+Flag types are all bitmasks aliasing the base type basetype:XrFlags64 and with
+corresponding bit flag types defining the valid bits for that flag, as
+described in Valid Usage for Flags. Flag types supported by the API include:
+
+include::../../generated/api/flags/XrCompositionLayerFlags.txt[]
+include::../../generated/api/flags/XrInputSourceLocalizedNameFlags.txt[]
+include::../../generated/api/flags/XrInstanceCreateFlags.txt[]
+include::../../generated/api/flags/XrSessionCreateFlags.txt[]
+include::../../generated/api/flags/XrSpaceRelationFlags.txt[]
+include::../../generated/api/flags/XrSwapchainCreateFlags.txt[]
+include::../../generated/api/flags/XrSwapchainUsageFlags.txt[]
+include::../../generated/api/flags/XrViewStateFlags.txt[]
+
+
+[[general-macro-definitions]]
+==== General Macro Definitions
+
+This API is defined in C and uses "C" linkage.
+The `openxr.h` header file is opened with:
+
+[source,C]
+----
+#ifdef __cplusplus
+extern "C" {
+#endif
+----
+
+and closed with:
+
+[source,C]
+#ifdef __cplusplus
+}
+#endif
+
+The supplied `openxr.h` header defines a
+small number of C preprocessor macros that are described below.
+
+[[appendix-version-number-macros]]
+===== Version Number Macros
+
+Two version numbers are defined in `openxr.h`.
+Each is packed into a 32-bit integer as described in
+<<appendix-api-version-number-macros,API Version Number Function-like Macros>>.
+
+
+[open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION XR_HEADER_VERSION']
+--
+include::../../generated/api/defines/XR_CURRENT_API_VERSION.txt[]
+
+dlink:XR_CURRENT_API_VERSION is the current version of the OpenXR API.
+--
+
+
+[open,refpage='XR_HEADER_VERSION',type='defines',desc='Version of the OpenXR header',xrefs='XR_MAKE_VERSION XR_CURRENT_API_VERSION']
+--
+include::../../generated/api/defines/XR_HEADER_VERSION.txt[]
+
+dlink:XR_HEADER_VERSION is the version number of the `openxr.h` header.
+This value is currently kept synchronized with the release number of the
+Specification. However, it is not guaranteed to remain synchronized,
+since most Specification updates have no effect on `openxr.h`.
+--
+
+
+[[appendix-api-version-number-macros]]
+===== API Version Number Function-like Macros
+
+API Version Numbers are three components, packed into a single 32-bit integer.
+The following macros manipulate version components and packed version numbers.
+
+
+[open,refpage='XR_MAKE_VERSION',type='defines',desc='Packs a three-component version number into a packed version number integer',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_VERSION_PATCH XR_CURRENT_API_VERSION']
+--
+include::../../generated/api/defines/XR_MAKE_VERSION.txt[]
+
+.Parameter Descriptions
+****
+* pname:major is the major version number.
+* pname:minor is the minor version number.
+* pname:patch is the patch version number.
+****
+
+dlink:XR_MAKE_VERSION constructs a packed 32-bit integer API version number from three components.
+The format used is described in
+<<api-version-numbers-and-semantics,API Version Numbers and Semantics>>.
+
+This macro can: be used when constructing the
+slink:XrApplicationInfo::pname:apiVersion parameter passed to flink:xrCreateInstance.
+--
+
+
+[open,refpage='XR_VERSION_MAJOR',type='defines',desc='Extracts the major version number from a packed version number',xrefs='XR_VERSION_MINOR XR_VERSION_PATCH XR_MAKE_VERSION']
+--
+include::../../generated/api/defines/XR_VERSION_MAJOR.txt[]
+
+.Parameter Descriptions
+****
+* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+****
+
+dlink:XR_VERSION_MAJOR extracts the API major version number from a packed
+version number.
+--
+
+
+[open,refpage='XR_VERSION_MINOR',type='defines',desc='Extracts the minor version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_PATCH XR_CURRENT_API_VERSION XR_MAKE_VERSION']
+--
+include::../../generated/api/defines/XR_VERSION_MINOR.txt[]
+
+.Parameter Descriptions
+****
+* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+****
+
+dlink:XR_VERSION_MINOR extracts the API minor version number from a packed
+version number.
+--
+
+
+[open,refpage='XR_VERSION_PATCH',type='defines',desc='Extracts the patch version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_CURRENT_API_VERSION XR_MAKE_VERSION']
+--
+include::../../generated/api/defines/XR_VERSION_PATCH.txt[]
+
+.Parameter Descriptions
+****
+* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+****
+
+dlink:XR_VERSION_PATCH extracts the API patch version number from a packed
+version number.
+--
+
+
+
+[[handle-macros]]
+===== Handle and Atom Macros
+
+[open,refpage='XR_DEFINE_HANDLE',desc='Macro to define a handle type',type='defines',xrefs='XR_NULL_HANDLE']
+--
+include::../../generated/api/defines/XR_DEFINE_HANDLE.txt[]
+
+.Parameter Descriptions
+****
+* object is the name of the resulting C type.
+****
+
+dlink:XR_DEFINE_HANDLE defines a handle type, which is an opaque 64 bit value,
+which may: be implemented as an opaque, distinct pointer type on platforms
+with 64 bit pointers.
+
+For further details, see <<handles,Handles>>.
+--
+
+[open,refpage='XR_NULL_HANDLE',desc='Invalid handle value',type='defines',xrefs='XR_DEFINE_HANDLE']
+--
+include::../../generated/api/defines/XR_NULL_HANDLE.txt[]
+
+dlink:XR_NULL_HANDLE is a reserved value representing a non-valid object
+handle.
+It may: be passed to and returned from API functions only when
+specifically allowed.
+--
+
+
+[open,refpage='XR_DEFINE_ATOM',desc='Macro to define a atom type',type='defines',xrefs='XrPath XR_NULL_PATH XrSystemId XR_NULL_SYSTEM_ID']
+--
+include::../../generated/api/defines/XR_DEFINE_ATOM.txt[]
+
+.Parameter Descriptions
+****
+* object is the name of the resulting C type.
+****
+
+dlink:XR_DEFINE_ATOM defines an atom type, which is an opaque 64 bit integer.
+--
+
+[[platform-specific-macro-definitions]]
+==== Platform-Specific Macro Definitions
+
+Additional platform-specific macros and interfaces are defined using the
+included `openxr_platform.h` file. These macros are used to control
+platform-dependent behavior, and their exact definitions are under the
+control of specific platform implementations of the API.
+
+
+[[platform-specific-calling-conventions]]
+===== Platform-Specific Calling Conventions
+
+On many platforms the following macros are empty strings, causing
+platform- and compiler-specific default calling conventions to be used.
+
+[[XRAPI_ATTR]]
+dlink:XRAPI_ATTR is a macro placed before the return type of an API function
+declaration. This macro controls calling conventions for C++11 and
+GCC/Clang-style compilers.
+
+[[XRAPI_CALL]]
+dlink:XRAPI_CALL is a macro placed after the return type of an API function
+declaration. This macro controls calling conventions for MSVC-style
+compilers.
+
+[[XRAPI_PTR]]
+dlink:XRAPI_PTR is a macro placed between the ( and * in API function
+pointer declarations. This macro also controls calling conventions, and
+typically has the same definition as dlink:XRAPI_ATTR or dlink:XRAPI_CALL,
+depending on the compiler.
+
+Examples:
+
+Function declaration:
+[source,listing]
+----
+XRAPI_ATTR <return_type> XRAPI_CALL <function_name>(<function_parameters>);
+----
+
+Function pointer type declaration:
+[source,listing]
+----
+typedef <return_type> (XRAPI_PTR *PFN_<function_name>(<function_parameters>);
+----
+
+
+[[platform-specific-header-control]]
+===== Platform-Specific Header Control
+
+[[XR_NO_STDINT_H]]
+If the dlink:XR_NO_STDINT_H macro is defined by the application
+at compile time, before including any OpenXR header,
+extended integer types normally found in `<stdint.h>` and
+used by the OpenXR headers, such as code:uint8_t,
+must: also be defined (as `typedef` or with the preprocessor)
+before including any OpenXR header.
+Otherwise, `openxr.h` and related headers will not compile.
+If dlink:XR_NO_STDINT_H is not defined,
+the system-provided `<stdint.h>` is used to define these types.
+There is a fallback path for Microsoft Visual Studio version 2008
+and earlier versions (which lack this header)
+that is automatically activated as needed.
+
+
+[[graphics-api-header-control]]
+===== Graphics API Header Control
+
+[cols=",",options="header",]
+|==========================================
+|Compile Time Symbol |Graphics API Name
+|[[XR_USE_GRAPHICS_API_OPENGL]] `XR_USE_GRAPHICS_API_OPENGL` |OpenGL
+|[[XR_USE_GRAPHICS_API_OPENGL_ES]] `XR_USE_GRAPHICS_API_OPENGL_ES` |OpenGL ES
+|[[XR_USE_GRAPHICS_API_VULKAN]] `XR_USE_GRAPHICS_API_VULKAN` |Vulkan
+|[[XR_USE_GRAPHICS_API_D3D10]] `XR_USE_GRAPHICS_API_D3D10` |Direct3D 10.x
+|[[XR_USE_GRAPHICS_API_D3D11]] `XR_USE_GRAPHICS_API_D3D11` |Direct3D 11
+|[[XR_USE_GRAPHICS_API_D3D12]] `XR_USE_GRAPHICS_API_D3D12` |Direct3D 12
+|==========================================
+
+
+[[window-system-header-control]]
+===== Window System Header Control
+
+[cols=",",options="header",]
+|============================================
+|Compile Time Symbol |Window System Name
+|[[XR_USE_PLATFORM_WIN32]] `XR_USE_PLATFORM_WIN32` |Microsoft Windows
+|[[XR_USE_PLATFORM_XLIB]] `XR_USE_PLATFORM_XLIB` |X Window System Xlib
+|[[XR_USE_PLATFORM_XCB]] `XR_USE_PLATFORM_XCB` |X Window System Xcb
+|[[XR_USE_PLATFORM_WAYLAND]] `XR_USE_PLATFORM_WAYLAND` |Wayland
+|[[XR_USE_PLATFORM_ANDROID]] `XR_USE_PLATFORM_ANDROID` |Android Native
+|============================================
+
+
+[[glossary]]
+=== Glossary
+
+The terms defined in this section are used throughout this Specification.
+Capitalization is not significant for these definitions.
+
+[cols=",",options="header"]
+|=======================================================================
+|Term |Description
+|Application |The XR application which calls the OpenXR API to
+communicate with an OpenXR runtime.
+
+|Deprecated |A feature/extension is deprecated if it is no longer
+recommended as the correct or best way to achieve its intended purpose.
+Generally a newer feature/extension will have been created that solves
+the same problem - in cases where no newer alternative feature exists,
+justification should be provided.
+
+|Handle |An opaque integer or pointer value used to refer to an object.
+Each object type has a unique handle type.
+
+|Haptic |Haptic or kinesthetic communication recreates the sense of
+touch by applying forces, vibrations, or motions to the user.
+
+|In-Process |Something that executes in the application's process.
+
+|Instance |The top-level object, which represents the application's
+connection to the runtime. Represented by an slink:XrInstance object.
+
+|Normalized |A value that is interpreted as being in the range [eq]#[0,1]#,
+or a vector whose norm is in that range,
+as a result of being implicitly divided or scaled by some other value.
+
+|Out-Of-Process |Something that executes outside the application's
+process.
+
+// the leading a is to make asciidoctor process this with asciidoc element styles
+|Promoted
+    a|A feature is promoted if it is taken from an older extension and
+made available as part of a new core version of the API, or a newer extension
+that is considered to be either as widely supported or more so.
+A promoted feature may have minor differences from the original such as:
+
+* It may be renamed
+* A small number of non-intrusive parameters may have been added
+* The feature may be advertised differently by device features
+* The author ID suffixes will be changed or removed as appropriate
+
+|Required Extensions |Extensions that must be enabled alongside extensions
+dependent on them, or that must be enabled to use given hardware.
+
+|Runtime |The software which implements the OpenXR API and allows
+applications to interact with XR hardware.
+
+|Swapchain |A resource that represents a chain of images in device memory.
+Represented by an slink:XrSwapchain object.
+
+|Swapchain Image |Each element in a swapchain. Commonly these are simple
+formatted 2D images, but in other cases they may be array images.
+Represented by a structure related to slink:XrSwapchainImageBaseHeader.
+|=======================================================================
+
+[[abbreviations]]
+=== Abbreviations
+
+Abbreviations and acronyms are sometimes used in the API where they are
+considered clear and commonplace, and are defined here:
+
+[cols=",",options="header",]
+|======================================
+|Abbreviation |Description
+| API   | Application Programming Interface
+| AR    | Augmented Reality
+| ER    | Eye Relief
+| IAD   | Inter Axial Distance
+| IPD   | Inter Pupillary Distance
+| MR    | Mixed Reality
+| OS    | Operating System
+| TSG   | Technical Sub-Group.  A specialized sub-group within a Khronos Working Group (WG).
+| VR    | Virtual Reality
+| WG    | Working Group.  An organized group of people working to define/augment an API.
+| XR    | VR + AR + MR
+|======================================
+
+<<<
+[[dedication]]
+=== Dedication (Informative)
+
+In memory of Johannes van Waveren: a loving father, husband, son, brother,
+colleague, and dear friend.
+
+Johannes, known to his friends as "JP", had a great sense of humor, fierce
+loyalty, intense drive, a love of rainbow unicorns, and deep disdain for
+processed American cheese. Perhaps most distinguishing of all, though, was his
+love of technology and his extraordinary technical ability.
+
+JP's love of technology started at an early age --- instead of working on his
+homework, he built train sets, hovercrafts, and complex erector sets from
+scratch; fashioned a tool for grabbing loose change out of street grates; and
+played computer games. The passion for computer games continued at Delft
+University of Technology, where, armed with a T1 internet connection and sheer
+talent, he regularly destroyed his foes in arena matches without being seen,
+earning him the moniker "MrElusive". During this time, he wrote the Gladiator-bot
+AI, which earned him acclaim in the community and led directly to a job at
+the iconic American computer game company, id Software. From there, he quickly
+became an expert in every system he touched, contributing significantly to
+every facet of the technology: AI, path navigation, networking, skeletal
+animation, virtual texturing, advanced rendering, and physics. He became a master
+of all. He famously owned more lines of code than anyone else, but he was also
+a generous mentor, helping junior developers hone their skills and make their
+own contributions.
+
+When the chance to work in the VR industry arose, he saw it as an opportunity
+to help shape the future. Having never worked on VR hardware did not
+phase him; he quickly became a top expert in the field. Many of his
+contributions directly moved the industry forward, most recently his work on
+asynchronous timewarp and open-standards development.
+
+Time was not on his side. Even in his final days, JP worked tirelessly on
+the initial proposal for this specification. The treatments he had undergone
+took a tremendous physical toll, but he continued to work because of his love
+of technology, his dedication to the craft, and his desire to get OpenXR
+started on a solid footing.  His focus was unwavering.
+
+His proposal was unofficially adopted several days before his passing - and
+upon hearing, he mustered the energy for a smile. While it was his great dream
+to see this process through, he would be proud of the spirit of cooperation,
+passion, and dedication of the industry peers who took up the torch to drive
+this specification to completion.
+
+JP lived a life full of accomplishment, as evidenced by many publications,
+credits, awards, and nominations where you will find his name. A less obvious
+accomplishment --- but of equal importance --- is the influence he had on people
+through his passionate leadership. He strove for excellence in everything that
+he did. He was always excited to talk about technology and share the
+discoveries made while working through complex problems. He created excitement
+and interest around engineering and technical excellence. He was a mentor and
+teacher who inspired those who knew him and many continue to benefit from his
+hard work and generosity.
+
+JP was a rare gem; fantastically brilliant intellectually, but also warm,
+compassionate, generous, humble, and funny. Those of us lucky enough to have
+crossed paths with him knew what a privilege and great honor it was to know
+him. He is certainly missed.
+
+image::images/JP.jpg[align="center",pdfwidth="80%"]
+
+<<<
+[[credits]]
+=== Contributors (Informative)
+OpenXR is the result of contributions from
+many people and companies participating in the Khronos OpenXR Working Group.
+Members of the Working Group, including the company that they represented at the time of their
+most recent contribution, are listed below.
+
+==== Contributors to OpenXR 0.90 Provisional
+
+* Adam Gousetis, Google
+* Alex Turner, Microsoft
+* Andreas Loeve Selvik, Arm
+* Andres Rodriguez, Valve Software
+* Armelle Laine, Qualcomm Technologies, Inc
+* Blake Taylor, Magic Leap
+* Brad Grantham, Google
+* Brandon Jones, Google
+* Brent E. Insko, Intel
+* Brent Wilson, Microsoft
+* Bryce Hutchings, Microsoft
+* Cass Everitt, Facebook
+* Charles Egenbacher, Epic Games
+* Christoph Haag, Collabora
+* Craig Donner, Google
+* Dan Ginsburg, Valve Software
+* Dave Houlton, LunarG
+* Dave Shreiner, Unity Technologies
+* Denny Rönngren, Tobii
+* Dmitriy Vasilev, Samsung
+* Doug Twileager, ZSpace
+* Ed Hutchins, Facebook
+* Gloria Kennickell, Facebook
+* Gregory Greeby, AMD
+* Guodong Chen, Huawei
+* Jakob Bornecrantz, Collabora
+* Jared Cheshier, PlutoVR
+* Javier Martinez, Intel
+* Jeff Bellinghausen, Valve Software
+* Jiehua Guo, Huawei
+* Joe Ludwig, Valve Software
+* Johannes van Waveren, Facebook
+* Jon Leech, Khronos
+* Jonathan Wright, Facebook
+* Juan Wee, Samsung
+* Jules Blok, Epic Games
+* Karl Schultz, LunarG
+* Kaye Mason, Google
+* Krzysztof Kosiński, Google
+* Lachlan Ford, Microsoft
+* Lubosz Sarnecki, Collabora
+* Mark Young, LunarG
+* Martin Renschler, Qualcomm Technologies, Inc.
+* Matias Koskela, Tampere University of Technology
+* Matt Wash, Arm
+* Mattias Brand, Tobii
+* Mattias O. Karlsson, Tobii
+* Michael Gatson, Dell
+* Minmin Gong, Microsoft
+* Mitch Singer, AMD
+* Nell Waliczek, Microsoft
+* Nick Whiting, Epic Games
+* Nigel Williams, Sony
+* Paul Pedriana, Facebook
+* Peter Kuhn, Unity Technologies
+* Peter Peterson, HP Inc.
+* Pierre-Loup Griffais, Valve Software
+* Rajeev Gupta, Sony
+* Remi Arnaud, Starbreeze
+* Remy Zimmerman, Logitech
+* River Gillis, Google
+* Robert Memmott, Facebook
+* Robert Menzel, NVIDIA
+* Robert Simpson, Qualcomm Technologies, Inc.
+* Robin Bourianes, Starbreeze
+* Ryan Pavlik, Collabora
+* Ryan Vance, Epic Games
+* Sam Martin, Arm
+* Satish Salian, NVIDIA
+* Scott Flynn, Unity Technologies
+* Sophia Baldonado, PlutoVR
+* Sungye Kim, Intel
+* Tom Flynn, Samsung
+* Trevor F. Smith, Mozilla
+* Vivek Viswanathan, Dell
+* Yin Li, Microsoft
+* Yuval Boger, Sensics

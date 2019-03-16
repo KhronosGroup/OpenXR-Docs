@@ -1,0 +1,77 @@
+include::../meta/XR_KHR_composition_layer_equirect.adoc[]
+
+*Last Modified Date*::
+    2019-01-24
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Johannes van Waveren, Oculus +
+    Cass Everitt, Oculus +
+    Paul Pedriana, Oculus +
+    Gloria Kennickell, Oculus +
+    Martin Renschler, Qualcomm
+*Contacts*::
+    Cass Everitt, Oculus +
+    Paul Pedriana, Oculus
+
+*Overview*
+
+This extension adds an additional layer type where the XR runtime must map an equirectangular coded image stemming
+from a swapchain onto the inside of a sphere.
+
+The equirect layer type provides most of the same benefits as a cubemap, but from an equirect 2D image source. 
+This image source is appealing mostly because equirect environment maps are very common, and
+the highest quality you can get from them is by sampling them directly in the compositor.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_EQUIRECT_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrCompositionLayerEquirectKHR',desc='Equirectangular layer composition info',type='structs',xrefs='XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
+--
+The slink:XrCompositionLayerEquirectKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerEquirectKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerFlags specifies options for the layer.
+* pname:space is the slink:XrSpace in which the pname:pose of the equirect layer is evaluated over time.
+* pname:eye is the eye represented by this layer.
+* pname:subImage identifies the image slink:XrSwapchainSubImage to use.
+* pname:pose is an slink:XrPosef defining the position and orientation of the center point of the 
+view of the equirect layer within the reference frame of the pname:space.
+* pname:offset is an slink:XrOffset2Df indicating the center of projection for this swapchain.
+* pname:scale is an slink:XrVector2f indicating a scale of the texture coordinates after the mapping to 2D.
+* pname:bias is an slink:XrVector2f indicating a bias of the texture coordinates after the mapping to 2D.
+****
+
+slink:XrCompositionLayerEquirectKHR contains the information needed to render an equirectangular image onto a sphere when calling flink:xrEndFrame. slink:XrCompositionLayerEquirectKHR is an alias type for the base struct slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
+
+
+include::../../../../generated/validity/structs/XrCompositionLayerEquirectKHR.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-05-19 (Paul Pedriana)
+** Initial version. This was originally part of a single extension which supported multiple such extension layer types.
+* Revision 2, 2017-12-07 (Paul Pedriana)
+** Updated to use transform components instead of transform matrices.
+* Revision 3, 2019-01-24 (Martin Renschler)
+** Reformatted, spec language changes, eye parameter description update 

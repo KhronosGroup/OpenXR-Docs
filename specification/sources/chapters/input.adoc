@@ -1,0 +1,952 @@
+[[input]]
+== Input and Haptics
+
+=== Action Overview
+
+OpenXR applications communicate with input devices using XrActions.
+Actions are created at initialization time and later used to request input device state, create action spaces, or control haptic events.
+Input action handles represent 'actions' that the game is interested in obtaining the state of, not direct input device hardware.
+For example, instead of the application directly querying the state of the A button when interacting with a menu, an OpenXR application instead creates a actionname:menu_select action at startup then asks OpenXR for the state of the action.
+
+The application recommends that the action be assigned to a specific input source on the input device for
+a known <<semantic-path-interaction-profiles, interaction profile>>, but runtimes have the ability to choose a
+different control depending on user preference, input device availability, or any other reason.
+This abstraction ensures that applications can run on a wide variety of input hardware and maximize user accessibility.
+
+Example usage:
+
+[source,C]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+
+// Create an action set
+XrActionSetCreateInfo actionSetInfo = {0};
+actionSetInfo.type = XR_TYPE_ACTION_SET_CREATE_INFO;
+strcpy(actionSetInfo.actionSetName, "gameplay" );
+strcpy(actionSetInfo.localizedActionSetName, "Gameplay" );
+XrActionSet inGameActionSet;
+CHK_XR(xrCreateActionSet( session, &actionSetInfo, &inGameActionSet ));
+
+// create a "teleport" input action
+XrActionCreateInfo actioninfo = {0};
+actioninfo.type = XR_TYPE_ACTION_CREATE_INFO;
+strcpy(actioninfo.actionName, "teleport" );
+actioninfo.actionType = XR_INPUT_ACTION_TYPE_BOOLEAN;
+strcpy(actioninfo.localizedActionName, "Teleport" );
+
+XrAction teleportAction;
+CHK_XR(xrCreateAction( inGameActionSet, &actioninfo, &teleportAction ));
+
+// create a "player_hit" output action
+XrActionCreateInfo hapticsactioninfo = {0};
+hapticsactioninfo.type = XR_TYPE_ACTION_CREATE_INFO;
+strcpy(hapticsactioninfo.actionName, "player_hit" );
+hapticsactioninfo.actionType = XR_OUTPUT_ACTION_TYPE_VIBRATION;
+strcpy(hapticsactioninfo.localizedActionName, "Player hit" );
+
+XrAction hapticsAction;
+CHK_XR(xrCreateAction( inGameActionSet, &hapticsactioninfo, &hapticsAction ));
+
+XrPath triggerClickPath, hapticPath;
+CHK_XR(xrStringToPath( instance, "/user/hand/right/input/trigger/click", &triggerClickPath ));
+CHK_XR(xrStringToPath( instance, "/user/hand/right/output/haptic", &hapticPath ))
+
+XrPath interactionProfilePath;
+CHK_XR(xrStringToPath( instance, "/interaction_profiles/vendor_x/profile_x", &interactionProfilePath ));
+
+XrActionSuggestedBinding bindings[2];
+bindings[0].action = teleportAction;
+bindings[0].binding = triggerClickPath;
+bindings[1].action = hapticsAction;
+bindings[1].binding = hapticPath;
+
+XrInteractionProfileSuggestedBinding suggestedBindings = {0};
+suggestedBindings.type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING;
+suggestedBindings.interactionProfile = interactionProfilePath;
+suggestedBindings.suggestedBindings = bindings;
+suggestedBindings.countSuggestedBindings = 2;
+
+CHK_XR(xrSetInteractionProfileSuggestedBindings( session, &suggestedBindings ));
+
+// application main loop
+while( 1 )
+{
+	// sync action data
+	XrActiveActionSet activeActionSet = {0};
+	activeActionSet.type = XR_TYPE_ACTIVE_ACTION_SET;
+	activeActionSet.actionSet = inGameActionSet;
+	activeActionSet.subactionPath = XR_NULL_PATH;
+	CHK_XR(xrSyncActionData( session, 1, &activeActionSet) );
+
+	// query input action state
+	XrActionStateBoolean teleportState;
+	CHK_XR(xrGetActionStateBoolean( teleportAction, 0, NULL, &teleportState ));
+
+	if ( teleportState.changedSinceLastSync && teleportState.currentState )
+	{
+		// fire haptics using output action
+		XrHapticVibration vibration = {0};
+		vibration.type = XR_TYPE_HAPTIC_VIBRATION;
+		vibration.amplitude = 0.5;
+		vibration.duration = 300;
+		vibration.frequency = 3000;
+		CHK_XR(xrApplyHapticFeedback( hapticsAction, 0, NULL, (const XrHapticBaseHeader*)&vibration ));
+	}
+}
+----
+
+[[input-action-creation]]
+
+=== Action Sets
+
+[open,refpage='XrActionSet',desc='Opaque handle to an action set',type='handles',xrefs='xrCreateActionSet xrDestroyActionSet']
+--
+include::../../generated/api/handles/XrActionSet.txt[]
+
+Action sets are application-defined collections of actions.
+They are enabled or disabled by the application via flink:xrSyncActionData depending on the current application context.
+For example, a game may have one set of actions that apply to controlling a character and another set for navigating a menu system.
+When these actions are grouped into two slink:XrActionSet handles they can be selectively enabled and disabled using a single function call.
+
+Actions are passed a handle to their slink:XrActionSet when they are created.
+
+Action sets are created by calling flink:xrCreateActionSet:
+--
+
+[open,refpage='xrCreateActionSet',desc='Creates an XrActionSet',type='protos',xrefs='XrActionSet XrActionSetCreateInfo xrDestroyActionSet']
+--
+The flink:xrCreateActionSet function is defined as:
+
+include::../../generated/api/protos/xrCreateActionSet.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:createInfo is a pointer to a valid slink:XrActionSetCreateInfo structure that defines the action set being created.
+* pname:actionSet is a pointer to an slink:XrActionSet where the created action set is returned.
+****
+
+The flink:xrCreateActionSet function creates an action set and returns a handle to the created action set.  
+If pname:session is running when this call is made, the runtime must: return ename:XR_ERROR_SESSION_RUNNING.
+Additional error codes are described with slink:XrActionSetCreateInfo.
+
+include::../../generated/validity/protos/xrCreateActionSet.txt[]
+--
+
+[open,refpage='XrActionSetCreateInfo',desc='XrActionSet creation info',type='structs',xrefs='XrActionSet xrCreateActionSet']
+--
+
+The slink:XrActionSetCreateInfo is defined as:
+include::../../generated/api/structs/XrActionSetCreateInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:actionSetName is an array containing a code:NULL terminated non-empty string with the name of this action set.
+* pname:localizedActionSetName is an array containing a code:NULL terminated code:UTF-8 string that can be presented to the user as a description of the action set. This string should be presented in the system's current active locale.
+* pname:priority defines which action sets' actions are active on a given input source when actions on multiple active action sets are bound to the same input source.
+  Larger priority numbers take precedence over smaller priority numbers.
+****
+
+When multiple actions are bound to the same input source, the pname:priority of each action set determines which
+bindings are suppressed.
+Runtimes must: ignore bindings from action sets with a lower priority number if those specific bindings are
+also present in active actions within a higher priority action set.
+If multiple action sets with the same priority are bound to the same input source and that is the highest priority
+number, runtimes must: process all those bindings at the same time.
+
+Two actions are considered to be bound to the same input source if they use the same
+<<semantic-path-input, identifier and optional location>> path segments, even if they have different component segments.
+
+When runtimes are ignoring bindings because of priority, they must: treat the binding to that input source as
+though they do not exist.
+That means the pname:isActive field must: be false when retrieving action data, and that the runtime must:
+not provide any visual, haptic, or other feedback related to the binding of that action to that input source.
+Other actions in the same action set which are bound to input sources that do not collide are not affected and are
+processed as normal.
+
+If pname:actionSetName or pname:localizedActionSetName are empty strings, the runtime must: return ename:XR_ERROR_NAME_INVALID.
+If pname:actionSetName or pname:localizedActionSetName are duplicates of the corresponding field for any existing action set in the specified session, the runtime must: return ename:XR_ERROR_NAME_DUPLICATED.
+If pname:actionSetName contains characters which are not allowed in a single level of a <<well-formed-path-strings, well-formed path string>>, the runtime must: return ename:XR_ERROR_PATH_FORMAT_INVALID.
+
+include::../../generated/validity/structs/XrActionSetCreateInfo.txt[]
+--
+
+[open,refpage='xrDestroyActionSet',desc='Destroys an XrActionSet',type='protos',xrefs='XrActionSet xrCreateActionSet']
+--
+The flink:xrDestroyActionSet function is defined as:
+
+include::../../generated/api/protos/xrDestroyActionSet.txt[]
+
+.Parameter Descriptions
+****
+* pname:actionSet is the action set to destroy.
+****
+
+Action sets can be destroyed by calling flink:xrDestroyActionSet.
+When an action set is destroyed, all actions of that action set are also destroyed.
+If the application subsequently attempts to destroy one of these actions via flink:xrDestroyAction then ename:XR_ERROR_HANDLE_INVALID is returned.
+
+include::../../generated/validity/protos/xrDestroyActionSet.txt[]
+--
+
+=== Creating Actions
+
+[open,refpage='XrAction',desc='Opaque handle to an action',type='handles',xrefs='xrCreateAction xrDestroyAction XrActionType']
+--
+include::../../generated/api/handles/XrAction.txt[]
+
+Action handles are used to refer to individual actions when retrieving action data, creating action spaces, or sending haptic events.
+
+--
+
+[open,refpage='xrCreateAction',desc='Creates an XrAction',type='protos',xrefs='XrAction XrActionCreateInfo XrActionType XrActionSet xrDestroyAction']
+--
+The flink:xrCreateAction function is defined as:
+
+include::../../generated/api/protos/xrCreateAction.txt[]
+
+.Parameter Descriptions
+****
+* pname:actionSet is a handle to an slink:XrActionSet.
+* pname:createInfo is a pointer to a valid slink:XrActionCreateInfo structure that defines the action being created.
+* pname:action is a pointer to an slink:XrAction where the created action is returned.
+****
+
+flink:xrCreateAction creates an action and returns its handle.
+If the session containing pname:actionSet is running when this call is made, the runtime must: return ename:XR_ERROR_SESSION_RUNNING.
+
+include::../../generated/validity/protos/xrCreateAction.txt[]
+--
+
+[open,refpage='XrActionCreateInfo',desc='XrAction creation info',type='structs',xrefs='XrAction xrCreateActionSet XrActionType xrCreateAction']
+--
+
+The slink:XrActionCreateInfo structure is defined as:
+include::../../generated/api/structs/XrActionCreateInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:actionName is an array containing a code:NULL terminated string with the name of this action.
+* pname:actionType is the elink:XrActionType of the action to be created.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is NULL, this parameter must be 0.
+* pname:subactionPaths is an array of basetype:XrPath or code:NULL. If this array is specified, it contains one or more subaction paths that the application intends to query action state for.
+* pname:localizedActionName is an array containing a code:NULL terminated code:UTF-8 string that can be presented to the user as a description of the action. This string should be in the system's current active locale.
+****
+
+Subaction paths are a mechanism that enables applications to use the same action name and handle on multiple devices.
+Applications can query action state using subaction paths that differentiate data coming from each device.
+This allows the runtime to group logically equivalent actions together in system UI.
+For instance, an application could create a single actionname:pick_up action
+with the pathname:/user/hand/left and pathname:/user/hand/right subaction paths
+and use the subaction paths to independently query the state of
+actionname:pick_up_with_left_hand and actionname:pick_up_with_right_hand.
+
+Applications can: create actions with or without the pname:subactionPaths set to a list of paths.
+If this list of paths is omitted (i.e. pname:subactionPaths is set to code:NULL, and pname:countSubactionPaths is set to 0), the application is opting out of filtering action results by subaction paths and any call to get action data must also omit subaction paths.
+
+If pname:subactionPaths is specified and any of the following conditions are not satisfied, the runtime must: return ename:XR_ERROR_PATH_INVALID:
+
+* Each path provided is one of:
+** pathname:/user/head
+** pathname:/user/hand/left
+** pathname:/user/hand/right
+** pathname:/user/gamepad
+** pathname:/user
+* No path appears in the list more than once
+
+Including pathname:/user in the list of subaction paths creates an 'other' bucket for action data to be filtered into. 
+When pathname:/user is included in the list passed to ftext:xrGetActionState* the runtime must: include data for all devices which are not included in the other subaction paths into the pathname:/user bucket.
+Extensions may: append additional top level user paths to the above list.
+
+The runtime must: return ename:XR_ERROR_PATH_INVALID in the following circumstances:
+
+* The application specified subaction paths at action creation and the application called ftext:xrGetActionState* or a haptic function with an empty subaction path array.
+* The application called ftext:xrGetActionState* or a haptic function with a subaction path that was not specified when the action was created.
+
+If pname:actionName or pname:localizedActionName are empty strings, the runtime must: return ename:XR_ERROR_NAME_INVALID.
+If pname:actionName or pname:localizedActionName are duplicates of the corresponding field for any existing action in the specified action set, the runtime must: return ename:XR_ERROR_NAME_DUPLICATED.
+If pname:actionName contains characters which are not allowed in a single level of a <<well-formed-path-strings, well-formed path string>>, the runtime must: return ename:XR_ERROR_PATH_FORMAT_INVALID.
+
+include::../../generated/validity/structs/XrActionCreateInfo.txt[]
+--
+
+[open,refpage='XrActionType',desc='XrAction type',type='enums',xrefs='XrAction xrCreateActionSet XrActionCreateInfo']
+--
+The elink:XrActionType parameter takes one of the following values:
+
+include::../../generated/api/enums/XrActionType.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_INPUT_ACTION_TYPE_BOOLEAN. The action can be passed to flink:xrGetActionStateBoolean to retrieve a single boolean value.
+* ename:XR_INPUT_ACTION_TYPE_VECTOR1F. The action can be passed to flink:xrGetActionStateVector1f to retrieve a 1D float vector.
+* ename:XR_INPUT_ACTION_TYPE_VECTOR2F. The action can be passed to flink:xrGetActionStateVector2f to retrieve a 2D float vector.
+* ename:XR_INPUT_ACTION_TYPE_POSE. The action can can be passed to flink:xrCreateActionSpace to create a space.
+* ename:XR_OUTPUT_ACTION_TYPE_VIBRATION. The action can be passed to flink:xrApplyHapticFeedback to send a haptic event to the runtime.
+****
+--
+
+
+[open,refpage='xrDestroyAction',desc='Destroys an XrAction',type='protos',xrefs='XrAction xrCreateAction']
+--
+The flink:xrDestroyAction function is defined as:
+
+include::../../generated/api/protos/xrDestroyAction.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the action to destroy.
+****
+
+Actions can: be destroyed by calling flink:xrDestroyAction.
+When an action is destroyed, it is removed from its associated action set.
+Alternatively, actions that are part of an action set are automatically destroyed when the action set is destroyed.
+
+The runtime must: ignore destroyed actions in action sets.
+
+include::../../generated/validity/protos/xrDestroyAction.txt[]
+--
+
+==== Input Actions & Output Actions
+
+Input actions are used to read sensors like buttons or joysticks while output actions are used for triggering haptics or motion platforms.
+The type of action created by flink:xrCreateAction depends on the value of the elink:XrActionType argument.
+
+A given action can either be used for either input or output, but not both. Input actions are queried using one of the ftext:xrGetActionState* function calls, while output actions are set using the haptics calls.
+If either call is used with an action of the wrong type ename:XR_ERROR_ACTION_TYPE_MISMATCH must: be returned.
+
+[[input-suggested-bindings]]
+=== Suggested Bindings
+
+Applications usually need to provide default bindings for their actions to runtimes so that input data can be mapped appropriately to the application's actions. 
+Applications can: do this by calling flink:xrSetInteractionProfileSuggestedBindings for each <<semantic-path-interaction-profiles, interaction profile>> that the applications has default bindings for.
+If bindings are provided for an appropriate interaction profile, the runtime will select one and input will begin to flow. 
+Applications can: call flink:xrGetCurrentInteractionProfile during on a running session to learn what the active interaction profile are for a top level user path. 
+If this value ever changes, the runtime must: send an ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED event to the application to indicate that the value should be queried again.
+
+The bindings suggested by this system are only a hint to the runtime.
+Some runtimes may: choose to use a different device binding depending on user preference, accessibility settings, or for any other reason.
+If the runtime is using the values provided by suggested bindings, it must: make a best effort to convert
+the input value to the created action and apply certain rules to that use so that suggested bindings
+function in the same way across runtimes.
+
+For actions created with ename:XR_INPUT_ACTION_TYPE_BOOLEAN when the runtime is obeying suggested bindings: Boolean input sources are bound directly to the action.
+If the path is to a scalar value, a threshold must: be applied to the value
+and values over that threshold will be true.
+The threshold may vary from device to device or component to
+component and is left as an implementation detail.
+If the path refers to the parent of input values instead of
+to an input value itself, the runtime must: use subpathname:/example/path/value instead of subpathname:/example/path if it
+is available and apply the same thresholding that would be applied to any scalar input. If a parent path does not have
+a subpathname:/value subpath, the runtime must: use subpathname:/click.
+In any other situation the runtime would need
+to provide an alternate binding for the action or it will be unbound.
+
+For actions created with ename:XR_INPUT_ACTION_TYPE_VECTOR1F when the runtime is obeying suggested
+bindings: If the input value specified by the path is scalar, the input value is bound directly to the
+vector.
+If the path refers to the parent of input values instead of to an input value itself, the runtime must:
+use pathname:/example/path/value instead of subpathname:/example/path as the source of the value. If the input value is
+boolean, the runtime must: supply 0.0 or 1.0 as a conversion of the boolean value. In any other
+situation, the runtime would need to provide an alternate binding for the action or it will be unbound.
+
+For actions created with ename:XR_INPUT_ACTION_TYPE_VECTOR2F when the runtime is obeying suggested
+bindings: The suggested binding path must refer to the parent of input values instead of to the input values
+themselves, and that parent path must contain subpaths subpathname:/x and subpathname:/y. subpathname:/x
+and subpathname:/y must: be bound to 'x' and 'y' of the vector, respectively.
+In any other situation, the runtime would need to provide an alternate binding for the action or it will
+be unbound.
+
+For actions created with ename:XR_INPUT_ACTION_TYPE_POSE when the runtime is obeying suggested
+bindings: Pose input sources are bound directly to the action. If the path refers to the parent of input values instead of
+to an input value itself, the runtime must; use subpathname:/example/path/pose instead of pathname:/example/path if it
+is available. In any other situation the runtime would need to provide an alternate binding for the action or it will be unbound.
+
+
+[open,refpage='XrEventDataInteractionProfileChanged',desc='Notifies the application than the active interaction profile has changed',type='structs',xrefs='xrSetInteractionProfileSuggestedBindings xrGetCurrentInteractionProfile']
+--
+
+The slink:XrEventDataInteractionProfileChanged structure is defined as:
+include::../../generated/api/structs/XrEventDataInteractionProfileChanged.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+The slink:XrEventDataInteractionProfileChanged event is sent to the application to notify it that the active input form factor for one or more top level user paths has changed.
+This event must: only be sent for interaction profiles that the application indicated its support for via flink:xrSetInteractionProfileSuggestedBindings.
+This event must: only be sent for running sessions.
+
+The application can: call flink:xrGetCurrentInteractionProfile if it wants to change its own behavior based on the active hardware.
+
+include::../../generated/validity/structs/XrEventDataInteractionProfileChanged.txt[]
+--
+
+[open,refpage='xrSetInteractionProfileSuggestedBindings',desc='Sets the application-suggested bindings for the interaction profile',type='protos',xrefs='XrInteractionProfileSuggestedBinding']
+--
+The function flink:xrSetInteractionProfileSuggestedBindings is defined as:
+
+include::../../generated/api/protos/xrSetInteractionProfileSuggestedBindings.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession for which the application would like to set suggested bindings
+* pname:suggestedBindings is the slink:XrInteractionProfileSuggestedBinding that the application would like to set
+****
+
+flink:xrSetInteractionProfileSuggestedBindings sets an interaction profile for
+which the application can provide default bindings.
+The application can: call flink:xrSetInteractionProfileSuggestedBindings once per interaction profile that it
+supports.
+
+The application can: provide any number of bindings for each action.
+
+If the provided session is running, the runtime must: return ename:XR_ERROR_SESSION_RUNNING.
+If the application has already called flink:xrSetInteractionProfileSuggestedBindings on this session for this interaction profile, the runtime must: return ename:XR_ERROR_BINDINGS_DUPLICATED.
+See <<input-suggested-bindings, suggested bindings>> for more details.
+
+include::../../generated/validity/protos/xrSetInteractionProfileSuggestedBindings.txt[]
+--
+
+[open,refpage='XrInteractionProfileSuggestedBinding',desc='Suggested bindings for a interaction profile',type='structs',xrefs='xrSetInteractionProfileSuggestedBindings XrActionSuggestedBinding']
+--
+
+The slink:XrInteractionProfileSuggestedBinding structure is defined as:
+include::../../generated/api/structs/XrInteractionProfileSuggestedBinding.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:interactionProfile is the basetype:XrPath of an interaction profile.
+* pname:countSuggestedBindings is the number of suggested bindings in the array pointed to by pname:suggestedBindings.
+* pname:suggestedBindings is a pointer to an array of slink:XrActionSuggestedBinding structures that define all of the application's suggested bindings for the specified interaction profile.
+****
+
+include::../../generated/validity/structs/XrInteractionProfileSuggestedBinding.txt[]
+--
+
+[open,refpage='XrActionSuggestedBinding',desc='Suggested binding for a single action',type='structs',xrefs='xrSetInteractionProfileSuggestedBindings XrInteractionProfileSuggestedBinding']
+--
+
+The slink:XrActionSuggestedBinding structure is defined as:
+include::../../generated/api/structs/XrActionSuggestedBinding.txt[]
+
+.Member Descriptions
+****
+* pname:action is the slink:XrAction handle for an action
+* pname:binding is the basetype:XrPath of a binding for the action specified in pname:action. This path is any top level user path plus input source path, for example pathname:/user/hand/right/input/trigger/click. See <<input-suggested-bindings, suggested bindings>> for more details.
+****
+
+include::../../generated/validity/structs/XrActionSuggestedBinding.txt[]
+--
+
+[open,refpage='xrGetCurrentInteractionProfile',desc='Gets the current interaction profile for a top level user paths',type='protos',xrefs='']
+--
+The flink:xrGetCurrentInteractionProfile is defined as:
+
+include::../../generated/api/protos/xrGetCurrentInteractionProfile.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession for which the application would like to retrieve the current interaction profile.
+* pname:topLevelUserPath is the top level user path the application would like to retrieve the interaction profile for.
+* pname:interactionProfile is a pointer to an slink:XrInteractionProfileInfo structure to receive the current interaction profile information.
+****
+
+flink:xrGetCurrentInteractionProfile asks the runtime for the active
+interaction profiles for a top level user path.
+
+The runtime must: return only interaction profiles for which the application has provided bindings with flink:xrSetInteractionProfileSuggestedBindings.
+The runtime may: return interaction profiles that do not represent physically present hardware, for example if the runtime is using a known interaction profile to bind to hardware that the application is not aware of. 
+
+If the provided session is not running, the runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING.
+
+include::../../generated/validity/protos/xrGetCurrentInteractionProfile.txt[]
+--
+
+[open,refpage='XrInteractionProfileInfo',desc='Receives active interaction profile for a top level path',type='structs',xrefs='xrSetInteractionProfileSuggestedBindings XrActionSuggestedBinding']
+--
+
+The slink:XrInteractionProfileInfo structure is defined as:
+include::../../generated/api/structs/XrInteractionProfileInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:interactionProfile is the basetype:XrPath of the interaction profile path for the pname:topLevelUserPath used to retrieve this info, or code:XR_PATH_NULL if there is no active interaction profile at that top level user path.
+****
+
+The runtime must: only include interaction profiles that the application has provided bindings for via flink:xrSetInteractionProfileSuggestedBindings or code:XR_PATH_NULL.
+If the runtime is rebinding an interaction profile provided by the application to a device that the application did not provide bindings for, it must: return the interaction profile path that it is emulating.
+If the runtime is unable to provide input because it cannot emulate any of the application-provided interaction profiles, it must: return code:XR_PATH_NULL.
+
+include::../../generated/validity/structs/XrInteractionProfileInfo.txt[]
+--
+=== Reading Input Action State
+
+The current state of an input action can be obtained by calling the ftext:xrGetActionState* function call that matches the elink:XrActionType provided when the action was created.
+If a mismatched call is used to retrieve the state ename:XR_ERROR_ACTION_TYPE_MISMATCH must: be returned.
+
+The results of calls to ftext:xrGetActionState* for an slink:XrAction and set of subaction paths generally
+does not change between calls to flink:xrSyncActionData.
+When the combination of the parent slink:XrActionSet and subaction path for an action is passed to
+flink:xrSyncActionData, the runtime must: update the results from ftext:xrGetActionState* after
+this call with any changes to the state of the underlying hardware.
+When the parent action set and subaction path for an action is removed from or added to the list of active
+action sets passed to flink:xrSyncActionData, the runtime must: update pname:isActive to reflect the new
+active state after this call.
+In all cases the runtime must: not change the results of ftext:xrGetActionState* calls between calls
+to flink:xrSyncActionData.
+
+For any call to ftext:xrGetActionState* or haptics functions, if the parent session of the supplied slink:XrAction is not running, the runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING.
+
+When retrieving action state, pname:lastChangeTime must: be set to the runtime's best estimate of when the 
+physical state of the part of the device bound to that action last changed.
+
+The pname:changedSinceLastSync value is calculated based on the state at the previous sync and the state of the current sync. If there is no previous sync, the pname:changedSinceLastSync value must: be set to false.
+
+The pname:isActive value must: be true whenever an action is bound and a source is providing state data for the
+current sync. If the action is unbound or no source is present, the pname:isActive value must: be false.
+For any action which is inactive, the runtime must: return zero (or false) for state, false for
+pname:changedSinceLastSync, and 0 for pname:lastChangeTime.
+
+==== Resolving a single action bound to multiple inputs or outputs
+
+It is often the case that a single action will be bound to multiple physical inputs simultaneously. In these circumstances, the runtime must: resolve the ambiguity in that multiple binding as follows:
+
+The current state value is selected based on the type of the action:
+
+* Boolean actions - The current state must: be the result of a boolean Or of all bound inputs
+* Vector1 and Vector2 actions - The current state must: be the state of the input with the longest length 
+* Pose actions - The runtime must: select a single pose source when the action is created or bound and use that value consistently. The runtime should: use subaction paths specified by the application to make this choice where possible.
+* Haptic actions - The runtime must: send output events to all bound haptic devices
+
+==== Boolean Actions
+
+[open,refpage='xrGetActionStateBoolean',desc='Gets boolean action state',type='protos',xrefs='XrActionStateBoolean xrCreateAction']
+--
+The flink:xrGetActionStateBoolean function is defined as:
+
+include::../../generated/api/protos/xrGetActionStateBoolean.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the slink:XrAction being queried.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is code:NULL, this parameter must be 0.
+* pname:subactionPaths is an array of paths or code:NULL. If this array is specified, it contains one or more subaction paths that were specified when the action was created. If the array includes a subaction path that was not specified when the action was created the runtime must: return ename:XR_ERROR_PATH_INVALID. If this parameter is specified, the runtime must: return data that originates only on the paths specified in this array.
+* pname:data is a pointer to a valid slink:XrActionStateBoolean into which the state will be placed.
+****
+
+flink:xrGetActionStateBoolean retrieves the current state of a boolean action.
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/protos/xrGetActionStateBoolean.txt[]
+--
+
+[open,refpage='XrActionStateBoolean',desc='Boolean action state',type='structs',xrefs='xrGetActionStateBoolean']
+--
+
+The slink:XrActionStateBoolean structure is defined as:
+include::../../generated/api/structs/XrActionStateBoolean.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:currentState is the current state of the action.
+* pname:changedSinceLastSync is ename:XR_TRUE if the value of pname:currentState is different than it was before the most recent call to flink:xrSyncActionData.
+  This parameter can be combined with pname:currentState to detect rising and falling edges since the previous call to flink:xrSyncActionData.
+  E.g. if both pname:changedSinceLastSync and pname:currentState are true then a rising edge (ename:XR_FALSE to ename:XR_TRUE) has taken place.
+* pname:lastChangeTime is the basetype:XrTime in nanoseconds since this action's value last changed.
+* pname:isActive is ename:XR_TRUE if and only if there exists an input source that is contributing to the current state of this action.
+****
+
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/structs/XrActionStateBoolean.txt[]
+--
+
+==== Vector Actions
+
+[open,refpage='xrGetActionStateVector1f',desc='Gets a floating point action state',type='protos',xrefs='XrActionStateVector1f xrCreateAction']
+--
+The flink:xrGetActionStateVector1f function is defined as:
+
+include::../../generated/api/protos/xrGetActionStateVector1f.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the slink:XrAction being queried.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is NULL, this parameter must be 0.
+* pname:subactionPaths is an array of paths or code:NULL. If this array is specified, it contains one or more subaction paths that were specified when the action was created. If the array includes a subaction path that was not specified when the action was created the runtime must: return ename:XR_ERROR_PATH_INVALID. If this parameter is specified, the runtime must: return data that originates only on the paths specified in this array.
+* pname:data is a pointer to a valid slink:XrActionStateVector1f into which the state will be placed.
+****
+
+flink:xrGetActionStateVector1f retrieves the current state of a one-dimensional vector action.
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/protos/xrGetActionStateVector1f.txt[]
+--
+
+
+[open,refpage='XrActionStateVector1f',desc='Floating point action state',type='structs',xrefs='xrGetActionStateVector1f']
+--
+
+The slink:XrActionStateVector1f structure is defined as:
+include::../../generated/api/structs/XrActionStateVector1f.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:currentState is the current state of the Action.
+* pname:changedSinceLastSync is ename:XR_TRUE if the value of pname:currentState is different than it was before the most recent call to flink:xrSyncActionData.
+* pname:lastChangeTime is the basetype:XrTime in nanoseconds since this action's value last changed.
+* pname:isActive is ename:XR_TRUE if and only if there exists an input source that is contributing to the current state of this action.
+****
+
+include::../../generated/validity/structs/XrActionStateVector1f.txt[]
+--
+
+[open,refpage='xrGetActionStateVector2f',desc='Gets 2d float vector action state',type='protos',xrefs='XrActionStateVector2f xrCreateAction']
+--
+The flink:xrGetActionStateVector2f function is defined as:
+
+include::../../generated/api/protos/xrGetActionStateVector2f.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the slink:XrAction being queried.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is NULL, this parameter must be 0.
+* pname:subactionPaths is an array of paths or code:NULL. If this array is specified, it contains one or more subaction paths that were specified when the action was created. If the array includes a subaction path that was not specified when the action was created the runtime must: return ename:XR_ERROR_PATH_INVALID. If this parameter is specified, the runtime must: return data that originates only on the paths specified in this array.
+* pname:data is a pointer to a valid slink:XrActionStateVector2f into which the state will be placed.
+****
+
+flink:xrGetActionStateVector2f retrieves the current state of a two-dimensional vector action.
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/protos/xrGetActionStateVector2f.txt[]
+--
+
+[open,refpage='XrActionStateVector2f',desc='2d float vector action state',type='structs',xrefs='xrGetActionStateVector2f']
+--
+
+The slink:XrActionStateVector2f structure is defined as:
+include::../../generated/api/structs/XrActionStateVector2f.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:currentState is the current slink:XrVector2f state of the Action.
+* pname:changedSinceLastSync is ename:XR_TRUE if the value of pname:currentState is different than it was before the most recent call to flink:xrSyncActionData.
+* pname:lastChangeTime is the basetype:XrTime in nanoseconds since this action's value last changed.
+* pname:isActive is ename:XR_TRUE if and only if there exists an input source that is contributing to the current state of this action.
+****
+
+include::../../generated/validity/structs/XrActionStateVector2f.txt[]
+--
+
+
+==== Pose Actions
+
+[open,refpage='xrGetActionStatePose',desc='Gets metadata from a pose action',type='protos',xrefs='XrActionStatePose xrCreateAction xrCreateActionSpace']
+--
+The flink:xrGetActionStatePose function is defined as:
+
+include::../../generated/api/protos/xrGetActionStatePose.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the slink:XrAction being queried.
+* pname:subactionPath is an basetype:XrPath or code:XR_PATH_NULL.
+* pname:data is a pointer to a valid slink:XrActionStatePose into which the state will be placed.
+****
+
+flink:xrGetActionStatePose returns information about the binding and active
+state for the specified action.
+To determine the pose of this action at a historical or predicted
+time, create an action space using flink:xrCreateActionSpace.
+Then, after each sync, get the pose of this action space within your
+base space using flink:xrLocateSpace.
+
+See slink:XrActionCreateInfo for a description of subaction paths, and the
+restrictions on their use.
+flink:xrGetActionStatePose only accepts a single subaction path to require that
+the application choose which subaction to use for actions that are intended to
+be bound to multiple devices at the same time.
+
+include::../../generated/validity/protos/xrGetActionStatePose.txt[]
+--
+
+[open,refpage='XrActionStatePose',desc='Pose action metadata',type='structs',xrefs='xrGetActionStatePose']
+--
+
+The slink:XrActionStatePose structure is defined as:
+include::../../generated/api/structs/XrActionStatePose.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:isActive is ename:XR_TRUE if and only if there exists an input source that is being tracked by this pose action.
+****
+
+include::../../generated/validity/structs/XrActionStatePose.txt[]
+--
+
+
+=== Output Actions and Haptics
+
+Haptic feedback is sent to a device using the flink:xrApplyHapticFeedback
+function. The pname:hapticEvent points to a supported event structure. All
+event structures have in common that the first element is an slink:XrHapticBaseHeader
+which can be used to determine the type of the haptic event.
+
+Haptic feedback may be immediately halted for a haptic action using the flink:xrStopHapticFeedback function.
+
+Output action requests activate immediately and must: not wait for the next call to flink:xrSyncActionData.
+
+If a haptic event is sent to an action before a previous haptic event completes, the latest event will take precedence and the runtime must: cancel all preceding incomplete haptic events on that action.
+
+Output action requests must: be discarded and have no effect on hardware if the application's session is not active.
+
+The only haptics type supported by unextended OpenXR is slink:XrHapticVibration.
+
+[open,refpage='xrApplyHapticFeedback',desc='Apply haptic feedback',type='protos',xrefs='XrHapticBaseHeader XrHapticVibration xrStopHapticFeedback']
+--
+The flink:xrApplyHapticFeedback function is defined as:
+
+include::../../generated/api/protos/xrApplyHapticFeedback.txt[]
+
+.Parameter Descriptions
+****
+* pname:hapticAction is the slink:XrAction handle for the desired output action.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is NULL, this parameter must be 0.
+* pname:subactionPaths is an array of paths or code:NULL. If this array is specified, it contains one or more subaction paths that were specified when the action was created. If the array includes a subaction path that was not specified when the action was created the runtime must: return ename:XR_ERROR_PATH_INVALID. If this parameter is specified, the runtime must: trigger haptic events only on devices represented in the array. 
+* pname:hapticEvent is a pointer to a haptic event structure which starts
+with an slink:XrHapticBaseHeader.
+****
+
+Triggers a haptic event through the specified action of type ename:XR_TYPE_ACTION_STATE_POSE. 
+The runtime should: deliver this request to the appropriate device, but exactly which device, if any, this event is sent to is up to the runtime to decide.
+If an appropriate device is unavailable the runtime may: ignore this request for haptic feedback.
+
+If another haptic event from this session is currently happening on the device bound to this action, the runtime must: interrupt that other event and replace it with the new one.
+
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/protos/xrApplyHapticFeedback.txt[]
+--
+
+[open,refpage='XrHapticBaseHeader',desc='Base header for haptic feedback',type='structs',xrefs='xrApplyHapticFeedback XrHapticVibration']
+--
+
+The slink:XrHapticBaseHeader structure is defined as:
+include::../../generated/api/structs/XrHapticBaseHeader.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+****
+
+include::../../generated/validity/structs/XrHapticBaseHeader.txt[]
+--
+
+[open,refpage='XrHapticVibration',desc='Base header for haptic feedback',type='structs',xrefs='xrApplyHapticFeedback XrHapticBaseHeader']
+--
+
+The slink:XrHapticVibration structure is defined as:
+include::../../generated/api/structs/XrHapticVibration.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:duration is the number of nanoseconds the vibration should: last. If dlink:XR_MIN_HAPTIC_DURATION is specified, the runtime must: produce a short haptics pulse of minimal supported duration for the haptic device.
+* pname:frequency is the frequency of the vibration in Hz. If dlink:XR_FREQUENCY_UNSPECIFIED is specified, it is left to the runtime to decide the optimal frequency value to use.
+* pname:amplitude is the amplitude of the vibration between [eq]#0.0# and [eq]#1.0#.
+****
+
+The slink:XrHapticVibration is used in calls to flink:xrApplyHapticFeedback that trigger actionname:vibration output actions.
+
+The pname:duration, and pname:frequency parameters may: be clamped to implementation-dependent ranges.
+
+include::../../generated/validity/structs/XrHapticVibration.txt[]
+--
+
+[open,refpage='XR_MIN_HAPTIC_DURATION',desc='Indicates the shortest valid duration for the device',type='defines',xrefs='xrApplyHapticFeedback']
+--
+dlink:XR_MIN_HAPTIC_DURATION is used to indicate to the runtime that a short haptic pulse of the minimal supported duration for the haptic device.
+include::../../generated/api/defines/XR_MIN_HAPTIC_DURATION.txt[]
+--
+
+[open,refpage='XR_FREQUENCY_UNSPECIFIED',desc='Runtime should determine optimal frequency for haptic pulse',type='defines',xrefs='xrApplyHapticFeedback']
+--
+dlink:XR_FREQUENCY_UNSPECIFIED is used to indicate that the application wants the runtime to decide what the optimal frequency is for the haptic pulse.
+include::../../generated/api/defines/XR_FREQUENCY_UNSPECIFIED.txt[]
+--
+
+[open,refpage='xrStopHapticFeedback',desc='Stop haptic feedback',type='protos',xrefs='xrApplyHapticFeedback']
+--
+The flink:xrStopHapticFeedback function is defined as:
+
+include::../../generated/api/protos/xrStopHapticFeedback.txt[]
+
+.Parameter Descriptions
+****
+* pname:hapticAction is the slink:XrAction handle for the desired output action.
+* pname:countSubactionPaths is the number of elements in the pname:subactionPaths array. If pname:subactionPaths is NULL, this parameter must be 0.
+* pname:subactionPaths is an array of paths or code:NULL. If this array is specified, it contains one or more subaction paths that were specified when the action was created. If the array includes a subaction path that was not specified when the action was created the runtime must: return ename:XR_ERROR_PATH_INVALID. The runtime must: only stop haptic output on the specified devices. If this parameter is specified, the runtime must: return data that originates only on the paths specified in this array.
+****
+
+If a haptic event from this slink:XrAction is in progress, when this function is
+called the runtime must: stop that event.
+See slink:XrActionCreateInfo for a description of subaction paths, and the restrictions on their use.
+
+include::../../generated/validity/protos/xrStopHapticFeedback.txt[]
+--
+
+=== Input Action State Synchronization
+
+[open,refpage='xrSyncActionData',desc='Updates the current state of input actions',type='protos',xrefs='XrActionSet XrActiveActionSet']
+--
+The flink:xrSyncActionData function is defined as:
+
+include::../../generated/api/protos/xrSyncActionData.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to the slink:XrSession that all provided action set handles belong to.
+* pname:countActionSets is an integer specifying the number of valid elements in the pname:actionSets array.
+* pname:actionSets is a pointer to an array of one or more slink:XrActiveActionSet structures, all from pname:session, that should be synchronized.
+****
+
+flink:xrSyncActionData updates the current state of input actions.
+Repeated input action state queries between subsequent synchronization calls must: return the same values.
+This call must be called with an array containing the slink:XrActiveActionSet structures, that reference action
+sets which belong to a single, running session, that should be updated during this synchronization.
+Any slink:XrActionSet that has been created in this session but was not passed to flink:xrSyncActionData will not be updated and all action state queries will return that the action is inactive.
+
+If pname:session is not running, the runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING.
+If pname:session is not focused, the runtime must: return ename:XR_SESSION_NOT_FOCUSED, and all actions in the session
+will be inactive.
+
+.Parameter Descriptions
+****
+* pname:session is a handle to the slink:XrSession that all provided action set handles belong to.
+* pname:countActionSets is an integer specifying the number of valid elements in the pname:actionSets array.
+* pname:actionSets is a pointer to an array of one or more slink:XrActiveActionSet structures, all from pname:session, that should be synchronized.
+****
+
+include::../../generated/validity/protos/xrSyncActionData.txt[]
+--
+
+
+[open,refpage='XrActiveActionSet',desc='Describes an active action set',type='structs',xrefs='xrSyncActionData']
+--
+
+The slink:XrActiveActionSet structure is defined as:
+include::../../generated/api/structs/XrActiveActionSet.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:actionSet is the handle of the action set to activate.
+* pname:subactionPath is the handle of a subaction path that was declared when one or more actions in the action set was created or code:XR_PATH_NULL if the actions in this action set were not declared with subaction paths.
+  If the application wants to activate the action set on more than one subaction path, it can: include additional slink:XrActiveActionSet structs with the other subactionPaths.
+****
+
+This structure defines a single active action set and subaction path combination.
+Applications provide a list of these structures via the flink:xrSyncActionData function.
+
+include::../../generated/validity/structs/XrActiveActionSet.txt[]
+--
+
+
+=== Action Sources
+
+[open,refpage='xrGetBoundSourcesForAction',desc='Gets the sources for an XrAction',type='protos',xrefs='XrAction']
+--
+The flink:xrGetBoundSourcesForAction function is defined as:
+
+include::../../generated/api/protos/xrGetBoundSourcesForAction.txt[]
+
+.Parameter Descriptions
+****
+* pname:action is the slink:XrAction being queried.
+* pname:sourceCapacityInput is the capacity of the array, or 0 to indicate a request to retrieve the required capacity.
+* pname:sourceCountOutput is a pointer to the count of action sources, or a pointer to the required capacity in the case that pname:sourceCapacityInput is 0.
+* pname:sources is a pointer to an application-allocated array that will be filled with the basetype:XrPath values for all sources. It can: be code:NULL if pname:sourceCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:sources size.
+****
+
+An application can: use the flink:xrGetBoundSourcesForAction and
+flink:xrGetInputSourceLocalizedName calls to prompt the user which physical inputs
+to use in order to perform an action.
+A *source* is the physical control that the action is bound to.
+An action may: be bound to multiple sources at one time, for example an action
+named actionname:hold could be bound to both the X and A buttons.
+
+If an action is unbound, flink:xrGetBoundSourcesForAction will assign 0 to the
+value pointed-to by pname:sourceCountOutput and not modify the array.
+
+Once the semantic paths for the action's source are obtained, the application
+can: gather additional information about the source.
+flink:xrGetInputSourceLocalizedName returns a localized human-readable string
+describing the source, e.g. 'A Button'.
+
+If the parent session of pname:action is not running, the runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING.
+
+include::../../generated/validity/protos/xrGetBoundSourcesForAction.txt[]
+--
+
+[open,refpage='xrGetInputSourceLocalizedName',desc='Gets a localized source name',type='protos',xrefs='XrAction']
+--
+The flink:xrGetInputSourceLocalizedName function is defined as:
+
+include::../../generated/api/protos/xrGetInputSourceLocalizedName.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to the slink:XrSession associated with the action that reported this source.
+* pname:source is an basetype:XrPath representing the source. Typically this was returned by a call to flink:xrGetBoundSourcesForAction.
+* pname:whichComponents is any set of flags from elink:XrInputSourceLocalizedNameFlagBits.
+* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate a request to retrieve the required capacity.
+* pname:bufferCountOutput is a pointer to the count of name characters written (including the terminating `\0`), or a pointer to the required capacity in the case that pname:bufferCapacityInput is 0.
+* pname:buffer is a pointer to an application-allocated buffer that will be filled with the source name. It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:buffer size.
+****
+
+flink:xrGetInputSourceLocalizedName returns a string for the input source in the
+current system locale.
+This string is appropriate for showing to users.
+
+include::../../generated/validity/protos/xrGetInputSourceLocalizedName.txt[]
+--
+
+[open,refpage='XrInputSourceLocalizedNameFlags',desc='Input source localized name flags',type='flags',xrefs='xrGetInputSourceLocalizedName']
+--
+The flink:xrGetInputSourceLocalizedName::pname:whichComponents parameter takes bitwise-OR of any of the following values:
+
+include::../../generated/api/enums/XrInputSourceLocalizedNameFlagBits.txt[]
+
+.Flag Descriptions
+****
+* ename:XR_INPUT_SOURCE_LOCALIZED_NAME_USER_PATH_BIT indicates that the runtime must: include the user path portion of the string in the result, if available. E.g. `Left Hand`.
+* ename:XR_INPUT_SOURCE_LOCALIZED_NAME_INTERACTION_PROFILE_BIT indicates that the runtime must: include the interaction profile portion of the string in the result, if available. E.g. `Vive Controller`.
+* ename:XR_INPUT_SOURCE_LOCALIZED_NAME_COMPONENT_BIT indicates that the runtime must: include the input component portion of the string in the result, if available. E.g. `Trigger`.
+****
+--

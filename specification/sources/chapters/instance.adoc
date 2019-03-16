@@ -1,0 +1,498 @@
+[[instance]]
+== Instance
+[open,refpage='XrInstance',desc='Opaque handle to an instance object',type='handles',xrefs='xrCreateInstance xrGetInstanceProperties XrInstanceCreateInfo XrInstanceProperties']
+--
+include::../../generated/api/handles/XrInstance.txt[]
+
+An OpenXR instance is an object that allows an OpenXR application
+to communicate with an OpenXR runtime.
+The application accomplishes this communication by calling
+flink:xrCreateInstance and receiving a handle to the resulting
+slink:XrInstance object.
+
+The slink:XrInstance object stores and tracks OpenXR-related application
+state, without storing any such state in the application's global address space.
+This allows the application to create multiple instances as well
+as safely encapsulate the application's OpenXR state since this object
+is opaque to the application.
+OpenXR runtimes may: limit the number of simultaneous slink:XrInstance
+objects that may be created and used, but they must: support the creation and usage of
+at least one slink:XrInstance object per process.
+
+Physically, this state may: be stored in any of the OpenXR loader,
+OpenXR API layers or the OpenXR runtime components.
+The exact storage and distribution of this saved state is
+implementation-dependent, except where indicated by this specification.
+--
+
+The tracking of OpenXR state in the instance allows the streamlining of the
+API, where the intended instance is inferred from the highest ascendant of an
+OpenXR function's target object.  For example, in:
+
+[source,c++]
+----
+myResult = xrEndFrame(mySession, &myEndFrameDescription);
+----
+
+the slink:XrSession object was created from an slink:XrInstance object.
+The OpenXR loader typically keeps track of the slink:XrInstance that is the
+parent of the slink:XrSession object in this example and directs
+the function to the runtime associated with that instance. This tracking of
+OpenXR objects eliminates the need to specify an slink:XrInstance in every
+OpenXR function.
+
+[[api-layers-and-extensions]]
+=== API Layers and Extensions
+
+Additional functionality may: be provided by API layers or extensions. An API
+layer must: not add or modify the definition of OpenXR functions, while an
+extension may: do so.
+
+The set of API layers to enable is specified when creating an instance, and
+those API layers are able to intercept any functions dispatched to that
+instance or any of its child objects.
+
+Example API layers may: include (but are not limited to):
+
+* an API layer to dump out OpenXR API calls
+* an API layer to perform OpenXR validation
+
+[open,refpage='xrEnumerateApiLayerProperties',desc='Returns up to requested number of global layer properties',type='protos',xrefs='XrApiLayerProperties']
+--
+To determine what set of API layers are available, OpenXR provides the
+flink:xrEnumerateApiLayerProperties function:
+
+include::../../generated/api/protos/xrEnumerateApiLayerProperties.txt[]
+
+.Parameter Descriptions
+****
+* pname:propertyCapacityInput is the capacity of the properties array, or 0 to indicate a request to retrieve the required capacity.
+* pname:propertyCountOutput is a pointer to the count of properties written, or a pointer to the required capacity in the case that propertyCapacityInput is 0.
+* pname:properties is a pointer to an array of slink:XrApiLayerProperties structures, but can: be code:NULL if propertyCapacityInput is 0.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a detailed description of retrieving the required pname:properties size.
+****
+
+The list of available layers may change at any time due to actions outside
+of the OpenXR runtime, so two calls to
+flink:xrEnumerateApiLayerProperties with the same parameters may:
+return different results, or retrieve different pname:propertyCountOutput values
+or pname:properties contents.
+
+Once an instance has been created, the layers enabled for that instance will
+continue to be enabled and valid for the lifetime of that instance, even if
+some of them become unavailable for future instances.
+
+include::../../generated/validity/protos/xrEnumerateApiLayerProperties.txt[]
+--
+
+[open,refpage='XrApiLayerProperties',desc='Structure specifying layer properties',type='structs',xrefs='xrEnumerateApiLayerProperties']
+--
+The slink:XrApiLayerProperties structure is defined as:
+
+include::../../generated/api/structs/XrApiLayerProperties.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:layerName is a string specifying the name of
+  the API layer.
+  Use this name in the slink:XrInstanceCreateInfo::pname:enabledApiLayerNames array
+  to enable this API layer for an instance.
+* pname:specVersion is the API version the API layer was written to, encoded as
+  described in the
+  <<api-version-numbers-and-semantics,API Version Numbers and Semantics>> section.
+* pname:implementationVersion is the version of this API layer. It is an
+  integer, increasing with backward compatible changes.
+* pname:description is a string providing additional details that can: be used
+  by the application to identify the API layer.
+****
+
+include::../../generated/validity/structs/XrApiLayerProperties.txt[]
+--
+
+To enable a layer, the name of the layer should: be added to the
+pname:enabledApiLayerNames member of slink:XrInstanceCreateInfo when creating
+an slink:XrInstance.
+
+Loader implementations may: provide mechanisms outside this API for
+enabling specific API layers.
+API layers enabled through such a mechanism are implicitly enabled, while
+API layers enabled by including the API layer name in
+slink:XrInstanceCreateInfo::pname:enabledApiLayerNames are explicitly enabled.
+Except where otherwise specified, implicitly enabled and explicitly enabled
+API layers differ only in the way they are enabled. Explicitly enabling an API
+layer that is implicitly enabled has no additional effect.
+
+Instance extensions are able to affect the operation of the instance
+and any of its child objects.
+As stated <<extensions, earlier>>, extensions can expand the OpenXR API and
+provide new functions or augment behavior.
+
+Examples of extensions may: be (but are not limited to):
+
+.Extension Examples
+****
+* an extension to include OpenXR functions to work with a new graphics API
+* an extension to expose debug information via a callback
+****
+
+[open,refpage='xrEnumerateInstanceExtensionProperties',desc='Returns properties of available instance extensions',type='protos']
+--
+
+The application can determine the available instance extensions by calling
+flink:xrEnumerateInstanceExtensionProperties:
+
+include::../../generated/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
+
+.Parameter Descriptions
+****
+* pname:layerName is either code:NULL or a pointer to a string naming the API layer to retrieve extensions from, as returned by flink:xrEnumerateApiLayerProperties.
+* pname:propertyCapacityInput is the capacity of the properties array, or 0 to indicate a request to retrieve the required capacity.
+* pname:propertyCountOutput is a pointer to the count of properties written, or a pointer to the required capacity in the case that pname:propertyCapacityInput is 0.
+* pname:properties is a pointer to an array of slink:XrExtensionProperties structures, but can: be code:NULL if pname:propertyCapacityInput is 0.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a detailed description of retrieving the required pname:properties size.
+****
+
+If pname:properties is code:NULL, then the number of extensions properties
+available is returned in pname:propertyCountOutput.
+Otherwise, pname:propertyCountInput must point
+to a variable set by the user to the number of elements in the pname:properties
+array.
+If pname:propertyCountInput is less than the number of extension properties
+available, the contents of pname:properties will be undefined.
+If pname:propertyCountInput is smaller than the number of extensions available,
+the failure code ename:XR_ERROR_SIZE_INSUFFICIENT and the contents of
+pname:properties are undefined.
+
+Because the list of available layers may change externally between calls to
+flink:xrEnumerateInstanceExtensionProperties, two calls may retrieve different
+results if a pname:layerName is available in one call but not in another.
+The extensions supported by a layer may also change between two calls,
+e.g. if the layer implementation is replaced by a different version between
+those calls.
+
+include::../../generated/validity/protos/xrEnumerateInstanceExtensionProperties.txt[]
+--
+
+[open,refpage='XrExtensionProperties',desc='Returns properties of available instance extensions',type='structs']
+--
+The slink:XrExtensionProperties structure is defined as:
+
+include::../../generated/api/structs/XrExtensionProperties.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:extensionName is a code:NULL terminated string specifying the name of
+the extension.
+* pname:specVersion is the version of this extension. It is an integer,
+incremented with backward compatible changes.
+****
+
+include::../../generated/validity/structs/XrExtensionProperties.txt[]
+--
+
+[[instance-initialization]]
+=== Instance Lifecycle
+[open,refpage='xrCreateInstance',desc='Creates an OpenXR Instance',type='protos']
+--
+The flink:xrCreateInstance function is defined as:
+
+include::../../generated/api/protos/xrCreateInstance.txt[]
+
+.Parameter Descriptions
+****
+* pname:createInfo points to an instance of slink:XrInstanceCreateInfo controlling
+creation of the instance.
+* pname:instance points to an slink:XrInstance handle in which the resulting
+instance is returned.
+****
+
+flink:xrCreateInstance creates the slink:XrInstance, then enables and
+initializes global API layers and extensions requested by the application.
+If an extension is provided by an API layer, both the API layer and extension
+must: be specified at flink:xrCreateInstance time.
+If a specified API layer cannot be found, no slink:XrInstance will be created
+and the function will return ename:XR_ERROR_API_LAYER_NOT_PRESENT.
+Likewise, if a specified extension cannot be found the call will return
+ename:XR_ERROR_EXTENSION_NOT_PRESENT and no slink:XrInstance will be created.
+Additionally, some runtimes may limit the number of concurrent instances
+that may be in use.
+If the application attempts to create more instances than a runtime can
+simultaneously support, flink:xrCreateInstance will return
+ename:XR_ERROR_LIMIT_REACHED.
+
+If the slink:XrInstanceCreateInfo struct contains a platform-specific
+extension for a platform other than the target platform,
+ename:XR_ERROR_INITIALIZATION_FAILED will be returned.
+The same is true if a mandatory platform-specific extension is defined for the
+target platform but no matching extension struct is provided in
+slink:XrInstanceCreateInfo.
+
+include::../../generated/validity/protos/xrCreateInstance.txt[]
+--
+
+[open,refpage='XrInstanceCreateInfo',desc='Structure specifying params of a newly created instance',type='structs',xrefs='xrCreateInstance XrInstanceCreateFlags']
+--
+The slink:XrInstanceCreateInfo structure is defined as:
+
+include::../../generated/api/structs/XrInstanceCreateInfo.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that identifies options that apply to the creation.
+* pname:applicationInfo is an instance of slink:XrApplicationInfo.
+This information helps runtimes recognize behavior inherent to classes
+of applications. slink:XrApplicationInfo is defined in detail below.
+* pname:enabledApiLayerCount is the number of global API layers to enable.
+* pname:enabledApiLayerNames is a pointer to an array of pname:enabledApiLayerCount
+strings containing the names of API layers to enable
+for the created instance. See the <<api-layers-and-extensions,API Layers And Extensions>> section for further details.
+* pname:enabledExtensionCount is the number of global extensions to
+enable.
+* pname:enabledExtensionNames is a pointer to an array of
+pname:enabledExtensionCount strings containing the names
+of extensions to enable.
+****
+
+include::../../generated/validity/structs/XrInstanceCreateInfo.txt[]
+--
+
+[open,refpage='XrInstanceCreateFlags',desc='Instance Creation Flags',type='flags',xrefs='xrCreateInstance XrInstanceCreateInfo']
+--
+The elink:XrInstanceCreateFlags include:
+
+include::../../generated/api/enums/XrInstanceCreateFlagBits.txt[]
+
+There are currently no instance creation flags. This is reserved for future use.
+--
+
+
+[open,refpage='XrApplicationInfo',desc='Structure specifying application info',type='structs']
+--
+The slink:XrApplicationInfo structure is defined as:
+
+include::../../generated/api/structs/XrApplicationInfo.txt[]
+
+.Member Descriptions
+****
+* pname:applicationName is a string containing the name of the application.
+* pname:applicationVersion is an unsigned integer variable containing the
+developer-supplied version number of the application.
+* pname:engineName is a string containing the name of the
+engine (if any) used to create the application. May be empty to indicate no specified engine.
+* pname:engineVersion is an unsigned integer variable containing the
+developer-supplied version number of the engine used to create the
+application. May be zero to indicate no specified engine.
+* pname:apiVersion is the version of this API against which the
+application will run, encoded as described in the
+<<api-version-numbers-and-semantics,API Version Numbers and Semantics>> section.
+If the runtime does not support the requested pname:apiVersion it
+must: return ename:XR_ERROR_DRIVER_INCOMPATIBLE.  pname:apiVersion must be zero, or otherwise it must be a version that the runtime supports, or supports an effective substitute for.
+****
+
+include::../../generated/validity/structs/XrApplicationInfo.txt[]
+--
+
+[open,refpage='xrDestroyInstance',desc='Destroy an instance of OpenXR',type='protos']
+--
+The flink:xrDestroyInstance function is defined as:
+
+include::../../generated/api/protos/xrDestroyInstance.txt[]
+
+The flink:xrDestroyInstance function is used to destroy an slink:XrInstance.
+
+.Parameter Descriptions
+****
+* pname:instance is the handle to the instance to destroy.
+****
+
+slink:XrInstance handles are destroyed using flink:xrDestroyInstance.  When an
+slink:XrInstance is destroyed, all handles that are children of that
+slink:XrInstance are also destroyed.   If the
+pname:instance is invalid the runtime must return ename:XR_ERROR_HANDLE_INVALID.
+
+include::../../generated/validity/protos/xrDestroyInstance.txt[]
+--
+
+[[instance-information]]
+=== Instance Information
+
+[open,refpage='xrGetInstanceProperties',desc='Gets information about the instance',type='protos']
+--
+The flink:xrGetInstanceProperties function provides information about the instance
+and the associated runtime.
+
+include::../../generated/api/protos/xrGetInstanceProperties.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance previously created with flink:xrCreateInstance.
+* pname:instanceProperties points to an slink:XrInstanceProperties which describes the pname:instance.
+****
+
+The pname:instanceProperties parameter must: be filled out by the runtime in response
+to this call, with information as defined in slink:XrInstanceProperties.
+
+include::../../generated/validity/protos/xrGetInstanceProperties.txt[]
+--
+
+[open,refpage='XrInstanceProperties',desc='Contains information about the instance',type='structs']
+--
+The slink:XrInstanceProperties structure is defined as:
+
+include::../../generated/api/structs/XrInstanceProperties.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:runtimeVersion is the current version of the runtime in the format of dlink:XR_MAKE_VERSION.
+* pname:runtimeName is the name of the runtime.
+****
+
+include::../../generated/validity/structs/XrInstanceProperties.txt[]
+--
+
+[[platform-specific-instance-creation]]
+=== Platform-Specific Instance Creation
+
+Some amount of data required for instance creation is exposed through
+extension structures.
+These structures may be optional: or even required: for instance creation
+on specific platforms, but not on other platforms.
+Separating off platform-specific functionality into extension structures
+prevents the primary slink:XrInstanceCreateInfo structure from becoming too
+bloated with unnecessary information.
+
+See the
+ifndef::HAS_DEPRECATED_EXTENSIONS[]
+<<extension-appendices-list, List of Extensions>>
+endif::HAS_DEPRECATED_EXTENSIONS[]
+ifdef::HAS_DEPRECATED_EXTENSIONS[]
+<<extension-appendices-list, List of Current Extensions>>
+endif::HAS_DEPRECATED_EXTENSIONS[]
+appendix for the list of available extensions and their related structures.
+These structures expand the slink:XrInstanceCreateInfo parent struct using the
+slink:XrInstanceCreateInfo::pname:next member.
+The specific list of structures that may be used for extending
+slink:XrInstanceCreateInfo::pname:next can be found in the
+"Valid Usage (Implicit)" block immediately following
+the definition of the structure.
+
+[[instance_lost]]
+==== The Instance Lost Error
+
+The ename:XR_ERROR_INSTANCE_LOST error indicates that the slink:XrInstance has
+become unusable.
+This can: happen if a critical runtime process aborts, if the connection to the
+runtime is otherwise no longer available, or if the runtime encounters an error
+during any function execution which prevents it from being able to support
+further function execution.
+Once ename:XR_ERROR_INSTANCE_LOST is first returned, it must: henceforth be
+returned by all functions that involve an slink:XrInstance or child handle
+type until the instance is destroyed.
+Applications must: destroy the slink:XrInstance. Applications may: then attempt
+to continue by recreating all relevant OpenXR objects, starting with a new slink:XrInstance.
+A runtime may: generate an slink:XrEventDataInstanceLossPending event when
+instance loss is detected.
+
+[[instancelosspending-description]]
+==== XrEventDataInstanceLossPending
+
+[open,refpage='XrEventDataInstanceLossPending',desc='Event indicating instance loss will occur',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
+--
+include::../../generated/api/structs/XrEventDataInstanceLossPending.txt[]
+
+Receiving the slink:XrEventDataInstanceLossPending event structure indicates
+that the application is about to lose the indicated slink:XrInstance at
+the indicated pname:lossTime in the future.
+The application should call flink:xrDestroyInstance and relinquish any
+instance-specific resources.
+This typically occurs to make way for a replacement of the underlying
+runtime, such as via a software update.
+
+After the application has destroyed all of its instances and their children
+and waited past the specified time, it may then re-try flink:xrCreateInstance
+in a loop waiting for whatever maintenance the runtime is performing to complete.
+The runtime will return ename:XR_ERROR_INSTANCE_LOST from flink:xrCreateInstance
+as long as it is unable to create the instance.
+Once the runtime has returned and is able to continue, it must: resume returning
+ename:XR_SUCCESS from flink:xrCreateInstance if valid data is passed in.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:lossTime is the absolute time at which the indicated instance
+  will be considered lost and become unusable.
+****
+
+include::../../generated/validity/structs/XrEventDataInstanceLossPending.txt[]
+--
+
+[[instance-enum-helpers]]
+=== Instance Enumerated Type String Functions
+
+Applications often want to turn certain enum values from the runtime into
+strings for use in log messages, to be localized in UI, or for various other
+reasons.
+OpenXR provides functions that turn common enum types into UTF-8 strings for
+use in applications.
+
+[open,refpage='xrResultToString',desc='Converts an XrResult to a UTF-8 string',type='protos',xrefs='xrStructureTypeToString']
+--
+include::../../generated/api/protos/xrResultToString.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the handle of the instance to ask for the string or dlink:XR_NULL_HANDLE to ask the loader for the string.
+* pname:value is the elink:XrResult value to turn into a string.
+* pname:buffer is the buffer that will be used to return the string in.
+****
+
+Returns the text version of the provided elink:XrResult value as a UTF-8
+string.
+
+In all cases the returned string must: be one of:
+
+.Result String Return Values
+****
+* The literal string defined for the provide numeric value in the core spec or extension. (e.g. the value 0 results in the string ename:XR_SUCCESS)
+* `XR_UNKNOWN_SUCCESS_` concatenated with the positive result number expressed as a decimal number.
+* `XR_UNKNOWN_FAILURE_` concatenated with the negative result number expressed as a decimal number.
+****
+
+include::../../generated/validity/protos/xrResultToString.txt[]
+--
+
+[open,refpage='xrStructureTypeToString',desc='Converts an XrStructureType to a UTF-8 string',type='protos',xrefs='xrResultToString']
+--
+The flink:xrStructureTypeToString function is defined as follows:
+
+include::../../generated/api/protos/xrStructureTypeToString.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the handle of the instance to ask for the string
+* pname:value is the elink:XrStructureType value to turn into a string.
+* pname:buffer is the buffer that will be used to return the string in.
+****
+
+Returns the text version of the provided elink:XrStructureType value as a
+UTF-8 string.
+
+In all cases the returned string must: be one of:
+
+.Structure Type String Return Values
+****
+* The literal string defined for the provide numeric value in the core spec or extension. (e.g. the value of ename:XR_TYPE_INSTANCE_CREATE_INFO results in the string ename:XR_TYPE_INSTANCE_CREATE_INFO)
+* `XR_UNKNOWN_STRUCTURE_TYPE_` concatenated with the structure type number expressed as a decimal number.
+****
+
+include::../../generated/validity/protos/xrStructureTypeToString.txt[]
+--

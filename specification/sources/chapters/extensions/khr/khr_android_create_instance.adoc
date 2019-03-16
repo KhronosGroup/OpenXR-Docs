@@ -1,0 +1,60 @@
+include::../meta/XR_KHR_android_create_instance.adoc[]
+
+*Last Modified Date*::
+    2019-01-24
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Robert Menzel, NVIDIA +
+    Martin Renschler, Qualcomm
+
+*Overview*
+
+When the application creates an slink:XrInstance object on Android systems, additional information from the application has to be provided to the XR runtime.
+
+The Android XR runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE if the additional information is not provided by the application or if the additional parameters are invalid.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_INSTANCE_CREATE_INFO_ANDROID_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrInstanceCreateInfoAndroidKHR',desc='Creates an OpenXR Instance',type='structs',xrefs='xrCreateInstance xrDestroyInstance']
+--
+The slink:XrInstanceCreateInfoAndroidKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:applicationVM is a pointer to the application virtual machine.
+* pname:applicationActivity is a pointer to the application Activity.
+****
+
+slink:XrInstanceCreateInfoAndroidKHR contains additional Android specific information needed when calling flink:xrCreateInstance.
+The slink:XrInstanceCreateInfoAndroidKHR struct must: be provided as the pname:next pointer in the slink:XrInstanceCreateInfo struct when calling flink:xrCreateInstance.
+
+
+include::../../../../generated/validity/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-05-26 (Robert Menzel)
+** Initial draft
+* Revision 2, 2019-01-24 (Martin Renschler)
+** Added error code, reformatted

@@ -1,0 +1,302 @@
+[[extension-processes]]
+== Extension Processes
+
+To help understand how OpenXR extensions are created and supported,
+this section of the spec will discuss the various processes for
+creating, supporting, and retiring extensions.
+
+=== Extension Types
+
+As mentioned in the <<extensions, Extensions>> section, OpenXR
+extensions can take the form of:
+
+* Khronos Extensions : Containing "KHR_" in their name
+* Multi-vendor Extensions : Identified by the "EXT_" in their name
+* Vendor-specific Extensions
+  * Examples could include:
+    * ARM - XR_ARM_...
+    * Google - XR_GOOGLE_...
+    * Oculus - Desktop: XR_OCULUS_...
+
+[NOTE]
+.Note
+====
+All vendor IDs are clearly identified in the OpenXR registry (xr.xml)
+====
+
+
+=== Typical Extension Process Flow
+
+The typical extension process can be best described in the following way:
+
+One company thinks of a new feature and creates their own vendor-specific
+extension.
+At some point, if they desire, the company reveals the extension to members
+of the OpenXR Working Group (WG).
+
+If multiple companies agree on the design, they can choose to create an
+`EXT` extension that will be supported by multiple companies.
+When creating the `EXT` extension, separate discussions must: occur outside
+of the Khronos IP-Zone.
+
+If a majority of companies within the working group desire to cooperate on
+making the functionality more consistent across the OpenXR API, they can
+discuss creating a new version of the extension as a Khronos extension with
+the `KHR` prefix.
+
+[NOTE]
+.Note
+====
+The originating company could still release their original vendor-specific
+extension if they desire to get it out in a timely manner.
+If everyone likes the direction, they can create a KHR extension.
+====
+
+Sometimes, multiple companies may come up with differing ideas of how to
+implement a given feature.
+Often, this will result in multiple vendor-specific extensions.
+It is preferable to cooperate and create either `EXT` or `KHR` extensions
+whenever possible since developers prefer to use common extensions.
+
+It is also possible that the OpenXR working group could create a new
+extension without any precedence.
+When this occurs, the extension is released directly as a `KHR` extension.
+
+A graphical view of the extension discussion flow can be seen in the
+following picture:
+
+image:images/extension_discussion_flow.png[
+"Extension Discussion FLow",width=1024]
+
+
+==== Creating Extensions During Khronos Discussions
+
+As shown in the above image, Khronos extensions belong in the Khronos IP zone
+and all other extension types exist outside of the Khronos IP zone.
+Khronos extensions, therefore, may be freely discussed and designed at any
+time within Khronos.
+However, because all other extensions are outside of the Khronos IP zone,
+detailed design discussions within Khronos of these extensions should:
+occur outside of Khronos email lists and/or meeting times.
+If a non-KHR extension's design is discussed during any of these, the
+discussion must: be clearly segregated and preceded by an indication that
+the following discussion is on an extension that will not be part of Khronos IP.
+It is preferable, to avoid talking about those types of extensions
+within Khronos whenever possible.
+
+
+=== Extension Registration Process
+
+Each extension has a unique number used to identify it within the OpenXR API.
+Since there can be multiple authors working on OpenXR extensions simultaneously,
+the extension author must: first register the extension with the OpenXR
+Working Group.
+When registering an extension, the author only provides a minimal amount
+of information about their extension to help avoid future spec conflicts.
+
+The process is detailed in the OpenXR Styleguide under the "Registering
+Extensions" section.
+Please follow this process when creating extensions to avoid extension
+merge collisions.
+
+[WARNING]
+.TODO (i/769)
+====
+Provide link to styleguide?
+====
+
+The rough process for registering an extension can be split into several
+steps to accommodate extension number assignment prior to extension
+publication:
+
+1. Acquire an extension number.
+ * This is done by proposing a merge request against xr.xml.
+ * The merge should add a new <extension> tag at the end of the file with
+   attributes specifying the proposed extension name, the next unused
+   sequential extension number, the author and contact information
+   (if different than that already specified for the author ID used in the
+   extension name), and finally, disabling the extension using `supported="disabled"`
+   instead of `supported="openxr"`.
+ * The extension number will be reserved only once this merge request is
+   accepted.
+2. Develop and test the extension using the registered extension number.
+3. Create a second merge request with the completed extension using the
+   previously registered extension number, and submit it to the appropriate
+   repository storing the OpenXR code.
+ * This should include all necessary changes to the OpenXR specification,
+   the OpenXR registry file (xr.xml) and any test or example source in the
+   tree that is affected by the change.
+
+
+=== Extension Approval Process
+
+The extension approval process starts when a completed extension's
+merge request has been properly submitted.
+The approval process is important since no extension can be merged into
+the OpenXR API Specification until it has been approved by the
+appropriate members/companies.
+The extension approval process does vary based upon what type of extension
+is being submitted, and the differences are pointed out in the following
+sections.
+
+
+==== KHR Extension Approval Process
+
+`KHR` extensions are a special case in the extension approval process because
+they must be approved by a majority of the Working Group members.
+A `KHR` extension must be developed in full view and with the participation of
+the Khronos OpenXR Working Group (WG).
+The development of the extension may: occur initially through the use of one or
+more OpenXR mailing lists, but must: eventually be discussed during either a
+Technical Sub-Group (TSG) conference call, the main Working Group conference
+call, or at a Khronos Face-to-Face.
+This required visibility is to provide sufficient time for members to provide
+their own input as well as evaluate any potential Intellectual Property (IP)
+concerns prior to an approval vote.
+
+Typically, one member of the OpenXR WG, or one of the OpenXR TSGs, will
+volunteer to `champion` the extension.
+The `champion` is required to document the extension and all concerns as well
+as create the final Merge Request to integrate the extension into the
+appropriate branch.
+Often, the appropriate branch will be the master branch, but this may vary.
+This `champion` should work with all companies interested and address their
+concerns about the extension when creating the final merge request.
+
+After the appropriate members feel that the extension has progressed enough,
+the `champion` must: submit the merge request to the Working Group for approval.
+The merge request must: conform to the requirements identified in the sections above
+regarding all extension related including the specification section formatting
+and contents of the registry (xr.xml).
+
+Once the Working group approves of the merge request and the extension, it must:
+be submitted to the appropriate group within Khronos for final review and approval
+before it can be made available to the public.
+
+
+[WARNING]
+.TODO (i/769)
+====
+Is providing a Conformance test a requirement for `KHR` extension approval?
+====
+
+
+==== EXT Extension Approval Process
+
+The process for accepting `EXT` extensions is different than that of accepting
+`KHR` extensions.
+
+Unlike the `KHR` extension approval process:
+
+1. Only two or more companies need to be involved, and only one of them needs
+   to be in the Working Group.
+2. The IP is not considered to be Khronos IP, and so discussions during any
+   Working Group or Technical Sub-Group time must: be preceded by the appropriate
+   disclaimers.
+3. Only the companies participating in the development of the `EXT` extension
+   need to approve of it prior to creating a merge request.
+ * This approval may be determined in whatever method the participating
+   companies feel is appropriate.
+4. The champion still must create the merge request against the appropriate branch.
+ * In this case, only the participating companies are responsible for
+   approving the merge request before review by the appropriate OpenXR
+   Specification editor.
+5. To indicate that the `EXT` extension has been approved by the appropriate
+   members, the champion, or someone he designates, will submit the merge request
+   to the Working Group for approval and indicate that it has been approved by
+   all relevant members.
+6. The Specification editor must: review the merge request and ensure that:
+ * CI does not failed for any reason due to the changes within the merge request.
+ * There are no pending conflicts.
+ * The reviewer may: also perform a quick check of the correctness of the
+   specification and registry (xr.xml) changes.
+7. Once the editor is satisfied with their simple review, they (or someone
+   approved by them to perform a merge) must: merge the merge request into the
+   appropriate branch within a reasonable amount of time (typically within one
+   or two weeks).
+
+
+==== Vendor-Specific Extension Approval Process
+
+Similar to an `EXT` extension, vendor-specific extensions should: not use OpenXR
+WG or TSG time and may: be done entirely within the domain of the company
+creating the extension.
+
+For vendor-specific extensions, the main process is:
+
+1. The company creating the extension identifies a `champion` to write up
+   the extension merge request.
+2. The company determines when they are ready to submit the merge request to the
+   OpenXR Specification editor submitting an merge request with completed extension's
+   changes.
+3. The Specification editor must: review the merge request and ensure that:
+ * CI does not failed for any reason due to the changes within the merge request.
+ * There are no pending conflicts.
+ * The reviewer may: also perform a quick check of the correctness of the
+   specification and registry (xr.xml) changes.
+4. Once the editor is satisfied with their simple review, they (or someone
+  approved by them to perform a merge) must: merge the merge request into the
+  appropriate branch within a reasonable amount of time (typically within one or
+  two weeks).
+
+[NOTE]
+.Note
+====
+If an extension is not intended for private use on a company's particular
+hardware, runtime or environment, it is recommended that they disclose
+the extension to the WG.
+This may occur during the step of merge request creation, but may occur
+at any point the vendor desires.
+
+This suggestion is based on the fact that other companies may be willing
+to collaborate on the design of an `EXT` for common behavior.
+`EXT` extensions are preferable for application developers since they are
+guaranteed to work across more than one vendor.
+
+However, sometimes a vendor may desire speed over collaboration and should:
+not feel pressured into always using the `EXT` path for extensions.
+====
+
+
+=== Extension Deprecation Process
+
+Extensions can be deprecated for several reasons:
+
+1. The extension is no longer useful or supported
+2. The extension has been replaced by another extension
+3. The extension functionality has been merged into the core OpenXR API
+
+In the case of either 1. or 2., what could happen is that Runtime vendors
+will simply stop exporting support for a deprecated extension at some
+point in the future.
+This is okay since extensions are optional.
+It is recommended that a transition period occur with some kind of
+warning indicating that the extension is going away since applications
+could be written that depend on it.
+
+However, because released applications could depend on an extension, it is
+preferable to support that extension at least until a new version of the
+OpenXR API is released.
+For example, if an extension is deprecated and it is written as part of
+OpenXR 1.0, it is recommended that Runtimes remove support for that
+extension no sooner than the release of OpenXR 1.1.
+
+Deprecated extensions will continue to be listed in the OpenXR API, with
+some indication that they have been deprecated, until at least the next
+Major version bump of the OpenXR API.
+This is also the case for extension features that have been merged into the
+OpenXR core API (3. above).
+In fact, it is recommended that on a major API version increase, that we
+re-evaluate all available extensions and determine if they should be
+removed from the API.
+
+In comparison, Vulkan is currently thinking that no extensions will
+survive the API bump from one major version to another (i.e 1.x to 2.x).
+In this way, they can completely clean the slate of extensions.
+OpenXR may, or may not want to do the same.
+
+[WARNING]
+.TODO (i/769)
+====
+Decide if OpenXR wants to do the same thing as Vulkan for extensions.
+====
