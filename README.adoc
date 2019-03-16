@@ -1,0 +1,46 @@
+ifdef::env-github[]
+:note-caption: :information_source:
+endif::[]
+
+= OpenXR^(R)^ API Documentation Project
+
+This repository contains sources for the formal documentation of the OpenXR
+API. This includes:
+
+[options="compact"]
+ * the OpenXR API Specification
+ * OpenXR header files 
+ * related tools and scripts.
+
+The authoritative public repository is located at
+https://github.com/KhronosGroup/OpenXR-Docs/.
+It hosts public Issue tracker, and accepts patches (Pull Requests) from the
+general public.
+
+== Directory Structure
+
+The directory structure is as follows:
+
+```
+README.adoc           This file
+COPYING.md            Copyright and licensing information
+CODE_OF_CONDUCT.md    Code of Conduct
+specification/        Specification - files to generate the spec
+include/openxr/       OpenXR headers, generated from the Registry
+```
+
+This structure is for the provisional specification.  Things are 
+incomplete at launch but will be added to going forward.
+
+== Building the Specification and Reference Pages
+
+The document sources are marked up in Asciidoctor format, and we use
+`asciidoctor` and related toolchain components to generate output documents.
+Once the pulic scripts are ready, see link:BUILD.adoc[BUILD.adoc] 
+for more information on installing the toolchain and building the 
+Specification.
+
+
+== Generating Headers and Related Files
+
+The ability to generate the header and related files will be added in the future.
