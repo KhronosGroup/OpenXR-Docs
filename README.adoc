@@ -4,6 +4,10 @@ endif::[]
 
 = OpenXR^(R)^ API Documentation Project
 
+[NOTE: This is the initial set up for the provisional release of the 
+specification.  Not all the files are populated yet, and expect significant
+changes as the spec moves towards 1.0.]  
+
 This repository contains sources for the formal documentation of the OpenXR
 API. This includes:
 
@@ -36,7 +40,7 @@ incomplete at launch but will be added to going forward.
 
 The document sources are marked up in Asciidoctor format, and we use
 `asciidoctor` and related toolchain components to generate output documents.
-Once the pulic scripts are ready, see link:BUILD.adoc[BUILD.adoc] 
+Once the public scripts are ready, see link:BUILD.adoc[BUILD.adoc] 
 for more information on installing the toolchain and building the 
 Specification.
 
