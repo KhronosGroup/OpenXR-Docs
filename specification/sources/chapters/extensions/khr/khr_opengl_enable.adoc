@@ -168,7 +168,7 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLWaylandKHR.txt
 When creating an OpenGL-backed slink:XrSession
 on any Linux/Unix platform that utilizes the Wayland protocol with its compositor,
 the application will provide
-a pointer to an slink:XrGraphicsBindingOpenGLWin32KHR in the `next` chain of the
+a pointer to an slink:XrGraphicsBindingOpenGLWaylandKHR in the `next` chain of the
 slink:XrSessionCreateInfo.
 
 The required window system configuration define to expose this structure type is
