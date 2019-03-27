@@ -517,12 +517,12 @@ Supported input sources:
 ** subpathname:/input/y/click
 ** subpathname:/input/y/touch
 ** subpathname:/input/menu/click
-** subpathname:/input/system/click (may: not be available for application use)
 * On pathname:/user/hand/right only:
 ** subpathname:/input/a/click
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application use)
 * subpathname:/input/grip/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
