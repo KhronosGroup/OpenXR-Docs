@@ -1,10 +1,6 @@
 #ifndef OPENXR_H_
 #define OPENXR_H_ 1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
 ** Copyright (c) 2017-2019 The Khronos Group Inc.
 **
@@ -27,6 +23,11 @@ extern "C" {
 */
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 
 #define XR_VERSION_0_90 1
 #include "openxr_platform_defines.h"
@@ -34,13 +35,13 @@ extern "C" {
     (((major) << 22) | ((minor) << 12) | (patch))
 
 // OpenXR current version number.
-#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(0, 90, 0)
+#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(0, 90, 1)
 
 #define XR_VERSION_MAJOR(version) ((uint32_t)(version) >> 22)
 #define XR_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define XR_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
 // Version of this file
-#define XR_HEADER_VERSION 42
+#define XR_HEADER_VERSION 43
 
 
 #if !defined(XR_NULL_HANDLE)
@@ -128,8 +129,6 @@ XR_DEFINE_HANDLE(XrActionSet)
 #define XR_MAX_APPLICATION_NAME_SIZE      128
 #define XR_MAX_ENGINE_NAME_SIZE           128
 #define XR_MAX_RUNTIME_NAME_SIZE          128
-#define XR_MAX_TOUCH_COUNT                2
-#define XR_MAX_ACTION_SOURCES_COUNT       8
 #define XR_MAX_PATH_LENGTH                256
 #define XR_MAX_STRUCTURE_NAME_SIZE        64
 #define XR_MAX_RESULT_STRING_SIZE         64
@@ -157,7 +156,6 @@ typedef enum XrResult {
     XR_ERROR_DRIVER_INCOMPATIBLE = -5,
     XR_ERROR_INITIALIZATION_FAILED = -6,
     XR_ERROR_FUNCTION_UNSUPPORTED = -7,
-    XR_ERROR_FEATURE_UNSUPPORTED = -8,
     XR_ERROR_EXTENSION_NOT_PRESENT = -9,
     XR_ERROR_LIMIT_REACHED = -10,
     XR_ERROR_SIZE_INSUFFICIENT = -11,

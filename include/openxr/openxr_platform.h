@@ -1,10 +1,6 @@
 #ifndef OPENXR_PLATFORM_H_
 #define OPENXR_PLATFORM_H_ 1
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*
 ** Copyright (c) 2017-2019 The Khronos Group Inc.
 **
@@ -25,6 +21,12 @@ extern "C" {
 ** This header is generated from the Khronos OpenXR XML API Registry.
 **
 */
+
+#include "openxr.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 #ifdef XR_USE_PLATFORM_ANDROID

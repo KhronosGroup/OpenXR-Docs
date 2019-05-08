@@ -694,8 +694,6 @@ Some common suffixes shared across many of the return codes are defined below:
 |Initialization of object could not be completed.
 |ename:XR_ERROR_FUNCTION_UNSUPPORTED
 |The requested function was not found or is otherwise unsupported.
-|ename:XR_ERROR_FEATURE_UNSUPPORTED
-|The requested feature is unavailable.
 |ename:XR_ERROR_EXTENSION_NOT_PRESENT
 |A requested extension is not supported.
 |ename:XR_ERROR_LIMIT_REACHED

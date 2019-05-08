@@ -1,0 +1,221 @@
+#!/bin/sh
+#
+# Copyright (c) 2018-2019 The Khronos Group Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# checkMarkup - search for a number of easily-correctable errors in the
+# AsciiDoctor markup.
+#
+# Usage: checkMarkup
+
+FAILED=
+
+# Base function for grepping through sources for errors
+# Params:
+# 1. Description of issue being checked for
+# All remaining parameters: passed to grep, typically a regex or something like -e regex -e regex
+# May set GREPCMD before call to do something other than egrep
+grep_sources() {
+    DESC="$1"
+    shift
+    if ${GREPCMD:-egrep} -n "$@" sources/*.adoc sources/chapters/*.adoc sources/chapters/extensions/khr/*.adoc sources/chapters/extensions/ext/*.adoc; then
+        echo ""
+        echo "*** Error: Above lines matched grep with  $@"
+        echo "*** $DESC"
+        echo ""
+        echo ""
+        FAILED="yes"
+    fi
+}
+
+
+# Common Params for the various check markup functions:
+# 1. macro first letter (so s in slink)
+# 2. description of category
+# 3. expectation, completing the sentence "Things like this should..."
+# 4. partial regex, which will be appended to the end of markup macro (eg slink:yourregex)
+
+# Function for checking markup macros like slink:
+check_link_markup() {
+    letter=$1
+    shift
+    category=$1
+    shift
+    expected="$1"
+    shift
+    grep_sources \
+        "'${letter}link:' is for linking to OpenXR ${category}, which should ${expected}. Name might be misspelled or '${letter}link:' might be the wrong markup macro to use." \
+        "${letter}link:$1"
+}
+
+# Function for checking markup macros like sname:
+check_name_markup() {
+    letter=$1
+    shift
+    category=$1
+    shift
+    expected="$1"
+    shift
+    grep_sources \
+        "'${letter}name:' is for ${category} with no anchor to link to in the spec, and OpenXR ${category} should ${expected}. Name might be misspelled or '${letter}name:' might be the wrong markup macro to use." \
+        "${letter}name:$1"
+}
+
+# Function for checking markup macros like stext:
+check_text_markup() {
+    letter=$1
+    shift
+    category=$1
+    shift
+    expected="$1"
+    shift
+    grep_sources \
+        "'${letter}text:' is for formatting text like ${category}, and OpenXR ${category} should ${expected}. Name might be misspelled or '${letter}text:' might be the wrong markup macro to use." \
+        "${letter}text:$1"
+}
+
+# Bulk markup checker:
+# Takes same params as the others, but then uses the additional parameters to choose which check_*_markup functions to call
+check_markups() {
+    letter=$1
+    shift
+    category=$1
+    shift
+    expected="$1"
+    shift
+    pattern="$1"
+    shift
+    for markup_type in $@; do
+        check_${markup_type}_markup $letter "$category" "$expected" "$pattern"
+    done
+}
+
+###
+# Actual Checks
+###
+(
+cd $(dirname $0)
+# "f" markup: check function naming convention
+check_markups f "function names" "start with xr" "X[rR]" link name text
+
+# "s" markup: check structure naming convention
+check_markups s "structure type names" "start with Xr" "xr" link name text
+
+# "e" markup: enumerated types (elink) and enumerant names (ename, etext)
+check_link_markup e "enumerated type names" "start with Xr followed by a capital letter" "x[Rr]"
+check_link_markup e "enumerated type names" "start with Xr followed by a capital letter" "Xr[^A-Z]"
+check_markups e "enumerant names" "start with XR_ followed by another capital letter" "(x[rR]|Xr|XR[^_]|XR_[^A-Z])" name text
+
+# "p" markup: check parameter and member naming convention
+check_markups p "parameter and member names" "typically not start with the letters 'xr'" "[xX][rR]" name text
+grep_sources \
+    "'plink:' is not a valid markup macro. Perhaps 'pname:' was meant?" \
+    "plink:"
+
+# "t" markup: check (function pointer) type  naming convention
+# skip for now - TODO
+
+# "d" markup: check define naming convention
+check_markups d "C definition names" "start with XR_ followed by another capital letter" "(x[rR]|Xr|XR[^_A]|XR_[^A-Z])" link name
+
+# XR_ERROR_anything marked up with something other than "e" markup
+grep_sources \
+    "All XR_ERROR_... identifiers should be marked up with 'ename:', or rarely 'etext:' (for identifiers with wildcards/placeholders)" \
+    '(.link|[^e]name|[^e]text):XR_ERROR_'
+
+# Things missed in conversion/cleanup - trailing backtick.
+grep_sources \
+    "Extraneous backtick at the end of a markup macro" \
+    '(.link|.name|.text|code|basetype):[a-zA-Z0-9_]+`'
+
+# One instead of two colons for scope.
+grep_sources \
+    "Missing colon in slink:something::pname:membername or similar" \
+    '(slink|flink):[a-zA-Z0-9_]+:pname'
+
+# Bad spelling.
+grep_sources \
+    "This should be spelled OpenXR" \
+    '[Oo]penXr'
+
+# AsciiDoctor markup error
+grep_sources \
+    "ifdef/endif/include lines must end in []" \
+    "^(ifdef|endif|include)::[^[]+$"
+
+# Style guide section 5.1.6
+grep_sources \
+    "Per the style guide, 'compile time' is two words" \
+    "\b[Cc]ompile-time"
+grep_sources \
+    "Per the style guide, 'color space' is two words" \
+    "\b[Cc]olorspace"
+grep_sources \
+    "Per the style guide, 'compile time' is two words" \
+    "\b[Cc]ompile-time"
+grep_sources \
+    "Per the style guide, 'double-buffer' is hyphenated" \
+    "\b[dD]ouble( ?)buffer"
+grep_sources \
+    "Per the style guide, 'entry point' is two words" \
+    "\b[Ee]ntry(-?)point"
+grep_sources \
+    "Per the style guide, 'GitHub' is the proper captalization" \
+    "[^/](Github|git[hH]ub)" # the leading pattern here is to exclude URLs
+grep_sources \
+    "Per the style guide, 'mipmap' is one word" \
+    "\b[mM]ip[- ]map"
+grep_sources \
+    "Per the style guide, 'swapchain' is one word" \
+    "\b[sS]wap[- ]chain"
+grep_sources \
+    "Per the style guide, do not include a hyphen when using the prefix 'pre' to indicate 'prior to'" \
+    "\b[Pp]re-"
+grep_sources \
+    "We have decided to consistently use 'composition layer' rather than 'compositor layer'" \
+    "\b[Cc]ompositor( ?)[Ll]ayer"
+grep_sources \
+    "We have decided to consistently use 'projection' rather than 'multiprojection'" \
+    "\b[Mm]ulti(-?)[Pp]rojection"
+
+grep_sources \
+    "Per the style guide, the text NULL should be marked up as code:NULL" \
+    '`NULL`'
+
+GREPCMD="grep -P" grep_sources \
+    "No TODO without associated issue notated as TODO(i/issuenum)" \
+    '[tT][oO][dD][oO](?!.*\(i/[0-9]+)'
+
+grep_sources \
+    "We have no members called pName, just name." \
+    '\bpName\b'
+
+grep_sources \
+    "We have no members called pNext, just next." \
+    '\bpNext\b'
+
+grep_sources \
+    "We have no members called sType, just type." \
+    '\bsType\b'
+
+#grep_sources \
+#    "test" \
+#    "basetype:"
+
+)
+
+if [ "$FAILED" ]; then
+    echo "Failures detected"
+    exit 1
+fi

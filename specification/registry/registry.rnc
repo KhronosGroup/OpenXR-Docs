@@ -1,0 +1,467 @@
+# Copyright (c) 2013-2019 The Khronos Group Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Relax NG schema for Khronos OpenXR API Registry XML
+#
+# See https://www.khronos.org/openxr/
+#
+# This definition is subject to change (mostly in the form of additions)
+
+# Toplevel is a <registry> tag.
+# May be led by an optional <comment> tag containing e.g. copyrights.
+start =
+    element registry {
+        (CommentElt?
+         | VendorIds*
+         | Tags*
+         | Types*
+         | Enums*
+         | Commands*
+         | Feature*
+         | Extensions*)*
+    }
+
+# <vendorids> defines vendor IDs for vendors without PCI vendor IDs
+VendorIds = element vendorids { CommentAttr?, VendorId* }
+
+# <vendorid> defines a single vendor ID.
+VendorId =
+    element vendorid {
+        attribute name { VendorIdRef_t },
+        attribute id { HexValue_t },
+        CommentAttr
+    }
+
+# <tags> defines a group of author/vendor tags
+Tags = element tags { CommentAttr?, Tag* }
+
+# <tag> defines a single author/vendor tag.
+#   name - name of the tag
+#   author - name of the author (usually a company or project name)
+#   contact - contact responsible for the tag (name and contact information)
+Tag =
+    element tag {
+        attribute name { VendorId_t },
+        attribute author { text },
+        attribute contact { text }
+    }
+
+# <types> defines a group of types
+Types = element types { CommentAttr?, (Type | CommentElt)* }
+
+# <type> defines a single type.
+# The contents vary, based mostly on the value of the "category" attribute.
+Type =
+    element type {
+        CommentAttr?,
+        (TypeInclude
+         | TypeEnum
+         | TypeRequires
+         | TypeDefine
+         | TypeBasetype
+         | TypeBitmask
+         | TypeHandle
+         | TypeStruct
+         | TypeFuncpointer)
+    }
+
+# <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+TypeInclude =
+    attribute category { "include" },
+    attribute name { PlatformDefinesName },
+    text
+
+# <type name="XrStructureType" category="enum"/>
+TypeEnum =
+    attribute category { "enum" },
+    attribute name { XrTypeName_t },
+    empty
+
+# These don't have a category attribute!
+# <type requires="vulkan/vulkan.h" name="VkDevice"/>
+TypeRequires =
+    NameAttr,
+    attribute requires {
+        xsd:token {
+            # Should vaguely look like a forward-slash delimited filename
+            pattern = "[\-a-zA-Z0-9_]+(/[a-zA-Z0-9_]+)*.h"
+        }
+        | PlatformDefinesName
+    },
+    empty
+
+# These can be quite long with their mixed text.
+TypeDefine =
+    attribute category { "define" },
+    text,
+    element name { XrEntityName_t },
+    text,
+    (element type { "XR_MAKE_VERSION" },
+     text)?
+
+# <type category="basetype">typedef <type>uint64_t</type> <name>XrFlags64</name>;</type>
+# <type category="basetype"><type>XR_DEFINE_ATOM</type>(<name>XrPath</name>)</type>
+TypeBasetype =
+    attribute category { "basetype" },
+    text,
+    element type { "XR_DEFINE_ATOM" | xsd:NCName },
+    text,
+    element name { XrTypeName_t },
+    text
+
+# <type bitvalues="XrInstanceCreateFlagBits" category="bitmask"> typedef <type>XrFlags64</type> <name>XrInstanceCreateFlags</name>;</type>
+TypeBitmask =
+    mixed {
+        attribute category { "bitmask" },
+        attribute bitvalues {
+            xsd:NCName { pattern = "Xr([A-Z]+[a-z]*)+FlagBits[A-Z]*" }
+        }?,
+        element type { "XrFlags64" },
+        element name { XrTypeName_t }
+    }
+
+# <type category="handle" parent="XrInstance"><type>XR_DEFINE_HANDLE</type>(<name>XrSession</name>)</type>
+TypeHandle =
+    attribute category { "handle" },
+    attribute parent { XrTypeNameRef_t }?,
+    element type { "XR_DEFINE_HANDLE" },
+    text,
+    element name { XrTypeName_t },
+    text
+
+# Some structs have type and next members, which get special validation.
+#
+# <type category="struct" name="XrInstanceProperties" returnedonly="true">
+#     <member values="XR_TYPE_INSTANCE_PROPERTIES"><type>XrStructureType</type> <name>type</name></member>
+#     <member>const <type>void</type>* <name>next</name></member>
+#     <member><type>uint32_t</type> <name>runtimeVersion</name></member>
+#     <member><type>char</type> <name>runtimeName</name>[<enum>XR_MAX_RUNTIME_NAME_SIZE</enum>]</member>
+# </type>
+# <type category="struct" name="XrVector2f">
+#     <member><type>float</type>          <name>x</name></member>
+#     <member><type>float</type>          <name>y</name></member>
+# </type>
+TypeStruct =
+    attribute category { "struct" },
+    attribute name { XrTypeName_t },
+    attribute protect { XrUpperSnakeCase_t }?,
+    attribute structextends { XrTypeNameRef_t }?,
+    MayAliasAttr?,
+    ReturnedOnlyAttr?,
+    (# Struct has type and next
+     (attribute parentstruct { XrTypeNameRef_t }?,
+      text,
+      StructTypeMember,
+      text,
+      StructNextMember,
+      (text, StructGeneralMember)*)
+     | # Struct just has general members.
+       (text, StructGeneralMember)*)
+
+StructTypeMember =
+    element member {
+        attribute values {
+            xsd:NCName { pattern = "XR_TYPE_[A-Z0-9]+(_[A-Z0-9]+)*" }
+        },
+        element type { "XrStructureType" },
+        text,
+        element name { "type" }
+    }
+StructNextMember =
+    element member {
+        text,
+        element type { "void" },
+        text,
+        element name { "next" }
+    }
+StructGeneralMember =
+    element member {
+        LenAttr?,
+        OptionalAttr?,
+        NoAutoValidityAttr?,
+        text,
+        element type { xsd:NCName },
+        text,
+        ParamOrMemberNameElt,
+        (text,
+         (# For array sizes corresponding to an enum/define
+          element enum { XrUpperSnakeCase_t },
+          text)?)?
+    }
+
+# <type category="funcpointer">typedef void (XRAPI_PTR *<name>PFN_xrVoidFunction</name>)(void);</type>
+# <type category="funcpointer" requires="XrDebugUtilsMessengerCallbackDataEXT">typedef XrBool32 (XRAPI_PTR *<name>PFN_xrDebugUtilsMessengerCallbackEXT</name>)(
+#             <type>XrDebugUtilsMessageSeverityFlagsEXT</type>              messageSeverity,
+#             <type>XrDebugUtilsMessageTypeFlagsEXT</type>                  messageTypes,
+#             const <type>XrDebugUtilsMessengerCallbackDataEXT</type>*      callbackData,
+#             <type>void</type>*                                            userData);
+#         </type>
+TypeFuncpointer =
+    attribute category { "funcpointer" },
+    # Not checking if struct mentioned is known, due to limitations in xsd:IDREF
+    attribute requires { XrEntityName_t }?,
+    text,
+    element name { XrPFNName_t },
+    text,
+    (element type { xsd:NCName },
+     text)*
+
+# <enums> elements immediately inside the <registry> may be either bitmask or enum
+Enums = EnumEnums | BitmaskEnums
+
+# <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+EnumEnums =
+    element enums {
+        attribute name { XrTypeName_t | "API Constants" }?,
+        CommentAttr?,
+        attribute type { "enum" }?,
+        (EnumInEnums | Unused | CommentElt)*
+    }
+
+# <enums name="XrInstanceCreateFlagBits" type="bitmask">
+BitmaskEnums =
+    element enums {
+        attribute name { XrTypeName_t }?,
+        CommentAttr?,
+        attribute type { "bitmask" },
+        (BitmaskEnumInEnums | Unused | CommentElt)*
+    }
+
+# <enum> defines or references a single enumerant.
+# It can look several ways:
+
+# From inside EnumEnums (<enums type="enum">):
+# <enum value="0" name="XR_SUCCESS" comment="Command completed successfully."/>
+EnumInEnums =
+    element enum {
+        mixed {
+            attribute value { xsd:long },
+            attribute name { XrUpperSnakeCase_t },
+            CommentAttr?
+        }
+    }
+
+# From inside BitmaskEnums (<enums type="bitmask">):
+# <enum bitpos="0" name="XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT" comment="Content will be protected from CPU access"/>
+BitmaskEnumInEnums =
+    element enum {
+        attribute bitpos {
+            xsd:unsignedByte { maxExclusive = "64" }
+        },
+        attribute name { XrUpperSnakeCase_t },
+        CommentAttr?
+    }
+
+# <unused> defines a range of enumerants not currently being used
+#   start, end - beginning and end of an unused numeric range
+#   vendor - unused
+#   comment - unused
+Unused =
+    element unused {
+        attribute start { IntegerOrHex_t },
+        attribute end { IntegerOrHex_t }?,
+        VendorAttr?,
+        CommentAttr?
+    }
+
+# <commands> defines a group of commands
+Commands = element commands { CommentAttr?, Command* }
+
+# <command> defines a single command
+Command =
+    element command {
+        attribute errorcodes { ReturnCodes_t }?,
+        attribute externsync { text }?,
+        attribute successcodes { ReturnCodes_t }?,
+        CommentAttr?,
+        element proto {
+            element type { XrTypeNameRef_t },
+            element name { XrFuncName_t }
+        },
+        element param {
+            attribute len { text }?,
+            attribute externsync { xsd:NCName }?,
+            OptionalAttr?,
+            NoAutoValidityAttr?,
+            mixed {
+                TypeRefElt?,
+                ParamOrMemberNameElt,
+                element enum { xsd:NCName }?
+            }
+        }*
+    }
+
+# Each <feature> defines the interface of an API version.
+Feature =
+    element feature {
+        attribute api { text },
+        NameAttr,
+        attribute number { xsd:float },
+        ProtectAttr?,
+        CommentAttr?,
+        (element require {
+             ExtensionNameAttr?,
+             CommentAttr?,
+             (InterfaceElement | CommentElt)*
+         }
+         | element remove {
+               CommentAttr?, (InterfaceElement | CommentElt)*
+           })*
+    }
+
+Extensions = element extensions { CommentAttr?, Extension* }
+
+# Defines the interface of an API <extension>. Like a <feature>
+# tag, but with slightly different attributes.
+Extension =
+    element extension {
+        attribute name { XrExtNameId_t },
+        attribute number { IntegerOrHex_t },
+        attribute protect { XrUpperSnakeCase_t }?,
+        # attribute author { text }?,
+        # attribute contact { text }?,
+        attribute type { "instance" },
+        attribute requires { XrExtNameRef_t }?,
+        # attribute requiresCore { text }?,
+        attribute supported { "openxr" | "disabled" }?,
+        attribute promotedto { text }?,
+        # attribute deprecatedby { text }?,
+        # attribute obsoletedby { text }?,
+        # attribute provisional { text }?,
+        CommentAttr?,
+        (element require {
+             attribute api { text }?,
+             attribute feature { text }?,
+             ExtensionNameAttr?,
+             CommentAttr?,
+             (InterfaceElement | CommentElt)*
+         }
+         | element remove {
+               attribute api { text }?,
+               CommentAttr?,
+               (InterfaceElement | CommentElt)*
+           })*
+    }
+# Contents of a <require> / <remove> tag, defining a group
+# of features to require or remove.
+#
+# Examples:
+# <type name="XrGraphicsBindingVulkanKHR"/>
+# <command name="xrGetVulkanInstanceExtensionsKHR"/>
+# <enum name="XR_TRUE"/>
+# <enum value="6" name="XR_KHR_vulkan_enable_SPEC_VERSION"/>
+# <enum value="&quot;XR_KHR_vulkan_enable&quot;" name="XR_KHR_VULKAN_ENABLE_EXTENSION_NAME"/>
+# <enum offset="0" extends="XrObjectType"        name="XR_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"  comment="XrDebugUtilsMessengerEXT"/>
+# <enum offset="0" extends="XrResult"   dir="-"  name="XR_ERROR_DEBUG_UTILS_MESSENGER_INVALID_EXT"/>
+InterfaceElement =
+    element type {
+        attribute name { XrEntityName_t | PlatformDefinesName },
+        CommentAttr?
+    }
+    | element command {
+          attribute name { XrFuncName_t },
+          CommentAttr?
+      }
+    | element enum {
+          (# the name define
+           attribute name {
+               xsd:NCName {
+                   pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+_EXTENSION_NAME"
+               }
+           },
+           attribute value { ExtensionNameDefineVal_t }?)
+          | (# Just a non-name define
+             attribute name { XrDefineOrEnumName_t },
+             attribute value { xsd:unsignedInt }?,
+             CommentAttr?)
+          | (# Extending another
+             attribute name { XrUpperSnakeCase_t },
+             attribute offset { xsd:integer },
+             attribute extends { XrTypeNameRef_t },
+             attribute dir { "-" }?,
+             CommentAttr?)
+      }
+
+# What is used in the name attribute of the platform defines include.
+PlatformDefinesName = "openxr_platform_defines"
+
+# Data types - all end in _t
+MemberOrParamName_t =
+    xsd:NCName { pattern = "[a-z]+([A-Z]+[a-z]*)*" }
+    | # TODO Remove workaround - see issue 914
+      "screen_number"
+VendorId_t = xsd:ID { pattern = "[A-Z]+" }
+VendorIdRef_t = xsd:IDREF { pattern = "[A-Z]+" }
+HexValue_t = xsd:token { pattern = "0[xX][0-9a-fA-F]+" }
+IntegerOrHex_t = xsd:long | HexValue_t
+XrUpperSnakeCase_t =
+    xsd:NCName { pattern = "XR_[A-Z0-9]+(_[A-Z0-9]+)*" }
+# Adds the ability to recognize the mixed-case _SPEC_VERSION defines
+XrDefineOrEnumName_t =
+    XrUpperSnakeCase_t
+    | xsd:NCName {
+          pattern = "XR_[A-Z]+(_([A-Za-z0-9]+))+_SPEC_VERSION"
+      }
+XrFuncName_t = xsd:NCName { pattern = "xr([A-Z]+[a-z0-9]*)+" }
+XrPFNName_t = xsd:NCName { pattern = "PFN_xr([A-Z]+[a-z0-9]*)+" }
+
+XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
+XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
+
+XrExtNameId_t = xsd:ID { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+XrExtNameRef_t = xsd:IDREF { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+
+ReturnCodes_t =
+    xsd:token {
+        pattern = "XR_([A-Z]+)(_[A-Z]+)*(,XR_([A-Z]+)(_[A-Z]+)*)*"
+    }
+ExtensionNameDefineVal_t =
+    xsd:token {
+        # For the name define
+        pattern = '"XR_[A-Z]+((_([A-Z0-9]+|[a-z0-9]+))*)"'
+    }
+XrEntityName_t =
+    XrUpperSnakeCase_t | XrFuncName_t | XrPFNName_t | XrTypeName_t
+
+# Repeatedly used attributes
+ExtensionNameAttr = attribute extension { XrExtNameRef_t }
+VendorAttr = attribute vendor { VendorIdRef_t }
+CommentAttr = attribute comment { text }
+NameAttr = attribute name { xsd:NCName }
+ProtectAttr = attribute protect { XrUpperSnakeCase_t }
+
+# len is a comma-separated list of:
+# zero or more argument names (currently 0 or 1) plus
+# an optional "null-terminated"
+# These are all OK:
+# len="null-terminated"
+# len="propertyCapacityInput"
+# len="enabledApiLayerCount,null-terminated"
+LenAttr =
+    attribute len {
+        xsd:token {
+            pattern =
+                "(null-terminated)|([a-z]+([A-Z]+[a-z]*)*(,[a-z]+([A-Z]+[a-z]*)*)*(,null-terminated)?)"
+        }
+    }
+# Optional attributes that must be true if present.
+NoAutoValidityAttr = attribute noautovalidity { "true" }
+ReturnedOnlyAttr = attribute returnedonly { "true" }
+MayAliasAttr = attribute mayalias { "true" }
+OptionalAttr = attribute optional { "true" }
+
+# Repeatedly used elements
+TypeRefElt = element type { xsd:NCName }
+ParamOrMemberNameElt = element name { xsd:NCName }
+CommentElt = element comment { text }
