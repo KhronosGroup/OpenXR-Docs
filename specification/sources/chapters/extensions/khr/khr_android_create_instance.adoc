@@ -1,18 +1,23 @@
 include::../meta/XR_KHR_android_create_instance.adoc[]
 
 *Last Modified Date*::
-    2019-01-24
+    2019-07-17
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Robert Menzel, NVIDIA +
-    Martin Renschler, Qualcomm
+    Martin Renschler, Qualcomm +
+    Krzysztof Kosiński, Google
 
 *Overview*
 
-When the application creates an slink:XrInstance object on Android systems, additional information from the application has to be provided to the XR runtime.
+When the application creates an slink:XrInstance object on Android systems,
+additional information from the application has to be provided to the XR
+runtime.
 
-The Android XR runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE if the additional information is not provided by the application or if the additional parameters are invalid.
+The Android XR runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE
+if the additional information is not provided by the application or if the
+additional parameters are invalid.
 
 *New Object Types*
 
@@ -37,12 +42,22 @@ include::../../../../generated/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:applicationVM is a pointer to the application virtual machine.
-* pname:applicationActivity is a pointer to the application Activity.
+* pname:applicationVM is a pointer to the JNI's opaque `JavaVM` structure,
+  cast to a void pointer.
+* pname:applicationActivity is a JNI reference to an `android.app.Activity`
+  that will drive the session lifecycle of this instance, cast to a void
+  pointer.
 ****
 
-slink:XrInstanceCreateInfoAndroidKHR contains additional Android specific information needed when calling flink:xrCreateInstance.
-The slink:XrInstanceCreateInfoAndroidKHR struct must: be provided as the pname:next pointer in the slink:XrInstanceCreateInfo struct when calling flink:xrCreateInstance.
+slink:XrInstanceCreateInfoAndroidKHR contains additional Android specific
+information needed when calling flink:xrCreateInstance.
+The pname:applicationVM field should be populated with the `JavaVM`
+structure received by the `JNI_OnLoad` function, while the
+pname:applicationActivity field will typically contain a reference to a Java
+activity object received through an application-specific native method.
+The slink:XrInstanceCreateInfoAndroidKHR structure must: be provided in the
+pname:next chain of the slink:XrInstanceCreateInfo structure when calling
+flink:xrCreateInstance.
 
 
 include::../../../../generated/validity/structs/XrInstanceCreateInfoAndroidKHR.txt[]
@@ -58,3 +73,5 @@ include::../../../../generated/validity/structs/XrInstanceCreateInfoAndroidKHR.t
 ** Initial draft
 * Revision 2, 2019-01-24 (Martin Renschler)
 ** Added error code, reformatted
+* Revision 3, 2019-07-17 (Krzysztof Kosiński)
+** Non-substantive clarifications.

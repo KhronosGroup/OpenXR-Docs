@@ -13,6 +13,7 @@
 #else
 #include <time.h>
 #define XR_USE_TIMESPEC 1
+typedef struct timespec timespec;
 #endif
 
 #include "openxr/openxr.h"

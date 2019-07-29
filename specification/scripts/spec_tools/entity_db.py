@@ -20,6 +20,7 @@ from abc import ABC, abstractmethod
 
 from .shared import (CATEGORIES_WITH_VALIDITY, EXTENSION_CATEGORY,
                      NON_EXISTENT_MACROS, EntityData)
+from .util import getElemName
 
 
 def _entityToDict(data):
@@ -149,6 +150,10 @@ class EntityDatabase(ABC):
             self.addEntity(protect, 'dlink',
                            category='configdefines', generates=False)
 
+        alias = info.elem.get('alias')
+        if alias:
+            self.addAlias(name, alias)
+
         cat = info.elem.get('category')
         if cat == 'struct':
             self.addEntity(name, 'slink', elem=info.elem)
@@ -234,15 +239,34 @@ class EntityDatabase(ABC):
     # Accessors
     ###
     def findMacroAndEntity(self, macro, entity):
-        """Look up EntityData by macro and entity pair."""
+        """Look up EntityData by macro and entity pair.
+
+        Does **not** resolve aliases."""
         return self._byMacroAndEntity.get((macro, entity))
 
     def findEntity(self, entity):
-        """Look up EntityData by entity name (case-sensitive)."""
-        return self._byEntity.get(entity)
+        """Look up EntityData by entity name (case-sensitive).
+
+        If it fails, it will try resolving aliases.
+        """
+        result = self._byEntity.get(entity)
+        if result:
+            return result
+
+        alias_set = self._aliasSetsByEntity.get(entity)
+        if alias_set:
+            for alias in alias_set:
+                if alias in self._byEntity:
+                    return self.findEntity(alias)
+
+            assert(not "Alias without main entry!")
+
+        return None
 
     def findEntityCaseInsensitive(self, entity):
-        """Look up EntityData by entity name (case-insensitive)."""
+        """Look up EntityData by entity name (case-insensitive).
+
+        Does **not** resolve aliases."""
         return self._byLowercaseEntity.get(entity.lower())
 
     def getMemberElems(self, commandOrStruct):
@@ -253,6 +277,8 @@ class EntityDatabase(ABC):
         data = self.findEntity(commandOrStruct)
 
         if not data:
+            return None
+        if data.elem is None:
             return None
         if data.macro == 'slink':
             tag = 'member'
@@ -288,7 +314,7 @@ class EntityDatabase(ABC):
         Returns None if the entity name is not known,
         otherwise a boolean: True if a validity include is expected.
 
-        Related to ValidityGenerator.isStructAlwaysValid.
+        Related to Generator.isStructAlwaysValid.
         """
         data = self.findEntity(entity)
         if not data:
@@ -309,11 +335,14 @@ class EntityDatabase(ABC):
         if not members:
             return None
         for member in members:
+            member_name = getElemName(member)
+            member_type = member.find('type').text
+            member_category = member.get('category')
 
-            if member.find('name').text in ['next', 'type']:
+            if member_name in ('next', 'type'):
                 return True
 
-            if member.find('type').text in ['void', 'char']:
+            if member_type in ('void', 'char'):
                 return True
 
             if member.get('noautovalidity'):
@@ -329,12 +358,11 @@ class EntityDatabase(ABC):
                 # Pointer
                 return True
 
-            if member.get('category') in [
-                    'handle', 'enum', 'bitmask'] == 'type':
+            if member_category in ('handle', 'enum', 'bitmask'):
                 return True
 
-            if member.get('category') in ['struct', 'union'] and self.entityHasValidity(
-                    member.find('type').text):
+            if member.get('category') in ('struct', 'union') \
+                    and self.entityHasValidity(member_type):
                 # struct or union member - recurse
                 return True
 
@@ -371,6 +399,17 @@ class EntityDatabase(ABC):
             return self._categoriesByMacro[macro]
         return None
 
+    def areAliases(self, first_entity_name, second_entity_name):
+        """Return true if the two entity names are equivalent (aliases of each other)."""
+        alias_set = self._aliasSetsByEntity.get(first_entity_name)
+        if not alias_set:
+            # If this assert fails, we have goofed in addAlias
+            assert(second_entity_name not in self._aliasSetsByEntity)
+
+            return False
+
+        return second_entity_name in alias_set
+
     @property
     def macros(self):
         """Return the collection of all known entity-related markup macros."""
@@ -403,6 +442,32 @@ class EntityDatabase(ABC):
             macro = letter + macroType
             self.addMacro(macro, categories, link=(macroType == 'link'))
 
+    def addAlias(self, entityName, aliasName):
+        """Record that entityName is an alias for aliasName."""
+        # See if we already have something with this as the alias.
+        alias_set = self._aliasSetsByEntity.get(aliasName)
+        other_alias_set = self._aliasSetsByEntity.get(entityName)
+        if alias_set and other_alias_set:
+            # If this fails, we need to merge sets and update.
+            assert(alias_set is other_alias_set)
+
+        if not alias_set:
+            # Try looking by the other name.
+            alias_set = other_alias_set
+
+        if not alias_set:
+            # Nope, this is a new set.
+            alias_set = set()
+            self._aliasSets.append(alias_set)
+
+        # Add both names to the set
+        alias_set.add(entityName)
+        alias_set.add(aliasName)
+
+        # Associate the set with each name
+        self._aliasSetsByEntity[aliasName] = alias_set
+        self._aliasSetsByEntity[entityName] = alias_set
+
     def addEntity(self, entityName, macro, category=None, elem=None,
                   generates=None, directory=None, filename=None):
         """Add an entity (command, structure type, enum, enum value, etc) in the database.
@@ -425,6 +490,12 @@ class EntityDatabase(ABC):
                     This only matters if generates is True (default). If not specified and generates is True,
                     one will be generated based on directory and entityName.
         """
+        # Probably dealt with in handleType(), but just in case it wasn't.
+        if elem is not None:
+            alias = elem.get('alias')
+            if alias:
+                self.addAlias(entityName, alias)
+
         if entityName in self._byEntity:
             # skip if already recorded.
             return
@@ -487,6 +558,10 @@ class EntityDatabase(ABC):
         self._byMacroAndEntity = {}
         self._categoriesByMacro = {}
         self._linkedMacros = set()
+        self._aliasSetsByEntity = {}
+        self._aliasSets = []
+
+        self._registry = None
 
         # Retrieve from subclass, if overridden, then store locally.
         self._supportExclusionSet = set(self.getExclusionSet())
@@ -502,7 +577,6 @@ class EntityDatabase(ABC):
         self.case_insensitive_name_prefix_pattern = ''.join(
             ('[{}{}]'.format(c.upper(), c) for c in self.name_prefix))
 
-        registry = self.makeRegistry()
         self.platform_requires = self.getPlatformRequires()
 
         self._generated_dirs = set(self.getGeneratedDirs())
@@ -524,11 +598,17 @@ class EntityDatabase(ABC):
         self.populateEntities()
 
         # Now, do default entity population
-        self._basicPopulateEntities(registry)
+        self._basicPopulateEntities(self.registry)
 
     ###
     # Methods only used internally during initial setup/population of this data structure
     ###
+    @property
+    def registry(self):
+        """Return a Registry."""
+        if not self._registry:
+            self._registry = self.makeRegistry()
+        return self._registry
 
     def _basicPopulateMacros(self):
         """Contains calls to self.addMacro() and self.addMacros().

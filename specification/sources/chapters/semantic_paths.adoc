@@ -1,28 +1,60 @@
 [[semantic-path]]
 == Path Tree and Semantic Paths
 
-OpenXR incorporates an internal _semantic path tree_ model, also known as the _path tree_, with entities associated with nodes organized in a logical tree and referenced by path name strings structured like a filesystem path or URL.
-The path tree unifies a number of concepts used in this specification and a runtime may: add additional nodes as implementation details.
-As a general design principle, the most application-facing paths should: have semantic and hierarchical meaning in their name.
+OpenXR incorporates an internal _semantic path tree_ model, also known as
+the _path tree_, with entities associated with nodes organized in a logical
+tree and referenced by path name strings structured like a filesystem path
+or URL.
+The path tree unifies a number of concepts used in this specification and a
+runtime may: add additional nodes as implementation details.
+As a general design principle, the most application-facing paths should:
+have semantic and hierarchical meaning in their name.
 Thus, these paths are often referred to as _semantic paths_.
-However, path names in the path tree model may: not all have the same level or kind of semantic meaning.
+However, path names in the path tree model may: not all have the same level
+or kind of semantic meaning.
 
-In regular use in an application, path name strings are converted to instance-specific basetype:XrPath values which are used in place of path strings.
-The mapping between basetype:XrPath values and their corresponding path name strings may: be considered to be tracked by the runtime in a one-to-one mapping in addition to the natural tree structure of the referenced entities.
-Runtimes may: use any internal implementation that satisfies the requirements.
+In regular use in an application, path name strings are converted to
+instance-specific basetype:XrPath values which are used in place of path
+strings.
+The mapping between basetype:XrPath values and their corresponding path name
+strings may: be considered to be tracked by the runtime in a one-to-one
+mapping in addition to the natural tree structure of the referenced
+entities.
+Runtimes may: use any internal implementation that satisfies the
+requirements.
 
-Formally, the runtime maintains an instance-specific bijective mapping between well-formed path name strings and valid basetype:XrPath (code:uint64_t) values.
-These basetype:XrPath values are only valid within a single slink:XrInstance, and must: not be shared between instances.
-Applications must: instead use the string representation of a path in their code and configuration, and obtain the correct corresponding basetype:XrPath at runtime in each slink:XrInstance.
-The term _path_ or _semantic path_ may: refer interchangeably to either the path name string or its associated basetype:XrPath value within an instance when context makes it clear which type is being discussed.
+Formally, the runtime maintains an instance-specific bijective mapping
+between well-formed path name strings and valid basetype:XrPath
+(code:uint64_t) values.
+These basetype:XrPath values are only valid within a single
+slink:XrInstance, and applications must: not share these values between
+instances.
+Applications must: instead use the string representation of a path in their
+code and configuration, and obtain the correct corresponding basetype:XrPath
+at runtime in each slink:XrInstance.
+The term _path_ or _semantic path_ may: refer interchangeably to either the
+path name string or its associated basetype:XrPath value within an instance
+when context makes it clear which type is being discussed.
 
-Given that path trees are a unifying model in this specification, the entities referenced by paths can: be of diverse types.
-For example, they may: be used to represent physical device or sensor _components_, which may: be of various _component types_.
-They may: also be used to represent frames of reference that are understood by the application and the runtime, as defined by an slink:XrSpace.
-Additionally, to permit runtime re-configuration and support hardware-independent development, any syntactically-valid path string may: be used to retrieve a corresponding basetype:XrPath without error given sufficient resources, _even if_ no logical or hardware entity currently corresponds to that path at the time of the call.
-Later retrieval of the associated path string of such an basetype:XrPath using flink:xrPathToString should: succeed if the other requirements of that call are met.
-However, using such an basetype:XrPath in a later call to any other API function may: result in an error if no entity of the type required by the call is available at the path at that later time.
-A runtime should: permit the entity referenced by a path to vary over time to naturally reflect varying system configuration and hardware availability.
+Given that path trees are a unifying model in this specification, the
+entities referenced by paths can: be of diverse types.
+For example, they may: be used to represent physical device or sensor
+_components_, which may: be of various _component types_.
+They may: also be used to represent frames of reference that are understood
+by the application and the runtime, as defined by an slink:XrSpace.
+Additionally, to permit runtime re-configuration and support
+hardware-independent development, any syntactically-valid path string may:
+be used to retrieve a corresponding basetype:XrPath without error given
+sufficient resources, _even if_ no logical or hardware entity currently
+corresponds to that path at the time of the call.
+Later retrieval of the associated path string of such an basetype:XrPath
+using flink:xrPathToString should: succeed if the other requirements of that
+call are met.
+However, using such an basetype:XrPath in a later call to any other API
+function may: result in an error if no entity of the type required by the
+call is available at the path at that later time.
+A runtime should: permit the entity referenced by a path to vary over time
+to naturally reflect varying system configuration and hardware availability.
 
 [[path-atom-type]]
 === Path Atom Type
@@ -31,63 +63,101 @@ A runtime should: permit the entity referenced by a path to vary over time to na
 --
 include::../../generated/api/basetypes/XrPath.txt[]
 
-The basetype:XrPath is an atom that connects an application with a single path, within the context of a single instance.
-There is a bijective mapping between well-formed path strings and atoms in use.
-This atom is used -- in place of the path name string it corresponds to -- to retrieve state and perform other operations.
+The basetype:XrPath is an atom that connects an application with a single
+path, within the context of a single instance.
+There is a bijective mapping between well-formed path strings and atoms in
+use.
+This atom is used -- in place of the path name string it corresponds to --
+to retrieve state and perform other operations.
 
-As an basetype:XrPath is only shorthand for a well-formed path string, they have no explicit life cycle.
+As an basetype:XrPath is only shorthand for a well-formed path string, they
+have no explicit life cycle.
 
 Lifetime is implicitly managed by the slink:XrInstance.
-An basetype:XrPath must: not be used unless it is received at execution time from the runtime in the context of a particular slink:XrInstance.
-Therefore, with the exception of dlink:XR_NULL_PATH, basetype:XrPath values must: not be specified as constant values in applications: the corresponding path string should: be used instead.
-During the lifetime of a given slink:XrInstance, the basetype:XrPath associated with that instance with any given well-formed path must: not vary, and similarly the well-formed path string that corresponds to a given basetype:XrPath in that instance must: not vary.
-An basetype:XrPath that is received from one slink:XrInstance may: not be used with another.
-Such an invalid use may: be detected and result in an error being returned, or it may: result in undefined behavior.
+An basetype:XrPath must: not be used unless it is received at execution time
+from the runtime in the context of a particular slink:XrInstance.
+Therefore, with the exception of dlink:XR_NULL_PATH, basetype:XrPath values
+must: not be specified as constant values in applications: the corresponding
+path string should: be used instead.
+During the lifetime of a given slink:XrInstance, the basetype:XrPath
+associated with that instance with any given well-formed path must: not
+vary, and similarly the well-formed path string that corresponds to a given
+basetype:XrPath in that instance must: not vary.
+An basetype:XrPath that is received from one slink:XrInstance may: not be
+used with another.
+Such an invalid use may: be detected and result in an error being returned,
+or it may: result in undefined behavior.
 --
 
-Well-written applications should: typically use a small, bounded set of paths in
-practice.
-However, the runtime should: support looking up the basetype:XrPath for a large
-number of path strings for maximum compatibility.
-Runtime implementers should: keep in mind that applications supporting diverse
-systems may: look up path strings in a quantity exceeding the number of
-non-empty entities predicted or provided by any one runtime's own path tree
-model, and this is not inherently an error.
-However, system resources are finite and thus runtimes may: signal exhaustion of
-resources dedicated to these associations under certain conditions.
+Well-written applications should: typically use a small, bounded set of
+paths in practice.
+However, the runtime should: support looking up the basetype:XrPath for a
+large number of path strings for maximum compatibility.
+Runtime implementers should: keep in mind that applications supporting
+diverse systems may: look up path strings in a quantity exceeding the number
+of non-empty entities predicted or provided by any one runtime's own path
+tree model, and this is not inherently an error.
+However, system resources are finite and thus runtimes may: signal
+exhaustion of resources dedicated to these associations under certain
+conditions.
 
-When discussing the behavior of runtimes at these limits, a _new_ basetype:XrPath refers to an basetype:XrPath value that, as of some point in time, has neither been received by the application nor tracked internally by the runtime.
-In this case, since an application has not yet received the value of such an basetype:XrPath, the runtime has not yet made any assertions about its association with any path string.
-In this context, _new_ only refers to the fact that the mapping has not necessarily been made constant for a given value/path string pair for the remaining life of the associated instance by being revealed to the application.
-It does not necessarily imply creation of the entity, if any, referred to by such a path.
-Similarly, it does not imply the absence of such an entity prior to that point.
-Entities in the path tree have varied lifetime that is independent from the duration of the mapping from path string to basetype:XrPath.
+When discussing the behavior of runtimes at these limits, a _new_
+basetype:XrPath refers to an basetype:XrPath value that, as of some point in
+time, has neither been received by the application nor tracked internally by
+the runtime.
+In this case, since an application has not yet received the value of such an
+basetype:XrPath, the runtime has not yet made any assertions about its
+association with any path string.
+In this context, _new_ only refers to the fact that the mapping has not
+necessarily been made constant for a given value/path string pair for the
+remaining life of the associated instance by being revealed to the
+application.
+It does not necessarily imply creation of the entity, if any, referred to by
+such a path.
+Similarly, it does not imply the absence of such an entity prior to that
+point.
+Entities in the path tree have varied lifetime that is independent from the
+duration of the mapping from path string to basetype:XrPath.
 
-For flexibility, the runtime may: internally track or otherwise make constant, in instance or larger scope, any mapping of a path string to an basetype:XrPath value even before an application would otherwise receive that value, thus making it no longer _new_ by the above definition.
+For flexibility, the runtime may: internally track or otherwise make
+constant, in instance or larger scope, any mapping of a path string to an
+basetype:XrPath value even before an application would otherwise receive
+that value, thus making it no longer _new_ by the above definition.
 
-When the runtime's resources to track the path string-basetype:XrPath mapping are exhausted, and the application makes an API call that would have otherwise retrieved a _new_ basetype:XrPath as defined above, the runtime must: return ename:XR_ERROR_PATH_COUNT_EXCEEDED.
-This includes both explicit calls to flink:xrStringToPath as well as other calls that retrieve an basetype:XrPath in any other way.
+When the runtime's resources to track the path string-basetype:XrPath
+mapping are exhausted, and the application makes an API call that would have
+otherwise retrieved a _new_ basetype:XrPath as defined above, the runtime
+must: return ename:XR_ERROR_PATH_COUNT_EXCEEDED.
+This includes both explicit calls to flink:xrStringToPath as well as other
+calls that retrieve an basetype:XrPath in any other way.
 
-The runtime should: support creating as many paths as memory will allow and must: return ename:XR_ERROR_PATH_COUNT_EXCEEDED from relevant functions when no more can be created.
+The runtime should: support creating as many paths as memory will allow and
+must: return ename:XR_ERROR_PATH_COUNT_EXCEEDED from relevant functions when
+no more can be created.
 
 [open,refpage='XR_NULL_PATH',desc='A NULL semantic path',type='defines',xrefs='XrPath']
 --
 include::../../generated/api/defines/XR_NULL_PATH.txt[]
 
-The only basetype:XrPath value defined to be constant across all instances is the invalid path dlink:XR_NULL_PATH.
+The only basetype:XrPath value defined to be constant across all instances
+is the invalid path dlink:XR_NULL_PATH.
 No well-formed path string is associated with dlink:XR_NULL_PATH.
-Unless explicitly permitted, it should: not be passed to API calls or used as a structure attribute when a valid basetype:XrPath is required.
+Unless explicitly permitted, it should: not be passed to API calls or used
+as a structure attribute when a valid basetype:XrPath is required.
 --
 
 [[well-formed-path-strings]]
 === Well-Formed Path Strings
 
 Even though they look similar, semantic paths are not file paths.
-To avoid confusion with file path directory traversal conventions, many file path conventions are explicitly disallowed from well-formed path name strings.
+To avoid confusion with file path directory traversal conventions, many file
+path conventions are explicitly disallowed from well-formed path name
+strings.
 
 A well-formed path name string must: conform to the following rules:
 
-* Path name strings must: be constructed entirely from characters on the following list.
+* Path name strings must: be constructed entirely from characters on the
+  following list.
 ** Lower case ASCII letters: a-z
 ** Numeric digits: 0-9
 ** Dash: -
@@ -95,10 +165,15 @@ A well-formed path name string must: conform to the following rules:
 ** Period: .
 ** Forward Slash: /
 * Path name strings must: start with a single forward slash character.
-* Path name strings must: not contain two or more adjacent forward slash characters.
-* Path name strings must: not contain two forward slash characters that are separated by only period characters.
-* Path name strings must: not contain only period characters following the final forward slash character in the string.
-* The maximum string length for a path name string, including the terminating `\0` character, is defined by ename:XR_MAX_PATH_LENGTH.
+* Path name strings must: not end with a forward slash character.
+* Path name strings must: not contain two or more adjacent forward slash
+  characters.
+* Path name strings must: not contain two forward slash characters that are
+  separated by only period characters.
+* Path name strings must: not contain only period characters following the
+  final forward slash character in the string.
+* The maximum string length for a path name string, including the
+  terminating `\0` character, is defined by ename:XR_MAX_PATH_LENGTH.
 
 ==== xrStringToPath
 [open,refpage='xrStringToPath',desc='Converts a string to a semantic path',type='protos',xrefs='XrPath xrPathToString']
@@ -110,22 +185,38 @@ include::../../generated/api/protos/xrStringToPath.txt[]
 .Parameter Descriptions
 ****
 * pname:instance is an instance previously created.
-* pname:pathString is the path name string to retrieve the associated basetype:XrPath for.
-* pname:path is the output parameter, which must: point to an basetype:XrPath.
-  Given a well-formed path name string, this will be populated with an opaque value that is constant for that path string during the lifetime of that instance.
+* pname:pathString is the path name string to retrieve the associated
+  basetype:XrPath for.
+* pname:path is the output parameter, which must: point to an
+  basetype:XrPath.
+  Given a well-formed path name string, this will be populated with an
+  opaque value that is constant for that path string during the lifetime of
+  that instance.
 ****
 
-flink:xrStringToPath retrieves the basetype:XrPath value for a well-formed path string.
-If such a value had not yet been assigned by the runtime to the provided path string in this slink:XrInstance, one must: be assigned at this point.
-All calls to this function with the same slink:XrInstance and path string must: retrieve the same basetype:XrPath value.
-Upon failure, flink:xrStringToPath must: return an appropriate elink:XrResult, and may: set the output parameter to dlink:XR_NULL_PATH.
-See <<path-atom-type, Path Atom Type>> for the conditions under which an error may: be returned when this function is given a valid slink:XrInstance and a well-formed path string.
+flink:xrStringToPath retrieves the basetype:XrPath value for a well-formed
+path string.
+If such a value had not yet been assigned by the runtime to the provided
+path string in this slink:XrInstance, one must: be assigned at this point.
+All calls to this function with the same slink:XrInstance and path string
+must: retrieve the same basetype:XrPath value.
+Upon failure, flink:xrStringToPath must: return an appropriate
+elink:XrResult, and may: set the output parameter to dlink:XR_NULL_PATH.
+See <<path-atom-type, Path Atom Type>> for the conditions under which an
+error may: be returned when this function is given a valid slink:XrInstance
+and a well-formed path string.
 
-If the runtime's resources are exhausted and it cannot create the path, a return value of ename:XR_ERROR_PATH_COUNT_EXCEEDED must: be returned.
-If the application specifies a string that is not a well-formed path string, ename:XR_ERROR_PATH_FORMAT_INVALID must: be returned.
+If the runtime's resources are exhausted and it cannot create the path, a
+return value of ename:XR_ERROR_PATH_COUNT_EXCEEDED must: be returned.
+If the application specifies a string that is not a well-formed path string,
+ename:XR_ERROR_PATH_FORMAT_INVALID must: be returned.
 
-NOTE: A return value of ename:XR_SUCCESS from flink:xrStringToPath may: not necessarily imply that the runtime has a component or other source of data that will be accessible through that semantic path.
-It only means that the path string supplied was well-formed and that the retrieved basetype:XrPath maps to the given path string within and during the lifetime of the slink:XrInstance given.
+NOTE: A return value of ename:XR_SUCCESS from flink:xrStringToPath may: not
+necessarily imply that the runtime has a component or other source of data
+that will be accessible through that semantic path.
+It only means that the path string supplied was well-formed and that the
+retrieved basetype:XrPath maps to the given path string within and during
+the lifetime of the slink:XrInstance given.
 
 
 include::../../generated/validity/protos/xrStringToPath.txt[]
@@ -139,19 +230,33 @@ include::../../generated/api/protos/xrPathToString.txt[]
 .Parameter Descriptions
 ****
 * pname:instance is an instance previously created.
-* pname:path is the valid basetype:XrPath value to retrieve the path string for.
-* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate a request to retrieve the required capacity.
-* pname:bufferCountOutput is a pointer to the count of characters written (including the terminating '\0'), or a pointer to the required capacity in the case that pname:bufferCapacityInput is 0.
-* pname:buffer is a pointer to an application-allocated buffer that will be filled with the semantic path string. It can: be code:NULL if pname:bufferCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a detailed description of retrieving the required pname:buffer size.
+* pname:path is the valid basetype:XrPath value to retrieve the path string
+  for.
+* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:bufferCountOutput is a pointer to the count of characters written
+  (including the terminating '\0'), or a pointer to the required capacity in
+  the case that pname:bufferCapacityInput is 0.
+* pname:buffer is a pointer to an application-allocated buffer that will be
+  filled with the semantic path string.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:buffer size.
 ****
 
-flink:xrPathToString retrieves the path name string associated with an basetype:XrPath, in the
-context of a given slink:XrInstance, in the form of a code:NULL terminated string placed into a _caller-allocated_ buffer.
-Since the mapping between a well-formed path name string and an basetype:XrPath is bijective, there will always be exactly one string for each valid basetype:XrPath value.
-This can be useful if the calling application receives an basetype:XrPath value that they had not previously retrieved via flink:xrStringToPath.
-During the lifetime of the given slink:XrInstance, the path name string retrieved by this function for a given valid basetype:XrPath will not change.
-For invalid paths, including dlink:XR_NULL_PATH, ename:XR_ERROR_PATH_INVALID will be returned.
+flink:xrPathToString retrieves the path name string associated with an
+basetype:XrPath, in the context of a given slink:XrInstance, in the form of
+a code:NULL terminated string placed into a _caller-allocated_ buffer.
+Since the mapping between a well-formed path name string and an
+basetype:XrPath is bijective, there will always be exactly one string for
+each valid basetype:XrPath value.
+This can be useful if the calling application receives an basetype:XrPath
+value that they had not previously retrieved via flink:xrStringToPath.
+During the lifetime of the given slink:XrInstance, the path name string
+retrieved by this function for a given valid basetype:XrPath will not
+change.
+For invalid paths, including dlink:XR_NULL_PATH, ename:XR_ERROR_PATH_INVALID
+must: be returned.
 
 
 include::../../generated/validity/protos/xrPathToString.txt[]
@@ -159,101 +264,181 @@ include::../../generated/validity/protos/xrPathToString.txt[]
 
 
 [[semantic-path-reserved]]
-=== Reserved Paths for Devices
+=== Reserved Paths
 
-In order for some uses of semantic paths to work consistently across runtimes, it is necessary to standardize several paths and require each runtime to use the same paths or patterns of paths for certain classes of usage.
+In order for some uses of semantic paths to work consistently across
+runtimes, it is necessary to standardize several paths and require each
+runtime to use the same paths or patterns of paths for certain classes of
+usage.
 Those paths are as follows.
 
 
 [[semantic-path-user]]
 ==== /user paths
 
-Some paths are used to refer to devices that are filling semantic roles in the system.
+Some paths are used to refer to entities that are filling semantic roles in
+the system.
 These paths are all under the pathname:/user subtree.
 
 The reserved user paths are:
 
 .Reserved Semantic Paths
 ****
-* pathname:/user/hand/left represents the user's left hand. It might be tracked using a controller or other device in the user's left hand, or tracked without the user holding anything, e.g. using computer vision.
-* pathname:/user/hand/right represents the user's right hand in analog to the left hand.
-* pathname:/user/head represents inputs on the user's head, often from a device such as a head-mounted display. To reason about the user's head, see the <<reference-spaces, ename:XR_REFERENCE_SPACE_TYPE_VIEW>> reference space.
+* pathname:/user/hand/left represents the user's left hand.
+  It might be tracked using a controller or other device in the user's left
+  hand, or tracked without the user holding anything, e.g. using computer
+  vision.
+* pathname:/user/hand/right represents the user's right hand in analog to
+  the left hand.
+* pathname:/user/head represents inputs on the user's head, often from a
+  device such as a head-mounted display.
+  To reason about the user's head, see the <<reference-spaces,
+  ename:XR_REFERENCE_SPACE_TYPE_VIEW>> reference space.
 * pathname:/user/gamepad is a two-handed gamepad device held by the user.
-* pathname:/user/treadmill is a treadmill or other locomotion-targeted input device.
+* pathname:/user/treadmill is a treadmill or other locomotion-targeted input
+  device.
 ****
 
-Runtimes are not required to provide devices at all of these paths.
-For instance, in a system with no hand tracking, only pathname:/user/head would be provided a device.
-In a system with only one controller, the runtime may: provide access to that controller via either pathname:/user/hand/left or pathname:/user/hand/right as it deems appropriate.
+Runtimes are not required to provide interaction at all of these paths.
+For instance, in a system with no hand tracking, only pathname:/user/head
+would be active for interaction.
+In a system with only one controller, the runtime may: provide access to
+that controller via either pathname:/user/hand/left or
+pathname:/user/hand/right as it deems appropriate.
 
-The runtime may: change the devices referred to by pathname:/user/hand/left and pathname:/user/hand/right at any time. 
+The runtime may: change the devices referred to by pathname:/user/hand/left
+and pathname:/user/hand/right at any time.
 
-If more than two hand-held controllers or devices are active, the runtime must: determine which two are accessible as pathname:/user/hand/left and pathname:/user/hand/right.
+If more than two hand-held controllers or devices are active, the runtime
+must: determine which two are accessible as pathname:/user/hand/left and
+pathname:/user/hand/right.
 
 [[semantic-path-input]]
-==== Device input subpaths
+==== Input subpaths
 
-Devices on the source side of the input system need to define paths for each component that can be bound to an action.
+Devices on the source side of the input system need to define paths for each
+component that can be bound to an action.
 This section describes the naming conventions for those input components.
-Runtimes must: ignore input source paths that use identifiers and component names that do not appear in this specification or otherwise do not follow the pattern specified below.
+Runtimes must: ignore input source paths that use identifiers and component
+names that do not appear in this specification or otherwise do not follow
+the pattern specified below.
 
 Each input source path must: match the following pattern:
 
-* subpathname:/input/<identifier>[_<location>]/<component>
+* subpathname:/input/<identifier>[_<location>][/<component>]
 
-Identifiers are often the label on the component or related to the type and location of the component.
+Identifiers are often the label on the component or related to the type and
+location of the component.
 
-See <<semantic-path-interaction-profiles, Interaction Profiles>> for examples of input subpaths.
+When specifying a suggested binding there are several cases where the
+component part of the path can be determined automatically.
+See <<input-suggested-bindings, Suggested Bindings>> for more details.
+
+See <<semantic-path-interaction-profiles, Interaction Profiles>> for
+examples of input subpaths.
 
 ===== Standard identifiers
 
-* trackpad - A 2D input source that usually includes click and touch component.
-* thumbstick - A small 2D joystick that is meant to be used with the user's thumb.
+* trackpad - A 2D input source that usually includes click and touch
+  component.
+* thumbstick - A small 2D joystick that is meant to be used with the user's
+  thumb.
   These sometimes include click and/or touch components.
-* joystick - A 2D joystick that is meant to be used with the user's entire hand, such as a flight stick.
-  These generally do not have click component, but might have touch components.
-* trigger - A 1D analog input component that returns to a rest state when the user stops interacting with it. These sometime include touch and/or click components.
-* throttle - A 1D analog input component that remains in position when the user stops interacting with it.
-* trackball - A 2D relative input source. These sometimes include click components.
-* pedal - A 1D analog input component that is similar to a trigger but meant to be operated by a foot
-* system - A button with the specialised meaning that it enables the user to access system-level functions and UI.
-  Input data from system buttons is generally used internally by runtimes and may: not be available to applications.
-* dpad_up, dpad_down, dpad_left, and dpad_right - A set of buttons arranged in a plus shape.
-* diamond_up, diamond_down, diamond_left, and diamond_right - Gamepads often have a set of four buttons arranged in a diamond shape.
-  The labels on those buttons vary from gamepad to gamepad, but their arrangement is consistent.
-  These names are used for the A/B/X/Y buttons on a Xbox controller, and the square/cross/circle/triangle button on a PlayStation controller.
-* a, b, x, y, start, home, end, select - Standalone buttons are named for their physical labels.
+* joystick - A 2D joystick that is meant to be used with the user's entire
+  hand, such as a flight stick.
+  These generally do not have click component, but might have touch
+  components.
+* trigger - A 1D analog input component that returns to a rest state when
+  the user stops interacting with it.
+  These sometime include touch and/or click components.
+* throttle - A 1D analog input component that remains in position when the
+  user stops interacting with it.
+* trackball - A 2D relative input source.
+  These sometimes include click components.
+* pedal - A 1D analog input component that is similar to a trigger but meant
+  to be operated by a foot
+* system - A button with the specialised meaning that it enables the user to
+  access system-level functions and UI.
+  Input data from system buttons is generally used internally by runtimes
+  and may: not be available to applications.
+* dpad_up, dpad_down, dpad_left, and dpad_right - A set of buttons arranged
+  in a plus shape.
+* diamond_up, diamond_down, diamond_left, and diamond_right - Gamepads often
+  have a set of four buttons arranged in a diamond shape.
+  The labels on those buttons vary from gamepad to gamepad, but their
+  arrangement is consistent.
+  These names are used for the A/B/X/Y buttons on a Xbox controller, and the
+  square/cross/circle/triangle button on a PlayStation controller.
+* a, b, x, y, start, home, end, select - Standalone buttons are named for
+  their physical labels.
   These are the standard identifiers for such buttons.
   Extensions may: add new identifiers as detailed in the next section.
-  Groups of four buttons in a diamond shape should: use the diamond-prefix names above instead of using the labels on the buttons themselves.
-* volume_up, volume_down, mute_mic, play_pause, menu, view - Some other standard controls are often identified by icons.
+  Groups of four buttons in a diamond shape should: use the diamond-prefix
+  names above instead of using the labels on the buttons themselves.
+* volume_up, volume_down, mute_mic, play_pause, menu, view - Some other
+  standard controls are often identified by icons.
   These are their standard names.
-* thumbrest - Some controllers have a place for the user to rest their thumb.
-* shoulder - A button that is usually pressed with the index finger and is often positioned above a trigger.
-* grip - An input source that indicates that the user is squeezing their fist closed.
-  This could be a simple button or act more like a trigger. Sources with this identifier should: either follow button or trigger conventions for their components.
+* thumbrest - Some controllers have a place for the user to rest their
+  thumb.
+* shoulder - A button that is usually pressed with the index finger and is
+  often positioned above a trigger.
+* squeeze - An input source that indicates that the user is squeezing their
+  fist closed.
+  This could be a simple button or act more like a trigger.
+  Sources with this identifier should: either follow button or trigger
+  conventions for their components.
 * wheel - A steering wheel.
 
-Input sources whose orientation and/or position are tracked also expose pose identifiers.
+Input sources whose orientation and/or position are tracked also expose pose
+identifiers.
 
-Standard pose identifiers for tracked hands or motion controllers as represented by pathname:/user/hand/left and pathname:/user/hand/right are:
+Standard pose identifiers for tracked hands or motion controllers as
+represented by pathname:/user/hand/left and pathname:/user/hand/right are:
 
-* palm - A pose that allows applications to reliably render a virtual object in the user's hand regardless of how a hand is tracked.
-The palm pose is defined as follows:
-** The palm position: The palm centroid when closing the fist.
-For handheld motion controllers, this position is adjusted left or right to center the position within the controller's grip.
-** The palm orientation's +X axis: When you completely open your hand to form a flat 5-finger pose, the ray that is normal to your palm
-   (forward from left palm, backward from right palm)
-** The palm orientation's -Z axis: When you close your hand partially (as if holding the controller), the ray that points "forward" through
-   the tube formed by your non-thumb fingers.
-** The palm orientation's +Y axis: The Up axis implied by the +X (Right) and -Z (Forward) definitions.
-* pointer - A pose positioned at the start of a motion controller's natural pointing ray, with +Y up, +X to the right, and -Z forward.
-  This pose is most useful for applications that are rendering a model matching the physical controller, as an application rendering a virtual object in the user's hand likely prefers to point based on the geometry of that virtual object.
-  The pointer ray chosen will be runtime-dependent, although this will often emerge from the frontmost tip of a motion controller.
+* grip - A pose that allows applications to reliably render a virtual object
+held in the user's hand, whether it is tracked directly or by a motion
+controller.
+The grip pose is defined as follows:
+** The grip position:
+*** For tracked hands: The user's palm centroid when closing the fist, at
+    the surface of the palm.
+*** For handheld motion controllers: A fixed position within the controller
+   that generally lines up with the palm centroid when held by a hand in a
+   neutral position.
+   This position should be adjusted left or right to center the position
+   within the controller's grip.
+** The grip orientation's +X axis: When you completely open your hand to
+   form a flat 5-finger pose, the ray that is normal to the user's palm
+   (forward from left palm, backward from right palm).
+** The grip orientation's -Z axis: When you close your hand partially (as if
+   holding the controller), the ray that points "forward" through the tube
+   formed by your non-thumb fingers.
+** The grip orientation's +Y axis: The right-handed Up axis implied by the
+   +X (Right) and -Z (Forward) definitions.
+* aim - A pose that allows applications to point in the world using the
+  input source, according to the platform's conventions for aiming with that
+  kind of source.
+  The aim pose is defined as follows:
+** For tracked hands: The ray that follows platform conventions for how the
+   user aims at objects in the world with their entire hand, with +Y up, +X
+   to the right, and -Z forward.
+   The ray chosen will be runtime-dependent, for example, a ray emerging
+   from the palm parallel to the forearm.
+** For handheld motion controllers: The ray that follows platform
+   conventions for how the user targets objects in the world with the motion
+   controller, with +Y up, +X to the right, and -Z forward.
+   This is usually for applications that are rendering a model matching the
+   physical controller, as an application rendering a virtual object in the
+   user's hand likely prefers to point based on the geometry of that virtual
+   object.
+   The ray chosen will be runtime-dependent, although this will often emerge
+   from the frontmost tip of a motion controller.
 
 ===== Standard locations
 
-When a single device contains multiple input sources that use the same identifier, a location suffix is added to create a unique identifier for that input source.
+When a single device contains multiple input sources that use the same
+identifier, a location suffix is added to create a unique identifier for
+that input source.
 
 Standard locations are:
 
@@ -263,64 +448,94 @@ Standard locations are:
 * left_lower
 * right_upper
 * right_lower
+* upper
+* lower
 
 ===== Standard components
 
-Components are named for the specific boolean, scalar, or other value of the input source.
+Components are named for the specific boolean, scalar, or other value of the
+input source.
 Standard components are:
 
 * click - A physical switch has been pressed by the user.
-  This is valid for all buttons, and is common for trackpads, thumbsticks, triggers, and dpads. "click" components are always boolean.
+  This is valid for all buttons, and is common for trackpads, thumbsticks,
+  triggers, and dpads.
+  "click" components are always boolean.
 * touch - The user has touched the input source.
-  This is valid for all trackpads, and may: be present for any other kind of input source if the device includes the necessary sensor.
+  This is valid for all trackpads, and may: be present for any other kind of
+  input source if the device includes the necessary sensor.
   "touch" components are always boolean.
-* force - A 1D scalar value that represents the user applying force to the input.
+* force - A 1D scalar value that represents the user applying force to the
+  input.
   It varies from 0 to 1, with 0 being the rest state.
   This is present for any input source with a force sensor.
-* value - A 1D scalar value that varies from 0 to 1, with 0 being the rest state.
+* value - A 1D scalar value that varies from 0 to 1, with 0 being the rest
+  state.
   This is present for triggers, throttles, and pedals.
-  It may: also be present for grips or other components.
-* x, y, z - 2D or 3D scalar values that vary from -1 to 1.
-  These represent the 2D or 3D position of the input source with 0 being the rest state on each axis.
+  It may: also be present for squeeze or other components.
+* x, y - scalar components of 2D values.
+  These vary in value from -1 to 1.
+  These represent the 2D position of the input source with 0 being the rest
+  state on each axis.
   x and y components are present for trackpads, thumbsticks, and joysticks.
-* twist - Some sources, such as flight sticks, have a sensor that allows the user to twist the input left or right.
-  For this component -1 means all the way left and 1 means all the way right.
+* twist - Some sources, such as flight sticks, have a sensor that allows the
+  user to twist the input left or right.
+  For this component -1 means all the way left and 1 means all the way
+  right.
 * pose - The orientation and/or position of this input source.
-  This component may: exist for dedicated pose identifiers like palm and pointer, or may: be defined on other identifiers such as trackpad to let applications reason about the surface of that part.
+  This component may: exist for dedicated pose identifiers like grip and
+  aim, or may: be defined on other identifiers such as trackpad to let
+  applications reason about the surface of that part.
 
-===== Output source paths
+===== Output paths
 
 Many devices also have subpaths for output features such as haptics.
-The runtime must: ignore output component paths that do not follow the pattern:
+The runtime must: ignore output component paths that do not follow the
+pattern:
 
 * subpathname:/output/<output_identifier>[_<location>]
 
 Standard output identifiers are:
 
-* haptic - A haptic element like an LRA (Linear Resonant Actuator) or vibration motor
+* haptic - A haptic element like an LRA (Linear Resonant Actuator) or
+  vibration motor
 
-Devices which contain multiple haptic elements with the same output identifier must use a location suffix as specified above.
+Devices which contain multiple haptic elements with the same output
+identifier must use a location suffix as specified above.
 
 
 ==== Adding input sources via extensions
 
-Extensions may: enable input source path identifiers, output source path identifiers, and component names that are not included in the core specification,
-subject to the following conditions:
+Extensions may: enable input source path identifiers, output source path
+identifiers, and component names that are not included in the core
+specification, subject to the following conditions:
 
-* EXT extensions must: include the _ext suffix on any identifier or component name. E.g. subpathname:/input/newidentifier_ext/newcomponent_ext
-* Vendor extensions must: include the vendor's tag as a suffix on any identifier or component name. E.g. subpathname:/input/newidentifier_vendor/newcomponent_vendor (where "vendor" is replaced with the vendor's actual extension tag.)
-* Khronos (KHR) extensions may: add undecorated identifier or component names.
+* EXT extensions must: include the _ext suffix on any identifier or
+  component name.
+  E.g. subpathname:/input/newidentifier_ext/newcomponent_ext
+* Vendor extensions must: include the vendor's tag as a suffix on any
+  identifier or component name.
+  E.g. subpathname:/input/newidentifier_vendor/newcomponent_vendor (where
+  "vendor" is replaced with the vendor's actual extension tag.)
+* Khronos (KHR) extensions may: add undecorated identifier or component
+  names.
 
-These rules are in place to prevent extensions from adding first class undecorated names that become defacto standards.
-Runtimes must: ignore input source paths that do not follow the restrictions above.
+These rules are in place to prevent extensions from adding first class
+undecorated names that become defacto standards.
+Runtimes must: ignore input source paths that do not follow the restrictions
+above.
 
-Extensions may: also add new location suffixes, and may: do so by adding a new identifier and location combination using the appropriate suffix. E.g. subpathname:/input/newidentifier_newlocation_ext
+Extensions may: also add new location suffixes, and may: do so by adding a
+new identifier and location combination using the appropriate suffix.
+E.g. subpathname:/input/newidentifier_newlocation_ext
 
 
 [[semantic-path-interaction-profiles]]
 === Interaction Profile Paths
 
-An interaction profile path identifies a collection of buttons and other input sources in a physical arrangement to allow applications and runtimes to coordinate action bindings.
+An interaction profile path identifies a collection of buttons and other
+input sources in a physical arrangement to allow applications and runtimes
+to coordinate action bindings.
 
 Interaction profile paths are of the form:
 
@@ -335,16 +550,19 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile provides basic pose, button, and haptic support for applications with simple input needs.
-There is no hardware associated with the profile, and runtimes which support this profile should: map the input paths provided to whatever the appropriate paths are on the actual hardware.
+This interaction profile provides basic pose, button, and haptic support for
+applications with simple input needs.
+There is no hardware associated with the profile, and runtimes which support
+this profile should: map the input paths provided to whatever the
+appropriate paths are on the actual hardware.
 
-Supported input sources:
+Supported component paths:
 
 * subpathname:/input/select/click
 * subpathname:/input/menu/click
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 * subpathname:/output/haptic
-* subpathname:/input/pointer/pose
-* subpathname:/input/palm/pose
 
 ==== Google Daydream Controller Profile
 
@@ -355,17 +573,18 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Google Daydream Controller.
+This interaction profile represents the input sources on the Google Daydream
+Controller.
 
-Supported input sources:
+Supported component paths:
 
 * subpathname:/input/select/click
 * subpathname:/input/trackpad/x
 * subpathname:/input/trackpad/y
 * subpathname:/input/trackpad/click
 * subpathname:/input/trackpad/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 
 
 ==== HTC Vive Controller Profile
@@ -377,12 +596,14 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Vive Controller.
+This interaction profile represents the input sources and haptics on the
+Vive Controller.
 
-Supported input sources:
+Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application use)
-* subpathname:/input/grip/click
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/squeeze/click
 * subpathname:/input/menu/click
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
@@ -390,8 +611,8 @@ Supported input sources:
 * subpathname:/input/trackpad/y
 * subpathname:/input/trackpad/click
 * subpathname:/input/trackpad/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
 ==== HTC Vive Pro Profile
@@ -402,11 +623,13 @@ Valid for user paths:
 
 * pathname:/user/head
 
-This interaction profile represents the input sources on the Vive Pro headset.
+This interaction profile represents the input sources on the Vive Pro
+headset.
 
-Supported input sources:
+Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application use)
+* subpathname:/input/system/click (may: not be available for application
+  use)
 * subpathname:/input/volume_up/click
 * subpathname:/input/volume_down/click
 * subpathname:/input/mute_mic/click
@@ -420,12 +643,13 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Microsoft Mixed Reality Controller.
+This interaction profile represents the input sources and haptics on the
+Microsoft Mixed Reality Controller.
 
-Supported input sources:
+Supported component paths:
 
 * subpathname:/input/menu/click
-* subpathname:/input/grip/click
+* subpathname:/input/squeeze/click
 * subpathname:/input/trigger/value
 * subpathname:/input/thumbstick/x
 * subpathname:/input/thumbstick/y
@@ -434,8 +658,8 @@ Supported input sources:
 * subpathname:/input/trackpad/y
 * subpathname:/input/trackpad/click
 * subpathname:/input/trackpad/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
 ==== Microsoft Xbox Controller Profile
@@ -446,9 +670,10 @@ Valid for user paths:
 
 * pathname:/user/gamepad
 
-This interaction profile represents the input sources and haptics on the Microsoft Xbox Controller.
+This interaction profile represents the input sources and haptics on the
+Microsoft Xbox Controller.
 
-Supported input sources:
+Supported component paths:
 
 * subpathname:/input/menu/click
 * subpathname:/input/view/click
@@ -484,18 +709,20 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Oculus Go controller.
+This interaction profile represents the input sources on the Oculus Go
+controller.
 
-Supported input sources:
+Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application use)
+* subpathname:/input/system/click (may: not be available for application
+  use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trackpad/x
 * subpathname:/input/trackpad/y
 * subpathname:/input/trackpad/click
 * subpathname:/input/trackpad/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 
 
 ==== Oculus Touch Controller Profile
@@ -507,9 +734,10 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Oculus Touch controller.
+This interaction profile represents the input sources and haptics on the
+Oculus Touch controller.
 
-Supported input sources:
+Supported component paths:
 
 * On pathname:/user/hand/left only:
 ** subpathname:/input/x/click
@@ -517,13 +745,14 @@ Supported input sources:
 ** subpathname:/input/y/click
 ** subpathname:/input/y/touch
 ** subpathname:/input/menu/click
-** subpathname:/input/system/click (may: not be available for application use)
 * On pathname:/user/hand/right only:
 ** subpathname:/input/a/click
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-* subpathname:/input/grip/value
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
 * subpathname:/input/thumbstick/x
@@ -531,32 +760,35 @@ Supported input sources:
 * subpathname:/input/thumbstick/click
 * subpathname:/input/thumbstick/touch
 * subpathname:/input/thumbrest/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
 
-==== Valve Knuckles Controller Profile
+==== Valve Index Controller Profile
 
-Path: pathname:/interaction_profiles/valve/knuckles_controller
+Path: pathname:/interaction_profiles/valve/index_controller
 
 Valid for user paths:
 
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the Valve Knuckles controller.
+This interaction profile represents the input sources and haptics on the
+Valve Index controller.
 
-Supported input sources:
+Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application use)
-* subpathname:/input/system/touch (may: not be available for application use)
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/system/touch (may: not be available for application
+  use)
 * subpathname:/input/a/click
 * subpathname:/input/a/touch
 * subpathname:/input/b/click
 * subpathname:/input/b/touch
-* subpathname:/input/grip/value
-* subpathname:/input/grip/force
+* subpathname:/input/squeeze/value
+* subpathname:/input/squeeze/force
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -568,6 +800,6 @@ Supported input sources:
 * subpathname:/input/trackpad/y
 * subpathname:/input/trackpad/force
 * subpathname:/input/trackpad/touch
-* subpathname:/input/palm/pose
-* subpathname:/input/pointer/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
 * subpathname:/output/haptic

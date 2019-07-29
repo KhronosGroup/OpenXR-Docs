@@ -14,33 +14,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# extDependency - generate a mapping of extension name -> all required
+# make_ext_dependency - generate a mapping of extension name -> all required
 # extension names for that extension.
 
 # This script generates a list of all extensions, and of just KHR
 # extensions, that are placed into a Bash script and/or Python script. This
-# script can then be sources or executed to set a variable (e.g., khrExts),
+# script can then be sources or executed to set a variable (e.g. khrExts),
 # Frontend scripts such as 'makeAllExts' and 'makeKHR' use this information
 # to set the EXTENSIONS Makefile variable when building the spec.
 #
 # Sample Usage:
 #
-# python3 scripts/extDependency.py -outscript=temp.sh
+# python3 scripts/make_ext_dependency.py -outscript=temp.sh
 # source temp.sh
 # make EXTENSIONS="$khrExts" html
 # rm temp.sh
 
 import argparse
+import errno
 import xml.etree.ElementTree as etree
+from pathlib import Path
+
 from xrconventions import OpenXRConventions as APIConventions
+
 
 def enQuote(key):
     return "'" + str(key) + "'"
 
-# Return a sortable (list or set) of names as a string encoding
-# of a Bash or Python list, sorted on the names.
-
 def shList(names):
+    """Return a sortable (list or set) of names as a string encoding
+    of a Bash or Python list, sorted on the names."""
     s = ('"' +
          ' '.join(str(key) for key in sorted(names)) +
          '"')
@@ -124,6 +127,14 @@ class DiGraphNode:
         # Set of adjacent of nodes.
         self.adj = set()
 
+def make_dir(fn):
+    outdir = Path(fn).parent
+    try:
+        outdir.mkdir(parents=True)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
 # API conventions object
 conventions = APIConventions()
 
@@ -183,6 +194,7 @@ if __name__ == '__main__':
             pass
 
     if args.outscript:
+        make_dir(args.outscript)
         fp = open(args.outscript, 'w', encoding='utf-8')
 
         print('#!/bin/bash', file=fp)
@@ -209,6 +221,7 @@ if __name__ == '__main__':
         fp.close()
 
     if args.outpy:
+        make_dir(args.outpy)
         fp = open(args.outpy, 'w', encoding='utf-8')
 
         print('#!/usr/bin/env python', file=fp)

@@ -2,6 +2,11 @@
 
 Before building the specification, install the necessary prerequisite tools as described later in this document.
 
+You may instead choose to use the `open-in-docker.sh` script,
+which will mount the repository in a container built from an image with all the necessary tools installed.
+See that script for more details.
+You can find the associated Dockerfile at https://github.com/KhronosGroup/DockerContainers/blob/master/Dockerfile.openxr
+
 ## Conditional Inclusion of Extensions
 
 By default, the specification is built without including the content belonging
@@ -52,7 +57,7 @@ makeKHRAndKHX target
 
 These targets generate a variety of output documents in the directory
 specified by the Makefile variable `$(OUTDIR)` (by default,
-`specification/out/prerelease/`).
+`specification/out/1.0/`).
 
 It is recommended to build these targets using a "helper" script from above,
 unless you want to only build the core spec without any extensions.
@@ -70,6 +75,7 @@ These targets are currently supported.
   * `header` - C language header files:
     * `$(OUTDIR)/openxr/openxr.h`
     * `$(OUTDIR)/openxr/openxr_platform.h`
+    * `$(OUTDIR)/openxr/openxr_reflection.h`
   * `header-test` Compile-tests the header files
 * Combined testing and output target (preview of some CI testing):
   * `all`

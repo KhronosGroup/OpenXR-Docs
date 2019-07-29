@@ -5,28 +5,28 @@
 [[code-style-conventions]]
 === Code Style Conventions
 
-These are the code style conventions used in this
-specification to define the API.
+These are the code style conventions used in this specification to define
+the API.
 
 .Conventions
 ****
 * Enumerants and defines are all upper case with words separated by an
   underscore.
 * Neither type, function or member names contain underscores.
-* Structure members start with a lower case character and each
-  consecutive word starts with a capital.
-* A structure that has a pointer to an array includes a structure
-  member named pname:fooCount of type
-  code:uint32_t to denote the number of elements in the array of pname:foo.
-* A structure that has a pointer to an array lists the pname:fooCount
-  member first and then the array pointer.
+* Structure members start with a lower case character and each consecutive
+  word starts with a capital.
+* A structure that has a pointer to an array includes a structure member
+  named pname:fooCount of type code:uint32_t to denote the number of
+  elements in the array of pname:foo.
+* A structure that has a pointer to an array lists the pname:fooCount member
+  first and then the array pointer.
 * Unless a negative value has a clearly defined meaning all pname:fooCount
   variables are unsigned.
 * Function parameters that are modified are always listed last.
 ****
 
-Prefixes are used in the API to denote specific semantic meaning of
-names, or as a label to avoid name clashes, and are explained here:
+Prefixes are used in the API to denote specific semantic meaning of names,
+or as a label to avoid name clashes, and are explained here:
 
 [cols=",",options="header",]
 |===================================================================
@@ -40,8 +40,8 @@ names, or as a label to avoid name clashes, and are explained here:
 
 [[applicationbinaryinterface]]
 === Application Binary Interface
-This section describes additional definitions and conventions that
-define the application binary interface.
+This section describes additional definitions and conventions that define
+the application binary interface.
 
 
 [[structure-types]]
@@ -56,10 +56,10 @@ Most structures containing pname:type members have a value of pname:type
 matching the type of the structure, as described more fully in
 <<valid-usage-for-structure-types,Valid Usage for Structure Types>>.
 
-Note that all extension enums begin at the extension
-enum base of [eq]#1^10^# (base 10).
-Each extension is assigned a block of 1000 enums,
-starting at the enum base and arranged by the extension's index.
+Note that all extension enums begin at the extension enum base of
+[eq]#1^10^# (base 10).
+Each extension is assigned a block of 1000 enums, starting at the enum base
+and arranged by the extension's index.
 --
 
 For example, if an extension with index 5 wants to use an enum value of 3,
@@ -72,15 +72,17 @@ the final enum is computed by:
 [[flag-types]]
 ==== Flag Types
 
-Flag types are all bitmasks aliasing the base type basetype:XrFlags64 and with
-corresponding bit flag types defining the valid bits for that flag, as
-described in Valid Usage for Flags. Flag types supported by the API include:
+Flag types are all bitmasks aliasing the base type basetype:XrFlags64 and
+with corresponding bit flag types defining the valid bits for that flag, as
+described in Valid Usage for Flags.
+Flag types supported by the API include:
 
 include::../../generated/api/flags/XrCompositionLayerFlags.txt[]
 include::../../generated/api/flags/XrInputSourceLocalizedNameFlags.txt[]
 include::../../generated/api/flags/XrInstanceCreateFlags.txt[]
 include::../../generated/api/flags/XrSessionCreateFlags.txt[]
-include::../../generated/api/flags/XrSpaceRelationFlags.txt[]
+include::../../generated/api/flags/XrSpaceLocationFlags.txt[]
+include::../../generated/api/flags/XrSpaceVelocityFlags.txt[]
 include::../../generated/api/flags/XrSwapchainCreateFlags.txt[]
 include::../../generated/api/flags/XrSwapchainUsageFlags.txt[]
 include::../../generated/api/flags/XrViewStateFlags.txt[]
@@ -102,22 +104,25 @@ extern "C" {
 and closed with:
 
 [source,C]
+----
 #ifdef __cplusplus
 }
 #endif
+----
 
-The supplied `openxr.h` header defines a
-small number of C preprocessor macros that are described below.
+The supplied `openxr.h` header defines a small number of C preprocessor
+macros that are described below.
 
 [[appendix-version-number-macros]]
 ===== Version Number Macros
 
 Two version numbers are defined in `openxr.h`.
 Each is packed into a 32-bit integer as described in
-<<appendix-api-version-number-macros,API Version Number Function-like Macros>>.
+<<appendix-api-version-number-macros,API Version Number Function-like
+Macros>>.
 
 
-[open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION XR_HEADER_VERSION']
+[open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION']
 --
 include::../../generated/api/defines/XR_CURRENT_API_VERSION.txt[]
 
@@ -125,22 +130,13 @@ dlink:XR_CURRENT_API_VERSION is the current version of the OpenXR API.
 --
 
 
-[open,refpage='XR_HEADER_VERSION',type='defines',desc='Version of the OpenXR header',xrefs='XR_MAKE_VERSION XR_CURRENT_API_VERSION']
---
-include::../../generated/api/defines/XR_HEADER_VERSION.txt[]
-
-dlink:XR_HEADER_VERSION is the version number of the `openxr.h` header.
-This value is currently kept synchronized with the release number of the
-Specification. However, it is not guaranteed to remain synchronized,
-since most Specification updates have no effect on `openxr.h`.
---
-
-
 [[appendix-api-version-number-macros]]
 ===== API Version Number Function-like Macros
 
-API Version Numbers are three components, packed into a single 32-bit integer.
-The following macros manipulate version components and packed version numbers.
+API Version Numbers are three components, packed into a single 64-bit
+integer.
+The following macros manipulate version components and packed version
+numbers.
 
 
 [open,refpage='XR_MAKE_VERSION',type='defines',desc='Packs a three-component version number into a packed version number integer',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_VERSION_PATCH XR_CURRENT_API_VERSION']
@@ -149,17 +145,21 @@ include::../../generated/api/defines/XR_MAKE_VERSION.txt[]
 
 .Parameter Descriptions
 ****
-* pname:major is the major version number.
-* pname:minor is the minor version number.
-* pname:patch is the patch version number.
+* pname:major is the major version number, packed into the most-significant
+  16 bits.
+* pname:minor is the minor version number, packed into the
+  second-most-significant group of 16 bits.
+* pname:patch is the patch version number, in the least-significant 32 bits.
 ****
 
-dlink:XR_MAKE_VERSION constructs a packed 32-bit integer API version number from three components.
-The format used is described in
-<<api-version-numbers-and-semantics,API Version Numbers and Semantics>>.
+dlink:XR_MAKE_VERSION constructs a packed 64-bit integer API version number
+from three components.
+The format used is described in <<api-version-numbers-and-semantics,API
+Version Numbers and Semantics>>.
 
 This macro can: be used when constructing the
-slink:XrApplicationInfo::pname:apiVersion parameter passed to flink:xrCreateInstance.
+slink:XrApplicationInfo::pname:apiVersion parameter passed to
+flink:xrCreateInstance.
 --
 
 
@@ -169,7 +169,8 @@ include::../../generated/api/defines/XR_VERSION_MAJOR.txt[]
 
 .Parameter Descriptions
 ****
-* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+* pname:version is a packed version number, such as those produced with
+  dlink:XR_MAKE_VERSION.
 ****
 
 dlink:XR_VERSION_MAJOR extracts the API major version number from a packed
@@ -183,7 +184,8 @@ include::../../generated/api/defines/XR_VERSION_MINOR.txt[]
 
 .Parameter Descriptions
 ****
-* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+* pname:version is a packed version number, such as those produced with
+  dlink:XR_MAKE_VERSION.
 ****
 
 dlink:XR_VERSION_MINOR extracts the API minor version number from a packed
@@ -197,7 +199,8 @@ include::../../generated/api/defines/XR_VERSION_PATCH.txt[]
 
 .Parameter Descriptions
 ****
-* pname:version is a packed version number, such as those produced with dlink:XR_MAKE_VERSION.
+* pname:version is a packed version number, such as those produced with
+  dlink:XR_MAKE_VERSION.
 ****
 
 dlink:XR_VERSION_PATCH extracts the API patch version number from a packed
@@ -218,9 +221,9 @@ include::../../generated/api/defines/XR_DEFINE_HANDLE.txt[]
 * object is the name of the resulting C type.
 ****
 
-dlink:XR_DEFINE_HANDLE defines a handle type, which is an opaque 64 bit value,
-which may: be implemented as an opaque, distinct pointer type on platforms
-with 64 bit pointers.
+dlink:XR_DEFINE_HANDLE defines a handle type, which is an opaque 64 bit
+value, which may: be implemented as an opaque, distinct pointer type on
+platforms with 64 bit pointers.
 
 For further details, see <<handles,Handles>>.
 --
@@ -231,8 +234,8 @@ include::../../generated/api/defines/XR_NULL_HANDLE.txt[]
 
 dlink:XR_NULL_HANDLE is a reserved value representing a non-valid object
 handle.
-It may: be passed to and returned from API functions only when
-specifically allowed.
+It may: be passed to and returned from API functions only when specifically
+allowed.
 --
 
 
@@ -245,39 +248,43 @@ include::../../generated/api/defines/XR_DEFINE_ATOM.txt[]
 * object is the name of the resulting C type.
 ****
 
-dlink:XR_DEFINE_ATOM defines an atom type, which is an opaque 64 bit integer.
+dlink:XR_DEFINE_ATOM defines an atom type, which is an opaque 64 bit
+integer.
 --
 
 [[platform-specific-macro-definitions]]
 ==== Platform-Specific Macro Definitions
 
 Additional platform-specific macros and interfaces are defined using the
-included `openxr_platform.h` file. These macros are used to control
-platform-dependent behavior, and their exact definitions are under the
-control of specific platform implementations of the API.
+included `openxr_platform.h` file.
+These macros are used to control platform-dependent behavior, and their
+exact definitions are under the control of specific platform implementations
+of the API.
 
 
 [[platform-specific-calling-conventions]]
 ===== Platform-Specific Calling Conventions
 
-On many platforms the following macros are empty strings, causing
-platform- and compiler-specific default calling conventions to be used.
+On many platforms the following macros are empty strings, causing platform-
+and compiler-specific default calling conventions to be used.
 
 [[XRAPI_ATTR]]
 dlink:XRAPI_ATTR is a macro placed before the return type of an API function
-declaration. This macro controls calling conventions for C++11 and
-GCC/Clang-style compilers.
+declaration.
+This macro controls calling conventions for C++11 and GCC/Clang-style
+compilers.
 
 [[XRAPI_CALL]]
 dlink:XRAPI_CALL is a macro placed after the return type of an API function
-declaration. This macro controls calling conventions for MSVC-style
-compilers.
+declaration.
+This macro controls calling conventions for MSVC-style compilers.
 
 [[XRAPI_PTR]]
 dlink:XRAPI_PTR is a macro placed between the ( and * in API function
-pointer declarations. This macro also controls calling conventions, and
-typically has the same definition as dlink:XRAPI_ATTR or dlink:XRAPI_CALL,
-depending on the compiler.
+pointer declarations.
+This macro also controls calling conventions, and typically has the same
+definition as dlink:XRAPI_ATTR or dlink:XRAPI_CALL, depending on the
+compiler.
 
 Examples:
 
@@ -298,18 +305,17 @@ typedef <return_type> (XRAPI_PTR *PFN_<function_name>(<function_parameters>);
 ===== Platform-Specific Header Control
 
 [[XR_NO_STDINT_H]]
-If the dlink:XR_NO_STDINT_H macro is defined by the application
-at compile time, before including any OpenXR header,
-extended integer types normally found in `<stdint.h>` and
-used by the OpenXR headers, such as code:uint8_t,
-must: also be defined (as `typedef` or with the preprocessor)
-before including any OpenXR header.
+If the dlink:XR_NO_STDINT_H macro is defined by the application at compile
+time, before including any OpenXR header, extended integer types normally
+found in `<stdint.h>` and used by the OpenXR headers, such as code:uint8_t,
+must: also be defined (as `typedef` or with the preprocessor) before
+including any OpenXR header.
 Otherwise, `openxr.h` and related headers will not compile.
-If dlink:XR_NO_STDINT_H is not defined,
-the system-provided `<stdint.h>` is used to define these types.
-There is a fallback path for Microsoft Visual Studio version 2008
-and earlier versions (which lack this header)
-that is automatically activated as needed.
+If dlink:XR_NO_STDINT_H is not defined, the system-provided `<stdint.h>` is
+used to define these types.
+There is a fallback path for Microsoft Visual Studio version 2008 and
+earlier versions (which lack this header) that is automatically activated as
+needed.
 
 
 [[graphics-api-header-control]]
@@ -321,7 +327,6 @@ that is automatically activated as needed.
 |[[XR_USE_GRAPHICS_API_OPENGL]] `XR_USE_GRAPHICS_API_OPENGL` |OpenGL
 |[[XR_USE_GRAPHICS_API_OPENGL_ES]] `XR_USE_GRAPHICS_API_OPENGL_ES` |OpenGL ES
 |[[XR_USE_GRAPHICS_API_VULKAN]] `XR_USE_GRAPHICS_API_VULKAN` |Vulkan
-|[[XR_USE_GRAPHICS_API_D3D10]] `XR_USE_GRAPHICS_API_D3D10` |Direct3D 10.x
 |[[XR_USE_GRAPHICS_API_D3D11]] `XR_USE_GRAPHICS_API_D3D11` |Direct3D 11
 |[[XR_USE_GRAPHICS_API_D3D12]] `XR_USE_GRAPHICS_API_D3D12` |Direct3D 12
 |==========================================
@@ -434,75 +439,92 @@ colleague, and dear friend.
 
 Johannes, known to his friends as "JP", had a great sense of humor, fierce
 loyalty, intense drive, a love of rainbow unicorns, and deep disdain for
-processed American cheese. Perhaps most distinguishing of all, though, was his
-love of technology and his extraordinary technical ability.
+processed American cheese.
+Perhaps most distinguishing of all, though, was his love of technology and
+his extraordinary technical ability.
 
-JP's love of technology started at an early age --- instead of working on his
-homework, he built train sets, hovercrafts, and complex erector sets from
-scratch; fashioned a tool for grabbing loose change out of street grates; and
-played computer games. The passion for computer games continued at Delft
-University of Technology, where, armed with a T1 internet connection and sheer
-talent, he regularly destroyed his foes in arena matches without being seen,
-earning him the moniker "MrElusive". During this time, he wrote the Gladiator-bot
-AI, which earned him acclaim in the community and led directly to a job at
-the iconic American computer game company, id Software. From there, he quickly
-became an expert in every system he touched, contributing significantly to
-every facet of the technology: AI, path navigation, networking, skeletal
-animation, virtual texturing, advanced rendering, and physics. He became a master
-of all. He famously owned more lines of code than anyone else, but he was also
-a generous mentor, helping junior developers hone their skills and make their
+JP's love of technology started at an early age --- instead of working on
+his homework, he built train sets, hovercrafts, and complex erector sets
+from scratch; fashioned a tool for grabbing loose change out of street
+grates; and played computer games.
+The passion for computer games continued at Delft University of Technology,
+where, armed with a T1 internet connection and sheer talent, he regularly
+destroyed his foes in arena matches without being seen, earning him the
+moniker "MrElusive".
+During this time, he wrote the Gladiator-bot AI, which earned him acclaim in
+the community and led directly to a job at the iconic American computer game
+company, id Software.
+From there, he quickly became an expert in every system he touched,
+contributing significantly to every facet of the technology: AI, path
+navigation, networking, skeletal animation, virtual texturing, advanced
+rendering, and physics.
+He became a master of all.
+He famously owned more lines of code than anyone else, but he was also a
+generous mentor, helping junior developers hone their skills and make their
 own contributions.
 
-When the chance to work in the VR industry arose, he saw it as an opportunity
-to help shape the future. Having never worked on VR hardware did not
-phase him; he quickly became a top expert in the field. Many of his
-contributions directly moved the industry forward, most recently his work on
-asynchronous timewarp and open-standards development.
+When the chance to work in the VR industry arose, he saw it as an
+opportunity to help shape the future.
+Having never worked on VR hardware did not phase him; he quickly became a
+top expert in the field.
+Many of his contributions directly moved the industry forward, most recently
+his work on asynchronous timewarp and open-standards development.
 
-Time was not on his side. Even in his final days, JP worked tirelessly on
-the initial proposal for this specification. The treatments he had undergone
-took a tremendous physical toll, but he continued to work because of his love
-of technology, his dedication to the craft, and his desire to get OpenXR
-started on a solid footing.  His focus was unwavering.
+Time was not on his side.
+Even in his final days, JP worked tirelessly on the initial proposal for
+this specification.
+The treatments he had undergone took a tremendous physical toll, but he
+continued to work because of his love of technology, his dedication to the
+craft, and his desire to get OpenXR started on a solid footing.
+His focus was unwavering.
 
 His proposal was unofficially adopted several days before his passing - and
-upon hearing, he mustered the energy for a smile. While it was his great dream
-to see this process through, he would be proud of the spirit of cooperation,
-passion, and dedication of the industry peers who took up the torch to drive
-this specification to completion.
+upon hearing, he mustered the energy for a smile.
+While it was his great dream to see this process through, he would be proud
+of the spirit of cooperation, passion, and dedication of the industry peers
+who took up the torch to drive this specification to completion.
 
 JP lived a life full of accomplishment, as evidenced by many publications,
-credits, awards, and nominations where you will find his name. A less obvious
-accomplishment --- but of equal importance --- is the influence he had on people
-through his passionate leadership. He strove for excellence in everything that
-he did. He was always excited to talk about technology and share the
-discoveries made while working through complex problems. He created excitement
-and interest around engineering and technical excellence. He was a mentor and
-teacher who inspired those who knew him and many continue to benefit from his
-hard work and generosity.
+credits, awards, and nominations where you will find his name.
+A less obvious accomplishment --- but of equal importance --- is the
+influence he had on people through his passionate leadership.
+He strove for excellence in everything that he did.
+He was always excited to talk about technology and share the discoveries
+made while working through complex problems.
+He created excitement and interest around engineering and technical
+excellence.
+He was a mentor and teacher who inspired those who knew him and many
+continue to benefit from his hard work and generosity.
+
+// Force page break here, workaround
+// see https://github.com/KhronosGroup/Vulkan-Docs/issues/459
+// and https://github.com/asciidoctor/asciidoctor-pdf/issues/38
+ifdef::backend-pdf[<<<]
 
 JP was a rare gem; fantastically brilliant intellectually, but also warm,
-compassionate, generous, humble, and funny. Those of us lucky enough to have
-crossed paths with him knew what a privilege and great honor it was to know
-him. He is certainly missed.
+compassionate, generous, humble, and funny.
+Those of us lucky enough to have crossed paths with him knew what a
+privilege and great honor it was to know him.
+He is certainly missed.
 
 image::images/JP.jpg[align="center",pdfwidth="80%"]
 
 <<<
 [[credits]]
 === Contributors (Informative)
-OpenXR is the result of contributions from
-many people and companies participating in the Khronos OpenXR Working Group.
-Members of the Working Group, including the company that they represented at the time of their
-most recent contribution, are listed below.
+OpenXR is the result of contributions from many people and companies
+participating in the Khronos OpenXR Working Group.
+Members of the Working Group, including the company that they represented at
+the time of their most recent contribution, are listed below.
 
-==== Contributors to OpenXR 0.90 Provisional
+==== Contributors to OpenXR 1.0
 
 * Adam Gousetis, Google
 * Alex Turner, Microsoft
 * Andreas Loeve Selvik, Arm
 * Andres Rodriguez, Valve Software
 * Armelle Laine, Qualcomm Technologies, Inc
+* Attila Maczak, CTRL-labs
 * Blake Taylor, Magic Leap
 * Brad Grantham, Google
 * Brandon Jones, Google
@@ -511,6 +533,8 @@ most recent contribution, are listed below.
 * Bryce Hutchings, Microsoft
 * Cass Everitt, Facebook
 * Charles Egenbacher, Epic Games
+* Chris Osborn, CTRL-labs
+* Christine Perey, Perey Research & Consulting
 * Christoph Haag, Collabora
 * Craig Donner, Google
 * Dan Ginsburg, Valve Software
@@ -563,15 +587,18 @@ most recent contribution, are listed below.
 * Robert Menzel, NVIDIA
 * Robert Simpson, Qualcomm Technologies, Inc.
 * Robin Bourianes, Starbreeze
-* Ryan Pavlik, Collabora
+* Ryan A. Pavlik, Collabora
 * Ryan Vance, Epic Games
 * Sam Martin, Arm
 * Satish Salian, NVIDIA
 * Scott Flynn, Unity Technologies
+* Sean Payne, CTRL-labs
 * Sophia Baldonado, PlutoVR
+* Steve Smith, Epic Games
 * Sungye Kim, Intel
 * Tom Flynn, Samsung
 * Trevor F. Smith, Mozilla
 * Vivek Viswanathan, Dell
 * Yin Li, Microsoft
 * Yuval Boger, Sensics
+* Zheng Qin, Microsoft

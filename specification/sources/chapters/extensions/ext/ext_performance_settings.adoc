@@ -5,7 +5,8 @@ include::../meta/XR_EXT_performance_settings.adoc[]
 *IP Status*::
     No known IP claims.
 *Contributors*::
-    Armelle Laine, Qualcomm Technologies Inc, on behalf of Qualcomm Innovation Center, Inc
+    Armelle Laine, Qualcomm Technologies Inc, on behalf of Qualcomm
+    Innovation Center, Inc
 
 // "This submission is provided subject to and covered by the Khronos Group Intellectual
 // Property ("IP") Rights Policy. No other rights are granted by this submission, and
@@ -16,14 +17,15 @@ include::../meta/XR_EXT_performance_settings.adoc[]
 
 ==== Overview
 
-This extension defines an API for the application to give performance
-hints to the runtime and for the runtime to send performance related notifications back to
-the application. This allows both sides to dial in a suitable compromise between
-needed CPU and GPU performance, thermal sustainability and a consistent good user experience
-throughout the session.
+This extension defines an API for the application to give performance hints
+to the runtime and for the runtime to send performance related notifications
+back to the application.
+This allows both sides to dial in a suitable compromise between needed CPU
+and GPU performance, thermal sustainability and a consistent good user
+experience throughout the session.
 
-The goal is to render frames consistently, in time, under varying system load
-without consuming more energy than necessary.
+The goal is to render frames consistently, in time, under varying system
+load without consuming more energy than necessary.
 
 
 In summary, the APIs allow:
@@ -37,56 +39,76 @@ In summary, the APIs allow:
 [[EXT_performance_settings-level-definition]]
 ===== Performance level hint definition
 
-The XR performance level hints for a given hardware system are expressed as a level elink:XrPerfSettingsLevelEXT
-for each of the XR-critical
-processing domains elink:XrPerfSettingsDomainEXT (currently defined is a CPU and a GPU domain):
+The XR performance level hints for a given hardware system are expressed as
+a level elink:XrPerfSettingsLevelEXT for each of the XR-critical processing
+domains elink:XrPerfSettingsDomainEXT (currently defined is a CPU and a GPU
+domain):
 
+[open,refpage='XrPerfSettingsDomainEXT',type='enums',desc='XrPerfSettingsDomainEXT']
+--
 include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.txt[]
+--
 
+[open,refpage='XrPerfSettingsLevelEXT',type='enums',desc='XrPerfSettingsLevelEXT']
+--
 include::{INCS-VAR}/api/enums/XrPerfSettingsLevelEXT.txt[]
+--
 
 This extension defines platform-independent level hints:
 
-* ename:XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT is used by the application to indicate that it enters a non-XR
-  section (head-locked / static screen), during which power savings are to be prioritized.
-  Consistent XR compositing, consistent frame rendering, and low latency are not needed.
-* ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT is used by the application to indicate that it enters a low
-  and stable complexity section, during which reducing power is more important than
-  occasional late rendering frames. With such a hint, the XR Runtime still strives for consistent XR
-  compositing (no tearing) within a thermally sustainable range(*), but is allowed to
-  take measures to reduce power, such as increasing latencies or reducing headroom.
-* ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT is used by the application to indicate that it enters
-  a high or dynamic complexity section, during which the XR Runtime strives for consistent
-  XR compositing and frame rendering within a thermally sustainable range(*).
-* ename:XR_PERF_SETTINGS_LEVEL_BOOST_EXT is used to indicate that the application enters
-  a section with very high complexity, during which the XR Runtime is allowed to step
-  up beyond the thermally sustainable range. As not thermally sustainable, this
-  level is meant to be used for short-term durations (< 30 seconds).
+* ename:XR_PERF_SETTINGS_LEVEL_POWER_SAVINGS_EXT is used by the application
+  to indicate that it enters a non-XR section (head-locked / static screen),
+  during which power savings are to be prioritized.
+  Consistent XR compositing, consistent frame rendering, and low latency are
+  not needed.
+* ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT is used by the application
+  to indicate that it enters a low and stable complexity section, during
+  which reducing power is more important than occasional late rendering
+  frames.
+  With such a hint, the XR Runtime still strives for consistent XR
+  compositing (no tearing) within a thermally sustainable range(*), but is
+  allowed to take measures to reduce power, such as increasing latencies or
+  reducing headroom.
+* ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT is used by the application
+  to indicate that it enters a high or dynamic complexity section, during
+  which the XR Runtime strives for consistent XR compositing and frame
+  rendering within a thermally sustainable range(*).
+* ename:XR_PERF_SETTINGS_LEVEL_BOOST_EXT is used to indicate that the
+  application enters a section with very high complexity, during which the
+  XR Runtime is allowed to step up beyond the thermally sustainable range.
+  As not thermally sustainable, this level is meant to be used for
+  short-term durations (< 30 seconds).
 
-(*) If the application chooses one of the two sustainable levels (ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT or
-ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT), the device may still run into thermal limits under non-nominal
-circumstances (high room temperature, additional background loads, extended device operation)
-and therefore the application should also in the sustainable modes be prepared to react to performance
-notifications (in particular ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT and
-ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT in the thermal sub-domain, see <<performance-settings-notification-levels>>). +
+(*) If the application chooses one of the two sustainable levels
+(ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_LOW_EXT or
+ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT), the device may still run
+into thermal limits under non-nominal circumstances (high room temperature,
+additional background loads, extended device operation) and therefore the
+application should also in the sustainable modes be prepared to react to
+performance notifications (in particular
+ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT and
+ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT in the thermal sub-domain,
+see <<performance-settings-notification-levels>>). +
 
-The XR Runtime shall select ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT as the default hint if the application does not provide any.
-The function to call for setting performance level hints is flink:xrPerfSettingsSetPerformanceLevelEXT.
+The XR Runtime shall select ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
+as the default hint if the application does not provide any.
+The function to call for setting performance level hints is
+flink:xrPerfSettingsSetPerformanceLevelEXT.
 
 include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.txt[]]
 
 ===== Example of using the short-term boost level hint
 
-For a limited amount of time, both the Mobile and PC systems can
-provide a higher level of performance than is thermally sustainable.
-It is desirable to make this extra computational power available for short complex scenes,
-then go back to a sustainable lower level.
+For a limited amount of time, both the Mobile and PC systems can provide a
+higher level of performance than is thermally sustainable.
+It is desirable to make this extra computational power available for short
+complex scenes, then go back to a sustainable lower level.
 This section describes means for the application developer to apply settings
 directing the runtime to boost performance for a short-term duration.
 
-The application developer must pay attention to keep these boost periods very short
-and carefully monitor the side effects, which may vary a lot between different
-hardware systems.
+The application developer must pay attention to keep these boost periods
+very short and carefully monitor the side effects, which may vary a lot
+between different hardware systems.
 
 .[.underline]#Sample code for temporarily boosting the performance#
 [source,C,%autofit]
@@ -104,9 +126,10 @@ xrPerfSettingsSetPerformanceLevelEXT(session, XR_PERF_SETTINGS_DOMAIN_CPU_EXT, X
 xrPerfSettingsSetPerformanceLevelEXT(session, XR_PERF_SETTINGS_DOMAIN_GPU_EXT, XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT);
 
 ----
-<1> we assume that session is initialized and its handle is available
-<2> setting performance level to ename:XR_PERF_SETTINGS_LEVEL_BOOST_EXT on both CPU and GPU domains
-<3> going back to the sustainable ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
+<1> we assume that session is initialized and its handle is available <2>
+setting performance level to ename:XR_PERF_SETTINGS_LEVEL_BOOST_EXT on both
+CPU and GPU domains <3> going back to the sustainable
+ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
 
 ===== Example of using the sustained low level hint for the CPU domain
 
@@ -124,57 +147,71 @@ xrPerfSettingsSetPerformanceLevelEXT(session, XR_PERF_SETTINGS_DOMAIN_GPU_EXT, X
 
 xrPerfSettingsSetPerformanceLevelEXT(session, XR_PERF_SETTINGS_DOMAIN_CPU_EXT, XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT); // <3>
 ----
-<1> we assume that session is initialized and its handle is available
-<2> the developer may choose to only reduce CPU domain and keep the GPU domain at ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
-<3> going back to the sustainable ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT for CPU
+<1> we assume that session is initialized and its handle is available <2>
+the developer may choose to only reduce CPU domain and keep the GPU domain
+at ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT <3> going back to the
+sustainable ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT for CPU
 
 
 ==== Receiving Performance Related Notifications
-The XR runtime shall provide performance related notifications to the application in the following situations:
+The XR runtime shall provide performance related notifications to the
+application in the following situations:
 
 * the compositing performance within the runtime has reached a new level,
-  either improved or degraded from the previous one (pname:subDomain is set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT)
-* the application rendering performance has reached a new level,
-  either improved or degraded from the previous one (pname:subDomain is set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT)
-* the temperature of the device has reached a new level, either improved
-  or degraded from the previous one (pname:subDomain is set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT).
+  either improved or degraded from the previous one (pname:subDomain is set
+  to ename:XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT)
+* the application rendering performance has reached a new level, either
+  improved or degraded from the previous one (pname:subDomain is set to
+  ename:XR_PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT)
+* the temperature of the device has reached a new level, either improved or
+  degraded from the previous one (pname:subDomain is set to
+  ename:XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT).
 
-When degradation is observed, the application should: take measures reducing its workload,
-helping the compositing or rendering pname:subDomain to meet their deadlines,
-or the thermal pname:subDomain to avoid or stop throttling.
-When improvement is observed, the application can potentially rollback some of its mitigations.
+When degradation is observed, the application should: take measures reducing
+its workload, helping the compositing or rendering pname:subDomain to meet
+their deadlines, or the thermal pname:subDomain to avoid or stop throttling.
+When improvement is observed, the application can potentially rollback some
+of its mitigations.
 
 include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.no-xref.txt[]
 
 include::{INCS-VAR}/api/enums/XrPerfSettingsSubDomainEXT.no-xref.txt[]
 
 ===== Compositing Sub-Domain
-One of the major functions the runtime shall provide is the timely compositing of the submitted layers in
-the background. The runtime has to share the CPU and GPU system resources for this operation with the application.
-Since this is extremely time sensitive - the head room is only a few milliseconds - the runtime
-may have to ask the application via notifications to cooperate and relinquish some usage of the
-indicated resource (CPU or GPU domain).
-Performance issues in this area
-that the runtime notices are notified to the application with the pname:subDomain set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT.
+One of the major functions the runtime shall provide is the timely
+compositing of the submitted layers in the background.
+The runtime has to share the CPU and GPU system resources for this operation
+with the application.
+Since this is extremely time sensitive - the head room is only a few
+milliseconds - the runtime may have to ask the application via notifications
+to cooperate and relinquish some usage of the indicated resource (CPU or GPU
+domain).
+Performance issues in this area that the runtime notices are notified to the
+application with the pname:subDomain set to
+ename:XR_PERF_SETTINGS_SUB_DOMAIN_COMPOSITING_EXT.
 
 ===== Rendering Sub-Domain
 The application submits rendered layers to the runtime for compositing.
-Performance issues in this area that the runtime notices (i.e. missing submission deadlines)
-are notified to the application with the pname:subDomain set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT. +
+Performance issues in this area that the runtime notices (i.e. missing
+submission deadlines) are notified to the application with the
+pname:subDomain set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_RENDERING_EXT. +
 
 ===== Thermal Sub-Domain
-XR applications run at a high-performance level during long periods of time, across a game or an entire movie session.
-As form factors shrink, especially on mobile solutions, the risk of reaching die thermal runaway
-or reaching the limits on skin and battery temperatures increases.
+XR applications run at a high-performance level during long periods of time,
+across a game or an entire movie session.
+As form factors shrink, especially on mobile solutions, the risk of reaching
+die thermal runaway or reaching the limits on skin and battery temperatures
+increases.
 When thermal limits are reached, the device mitigates the heat generation
-leading to severe performance reductions, which greatly affects
-user experience (dropped frames, high latency).
+leading to severe performance reductions, which greatly affects user
+experience (dropped frames, high latency).
 
-Better than dropping frames when it is too late, pro-active measures from the
-application should be encouraged.
+Better than dropping frames when it is too late, pro-active measures from
+the application should be encouraged.
 
-The performance notification with the pname:subDomain set to ename:XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT provides an early
-warning allowing the application to take mitigation actions.
+The performance notification with the pname:subDomain set to
+ename:XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT provides an early warning
+allowing the application to take mitigation actions.
 
 [[performance-settings-notification-levels]]
 ===== Notification level definition
@@ -182,70 +219,93 @@ warning allowing the application to take mitigation actions.
 The levels are defined as follows:
 
 include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
-* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT notifies that the sub-domain has reached a
-  level where no further actions other than currently applied are necessary.
-* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT notifies that the sub-domain has reached an early
-  warning level where the application should start proactive mitigation actions
-  with the goal to return to the ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT level.
-* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT notifies that the sub-domain has reached a critical
-  level with significant performance degradation. The application should take drastic mitigation
-  action.
+* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT notifies that the sub-domain
+  has reached a level where no further actions other than currently applied
+  are necessary.
+* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT notifies that the
+  sub-domain has reached an early warning level where the application should
+  start proactive mitigation actions with the goal to return to the
+  ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT level.
+* ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT notifies that the
+  sub-domain has reached a critical level with significant performance
+  degradation.
+  The application should take drastic mitigation action.
 
-The above definitions summarize the broad interpretation of the notification levels,
-however sub-domain specific definitions of each level and their transitions are specified below:
+The above definitions summarize the broad interpretation of the notification
+levels, however sub-domain specific definitions of each level and their
+transitions are specified below:
 
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT
-** For the compositing sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT indicates that the composition
-   headroom is consistently being met with sufficient margin. +
+** For the compositing sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT indicates that the
+   composition headroom is consistently being met with sufficient margin. +
    Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT from
-   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the composition headroom was
-   consistently *met with sufficient margin during a sufficient time period*.
-** For the rendering sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT indicates that frames are
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the
+   composition headroom was consistently *met with sufficient margin during
+   a sufficient time period*.
+** For the rendering sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT indicates that frames are
    being submitted in time to be used by the compositor. +
    Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT from
-   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that *during a sufficient time period*,
-   *none* of the due layers was *too late* to be picked up by the compositor.
-** For the thermal sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT indicates that the current load
-   should be sustainable in the near future. +
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that *during a
+   sufficient time period*, *none* of the due layers was *too late* to be
+   picked up by the compositor.
+** For the thermal sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT
+   indicates that the current load should be sustainable in the near future. +
    Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT from
    ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the runtime
    does not presuppose any further temperature mitigation action on the
    application side, other than the current ones.
 
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT
-** For the compositing sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that
-   the compositing headroom of the current frame was met but the margin is considered
-   insufficient by the runtime, and the application should: reduce its workload
-   in the notified domain to solve this problem. +
-   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT
-   indicates that the compositing deadline was *not missed during a sufficient time period*.
-** For the rendering sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that at least one layer
-   is regularly late to be picked up by the compositor, resulting in a degraded user experience,
-   and that the application should take action to consistently provide frames in a more timely manner. +
-   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT
-   indicates that *the runtime has stopped any of its own independent actions* which are tied to
+** For the compositing sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the
+   compositing headroom of the current frame was met but the margin is
+   considered insufficient by the runtime, and the application should:
+   reduce its workload in the notified domain to solve this problem. +
+   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that the
+   compositing deadline was *not missed during a sufficient time period*.
+** For the rendering sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that at least
+   one layer is regularly late to be picked up by the compositor, resulting
+   in a degraded user experience, and that the application should take
+   action to consistently provide frames in a more timely manner. +
+   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that *the
+   runtime has stopped any of its own independent actions* which are tied to
    the ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT level.
-** For the thermal sub-domain, the ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the runtime
-   expects the device to overheat under the current load, and that the application should
-   take mitigating action in order to prevent thermal throttling. +
-   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT
-   indicates that *the underlying system thermal throttling has stopped*.
+** For the thermal sub-domain, the
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT indicates that the runtime
+   expects the device to overheat under the current load, and that the
+   application should take mitigating action in order to prevent thermal
+   throttling. +
+   Getting into ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT from
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that *the
+   underlying system thermal throttling has stopped*.
 
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT
-** For the compositing sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that composition
-   can no longer be maintained under the current workload. The runtime may take independent
-   action that will interfere with the application (e.g. limiting the framerate,
-   ignoring submitted layers, or shutting down the application) in order to correct this problem.
-** For the rendering sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that at least one layer
-   is *too often* late to be picked up by the compositor, and consequently the runtime may take independent action
-   that will interfere with the application (e.g. informing the user that the application is not responding, displaying
-   a tracking environment in order to maintain user orientation). +
-** For the thermal sub-domain, ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that the *underlying*
-   *system is taking measures, such as thermal throttling* to reduce the temperature,
-   impacting the XR experience.​
+** For the compositing sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that
+   composition can no longer be maintained under the current workload.
+   The runtime may take independent action that will interfere with the
+   application (e.g. limiting the framerate, ignoring submitted layers, or
+   shutting down the application) in order to correct this problem.
+** For the rendering sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that at least
+   one layer is *too often* late to be picked up by the compositor, and
+   consequently the runtime may take independent action that will interfere
+   with the application (e.g. informing the user that the application is not
+   responding, displaying a tracking environment in order to maintain user
+   orientation). +
+** For the thermal sub-domain,
+   ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that the
+   *underlying* *system is taking measures, such as thermal throttling* to
+   reduce the temperature, impacting the XR experience.​
 
-Leaving ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that any mitigating actions by the runtime
-(e.g. down-clocking the device to stay within thermal limits) have ended.​
+Leaving ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that any
+mitigating actions by the runtime (e.g. down-clocking the device to stay
+within thermal limits) have ended.​
 
 [performance-settings-api]
 ==== Performance Settings API Reference
@@ -253,6 +313,8 @@ Leaving ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that any mitig
 '''
 ===== [big]#xrPerfSettingsSetPerformanceLevelEXT#
 
+[open,refpage='xrPerfSettingsSetPerformanceLevelEXT',type='protos',desc='xrPerfSettingsSetPerformanceLevelEXT',xrefs='']
+--
 include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 
 .Parameter Descriptions
@@ -263,13 +325,16 @@ include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 ****
 
 include::{INCS-VAR}/validity/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
+--
 
-Refer to <<EXT_performance_settings-level-definition>> for the definition
-of the level enumerations.
+Refer to <<EXT_performance_settings-level-definition>> for the definition of
+the level enumerations.
 
 '''
 ===== [big]#XrEventDataPerformanceSettingsEXT#
 
+[open,refpage='XrEventDataPerfSettingsEXT',type='structs',desc='XrEventDataPerfSettingsEXT',xrefs='']
+--
 include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 
 .Member Descriptions
@@ -283,10 +348,19 @@ include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 ****
 
 include::{INCS-VAR}/validity/structs/XrEventDataPerfSettingsEXT.txt[]
+--
 
 include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+
+[open,refpage='XrPerfSettingsSubDomainEXT',type='enums',desc='XrPerfSettingsSubDomainEXT',xrefs='']
+--
 include::{INCS-VAR}/api/enums/XrPerfSettingsSubDomainEXT.txt[]
+--
+
+[open,refpage='XrPerfSettingsNotificationLevelEXT',type='enums',desc='XrPerfSettingsNotificationLevelEXT',xrefs='']
+--
 include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.txt[]
+--
 
 *Version History*
 

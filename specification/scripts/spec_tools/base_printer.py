@@ -127,7 +127,8 @@ class BasePrinter(ABC):
                                missing_includes=False):
         """Outputs broken links and missing includes, if desired.
 
-        Delegates to self.outputBrokenLinks() and self.outputMissingIncludes().
+        Delegates to self.outputBrokenLinks() (if broken_links==True)
+        and self.outputMissingIncludes() (if missing_includes==True).
         """
         if broken_links:
             broken = checker.getBrokenLinks()

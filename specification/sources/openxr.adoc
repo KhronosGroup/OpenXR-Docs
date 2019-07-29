@@ -1,7 +1,7 @@
 // Copyright (c) 2017-2019 The Khronos Group Inc.
 // Copyright notice at https://www.khronos.org/registry/speccopyright.html
 
-= The OpenXR Specification [PROVISIONAL RELEASE]
+= The OpenXR Specification
 Copyright (c) 2017-2019 The Khronos Group Inc.
 :data-uri:
 :icons: font
@@ -13,7 +13,11 @@ Copyright (c) 2017-2019 The Khronos Group Inc.
 :fullimagewidth: width="800"
 :source-highlighter: prettify
 
-Copyright (c) 2017-2019 The Khronos Group Inc. All Rights reserved.
+Copyright (c) 2017-2019 The Khronos Group Inc.
+All rights reserved.
+
+// Include attributes for special symbols
+include::attribs.adoc[]
 
 toc::[]
 
@@ -39,13 +43,24 @@ include::chapters/rendering.adoc[]
 
 include::chapters/input.adoc[]
 
-// Extension process removed from provisional specificaion
+// Extension process removed from specification
 // per discussion.  See (i/863) for issue involving adding
-// it back after release.
+// it back.
 // include::chapters/extensions/extension_process.adoc[]
 
 include::chapters/extensions/meta/current_extensions_appendix.adoc[]
 
 :numbered!:
 
+// In non-PDF, use our custom index.
+ifndef::backend-pdf[]
+include::../generated/index.adoc[]
+endif::backend-pdf[]
+
 include::chapters/appendix.adoc[]
+
+// In PDF, use the auto-generated index.
+ifdef::backend-pdf[]
+[index]
+= Index
+endif::backend-pdf[]

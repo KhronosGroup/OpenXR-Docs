@@ -44,7 +44,7 @@ INTERNAL_PLACEHOLDER = re.compile(
 
 # Matches a generated (api or validity) include line.
 INCLUDE = re.compile(
-    r'include::(?P<directory_traverse>((../){1,4}|\{INCS-VAR\}/)(generated/)?)(?P<generated_type>[\w]+)/(?P<category>\w+)/(?P<entity_name>[^./]+).txt[\[][\]]')
+    r'include::(?P<directory_traverse>((../){1,4}|\{(INCS-VAR|generated)\}/)(generated/)?)(?P<generated_type>(api|validity))/(?P<category>\w+)/(?P<entity_name>[^./]+).txt[\[][\]]')
 
 # Matches an [[AnchorLikeThis]]
 ANCHOR = re.compile(r'\[\[(?P<entity_name>[^\]]+)\]\]')
@@ -740,7 +740,7 @@ class MacroCheckerFile(object):
         if dataArray:
             # We might have found the goof...
 
-            if dataArray:
+            if len(dataArray) == 1:
                 # Yep, found the goof:
                 # incorrect macro and entity capitalization
                 data = dataArray[0]
@@ -748,10 +748,11 @@ class MacroCheckerFile(object):
                     data.category))
                 self.handleWrongMacro(msg, data)
                 return True
-            # Ugh, more than one resolution
-            msg.append(
-                'More than one apparent match found by searching case-insensitively, cannot auto-fix.')
-            see_also = dataArray[:]
+            else:
+                # Ugh, more than one resolution
+                msg.append(
+                    'More than one apparent match found by searching case-insensitively, cannot auto-fix.')
+                see_also = dataArray[:]
 
         # OK, so we don't recognize this entity (and couldn't auto-fix it).
 
@@ -783,8 +784,8 @@ class MacroCheckerFile(object):
             # hard to check this.
             if self.checker.likelyRecognizedEntity(entity):
                 if not self.checkText():
-                    self.error(MessageId.BAD_ENUMERANT, msg +
-                               ['Unrecognized ename:{} that we would expect to recognize since it fits the pattern for this API.'.format(entity)], see_also=see_also)
+                    self.warning(MessageId.BAD_ENUMERANT, msg +
+                                 ['Unrecognized ename:{} that we would expect to recognize since it fits the pattern for this API.'.format(entity)], see_also=see_also)
         else:
             # This is fine:
             # it doesn't need to be recognized since it's not linked.
@@ -922,7 +923,7 @@ class MacroCheckerFile(object):
         if ref_page_entity == expected_ref_page_entity:
             # OK, this is a total match.
             pass
-        elif expected_ref_page_entity.startswith(ref_page_entity):
+        elif self.checker.entity_db.areAliases(expected_ref_page_entity, ref_page_entity):
             # This appears to be a promoted synonym which is OK.
             pass
         else:

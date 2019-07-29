@@ -64,7 +64,7 @@ If such a per-code-block include file is present,
 an include line for it will be added after the `common_include.h` include line, where noted above.
 
 The effect is roughly equivalent to adding the following
-(replacing `STEM` with, e.g., `view_configuration.0`)
+(replacing `STEM` with, e.g. `view_configuration.0`)
 after the `common_include.h` include:
 
 ```c++

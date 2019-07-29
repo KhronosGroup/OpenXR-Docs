@@ -1,7 +1,7 @@
 include::../meta/XR_KHR_opengl_es_enable.adoc[]
 
 *Last Modified Date*::
-    2019-01-25
+    2019-07-12
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -9,30 +9,37 @@ include::../meta/XR_KHR_opengl_es_enable.adoc[]
     Bryce Hutchings, Microsoft +
     Paul Pedriana, Oculus +
     Minmin Gong, Microsoft +
-    Robert Menzel, NVIDIA
+    Robert Menzel, NVIDIA +
+    Martin Renschler, Qualcomm
 
 *Overview*
 
-This extension enables the use of the OpenGL ES graphics API in an OpenXR runtime.
-Without this extension, the OpenXR runtime may not be able to
-use any OpenGL ES swapchain images.
+This extension must be provided by runtimes supporting applications using
+OpenGL ES APIs for rendering.
+OpenGL ES applications need this extension to obtain compatible swapchain
+images which the runtime is required to supply.
+The runtime needs the following OpenGL ES objects from the application in
+order to interact properly with the OpenGL ES driver: EGLDisplay, EGLConfig
+and EGLContext.
 
-This extension provides the mechanisms necessary for an application to generate a
-valid stext:XrGraphicsBindingOpenGLES*KHR structure in order to create a
-OpenGL-based slink:XrSession.
-Note that during this process the application is responsible for creating all
-the required OpenGL ES objects,
-including an OpenGL ES context to be used for rendering.
+These are passed from the application to the runtime in a
+slink:XrGraphicsBindingOpenGLESAndroidKHR structure when creating the
+slink:XrSession.
+Although not restricted to Android, the OpenGL ES extension is currently
+tailored for Android.
+
+Note that the application is responsible for creating the required OpenGL ES
+objects, including an OpenGL ES context to be used for rendering.
 
 This extension also provides mechanisms for the application to interact with
 images acquired by calling flink:xrEnumerateSwapchainImages.
 
 In order to expose the structures, types, and functions of this extension,
-you must: define
+the application source code must: define
 dlink:XR_USE_GRAPHICS_API_OPENGL_ES, as well as an appropriate
-<<window-system-header-control,window system define>> supported by this extension,
-before including the OpenXR platform header `openxr_platform.h`,
-in all portions of your library or application that include it.
+<<window-system-header-control,window system define>>, before including the
+OpenXR platform header `openxr_platform.h`, in all portions of your library
+or application that include it.
 The only window system define currently supported by this extension is:
 
 * dlink:XR_USE_PLATFORM_ANDROID
@@ -75,14 +82,13 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLESAndroidKHR.t
 * pname:context is a valid Android OpenGL ES sname:EGLContext.
 ****
 
-When creating an OpenGL ES-backed slink:XrSession
-on Android,
-the application will provide
-a pointer to an slink:XrGraphicsBindingOpenGLESAndroidKHR in the `next` chain of the
-slink:XrSessionCreateInfo.
+When creating an OpenGL ES-backed slink:XrSession on Android, the
+application will provide a pointer to an
+slink:XrGraphicsBindingOpenGLESAndroidKHR structure in the pname:next chain
+of the slink:XrSessionCreateInfo.
 
-The required window system configuration define to expose this structure type is
-dlink:XR_USE_PLATFORM_ANDROID.
+The required window system configuration define to expose this structure
+type is dlink:XR_USE_PLATFORM_ANDROID.
 
 include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLESAndroidKHR.txt[]
 --
@@ -97,20 +103,23 @@ include::../../../../generated/api/structs/XrSwapchainImageOpenGLESKHR.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:image is an index indicating the current OpenGL ES swapchain image to use.
+* pname:image is an index indicating the current OpenGL ES swapchain image
+  to use.
 ****
 
 If a given session was created with a stext:XrGraphicsBindingOpenGLES*KHR,
 the following conditions must: apply.
 
-* Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that session
-  must: return an array of slink:XrSwapchainImageOpenGLESKHR structures.
-* Whenever an OpenXR function accepts an slink:XrSwapchainImageBaseHeader pointer
-  as a parameter in that session, the runtime must: also accept a pointer to an
-  slink:XrSwapchainImageOpenGLESKHR.
+* Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
+  session must: return an array of slink:XrSwapchainImageOpenGLESKHR
+  structures.
+* Whenever an OpenXR function accepts an slink:XrSwapchainImageBaseHeader
+  pointer as a parameter in that session, the runtime must: also accept a
+  pointer to an slink:XrSwapchainImageOpenGLESKHR structure.
 
-The OpenXR runtime must: interpret the bottom-left corner of the swapchain image
-as the coordinate origin unless specified otherwise by extension functionality.
+The OpenXR runtime must: interpret the bottom-left corner of the swapchain
+image as the coordinate origin unless specified otherwise by extension
+functionality.
 
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing up, near Z plane at -1, and far Z plane at 1.
@@ -128,16 +137,20 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsOpenGLESKHR.txt
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:minApiVersionSupported is the minimum version of OpenGL ES that the runtime supports.
-  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any patch version component.
-* pname:maxApiVersionSupported is the maximum version of OpenGL ES that the runtime
-  has been tested on and is known to support.
+* pname:minApiVersionSupported is the minimum version of OpenGL ES that the
+  runtime supports.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
+* pname:maxApiVersionSupported is the maximum version of OpenGL ES that the
+  runtime has been tested on and is known to support.
   Newer OpenGL ES versions might work if they are compatible.
-  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any patch version component.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
 ****
 
-slink:XrGraphicsRequirementsOpenGLESKHR is populated by flink:xrGetOpenGLESGraphicsRequirementsKHR with the runtime's
-OpenGL ES API version requirements.
+slink:XrGraphicsRequirementsOpenGLESKHR is populated by
+flink:xrGetOpenGLESGraphicsRequirementsKHR with the runtime's OpenGL ES API
+version requirements.
 
 include::../../../../generated/validity/structs/XrGraphicsRequirementsOpenGLESKHR.txt[]
 --
@@ -146,20 +159,26 @@ include::../../../../generated/validity/structs/XrGraphicsRequirementsOpenGLESKH
 
 [open,refpage='xrGetOpenGLESGraphicsRequirementsKHR',type='protos',desc='Retrieve the OpenGL ES version requirements for an instance and system',xrefs='XrGraphicsRequirementsOpenGLESKHR']
 --
-To query OpenGL ES API version requirements for an instance and system, call:
+To query OpenGL ES API version requirements for an instance and system,
+call:
 
 include::../../../../generated/api/protos/xrGetOpenGLESGraphicsRequirementsKHR.txt[]
 
 .Parameter Descriptions
 ****
-* pname:instance is an slink:XrInstance handle previously created with flink:xrCreateInstance.
-* pname:systemId is an basetype:XrSystemId handle for the system which will be used to create a session.
-* pname:graphicsRequirements is the slink:XrGraphicsRequirementsOpenGLESKHR output structure.
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:graphicsRequirements is the slink:XrGraphicsRequirementsOpenGLESKHR
+  output structure.
 ****
 
-The flink:xrGetOpenGLESGraphicsRequirementsKHR function identifies to the application
-the minimum OpenGL ES version requirement and the highest known tested OpenGL ES version.
-flink:xrGetOpenGLESGraphicsRequirementsKHR has to be called prior to calling flink:xrCreateSession.
+The flink:xrGetOpenGLESGraphicsRequirementsKHR function identifies to the
+application the minimum OpenGL ES version requirement and the highest known
+tested OpenGL ES version.
+flink:xrGetOpenGLESGraphicsRequirementsKHR must: be called prior to calling
+flink:xrCreateSession.
 
 include::../../../../generated/validity/protos/xrGetOpenGLESGraphicsRequirementsKHR.txt[]
 --
@@ -177,4 +196,6 @@ include::../../../../generated/validity/protos/xrGetOpenGLESGraphicsRequirements
 * Revision 4, 2018-11-16 (Minmin Gong)
 ** Specified Y direction and Z range in clip space
 * Revision 5, 2019-01-25 (Robert Menzel)
+** Description updated
+* Revision 6, 2019-07-12 (Martin Renschler)
 ** Description updated

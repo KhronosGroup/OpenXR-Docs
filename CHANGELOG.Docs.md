@@ -11,6 +11,12 @@ along with any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification
 
+## OpenXR 1.0.0 release (29-July-2019)
+
+Substantial changes, including breaking changes, since the 0.90 series.
+
+Users of the provisional release should migrate to 1.0.
+
 ## Change log for OpenXR 0.90.1 provisional spec update (8-May-2019)
 
 No API changes, and only minimal consistency changes to the spec/registry.

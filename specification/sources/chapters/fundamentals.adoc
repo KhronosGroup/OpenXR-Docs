@@ -4,20 +4,29 @@
 [[api-version-numbers-and-semantics]]
 === API Version Numbers and Semantics
 
-The version number is used in several places in the OpenXR API.
-In each such use, the API major version number, minor version number, and patch
-version number are packed into a 32-bit integer as follows:
+
+[open,refpage='XrVersion',type='basetypes',desc='Type indicating multi-part version packed into 64-bit integer']
+--
+Multi-part version numbers are used in several places in the OpenXR API.
+
+include::../../generated/api/basetypes/XrVersion.txt[]
+
+In each such use, the API major version number, minor version number, and
+patch version number are packed into a 64-bit integer, referred to as
+basetype:XrVersion, as follows:
 
 .Version Numbers
 ****
-* The major version number is a 10-bit integer packed into bits 31-22.
-* The minor version number is a 10-bit integer packed into bits 21-12.
-* The patch version number is a 12-bit integer packed into bits 11-0.
+* The major version number is a 16-bit integer packed into bits 63-48.
+* The minor version number is a 16-bit integer packed into bits 47-32.
+* The patch version number is a 32-bit integer packed into bits 31-0.
 ****
 
-Differences in any of the version numbers indicate a change to the API,
-with each part of the version number indicating a different
-scope of change, as follows.
+--
+
+Differences in any of the version numbers indicate a change to the API, with
+each part of the version number indicating a different scope of change, as
+follows.
 
 [NOTE]
 .Note
@@ -26,34 +35,34 @@ The rules below apply to OpenXR versions 1.0 or later.
 Prerelease versions of OpenXR may use different rules for versioning.
 ====
 
-A difference in patch version numbers indicates that some usually small
-part of the specification or header has been modified, typically to fix
-a bug, and may: have an impact on the behavior of existing functionality.
+A difference in patch version numbers indicates that some usually small part
+of the specification or header has been modified, typically to fix a bug,
+and may: have an impact on the behavior of existing functionality.
 Differences in the patch version number must: affect neither full
-compatibility nor backwards compatibility between two versions, nor may:
-it add additional interfaces to the API.
+compatibility nor backwards compatibility between two versions, nor may: it
+add additional interfaces to the API.
 
 A difference in minor version numbers indicates that some amount of new
-functionality has been added. This will usually include new interfaces
-in the header, and may: also include behavior changes and bug fixes.
+functionality has been added.
+This will usually include new interfaces in the header, and may: also
+include behavior changes and bug fixes.
 Functionality may: be deprecated in a minor revision, but must: not be
 removed.
-When a new minor version is introduced, the patch version is reset to 0,
-and each minor revision maintains its own set of patch versions.
+When a new minor version is introduced, the patch version is reset to 0, and
+each minor revision maintains its own set of patch versions.
 Differences in the minor version number should: not affect backwards
 compatibility, but will affect full compatibility.
 
-A difference in major version numbers indicates a large set of changes
-to the API, potentially including new functionality and header
-interfaces, behavioral changes, removal of deprecated features,
-modification or outright replacement of any feature, and is thus very
-likely to break compatibility.
+A difference in major version numbers indicates a large set of changes to
+the API, potentially including new functionality and header interfaces,
+behavioral changes, removal of deprecated features, modification or outright
+replacement of any feature, and is thus very likely to break compatibility.
 Differences in the major version number will typically require significant
 modification to application code in order for it to function properly.
 
 The following table attempts to detail the changes that may occur versus
-when they must not be updated (indicating the next version number must
-be updated instead) during an update to any of the major, minor, or patch
+when they must not be updated (indicating the next version number must be
+updated instead) during an update to any of the major, minor, or patch
 version numbers:
 
 .Scenarios Which May Cause a Version Change
@@ -140,8 +149,8 @@ In the above table, the following identify the various cases in detail:
 === String Encoding
 
 This API uses strings as input and output for some functions.
-Unless otherwise specified, all such strings are code:NULL terminated UTF-8 encoded
-character arrays.
+Unless otherwise specified, all such strings are code:NULL terminated UTF-8
+encoded case-sensitive character arrays.
 
 [[threading-behavior]]
 === Threading Behavior
@@ -149,43 +158,41 @@ character arrays.
 The OpenXR API is intended to provide scalable performance when used on
 multiple host threads.
 All functions must: support being called concurrently from multiple threads,
-but certain parameters, or components of parameters are defined to be externally
-synchronized.
-This means that the caller must: guarantee that no more than one thread is using
-such a parameter at a given time.
+but certain parameters, or components of parameters are defined to be
+externally synchronized.
+This means that the caller must: guarantee that no more than one thread is
+using such a parameter at a given time.
 
 More precisely, functions use simple stores to update software structures
 representing objects.
-A parameter declared as externally synchronized may: have its software structures
-updated at any time during the host execution of the function.
-If two functions operate on the same object and at least one of the functions
-declares the object to be externally synchronized, then the caller must: guarantee
-not only that the functions do not execute simultaneously, but also that the two
-functions are separated by an appropriate memory barrier if needed.
+A parameter declared as externally synchronized may: have its software
+structures updated at any time during the host execution of the function.
+If two functions operate on the same object and at least one of the
+functions declares the object to be externally synchronized, then the caller
+must: guarantee not only that the functions do not execute simultaneously,
+but also that the two functions are separated by an appropriate memory
+barrier if needed.
 
-The following is a complete list of externally synchronized parameters
-in OpenXR:
+For all functions which destroy an object handle, the application must:
+externally synchronize the object handle parameter and any child handles.
 
-.Externally Synchronized Parameters
-****
-* the pname:instance parameter in flink:xrDestroyInstance,
-* the pname:session parameter in flink:xrDestroySession,
-* the pname:swapchain parameter in flink:xrDestroySwapchain
-****
+include::../../generated/hostsynctable/parameters.txt[]
+include::../../generated/hostsynctable/parameterlists.txt[]
+include::../../generated/hostsynctable/implicit.txt[]
 
 [[multiprocessing-behavior]]
 === Multiprocessing Behavior
 
-The OpenXR API does not explicitly recognize nor require support for multiple
-processes using the runtime simultaneously, nor does it prevent a runtime from
-providing such support.
+The OpenXR API does not explicitly recognize nor require support for
+multiple processes using the runtime simultaneously, nor does it prevent a
+runtime from providing such support.
 
 [[runtime]]
 === Runtime
 
 An OpenXR runtime is software which implements the OpenXR API.
-There may: be more than one OpenXR runtime installed on a system, but only one
-runtime can be active at any given time.
+There may: be more than one OpenXR runtime installed on a system, but only
+one runtime can be active at any given time.
 
 [[extensions]]
 === Extensions
@@ -196,41 +203,42 @@ Similar to other Khronos APIs, extensions can: be used to expose new OpenXR
 functions or modify the behavior of existing OpenXR functions.
 Extensions are optional and therefore must: be enabled by the application
 before the extended functionality is made available.
-Because extensions are optional, they may: be implemented only on a subset of
-runtimes, graphics platforms, or operating systems.
-Therefore, an application must: first query which extensions are available before
-enabling.
+Because extensions are optional, they may: be implemented only on a subset
+of runtimes, graphics platforms, or operating systems.
+Therefore, an application should: first query which extensions are available
+before enabling.
 
-The application queries the available list of extensions using the
-the flink:xrEnumerateInstanceExtensionProperties function.
+The application queries the available list of extensions using the the
+flink:xrEnumerateInstanceExtensionProperties function.
 Once an application determines which target extensions are supported, it
 can: enable some subset of them during the call to flink:xrCreateInstance.
 
-OpenXR extensions have unique names that convey information about what functionality
-is provided.
+OpenXR extensions have unique names that convey information about what
+functionality is provided.
 The names have the following format:
 
 .Extension Name Formatting
 ****
 * The prefix "code:XR_" to identify this as an OpenXR extension
 * A string identifier for the vendor tag, which corresponds to the company
-or group exposing the extension.
-The vendor tag must: use only uppercase letters and decimal digits. Some
-examples include:
+  or group exposing the extension.
+  The vendor tag must: use only uppercase letters and decimal digits.
+  Some examples include:
 ** "code:KHR" for Khronos extensions, supported by multiple vendors.
 ** "code:EXT" for non-Khronos extensions supported by multiple vendors.
 * An underscore "code:_".
-* A string uniquely identifying the extension. The string is a compound of
-substrings which must: use only lower case letters and decimal digits. The
-substrings are delimited with single underscores.
+* A string uniquely identifying the extension.
+  The string is a compound of substrings which must: use only lower case
+  letters and decimal digits.
+  The substrings are delimited with single underscores.
 ****
 
 For example: `<<XR_KHR_composition_layer_cube>>` is an OpenXR extension
-created by the Khronos (KHR) OpenXR Working Group to support cube composition
-layers.
+created by the Khronos (KHR) OpenXR Working Group to support cube
+composition layers.
 
-The public list of available extensions known at the time of this specification
-being generated appears in the
+The public list of available extensions known at the time of this
+specification being generated appears in the
 ifndef::HAS_DEPRECATED_EXTENSIONS[]
 <<extension-appendices-list, List of Extensions>>
 endif::HAS_DEPRECATED_EXTENSIONS[]
@@ -241,56 +249,59 @@ appendix at the end of this document.
 
 [[api-layers]]
 === API Layers
-OpenXR is designed to be a layered API, which means that a user or application
-may: insert API layers between the application and the runtime implementation.
-These API layers provide additional functionality by intercepting OpenXR functions
-from the layer above and then performing different operations than would otherwise
-be performed without the layer.
-In the simplest cases, the layer simply calls the
-next layer down with the same arguments, but a more complex layer may implement
-API functionality that is not present in the layers or runtime below it.
-This mechanism is essentially an architected "function shimming" or "intercept"
-feature that is designed into OpenXR and meant to replace more informal methods of
-"hooking" API calls.
+OpenXR is designed to be a layered API, which means that a user or
+application may: insert API layers between the application and the runtime
+implementation.
+These API layers provide additional functionality by intercepting OpenXR
+functions from the layer above and then performing different operations than
+would otherwise be performed without the layer.
+In the simplest cases, the layer simply calls the next layer down with the
+same arguments, but a more complex layer may implement API functionality
+that is not present in the layers or runtime below it.
+This mechanism is essentially an architected "function shimming" or
+"intercept" feature that is designed into OpenXR and meant to replace more
+informal methods of "hooking" API calls.
 
 ==== Examples of API Layers
 ===== Validation Layer
-The layered API approach employed by OpenXR allows for the expensive validation
-of correct API usage to be implemented in a "validation" layer.
-This layer allows the application developer to develop their application with
-the validation layer active to ensure that the application is using the
+The layered API approach employed by OpenXR allows for the expensive
+validation of correct API usage to be implemented in a "validation" layer.
+This layer allows the application developer to develop their application
+with the validation layer active to ensure that the application is using the
 API correctly.
 The validation layer confirms that the application has set up object state
 correctly, has provided the required data for each function, ensures that
 required resources are available, etc.
 If the validation layer detects a problem, it issues an error message that
 can be logged or captured by the application via a callback.
-After the developer has determined that the application is correct, they turn
-off the validation layer to allow the application to run in a production environment
-without repeatedly incurring the validation expense.
+After the developer has determined that the application is correct, they
+turn off the validation layer to allow the application to run in a
+production environment without repeatedly incurring the validation expense.
 
 ===== API Logging Layer
-Another example of an API layer is an API logging layer that simply serializes
-all the API calls to an output sink in a text format, including printing out
-argument values and structure contents.
+Another example of an API layer is an API logging layer that simply
+serializes all the API calls to an output sink in a text format, including
+printing out argument values and structure contents.
 
 ===== API Trace Layer
-A related API trace layer produces a trace file that contains all the information
-provided to the API so that the trace file can be played back by a replay program.
+A related API trace layer produces a trace file that contains all the
+information provided to the API so that the trace file can be played back by
+a replay program.
 
 ==== Naming API Layers
-To organize API layer names and prevent collisions in the API layer name namespace,
-API layers must: be named using the following convention:
+To organize API layer names and prevent collisions in the API layer name
+namespace, API layers must: be named using the following convention:
 
 ```
 XR_APILAYER_<VENDOR-TAG>_short_name
 ```
 
-Vendors are responsible for registering a vendor tag with the OpenXR working group and
-just like for implementors, they must maintain their vendor namespace.
+Vendors are responsible for registering a vendor tag with the OpenXR working
+group and just like for implementors, they must maintain their vendor
+namespace.
 
-Example of an API layer name produced by the Acme company for the
-"check best practices" API layer:
+Example of an API layer name produced by the Acme company for the "check
+best practices" API layer:
 
 ```
 XR_APILAYER_ACME_check_best_practices
@@ -299,11 +310,12 @@ XR_APILAYER_ACME_check_best_practices
 ==== Activating API Layers
 
 ===== Application Activation
-Applications may: determine the API layers that are available to them by
+Applications can: determine the API layers that are available to them by
 calling the flink:xrEnumerateApiLayerProperties function to obtain a list of
 available API layers.
-Applications then may: select the desired API layers from this list and provide
-them to the flink:xrCreateInstance function when creating an instance.
+Applications then can: select the desired API layers from this list and
+provide them to the flink:xrCreateInstance function when creating an
+instance.
 
 ===== System Activation
 Application users or users performing roles such as system integrator or
@@ -312,31 +324,34 @@ involvement from the applications.
 These platform-dependent steps may: include the installation of API
 layer-related files, setting environment variables, or other
 platform-specific operations.
-The options that are available for configuring the API layers in this manner are
-also dependent on the platform.
+The options that are available for configuring the API layers in this manner
+are also dependent on the platform and/or runtime.
 
 ==== API Layer Extensions
-API layers may: implement OpenXR functions that may or may not be supported by
-the underlying runtime.
+API layers may: implement OpenXR functions that may or may not be supported
+by the underlying runtime.
 In order to expose these new features, the API layer must expose this
 functionality in the form of an OpenXR <<extensions,extension>>.
 It must: not expose new OpenXR functions without an associated extension.
 
-For example, an OpenXR API-logging API layer might expose an API function to allow
-the application to turn logging on for only a portion of its execution.
+For example, an OpenXR API-logging API layer might expose an API function to
+allow the application to turn logging on for only a portion of its
+execution.
 Since new functions must: be exposed through an extension, the vendor has
-created an extension called `XR_ACME_logging_on_off` to contain these new functions.
-The application should: query if the API layer supports the extension and then,
-only if it exists, enable both the extension and the API layer by name during
-flink:xrCreateInstance.
+created an extension called `XR_ACME_logging_on_off` to contain these new
+functions.
+The application should: query if the API layer supports the extension and
+then, only if it exists, enable both the extension and the API layer by name
+during flink:xrCreateInstance.
 
-To find out what extensions an API layer supports, an application must: first
-verify that the API layer exists on the current system by calling
+To find out what extensions an API layer supports, an application must:
+first verify that the API layer exists on the current system by calling
 flink:xrEnumerateApiLayerProperties.
-After verifying an API layer of interest exists, the application then should:
-call flink:xrEnumerateInstanceExtensionProperties and provide the API layer
-name as the first parameter.
-This will return the list of extensions implemented internally in that API layer.
+After verifying an API layer of interest exists, the application then
+should: call flink:xrEnumerateInstanceExtensionProperties and provide the
+API layer name as the first parameter.
+This will return the list of extensions implemented internally in that API
+layer.
 
 [[type-aliasing]]
 ==== Type Aliasing
@@ -344,19 +359,21 @@ This will return the list of extensions implemented internally in that API layer
 Type aliasing refers to the situation in which the actual type of a element
 does not match the declared type.
 Some C and C++ compilers can be configured to assume that the actual type
-matches the declared type,
-and may be so configured by default at common optimization levels.
+matches the declared type, and may be so configured by default at common
+optimization levels.
 Without this, otherwise undefined behavior may occur.
 This compiler feature is typically referred to as "strict aliasing," and it
 can usually be enabled or disabled via compiler options.
 The OpenXR specification does not support strict aliasing, as there are some
-cases in which an application may: need to provide a struct with a type that differs from the declared type.
+cases in which an application intentionally provides a struct with a type
+that differs from the declared type.
 For example, slink:XrFrameEndInfo::pname:layers is an array of type
 code:const slink:XrCompositionLayerBaseHeader code:* code:const.
-However, the array must: be of one of the specific layer types, such
-as slink:XrCompositionLayerQuad.
+However, the array must: be of one of the specific layer types, such as
+slink:XrCompositionLayerQuad.
 Similarly, flink:xrEnumerateSwapchainImages accepts an array of
-slink:XrSwapchainImageBaseHeader, whereas the actual type passed must: be an array of a type such as slink:XrSwapchainImageVulkanKHR.
+slink:XrSwapchainImageBaseHeader, whereas the actual type passed must: be an
+array of a type such as slink:XrSwapchainImageVulkanKHR.
 For OpenXR to work correctly, the compiler must: support the type aliasing
 described here.
 
@@ -364,21 +381,22 @@ described here.
 --
 include::../../generated/api/defines/XR_MAY_ALIAS.txt[]
 
-As a convenience, some types and pointers that are known at specification time
-to alias values of different types have been annotated with the dlink:XR_MAY_ALIAS
-definition.
-If this macro is not defined before including OpenXR headers,
-and a new enough Clang or GCC compiler is used,
-it will be defined to the compiler-specific attribute annotation to inform these
-compilers that those pointers may alias.
+As a convenience, some types and pointers that are known at specification
+time to alias values of different types have been annotated with the
+dlink:XR_MAY_ALIAS definition.
+If this macro is not defined before including OpenXR headers, and a new
+enough Clang or GCC compiler is used, it will be defined to the
+compiler-specific attribute annotation to inform these compilers that those
+pointers may alias.
 However, there is no guarantee that all aliasing types or pointers have been
-correctly marked with this macro,
-so thorough testing is still recommended if you choose (at your own risk) to permit
-your compiler to perform type-based aliasing analysis.
+correctly marked with this macro, so thorough testing is still recommended
+if you choose (at your own risk) to permit your compiler to perform
+type-based aliasing analysis.
 
 ifdef::doctype-manpage[]
 // This link is redundant in the full spec, but important in the extracted refpages.
-See <<type-aliasing,Type Aliasing>> for full discussion of pointer aliasing in OpenXR.
+See <<type-aliasing,Type Aliasing>> for full discussion of pointer aliasing
+in OpenXR.
 endif::[]
 --
 
@@ -386,38 +404,37 @@ endif::[]
 ==== Valid Usage
 
 Valid usage defines a set of conditions which must: be met in order to
-achieve well-defined run-time behavior in an application. These
-conditions depend only on API state, and the parameters or objects whose
-usage is constrained by the condition.
+achieve well-defined run-time behavior in an application.
+These conditions depend only on API state, and the parameters or objects
+whose usage is constrained by the condition.
 
-Some valid usage conditions have dependencies on runtime limits or
-feature availability. It is possible to validate these conditions
-against the API's minimum or maximum supported values for these limits
-and features, or some subset of other known values.
-
-Valid usage conditions do not cover conditions where well-defined
-behavior (including returning an error code) exists.
+Some valid usage conditions have dependencies on runtime limits or feature
+availability.
+It is possible to validate these conditions against the API's minimum or
+maximum supported values for these limits and features, or some subset of
+other known values.
 
 Valid usage conditions should: apply to a function or structure where
-complete information about the condition would be known during execution
-of an application. This is such that a validation API layer or linter can: be
-written directly against these statements at the point they are
-specified.
+complete information about the condition would be known during execution of
+an application.
+This is such that a validation API layer or linter can: be written directly
+against these statements at the point they are specified.
 
 [[implicit-valid-usage]]
 ==== Implicit Valid Usage
 
 Some valid usage conditions apply to all functions and structures in the
 API, unless explicitly denoted otherwise for a specific function or
-structure. These conditions are considered implicit. Implicit valid
-usage conditions are described in detail below.
+structure.
+These conditions are considered implicit.
+Implicit valid usage conditions are described in detail below.
 
 [[valid-usage-for-object-handles]]
 ===== Valid Usage for Object Handles
 
-Any input parameter to a function that is an object handle must: be a
-valid object handle, unless otherwise specified. An object handle is
-valid if and only if:
+Any input parameter to a function that is an object handle must: be a valid
+object handle, unless otherwise specified.
+An object handle is valid if and only if:
 
 .Object Handle Validity Conditions
 ****
@@ -428,57 +445,60 @@ API,
 ****
 
 There are contexts in which an object handle is optional: or otherwise
-unspecified. In those cases, the API uses dlink:XR_NULL_HANDLE, which has
-the integer value code:0.
+unspecified.
+In those cases, the API uses dlink:XR_NULL_HANDLE, which has the integer
+value code:0.
 
 [[valid-usage-for-pointers]]
 ===== Valid Usage for Pointers
 
 Any parameter that is a pointer must: be a valid pointer when the
-specification indicates that the runtime uses the pointer.  A pointer is
-valid if and only if it points at memory containing values of the number and
-type(s) expected by the function, and all fundamental types accessed through the
-pointer (e.g. as elements of an array or as members of a structure)
-satisfy the alignment requirements of the host processor.
+specification indicates that the runtime uses the pointer.
+A pointer is valid if and only if it points at memory containing values of
+the number and type(s) expected by the function, and all fundamental types
+accessed through the pointer (e.g. as elements of an array or as members of
+a structure) satisfy the alignment requirements of the host processor.
 
 
 [[valid-usage-for-enumerated-types]]
 ===== Valid Usage for Enumerated Types
 
 Any parameter of an enumerated type must: be a valid enumerant for that
-type. An enumerant is valid if and only if the enumerant is defined as part
-of the enumerated type in question.
+type.
+An enumerant is valid if and only if the enumerant is defined as part of the
+enumerated type in question.
 
 [[valid-usage-for-flags]]
 ===== Valid Usage for Flags
-[open,refpage='XrFlags64',desc='OpenXR bitmasks',type='basetypes',xrefs='XrInstanceCreateFlags XrSessionCreateFlags XrSwapchainCreateFlags XrSwapchainUsageFlags XrViewStateFlags XrCompositionLayerFlags XrSpaceRelationFlags']
+[open,refpage='XrFlags64',desc='OpenXR bitmasks',type='basetypes',xrefs='XrInstanceCreateFlags XrSessionCreateFlags XrSwapchainCreateFlags XrSwapchainUsageFlags XrViewStateFlags XrCompositionLayerFlags XrSpaceLocationFlags']
 --
 A collection of flags is represented by a bitmask using the type
 basetype:XrFlags64:
 
 include::../../generated/api/basetypes/XrFlags64.txt[]
 
-Bitmasks are passed to many functions and structures to compactly
-represent options and are stored in memory defined by the
-basetype:XrFlags64 type.
+Bitmasks are passed to many functions and structures to compactly represent
+options and are stored in memory defined by the basetype:XrFlags64 type.
 But the API does not use the basetype:XrFlags64 type directly.
 Instead, a stext:Xr*Flags type is used which is an alias of the
 basetype:XrFlags64 type.
-The API also defines a set of constant bit definitions used to set the bitmasks.
+The API also defines a set of constant bit definitions used to set the
+bitmasks.
 --
 
 Any stext:Xr*Flags member or parameter used in the API must: be a valid
 combination of bit flags.
-A valid combination is either zero or the bitwise code:OR of valid bit flags.
+A valid combination is either zero or the bitwise code:OR of valid bit
+flags.
 A bit flag is valid if and only if:
 
 .Bit Flag Validity
 ****
-* The bit flag is one of the constant bit definitions defined by the same stext:Xr*Flags
-  type as the stext:Xr*Flags member or parameter. Valid flag values may
-  also be defined by extensions.
-* The flag is allowed in the context in which it is being used. For
-  example, in some cases, certain bit flags or combinations of bit flags
+* The bit flag is one of the constant bit definitions defined by the same
+  stext:Xr*Flags type as the stext:Xr*Flags member or parameter.
+  Valid flag values may also be defined by extensions.
+* The flag is allowed in the context in which it is being used.
+  For example, in some cases, certain bit flags or combinations of bit flags
   are mutually exclusive.
 ****
 
@@ -486,56 +506,54 @@ A bit flag is valid if and only if:
 ===== Valid Usage for Structure Types
 
 Any parameter that is a structure containing a pname:type member must: have
-a value of pname:type which is a valid elink:XrStructureType value
-matching the type of the structure.
-As a general rule, the name of this value is obtained by taking the structure
-name, stripping the leading code:Xr, prefixing each capital letter with an
-underscore, converting the entire resulting string to upper case, and
-prefixing it with `XR_TYPE_`.
+a value of pname:type which is a valid elink:XrStructureType value matching
+the type of the structure.
+As a general rule, the name of this value is obtained by taking the
+structure name, stripping the leading code:Xr, prefixing each capital letter
+with an underscore, converting the entire resulting string to upper case,
+and prefixing it with `XR_TYPE_`.
 
 The only exceptions to this rule are API and Operating System names which
 are converted in a way that produces a more readable value:
 
 .Structure Type Format Exceptions
-***
+****
 * OpenGL => _OPENGL
 * OpenGLES => _OPENGL_ES
 * D3D => _D3D
 * VULKAN => _VULKAN
-***
+****
 
 [[valid-usage-for-structure-pointer-chains]]
 ===== Valid Usage for Structure Pointer Chains
 
 Any structure containing a code:void* pname:next member must: have a value
-of pname:next that is either code:NULL, or points to a valid structure
-defined by an extension.
-The extension structure must: contain pname:type and pname:next member values
-for that specific structure as described in the extension's documentation.
+of pname:next that is either code:NULL, or points to a valid structure that
+also contains pname:type and pname:next member values.
 The set of structures connected by pname:next pointers is referred to as a
 pname:next chain.
 
-In order to insert an extension structure into a pname:next chain, the
-proper extension must: have been previously enabled during
+In order to use a structure type defined by an extension in a pname:next
+chain, the proper extension must: have been previously enabled during
 flink:xrCreateInstance.
-If the appropriate extension has not been enabled, then the structure must:
-be ignored.
+A runtime must: ignore all unrecognized structures in a pname:next chain,
+including those associated with an extension that has not been enabled.
 
-Most extension structures are described in the base OpenXR
-Specification under the
+Most extension structures are described in the base OpenXR Specification
+under the
 ifndef::HAS_DEPRECATED_EXTENSIONS[]
 <<extension-appendices-list, List of Extensions>>.
 endif::HAS_DEPRECATED_EXTENSIONS[]
 ifdef::HAS_DEPRECATED_EXTENSIONS[]
 <<extension-appendices-list, List of Current Extensions>>.
 endif::HAS_DEPRECATED_EXTENSIONS[]
-Vendor-specific extensions may: be found there as well, or may: only be available
-from the vendor's website or internal document repositories.
+Vendor-specific extensions may: be found there as well, or may: only be
+available from the vendor's website or internal document repositories.
 
-Unless otherwise specified:
-Extension structs which are output structs may: be modified by the runtime
-with the exception of the type and next fields.
-Upon return from any function, all type and next fields in the chain must: be unmodified.
+Unless otherwise specified: Extension structs which are output structs may:
+be modified by the runtime with the exception of the type and next fields.
+Upon return from any function, all type and next fields in the chain must:
+be unmodified.
 
 ====== Useful Base Structures
 
@@ -556,8 +574,8 @@ include::../../generated/api/structs/XrBaseInStructure.txt[]
 * pname:next is code:NULL or a pointer to an extension-specific structure.
 ****
 
-slink:XrBaseInStructure can be used to facilitate iterating through a read-only
-structure pointer chain.
+slink:XrBaseInStructure can be used to facilitate iterating through a
+read-only structure pointer chain.
 --
 
 [open,refpage='XrBaseOutStructure',desc='Convenience type for iterating (mutable)',type='structs',xrefs='XrBaseInStructure']
@@ -580,27 +598,28 @@ structure pointer chain that returns data back to the application.
 These structures allow for some type safety and can be used by OpenXR API
 functions that operate on generic inputs and outputs.
 
+[[next-chain-structure-uniqueness]]
 ====== Next Chain Structure Uniqueness
 
-Applications must: ensure that they create and insert no more than one
+Applications should: ensure that they create and insert no more than one
 occurrence of each type of extension structure in a given pname:next chain.
 Other components of OpenXR (such as the OpenXR loader or an API Layer) may:
 insert duplicate structures into this chain.
 This provides those components the ability to update a structure that
-appears in the pname:next chain by making a modified copy of that
-same structure and placing the new version at the beginning of the chain.
-The benefit of allowing this duplication is each component
-is no longer required to create a copy of the entire pname:next chain
-just to update one structure.
-When duplication is present, all other OpenXR components must: process
-only the first instance of a structure of a given type, and then ignore
-all instances of a structure of that same type.
+appears in the pname:next chain by making a modified copy of that same
+structure and placing the new version at the beginning of the chain.
+The benefit of allowing this duplication is each component is no longer
+required to create a copy of the entire pname:next chain just to update one
+structure.
+When duplication is present, all other OpenXR components must: process only
+the first instance of a structure of a given type, and then ignore all
+instances of a structure of that same type.
 
-If a component makes such a structure copy, and the original structure
-is also used to return content, then that component must: copy
-the necessary content from the copied structure and into the original
-version of the structure upon completion of the function prior to
-proceeding back up the call stack.
+If a component makes such a structure copy, and the original structure is
+also used to return content, then that component must: copy the necessary
+content from the copied structure and into the original version of the
+structure upon completion of the function prior to proceeding back up the
+call stack.
 This is to ensure that OpenXR behavior is consistent whether or not that
 particular OpenXR component is present and/or enabled on the system.
 
@@ -618,17 +637,18 @@ sections.
 === Return Codes
 
 While the core API is not designed to capture incorrect usage, some
-circumstances still require return codes. Functions in the API return
-their status via return codes that are in one of the two categories below.
+circumstances still require return codes.
+Functions in the API return their status via return codes that are in one of
+the two categories below.
 
 .Return Code Categories
 ****
 * Successful completion codes are returned when a function needs to
-communicate success or status information. All successful completion
-codes are non-negative values.
-* Run time error codes are returned when a function needs to communicate
-a failure that could only be detected at run time. All run time error
-codes are negative values.
+communicate success or status information.
+All successful completion codes are non-negative values.
+* Run time error codes are returned when a function needs to communicate a
+failure that could only be detected at run time.
+All run time error codes are negative values.
 ****
 
 [open,refpage='XrResult',desc='Result codes',type='enums']
@@ -637,128 +657,32 @@ include::../../generated/api/enums/XrResult.txt[]
 
 All return codes in the API are reported via elink:XrResult return values.
 
-Some common suffixes shared across many of the return codes are defined below:
+Some common suffixes shared across many of the return codes are defined
+below:
 
-* etext:_INVALID: The specified handle, atom or value is formatted incorrectly, or the specified handle was never created or has been destroyed.
-* etext:_UNSUPPORTED: The specified handle, atom, enumerant or value is formatted correctly but cannot be used for the lifetime of this function's parent handle.
-* etext:_UNAVAILABLE: The specified handle, atom, enumerant or value is supported by this function's parent handle but not at this moment.
+* etext:_INVALID: The specified handle, atom or value is formatted
+  incorrectly, or the specified handle was never created or has been
+  destroyed.
+* etext:_UNSUPPORTED: The specified handle, atom, enumerant or value is
+  formatted correctly but cannot be used for the lifetime of this function's
+  parent handle.
+* etext:_UNAVAILABLE: The specified handle, atom, enumerant or value is
+  supported by this function's parent handle but not at this moment.
 --
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-successcodes]]
 ==== Success Codes
 
-[cols=",",options="header",]
-|=======================================================================
-|Enum |Description
-|ename:XR_SUCCESS
-|Function successfully completed.
-|ename:XR_TIMEOUT_EXPIRED
-|The specified timeout time occurred before the operation could complete.
-|ename:XR_SESSION_VISIBILITY_UNAVAILABLE
-|The session has started but cannot be made visible at the moment.
-|ename:XR_SESSION_LOSS_PENDING
-|The session will be lost soon.
-|ename:XR_EVENT_UNAVAILABLE
-|No event was available.
-|ename:XR_STATE_UNAVAILABLE
-|No state (of any type) is available for the provided handle.
-|ename:XR_STATE_TYPE_UNAVAILABLE
-|The state of the given type is not available for the provided handle.
-|ename:XR_SPACE_BOUNDS_UNAVAILABLE
-|The space's bounds are not known at the moment.
-|ename:XR_SESSION_NOT_FOCUSED
-|The session is not in the focused state.
-|ename:XR_FRAME_DISCARDED
-|A frame has been discarded from composition.
-|=======================================================================
+// Generated from comment attributes in XML
+include::../../generated/api/enums/XrResult.success.comments.txt[]
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-errorcodes]]
 ==== Error Codes
 
-[cols=",",options="header",]
-|=======================================================================
-|Enum |Description
-|ename:XR_ERROR_VALIDATION_FAILURE
-|The function usage was invalid in some way.
-|ename:XR_ERROR_RUNTIME_FAILURE
-|The runtime failed to handle the function in an unexpected way that is not covered by another error result.
-|ename:XR_ERROR_OUT_OF_MEMORY
-|A memory allocation has failed.
-|ename:XR_ERROR_RUNTIME_VERSION_INCOMPATIBLE
-|The runtime version is incompatible with the requested or required version.
-|ename:XR_ERROR_DRIVER_INCOMPATIBLE
-|The driver is incompatible with the runtime.
-|ename:XR_ERROR_INITIALIZATION_FAILED
-|Initialization of object could not be completed.
-|ename:XR_ERROR_FUNCTION_UNSUPPORTED
-|The requested function was not found or is otherwise unsupported.
-|ename:XR_ERROR_EXTENSION_NOT_PRESENT
-|A requested extension is not supported.
-|ename:XR_ERROR_LIMIT_REACHED
-|The runtime supports no more of the requested resource.
-|ename:XR_ERROR_SIZE_INSUFFICIENT
-|The supplied size was smaller than required.
-|ename:XR_ERROR_HANDLE_INVALID
-|The supplied object handle was invalid.
-|ename:XR_ERROR_INSTANCE_LOST
-|The slink:XrInstance was lost or could not be found. It will need to be destroyed and optionally recreated.
-|ename:XR_ERROR_SESSION_RUNNING
-|This session is already running.
-|ename:XR_ERROR_SESSION_NOT_RUNNING
-|The operation requires this session to be in the running state.
-|ename:XR_ERROR_SESSION_LOST
-|The slink:XrSession was lost. It will need to be destroyed and optionally recreated.
-|ename:XR_ERROR_SYSTEM_INVALID
-|The provided basetype:XrSystemId was invalid.
-|ename:XR_ERROR_PATH_INVALID
-|The provided basetype:XrPath was not valid.
-|ename:XR_ERROR_PATH_COUNT_EXCEEDED
-|The maximum number of supported semantic paths has been reached.
-|ename:XR_ERROR_PATH_FORMAT_INVALID
-|The semantic path character format is invalid.
-|ename:XR_ERROR_LAYER_INVALID
-|The layer was NULL or otherwise invalid.
-|ename:XR_ERROR_LAYER_LIMIT_EXCEEDED
-|The number of specified layers is greater than the supported number.
-|ename:XR_ERROR_SWAPCHAIN_RECT_INVALID
-|The image rect was negatively sized or otherwise invalid.
-|ename:XR_ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED
-|The image format is not supported by the runtime or platform.
-|ename:XR_ERROR_ACTION_TYPE_MISMATCH
-|The API used to retrieve an action's state does not match the action's type.
-|ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED
-|The specified reference space is not supported by the runtime or system.
-|ename:XR_ERROR_FILE_ACCESS_ERROR
-|The file could not be accessed.
-|ename:XR_ERROR_FILE_CONTENTS_INVALID
-|The file's contents were invalid.
-|ename:XR_ERROR_FORM_FACTOR_UNSUPPORTED
-|The specified form factor is not supported by the current runtime or platform.
-|ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE
-|The specified form factor is supported, but the device is currently not available, e.g. not plugged in or powered off.
-|ename:XR_ERROR_API_LAYER_NOT_PRESENT
-|A requested API layer is not present or could not be loaded.
-|ename:XR_ERROR_CALL_ORDER_INVALID
-|The call was made without having made a previously required call.
-|ename:XR_ERROR_GRAPHICS_DEVICE_INVALID
-|The given graphics device is not in a valid state. The graphics device could be lost or initialized without meeting graphics requirements.
-|ename:XR_ERROR_POSE_INVALID
-|The supplied pose was invalid with respect to the requirements.
-|ename:XR_ERROR_INDEX_OUT_OF_RANGE
-|The supplied index was outside the range of valid indices.
-|ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED
-|The specified view configuration type is not supported by the runtime or platform.
-|ename:XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED
-|The specified environment blend mode is not supported by the runtime or platform.
-|ename:XR_ERROR_BINDINGS_DUPLICATED
-|The application specified bindings for an input form factor it had already suggested bindings for.
-|ename:XR_ERROR_NAME_DUPLICATED
-|The name provided was a duplicate of an already-existing resource.
-|ename:XR_ERROR_NAME_INVALID
-|The name provided was invalid.
-|=======================================================================
+// Generated from comment attributes in XML
+include::../../generated/api/enums/XrResult.error.comments.txt[]
 
 ==== Convenience Macros
 
@@ -772,8 +696,8 @@ This may be a qualified success such as ename:XR_FRAME_DISCARDED.
 [open,refpage='XR_FAILED',desc='Failure convenience macro',type='defines',xrefs='XR_SUCCEEDED XR_UNQUALIFIED_SUCCESS']
 --
 include::../../generated/api/defines/XR_FAILED.txt[]
-A convenience macro that can be used to test if a function has failed in some
-way.
+A convenience macro that can be used to test if a function has failed in
+some way.
 --
 
 [open,refpage='XR_UNQUALIFIED_SUCCESS',desc='Unqualified success convenience macro',type='defines',xrefs='XR_FAILED XR_SUCCEEDED']
@@ -788,34 +712,34 @@ used to compare an elink:XrResult to code:0 (ename:XR_SUCCESS) exclusively.
 
 Except as noted below or in individual API specifications, valid API usage
 may: be required by the runtime.
-Invalid API usage may: result in undefined behavior.
-Runtimes may: choose to validate some API usage and return
-an etext:XR_ERROR_*_INVALID error code.
+Runtimes may: choose to validate some API usage and return an appropriate
+error code.
 
-Application developers should: use validation layers to catch and eliminate errors during
-development.
-Once validated, applications should: not enable validation layers by default.
+Application developers should: use validation layers to catch and eliminate
+errors during development.
+Once validated, applications should: not enable validation layers by
+default.
 
-If a function returns a run time error, unless otherwise specified any output parameters will have
-undefined contents, except that if the output parameter is a structure with type and next fields,
-those fields will be unmodified.
-Any output structures chained from next will also have undefined contents, except that the
-type and next will be unmodified.
+If a function returns a run time error, unless otherwise specified any
+output parameters will have undefined contents, except that if the output
+parameter is a structure with type and next fields, those fields will be
+unmodified.
+Any output structures chained from next will also have undefined contents,
+except that the type and next will be unmodified.
 
 Unless otherwise specified, errors do not affect existing OpenXR objects.
-Objects that have already been successfully created may: still be used by the
-application.
+Objects that have already been successfully created may: still be used by
+the application.
 
-elink:XrResult code returns may be added to a given function in future versions
-of the specification.
-Runtimes must: return only elink:XrResult codes from the set
-documented for the given application API version.
+elink:XrResult code returns may be added to a given function in future
+versions of the specification.
+Runtimes must: return only elink:XrResult codes from the set documented for
+the given application API version.
 
-Runtimes must: ensure that
-incorrect usage by an application does not affect the integrity of the
-operating system, the API implementation, or other API client
-applications in the system, and does not allow one application to access
-data belonging to another application.
+Runtimes must: ensure that incorrect usage by an application does not affect
+the integrity of the operating system, the API implementation, or other API
+client applications in the system, and does not allow one application to
+access data belonging to another application.
 
 [[handles]]
 === Handles
@@ -825,42 +749,45 @@ Handles are opaque identifiers for objects whose lifetime is controlled by
 applications via the create and destroy functions.
 Example handle types include slink:XrInstance, slink:XrSession, and
 slink:XrSwapchain.
-Handles which have not been destroyed are unique for a given application process,
-but may: be reused after being destroyed.
-Unless otherwise specified, a successful handle creation function call returns
-a new unique handle.
+Handles which have not been destroyed are unique for a given application
+process, but may: be reused after being destroyed.
+Unless otherwise specified, a successful handle creation function call
+returns a new unique handle.
 Unless otherwise specified, handles are implicitly destroyed when their
 parent handle is destroyed.
 Applications may: destroy handles explicitly before the parent handle is
 destroyed, and should: do so if no longer needed, in order to conserve
 resources.
-Runtimes are not required to detect invalid handles.
-Usage of an invalid handle may: result in undefined behavior.
+Runtimes may: detect dlink:XR_NULL_HANDLE and other invalid handles passed
+where a valid handle is required and return ename:XR_ERROR_HANDLE_INVALID.
+However, runtimes are not required to do so unless otherwise specified, and
+so use of any invalid handle may: result in undefined behavior.
 When a function has an optional handle parameter, dlink:XR_NULL_HANDLE must:
 be used unless passing a valid handle.
 
-All functions that take a handle parameter may: return ename:XR_ERROR_HANDLE_INVALID.
+All functions that take a handle parameter may: return
+ename:XR_ERROR_HANDLE_INVALID.
 
 Handles form a hierarchy in which child handles fall under the validity and
 lifetime of parent handles.
-To create an slink:XrSwapchain handle, applications must call
+For example, to create an slink:XrSwapchain handle, applications must call
 flink:xrCreateSwapchain and pass an slink:XrSession handle.
 Thus slink:XrSwapchain is a child handle to slink:XrSession.
 
 [[object-handle-types]]
 === Object Handle Types
-The type of an object handle used in a function is usually determined
-by the specification of that function, as discussed in
+The type of an object handle used in a function is usually determined by the
+specification of that function, as discussed in
 <<valid-usage-for-object-handles,Valid Usage for Object Handles>>.
-However, some functions accept or return object handle
-parameters where the type of the object handle is unknown at execution
-time and is not specified in the description of the function itself.
+However, some functions accept or return object handle parameters where the
+type of the object handle is unknown at execution time and is not specified
+in the description of the function itself.
 For these functions, the elink:XrObjectType may: be used to explicitly
 specify the type of a handle.
 
-For example, an information-gathering or debugging mechanism implemented
-in a runtime extension or API layer extension may: return
-a list of object handles that are generated by the mechanism's operation.
+For example, an information-gathering or debugging mechanism implemented in
+a runtime extension or API layer extension may: return a list of object
+handles that are generated by the mechanism's operation.
 The same mechanism may: also return a parallel list of object handle types
 that allow the recipient of this information to easily determine the types
 of the handles.
@@ -875,9 +802,10 @@ include::../../generated/api/enums/XrObjectType.txt[]
 The elink:XrObjectType enumeration defines values, each of which corresponds
 to a specific OpenXR handle type.
 These values can: be used to associate debug information with a particular
-type of object through one or more extensions.  
+type of object through one or more extensions.
 
-The following table defines elink:XrObjectType and OpenXR Handle relationships:    
+The following table defines elink:XrObjectType and OpenXR Handle
+relationships:
 
 [width="80%",cols="<35,<23",options="header"]
 |=======================
@@ -895,70 +823,101 @@ The following table defines elink:XrObjectType and OpenXR Handle relationships:
 [[buffer-size-parameters]]
 === Buffer Size Parameters
 
-Functions with input/output buffer parameters look like the following example,
-with the element type being float in this case:
+Functions with input/output buffer parameters take on either parameter form
+or struct form, looking like one of the following examples, with the element
+type being code:float in this case:
 
+Parameter form:
 [source,listing,tilde]
 ----
 XrResult xrFunction(uint32_t elementCapacityInput, uint32_t* elementCountOutput, float* elements);
 ----
 
-A two-call idiom may: be employed, first calling fname:xrFunction with a valid
-pname:elementCountOutput pointer, but passing code:NULL as pname:elements and
-code:0 as pname:elementCapacityInput, to retrieve the required buffer size as
-number of elements (number of floats in this example).
-After allocating a buffer at least as large, as the value pointed to by
-pname:elementCountOutput, a pointer to the allocated buffer should: be passed
-as pname:elements, along with the buffer's length in the variable
-pname:elementCapacityInput, to a second call to fname:xrFunction to perform the
-retrieval of the data.
-In case that pname:elements is a struct with pname:type and pname:next fields,
-the application must: set the pname:type to the correct value as well as
-pname:next either to code:NULL or a struct with extension related data in which
-pname:type and pname:next also need to be well defined.
+Struct form:
+[source,listing,tilde]
+----
+XrResult xrFunction(XrBuffer* buffer);
 
-These functions have the below-listed behavior with respect to the buffer size parameters:
+struct XrBuffer {
+    uint32_t              elementCapacityInput;
+    uint32_t              elementCountOutput;
+    float*                elements;
+};
+----
+
+A two-call idiom may: be employed, first calling fname:xrFunction (with a
+valid pname:elementCountOutput pointer if in parameter form), but passing
+code:NULL as pname:elements and code:0 as pname:elementCapacityInput, to
+retrieve the required buffer size as number of elements (number of floats in
+this example).
+After allocating a buffer at least as large as pname:elementCountOutput (in
+a struct) or the value pointed to by pname:elementCountOutput (as
+parameters), a pointer to the allocated buffer should: be passed as
+pname:elements, along with the buffer's length in
+pname:elementCapacityInput, to a second call to fname:xrFunction to perform
+the retrieval of the data.
+In case that pname:elements is a struct with pname:type and pname:next
+fields, the application must: set the pname:type to the correct value as
+well as pname:next either to code:NULL or a struct with extension related
+data in which pname:type and pname:next also need to be well defined.
+
+In the following discussion, "set pname:elementCountOutput" should be
+interpreted as "set the value pointed to by pname:elementCountOutput" in
+parameter form and "set the value of pname:elementCountOutput" in struct
+form.
+These functions have the below-listed behavior with respect to the buffer
+size parameters:
 
 .Buffer Size Parameter Behavior
 ****
 * The element capacity and count arguments precede the array to which they
   refer, in argument order.
-* pname:elementCapacityInput specifies the capacity in number of elements of the
-  buffer to be written, or code:0 to indicate a request for the required buffer
-  size.
+* pname:elementCapacityInput specifies the capacity in number of elements of
+  the buffer to be written, or code:0 to indicate a request for the required
+  buffer size.
 * Independent of pname:elementCapacityInput or pname:elements parameters,
-  pname:elementCountOutput must: be a valid pointer, and the function sets
-  pname:elementCountOutput.
+  the function sets pname:elementCountOutput.
+  pname:elementCountOutput must: be a valid pointer if the function uses
+  parameter form.
 * Where the pname:elementCapacityInput is code:0, the function sets
-  pname:elementCountOutput to the required size in number of elements and returns
-  ename:XR_SUCCESS.
+  pname:elementCountOutput to the required size in number of elements and
+  must: return ename:XR_SUCCESS.
   pname:elements is ignored.
-* The value returned in pname:elementCountOutput is not guaranteed to be
-  constant during the lifetime of the application.
-* Where the pname:elementCapacityInput is non-zero but less than required, the
-  function sets elementCountOutput to the required capacity, and returns
-  ename:XR_ERROR_SIZE_INSUFFICIENT. The data in pname:elements is undefined.
+* Where the pname:elementCapacityInput is non-zero but less than required,
+  the function sets pname:elementCountOutput to the required capacity, and
+  must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
+  The data in pname:elements is undefined.
 * Where the pname:elementCapacityInput is non-zero and the function returned
-  successfully, the pname:elementCountOutput contains the count of the elements
-  that have been written to pname:elements.
-* Upon a failure for reasons unrelated to the element array capacity,
-  pname:elementCountOutput is code:0 and the contents of pname:elements are undefined.
-* pname:elementCountOutput can: be code:NULL for cases in which
-  pname:elementCapacityInput is greater than 0, in which case it is unused by
-  the function. However, ename:XR_ERROR_SIZE_INSUFFICIENT may: still be returned
-  by the function in the case that pname:elementCapacityInput is too small.
-* In the case that the element array refers to a string (is of type code:char*),
-  pname:elementCapacityInput and pname:elementCountOutput refer to the string
-  code:strlen plus code:1 for a code:NULL terminator.
+  successfully, the function sets pname:elementCountOutput to the count of
+  the elements that have been written to pname:elements.
+* Upon a failure for reasons unrelated to the element array capacity, the
+  contents of pname:elementCountOutput and pname:elements are undefined.
+* In the case that the element array refers to a string (is of type
+  code:char*), pname:elementCapacityInput and pname:elementCountOutput refer
+  to the string code:strlen plus code:1 for a code:NULL terminator.
 ****
+
+Some functions fill multiple buffers in one call.
+For these functions, the pname:elementCapacityInput,
+pname:elementCountOutput and pname:elements parameters or fields are
+repeated, once per buffer, with different prefixes.
+In that case, the semantics above still apply, with the additional behavior
+that if any pname:elementCapacityInput parameter or field is set to 0 by the
+application, the runtime must: treat all pname:elementCapacityInput values
+as if they were set to 0.
+If any pname:elementCapacityInput value is too small to fit all elements of
+the buffer, ename:XR_ERROR_SIZE_INSUFFICIENT must: be returned, and the data
+in all buffers is undefined.
 
 [[time]]
 === Time
 
 Time is represented by a 64-bit signed integer representing nanoseconds
 (basetype:XrTime).
-The passage of time is monotonic and not realtime (i.e., wall clock time).
-Thus the time is always increasing at a constant rate and is unaffected by clock changes, time zones, daylight savings, etc.
+The passage of time must: be monotonic and not real-time (i.e. wall clock
+time).
+Thus the time is always increasing at a constant rate and is unaffected by
+clock changes, time zones, daylight savings, etc.
 
 ==== XrTime
 
@@ -966,26 +925,53 @@ Thus the time is always increasing at a constant rate and is unaffected by clock
 --
 include::../../generated/api/basetypes/XrTime.txt[]
 
-basetype:XrTime is a base value type to represent time, as a 64 bit integer.
-Unless specified otherwise, basetype:XrTime denotes a time-point relative to
-some runtime-determined constant epoch, rather than a duration, or a
-time-point with some moving epoch such as function call time, vsync time, etc.
+basetype:XrTime is a base value type that represents time as a signed 64-bit
+integer, representing the monotonically-increasing count of nanoseconds that
+have elapsed since a runtime-chosen epoch.
+basetype:XrTime always represents the time elasped since that constant
+epoch, rather than a duration or a time point relative to some moving epoch
+such as vsync time, etc.
+Durations are instead represented by basetype:XrDuration.
 
-Time may: be represented by the runtime with a standardized epoch
-(e.g. 12:00:00 January 1, 1970 as of runtime start), or an arbitrary epoch
-may: be used (e.g. time since runtime start).
-Time overflows after 2^64^ nanoseconds have occurred since the epoch.
 A single runtime must: use the same epoch for all simultaneous applications.
-Time must: be represented the same regardless of multiple processors or threads
-present in the system.
+Time must: be represented the same regardless of multiple processors or
+threads present in the system.
 
-The period precision of time reported by the runtime is runtime-dependent, and
-may: change.
+The period precision of time reported by the runtime is runtime-dependent,
+and may: change.
 One nanosecond is the finest possible period precision.
 A runtime may:, for example, report time progression with only
 microsecond-level granularity.
 
 Time must: not be assumed to correspond to a system clock time.
+
+Unless specified otherwise, zero or a negative value is not a valid
+basetype:XrTime, and related functions must: return error
+ename:XR_ERROR_TIME_INVALID.
+Applications must: not initialize such basetype:XrTime fields to a zero
+value.
+Instead, applications should: always assign basetype:XrTime fields to the
+meaningful point in time they are choosing to reason about, such as a
+frame's predicted display time, or an action's last change time.
+
+The behavior of a runtime is undefined when time overflows beyond the
+maximum positive value that can be represented by an basetype:XrTime.
+Runtimes should: choose an epoch that minimizes the chance of overflow.
+Runtimes should: also choose an epoch that minimizes the chance of underflow
+below 0 for applications performing a reasonable amount of historical pose
+lookback.
+For example, if the runtime chooses an epoch relative to its startup time,
+it should: push the epoch into the past by enough time to avoid applications
+performing reasonable pose lookback from reaching a negative basetype:XrTime
+value.
+
+An application cannot assume that the system's clock and the runtime's clock
+will maintain a constant relationship across frames and should: avoid
+storing such an offset, as this may cause time drift.
+Applications should: instead always use time interop functions to convert a
+relevant time point across the system's clock and the runtime's clock using
+extensions, for example, <<XR_KHR_win32_convert_performance_counter_time>>
+or <<XR_KHR_convert_timespec_time>>.
 --
 
 [[duration]]
@@ -1043,9 +1029,10 @@ include::../../generated/api/structs/XrColor4f.txt[]
 * pname:a is the alpha component of the color.
 ****
 
-Unless otherwise specified, colors are encoded as linear (not with sRGB nor other gamma compression)
-values with individual components being in the range of 0.0 through 1.0, and without the RGB
-components being premultiplied by the alpha component.
+Unless otherwise specified, colors are encoded as linear (not with sRGB nor
+other gamma compression) values with individual components being in the
+range of 0.0 through 1.0, and without the RGB components being premultiplied
+by the alpha component.
 --
 
 [[coordinate-system]]
@@ -1056,12 +1043,13 @@ This API uses a Cartesian right-handed coordinate system.
 image::images/right-handed.svg[align="center", title="Right Handed Coordinate System"]
 
 The conventions for mapping coordinate axes of any particular space to
-meaningful directions depend on and are documented with the description of the
-space.
+meaningful directions depend on and are documented with the description of
+the space.
 
-The API uses 2D, 3D, and 4D floating-point vectors to describe points and directions
-in a space. When using slink:XrPosef the rotation described by pname:orientation
-is always applied before the translation described by pname:position.
+The API uses 2D, 3D, and 4D floating-point vectors to describe points and
+directions in a space.
+When using slink:XrPosef the rotation described by pname:orientation is
+always applied before the translation described by pname:position.
 
 [open,refpage='XrVector2f',desc='Two-dimensional vector',type='structs',xrefs='XrVector3f XrVector4f XrQuaternionf XrPosef']
 --
@@ -1074,8 +1062,8 @@ include::../../generated/api/structs/XrVector2f.txt[]
 * pname:y is the y coordinate of the vector.
 ****
 
-If used to represent physical distances (rather than e.g. normalized direction) and not otherwise specified,
-values must: be in meters.
+If used to represent physical distances (rather than e.g. normalized
+direction) and not otherwise specified, values must: be in meters.
 --
 
 [open,refpage='XrVector3f',desc='Three-dimensional vector',type='structs',xrefs='XrVector2f XrVector4f XrQuaternionf XrPosef']
@@ -1090,14 +1078,15 @@ include::../../generated/api/structs/XrVector3f.txt[]
 * pname:z is the z coordinate of the vector.
 ****
 
-If used to represent physical distances (rather than e.g. velocity or angular velocity) and not otherwise specified,
-values must: be in meters.
+If used to represent physical distances (rather than e.g. velocity or
+angular velocity) and not otherwise specified, values must: be in meters.
 --
 
 [open,refpage='XrVector4f',desc='Four-dimensional vector',type='structs',xrefs='XrVector2f XrVector3f XrQuaternionf XrPosef']
 --
 
-A four-dimensional or homogeneous vector is defined by the slink:XrVector4f structure:
+A four-dimensional or homogeneous vector is defined by the slink:XrVector4f
+structure:
 include::../../generated/api/structs/XrVector4f.txt[]
 
 .Member Descriptions
@@ -1108,13 +1097,15 @@ include::../../generated/api/structs/XrVector4f.txt[]
 * pname:w is the w coordinate of the vector.
 ****
 
-If used to represent physical distances, pname:x, pname:y, and pname:z values must: be in meters.
+If used to represent physical distances, pname:x, pname:y, and pname:z
+values must: be in meters.
 --
 
 [open,refpage='XrQuaternionf',desc='Unit Quaternion',type='structs',xrefs='XrVector2f XrVector3f XrVector4f XrPosef']
 --
 
-Rotation is represented by a unit quaternion defined by the slink:XrQuaternionf structure:
+Rotation is represented by a unit quaternion defined by the
+slink:XrQuaternionf structure:
 include::../../generated/api/structs/XrQuaternionf.txt[]
 
 .Member Descriptions
@@ -1135,19 +1126,26 @@ include::../../generated/api/structs/XrPosef.txt[]
 
 .Member Descriptions
 ****
-* pname:orientation is an slink:XrQuaternionf representing the orientation within a space.
-* pname:position is an slink:XrVector3f representing position within a space.
+* pname:orientation is an slink:XrQuaternionf representing the orientation
+  within a space.
+* pname:position is an slink:XrVector3f representing position within a
+  space.
 ****
-A construct representing a position and orientation within a space,
-with position expressed in meters, and orientation represented as a unit quaternion.
+A construct representing a position and orientation within a space, with
+position expressed in meters, and orientation represented as a unit
+quaternion.
+
+A runtime must: return ename:XR_ERROR_POSE_INVALID if the pname:orientation
+norm deviates by more than 1% from unit length.
+
 --
 
 [[common-object-types]]
 === Common Object Types
 
-Some types of OpenXR objects are used in multiple structures. Those include
-the stext:XrVector*f and types specified above but also the following
-structures: offset, extents and rectangle.
+Some types of OpenXR objects are used in multiple structures.
+Those include the stext:XrVector*f and types specified above but also the
+following structures: offset, extents and rectangle.
 
 Offsets are used to describe the magnitude of an offset in two dimensions.
 
@@ -1163,7 +1161,8 @@ include::../../generated/api/structs/XrOffset2Df.txt[]
 * pname:y the floating-point offset in the y direction.
 ****
 
-This structure is used for component values that may be fractional (floating-point).
+This structure is used for component values that may be fractional
+(floating-point).
 If used to represent physical distances, values must: be in meters.
 --
 
@@ -1180,10 +1179,12 @@ include::../../generated/api/structs/XrOffset2Di.txt[]
 ****
 
 This variant is for representing discrete values such as texels.
-For representing physical distances, the floating-point variant must: be used instead.
+For representing physical distances, the floating-point variant must: be
+used instead.
 --
 
-Extents are used to describe the size of a rectangular region in two dimensions.
+Extents are used to describe the size of a rectangular region in two
+dimensions.
 
 [open,refpage='XrExtent2Df',desc='Extent in two dimensions',type='structs',xrefs='XrOffset2Df XrRect2Df']
 --
@@ -1197,8 +1198,11 @@ include::../../generated/api/structs/XrExtent2Df.txt[]
 * pname:height the floating-point height of the extent.
 ****
 
-This structure is used for component values that may be fractional (floating-point).
+This structure is used for component values that may be fractional
+(floating-point).
 If used to represent physical distances, values must: be in meters.
+
+The pname:width and pname:height value must: be non-negative.
 --
 
 [open,refpage='XrExtent2Di',desc='Extent in two dimensions',type='structs',xrefs='XrOffset2Di XrRect2Di']
@@ -1214,13 +1218,18 @@ include::../../generated/api/structs/XrExtent2Di.txt[]
 ****
 
 This variant is for representing discrete values such as texels.
-For representing physical distances, the floating-point variant must: be used instead.
+For representing physical distances, the floating-point variant must: be
+used instead.
+
+The pname:width and pname:height value must: be non-negative.
 --
 
 Rectangles are used to describe a specific rectangular region in two
-dimensions. Rectangles must: include both an offset and an extent defined in
-the same units. For instance, if a rectangle is in meters, both offset and
-extent must: be in meters.
+dimensions.
+Rectangles must: include both an offset and an extent defined in the same
+units.
+For instance, if a rectangle is in meters, both offset and extent must: be
+in meters.
 
 [open,refpage='XrRect2Df',desc='Rect in two dimensions',type='structs',xrefs='XrOffset2Df XrExtent2Df']
 --
@@ -1234,7 +1243,8 @@ include::../../generated/api/structs/XrRect2Df.txt[]
 * pname:extent is the slink:XrExtent2Df specifying the rectangle extent.
 ****
 
-This structure is used for component values that may be fractional (floating-point).
+This structure is used for component values that may be fractional
+(floating-point).
 --
 
 [open,refpage='XrRect2Di',desc='Rect in two dimensions',type='structs',xrefs='XrOffset2Di XrExtent2Di']
@@ -1245,20 +1255,22 @@ include::../../generated/api/structs/XrRect2Di.txt[]
 
 .Member Descriptions
 ****
-* pname:offset is the slink:XrOffset2Di specifying the integer rectangle offset.
-* pname:extent is the slink:XrExtent2Di specifying the integer rectangle extent.
+* pname:offset is the slink:XrOffset2Di specifying the integer rectangle
+  offset.
+* pname:extent is the slink:XrExtent2Di specifying the integer rectangle
+  extent.
 ****
 
 This variant is for representing discrete values such as texels.
-For representing physical distances, the floating-point variant must: be used instead.
+For representing physical distances, the floating-point variant must: be
+used instead.
 --
 
 [[angles]]
 === Angles
 
-Where a value is provided as a function parameter or as a structure
-member and will be interpreted as an angle, the value is defined to be
-in radians.
+Where a value is provided as a function parameter or as a structure member
+and will be interpreted as an angle, the value is defined to be in radians.
 
 
 [open,refpage='XrFovf',desc='Field of view',type='structs']
@@ -1268,30 +1280,53 @@ include::../../generated/api/structs/XrFovf.txt[]
 
 .Member Descriptions
 ****
-* pname:angleLeft is the angle of the left side of the field of view. For a symmetric field of view this value is negative.
+* pname:angleLeft is the angle of the left side of the field of view.
+  For a symmetric field of view this value is negative.
 * pname:angleRight is the angle of the right side of the field of view.
 * pname:angleUp is the angle of the top part of the field of view.
-* pname:angleDown is the angle of the bottom part of the field of view. For a symmetric field of view this value is negative.
+* pname:angleDown is the angle of the bottom part of the field of view.
+  For a symmetric field of view this value is negative.
 ****
 
-Angles to the right of the center and upwards from the center are positive, and angles to the left of the center and down from the center are negative.
-The total horizontal field of view is pname:angleRight minus pname:angleLeft, and the total vertical field of view is pname:angleUp minus pname:angleDown.
-For a symmetric FoV, pname:angleRight and pname:angleUp will have positive values, pname:angleLeft will be -pname:angleRight, and pname:angleDown will be -pname:angleUp.
+Angles to the right of the center and upwards from the center are positive,
+and angles to the left of the center and down from the center are negative.
+The total horizontal field of view is pname:angleRight minus
+pname:angleLeft, and the total vertical field of view is pname:angleUp minus
+pname:angleDown.
+For a symmetric FoV, pname:angleRight and pname:angleUp will have positive
+values, pname:angleLeft will be -pname:angleRight, and pname:angleDown will
+be -pname:angleUp.
 
-The angles must: be specified in radians.
+The angles must: be specified in radians, and must: be between [eq]#-{pi}/2#
+and [eq]#{pi}/2# exclusively.
+
+When pname:angleLeft > pname:angleRight, the content of the view must: be
+flipped horizontally.
+When pname:angleDown > pname:angleUp, the content of the view must: be
+flipped vertically.
 --
 
 [[prediction-time-limits]]
 === Prediction Time Limits
 
 Some functions involve prediction.
-For example, flink:xrLocateViews accepts a display time for which to return the resulting data.
-Prediction times provided by applications may refer to time in the past or the future.
+For example, flink:xrLocateViews accepts a display time for which to return
+the resulting data.
+Prediction times provided by applications may refer to time in the past or
+the future.
 Times in the past may: be interpolated historical data.
-Runtimes have different practical limits with respect to how far forward or backward prediction times can be accurate.
-There is no prescribed forward limit the application can successfully request predictions for, though predictions may become less accurate as they get farther into the future.
-With respect to backward prediction, the application can pass a prediction time equivalent to the timestamp of the most recently received pose plus as much as code:50 milliseconds in the past to retrieve accurate historical data.
-Requested times predating this time window, or requested times predating the earliest received pose, may: result in a best effort data whose accuracy reduced or unspecified.
+Runtimes have different practical limits with respect to how far forward or
+backward prediction times can be accurate.
+There is no prescribed forward limit the application can successfully
+request predictions for, though predictions may become less accurate as they
+get farther into the future.
+With respect to backward prediction, the application can pass a prediction
+time equivalent to the timestamp of the most recently received pose plus as
+much as code:50 milliseconds in the past to retrieve accurate historical
+data.
+Requested times predating this time window, or requested times predating the
+earliest received pose, may: result in a best effort data whose accuracy
+reduced or unspecified.
 
 
 === Boolean Values
@@ -1300,7 +1335,9 @@ Requested times predating this time window, or requested times predating the ear
 --
 include::../../generated/api/basetypes/XrBool32.txt[]
 
-Boolean values used by OpenXR are of type basetype:XrBool32 and are 32-bits wide as suggested by the name. The only valid values are the following:
+Boolean values used by OpenXR are of type basetype:XrBool32 and are 32-bits
+wide as suggested by the name.
+The only valid values are the following:
 
 
 .Enumerant Descriptions
@@ -1317,11 +1354,11 @@ Events are messages sent from the runtime to the application.
 
 [[event-polling]]
 ==== Event Polling
-These events are placed in a queue and the application must: read
-from the queue with regularity.
+These events are placed in a queue and the application must: read from the
+queue with regularity.
 Events are read from the queue one at a time via flink:xrPollEvent.
-Every event is identified by an individual struct, with each struct beginning
-with an slink:XrEventDataBaseHeader.
+Every event is identified by an individual struct, with each struct
+beginning with an slink:XrEventDataBaseHeader.
 
 [example]
 .Proper Method for Receiving OpenXR Event Data
@@ -1362,14 +1399,18 @@ if (result == XR_SUCCESS) {
 --
 include::../../generated/api/protos/xrPollEvent.txt[]
 
-flink:xrPollEvent polls for the next event and returns an event if one is available.
-flink:xrPollEvent returns immediately regardless of whether an event was available.
-The event (if present) is unilaterally removed from the queue if a valid slink:XrInstance is provided.
-On return the pname:eventData parameter is filled with the event's data and the type field
-is changed to the event's type.
-Runtimes may: create valid next chains depending on enabled extensions, but they must: guarantee
-that any such chains point only to objects which fit completely within the original slink:XrEventDataBuffer
-pointed to by pname:eventData.
+flink:xrPollEvent polls for the next event and returns an event if one is
+available.
+flink:xrPollEvent returns immediately regardless of whether an event was
+available.
+The event (if present) is unilaterally removed from the queue if a valid
+slink:XrInstance is provided.
+On return the pname:eventData parameter is filled with the event's data and
+the type field is changed to the event's type.
+Runtimes may: create valid next chains depending on enabled extensions, but
+they must: guarantee that any such chains point only to objects which fit
+completely within the original slink:XrEventDataBuffer pointed to by
+pname:eventData.
 
 .Parameter Descriptions
 ****
@@ -1377,12 +1418,10 @@ pointed to by pname:eventData.
 * pname:eventData is a pointer to a valid slink:XrEventDataBuffer.
 ****
 
-.Valid Usage
-****
-* pname:eventData must be a pointer to a valid slink:XrEventDataBuffer.
-****
-
 include::../../generated/validity/protos/xrPollEvent.txt[]
+
+The runtime must: discard queued events which contain destroyed or otherwise
+invalid handles.
 
 .Event Descriptions
 [cols=",",options="header",]
@@ -1404,7 +1443,7 @@ include::../../generated/validity/protos/xrPollEvent.txt[]
 
 [open,refpage='XrEventDataBaseHeader',desc='Base header for an event',type='structs',xrefs='xrPollEvent']
 --
-The slink:XrEventDataBaseHeader is defined as:
+The slink:XrEventDataBaseHeader structure is defined as:
 include::../../generated/api/structs/XrEventDataBaseHeader.txt[]
 
 .Parameter Descriptions
@@ -1414,25 +1453,27 @@ include::../../generated/api/structs/XrEventDataBaseHeader.txt[]
 * pname:next is code:NULL or a pointer to an extension-specific structure.
 ****
 
-The slink:XrEventDataBaseHeader is a generic structure used to identify the common event data elements.
+The slink:XrEventDataBaseHeader is a generic structure used to identify the
+common event data elements.
 
-Upon receipt, the slink:XrEventDataBaseHeader pointer should be type-cast to a
-pointer of the appropriate event data based on the pname:type parameter.
+Upon receipt, the slink:XrEventDataBaseHeader pointer should be type-cast to
+a pointer of the appropriate event data based on the pname:type parameter.
 
 include::../../generated/validity/structs/XrEventDataBaseHeader.txt[]
 --
 
 [open,refpage='XrEventDataBuffer',desc='Event buffer',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
 --
-The slink:XrEventDataBuffer is a structure passed to flink:xrPollEvent large enough to
-contain any returned event data element.  The maximum size is specified by
-dlink:XR_MAX_EVENT_DATA_SIZE.
+The slink:XrEventDataBuffer is a structure passed to flink:xrPollEvent large
+enough to contain any returned event data element.
+The maximum size is specified by dlink:XR_MAX_EVENT_DATA_SIZE.
 
-It is sufficient to clear the pname:type and pname:next parameters of an slink:XrEventDataBuffer
-when passing it as an input to flink:xrPollEvent.
+It is sufficient to clear the pname:type and pname:next parameters of an
+slink:XrEventDataBuffer when passing it as an input to flink:xrPollEvent.
 
-An slink:XrEventDataBuffer may be type-cast to an slink:XrEventDataBaseHeader pointer or a pointer to any
-other appropriate event data based on the pname:type parameter.
+An slink:XrEventDataBuffer may be type-cast to an
+slink:XrEventDataBaseHeader pointer or a pointer to any other appropriate
+event data based on the pname:type parameter.
 
 include::../../generated/api/structs/XrEventDataBuffer.txt[]
 
@@ -1440,7 +1481,8 @@ include::../../generated/api/structs/XrEventDataBuffer.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:varying is a fixed sized output buffer big enough to hold returned data elements for all specified event data types.
+* pname:varying is a fixed sized output buffer big enough to hold returned
+  data elements for all specified event data types.
 ****
 
 include::../../generated/validity/structs/XrEventDataBuffer.txt[]
@@ -1448,7 +1490,8 @@ include::../../generated/validity/structs/XrEventDataBuffer.txt[]
 
 [open,refpage='XR_MAX_EVENT_DATA_SIZE',desc='Maximum event data buffer size',type='defines',xrefs='XrEventDataBuffer']
 --
-dlink:XR_MAX_EVENT_DATA_SIZE is the maximum size of an slink:XrEventDataBuffer.
+dlink:XR_MAX_EVENT_DATA_SIZE is the maximum size of an
+slink:XrEventDataBuffer.
 
 include::../../generated/api/defines/XR_MAX_EVENT_DATA_SIZE.txt[]
 --
@@ -1459,7 +1502,7 @@ include::../../generated/api/defines/XR_MAX_EVENT_DATA_SIZE.txt[]
 [open,refpage='XrEventDataEventsLost',desc='Event indicating events were lost',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
 --
 
-The slink:XrEventDataEventsLost is defined as:
+The slink:XrEventDataEventsLost structure is defined as:
 include::../../generated/api/structs/XrEventDataEventsLost.txt[]
 
 .Member Descriptions
@@ -1477,4 +1520,5 @@ the queue at which this event was found.
 include::../../generated/validity/structs/XrEventDataEventsLost.txt[]
 --
 
-Other event structures are defined in later chapters in the context where their definition is most relevant.
+Other event structures are defined in later chapters in the context where
+their definition is most relevant.

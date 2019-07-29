@@ -14,41 +14,39 @@ include::../meta/XR_EXT_debug_utils.adoc[]
 
 Due to the nature of the OpenXR interface, there is very little error
 information available to the developer and application.
-By using the +XR_EXT_debug_utils+ extension, developers can: obtain
-more information.
+By using the +XR_EXT_debug_utils+ extension, developers can: obtain more
+information.
 When combined with validation layers, even more detailed feedback on the
 application's use of OpenXR will be provided.
 
 This extension provides the following capabilities:
 
-  - The ability to create a debug messenger which will pass along
-    debug messages to an application supplied callback.
-  - The ability to identify specific OpenXR handles using a
-    name to improve tracking.
+  - The ability to create a debug messenger which will pass along debug
+    messages to an application supplied callback.
+  - The ability to identify specific OpenXR handles using a name to improve
+    tracking.
 
 [[object-debug-annotation]]
 ==== Object Debug Annotation
 
-It can be useful for an application to provide its own content relative to
-a specific OpenXR handle.
+It can be useful for an application to provide its own content relative to a
+specific OpenXR handle.
 
 [[object-naming]]
 ===== Object Naming
 
-flink:xrSetDebugUtilsObjectNameEXT allows application
-developers to associate user-defined information with OpenXR
-handles.
+flink:xrSetDebugUtilsObjectNameEXT allows application developers to
+associate user-defined information with OpenXR handles.
 
-This is useful when paired with the callback that you register when
-creating an slink:XrDebugUtilsMessengerEXT object.
-When properly used, debug messages will contain not only the
-corresponding object handle, but the associated object name as well.
+This is useful when paired with the callback that you register when creating
+an slink:XrDebugUtilsMessengerEXT object.
+When properly used, debug messages will contain not only the corresponding
+object handle, but the associated object name as well.
 
 An application can change the name associated with an object simply by
 calling flink:xrSetDebugUtilsObjectNameEXT again with a new string.
 If the objectName member of the slink:XrDebugUtilsObjectNameInfoEXT
-structure is an empty string, then any previously set name
-is removed.
+structure is an empty string, then any previously set name is removed.
 
 [[debug-messengers]]
 ==== Debug Messengers
@@ -63,21 +61,21 @@ when no validation layers are enabled.
 The OpenXR loader, other layers, and runtimes may: also produce callback
 messages.
 
-The debug messenger will provide detailed feedback on the
-application's use of OpenXR when events of interest occur.
-When an event of interest does occur, the debug messenger will submit
-a debug message to the debug callback that was provided during
-its creation.
-Additionally, the debug messenger is responsible with filtering out
-debug messages that the callback isn't interested in and will only provide
-desired debug messages.
+The debug messenger will provide detailed feedback on the application's use
+of OpenXR when events of interest occur.
+When an event of interest does occur, the debug messenger will submit a
+debug message to the debug callback that was provided during its creation.
+Additionally, the debug messenger is responsible with filtering out debug
+messages that the callback isn't interested in and will only provide desired
+debug messages.
 
 [[debug-message-categorization]]
 ==== Debug Message Categorization
 
 Messages that are triggered by the debug messenger are categorized by their
 message type and severity.
-Additionally, each message has a string value identifying its pname:messageId.
+Additionally, each message has a string value identifying its
+pname:messageId.
 These 3 bits of information can be used to filter out messages so you only
 receive reports on the messages you desire.
 In fact, during debug messenger creation, the severity and type flag values
@@ -101,18 +99,22 @@ Currently we have the following message types:
       that may: indicate invalid OpenXR usage.
 |ename:XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
     | Specifies a potentially non-optimal use of OpenXR.
+|ename:XR_DEBUG_UTILS_MESSAGE_TYPE_CONFORMANCE_BIT_EXT
+    | Specifies a non-conformant OpenXR result.
+      This is typically caused by a layer or runtime returning non-conformant data.
 |=======================================================================
 
-A message may correspond to more than one type.  For example, if a validation 
-warning also could impact performance, then the message might be identified
-with both the ename:XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT and
+A message may correspond to more than one type.
+For example, if a validation warning also could impact performance, then the
+message might be identified with both the
+ename:XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT and
 ename:XR_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT flag bits.
 
 
 ===== Message Severity
 
-The severity of a message is a flag that indicates how important the
-message is using standard logging naming.
+The severity of a message is a flag that indicates how important the message
+is using standard logging naming.
 The severity flag bit values are shown in the following table.
 
 .XR_EXT_debug_utils Message Severity Flag Descriptions
@@ -141,8 +143,8 @@ The severity flag bit values are shown in the following table.
 [NOTE]
 .Note
 ====
-The values of elink:XrDebugUtilsMessageSeverityFlagBitsEXT are sorted based on
-severity.
+The values of elink:XrDebugUtilsMessageSeverityFlagBitsEXT are sorted based
+on severity.
 The higher the flag value, the more severe the message.
 This allows for simple boolean operation comparisons when looking at
 elink:XrDebugUtilsMessageSeverityFlagBitsEXT values.
@@ -158,8 +160,8 @@ This may be blank, or it may simply contain the name of an OpenXR component
 However, when certain API layers or runtimes are used, especially the OpenXR
 core_validation API layer, then this value is intended to uniquely identify
 the message generated.
-If a certain warning/error message constantly fires, a user can simply
-look at the unique ID in their callback handler and manually filter it out.
+If a certain warning/error message constantly fires, a user can simply look
+at the unique ID in their callback handler and manually filter it out.
 
 For validation layers, this pname:messageId value actually can be used to
 find the section of the OpenXR specification that the layer believes to have
@@ -172,10 +174,10 @@ this can be done.
 ==== Session Labels
 
 All OpenXR work is performed inside of an slink:XrSession.
-There are times that it helps to label areas in your OpenXR session
-to allow easier debugging.
-This can be especially true if your application creates more than
-one session.
+There are times that it helps to label areas in your OpenXR session to allow
+easier debugging.
+This can be especially true if your application creates more than one
+session.
 There are two kinds of labels provided in this extension:
 
 * Region labels
@@ -183,8 +185,8 @@ There are two kinds of labels provided in this extension:
 
 To begin identifying a region using a debug label inside a session, you may
 use the flink:xrSessionBeginDebugUtilsLabelRegionEXT function.
-Calls to flink:xrSessionBeginDebugUtilsLabelRegionEXT may be nested allowing you
-to identify smaller and smaller labeled regions within your code.
+Calls to flink:xrSessionBeginDebugUtilsLabelRegionEXT may be nested allowing
+you to identify smaller and smaller labeled regions within your code.
 Using this, you can build a "call-stack" of sorts with labels since any
 logging callback will contain the list of all active session label regions.
 
@@ -209,17 +211,31 @@ flink:xrSessionEndDebugUtilsLabelRegionEXT overrides this value.
 --
 include::{INCS-VAR}/api/handles/XrDebugUtilsMessengerEXT.txt[]
 
-slink:XrDebugUtilsMessengerEXT represents a callback function and associated filters
-registered with the runtime.
+slink:XrDebugUtilsMessengerEXT represents a callback function and associated
+filters registered with the runtime.
 --
 
 *New Flag Types*
 
+[open,refpage='XrDebugUtilsMessageSeverityFlagsEXT',type='flags',desc='XrDebugUtilsMessageSeverityFlagsEXT']
+--
 include::{INCS-VAR}/api/flags/XrDebugUtilsMessageSeverityFlagsEXT.txt[]
-include::{INCS-VAR}/api/enums/XrDebugUtilsMessageSeverityFlagBitsEXT.txt[]
+--
 
+[open,refpage='XrDebugUtilsMessageSeverityFlagBitsEXT',type='enums',desc='XrDebugUtilsMessageSeverityFlagBitsEXT']
+--
+include::{INCS-VAR}/api/enums/XrDebugUtilsMessageSeverityFlagBitsEXT.txt[]
+--
+
+[open,refpage='XrDebugUtilsMessageTypeFlagsEXT',type='flags',desc='XrDebugUtilsMessageTypeFlagsEXT']
+--
 include::{INCS-VAR}/api/flags/XrDebugUtilsMessageTypeFlagsEXT.txt[]
+--
+
+[open,refpage='XrDebugUtilsMessageTypeFlagBitsEXT',type='enums',desc='XrDebugUtilsMessageTypeFlagBitsEXT']
+--
 include::{INCS-VAR}/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.txt[]
+--
 
 *New Enum Constants*
 
@@ -229,10 +245,6 @@ elink:XrStructureType enumeration is extended with:
 * ename:XR_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT
 * ename:XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT
 * ename:XR_TYPE_DEBUG_UTILS_LABEL_EXT
-
-elink:XrResult enumeration is extended with:
-
-* ename:XR_ERROR_DEBUG_UTILS_MESSENGER_INVALID_EXT
 
 
 *New Enums*
@@ -248,18 +260,20 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:objectType is an elink:XrObjectType specifying the type of the object to be named.
+* pname:objectType is an elink:XrObjectType specifying the type of the
+  object to be named.
 * pname:objectHandle is the object to be named.
-* pname:objectName is a code:NULL terminated UTF-8 string specifying the name to apply to objectHandle.
+* pname:objectName is a code:NULL terminated UTF-8 string specifying the
+  name to apply to objectHandle.
 ****
 
 .Valid Usage
 ****
-* If pname:objectType is ename:XR_OBJECT_TYPE_UNKNOWN,
-  pname:objectHandle must: not be dlink:XR_NULL_HANDLE
+* If pname:objectType is ename:XR_OBJECT_TYPE_UNKNOWN, pname:objectHandle
+  must: not be dlink:XR_NULL_HANDLE
 * If pname:objectType is not ename:XR_OBJECT_TYPE_UNKNOWN,
-  pname:objectHandle must: be dlink:XR_NULL_HANDLE or
-  an OpenXR handle of the type associated with pname:objectType
+  pname:objectHandle must: be dlink:XR_NULL_HANDLE or an OpenXR handle of
+  the type associated with pname:objectType
 ****
 include::{INCS-VAR}/validity/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
 --
@@ -273,8 +287,8 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsLabelEXT.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:labelName is a code:NULL terminated UTF-8 string specifying the label
-  name.
+* pname:labelName is a code:NULL terminated UTF-8 string specifying the
+  label name.
 ****
 
 include::{INCS-VAR}/validity/structs/XrDebugUtilsLabelEXT.txt[]
@@ -288,36 +302,34 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsMessengerCallbackDataEXT.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:messageId is a code:NULL terminated string that identifies
-  the message in a unique way.
-  If the callback is triggered by a validation layer, this string corresponds
-  the Valid Usage ID (VUID) that can be used to jump to the appropriate
-  location in the OpenXR specification.
+* pname:messageId is a code:NULL terminated string that identifies the
+  message in a unique way.
+  If the callback is triggered by a validation layer, this string
+  corresponds the Valid Usage ID (VUID) that can be used to jump to the
+  appropriate location in the OpenXR specification.
   This value may: be code:NULL if no unique message identifier is associated
   with the message.
-* pname:functionName is a code:NULL terminated string that identifies
-  the OpenXR function that was executing at the time the message
-  callback was triggered.
+* pname:functionName is a code:NULL terminated string that identifies the
+  OpenXR function that was executing at the time the message callback was
+  triggered.
   This value may: be code:NULL in cases where it is difficult to determine
   the originating OpenXR function.
 * pname:message is a code:NULL terminated string detailing the trigger
   conditions.
-* pname:objectCount is a count of items contained in the
-  pname:objects array.
-  This may be 0.
+* pname:objectCount is a count of items contained in the pname:objects
+  array.
+  This may be `0`.
 * pname:objects is a pointer to an array of
-  slink:XrDebugUtilsObjectNameInfoEXT objects related to the
-  detected issue.
+  slink:XrDebugUtilsObjectNameInfoEXT objects related to the detected issue.
   The array is roughly in order or importance, but the 0th element is always
   guaranteed to be the most important object for this message.
 * pname:sessionLabelCount is a count of items contained in the
   pname:sessionLabels array.
-  This may be 0.
-* pname:sessionLabels is a pointer to an array of
-  slink:XrDebugUtilsLabelEXT objects related to the
-  detected issue.
-  The array is roughly in order or importance, but the 0th element is
-  always guaranteed to be the most important object for this message.
+  This may be `0`.
+* pname:sessionLabels is a pointer to an array of slink:XrDebugUtilsLabelEXT
+  objects related to the detected issue.
+  The array is roughly in order or importance, but the 0th element is always
+  guaranteed to be the most important object for this message.
 * pname:sessionLabels is NULL or a pointer to an array of
   slink:XrDebugUtilsLabelEXT active in the current slink:XrSession at the
   time the callback was triggered.
@@ -332,13 +344,13 @@ handles passing along debug messages to a provided debug callback.
 [NOTE]
 .Note
 ====
-This structure should only be considered valid during the lifetime
-of the triggered callback.
+This structure should only be considered valid during the lifetime of the
+triggered callback.
 ====
 
-The labels listed inside pname:sessionLabels are organized in time order, with
-the most recently generated label appearing first, and the oldest label appearing
-last.
+The labels listed inside pname:sessionLabels are organized in time order,
+with the most recently generated label appearing first, and the oldest label
+appearing last.
 --
 
 [open,refpage='XrDebugUtilsMessengerCreateInfoEXT',type='structs',desc='Debug utils messenger create info']
@@ -349,12 +361,13 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:messageSeverities is a bitmask of elink:XrDebugUtilsMessageSeverityFlagBitsEXT
-  specifying which severity of event(s) that will cause this callback to be called.
-* pname:messageTypes is a combination of elink:XrDebugUtilsMessageTypeFlagBitsEXT
-  specifying which type of event(s) will cause this callback to be called.
-* pname:userCallback is the application defined callback function to
-  call.
+* pname:messageSeverities is a bitmask of
+  elink:XrDebugUtilsMessageSeverityFlagBitsEXT specifying which severity of
+  event(s) that will cause this callback to be called.
+* pname:messageTypes is a combination of
+  elink:XrDebugUtilsMessageTypeFlagBitsEXT specifying which type of event(s)
+  will cause this callback to be called.
+* pname:userCallback is the application defined callback function to call.
 * pname:userData is arbitrary user data to be passed to the callback.
 ****
 
@@ -367,24 +380,24 @@ include::{INCS-VAR}/validity/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
 
 For each slink:XrDebugUtilsMessengerEXT that is created the
 slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageSeverities and
-slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageTypes determine when that
-slink:XrDebugUtilsMessengerCreateInfoEXT::pname:userCallback is called.
-The process to determine if the user's userCallback is triggered when
-an event occurs is as follows:
+slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageTypes determine when
+that slink:XrDebugUtilsMessengerCreateInfoEXT::pname:userCallback is called.
+The process to determine if the user's userCallback is triggered when an
+event occurs is as follows:
 
 * The runtime will perform a bitwise AND of the event's
   elink:XrDebugUtilsMessageSeverityFlagBitsEXT with the
-  slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageSeverities
-  provided during creation of the slink:XrDebugUtilsMessengerEXT object.
+  slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageSeverities provided
+  during creation of the slink:XrDebugUtilsMessengerEXT object.
 
-* If this results in 0, the message is skipped.
+* If this results in `0`, the message is skipped.
 
 * The runtime will perform bitwise AND of the event's
   elink:XrDebugUtilsMessageTypeFlagBitsEXT with the
-  slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageTypes
-  provided during the creation of the slink:XrDebugUtilsMessengerEXT object.
+  slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageTypes provided
+  during the creation of the slink:XrDebugUtilsMessengerEXT object.
 
-* If this results in 0, the message is skipped.
+* If this results in `0`, the message is skipped.
 
 * If the message of the current event is not skipped, the callback will be
   called with the message.
@@ -417,18 +430,18 @@ include::{INCS-VAR}/api/protos/xrSetDebugUtilsObjectNameEXT.txt[]
 ****
 * pname:instance is the slink:XrInstance that the object was created under.
 * pname:nameInfo is a pointer to an instance of the
-  slink:XrDebugUtilsObjectNameInfoEXT structure specifying the parameters
-  of the name to set on the object.
+  slink:XrDebugUtilsObjectNameInfoEXT structure specifying the parameters of
+  the name to set on the object.
 ****
 
 .Valid Usage
 ****
 * In the structure pointed to by pname:nameInfo,
-  slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType must:
-  not be ename:XR_OBJECT_TYPE_UNKNOWN
+  slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType must: not be
+  ename:XR_OBJECT_TYPE_UNKNOWN
 * In the structure pointed to by pname:nameInfo,
-  slink:XrDebugUtilsObjectNameInfoEXT::pname:objectHandle must:
-  not be dlink:XR_NULL_HANDLE
+  slink:XrDebugUtilsObjectNameInfoEXT::pname:objectHandle must: not be
+  dlink:XR_NULL_HANDLE
 ****
 
 include::{INCS-VAR}/validity/protos/xrSetDebugUtilsObjectNameEXT.txt[]
@@ -447,22 +460,23 @@ include::{INCS-VAR}/api/protos/xrCreateDebugUtilsMessengerEXT.txt[]
 ****
 * pname:instance is the instance the messenger will be used with.
 * pname:createInfo points to an slink:XrDebugUtilsMessengerCreateInfoEXT
-  structure, which contains the callback pointer as well as defines
-  the conditions under which this messenger will trigger the callback.
+  structure, which contains the callback pointer as well as defines the
+  conditions under which this messenger will trigger the callback.
 * pname:messenger is a pointer to which the created
   slink:XrDebugUtilsMessengerEXT object is returned.
 ****
 
 include::{INCS-VAR}/validity/protos/xrCreateDebugUtilsMessengerEXT.txt[]
 
-The application must: ensure that flink:xrCreateDebugUtilsMessengerEXT is not
-executed in parallel with any OpenXR function that is also called with
-pname:instance or child of pname:instance as the dispatchable argument.
+The application must: ensure that flink:xrCreateDebugUtilsMessengerEXT is
+not executed in parallel with any OpenXR function that is also called with
+pname:instance or child of pname:instance.
 
 When an event of interest occurs a debug messenger calls its
 pname:createInfo\->pname:userCallback with a debug message from the producer
-of the event. Additionally, the debug messenger must: filter out any debug
-messages that the application's callback is not interested in based on
+of the event.
+Additionally, the debug messenger must: filter out any debug messages that
+the application's callback is not interested in based on
 slink:XrDebugUtilsMessengerCreateInfoEXT flags, as described below.
 --
 
@@ -481,9 +495,9 @@ include::{INCS-VAR}/api/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
 
 include::{INCS-VAR}/validity/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
 
-The application must: ensure that flink:xrDestroyDebugUtilsMessengerEXT is not
-executed in parallel with any OpenXR function that is also called with
-pname:instance or child of pname:instance as the dispatchable argument.
+The application must: ensure that flink:xrDestroyDebugUtilsMessengerEXT is
+not executed in parallel with any OpenXR function that is also called with
+the pname:instance or child of pname:instance that it was created with.
 --
 
 [open,refpage='xrSubmitDebugUtilsMessageEXT',type='protos',desc='Submits debug utils message',xrefs='']
@@ -493,20 +507,20 @@ include::{INCS-VAR}/api/protos/xrSubmitDebugUtilsMessageEXT.txt[]
 .Parameter Descriptions
 ****
 * pname:instance is the debug stream's slink:XrInstance.
-* pname:messageSeverity is a single bit value of elink:XrDebugUtilsMessageSeverityFlagsEXT
-  severity of this event/message.
+* pname:messageSeverity is a single bit value of
+  elink:XrDebugUtilsMessageSeverityFlagsEXT severity of this event/message.
 * pname:messageTypes is an elink:XrDebugUtilsMessageTypeFlagsEXT bitmask of
-  elink:XrDebugUtilsMessageTypeFlagBitsEXT specifying which types of event to
-  identify this message with.
+  elink:XrDebugUtilsMessageTypeFlagBitsEXT specifying which types of event
+  to identify this message with.
 * pname:callbackData contains all the callback related data in the
   slink:XrDebugUtilsMessengerCallbackDataEXT structure.
 ****
 
 .Valid Usage
 ****
-* For each structure in pname:objects found in pname:callbackData,
-  the value of slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType
-  must: not be ename:XR_OBJECT_TYPE_UNKNOWN
+* For each structure in pname:objects found in pname:callbackData, the value
+  of slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType must: not be
+  ename:XR_OBJECT_TYPE_UNKNOWN
 ****
 
 include::{INCS-VAR}/validity/protos/xrSubmitDebugUtilsMessageEXT.txt[]
@@ -516,9 +530,8 @@ OpenXR messaging system.
 
 The call will propagate through the layers and generate callback(s) as
 indicated by the message's flags.
-The parameters are passed on to the callback in addition to the
-userData value that was defined at the time the messenger was
-created.
+The parameters are passed on to the callback in addition to the userData
+value that was defined at the time the messenger was created.
 --
 
 [open,refpage='xrSessionBeginDebugUtilsLabelRegionEXT',type='protos',desc='Session begin debug utils label region',xrefs='XrDebugUtilsLabelEXT']
@@ -551,15 +564,15 @@ include::{INCS-VAR}/api/protos/xrSessionEndDebugUtilsLabelRegionEXT.txt[]
 
 .Valid Usage
 ****
-* flink:xrSessionEndDebugUtilsLabelRegionEXT must: be called only after a matching
-  flink:xrSessionBeginDebugUtilsLabelRegionEXT.
+* flink:xrSessionEndDebugUtilsLabelRegionEXT must: be called only after a
+  matching flink:xrSessionBeginDebugUtilsLabelRegionEXT.
 ****
 
 include::{INCS-VAR}/validity/protos/xrSessionEndDebugUtilsLabelRegionEXT.txt[]
 
 This function ends the last label region begun with the
-flink:xrSessionBeginDebugUtilsLabelRegionEXT function within
-the same pname:session.
+flink:xrSessionBeginDebugUtilsLabelRegionEXT function within the same
+pname:session.
 --
 
 [open,refpage='xrSessionInsertDebugUtilsLabelEXT',type='protos',desc='Session insert debug utils label',xrefs='xrSessionBeginDebugUtilsLabelRegionEXT xrSessionEndDebugUtilsLabelRegionEXT']
@@ -578,14 +591,14 @@ include::{INCS-VAR}/validity/protos/xrSessionInsertDebugUtilsLabelEXT.txt[]
 
 The flink:xrSessionInsertDebugUtilsLabelEXT function inserts an individual
 label within pname:session.
-The individual labels are useful for different reasons based on the type
-of debugging scenario.
-When used with something active like a profiler or debugger, it
-identifies a single point of time.
+The individual labels are useful for different reasons based on the type of
+debugging scenario.
+When used with something active like a profiler or debugger, it identifies a
+single point of time.
 When used with logging, the individual label identifies that a particular
 location has been passed at the point the log message is triggered.
-Because of this usage, individual labels only exist in a log until the
-next call to any of the label functions:
+Because of this usage, individual labels only exist in a log until the next
+call to any of the label functions:
 
 * flink:xrSessionBeginDebugUtilsLabelRegionEXT
 * flink:xrSessionEndDebugUtilsLabelRegionEXT
@@ -600,10 +613,10 @@ include::{INCS-VAR}/api/funcpointers/PFN_xrDebugUtilsMessengerCallbackEXT.txt[]
 
 .Parameter Descriptions
 ****
-* pname:messageSeverity indicates the single bit value of elink:XrDebugUtilsMessageSeverityFlagsEXT
-  that triggered this callback.
-* pname:messageTypes indicates the elink:XrDebugUtilsMessageTypeFlagsEXT specifying
-  which types of event triggered this callback.
+* pname:messageSeverity indicates the single bit value of
+  elink:XrDebugUtilsMessageSeverityFlagsEXT that triggered this callback.
+* pname:messageTypes indicates the elink:XrDebugUtilsMessageTypeFlagsEXT
+  specifying which types of event triggered this callback.
 * pname:callbackData contains all the callback related data in the
   slink:XrDebugUtilsMessengerCallbackDataEXT structure.
 * pname:userData is the user data provided when the
@@ -612,11 +625,12 @@ include::{INCS-VAR}/api/funcpointers/PFN_xrDebugUtilsMessengerCallbackEXT.txt[]
 
 The callback must: not call flink:xrDestroyDebugUtilsMessengerEXT.
 
-The callback returns an basetype:XrBool32 that indicates to the calling layer
-the application's desire to abort the call.
+The callback returns an basetype:XrBool32 that indicates to the calling
+layer the application's desire to abort the call.
 A value of ename:XR_TRUE indicates that the application wants to abort this
 call.
-If the application returns ename:XR_FALSE, the function must: not be aborted.
+If the application returns ename:XR_FALSE, the function must: not be
+aborted.
 Applications should: always return ename:XR_FALSE so that they see the same
 behavior with and without validation layers enabled.
 
@@ -643,8 +657,8 @@ events.
 
 To capture events that occur while creating or destroying an instance an
 application can: link an slink:XrDebugUtilsMessengerCreateInfoEXT structure
-to the next element of the slink:XrInstanceCreateInfo structure given
-to flink:xrCreateInstance.
+to the next element of the slink:XrInstanceCreateInfo structure given to
+flink:xrCreateInstance.
 This callback is only valid for the duration of the flink:xrCreateInstance
 and the flink:xrDestroyInstance call.
 Use flink:xrCreateDebugUtilsMessengerEXT to create persistent callback
@@ -656,62 +670,51 @@ code:OutputDebugString.
 The second will cause the debugger to break at that callback when an error
 happens and the third will log warnings to stdout.
 
-ifdef::editing-notes[]
-[NOTE]
-.editing-note
-====
-TODO(OpenXR) (i/768): This sample code has testing disabled right now to minimize merge conflicts. It should be re-enabled once !633 is merged.
-====
-endif::editing-notes[]
-
-[source,c++,suppress-build]
+[source,c++]
 ------------------------------------------------------------------------------
-    XrInstance instance; // previously initialized
-    XrResult res;
-    XrDebugUtilsMessengerEXT messenger1, messenger2, messenger3;
+    extern XrInstance instance;  // previously initialized
 
     // Must call extension functions through a function pointer:
     PFN_xrCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT;
-    res = xrGetInstanceProcAddr(instance, "xrCreateDebugUtilsMessengerEXT", reinterpret_cast<PFN_xrVoidFunction*>(&pfnCreateDebugUtilsMessengerEXT));
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateDebugUtilsMessengerEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnCreateDebugUtilsMessengerEXT)));
+
     PFN_xrDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT;
-    res = xrGetInstanceProcAddr(instance, "xrDestroyDebugUtilsMessengerEXT", reinterpret_cast<PFN_xrVoidFunction*>(&pfnDestroyDebugUtilsMessengerEXT));
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrDestroyDebugUtilsMessengerEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnDestroyDebugUtilsMessengerEXT)));
 
     XrDebugUtilsMessengerCreateInfoEXT callback1 = {
-            XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,      // type
-            NULL,                                               // next
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |     // messageSeverities
+        XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,   // type
+        NULL,                                            // next
+        XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |  // messageSeverities
             XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
-            XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |       // messageTypes
+        XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |  // messageTypes
             XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-            myOutputDebugString,                                // userCallback
-            NULL                                                // userData
+        myOutputDebugString,  // userCallback
+        NULL                  // userData
     };
-    res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger1);
-    if (res != XR_SUCCESS) {
-       // Do error handling
-    }
+    XrDebugUtilsMessengerEXT messenger1 = XR_NULL_HANDLE;
+    CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger1));
 
     callback1.messageSeverities = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
     callback1.userCallback = myDebugBreak;
     callback1.userData = NULL;
-    res = pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger2);
-    if (res != XR_SUCCESS) {
-       // Do error handling
-    }
+    XrDebugUtilsMessengerEXT messenger2 = XR_NULL_HANDLE;
+    CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger2));
 
     XrDebugUtilsMessengerCreateInfoEXT callback3 = {
-            XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,      // type
-            NULL,                                               // next
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,    // messageSeverities
-            XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |       // messageTypes
+        XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,    // type
+        NULL,                                             // next
+        XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,  // messageSeverities
+        XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |     // messageTypes
             XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-            myStdOutLogger,                                     // userCallback
-            NULL                                                // userData
+        myStdOutLogger,  // userCallback
+        NULL             // userData
     };
-    res = pfnCreateDebugUtilsMessengerEXT(instance, &callback3, &messenger3);
-    if (res != XR_SUCCESS) {
-       // Do error handling
-    }
+    XrDebugUtilsMessengerEXT messenger3 = XR_NULL_HANDLE;
+    CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback3, &messenger3));
 
     // ...
 
@@ -723,35 +726,28 @@ endif::editing-notes[]
 
 **Example 2**
 
-Associate a name with an slink:XrSpace, for easier debugging in external tools or
-with validation layers that can print a friendly name when referring to
-objects in error messages.
+Associate a name with an slink:XrSpace, for easier debugging in external
+tools or with validation layers that can print a friendly name when
+referring to objects in error messages.
 
-ifdef::editing-notes[]
-[NOTE]
-.editing-note
-====
-TODO(OpenXR) (i/768): This sample code has testing disabled right now to minimize merge conflicts. It should be re-enabled once !633 is merged.
-====
-endif::editing-notes[]
-
-[source,c++,suppress-build]
+[source,c++]
 ----------------------------------------
-    extern XrInstance instance;
-    extern XrSpace space;
+    extern XrInstance instance;  // previously initialized
+    extern XrSpace space;        // previously initialized
 
     // Must call extension functions through a function pointer:
     PFN_xrSetDebugUtilsObjectNameEXT pfnSetDebugUtilsObjectNameEXT;
-    xrGetInstanceProcAddr(instance, "xrSetDebugUtilsObjectNameEXT", reinterpret_cast<PFN_xrVoidFunction*>(&pfnSetDebugUtilsObjectNameEXT));
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrSetDebugUtilsObjectNameEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnSetDebugUtilsObjectNameEXT)));
 
     // Set a name on the space
-    const XrDebugUtilsObjectNameInfoEXT spaceNameInfo =
-    {
-        XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT, // type
-        NULL,                                     // next
-        XR_OBJECT_TYPE_SPACE,                     // objectType
-        (uint64_t)space,                          // objectHandle
-        "My Object-Specific Space",               // objectName
+    const XrDebugUtilsObjectNameInfoEXT spaceNameInfo = {
+        XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,  // type
+        NULL,                                      // next
+        XR_OBJECT_TYPE_SPACE,                      // objectType
+        (uint64_t)space,                           // objectHandle
+        "My Object-Specific Space",                // objectName
     };
 
     pfnSetDebugUtilsObjectNameEXT(instance, &spaceNameInfo);
@@ -763,106 +759,124 @@ endif::editing-notes[]
 
 **Example 3**
 
-Labeling the workload with naming information so that any form of
-analysis can display a more usable visualization of where actions
-occur in the lifetime of a session.
+Labeling the workload with naming information so that any form of analysis
+can display a more usable visualization of where actions occur in the
+lifetime of a session.
 
-[source,c++,suppress-build]
+[source,c++]
 ----------------------------------------
-    extern XrInstance              instance;
-    extern XrSession               session;
-    extern XrSessionBeginInfo      session_begin_info;
-    extern XrFrameBeginInfo        begin_frame_info;
-    extern XrFrameEndInfo          end_frame_info;
-    extern XrFrameWaitInfo         wait_frame_info;
-    extern XrFrameState            frame_state;
+    extern XrInstance instance;  // previously initialized
+    extern XrSession session;    // previously initialized
 
     // Must call extension functions through a function pointer:
-    PFN_xrSessionBeginDebugUtilsLabelRegionEXT pfn_xrSessionBeginDebugUtilsLabelRegionEXT = (PFN_xrSessionBeginDebugUtilsLabelRegionEXT)xrGetInstanceProcAddr(instance, "xrSessionBeginDebugUtilsLabelRegionEXT");
-    PFN_xrSessionEndDebugUtilsLabelRegionEXT   pfn_xrSessionEndDebugUtilsLabelRegionEXT   = (PFN_xrSessionEndDebugUtilsLabelRegionEXT)xrGetInstanceProcAddr(instance, "xrSessionEndDebugUtilsLabelRegionEXT");
-    PFN_xrSessionInsertDebugUtilsLabelEXT      pfn_xrSessionInsertDebugUtilsLabelEXT      = (PFN_xrSessionInsertDebugUtilsLabelEXT)xrGetInstanceProcAddr(instance, "xrSessionInsertDebugUtilsLabelEXT");
 
-    const XrDebugUtilsLabelEXT session_active_region_label =
-    {
-        XR_TYPE_DEBUG_UTILS_LABEL_EXT, // type
-        NULL,                          // next
-        "Session active",              // labelName
+    PFN_xrSessionBeginDebugUtilsLabelRegionEXT pfnSessionBeginDebugUtilsLabelRegionEXT;
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionBeginDebugUtilsLabelRegionEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnSessionBeginDebugUtilsLabelRegionEXT)));
+
+    PFN_xrSessionEndDebugUtilsLabelRegionEXT pfnSessionEndDebugUtilsLabelRegionEXT;
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionEndDebugUtilsLabelRegionEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnSessionEndDebugUtilsLabelRegionEXT)));
+
+    PFN_xrSessionInsertDebugUtilsLabelEXT pfnSessionInsertDebugUtilsLabelEXT;
+    CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionInsertDebugUtilsLabelEXT",
+                                 reinterpret_cast<PFN_xrVoidFunction*>(
+                                     &pfnSessionInsertDebugUtilsLabelEXT)));
+
+    XrSessionBeginInfo session_begin_info = {
+        XR_TYPE_SESSION_BEGIN_INFO,
+        nullptr,
+        XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO
+    };
+    xrBeginSession(session, &session_begin_info);
+
+    const XrDebugUtilsLabelEXT session_active_region_label = {
+        XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
+        NULL,                           // next
+        "Session active",               // labelName
     };
 
-    xrSessionBegin(session, &session_begin_info);
-
     // Start an annotated region of calls under the 'Session Active' name
-    pfn_xrSessionBeginDebugUtilsLabelRegionEXT(session, &session_active_region_label);
+    pfnSessionBeginDebugUtilsLabelRegionEXT(session, &session_active_region_label);
 
     // Brackets added for clarity
     {
-        XrDebugUtilsLabelEXT individual_label =
-        {
-            XR_TYPE_DEBUG_UTILS_LABEL_EXT, // type
-            NULL,                          // next
-            "WaitFrame",                   // labelName
+        XrDebugUtilsLabelEXT individual_label = {
+            XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
+            NULL,                           // next
+            "WaitFrame",                    // labelName
         };
 
         const char wait_frame_label[] = "WaitFrame";
         individual_label.labelName = wait_frame_label;
-        pfn_xrSessionInsertDebugUtilsLabelEXT(session, individual_label);
+        pfnSessionInsertDebugUtilsLabelEXT(session, &individual_label);
+        XrFrameWaitInfo wait_frame_info;  // initialization omitted for readability
+        XrFrameState frame_state = {XR_TYPE_FRAME_STATE, nullptr};
         xrWaitFrame(session, &wait_frame_info, &frame_state);
 
         // Do stuff 1
 
-        const XrDebugUtilsLabelEXT session_frame_region_label =
-        {
-            XR_TYPE_DEBUG_UTILS_LABEL_EXT, // type
-            NULL,                          // next
-            "Session Frame 123",           // labelName
+        const XrDebugUtilsLabelEXT session_frame_region_label = {
+            XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
+            NULL,                           // next
+            "Session Frame 123",            // labelName
         };
 
-
         // Start an annotated region of calls under the 'Session Frame 123' name
-        pfn_xrSessionBeginDebugUtilsLabelRegionEXT(session, &session_frame_region_label);
+        pfnSessionBeginDebugUtilsLabelRegionEXT(session, &session_frame_region_label);
 
         // Brackets added for clarity
         {
 
             const char begin_frame_label[] = "BeginFrame";
             individual_label.labelName = begin_frame_label;
-            pfn_xrSessionInsertDebugUtilsLabelEXT(session, individual_label);
+            pfnSessionInsertDebugUtilsLabelEXT(session, &individual_label);
+
+            XrFrameBeginInfo begin_frame_info;  // initialization omitted for readability
             xrBeginFrame(session, &begin_frame_info);
 
             // Do stuff 2
 
             const char end_frame_label[] = "EndFrame";
             individual_label.labelName = end_frame_label;
-            pfn_xrSessionInsertDebugUtilsLabelEXT(session, individual_label);
+            pfnSessionInsertDebugUtilsLabelEXT(session, &individual_label);
+
+            XrFrameEndInfo end_frame_info;  // initialization omitted for readability
             xrEndFrame(session, &end_frame_info);
         }
 
-        // End the session/begun region started above (in this case it's the "Session Frame 123" label)
-        pfn_xrSessionEndDebugUtilsLabelRegionEXT(session);
+        // End the session/begun region started above
+        // (in this case it's the "Session Frame 123" label)
+        pfnSessionEndDebugUtilsLabelRegionEXT(session);
     }
 
-    // End the session/begun region started above (in this case it's the "Session Active" label)
-    pfn_xrSessionEndDebugUtilsLabelRegionEXT(session);
+    // End the session/begun region started above
+    // (in this case it's the "Session Active" label)
+    pfnSessionEndDebugUtilsLabelRegionEXT(session);
 
-    vkEndSession(session);
+    xrEndSession(session);
 ----------------------------------------
 
-In the above example, if an error occurred in the "// Do stuff 1" section,
-then your debug utils callback would contain the following data in
-its pname:sessionLabels array:
-  [0] = individual_label with labelName = "WaitFrame"
-  [1] = session_active_region_label with labelName = "Session active"
+In the above example, if an error occurred in the `// Do stuff 1` section,
+then your debug utils callback would contain the following data in its
+pname:sessionLabels array:
 
-However, if an error occurred in the "// Do stuff 2" section,
-then your debug utils callback would contain the following data in
-its pname:sessionLabels array:
-  [0] = individual_label with labelName = "BeginFrame"
-  [1] = session_frame_region_label with labelName = "Session Frame 123"
-  [2] = session_active_region_label with labelName = "Session active"
+* `[0]` = `individual_label` with `labelName` = "WaitFrame"
+* `[1]` = `session_active_region_label` with `labelName` = "Session active"
 
-You'll notice that "WaitFrame" is no longer available as soon as the
-next call to another function like
-flink:xrSessionBeginDebugUtilsLabelRegionEXT.
+However, if an error occurred in the `// Do stuff 2` section, then your
+debug utils callback would contain the following data in its
+pname:sessionLabels array:
+
+* `[0]` = `individual_label` with `labelName` = "BeginFrame"
+* `[1]` = `session_frame_region_label` with `labelName` = "Session Frame
+  123"
+* `[2]` = `session_active_region_label` with `labelName` = "Session active"
+
+You'll notice that "WaitFrame" is no longer available as soon as the next
+call to another function like flink:xrSessionBeginDebugUtilsLabelRegionEXT.
 
 *Issues*
 
@@ -870,12 +884,12 @@ None
 
 *Version History*
 
- * Revision 1, 2018-02-19 (Mark Young / Karl Schultz)
- ** Initial draft, based on +VK_EXT_debug_utils+.
- * Revision 2, 2018-11-16 (Mark Young)
- ** Clean up some language based on changes going into
-    the Vulkan +VK_EXT_debug_utils+ extension by
-    Peter Kraus (aka @krOoze).
- ** Added session labels
-
-
+* Revision 1, 2018-02-19 (Mark Young / Karl Schultz)
+** Initial draft, based on +VK_EXT_debug_utils+.
+* Revision 2, 2018-11-16 (Mark Young)
+** Clean up some language based on changes going into the Vulkan
+   +VK_EXT_debug_utils+ extension by Peter Kraus (aka @krOoze).
+** Added session labels
+* Revision 3, 2019-07-19 (Ryan Pavlik)
+** Update examples.
+** Improve formatting

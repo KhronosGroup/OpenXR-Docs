@@ -122,6 +122,11 @@ class ShouldInlineMacro < NormativeInlineMacroBase
     end
 end
 
+class ReflinkInlineMacro < LinkInlineMacroBase
+    named :reflink
+    match /reflink:(\w+)/
+end
+
 class FlinkInlineMacro < LinkInlineMacroBase
     named :flink
     match /flink:(\w+)/

@@ -41,8 +41,12 @@ ifneq (,$(strip $(VERY_STRICT)))
 ASCIIDOC := $(ASCIIDOC) --failure-level WARN
 endif
 
+SPECREVISION = 1.0.0
+REVISION_COMPONENTS = $(subst ., ,$(SPECREVISION))
+MAJORMINORVER = $(word 1,$(REVISION_COMPONENTS)).$(word 2,$(REVISION_COMPONENTS))
+
 # Target directory for output files.
-OUTDIR	 ?= $(CURDIR)/out/prerelease
+OUTDIR	 ?= $(CURDIR)/out/$(MAJORMINORVER)
 
 # Target directory for generated files.
 # This is shorthand; can't be moved because the spec source
@@ -56,6 +60,7 @@ GENOPTS =
 HEADER_DIR  = $(OUTDIR)/openxr
 HEADER      = $(HEADER_DIR)/openxr.h
 PLATHEAD    = $(HEADER_DIR)/openxr_platform.h
+REFLECTHEAD = $(HEADER_DIR)/openxr_reflection.h
 HTMLSPEC    = $(OUTDIR)/openxr.html
 PDFSPEC     = $(OUTDIR)/openxr.pdf
 REGISTRYOUTDIR = $(OUTDIR)/../registry-release/specs/$(MAJORMINORVER)
@@ -93,19 +98,23 @@ default:
 # Python and XML files on which openxr.h depends
 header: $(HEADER)
 
+# Directory to build headers into
+$(OUTDIR)/openxr:
+	$(QUIET)$(MKDIR) $@
+
 REGISTRY    = ./registry/xr.xml
 GENXR       = ./scripts/genxr.py
-XRH_DEPENDS = $(REGISTRY) $(GENXR) ./scripts/reg.py ./scripts/generator.py
+XRH_DEPENDS = $(REGISTRY) $(GENXR) ./scripts/reg.py ./scripts/generator.py $(OUTDIR)/openxr
+
 
 # OpenXR header target
 $(HEADER): $(XRH_DEPENDS) $(PLATHEAD)
-	$(QUIET)$(MKDIR) $(@D)
 	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) -o $(HEADER_DIR) openxr.h
 	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) -o $(HEADER_DIR) openxr_platform.h
+	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) -o $(HEADER_DIR) openxr_reflection.h
 
 # Platform header (just copy)
-$(PLATHEAD):
-	$(QUIET)$(MKDIR) $(@D)
+$(PLATHEAD): $(OUTDIR)/openxr
 	$(QUIET)$(CP) ../include/openxr/openxr_platform_defines.h $(HEADER_DIR)
 
 # Test that openxr.h compiles
@@ -129,9 +138,16 @@ manpdf: $(PDFMAN)
 SPECSRC = sources/openxr.adoc
 SPECFILES = $(wildcard sources/chapters/[A-Za-z]*.adoc)
 
-GENDEPENDS = $(GENDIR)/api/apiinc $(GENDIR)/validity/validinc $(METADIR)/extinc
-GENINCLUDE = $(wildcard $(GENDIR)/api/*/[A-Za-z]*.txt $(GENDIR)/validity/*/[A-Za-z]*.txt)
-COMMONDOCS = $(SPECSRC) $(SPECFILES) $(GENINCLUDE) $(GENDEPENDS)
+HOSTSYNCPATH   = $(GENDIR)/hostsynctable
+HOSTSYNCDEPEND = $(HOSTSYNCPATH)/hostsyncinc
+INDEXDEPEND = $(GENDIR)
+INDEXNAME = index.adoc
+GENDEPENDS = $(GENDIR)/api/apiinc $(GENDIR)/validity/validinc $(METADIR)/extinc $(INDEXDEPEND)/$(INDEXNAME) $(HOSTSYNCDEPEND)
+GENINCLUDE = $(wildcard $(GENDIR)/api/*/[A-Za-z]*.txt $(GENDIR)/validity/*/[A-Za-z]*.txt $(HOSTSYNCPATH)/*/[A-Za-z]*.txt)
+COMMONDOCS = $(SPECSRC) $(SPECFILES) $(GENINCLUDE) $(GENDEPENDS) $(OUTDIR)
+
+.PHONY: generated
+generated: $(COMMONDOCS)
 
 EXTS := $(sort $(EXTENSIONS))
 EXTATTRIBS := $(foreach ext,$(EXTS),-a $(ext))
@@ -141,16 +157,15 @@ EXTOPTIONS := $(foreach ext,$(EXTS),-extension $(ext))
 # Generate Asciidoc attributes for spec revision remark.
 APITITLE ?= OpenXR
 
-SPECREVISION = 0.90.1
-REVISION_COMPONENTS = $(subst ., ,$(SPECREVISION))
-MAJORMINORVER = $(word 1,$(REVISION_COMPONENTS)).$(word 2,$(REVISION_COMPONENTS))
-
 # Spell out RFC2822 format as not all date commands support -R
 SPECDATE     = $(shell echo `date -u "+%a, %d %b %Y %T %z"`)
 
 # GITBRANCH should be set by the caller in CI environments
 # because CI machines often checkout the code in detached HEAD state.
-GITBRANCH  ?= $(shell echo `git symbolic-ref --short HEAD`)
+ifeq ($(GITBRANCH),)
+# Evaluate only once to avoid slow calls to git.
+GITBRANCH  := $(shell echo `git symbolic-ref --short HEAD`)
+endif
 GITREMARK  ?= from git branch: $(GITBRANCH)
 SPECREMARK ?= $(GITREMARK) \
              commit: $(shell echo `git log -1 --format="%H"`)
@@ -168,7 +183,6 @@ ATTRIBOPTS   = -a revnumber="$(SPECREVISION)" \
 ADOCOPTS = --doctype book -a data-uri -r $(CURDIR)/scripts/openxr-macros.rb $(ATTRIBOPTS)
 
 $(HTMLSPEC): $(COMMONDOCS)
-	$(QUIET)$(MKDIR) $(@D)
 	$(QUIET)if [ $$(uname -s | cut -c 1-6) == "CYGWIN" ]; then \
 	HTMLSPEC_DOS=$$(cygpath -w $@) ;\
 	SPECSRC_DOS=$$(cygpath -w $(SPECSRC)) ;\
@@ -188,7 +202,6 @@ $(HTMLSPEC): $(COMMONDOCS)
 	fi
 
 $(PDFSPEC): $(COMMONDOCS)
-	$(QUIET)$(MKDIR) $(@D)
 	$(QUIET)if [ $$(uname -s | cut -c 1-6) == "CYGWIN" ]; then \
 	PDFSPEC_DOS=$$(cygpath -w $@) ;\
 	SPECSRC_DOS=$$(cygpath -w $(SPECSRC)) ;\
@@ -311,6 +324,14 @@ $(GENDIR)/validity/validinc: $(XRH_DEPENDS)
 	$(QUIET)$(MKDIR) $(@D)
 	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) $(EXTOPTIONS) -o $(GENDIR)/validity validinc
 
+$(HOSTSYNCDEPEND): $(XRH_DEPENDS)
+	$(QUIET)$(MKDIR) $(@D)
+	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) $(EXTOPTIONS) -o $(HOSTSYNCPATH) hostsyncinc
+
+$(INDEXDEPEND)/$(INDEXNAME): $(XRH_DEPENDS)
+	$(QUIET)$(MKDIR) $(@D)
+	$(QUIET)$(PYTHON) $(GENXR) $(GENXR_ARGS) $(EXTOPTIONS) -o $(INDEXDEPEND) $(INDEXNAME)
+
 XRM_DEPENDS = $(REGISTRY) $(GENXR) ./scripts/reg.py ./scripts/generator.py
 
 $(METADIR)/extinc: $(XRM_DEPENDS)
@@ -319,6 +340,11 @@ $(METADIR)/extinc: $(XRM_DEPENDS)
 
 # Every generated include snippet depends on registry and scripts.
 $(GENINCLUDE): $(XRH_DEPENDS)
+
+DEPSCRIPT = ./scripts/make_ext_dependency.py
+generated/extDependency.sh: $(REGISTRY) $(DEPSCRIPT)
+	$(QUIET)$(PYTHON) $(DEPSCRIPT) -registry $(REGISTRY) \
+	    -outscript $@
 
 ################################################
 # OpenXR Style Guide
@@ -394,7 +420,7 @@ EXTRACT_QUIET := --quiet
 endif
 
 $(EXAMPLES_MAKEFILE): $(EXAMPLES_SCRIPT)
-	$(QUIET)$(PYTHON) $< --makefile=$@ --linenumbers $(EXTRACT_QUIET)
+	$(QUIET)$(PYTHON) $< --makefile=$@ --line_numbers $(EXTRACT_QUIET)
 
 build-examples: $(EXAMPLES_MAKEFILE)
 .PHONY: build-examples
@@ -416,6 +442,7 @@ check-spec-links:
 	$(QUIET)$(CHECK_MARKUP_SCRIPT) -Werror
 	$(QUIET)$(PYTHON) $(CHECK_SPEC_LINKS_SCRIPT)
 	$(QUIET)env FAIL_IF_COULD_NOT_VALIDATE=false ./checkXml.sh
+	$(QUIET)$(PYTHON) $(CURDIR)/scripts/xml_consistency.py
 
 .PHONY: check-spec-links
 
@@ -423,7 +450,7 @@ check-spec-links:
 # Meta "build approximately everything spec-specific required to pass CI" target
 all:
 	$(QUIET)$(MAKE) check-spec-links # recursive to cause csl to run first for better errors messages, without adding bogus depends.
-	$(QUIET)$(MAKE) header header-test html pdf styleguide loader build-examples 
+	$(QUIET)$(MAKE) header header-test html pdf styleguide loader build-examples
 	$(ECHO) ""
 	$(ECHO) "Target 'all': Completed specification build and basic checks successfully."
 .PHONY: all
@@ -437,8 +464,6 @@ release: header html pdf manhtmlpages loader
 	$(QUIET)$(CP) $(HTMLSPEC) $(REGISTRYOUTDIR)/html/xrspec.html
 	$(QUIET)$(MKDIR) $(REGISTRYOUTDIR)/man
 	$(QUIET)$(CP) -R $(MANHTMLDIR) $(REGISTRYOUTDIR)/man/html
-	$(QUIET)$(MKDIR) $(OUTDIR)/doc/loader
-	$(QUIET)$(CP) $(LOADERGUIDE) $(OUTDIR)/doc/loader/OpenXR_loader_design.html
 
 ################################################
 ## Clean targets

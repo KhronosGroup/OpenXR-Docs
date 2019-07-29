@@ -1,43 +1,46 @@
 [[system]]
 == System
 
-This API separates the concept of physical systems of XR devices from
-the logical objects that applications interact with directly.
-A system
-represents a collection of related devices in the runtime, often made up of
-several individual hardware components working together to enable XR experiences.
+This API separates the concept of physical systems of XR devices from the
+logical objects that applications interact with directly.
+A system represents a collection of related devices in the runtime, often
+made up of several individual hardware components working together to enable
+XR experiences.
 An basetype:XrSystemId is returned by flink:xrGetSystem representing the
 system of devices the runtime will use to support a given
 <<form_factor_description,form factor>>.
-Each system may include: a VR/AR display, various forms of input
-(gamepad, touchpad, motion controller), and other trackable objects.
+Each system may include: a VR/AR display, various forms of input (gamepad,
+touchpad, motion controller), and other trackable objects.
 
-The application uses the system to create a <<session,session>>,
-which can then be used to accept input from the user and output rendered frames.
+The application uses the system to create a <<session,session>>, which can
+then be used to accept input from the user and output rendered frames.
 The application also provides a default set of bindings from its actions to
 any number of input sources.
-The runtime may: use this action information to activate only a subset of devices
-and avoid wasting resources on devices that are not in use.
-Exactly which devices are active once an XR system is
-selected will depend on the features provided by the runtime, and may: vary
-from runtime to runtime. For example, a runtime that is capable of mapping from
-one tracking system's space to another's may: support devices from
-multiple tracking systems simultaneously.
+The runtime may: use this action information to activate only a subset of
+devices and avoid wasting resources on devices that are not in use.
+Exactly which devices are active once an XR system is selected will depend
+on the features provided by the runtime, and may: vary from runtime to
+runtime.
+For example, a runtime that is capable of mapping from one tracking system's
+space to another's may: support devices from multiple tracking systems
+simultaneously.
 
 [[form_factor_description]]
 === Form Factors
 
-The first step in selecting a system is for the app to request its desired **form factor**.
-The form factor defines how the display(s) moves in the
-environment relative to the user's head and how the user will interact with the XR experience.
-A runtime may: support multiple form factors,
-such as on a mobile phone that supports both slide-in VR headset experiences and handheld AR experiences.
+The first step in selecting a system is for the app to request its desired
+**form factor**.
+The form factor defines how the display(s) moves in the environment relative
+to the user's head and how the user will interact with the XR experience.
+A runtime may: support multiple form factors, such as on a mobile phone that
+supports both slide-in VR headset experiences and handheld AR experiences.
 
-While an application's core XR rendering may span across form factors,
-its user interface will often be written to target a particular form factor,
+While an application's core XR rendering may span across form factors, its
+user interface will often be written to target a particular form factor,
 requiring explicit tailoring to function well on other form factors.
 For example, screen-space UI designed for a handheld phone will produce an
-uncomfortable experience for users if presented in screen-space on an AR headset.
+uncomfortable experience for users if presented in screen-space on an AR
+headset.
 
 [open,refpage='XrFormFactor',desc='Supported form factors',type='enums',xrefs='XrSystemId xrGetSystem XR_NULL_SYSTEM_ID']
 --
@@ -52,9 +55,11 @@ The predefined form factors which may: be supported by OpenXR runtimes are:
   The user cannot touch the display itself.
   A VR headset would be an example of this form factor.
 * ename:XR_FORM_FACTOR_HANDHELD_DISPLAY.
-  The tracked display is held in the user's hand, independent from the user's head.
+  The tracked display is held in the user's hand, independent from the
+  user's head.
   The user may: be able to touch the display, allowing for screen-space UI.
-  A mobile phone running an AR experience using pass-through video would be an example of this form factor.
+  A mobile phone running an AR experience using pass-through video would be
+  an example of this form factor.
 ****
 --
 
@@ -65,7 +70,8 @@ The predefined form factors which may: be supported by OpenXR runtimes are:
 --
 include::../../generated/api/basetypes/XrSystemId.txt[]
 
-An basetype:XrSystemId is an opaque atom used by the runtime to identify a system.
+An basetype:XrSystemId is an opaque atom used by the runtime to identify a
+system.
 The value dlink:XR_NULL_SYSTEM_ID is considered an invalid system.
 --
 
@@ -73,9 +79,11 @@ The value dlink:XR_NULL_SYSTEM_ID is considered an invalid system.
 --
 include::../../generated/api/defines/XR_NULL_SYSTEM_ID.txt[]
 
-The only basetype:XrSystemId value defined to be constant across all instances is the invalid system dlink:XR_NULL_SYSTEM_ID.
+The only basetype:XrSystemId value defined to be constant across all
+instances is the invalid system dlink:XR_NULL_SYSTEM_ID.
 No supported system is associated with dlink:XR_NULL_SYSTEM_ID.
-Unless explicitly permitted, it should: not be passed to API calls or used as a structure attribute when a valid basetype:XrSystemId is required.
+Unless explicitly permitted, it should: not be passed to API calls or used
+as a structure attribute when a valid basetype:XrSystemId is required.
 --
 
 [open,refpage='xrGetSystem',desc='Gets a system identifier',type='protos',xrefs='XrSystemId XR_NULL_SYSTEM_ID']
@@ -86,20 +94,23 @@ include::../../generated/api/protos/xrGetSystem.txt[]
 
 .Parameter Descriptions
 ****
-* pname:instance is the handle of the instance to get the information from.
-* pname:getInfo is a pointer to an slink:XrSystemGetInfo containing the application's requests for a system.
+* pname:instance is the handle of the instance from which to get the
+  information.
+* pname:getInfo is a pointer to an slink:XrSystemGetInfo structure
+  containing the application's requests for a system.
 * pname:systemId is the returned basetype:XrSystemId.
 ****
 
 To get an basetype:XrSystemId, an application specifies its desired
-<<form_factor_description,form factor>> to flink:xrGetSystem
-and gets the runtime's basetype:XrSystemId associated with that configuration.
+<<form_factor_description,form factor>> to flink:xrGetSystem and gets the
+runtime's basetype:XrSystemId associated with that configuration.
 
-If the form factor is supported but temporarily unavailable, flink:xrGetSystem must:
-return ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
-A runtime may: return success on a subsequent call for a
-form factor it previously returned ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
-For example, connecting or warming up hardware might cause an unavailable form factor to become available.
+If the form factor is supported but temporarily unavailable,
+flink:xrGetSystem must: return ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
+A runtime may: return ename:XR_SUCCESS on a subsequent call for a form
+factor it previously returned ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
+For example, connecting or warming up hardware might cause an unavailable
+form factor to become available.
 
 include::../../generated/validity/protos/xrGetSystem.txt[]
 --
@@ -117,7 +128,8 @@ include::../../generated/api/structs/XrSystemGetInfo.txt[]
 * pname:formFactor is the elink:XrFormFactor requested by the application.
 ****
 
-The slink:XrSystemGetInfo structure specifies attributes about a system as desired by an application.
+The slink:XrSystemGetInfo structure specifies attributes about a system as
+desired by an application.
 
 include::../../generated/validity/structs/XrSystemGetInfo.txt[]
 --
@@ -159,16 +171,15 @@ include::../../generated/api/protos/xrGetSystemProperties.txt[]
 .Parameter Descriptions
 ****
 * pname:instance is the instance from which pname:systemId was retrieved.
-* pname:systemId is the basetype:XrSystemId whose
-  properties will be queried.
-* pname:properties points to an instance of the
-  slink:XrSystemProperties structure, that will be filled with
-  returned information.
+* pname:systemId is the basetype:XrSystemId whose properties will be
+  queried.
+* pname:properties points to an instance of the slink:XrSystemProperties
+  structure, that will be filled with returned information.
 ****
 
-An application can: call flink:xrGetSystemProperties to retrieve
-information about the system such as vendor ID,
-system name, and graphics and tracking properties.
+An application can: call flink:xrGetSystemProperties to retrieve information
+about the system such as vendor ID, system name, and graphics and tracking
+properties.
 
 include::../../generated/validity/protos/xrGetSystemProperties.txt[]
 --
@@ -186,8 +197,10 @@ include::../../generated/api/structs/XrSystemProperties.txt[]
 * pname:vendorId is a unique identifier for the vendor of the system.
 * pname:systemId is the basetype:XrSystemId identifying the system.
 * pname:systemName is a string containing the name of the system.
-* pname:graphicsProperties is an slink:XrSystemGraphicsProperties struct specifying the system graphics properties.
-* pname:trackingProperties is an slink:XrSystemTrackingProperties struct specifying system tracking properties.
+* pname:graphicsProperties is an slink:XrSystemGraphicsProperties structure
+  specifying the system graphics properties.
+* pname:trackingProperties is an slink:XrSystemTrackingProperties structure
+  specifying system tracking properties.
 ****
 
 include::../../generated/validity/structs/XrSystemProperties.txt[]
@@ -201,13 +214,14 @@ include::../../generated/api/structs/XrSystemGraphicsProperties.txt[]
 
 .Member Descriptions
 ****
-* pname:maxSwapchainImageHeight is the maximum swapchain image pixel height supported by
-  this system.
-* pname:maxSwapchainImageWidth is the maximum swapchain image pixel width supported by
-  this system.
-* pname:maxViewCount is maximum number of views possibly required
-  by flink:xrLocateViews.
-* pname:maxLayerCount is the maximum number of composition layers supported by this system.
+* pname:maxSwapchainImageHeight is the maximum swapchain image pixel height
+  supported by this system.
+* pname:maxSwapchainImageWidth is the maximum swapchain image pixel width
+  supported by this system.
+* pname:maxLayerCount is the maximum number of composition layers supported
+  by this system.
+  The runtime must: support at least
+  ename:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
 ****
 
 include::../../generated/validity/structs/XrSystemGraphicsProperties.txt[]
@@ -221,10 +235,12 @@ include::../../generated/api/structs/XrSystemTrackingProperties.txt[]
 
 .Member Descriptions
 ****
-* pname:orientationTracking is set to ename:XR_TRUE to indicate the system supports
-  orientational tracking of the view pose(s), ename:XR_FALSE otherwise.
-* pname:positionTracking is set to ename:XR_TRUE to indicate the system supports
-  positional tracking of the view pose(s), ename:XR_FALSE otherwise.
+* pname:orientationTracking is set to ename:XR_TRUE to indicate the system
+  supports orientational tracking of the view pose(s), ename:XR_FALSE
+  otherwise.
+* pname:positionTracking is set to ename:XR_TRUE to indicate the system
+  supports positional tracking of the view pose(s), ename:XR_FALSE
+  otherwise.
 ****
 
 include::../../generated/validity/structs/XrSystemTrackingProperties.txt[]

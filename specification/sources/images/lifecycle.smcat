@@ -1,0 +1,29 @@
+initial,
+XR_SESSION_STATE_IDLE,
+XR_SESSION_STATE_READY,
+# xrWait/Begin/EndFrame loop
+XR_SESSION_STATE_SYNCHRONIZED,
+rendering {
+    XR_SESSION_STATE_VISIBLE => XR_SESSION_STATE_SYNCHRONIZED : runtime:
+not visible;
+    XR_SESSION_STATE_VISIBLE => XR_SESSION_STATE_FOCUSED : runtime: focused;
+    XR_SESSION_STATE_FOCUSED => XR_SESSION_STATE_VISIBLE : runtime: not focused;
+},
+XR_SESSION_STATE_STOPPING,
+*any*,
+XR_SESSION_STATE_LOSS_PENDING,
+XR_SESSION_STATE_EXITING,
+final;
+
+initial                             => XR_SESSION_STATE_IDLE            : - xrCreateInstance, xrCreateSession;
+XR_SESSION_STATE_IDLE               => XR_SESSION_STATE_READY           : - runtime: session is ready;
+XR_SESSION_STATE_IDLE               => XR_SESSION_STATE_EXITING         : - runtime: user quit request;
+*any*                               => XR_SESSION_STATE_LOSS_PENDING    : - runtime: losing session;
+# optional: xrDestroySession,
+# poll xrCreateSession
+XR_SESSION_STATE_LOSS_PENDING       => final                            : - xrDestroySession;
+XR_SESSION_STATE_EXITING            => final                            : - xrDestroySession, xrDestroyInstance;
+XR_SESSION_STATE_READY              => XR_SESSION_STATE_SYNCHRONIZED    : - xrBeginSession;
+XR_SESSION_STATE_SYNCHRONIZED       => XR_SESSION_STATE_VISIBLE         : - runtime: visible;
+XR_SESSION_STATE_SYNCHRONIZED       => XR_SESSION_STATE_STOPPING        : - runtime: stop session;
+XR_SESSION_STATE_STOPPING           => XR_SESSION_STATE_IDLE            : - xrEndSession;

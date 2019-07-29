@@ -282,9 +282,9 @@ Commands = element commands { CommentAttr?, Command* }
 Command =
     element command {
         attribute errorcodes { ReturnCodes_t }?,
-        attribute externsync { text }?,
         attribute successcodes { ReturnCodes_t }?,
         CommentAttr?,
+
         element proto {
             element type { XrTypeNameRef_t },
             element name { XrFuncName_t }
@@ -299,7 +299,11 @@ Command =
                 ParamOrMemberNameElt,
                 element enum { xsd:NCName }?
             }
-        }*
+        }*,
+
+        element implicitexternsyncparams {
+            element param { text }*
+        }?
     }
 
 # Each <feature> defines the interface of an API version.
@@ -399,8 +403,6 @@ PlatformDefinesName = "openxr_platform_defines"
 # Data types - all end in _t
 MemberOrParamName_t =
     xsd:NCName { pattern = "[a-z]+([A-Z]+[a-z]*)*" }
-    | # TODO Remove workaround - see issue 914
-      "screen_number"
 VendorId_t = xsd:ID { pattern = "[A-Z]+" }
 VendorIdRef_t = xsd:IDREF { pattern = "[A-Z]+" }
 HexValue_t = xsd:token { pattern = "0[xX][0-9a-fA-F]+" }

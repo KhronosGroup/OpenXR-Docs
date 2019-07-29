@@ -11,11 +11,13 @@ include::../meta/XR_KHR_composition_layer_depth.adoc[]
     Martin Renschler, Qualcomm
 
 *Overview*
-This extension defines an extra layer type which allows applications to submit 
-valid depth buffers along with
-images submitted in projection layers, i.e. slink:XrCompositionLayerProjection.
 
-The XR runtime may: use this information to perform more accurate reprojections taking depth into account.
+This extension defines an extra layer type which allows applications to
+submit valid depth buffers along with images submitted in projection layers,
+i.e. slink:XrCompositionLayerProjection.
+
+The XR runtime may: use this information to perform more accurate
+reprojections taking depth into account.
 
 *New Object Types*
 
@@ -33,8 +35,9 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrCompositionLayerDepthInfoKHR',desc='Depth map layer info',type='structs',xrefs='XrCompositionLayerProjectionView XrCompositionLayerProjection XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
 --
-When submitting depth buffers along with projection layers, add the slink:XrCompositionLayerDepthInfoKHR to the pname:next chain
-for all slink:XrCompositionLayerProjectionView structures in the given layer.
+When submitting depth buffers along with projection layers, add the
+slink:XrCompositionLayerDepthInfoKHR to the pname:next chain for all
+slink:XrCompositionLayerProjectionView structures in the given layer.
 
 The slink:XrCompositionLayerDepthInfoKHR structure is defined as:
 
@@ -44,17 +47,32 @@ include::../../../../generated/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:subImage identifies the depth image slink:XrSwapchainSubImage to be associated with the color swapchain. The contained pname:imageRect specifies the valid portion of the depth image to use, in pixels. The contained pname:imageArrayIndex is the depth image array index, with 0 meaning the first or only array element.
-* pname:minDepth and pname:maxDepth are the range of depth values the pname:depthSwapchain could have, in the range of [eq]#[0.0,1.0]#.
-This is akin to min and max values of OpenGL's fname:glDepthRange, but with the requirement here that [eq]#maxDepth >= minDepth#.
-* pname:nearZ is the positive distance in meters of the minDepth value in the depth swapchain.
-Apps may: use a nearZ that is greater than farZ to indicate depth values are reversed. nearZ can be infinite.
-* pname:farZ is the positive distance in meters of the maxDepth value in the depth swapchain. farZ can be infinite.
-Apps must: not use the same value as nearZ.
+* pname:subImage identifies the depth image slink:XrSwapchainSubImage to be
+  associated with the color swapchain.
+  The contained pname:imageRect specifies the valid portion of the depth
+  image to use, in pixels.
+  The contained pname:imageArrayIndex is the depth image array index, with 0
+  meaning the first or only array element.
+* pname:minDepth and pname:maxDepth are the range of depth values the
+  pname:depthSwapchain could have, in the range of [eq]#[0.0,1.0]#.
+  This is akin to min and max values of OpenGL's fname:glDepthRange, but
+  with the requirement here that [eq]#maxDepth {geq} minDepth#.
+* pname:nearZ is the positive distance in meters of the pname:minDepth value
+  in the depth swapchain.
+  Apps may: use a pname:nearZ that is greater than pname:farZ to indicate
+  depth values are reversed.
+  pname:nearZ can be infinite.
+* pname:farZ is the positive distance in meters of the pname:maxDepth value
+  in the depth swapchain.
+  pname:farZ can be infinite.
+  Apps must: not use the same value as pname:nearZ.
 ****
 
-slink:XrCompositionLayerDepthInfoKHR contains the information needed to specify an extra layer with depth information. When submitting depth buffers along with projection layers, add the slink:XrCompositionLayerDepthInfoKHR to the pname:next chain
-for all slink:XrCompositionLayerProjectionView structures in the given layer.
+slink:XrCompositionLayerDepthInfoKHR contains the information needed to
+specify an extra layer with depth information.
+When submitting depth buffers along with projection layers, add the
+slink:XrCompositionLayerDepthInfoKHR to the pname:next chain for all
+slink:XrCompositionLayerProjectionView structures in the given layer.
 
 include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.txt[]
 --
@@ -77,4 +95,4 @@ include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.t
 ** changed depthSwapchain/depthImageRect/depthImageArrayIndex +
 to slink:XrSwapchainSubImage
 ** reformat and spec language changes
-** removed vendor specific terminology 
+** removed vendor specific terminology

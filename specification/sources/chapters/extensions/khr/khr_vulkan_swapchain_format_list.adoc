@@ -10,20 +10,25 @@ include::../meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
 
 *Overview*
 
-Vulkan has the ename:VK_KHR_image_format_list extension which allows applications
-to tell the fname:vkCreateImage function which formats the application intends to use
-when ename:VK_IMAGE_USAGE_MUTABLE_FORMAT_BIT is specified. This OpenXR extension
-exposes that Vulkan extension to OpenXR applications. In the same way that a
-Vulkan-based application can pass a sname:VkImageFormatListCreateInfo struct to the
-fname:vkCreateImage function, an OpenXR application can pass an identically configured
-slink:XrVulkanSwapchainFormatListCreateInfoKHR struct to flink:xrCreateSwapchain.
+Vulkan has the ename:VK_KHR_image_format_list extension which allows
+applications to tell the fname:vkCreateImage function which formats the
+application intends to use when ename:VK_IMAGE_USAGE_MUTABLE_FORMAT_BIT is
+specified.
+This OpenXR extension exposes that Vulkan extension to OpenXR applications.
+In the same way that a Vulkan-based application can pass a
+sname:VkImageFormatListCreateInfo struct to the fname:vkCreateImage
+function, an OpenXR application can pass an identically configured
+slink:XrVulkanSwapchainFormatListCreateInfoKHR structure to
+flink:xrCreateSwapchain.
 
-Applications using this extension to specify more than one swapchain format must
-create OpenXR swapchains with the ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT bit set.
+Applications using this extension to specify more than one swapchain format
+must create OpenXR swapchains with the
+ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT bit set.
 
-Runtimes implementing this extension must: support the `<<XR_KHR_vulkan_enable>>`
-extension and add ename:VK_KHR_image_format_list to the list returned by flink:xrGetVulkanDeviceExtensionsKHR,
-as the runtime will need to use that Vulkan extension.
+Runtimes implementing this extension must: support the
+`<<XR_KHR_vulkan_enable>>` extension and add ename:VK_KHR_image_format_list
+to the list returned by flink:xrGetVulkanDeviceExtensionsKHR, as the runtime
+will need to use that Vulkan extension.
 
 *New Object Types*
 
@@ -50,7 +55,8 @@ include::../../../../generated/api/structs/XrVulkanSwapchainFormatListCreateInfo
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:viewFormatCount is the number of view formats passed in pname:viewFormats.
+* pname:viewFormatCount is the number of view formats passed in
+  pname:viewFormats.
 * pname:viewFormats is an array of sname:VkFormat.
 ****
 
@@ -66,4 +72,5 @@ include::../../../../generated/validity/structs/XrVulkanSwapchainFormatListCreat
 * Revision 1, 2017-09-13 (Paul Pedriana)
 ** Initial proposal.
 * Revision 2, 2018-06-21 (Bryce Hutchings)
-** Update reference of `XR_KHR_vulkan_extension_requirements` to `XR_KHR_vulkan_enable`
+** Update reference of `XR_KHR_vulkan_extension_requirements` to
+   `XR_KHR_vulkan_enable`

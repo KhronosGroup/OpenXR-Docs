@@ -24,6 +24,7 @@ Asciidoctor::Extensions.register do
     inline_macro OptionalInlineMacro
     inline_macro RequiredInlineMacro
     inline_macro ShouldInlineMacro
+    inline_macro ReflinkInlineMacro
     inline_macro FlinkInlineMacro
     inline_macro FnameInlineMacro
     inline_macro FtextInlineMacro

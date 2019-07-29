@@ -1,24 +1,25 @@
 include::../meta/XR_KHR_android_thread_settings.adoc[]
 
 *Last Modified Date*::
-    2019-01-24
+    2019-07-17
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Cass Everitt, Oculus +
     Johannes van Waveren, Oculus +
-    Martin Renschler, Qualcomm
+    Martin Renschler, Qualcomm +
+    Krzysztof Kosiński, Google
 
 :INCS-VAR: ../../../../generated
 
 
 *Overview*
 
-For XR to be comfortable, it is important for applications to deliver
-frames quickly and consistently. In order to
-make sure the important application threads get their full share of time, these
-threads must be identified to the system, which will adjust their
-scheduling priority accordingly.
+For XR to be comfortable, it is important for applications to deliver frames
+quickly and consistently.
+In order to make sure the important application threads get their full share
+of time, these threads must be identified to the system, which will adjust
+their scheduling priority accordingly.
 
 *New Object Types*
 
@@ -34,8 +35,8 @@ elink:XrResult enumeration is extended with:
 *New Enums*
 [open,refpage='XrAndroidThreadTypeKHR',desc='Enum describing Android thread types',type='enums']
 --
-The possible thread types are specified by the
-elink:XrAndroidThreadTypeKHR enumeration:
+The possible thread types are specified by the elink:XrAndroidThreadTypeKHR
+enumeration:
 
 include::{INCS-VAR}/api/enums/XrAndroidThreadTypeKHR.txt[]
 
@@ -46,9 +47,11 @@ include::{INCS-VAR}/api/enums/XrAndroidThreadTypeKHR.txt[]
 * ename:XR_ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR +
   hints the XR runtime that the thread is doing time critical CPU tasks
 * ename:XR_ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR +
-  hints the XR runtime that the thread is doing background graphics device tasks
+  hints the XR runtime that the thread is doing background graphics device
+  tasks
 * ename:XR_ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR +
-  hints the XR runtime that the thread is doing time critical graphics device tasks
+  hints the XR runtime that the thread is doing time critical graphics
+  device tasks
 ****
 --
 
@@ -57,22 +60,26 @@ include::{INCS-VAR}/api/enums/XrAndroidThreadTypeKHR.txt[]
 *New Functions*
 [open,refpage='xrSetAndroidApplicationThreadKHR',desc='declare threads to be of a certain priority type',type='protos',xrefs='']
 --
-To declare a thread to be of a certain elink:XrAndroidThreadTypeKHR type call:
+To declare a thread to be of a certain elink:XrAndroidThreadTypeKHR type
+call:
 
 include::{INCS-VAR}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
 
 .Parameter Descriptions
 ****
 * pname:session is a valid slink:XrSession handle.
-* pname:threadType is a classification of the declared thread
-  allowing the XR runtime to apply the relevant priority and attributes.
-  If such settings fail, the error ename:XR_ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR
-  is returned.
-* pname:threadId is the thread id of the declared thread. If thread Id is invalid
-  the error ename:XR_ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR is returned.
+* pname:threadType is a classification of the declared thread allowing the
+  XR runtime to apply the relevant priority and attributes.
+  If such settings fail, the runtime must: return
+  ename:XR_ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR.
+* pname:threadId is the kernel thread ID of the declared thread, as returned
+  by `gettid()` or `android.os.process.myTid()`.
+  If the thread ID is invalid, the runtime must: return
+  ename:XR_ERROR_ANDROID_THREAD_SETTINGS_ID_INVALID_KHR.
 ****
 
-flink:xrSetAndroidApplicationThreadKHR allows to declare an XR-critical thread and to classify it.
+flink:xrSetAndroidApplicationThreadKHR allows to declare an XR-critical
+thread and to classify it.
 
 include::{INCS-VAR}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
 --
@@ -84,6 +91,9 @@ include::{INCS-VAR}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
 * Revision 2, 2017-10-31 (Armelle Laine)
 ** Move the performance settings to EXT extension.
 * Revision 3, 2018-12-20 (Paul Pedriana)
-** Revised the error code naming to use KHR and renamed xrSetApplicationThreadKHR -> flink:xrSetAndroidApplicationThreadKHR.
+** Revised the error code naming to use KHR and renamed
+   xrSetApplicationThreadKHR -> flink:xrSetAndroidApplicationThreadKHR.
 * Revision 4, 2019-01-24 (Martin Renschler)
 ** Added enum specification, reformatting
+* Revision 5, 2019-07-17 (Krzysztof Kosiński)
+** Clarify the type of thread identifier used by the extension.

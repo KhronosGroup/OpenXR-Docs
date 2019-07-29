@@ -149,10 +149,18 @@ grep_sources \
     "This should be spelled OpenXR" \
     '[Oo]penXr'
 
-# AsciiDoctor markup error
+# AsciiDoctor markup errors
 grep_sources \
     "ifdef/endif/include lines must end in []" \
     "^(ifdef|endif|include)::[^[]+$"
+
+grep_sources \
+    "Should only have a single colon following the name of a markup macro" \
+    '(.link|.name|.text|code|basetype)::'
+
+grep_sources \
+    "Probable misspelling of basetype:" \
+    '\bbasetpe:'
 
 # Style guide section 5.1.6
 grep_sources \
@@ -193,6 +201,10 @@ grep_sources \
     "Per the style guide, the text NULL should be marked up as code:NULL" \
     '`NULL`'
 
+grep_sources \
+    "Typo: the the" \
+    '\b[tT]he [tT]he\b'
+
 GREPCMD="grep -P" grep_sources \
     "No TODO without associated issue notated as TODO(i/issuenum)" \
     '[tT][oO][dD][oO](?!.*\(i/[0-9]+)'
@@ -208,6 +220,55 @@ grep_sources \
 grep_sources \
     "We have no members called sType, just type." \
     '\bsType\b'
+
+grep_sources \
+    "We use 2D, 3D, 4D etc... over 2d, 3d, 4d" \
+    '\b[0-9]d\b'
+
+grep_sources \
+    "Remove comma after e.g." \
+    '\b[Ee][.]g[.],'
+
+grep_sources \
+    "Remove comma after i.e." \
+    '\b[Ii][.]e[.],'
+
+
+grep_sources \
+    "Spell it i.e." \
+    '\b[Ii]e\b'
+
+grep_sources \
+    "Spell it e.g." \
+    '\b[Ee]g\b'
+
+grep_sources \
+    "Put the word 'function' after the identifier" \
+    '\bThe function flink:\b'
+
+grep_sources \
+    "Put the word 'structure' after the identifier" \
+    '\bThe structure slink:\b'
+
+grep_sources \
+    "Put the full word 'structure' after the identifier" \
+    "\bslink:[a-zA-Z0-9]+ struct\b"
+
+grep_sources \
+    "Put the word 'structure' after the identifier" \
+    "The slink:[a-zA-Z0-9]+ is defined as"
+
+grep_sources \
+    "Put the word 'function' after the identifier" \
+    "The flink:[a-zA-Z0-9]+ is defined as"
+
+grep_sources \
+    "Remove the word 'follows'" \
+    "structure is defined as follows"
+
+grep_sources \
+    "Remove the word 'follows'" \
+    "function is defined as follows"
 
 #grep_sources \
 #    "test" \
