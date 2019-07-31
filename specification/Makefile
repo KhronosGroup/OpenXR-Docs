@@ -450,7 +450,7 @@ check-spec-links:
 # Meta "build approximately everything spec-specific required to pass CI" target
 all:
 	$(QUIET)$(MAKE) check-spec-links # recursive to cause csl to run first for better errors messages, without adding bogus depends.
-	$(QUIET)$(MAKE) header header-test html pdf styleguide loader build-examples
+	$(QUIET)$(MAKE) header header-test html pdf build-examples
 	$(ECHO) ""
 	$(ECHO) "Target 'all': Completed specification build and basic checks successfully."
 .PHONY: all
