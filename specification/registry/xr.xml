@@ -972,9 +972,9 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <type category="struct" name="XrSpatialAnchorCreateInfoMSFT">
             <member values="XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_MSFT"><type>XrStructureType</type><name>type</name></member>
             <member>const <type>void</type>* <name>next</name></member>
-            <member><type>XrSpace</type><name>space</name></member>
-            <member><type>XrPosef</type><name>pose</name></member>
-            <member><type>XrTime</type><name>time</name></member>
+            <member><type>XrSpace</type>     <name>space</name></member>
+            <member><type>XrPosef</type>     <name>pose</name></member>
+            <member><type>XrTime</type>      <name>time</name></member>
         </type>
         <type category="struct" name="XrSpatialAnchorSpaceCreateInfoMSFT">
             <member values="XR_TYPE_ACTION_SPACE_CREATE_INFO"><type>XrStructureType</type> <name>type</name></member>
@@ -2319,7 +2319,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <command name="xrCreateSpatialAnchorSpaceMSFT" />
             <command name="xrDestroySpatialAnchorMSFT" />
             <enum offset="0" extends="XrObjectType" name="XR_OBJECT_TYPE_SPATIAL_ANCHOR_MSFT" comment="XrSpatialAnchorMSFT" />
-            <enum offset="1" dir="-" extends="XrResult" name="XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT" comment="Spatial anchor could not be created at that location.">
+            <enum offset="1" dir="-" extends="XrResult" name="XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT" comment="Spatial anchor could not be created at that location." />
         </require>
     </extension>
 
