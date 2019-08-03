@@ -711,7 +711,7 @@ for one particular application-generated frame.
 An accurate and consistent display time across all stages and threads in the
 engine pipeline is important to avoid object motion judder.
 If the application has multiple pipeline stages, the application should pass
-its computed display time through its pipeline, as xrWaitFrame must be
+its computed display time through its pipeline, as flink:xrWaitFrame must be
 called only once per frame.
 ====
 
@@ -1299,12 +1299,13 @@ their assets and rendering techniques differently based on the blend mode
 they choose.
 For example, a black shadow rendered using the
 ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE blend mode will appear transparent,
-and so an app in that mode may: render a glow as a grounding effect around
-the black shadow to ensure the shadow can be seen.
-Similarly, an app designed for ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE
-rendering may: choose to leave garbage in their alpha channel as a side
-effect of a rendering optimization, but this garbage would appear as visible
-display artifacts if the environment blend mode was instead
+and so an application in that mode may: render a glow as a grounding effect
+around the black shadow to ensure the shadow can be seen.
+Similarly, an application designed for
+ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE rendering may: choose to leave
+garbage in their alpha channel as a side effect of a rendering optimization,
+but this garbage would appear as visible display artifacts if the
+environment blend mode was instead
 ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND.
 
 Not all systems will support all environment blend modes.
@@ -1317,14 +1318,14 @@ ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes.
 
 For devices that can support multiple environment blend modes, such as AR
 phones with video passthrough, the runtime may: optimize power consumption
-on the device in response to the environment blend mode that the app chooses
-each frame.
-For example, if an app on a video passthrough phone knows that it is
+on the device in response to the environment blend mode that the application
+chooses each frame.
+For example, if an application on a video passthrough phone knows that it is
 currently rendering a 360-degree background covering all screen pixels, it
 can submit frames with an environment blend mode of
 ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE, saving the runtime the cost of
-compositing a camera-based underlay of the physical world behind the app's
-layers.
+compositing a camera-based underlay of the physical world behind the
+application's layers.
 
 
 [open,refpage='xrEnumerateEnvironmentBlendModes',desc='Lists environment blend modes',type='protos',xrefs='XrEnvironmentBlendMode']

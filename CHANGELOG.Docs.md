@@ -9,7 +9,33 @@ collecting together the resolution of many Khronos internal issues,
 along with any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
-headers, and/or specification
+headers, and/or specification text.
+
+## OpenXR 1.0.1 release (2-August-2019)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.1.
+
+### Public issues
+
+- #25 - Fix `make all` in the absence of styleguide and loader doc.
+- #26 - Proposal for unbounded space and spatial anchor extensions (vendor extensions)
+
+### Internal issues
+
+- Replace remaining mentions of "app" with "application" (internal MR 1468)
+- Makefile cleanups (internal MR 1469, 1489)
+- Typographical fixes (internal MR 1490)
+- Reserve Oculus extension numbers (internal MR 1493)
+- Add Monado headless (vendor extension) (internal MR 1482)
+- Generated header files removed from `OpenXR-Docs` repo.
+
+### New extensions
+
+- `XR_MND_headless`
+- `XR_MSFT_spatial_anchor`
+- `XR_MSFT_unbounded_reference_space`
 
 ## OpenXR 1.0.0 release (29-July-2019)
 

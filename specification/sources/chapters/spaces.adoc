@@ -109,11 +109,11 @@ Runtimes must: support this reference space.
   gravity-aligned to exclude pitch and roll, with +Y up, +X to the right,
   and -Z forward.
   This space locks in both its initial position and orientation, which the
-  runtime may: define to be either the initial position at app launch or
-  some other calibrated zero position.
+  runtime may: define to be either the initial position at application
+  launch or some other calibrated zero position.
 +
-`LOCAL` space is useful when an app needs to render *seated-scale* content
-that is not positioned relative to the physical floor.
+`LOCAL` space is useful when an application needs to render *seated-scale*
+content that is not positioned relative to the physical floor.
 +
 When a user needs to recenter `LOCAL` space, a runtime may: offer some
 system-level recentering interaction that is transparent to the application,
@@ -150,12 +150,12 @@ Runtimes must: support this reference space.
   The runtime may: not be able to locate spaces relative to the `STAGE`
   reference space if the user has not yet defined one within the
   runtime-specific UI.
-  Apps can use flink:xrGetReferenceSpaceBoundsRect to determine the extents
-  of the `STAGE` reference space's XZ bounds rectangle, if defined.
+  Applications can use flink:xrGetReferenceSpaceBoundsRect to determine the
+  extents of the `STAGE` reference space's XZ bounds rectangle, if defined.
 +
-`STAGE` space is useful when an app needs to render *standing-scale* content
-(no bounds) or *room-scale* content (with bounds) that is relative to the
-physical floor.
+`STAGE` space is useful when an application needs to render *standing-scale*
+content (no bounds) or *room-scale* content (with bounds) that is relative
+to the physical floor.
 +
 When the user redefines the origin or bounds of the current `STAGE` space,
 or the runtime otherwise switches to a new `STAGE` definition, the runtime
@@ -207,7 +207,8 @@ pname:bounds will be set to 0.
 
 The returned extents are expressed relative to the natural origin of the
 provided elink:XrReferenceSpaceType and must: not incorporate any origin
-offsets specified by the app during calls to flink:xrCreateReferenceSpace.
+offsets specified by the application during calls to
+flink:xrCreateReferenceSpace.
 
 The runtime must: return ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED if the
 elink:XrReferenceSpaceType passed in pname:createInfo is not supported by
@@ -244,16 +245,16 @@ runtime otherwise switching to a different space definition.
 The reference space change must: only take effect for flink:xrLocateSpace or
 flink:xrLocateViews calls whose basetype:XrTime parameter is greater than or
 equal to the pname:changeTime provided in that event.
-Runtimes should: provide a pname:changeTime to apps that allows for a deep
-render pipeline to present frames that are already in flight using the
-previous definition of the space.
+Runtimes should: provide a pname:changeTime to applications that allows for
+a deep render pipeline to present frames that are already in flight using
+the previous definition of the space.
 Runtimes should: choose a pname:changeTime that is midway between the
-pname:displayTime of future frames to avoid threshold issues with apps that
-calculate future frame times using pname:displayPeriod.
+pname:displayTime of future frames to avoid threshold issues with
+applications that calculate future frame times using pname:displayPeriod.
 
 The pname:pose provided here must: only describe the change in the natural
 origin of the reference space and must: not incorporate any origin offsets
-specified by the app during calls to flink:xrCreateReferenceSpace.
+specified by the application during calls to flink:xrCreateReferenceSpace.
 If the runtime does not know the location of the space's new origin relative
 to its previous origin, pname:poseValid must: be false, and the position and
 orientation of pname:poseInPreviousSpace are undefined.

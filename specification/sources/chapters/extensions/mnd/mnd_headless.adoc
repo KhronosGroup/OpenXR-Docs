@@ -1,0 +1,71 @@
+include::../meta/XR_MND_headless.adoc[]
+
+*Last Modified Date*::
+    2019-07-25
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Ryan Pavlik, Collabora
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright license to incorporate this submission into
+// other works it controls as it desires."
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+Some applications may wish to access XR interaction devices without
+presenting any image content on the display(s).
+This extension provides a mechanism for writing such an application using
+the OpenXR API.
+It modifies the specification in the following ways, without adding any new
+named entities.
+
+
+* When this extension is enabled, an application may: call
+  flink:xrCreateSession without an stext:XrGraphicsBinding* structure in its
+  pname:next chain.
+  In this case, the runtime must: create a "headless" session that does not
+  interact with the display.
+* In a headless session, the session state should: proceed to
+  ename:XR_SESSION_STATE_READY directly from ename:XR_SESSION_STATE_IDLE.
+* In a headless session, the
+  slink:XrSessionBeginInfo::pname:primaryViewConfigurationType must: be
+  ignored and may: be `0`.
+* In a headless session, the session state proceeds to
+  ename:XR_SESSION_STATE_SYNCHRONIZED, then ename:XR_SESSION_STATE_VISIBLE
+  and ename:XR_SESSION_STATE_FOCUSED, after the call to
+  flink:xrBeginSession.
+  The application does not need to call flink:xrWaitFrame,
+  flink:xrBeginFrame, or flink:xrEndFrame, unlike with non-headless
+  sessions.
+* In a headless session, flink:xrEnumerateSwapchainFormats must: return
+  ename:XR_SUCCESS but enumerate `0` formats.
+
+Because flink:xrWaitFrame is not required, an application using a headless
+session should: sleep periodically to avoid consuming all available system
+resources in a busy-wait loop.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+* Not all devices with which this would be useful fit into one of the
+  existing elink:XrFormFactor values.
+
+*Version History*
+
+* Revision 1, 2019-07-25 (Ryan Pavlik)
+** Initial version reflecting Monado prototype.

@@ -26,14 +26,10 @@ set -e
 (
     cd $(dirname $0)
     # Generate extension lists from xr.xml
-    python3 scripts/make_ext_dependency.py -outscript=generated/extDependency.sh
-    # make generated/extDependency.sh || exit
+    make out/extDependency.sh || exit
 
     # Load extension lists
-    source generated/extDependency.sh
-    rm generated/extDependency.sh
+    source out/extDependency.sh
 
-
-    make clean_generated
     make EXTENSIONS="$khrExts" APITITLE="(with all KHR extensions)" $*
 )

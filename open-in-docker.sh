@@ -16,19 +16,17 @@
 # https://github.com/KhronosGroup/DockerContainers
 
 # This image/tag is generated from https://github.com/KhronosGroup/DockerContainers/blob/master/Dockerfile.openxr
+# Purpose: Spec (pdf/html) generation
 IMAGE_NAME=khronosgroup/docker-images:openxr
-MOUNTPOINT=/openxr
+MOUNTPOINT=$(pwd)
 
 set -e
-(
-    cd $(dirname $0)
-    # docker pull $IMAGE_NAME
-    uid=$(id -u)
-    gid=$(id -g)
-    USER_ID_ARGS="-e USER_ID=$uid -e GROUP_ID=$gid"
-    docker run -it --rm \
-      ${USER_ID_ARGS} \
-      -e CONTAINER_CWD=$MOUNTPOINT \
-      --mount type=bind,source=$(pwd),target=$MOUNTPOINT \
-      $IMAGE_NAME
-)
+# docker pull $IMAGE_NAME
+uid=$(id -u)
+gid=$(id -g)
+USER_ID_ARGS="-e USER_ID=$uid -e GROUP_ID=$gid"
+docker run -it --rm \
+    ${USER_ID_ARGS} \
+    -e CONTAINER_CWD=$MOUNTPOINT \
+    --mount type=bind,source=$MOUNTPOINT,target=$MOUNTPOINT \
+    $IMAGE_NAME "$@"

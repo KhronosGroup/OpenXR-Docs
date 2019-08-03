@@ -4,24 +4,26 @@ include::../meta/XR_MSFT_spatial_anchor.adoc[]
 
 [open,refpage='XrSpatialAnchorMSFT',type='handles',desc='Represents a spatial anchor']
 --
-This extension allows an application to create a **spatial anchor**,
-an arbitrary freespace point in the user's physical environment that will then
+This extension allows an application to create a **spatial anchor**, an
+arbitrary freespace point in the user's physical environment that will then
 be tracked by the runtime.
-The runtime should: then adjust the position and orientation of that anchor's origin
-over time as needed, independently of all other spaces and anchors, to ensure that it
-maintains its original mapping to the real world.
+The runtime should: then adjust the position and orientation of that
+anchor's origin over time as needed, independently of all other spaces and
+anchors, to ensure that it maintains its original mapping to the real world.
 
 include::../../../../generated/api/handles/XrSpatialAnchorMSFT.txt[]
 
-Spatial anchors are often used in combination with an `UNBOUNDED_MSFT` reference space.
-`UNBOUNDED_MSFT` reference spaces adjust their origin as necessary
-to keep the viewer's coordinates relative to the space's origin stable.
-Such adjustments maintain the visual stability of content currently near the viewer,
-but may cause content placed far from the viewer to drift in its alignment to the real world
-by the time the user moves close again.
-By creating an `XrSpatialAnchorMSFT` where a piece of content is placed and then always
-rendering that content relative to its anchor's space,
-an application can ensure that each piece of content stays at a fixed location in the environment.
+Spatial anchors are often used in combination with an `UNBOUNDED_MSFT`
+reference space.
+`UNBOUNDED_MSFT` reference spaces adjust their origin as necessary to keep
+the viewer's coordinates relative to the space's origin stable.
+Such adjustments maintain the visual stability of content currently near the
+viewer, but may cause content placed far from the viewer to drift in its
+alignment to the real world by the time the user moves close again.
+By creating an `XrSpatialAnchorMSFT` where a piece of content is placed and
+then always rendering that content relative to its anchor's space, an
+application can ensure that each piece of content stays at a fixed location
+in the environment.
 --
 
 
@@ -34,24 +36,25 @@ include::../../../../generated/api/protos/xrCreateSpatialAnchorMSFT.txt[]
 .Parameter Descriptions
 ****
 * pname:session is a handle to an slink:XrSession.
-* pname:createInfo is a pointer to an slink:XrSpatialAnchorCreateInfoMSFT structure
-  containing information about how to create the anchor.
+* pname:createInfo is a pointer to an slink:XrSpatialAnchorCreateInfoMSFT
+  structure containing information about how to create the anchor.
 * pname:session is a pointer to a handle in which the created
   slink:XrSpatialAnchorMSFT is returned.
 ****
 
 Creates an slink:XrSpatialAnchorMSFT handle representing a spatial anchor
 that will track a fixed location in the physical world over time.
-That real-world location is specified by the position and orientation of
-the specified pname:pose within pname:space at pname:time.
+That real-world location is specified by the position and orientation of the
+specified pname:pose within pname:space at pname:time.
 
 If pname:space cannot be located relative to the environment at the moment
-of the call to flink:xrCreateSpatialAnchorMSFT, the runtime must: return ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT.
+of the call to flink:xrCreateSpatialAnchorMSFT, the runtime must: return
+ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT.
 
 After the anchor is created, the runtime should: then adjust its position
-and orientation over time relative to other spaces so as to maintain maximum alignment
-to its original real-world location, even if that changes the anchor's
-relationship to the original pname:space used to initialize it.
+and orientation over time relative to other spaces so as to maintain maximum
+alignment to its original real-world location, even if that changes the
+anchor's relationship to the original pname:space used to initialize it.
 
 include::../../../../generated/validity/protos/xrCreateSpatialAnchorMSFT.txt[]
 --
@@ -66,7 +69,8 @@ include::../../../../generated/api/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:space is a handle to the slink:XrSpace in which pname:pose is specified.
+* pname:space is a handle to the slink:XrSpace in which pname:pose is
+  specified.
 * pname:pose is the slink:XrPosef within pname:space at pname:time that
   specifies the point in the real world used to initialize the new anchor.
 * pname:time is the basetype:XrTime at which pname:pose will be evaluated
@@ -85,21 +89,24 @@ include::../../../../generated/api/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
 .Parameter Descriptions
 ****
 * pname:session is a handle to an slink:XrSession.
-* pname:createInfo is a pointer to an slink:XrSpatialAnchorSpaceCreateInfoMSFT structure
-  containing information about how to create the anchor.
-* pname:space is a pointer to a handle in which the created
-  slink:XrSpace is returned.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialAnchorSpaceCreateInfoMSFT structure containing information
+  about how to create the anchor.
+* pname:space is a pointer to a handle in which the created slink:XrSpace is
+  returned.
 ****
 
 Creates an slink:XrSpace handle based on a spatial anchor.
 Application can: provide an slink:XrPosef to define the position and
-orientation of the new space's origin relative to the anchor's natural origin.
+orientation of the new space's origin relative to the anchor's natural
+origin.
 
-Multiple slink:XrSpace handles may exist for a given slink:XrSpatialAnchorMSFT simultaneously,
-up to some limit imposed by the runtime.
+Multiple slink:XrSpace handles may exist for a given
+slink:XrSpatialAnchorMSFT simultaneously, up to some limit imposed by the
+runtime.
 The slink:XrSpace handle must be eventually freed via the
-flink:xrDestroySpace function or by destroying the parent slink:XrSpatialAnchorMSFT
-handle.
+flink:xrDestroySpace function or by destroying the parent
+slink:XrSpatialAnchorMSFT handle.
 
 include::../../../../generated/validity/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
 --
@@ -114,10 +121,11 @@ include::../../../../generated/api/structs/XrSpatialAnchorSpaceCreateInfoMSFT.tx
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:anchor is a handle to an slink:XrSpatialAnchorMSFT previously created with
-  flink:xrCreateSpatialAnchorMSFT.
+* pname:anchor is a handle to an slink:XrSpatialAnchorMSFT previously
+  created with flink:xrCreateSpatialAnchorMSFT.
 * pname:poseInAnchorSpace is an slink:XrPosef defining the position and
-  orientation of the new space's origin relative to the anchor's natural origin.
+  orientation of the new space's origin relative to the anchor's natural
+  origin.
 ****
 
 include::../../../../generated/validity/structs/XrSpatialAnchorSpaceCreateInfoMSFT.txt[]
@@ -131,13 +139,14 @@ include::../../../../generated/api/protos/xrDestroySpatialAnchorMSFT.txt[]
 
 .Parameter Descriptions
 ****
-* pname:anchor is a handle to an slink:XrSpatialAnchorMSFT previously created by
-  flink:xrCreateSpatialAnchorMSFT.
+* pname:anchor is a handle to an slink:XrSpatialAnchorMSFT previously
+  created by flink:xrCreateSpatialAnchorMSFT.
 ****
 
-slink:XrSpatialAnchorMSFT handles are destroyed using flink:xrDestroySpatialAnchorMSFT.
-By destroying an anchor, the runtime can: stop spending resources used to maintain tracking
-for that anchor's origin.
+slink:XrSpatialAnchorMSFT handles are destroyed using
+flink:xrDestroySpatialAnchorMSFT.
+By destroying an anchor, the runtime can: stop spending resources used to
+maintain tracking for that anchor's origin.
 
 include::../../../../generated/validity/protos/xrDestroySpatialAnchorMSFT.txt[]
 --
@@ -150,11 +159,17 @@ slink:XrSpatialAnchorMSFT
 
 *New Enum Constants*
 
-ename:XR_OBJECT_TYPE_SPATIAL_ANCHOR_MSFT
+elink:XrObjectType enumeration is extended with:
 
-ename:XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_MSFT
+* ename:XR_OBJECT_TYPE_SPATIAL_ANCHOR_MSFT
 
-ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_MSFT
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT
 
 *New Enums*
 

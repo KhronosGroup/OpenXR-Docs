@@ -2,37 +2,41 @@ include::../meta/XR_MSFT_unbounded_reference_space.adoc[]
 
 *Overview*
 
-This extension allows an application to create an `UNBOUNDED_MSFT` reference space.
-This reference space enables the viewer to move freely through a complex environment,
-often many meters from where they started, while always optimizing
-for coordinate system stability near the viewer.
-This is done by allowing the origin of the reference space to drift as necessary
-to keep the viewer's coordinates relative to the space's origin stable.
+This extension allows an application to create an `UNBOUNDED_MSFT` reference
+space.
+This reference space enables the viewer to move freely through a complex
+environment, often many meters from where they started, while always
+optimizing for coordinate system stability near the viewer.
+This is done by allowing the origin of the reference space to drift as
+necessary to keep the viewer's coordinates relative to the space's origin
+stable.
 
-To create an `UNBOUNDED_MSFT` reference space, the application can:
-pass ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT to flink:xrCreateReferenceSpace.
+To create an `UNBOUNDED_MSFT` reference space, the application can: pass
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT to
+flink:xrCreateReferenceSpace.
 
 The `UNBOUNDED_MSFT` reference space establishes a world-locked origin,
-gravity-aligned to exclude pitch and roll, with +Y up, +X to the right,
-and -Z forward.
-This space begins with an arbitrary initial position and orientation, which the
-runtime may: define to be either the initial position at app launch or
+gravity-aligned to exclude pitch and roll, with +Y up, +X to the right, and
+-Z forward.
+This space begins with an arbitrary initial position and orientation, which
+the runtime may: define to be either the initial position at app launch or
 some other initial zero position.
-Unlike a `STAGE` reference space, the runtime may: place the origin of an `UNBOUNDED_MSFT`
-reference space at any height, rather than fixing it at the floor.
-This is because the viewer may move through various rooms and levels of their
-environment, each of which has a different floor height.
+Unlike a `STAGE` reference space, the runtime may: place the origin of an
+`UNBOUNDED_MSFT` reference space at any height, rather than fixing it at the
+floor.
+This is because the viewer may move through various rooms and levels of
+their environment, each of which has a different floor height.
 Runtimes should: not automatically adjust the position of the origin when
 the viewer moves to a room with a different floor height.
 
-`UNBOUNDED_MSFT` space is useful when an app needs to render *world-scale* content
-that spans beyond the bounds of a single `STAGE`,
-for example, an entire floor or multiple floors of a building.
+`UNBOUNDED_MSFT` space is useful when an app needs to render *world-scale*
+content that spans beyond the bounds of a single `STAGE`, for example, an
+entire floor or multiple floors of a building.
 
-An `UNBOUNDED_MSFT` space maintains stability near the viewer by slightly adjusting
-its origin over time.  The runtime must: not queue the
-slink:XrEventDataReferenceSpaceChangePending event in response to these
-minor adjustments.
+An `UNBOUNDED_MSFT` space maintains stability near the viewer by slightly
+adjusting its origin over time.
+The runtime must: not queue the slink:XrEventDataReferenceSpaceChangePending
+event in response to these minor adjustments.
 
 When views, controllers or other spaces experience tracking loss relative to
 the `UNBOUNDED_MSFT` space, runtimes should: continue to provide inferred or
@@ -50,26 +54,35 @@ inferred or last-known in this way.
 When tracking is recovered, runtimes should: snap the pose of other spaces
 back into position relative to the `UNBOUNDED_MSFT` space's original origin.
 However, if tracking recovers into a new tracking volume in which the
-original origin can no longer be located (e.g. the viewer moved through
-a dark hallway and regained tracking in a new room), the runtime may: recenter
-the origin arbitrarily, for example moving the origin to coincide with the viewer.
+original origin can no longer be located (e.g. the viewer moved through a
+dark hallway and regained tracking in a new room), the runtime may: recenter
+the origin arbitrarily, for example moving the origin to coincide with the
+viewer.
 If such recentering occurs, the runtime must: queue the
-slink:XrEventDataReferenceSpaceChangePending event with pname:poseValid set to false.
+slink:XrEventDataReferenceSpaceChangePending event with pname:poseValid set
+to false.
 
-If the viewer moves far enough away from the origin of an `UNBOUNDED_MSFT` reference space
-that floating point error would introduce noticeable error when locating the viewer
-within that space, the runtime may: recenter the space's origin to a new location
-closer to the viewer.  If such recentering occurs, the runtime must: queue the
-slink:XrEventDataReferenceSpaceChangePending event with pname:poseValid set to true.
+If the viewer moves far enough away from the origin of an `UNBOUNDED_MSFT`
+reference space that floating point error would introduce noticeable error
+when locating the viewer within that space, the runtime may: recenter the
+space's origin to a new location closer to the viewer.
+If such recentering occurs, the runtime must: queue the
+slink:XrEventDataReferenceSpaceChangePending event with pname:poseValid set
+to true.
 
-Runtimes must: support the `UNBOUNDED_MSFT` reference space when this extension is enabled.
+Runtimes must: support the `UNBOUNDED_MSFT` reference space when this
+extension is enabled.
+
+
 *New Object Types*
 
 *New Flag Types*
 
 *New Enum Constants*
 
-ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT
+elink:XrReferenceSpaceType enumeration is extended with:
+
+* ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_MSFT
 
 *New Enums*
 

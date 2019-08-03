@@ -59,13 +59,13 @@ include::../../../../generated/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
   with the requirement here that [eq]#maxDepth {geq} minDepth#.
 * pname:nearZ is the positive distance in meters of the pname:minDepth value
   in the depth swapchain.
-  Apps may: use a pname:nearZ that is greater than pname:farZ to indicate
-  depth values are reversed.
+  Applications may: use a pname:nearZ that is greater than pname:farZ to
+  indicate depth values are reversed.
   pname:nearZ can be infinite.
 * pname:farZ is the positive distance in meters of the pname:maxDepth value
   in the depth swapchain.
   pname:farZ can be infinite.
-  Apps must: not use the same value as pname:nearZ.
+  Applications must: not use the same value as pname:nearZ.
 ****
 
 slink:XrCompositionLayerDepthInfoKHR contains the information needed to

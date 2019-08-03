@@ -208,7 +208,7 @@ of runtimes, graphics platforms, or operating systems.
 Therefore, an application should: first query which extensions are available
 before enabling.
 
-The application queries the available list of extensions using the the
+The application queries the available list of extensions using the
 flink:xrEnumerateInstanceExtensionProperties function.
 Once an application determines which target extensions are supported, it
 can: enable some subset of them during the call to flink:xrCreateInstance.
@@ -644,11 +644,11 @@ the two categories below.
 .Return Code Categories
 ****
 * Successful completion codes are returned when a function needs to
-communicate success or status information.
-All successful completion codes are non-negative values.
+  communicate success or status information.
+  All successful completion codes are non-negative values.
 * Run time error codes are returned when a function needs to communicate a
-failure that could only be detected at run time.
-All run time error codes are negative values.
+  failure that could only be detected at run time.
+  All run time error codes are negative values.
 ****
 
 [open,refpage='XrResult',desc='Result codes',type='enums']

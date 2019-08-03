@@ -49,6 +49,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <tag name="INTEL"      author="Intel"                   contact="Javier Martinez @javier"/>
         <tag name="KHR"        author="Khronos"                 contact="Nick Whiting @whitingn"/>
         <tag name="LUNARG"     author="LunarG"                  contact="Mark Young @marky_lunarg, Karl Schultz @karlschultz"/>
+        <tag name="MND"        author="Monado Project"          contact="Ryan Pavlik @rpavlik"/>
         <tag name="MSFT"       author="Microsoft"               contact="Alex Turner @alexturn, Yin Li @yl_msft, Bryce Hutchings @brycehutchings, Lachlan Ford @laford_msft, Minmin Gong @gongminmin "/>
         <tag name="NV"         author="NVIDIA Corporation"      contact="Satish Salian @ssalian, Robert Menzel"/>
         <tag name="OCULUS"     author="Oculus"                  contact="Cass Everitt @casseveritt, Paul Pedriana @ppedriana"/>
@@ -111,7 +112,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         updates them automatically by processing a line at a time.
         -->
         <type category="define">// OpenXR current version number.
-#define <name>XR_CURRENT_API_VERSION</name> <type>XR_MAKE_VERSION</type>(1, 0, 0)</type>
+#define <name>XR_CURRENT_API_VERSION</name> <type>XR_MAKE_VERSION</type>(1, 0, 1)</type>
 
         <!-- 
         NOTE: For avoidance of ambiguity, there should only be 1 <name> tag immediately in
@@ -2323,5 +2324,25 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
+    <extension name="XR_OCULUS_extension_41" number="41" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_OCULUS_extension_41_SPEC_VERSION"/>
+            <enum value="&quot;XR_OCULUS_extension_41&quot;" name="XR_OCULUS_EXTENSION_41_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_OCULUS_extension_42" number="42" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_OCULUS_extension_42_SPEC_VERSION"/>
+            <enum value="&quot;XR_OCULUS_extension_42&quot;" name="XR_OCULUS_EXTENSION_42_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MND_headless" number="43" type="instance" supported="openxr">
+        <require>
+            <enum value="1" name="XR_MND_headless_SPEC_VERSION"/>
+            <enum value="&quot;XR_MND_headless&quot;" name="XR_MND_HEADLESS_EXTENSION_NAME"/>
+        </require>
+    </extension>
     </extensions>
 </registry>

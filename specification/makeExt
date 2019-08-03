@@ -31,12 +31,10 @@ set -e
 (
     cd $(dirname $0)
     # Generate extension lists from xr.xml
-    python3 scripts/make_ext_dependency.py -outscript=generated/extDependency.sh
-    # make generated/extDependency.sh || exit
+    make out/extDependency.sh || exit
 
     # Load extension lists
-    source generated/extDependency.sh
-    rm generated/extDependency.sh
+    source out/extDependency.sh
 
     extension=$1
     shift
@@ -57,9 +55,6 @@ set -e
             done
         fi
     done
-
-    # There have been requests for this to be optional.
-    make clean_generated
 
     # Something weird in bash quoting requires this two-step process to define
     # EXTENSIONS to make.

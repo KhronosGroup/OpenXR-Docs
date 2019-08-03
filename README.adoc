@@ -26,7 +26,7 @@ README.adoc           This file
 COPYING.md            Copyright and licensing information
 CODE_OF_CONDUCT.md    Code of Conduct
 specification/        Specification - files to generate the spec
-include/openxr/       OpenXR headers, generated from the Registry
+include/openxr/       Static OpenXR header (not generated from the Registry)
 ```
 
 == Building the Specification and Reference Pages, and Regenerating Headers

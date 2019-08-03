@@ -26,15 +26,15 @@ Once the runtime is synchronized with the application's frame loop and ready
 to display its frames, the session will move into the
 ename:XR_SESSION_STATE_SYNCHRONIZED state.
 For frames where flink:xrWaitFrame returns an slink:XrFrameState with
-pname:shouldRender set to true, the app should render its composition layers
-and submit them to flink:xrEndFrame.
+pname:shouldRender set to true, the application should render its
+composition layers and submit them to flink:xrEndFrame.
 If the application desires to leave a running session, it should call the
 flink:xrRequestExitSession function to request that the runtime transition
 its session to the ename:XR_SESSION_STATE_STOPPING state as soon as
 possible.
-Once the app reaches the ename:XR_SESSION_STATE_STOPPING state, it can call
-flink:xrEndSession to stop the XR session, after which the session will
-transition through ename:XR_SESSION_STATE_IDLE to the
+Once the application reaches the ename:XR_SESSION_STATE_STOPPING state, it
+can call flink:xrEndSession to stop the XR session, after which the session
+will transition through ename:XR_SESSION_STATE_IDLE to the
 ename:XR_SESSION_STATE_EXITING state.
 
 [[session_running]]A session is considered **running** after a successful
@@ -392,7 +392,7 @@ The application does this by successfully calling flink:xrBeginSession and
 then running its frame loop by calling flink:xrWaitFrame, flink:xrBeginFrame
 and flink:xrEndFrame in a loop.
 If the runtime wishes to return the session to the
-ename:XR_SESSION_STATE_IDLE state, it must: wait until the app calls
+ename:XR_SESSION_STATE_IDLE state, it must: wait until the application calls
 flink:xrBeginSession.
 After returning from the flink:xrBeginSession call, the runtime may then
 immediately transition forward through the
@@ -428,13 +428,13 @@ frames.
 The application should: continue running its frame loop, rendering and
 submitting its composition layers, although it may wish to pause its
 experience, as users cannot interact with the application at this time.
-It is important for apps to continue rendering when visible, even when they
-do not have focus, so the user continues to see something reasonable
-underneath modal pop-ups.
-Runtimes should: make input actions inactive during while the app is
-unfocused, and apps should react to an inactive input action by skipping
-rendering of that action's input avatar (depictions of hands or other
-tracked objects controlled by the user).
+It is important for applications to continue rendering when visible, even
+when they do not have focus, so the user continues to see something
+reasonable underneath modal pop-ups.
+Runtimes should: make input actions inactive during while the application is
+unfocused, and applications should react to an inactive input action by
+skipping rendering of that action's input avatar (depictions of hands or
+other tracked objects controlled by the user).
 
 Receiving the ename:XR_SESSION_STATE_FOCUSED state indicates that the
 application has synchronized its frame loop with the runtime, the session's
