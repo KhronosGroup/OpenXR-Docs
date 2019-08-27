@@ -1,0 +1,110 @@
+include::../meta/XR_OCULUS_android_session_state_enable.adoc[]
+
+*Overview*
+
+This extension enables the integration of the Android session lifecycle and
+an OpenXR runtime session state.
+Some OpenXR runtimes may require this extension to transition the
+application to the session READY or STOPPING state.
+
+Applications that run on an Android system with this extension enabled have
+a different OpenXR Session state flow.
+
+On Android, it is the Android Activity lifecycle that will dictate when the
+system is ready for the application to begin or end its session, not the
+runtime.
+
+When XR_OCULUS_android_session_state is enabled, the following changes are
+made to Session State handling:
+
+- The runtime does not determine when the application's session should be
+moved to the ready state, ename:XR_SESSION_STATE_READY.
+The application should not wait to receive the ename:XR_SESSION_STATE_READY
+session state changed event before beginning a session.
+Instead, the application should begin their session once there is a surface
+and the activity is resumed.
+
+- The application should not call flink:xrRequestExitSession to request the
+session move to the stopping state, ename:XR_SESSION_STATE_STOPPING.
+flink:xrRequestExitSession will return ename:XR_ERROR_VALIDATION_FAILURE if
+called.
+
+- The application should not wait to receive the
+ename:XR_SESSION_STATE_STOPPING session state changed event before ending a
+session.
+Instead, the application should end its session once the surface is
+destroyed or the activity is paused.
+
+- The runtime will not transition to ename:XR_SESSION_STATE_READY or
+ename:XR_SESSION_STATE_STOPPING as the state is implicit from the Android
+activity and surface lifecycles.
+
+
+*Android Activity life cycle*
+
+An Android Activity can only be in the session running state while the
+activity is in the resumed state.
+The following shows how beginning and ending an XR session fits into the
+Android Activity life cycle.
+
+[source]
+----
+	1.  VrActivity::onCreate() <---------+
+	2.  VrActivity::onStart() <-------+  |
+	3.  VrActivity::onResume() <---+  |  |
+	4.  xrBeginSession()           |  |  |
+	5.  xrEndSession()             |  |  |
+	6.  VrActivity::onPause() -----+  |  |
+	7.  VrActivity::onStop() ---------+  |
+	8.  VrActivity::onDestroy() ---------+
+----
+
+*Android Surface life cycle*
+
+An Android Activity can only be in the session running state while there is
+a valid Android Surface.
+The following shows how beginning and ending an XR session fits into the
+Android Surface life cycle.
+
+[source]
+----
+	1.  VrActivity::surfaceCreated() <----+
+	2.  VrActivity::surfaceChanged()      |
+	3.  xrBeginSession()                  |
+	4.  xrEndSession()                    |
+	5.  VrActivity::surfaceDestroyed() ---+
+----
+
+Note that the life cycle of a surface is not necessarily tightly coupled
+with the life cycle of an activity.
+These two life cycles may interleave in complex ways.
+Usually surfaceCreated() is called after onResume() and surfaceDestroyed()
+is called between onPause() and onDestroy().
+However, this is not guaranteed and, for instance, surfaceDestroyed() may be
+called after onDestroy() or even before onPause().
+
+An Android Activity is only in the resumed state with a valid Android
+Surface between surfaceChanged() or onResume(), whichever comes last, and
+surfaceDestroyed() or onPause(), whichever comes first.
+In other words, a XR application will typically begin the session from
+surfaceChanged() or onResume(), whichever comes last, and end the session
+from surfaceDestroyed() or onPause(), whichever comes first.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2019-08-16 (Cass Everitt)
+** Initial extension description

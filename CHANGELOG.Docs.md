@@ -11,6 +11,26 @@ along with any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR 1.0.2 release (27-August-2019)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.2.
+
+### Public issues
+
+- Pull request #30 - Fix parameter name typo in XR_MSFT_spatial_anchor
+
+### Internal issues
+
+- Enhance xml_consistency script. (Internal MR 1526)
+- Sync scripts from Vulkan. (Internal MR 1514)
+- Port the equivalent of Vulkan's internal MR 3319 to OpenXR,
+  affecting empty bitmask generated implicit valid usage. (Internal MR 1513)
+- Fix error in extension-added function. (Internal MR 1510)
+- Add Oculus Android extension. (Internal MR 1518)
+- Reserve additional extension number for Oculus. (Internal MR 1517)
+
 ## OpenXR 1.0.1 release (2-August-2019)
 
 Patch release for the 1.0 series.

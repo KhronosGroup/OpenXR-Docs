@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-SHELL = /bin/bash
+SHELL = /usr/bin/env bash
 
 QUIET      ?= @
 PYTHON     ?= python3
@@ -43,7 +43,7 @@ ifneq (,$(strip $(VERY_STRICT)))
 ASCIIDOC := $(ASCIIDOC) --failure-level WARN
 endif
 
-SPECREVISION = 1.0.1
+SPECREVISION = 1.0.2
 REVISION_COMPONENTS = $(subst ., ,$(SPECREVISION))
 MAJORMINORVER = $(word 1,$(REVISION_COMPONENTS)).$(word 2,$(REVISION_COMPONENTS))
 
@@ -446,9 +446,9 @@ CHECK_SPEC_LINKS_SCRIPT = $(CURDIR)/scripts/check_spec_links.py --ignore_count=0
 # Would like those in the logs, but not in the count for build-breaking.
 
 check-spec-links:
-	$(QUIET)$(CHECK_MARKUP_SCRIPT) -Werror
-	$(QUIET)$(PYTHON) $(CHECK_SPEC_LINKS_SCRIPT)
-	$(QUIET)env FAIL_IF_COULD_NOT_VALIDATE=false ./checkXml.sh
+	$(QUIET)if [ -f $(CHECK_MARKUP_SCRIPT) ] && [ -f $(SPECSRC) ]; then $(CHECK_MARKUP_SCRIPT) -Werror; fi
+	$(QUIET)if [ -f $(SPECSRC) ]; then $(PYTHON) $(CHECK_SPEC_LINKS_SCRIPT); fi
+	$(QUIET)if [ -f checkXml.sh ] && [ -f registry/registry.rnc ]; then env FAIL_IF_COULD_NOT_VALIDATE=false ./checkXml.sh; fi
 	$(QUIET)$(PYTHON) $(SCRIPTS)/xml_consistency.py
 
 .PHONY: check-spec-links
