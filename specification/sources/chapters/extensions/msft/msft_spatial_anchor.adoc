@@ -38,7 +38,7 @@ include::../../../../generated/api/protos/xrCreateSpatialAnchorMSFT.txt[]
 * pname:session is a handle to an slink:XrSession.
 * pname:createInfo is a pointer to an slink:XrSpatialAnchorCreateInfoMSFT
   structure containing information about how to create the anchor.
-* pname:session is a pointer to a handle in which the created
+* pname:anchor is a pointer to a handle in which the created
   slink:XrSpatialAnchorMSFT is returned.
 ****
 
