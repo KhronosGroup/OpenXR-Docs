@@ -914,6 +914,9 @@ ename:XR_ERROR_LAYER_INVALID must: be returned if an unknown, unsupported
 layer type, or code:NULL pointer is passed as one of the
 slink:XrFrameEndInfo::layers.
 
+ename:XR_ERROR_LAYER_INVALID must: be returned if a layer references a
+swapchain that has no released swapchain image.
+
 ename:XR_ERROR_LAYER_LIMIT_EXCEEDED must: be returned if
 slink:XrFrameEndInfo::layerCount exceeds
 slink:XrSystemGraphicsProperties::maxLayerCount or if the runtime is unable

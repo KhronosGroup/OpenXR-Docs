@@ -11,6 +11,25 @@ along with any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR 1.0.3 release (7-October-2019)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.3.
+
+- OpenXR-SDK-Source PR #139 - Write output atomically at the end of generator scripts
+
+### Internal issues
+
+- Spec
+  - Clarify what happens when a swapchain that has never been released is passed
+    to `xrEndFrame`. (internal MR 1569, internal issue 1121)
+  - Remove duplicated paragraph in `XR_KHR_vulkan_enable` (internal MR 1543)
+- Registry
+  - Add `XR_EXT_view_configuration_depth_range` extension (internal MR 1502,
+    internal issue 1201)
+  - Reserve a Monado extension (internal MR 1541)
+
 ## OpenXR 1.0.2 release (27-August-2019)
 
 Patch release for the 1.0 series.

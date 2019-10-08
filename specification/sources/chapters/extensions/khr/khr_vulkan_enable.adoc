@@ -314,14 +314,6 @@ include::../../../../generated/api/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
   detailed description of retrieving the required pname:buffer size.
 ****
 
-The flink:xrGetVulkanGraphicsDeviceKHR function identifies to the
-application what graphics device (Vulkan sname:VkPhysicalDevice) needs to be
-used.
-flink:xrGetVulkanGraphicsDeviceKHR must be called prior to calling
-flink:xrCreateSession, and the sname:VkPhysicalDevice that
-flink:xrGetVulkanGraphicsDeviceKHR returns should be passed to
-flink:xrCreateSession.
-
 include::../../../../generated/validity/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
 --
 
