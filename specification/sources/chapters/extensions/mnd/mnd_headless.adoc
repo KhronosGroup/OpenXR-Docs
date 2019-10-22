@@ -1,7 +1,7 @@
 include::../meta/XR_MND_headless.adoc[]
 
 *Last Modified Date*::
-    2019-07-25
+    2019-10-22
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -43,6 +43,12 @@ named entities.
   sessions.
 * In a headless session, flink:xrEnumerateSwapchainFormats must: return
   ename:XR_SUCCESS but enumerate `0` formats.
+* flink:xrWaitFrame must: set slink:XrFrameState::pname:shouldRender to
+  code:XR_FALSE in a headless session.
+  The VISIBLE and FOCUSED states are only used for their input-related
+  semantics, not their rendering-related semantics, and these functions are
+  permitted to allow minimal change between headless and non-headless code
+  if desired.
 
 Because flink:xrWaitFrame is not required, an application using a headless
 session should: sleep periodically to avoid consuming all available system
@@ -69,3 +75,6 @@ resources in a busy-wait loop.
 
 * Revision 1, 2019-07-25 (Ryan Pavlik)
 ** Initial version reflecting Monado prototype.
+* Revision 2, 2019-10-22 (Ryan Pavlik)
+** Clarify that `xrWaitFrame` is permitted and should set `shouldRender` to
+   false.
