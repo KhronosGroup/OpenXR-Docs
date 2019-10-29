@@ -77,6 +77,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <type requires="EGL/egl.h" name="EGLDisplay"/>
         <type requires="EGL/egl.h" name="EGLConfig"/>
         <type requires="EGL/egl.h" name="EGLContext"/>
+        <type requires="EGL/egl.h" name="PFNEGLGETPROCADDRESSPROC"/>
         <type requires="GL/glxext.h" name="GLXFBConfig"/>
         <type requires="GL/glxext.h" name="GLXDrawable"/>
         <type requires="GL/glxext.h" name="GLXContext"/>
@@ -995,6 +996,15 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <member><type>XrPosef</type>                         <name>poseInAnchorSpace</name></member>
         </type>
 
+        <!-- types for XR_MND_egl_enable -->
+        <type category="struct" name="XrGraphicsBindingEGLMND" structextends="XrSessionCreateInfo">
+            <member values="XR_TYPE_GRAPHICS_BINDING_EGL_MND"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member><type>PFNEGLGETPROCADDRESSPROC</type> <name>getProcAddress</name></member>
+            <member><type>EGLDisplay</type> <name>display</name></member>
+            <member><type>EGLConfig</type> <name>config</name></member>
+            <member><type>EGLContext</type> <name>context</name></member>
+        </type>
     </types>
 
     <!-- SECTION: OpenXR enumerant (token) definitions. -->
@@ -2384,6 +2394,15 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <enum value="&quot;XR_EXT_view_configuration_depth_range&quot;" name="XR_EXT_VIEW_CONFIGURATION_DEPTH_RANGE_EXTENSION_NAME"/>
             <enum offset="0" extends="XrStructureType" name="XR_TYPE_VIEW_CONFIGURATION_DEPTH_RANGE_EXT"/>
             <type name="XrViewConfigurationDepthRangeEXT"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MND_egl_enable" number="48" type="instance" protect="XR_USE_PLATFORM_EGL" supported="openxr">
+        <require>
+            <enum value="1" name="XR_MND_egl_enable_SPEC_VERSION"/>
+            <enum value="&quot;XR_MND_egl_enable&quot;" name="XR_MND_EGL_ENABLE_EXTENSION_NAME"/>
+            <enum offset="4" extends="XrStructureType" name="XR_TYPE_GRAPHICS_BINDING_EGL_MND"/>
+            <type name="XrGraphicsBindingEGLMND"/>
         </require>
     </extension>
 
