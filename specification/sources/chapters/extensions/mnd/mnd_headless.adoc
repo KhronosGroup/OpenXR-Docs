@@ -44,7 +44,7 @@ named entities.
 * In a headless session, flink:xrEnumerateSwapchainFormats must: return
   ename:XR_SUCCESS but enumerate `0` formats.
 * flink:xrWaitFrame must: set slink:XrFrameState::pname:shouldRender to
-  code:XR_FALSE in a headless session.
+  ename:XR_FALSE in a headless session.
   The VISIBLE and FOCUSED states are only used for their input-related
   semantics, not their rendering-related semantics, and these functions are
   permitted to allow minimal change between headless and non-headless code

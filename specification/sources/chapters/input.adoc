@@ -720,19 +720,19 @@ include::../../generated/api/structs/XrInteractionProfileState.txt[]
 * pname:next is code:NULL or a pointer to an extension-specific structure.
 * pname:interactionProfile is the basetype:XrPath of the interaction profile
   path for the pname:topLevelUserPath used to retrieve this state, or
-  code:XR_PATH_NULL if there is no active interaction profile at that top
+  dlink:XR_NULL_PATH if there is no active interaction profile at that top
   level user path.
 ****
 
 The runtime must: only include interaction profiles that the application has
 provided bindings for via flink:xrSuggestInteractionProfileBindings or
-code:XR_PATH_NULL.
+dlink:XR_NULL_PATH.
 If the runtime is rebinding an interaction profile provided by the
 application to a device that the application did not provide bindings for,
 it must: return the interaction profile path that it is emulating.
 If the runtime is unable to provide input because it cannot emulate any of
 the application-provided interaction profiles, it must: return
-code:XR_PATH_NULL.
+dlink:XR_NULL_PATH.
 
 include::../../generated/validity/structs/XrInteractionProfileState.txt[]
 --
@@ -1273,11 +1273,15 @@ include::../../generated/api/structs/XrActiveActionSet.txt[]
 ****
 * pname:actionSet is the handle of the action set to activate.
 * pname:subactionPath is a subaction path that was declared when one or more
-  actions in the action set was created or code:XR_PATH_NULL if the actions
-  in this action set were not declared with subaction paths.
+  actions in the action set was created or dlink:XR_NULL_PATH.
   If the application wants to activate the action set on more than one
   subaction path, it can: include additional slink:XrActiveActionSet structs
   with the other pname:subactionPath values.
+  Using dlink:XR_NULL_PATH as the value for pname:subactionPath, acts as a
+  wildcard for all subaction paths on the actions in the action set.
+  If the subaction path was not specified on any of the actions in the
+  actionSet when that action was created, the runtime must: return
+  ename:XR_ERROR_PATH_UNSUPPORTED.
 ****
 
 This structure defines a single active action set and subaction path

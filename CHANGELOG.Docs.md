@@ -1,15 +1,44 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
-Update log for the OpenXR-Docs and OpenXR-Registry repos on GitHub.
-Updates are in reverse chronological order starting with the latest public release.
+Update log for the OpenXR-Docs and OpenXR-Registry repos on GitHub. Updates are
+in reverse chronological order starting with the latest public release.
 
-This summarizes the periodic public updates, not individual commits. Updates
-on GitHub are generally done as single large patches at the release point,
-collecting together the resolution of many Khronos internal issues,
-along with any public pull requests that have been accepted.
+This summarizes the periodic public updates, not individual commits. Updates on
+GitHub are generally done as single large patches at the release point,
+collecting together the resolution of many Khronos internal issues, along with
+any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR 1.0.4 release (21-November-2019)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.4.
+
+### GitHub Pull Requests
+
+- Spec
+  - Clarify Monado headless extension behavior related to `xrWaitFrame`
+    <https://github.com/KhronosGroup/OpenXR-Docs/pull/38>
+- Registry
+  - Reserve a Monado EGL extension
+    <https://github.com/KhronosGroup/OpenXR-Docs/pull/39>
+
+### Internal issues
+
+- General, Build, Other
+  - Remove unused/unneeded files (internal MR 1609)
+- Spec
+  - Clarify subaction path description for XrActiveActionSet (internal MR 1592,
+    internal issues 1243 and 1244)
+  - Resolve misleading use of `xrLocateViews` before `xrWaitFrame` in helloXR
+    and spec (internal MR 1584, internal issue 1227, public issue
+    <https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/134>)
+- Registry
+  - Add `XR_EXT_conformance_automation` extension, for use **only** by
+    conformance testing (internal MR 1577, 1608)
 
 ## OpenXR 1.0.3 release (7-October-2019)
 
