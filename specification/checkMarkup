@@ -205,6 +205,10 @@ grep_sources \
     "Typo: the the" \
     '\b[tT]he [tT]he\b'
 
+grep_sources \
+    "Typo: and and" \
+    '\b[aA]nd [aA]nd\b'
+
 GREPCMD="grep -P" grep_sources \
     "No TODO without associated issue notated as TODO(i/issuenum)" \
     '[tT][oO][dD][oO](?!.*\(i/[0-9]+)'

@@ -11,6 +11,23 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR 1.0.5 release (6-December-2019)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.5.
+
+### Internal issues
+
+- Registry
+  - Reserve Microsoft extension numbers (Internal MR 1613)
+- Spec
+  - Clarify degree to which `xrWaitFrame` is decoupled from
+    `xrBeginFrame`/`xrEndFrame` (internal issue 1246, internal MR 1595)
+  - Typo fixed in `XrCompositionLayerQuad` docs.
+    <https://github.com/KhronosGroup/OpenXR-Docs/issues/24> (internal issue
+    1254)
+
 ## OpenXR 1.0.4 release (21-November-2019)
 
 Patch release for the 1.0 series.

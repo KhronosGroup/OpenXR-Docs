@@ -3,7 +3,8 @@ ifdef::doctype-manpage[]
 .Note
 ****
 This belongs to the `<<XR_EXT_conformance_automation>>` extension.
-This extension is **not** intended for use by non-conformance-test applications.
+This extension is **not** intended for use by non-conformance-test
+applications.
 A runtime may: require a runtime-specified configuration such as a
 "developer mode" to be enabled before reporting support for this extension
 or providing a non-stub implementation of it.

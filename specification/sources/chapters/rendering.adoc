@@ -695,6 +695,9 @@ processor contention between the application and the compositor.
 
 flink:xrWaitFrame must: be callable from any thread, including a different
 thread than flink:xrBeginFrame/flink:xrEndFrame are being called from.
+Runtimes must: not block indefinitely on a second flink:xrWaitFrame call in
+the absence of flink:xrBeginFrame/flink:xrEndFrame calls but may do so on
+subsequent flink:xrWaitFrame calls.
 
 Calling flink:xrWaitFrame must: be externally synchronized by the
 application, concurrent calls may: result in undefined behavior.
@@ -1237,7 +1240,7 @@ include::../../generated/api/structs/XrCompositionLayerQuad.txt[]
 * pname:subImage is the image layer slink:XrSwapchainSubImage to use.
 * pname:pose is an slink:XrPosef defining the position and orientation of
   the quad in the reference frame of the pname:space.
-* pname:size is the width and and height of the quad in meters.
+* pname:size is the width and height of the quad in meters.
 ****
 
 The slink:XrCompositionLayerQuad layer is useful for user interface elements
