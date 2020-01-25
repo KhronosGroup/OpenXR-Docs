@@ -1,0 +1,60 @@
+include::../meta/XR_EXT_win32_appcontainer_compatible.adoc[]
+
+*Last Modified Date*::
+    2019-12-16
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Yin Li, Microsoft +
+    Alex Turner, Microsoft +
+    Lachlan Ford, Microsoft +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+To minimize opportunities for malicious manipulation, a common practice on
+the Windows OS is to isolate the application process in an [AppContainer
+execution environment]
+(https://docs.microsoft.com/en-us/windows/win32/secauthz/appcontainer-isolation).
+In order for a runtime to work properly in such an application process, the
+runtime must: properly [set ACL to device resources and cross process
+resources]
+(https://docs.microsoft.com/en-us/windows/win32/secauthz/implementing-an-appcontainer).
+
+An application running in an AppContainer process can: request for a runtime
+to enable such AppContainer compatibility by adding
+ename:XR_EXT_WIN32_APPCONTAINER_COMPATIBLE_EXTENSION_NAME to
+pname:enabledExtensionNames of slink:XrInstanceCreateInfo when calling
+flink:xrCreateInstance.
+If the runtime is not capable of running properly within the AppContainer
+execution environment, it must: return ename:XR_ERROR_EXTENSION_NOT_PRESENT.
+
+If the runtime supports this extension, it can: further inspect the
+capability based on the connected device.
+If the XR system cannot support an AppContainer execution environment, the
+runtime must: return ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE when the
+application calls flink:xrGetSystem.
+
+If the call to flink:xrGetSystem successfully returned with a valid
+basetype:XrSystemId, the application can: rely on the runtime working
+properly in the AppContainer execution environment.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2019-12-16 (Yin Li)
+** Initial proposal.

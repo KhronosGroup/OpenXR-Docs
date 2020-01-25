@@ -11,6 +11,37 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR 1.0.6 release (24-January-2020)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.6.
+
+### Internal issues
+
+- Registry
+  - Fix typo in visibility mesh enum comment.
+- Scripts
+  - Fix comment typos.
+  - Sync scripts with Vulkan. (internal MR 1625)
+  - Sort the names of APIs in generated "See also" lists for deterministic
+    results. (internal MR 1622)
+- Spec
+  - Fix reference in `xrGetCurrentInteractionProfile` spec to a path format that
+    doesn't exist. (internal issue 1221, internal MR 1565)
+  - Fix missing `back` button in Oculus Go controller interaction profile.
+  - Add text about OpenGL context currentness on other threads. (internal MR
+    1614)
+  - Fix typo in `XR_SESSION_STATE_VISIBLE` description (internal issue 1294,
+    internal MR 1630)
+  - Add `XR_EXT_win32_appcontainer_compatible` extension.
+  - Clarify error code when using interaction profile that's not in the spec.
+    (internal issue 1272, internal MR 1615)
+
+### New extensions in 1.0.6
+
+- `XR_EXT_win32_appcontainer_compatible`
+
 ## OpenXR 1.0.5 release (6-December-2019)
 
 Patch release for the 1.0 series.
@@ -62,6 +93,8 @@ Updates version to 1.0.4.
 Patch release for the 1.0 series.
 
 Updates version to 1.0.3.
+
+### Public issues
 
 - OpenXR-SDK-Source PR #139 - Write output atomically at the end of generator scripts
 
@@ -131,8 +164,9 @@ Users of the provisional release should migrate to 1.0.
 ## Change log for OpenXR 0.90.1 provisional spec update (8-May-2019)
 
 No API changes, and only minimal consistency changes to the spec/registry.
-Mostly an update for tooling, layers, loader, and sample code.
-Header version has been bumped to 43, but no symbols that should have actually been in use have changed.
+Mostly an update for tooling, layers, loader, and sample code. Header version
+has been bumped to 43, but no symbols that should have actually been in use have
+changed.
 
 The OpenXR-Docs repo now contains the scripts and sources needed to build
 the specification output files.
@@ -140,13 +174,17 @@ the specification output files.
 ### Internal Issues
 
 - General, Build, Other
-  - Unify (for the most part) the OpenXR and Vulkan generator scripts. (internal MR 1166)
-  - Avoid dllexport for all apps compiled with `openxr_platform_defines.h` (internal MR 1187)
+  - Unify (for the most part) the OpenXR and Vulkan generator scripts. (internal
+    MR 1166)
+  - Avoid dllexport for all apps compiled with `openxr_platform_defines.h`
+    (internal MR 1187)
 - API Registry and Headers
   - Remove impossible and undocumented error codes. (internal MR 1185 and 1189)
-  - Mark layers in `XrFrameEndInfo` as optional. (internal MR 1151, internal issue 899)
+  - Mark layers in `XrFrameEndInfo` as optional. (internal MR 1151, internal
+    issue 899)
   - Remove unused windows types from `openxr_platform.h` (internal MR 1197)
-  - Make `openxr_platform.h` include `openxr.h` on which it depends. (internal MR 1140, internal issue 918)
+  - Make `openxr_platform.h` include `openxr.h` on which it depends. (internal
+    MR 1140, internal issue 918)
   - Remove unused, undocumented defines. (internal MR 1238, internal issue 1012)
 
 ## OpenXR 0.90.0 - Initial public provisional release at GDC

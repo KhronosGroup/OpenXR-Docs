@@ -431,7 +431,7 @@ experience, as users cannot interact with the application at this time.
 It is important for applications to continue rendering when visible, even
 when they do not have focus, so the user continues to see something
 reasonable underneath modal pop-ups.
-Runtimes should: make input actions inactive during while the application is
+Runtimes should: make input actions inactive while the application is
 unfocused, and applications should react to an inactive input action by
 skipping rendering of that action's input avatar (depictions of hands or
 other tracked objects controlled by the user).

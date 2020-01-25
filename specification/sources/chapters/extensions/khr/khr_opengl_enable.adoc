@@ -9,7 +9,8 @@ include::../meta/XR_KHR_opengl_enable.adoc[]
     Bryce Hutchings, Microsoft +
     Paul Pedriana, Oculus +
     Minmin Gong, Microsoft +
-    Robert Menzel, NVIDIA
+    Robert Menzel, NVIDIA +
+    Jakob Bornecrantz, Collabora
 
 *Overview*
 
@@ -45,6 +46,17 @@ The window system defines currently supported by this extension are:
 Note that a runtime implementation of this extension is only required to
 support the structs introduced by this extension which belong to the
 platform it is running on.
+
+Note that the OpenGL context given to the call flink:xrCreateSession must:
+not be bound in another thread when calling the functions:
+flink:xrCreateSession, flink:xrDestroySession, flink:xrBeginFrame,
+flink:xrEndFrame, flink:xrCreateSwapchain, flink:xrDestroySwapchain,
+flink:xrEnumerateSwapchainImages, flink:xrAcquireSwapchainImage,
+flink:xrWaitSwapchainImage and flink:xrReleaseSwapchainImage.
+It may: be bound in the thread calling those functions.
+The runtime must: not access the context from any other function.
+In particular the application must be able to call flink:xrWaitFrame from a
+different thread than the rendering thread.
 
 *New Object Types*
 
@@ -293,3 +305,5 @@ include::../../../../generated/validity/protos/xrGetOpenGLGraphicsRequirementsKH
 ** Minor fixes
 * Revision 7, 2019-07-08 (Ryan Pavlk)
 ** Adjusted member name in XCB struct
+* Revision 8, 2019-11-28 (Jakob Bornecrantz)
+** Added note about context not allowed to be current in a different thread.
