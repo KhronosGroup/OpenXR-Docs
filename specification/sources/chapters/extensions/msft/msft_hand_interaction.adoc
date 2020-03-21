@@ -1,0 +1,71 @@
+include::../meta/XR_MSFT_hand_interaction.adoc[]
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Lachlan Ford, Microsoft +
+    Alex Turner, Microsoft
+
+*Overview*
+
+This extension defines a new interaction profile for near interactions and
+far interactions driven by directly-tracked hands.
+
+*Hand interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/microsoft/hand_interaction
+
+Valid for top level user path:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile provides basic pose and actions for near and far
+interactions using hand tracking input.
+
+Supported component paths:
+
+* subpathname:/input/select/value
+* subpathname:/input/squeeze/value
+* subpathname:/input/aim/pose
+* subpathname:/input/grip/pose
+
+The application should: use the subpathname:/select/value and
+subpathname:/aim/pose paths for far hand interactions, such as using a
+virtual laser pointer to target and click a button on the wall.
+Here, subpathname:/select/value can: be used as either a boolean or float
+action type, where the value `XR_TRUE` or `1.0f` represents a closed hand
+shape.
+
+The application should: use the subpathname:/squeeze/value and
+subpathname:/grip/pose for near hand interactions, such as picking up a
+virtual object within the user's reach from a table.
+Here, subpathname:/squeeze/value can: be used as either a boolean or float
+action type, where the value `XR_TRUE` or `1.0f` represents a closed hand
+shape.
+
+The runtime may: trigger both "select" and "squeeze" actions for the same
+hand gesture if the user's hand gesture is able to trigger both near and far
+interactions.
+The application should: not assume they are as independent as two buttons on
+a controller.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2019-09-16 (Yin Li)
+** Initial extension description

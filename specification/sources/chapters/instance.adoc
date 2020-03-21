@@ -324,8 +324,29 @@ developer-supplied version number of the application.
   return ename:XR_ERROR_API_VERSION_UNSUPPORTED.
 ****
 
-
 include::../../generated/validity/structs/XrApplicationInfo.txt[]
+
+[NOTE]
+.Note
+====
+When using the OpenXR API to implement a reusable engine that will be used
+by many applications, pname:engineName should: be set to a unique string
+that identifies the engine, and pname:engineVersion should: encode a
+representation of the engine's version.
+This way, all applications that share this engine version will provide the
+same pname:engineName and pname:engineVersion to the runtime.
+The engine should: then enable individual applications to choose their
+specific pname:applicationName and pname:applicationVersion, enabling one
+application to be distinguished from another application.
+
+When using the OpenXR API to implement an individual application without a
+shared engine, the input pname:engineName should: be left empty and
+pname:engineVersion should: be set to 0.
+The pname:applicationName should: then be filled in with a unique string
+that identifies the app and the pname:applicationVersion should: encode a
+representation of the application's version.
+====
+
 --
 
 [open,refpage='xrDestroyInstance',desc='Destroy an instance of OpenXR',type='protos']

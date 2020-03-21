@@ -1,0 +1,64 @@
+include::../meta/XR_EPIC_view_configuration_fov.adoc[]
+
+*Last Modified Date*::
+    2020-03-05
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Jules Blok, Epic Games
+
+*Overview*
+
+This extension allows the application to retrieve the recommended and
+maximum field-of-view using flink:xrEnumerateViewConfigurationViews.
+These field-of-view parameters can be used during initialization of the
+application before creating a session.
+
+The field-of-view given here should: not be used for rendering, see
+flink:xrLocateViews to retrieve the field-of-view for rendering.
+
+For views with `fovMutable` set to `XR_TRUE` the maximum field-of-view
+should: specify the upper limit that runtime can support.
+If the view has `fovMutable` set to `XR_FALSE` the runtime must: set
+`maxMutableFov` to be the same as `recommendedFov`.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrViewConfigurationViewFovEPIC',desc='View Configuration Field-of-View',type='structs']
+--
+The slink:XrViewConfigurationViewFovEPIC struct is an output struct which
+can be added to the next chain of slink:XrViewConfigurationView to retrieve
+the field-of-view for that view.
+
+include::../../../../generated/api/structs/XrViewConfigurationViewFovEPIC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the type of this struct
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:recommendedFov is the recommended field-of-view based on the current
+  user IPD.
+* pname:maxMutableFov is the maximum field-of-view that the runtime can
+  display.
+****
+
+include::../../../../generated/validity/structs/XrViewConfigurationViewFovEPIC.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-03-05 (Jules Blok)
+** Initial version.
+

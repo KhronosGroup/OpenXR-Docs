@@ -394,6 +394,12 @@ A promoted feature may have minor differences from the original such as:
 * The feature may be advertised differently by device features
 * The author ID suffixes will be changed or removed as appropriate
 
+| Provisional |A feature is released provisionally in order to get wider feedback on
+the functionality before it is finalized.
+Provisional features may change in ways that break backwards
+compatibility, and thus are not recommended for use in production
+applications.
+
 |Required Extensions |Extensions that must be enabled alongside extensions
 dependent on them, or that must be enabled to use given hardware.
 

@@ -11,6 +11,66 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.7 (2020-03-20)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.6.
+
+Note: Changelogs are now being assembled with the help of the
+[Proclamation](https://pypi.org/project/proclamation/) tool, so the format has
+changed somewhat.
+
+- Registry
+  - Clarify the usage of `engineName` and `applicationName` in `XrApplicationInfo`.
+    ([internal MR 1645](https://gitlab.khronos.org/openxr/openxr/merge_requests/1645))
+  - Introduce `XR_MSFT_hand_interaction` extension for hand interaction profile.
+    ([internal MR 1601](https://gitlab.khronos.org/openxr/openxr/merge_requests/1601))
+  - Introduce `XR_EPIC_view_configuration_fov` extension for system field-of-view
+    queries.
+    ([internal MR 1170](https://gitlab.khronos.org/openxr/openxr/merge_requests/1170))
+  - Indicate that `xrBeginFrame` returns `XR_ERROR_CALL_ORDER_INVALID` when not
+    paired with a corresponding `xrWaitFrame` call.
+    ([internal MR 1673](https://gitlab.khronos.org/openxr/openxr/merge_requests/1673))
+  - Update the version number of `XR_KHR_D3D12_enable` extension.
+  - ([internal MR 1681](https://gitlab.khronos.org/openxr/openxr/merge_requests/1681))
+  - Introduce `XR_EXTX_overlay` extension for Overlay sessions (which can provide
+    overlay composition layers).
+    ([internal MR 1665](https://gitlab.khronos.org/openxr/openxr/merge_requests/1665))
+- Specification
+  - Clarify the usage of `engineName` and `applicationName` in `XrApplicationInfo`.
+    ([internal MR 1645](https://gitlab.khronos.org/openxr/openxr/merge_requests/1645))
+  - Simplify and update the specification build instructions in
+    `specification/README.md`. On Windows, use of Windows Subsystem for Linux to
+    build the spec is now assumed: Makefile code, etc. for retired methods (Cygwin,
+    MinGW) remain for this release but are being considered for removal in an
+    upcoming release to reduce maintenance burden. (They have not been tested in
+    some time.) Note that this does not affect the build support of the SDK.
+    ([internal MR 1692](https://gitlab.khronos.org/openxr/openxr/merge_requests/1692))
+  - Introduce `XR_MSFT_hand_interaction` extension for hand interaction profile.
+    ([internal MR 1601](https://gitlab.khronos.org/openxr/openxr/merge_requests/1601))
+  - Adjust release scripts to publish the Style Guide and Extension Process with
+    the rest of the specification.
+    ([internal MR 1678](https://gitlab.khronos.org/openxr/openxr/merge_requests/1678))
+  - Revise Style Guide and Extension Process, ratify by working group, and release.
+    ([internal MR 1648](https://gitlab.khronos.org/openxr/openxr/merge_requests/1648))
+  - Introduce `XR_EPIC_view_configuration_fov` extension for system field-of-view
+    queries.
+    ([internal MR 1170](https://gitlab.khronos.org/openxr/openxr/merge_requests/1170))
+  - Clarify that every `xrWaitFrame` call must have a matching `xrBeginFrame`
+    call and that there can be up to one outstanding call to `xrWaitFrame` for
+    pipelined frame loops.
+    ([internal MR 1673](https://gitlab.khronos.org/openxr/openxr/merge_requests/1673))
+  - Specify expected D3D12 resource state of a depth swapchain image between
+    `xrAcquireSwapchainImage` and `xrReleaseSwapchainImage`.
+    ([internal MR 1681](https://gitlab.khronos.org/openxr/openxr/merge_requests/1681))
+  - Update build scripts so that headers in the generated HTML have clickable
+    anchor links that appear on hover, to provide a direct link to a heading.
+    ([internal MR 1691](https://gitlab.khronos.org/openxr/openxr/merge_requests/1691))
+  - Introduce `XR_EXTX_overlay` extension for Overlay sessions (which can provide
+    overlay composition layers)
+    ([internal MR 1665](https://gitlab.khronos.org/openxr/openxr/merge_requests/1665))
+
 ## OpenXR 1.0.6 release (24-January-2020)
 
 Patch release for the 1.0 series.

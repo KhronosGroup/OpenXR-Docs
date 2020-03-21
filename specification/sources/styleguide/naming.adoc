@@ -1,0 +1,410 @@
+// Copyright (c) 2015-2020 The Khronos Group Inc. This work is licensed under a
+// Creative Commons Attribution 4.0 International License; see
+// http://creativecommons.org/licenses/by/4.0/
+
+[[naming]]
+= API Naming Conventions
+
+Identifiers in the OpenXR API (e.g. types, parameters, constants, etc.) all
+follow a set of naming rules, providing a consistent scheme for developers.
+
+The OpenXR C API uses prefixes as an implicit namespace control mechanism.
+Bindings to other languages can choose not to use these prefixes if the
+language provides an explicit namespace mechanism.
+
+
+== General Naming Rules
+
+Names of identifiers should generally be written with full words, avoiding
+abbreviations, as a concise description of what that identifier is.
+For example, the type of a structure containing information about how to
+create an instance is stext:XrInstanceCreateInfo.
+
+Abbreviations and prefixes are sometimes used in the API when they are in
+common use.
+
+All abbreviations and prefixes used in the API must be approved by the
+OpenXR working group, and be added to the <<naming-abbreviations,Common
+Abbreviations>> and <<naming-prefixes,Standard Prefixes>> sections,
+respectively.
+
+Whenever an abbreviation exists for a particular word, it should be used in
+place of the full word unless there is good reason not to.
+
+[[naming-preprocessor]]
+== Preprocessor Defines
+
+Preprocessor definitions include an underscore `_` as a delimiter between
+words, with every character in upper case.
+
+Each definition is prefixed with `XR_`, followed by the name.
+
+This rule applies to most declarations with the C Preprocessor's `#define`
+token, including macros and constants.
+There are however a few exceptions:
+
+* The header guard for each header includes an additional underscore `_` at
+  the end of the identifier.
+** Example: `OPENXR_H_`
+* Definitions that denote the presence of an extension follow the
+  <<extensions-naming-conventions-name-strings,extension name string
+  convention>>.
+** Example: `XR_KHR_rich_layer_types`
+* Three `XRAPI_*` definitions are defined by the platform header to alias
+  certain platform-specific identifiers related to calling conventions.
+** Examples: `XRAPI_ATTR`, `XRAPI_CALL` and `XRAPI_PTR`
+* Preprocessor may be used to create aliases between other OpenXR
+  identifiers, which could happen if a determination is made that something
+  has been misnamed.
+  In these cases, the fixed name is added to the API, and the old name is
+  made into an alias of that.
+  In these cases, the name will be whatever the original misnamed identifier
+  was.
+
+.Example: Macro
+include::../../generated/api/defines/XR_VERSION_MAJOR.no-xref.txt[]
+
+.Example: Value
+include::../../generated/api/defines/XR_CURRENT_API_VERSION.no-xref.txt[]
+
+
+== Type Names
+
+Type names are declared with no separator between words.
+Each word starts with a capital letter, and every other character in each
+word is lower case.
+
+Each type name is prefixed with `Xr`.
+
+This rule applies to all type definitions except <<naming-funcpointers,
+function pointer types>>, including struct and union types, handles, base
+typedefs, and enumerant types.
+
+.Example: Handle
+include::../../generated/api/handles/XrInstance.no-xref.txt[]
+
+.Example: Base Type
+include::../../generated/api/basetypes/XrFlags64.no-xref.txt[]
+
+// Note: This is manually inserted to be able to omit all enumerants.
+[source, c]
+.Example: Enumerator Type
+----
+typedef enum XrStructureType {
+    ...
+};
+----
+
+.Example: Structure
+include::../../generated/api/structs/XrInstanceCreateInfo.no-xref.txt[]
+
+[[naming-extension-structures]]
+=== Extension Structure Names
+
+Structures which extend other structures through the pname:next chain should
+reflect the name of the base structure they extend.
+
+New structures which add extended object creation parameters to a base
+structure should use this naming scheme:
+
+.Extended Object Information Structures
+[width="60%",options="header"]
+|====
+| Base Structure Name | Extension Structure Name
+| `Xr__Object__CreateInfo`
+    | `Xr__ObjectName__CreateInfo__Author__`
+|====
+
+`_Object_` is the name of the object being created.
+`_Name_` is a short name for the extension or the new information added by
+that extension.
+`_Author_` is the author ID of the extension.
+
+== Enumerant Names
+
+Enumerants include an underscore `_` as a delimiter between words, with
+every character in upper case.
+
+Each enumerant name is prefixed with `XR_`.
+
+Enumerants are prefixed with the exact name of the type it belongs to,
+converted to the correct case (e.g. `XrEyeVisibility` ->
+`XR_EYE_VISIBILITY_LEFT`), and with the extension author indication moved to
+the end.
+
+This rule applies to all enumerants, with some exceptions.
+
+* The `XrStructureType` enumerants begin with `XR_TYPE` instead of
+  `XR_STRUCTURE_TYPE`.
+* Flag types don't use FLAGS in the name (e.g. `XrSpaceLocationFlags` uses
+  `XR_SPACE_LOCATION_POSITION_VALID_BIT` instead of
+  `XR_SPACE_LOCATION_FLAGS_POSITION_VALID_BIT`).
+* The `XrResult` enumerants are split into two sub types: error and success
+  codes.
+** Success codes are prefixed with `XR_`.
+** Error codes are prefixed with `XR_ERROR_`.
+
+// Note: This is manually inserted to be able to limit it and not include all enumerants.
+[source, c]
+.Example: XrStructureType Enumerants (rule exception)
+----
+typedef enum XrStructureType {
+    XR_TYPE_API_LAYER_PROPERTIES = 0,
+    XR_TYPE_EXTENSION_PROPERTIES = 1,
+    ...
+} XrStructureType;
+----
+
+.Example: Flag Types and Bit Values (rule exception)
+include::../../generated/api/flags/XrSwapchainCreateFlags.no-xref.txt[]
+include::../../generated/api/enums/XrSwapchainCreateFlagBits.no-xref.txt[]
+
+// Note: This is manually inserted to be able to limit it and not include all enumerants.
+[source, c]
+.Example: XrResult Enumerants (rule exception)
+----
+typedef enum XrResult {
+    XR_SUCCESS = 0,
+    ...
+    XR_ERROR_SESSION_RUNNING = -3,
+    ...
+} XrResult;
+----
+
+ifdef::XR_KHR_android_thread_settings[]
+// In an ifdef to avoid breaking style guide if we didn't generate the extension includes.
+.Example: Enumeration and Enumerant in an Extension
+include::../../generated/api/enums/XrAndroidThreadTypeKHR.no-xref.txt[]
+endif::XR_KHR_android_thread_settings[]
+
+== Function Names
+
+Function names are declared with no separator between words.
+Each word starts with a capital letter, and every other character in each
+word is lower case.
+
+Function names are prefixed with `xr`.
+This rule applies to all function declarations.
+
+// Note: This is manually inserted to be able to omit parameters.
+[source, c]
+.Example: Function Calls
+----
+XRAPI_ATTR XrResult XRAPI_CALL xrCreateInstance( ... );
+XRAPI_ATTR XrResult XRAPI_CALL xrGetSystem( ... );
+----
+
+
+[[naming-funcpointers]]
+=== Function Pointer Type Names
+
+Function pointer names are declared exactly as the equivalent statically
+declared function would be declared, but prefixed with `PFN_`, standing for
+"Pointer to FunctioN".
+
+// Note: This is manually inserted because no API includes are generated for this type.
+[source, c]
+.Example: Function Pointer Type
+----
+typedef XrResult (XRAPI_PTR *PFN_xrCreateInstance)( ... );
+----
+
+
+== Function Parameter and Struct/Union Member Names
+
+Function parameter names are declared with no separator between words.
+Each new word, *except* for the first, starts with a capital letter.
+All other characters in the parameter name are in lower case.
+
+Members/parameters of a type that is not a base type should generally be
+named in a similar way to the type itself, with additional context added for
+clarity when necessary.
+
+Any member that describes the size of a memory allocation should be suffixed
+with `Size`, or `CapacityInput` in the case of the input parameter to the
+two-call idiom.
+
+Any member that describes the number of something, such as an array length
+or number of internal allocations, should be suffixed with `Count`, or
+`CountOutput` in the case of the count output parameter to the two-call
+idiom.
+The `size` rule overrides this rule, though it is possible to have multiple
+sizes (e.g. `sizeCount`).
+If the member is an array length, then the name of length should correspond
+to the name of the array member, usually `XYZCount` for an array named
+`XYZs`.
+If a member of a chained extension structure is an array whose length must
+match the length of an array of the base structure, then the chained
+extension structure should include an array length member with the same name
+as the length in the base structure.
+
+.Example: Function Parameters (including a single indirected pointer)
+include::../../generated/api/protos/xrGetInputSourceLocalizedName.no-xref.txt[]
+
+.Example: Structure Members (including the type exception and a double indirected pointer)
+include::../../generated/api/structs/XrFrameEndInfo.no-xref.txt[]
+
+ifdef::XR_EXT_debug_utils[]
+.Example: Function Pointer Members
+include::../../generated/api/structs/XrDebugUtilsMessengerCreateInfoEXT.no-xref.txt[]
+endif::XR_EXT_debug_utils[]
+
+.Example: Size Parameter
+include::../../generated/api/protos/xrPollEvent.no-xref.txt[]
+
+.Example: Two-Call Idiom with `CapacityInput` and `CountOutput`
+include::../../generated/api/protos/xrEnumerateApiLayerProperties.no-xref.txt[]
+
+.Example: Count Members
+include::../../generated/api/structs/XrCompositionLayerProjection.no-xref.txt[]
+
+[[naming-extension-identifiers]]
+== Extension Identifier Naming Conventions
+
+Identifiers defined by an extension are modified by appending the
+extension's author ID to the end of the identifier, as described below.
+Author IDs are obtained as described in the
+<<extensions-naming-conventions,Extension and Layer Naming Conventions>>
+section.
+
+If an extension becomes part of core, a new version of the extension's
+identifiers should be created, that do not contain the author ID at the end
+of the identifier.
+The original identifiers should be kept in order to maintain source-level
+compatibility with existing software.
+
+=== Extension Type Names
+
+Types defined by extensions have the author ID appended to the end of the
+type name.
+
+ifdef::XR_KHR_vulkan_enable[]
+.Example: Structure Name with `KHR` Appended
+include::../../generated/api/structs/XrGraphicsBindingVulkanKHR.no-xref.txt[]
+endif::XR_KHR_vulkan_enable[]
+
+=== Extension Enumerant Names
+
+Enumerants defined by extensions will have the author ID appended to the end
+of the enumerant name, separated by an underscore.
+This includes the begin, end, range and max values added to enumeranted type
+definitions by the generator scripts.
+
+ifdef::XR_EXT_debug_utils[]
+.Example: Enumerants with `_EXT` Appended
+include::../../generated/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.no-xref.txt[]
+endif::XR_EXT_debug_utils[]
+
+
+=== Extension Function Names
+
+Function and function pointer type names defined by extensions have the
+author ID appended to the end of the name.
+
+
+ifdef::XR_KHR_vulkan_enable[]
+.Example: Function with `KHR` Appended
+include::../../generated/api/protos/xrGetVulkanGraphicsRequirementsKHR.no-xref.txt[]
+endif::XR_KHR_vulkan_enable[]
+
+// Note: This is manually inserted because no API includes are generated for this type.
+[source, c]
+.Example: Corresponding Function Pointer Type with `KHR` Appended
+----
+typedef XrResult (XRAPI_PTR *PFN_xrGetVulkanGraphicsRequirementsKHR)(
+    XrInstance                                  instance,
+    XrSystemId                                  systemId,
+    XrGraphicsRequirementsVulkanKHR*            graphicsRequirements);
+----
+
+
+[[naming-abbreviations]]
+== Common Abbreviations
+
+Abbreviations and acronyms are sometimes used in the <<openxr-spec,OpenXR
+API Specification>> and the OpenXR API where they are considered clear and
+commonplace.
+All such abbreviations used in the core API are defined here.
+Extensions should also use these abbreviations where appropriate.
+
+Src::
+    Source
+
+Dst::
+    Destination
+
+Min::
+    Minimum
+
+Max::
+    Maximum
+
+Rect::
+    Rectangle
+
+Info::
+    Information
+
+Bool::
+    Boolean
+
+[NOTE]
+====
+Exceptions may be made for historical reasons.
+If that decision is made these exceptions may be noted here.
+====
+
+Addr::
+    Address
+
+ID::
+    Identifier
+
+UUID::
+    Universally Unique Identifier
+
+Op::
+    Operation
+
+R::
+    Red color component
+
+G::
+    Green color component
+
+B::
+    Blue color component
+
+A::
+    Alpha color component
+
+D3D::
+    Direct3D
+
+D3D10::
+    Direct3D 10.x
+
+D3D11::
+    Direct3D 11.x
+
+D3D12::
+    Direct3D 12
+
+Perf::
+    Performance
+
+[[naming-prefixes]]
+== Standard Prefixes
+
+Prefixes are used in the API to denote specific semantic meaning of OpenXR
+names, or as a label to avoid name clashes, and are explained here:
+
+XR/Xr/xr::
+    OpenXR namespace +
+    All types, commands, enumerants and C macro definitions in the OpenXR
+    specification are prefixed with these two characters, according to the
+    rules defined above.
+
+PFN::
+    Function Pointer +
+    Denotes that a type is a function pointer.

@@ -1,7 +1,7 @@
 include::../meta/XR_KHR_D3D12_enable.adoc[]
 
 *Last Modified Date*::
-   2019-01-29
+   2020-03-18
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -39,8 +39,10 @@ When an application acquires a swapchain image by calling
 flink:xrAcquireSwapchainImage in a session create using
 slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: guarantee that:
 
-* The image has a memory layout compatible with
+* The color rendering target image has a memory layout compatible with
   ename:D3D12_RESOURCE_STATE_RENDER_TARGET
+* The depth rendering target image has a memory layout compatible with
+  ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
 * The sname:ID3D12CommandQueue specified in slink:XrGraphicsBindingD3D12KHR
   can write to the image.
 
@@ -50,7 +52,11 @@ slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: interpret the
 image as:
 
 * Having a memory layout compatible with
-  ename:D3D12_RESOURCE_STATE_RENDER_TARGET
+  ename:D3D12_RESOURCE_STATE_RENDER_TARGET if the image is a color rendering
+  target
+* Having a memory layout compatible with
+  ename:D3D12_RESOURCE_STATE_DEPTH_WRITE if the image is a depth rendering
+  target
 * Being available for read/write on the sname:ID3D12CommandQueue specified
   in slink:XrGraphicsBindingD3D12KHR.
 
@@ -208,3 +214,5 @@ include::../../../../generated/validity/protos/xrGetD3D12GraphicsRequirementsKHR
 ** Specified Y direction and Z range in clip space
 * Revision 5, 2019-01-29 (Dan Ginsburg)
 ** Added swapchain image resource state details.
+* Revision 6, 2020-03-18 (Minmin Gong)
+** Specified depth swapchain image resource state.

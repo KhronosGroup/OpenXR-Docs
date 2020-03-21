@@ -1,0 +1,325 @@
+include::../meta/XR_EXTX_overlay.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2020-03-05
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Mark Young, LunarG +
+    Jules Blok, Epic +
+    Jared Cheshier, Pluto VR +
+    Nick Whiting, Epic +
+    Brad Grantham, LunarG
+
+*Overview*
+
+Application developers may desire to implement an OpenXR application that
+renders content on top of another OpenXR application.
+These additional applications will execute in a separate process, create a
+separate session, generate separate content, but want the OpenXR runtime to
+composite their content on top of the main OpenXR application.
+Examples of these applications might include:
+
+ * A debug environment outputting additional content
+ * A Store application that hovers to one side of the user's view
+ * A interactive HUD designed to expose additional chat features
+
+This extension introduces the concept of "Overlay Sessions" in order to
+expose this usage model.
+
+This extension allows:
+
+ * An application to identify when the current sessions composition layers
+   will be applied during composition
+ * The ability for an overlay session to get information about what is going
+   on with the main application
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extension>> section.
+
+When you are ready to create an overlay session, you will need to create a
+slink:XrSessionCreateInfoOverlayEXTX structure and passing it into the
+flink:xrCreateSession via the slink:XrSessionCreateInfo structure's
+pname:next parameter.
+
+A runtime will attempt to match or lock the display time between main and
+overlay sessions.
+If the overlay application's display content is not visually correlated to
+features in the main frame (e.g. a HUD or a notification UI) or the overlay
+application otherwise does not need its frames' display time to be
+synchronized to the main application, the application can set
+ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_EXTX in
+pname:createFlags in slink:XrSessionCreateInfoOverlayEXTX.
+
+==== Overlay Session Layer Placement
+
+Since one or more sessions may be active at the same time, this extension
+provides the ability for the application to identify when the frames of the
+current session will be composited into the final frame.
+
+The slink:XrSessionCreateInfoOverlayEXTX pname:sessionLayersPlacement
+parameter provides information on when the sessions composition layers
+should be applied to the final composition frame.
+The larger the value passed into pname:sessionLayersPlacement, the closer to
+the front this session's composition layers will appear (relative to other
+overlay session's composition layers).
+The smaller the value of pname:sessionLayersPlacement, the further to the
+back this session's composition's layers will appear.
+The main session's composition layers will always be composited first,
+resulting in any overlay content being composited on top of the main
+application's content.
+
+If pname:sessionLayersPlacement is 0, then the runtime will always attempt
+to composite that session's composition layers first.
+If pname:sessionLayersPlacement is UINT32_MAX, then the runtime will always
+attempt to composite that session's composition layers last.
+If two or more overlay sessions are created with the same
+pname:sessionLayersPlacement value, then the newer session's will be treated
+as if they had a slightly higher value of pname:sessionLayersPlacement than
+the previous sessions with the same value.
+This should result in the newest overlay session being composited closer to
+the user than the older session.
+
+The following image hopefully will provide any further clarification you
+need:
+
+image::images/overlay_composition_order.svg[align="center", title="Overlay Composition Order"]
+
+
+==== Main Session Behavior Event
+
+Since an overlay session's intends to work in harmony with a main session,
+some information needs to be provided from that main session to the overlay
+session.
+
+The slink:XrEventDataMainSessionVisibilityChangedEXTX event structure
+provides information on the visibility of the main session as well as some
+additional flags which can be used to adjust overlay behavior.
+
+ifdef::XR_KHR_composition_layer_depth[]
+
+If <<XR_KHR_composition_layer_depth>> is enabled in the main session, then
+slink:XrEventDataMainSessionVisibilityChangedEXTX pname:flags should:
+contain the value:
+ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX.
+If the overlay session also enables <<XR_KHR_composition_layer_depth>>, then
+when both sessions are visible, the runtime can integrate their projection
+layer content together using depth information as described in the
+extension.
+However, if either the main session or the overlay do not enable the
+extension, then composition behavior will continue as if neither one enabled
+the extension.
+
+endif::XR_KHR_composition_layer_depth[]
+
+
+==== Modifications to the OpenXR Specification
+
+When this extension is enabled, certain core behaviors defined in the OpenXR
+specification must change as defined below:
+
+
+===== Modifications to Composition
+
+The <<compositing, Compositing>> section description of the composition
+process will be changed if this extension is enabled.
+If this extension is enabled, and there is only one active session, then
+there is no change.
+However, if this extension is enabled, and there are multiple active
+sessions, then the composition will occur in order based on the
+overlay session's slink:XrSessionCreateInfoOverlayEXTX::
+pname:sessionLayersPlacement value as described in the table below:
+
+.Overlay Session Composition Order
+
+[width="85%",frame="topbot",cols="^.^30%,^.^45%,^.^25%e",options="header"]
+|=======================================================================
+| Session Type
+    | slink:XrSessionCreateInfoOverlayEXTX:: pname:sessionLayersPlacement
+        | Composited
+| Overlay Session
+    | UINT32_MAX
+        | Composited last, appears in front of all other XrSessions
+| Overlay Session
+    | <Positive value>
+        | 
+| Overlay Session
+    | 0
+        |  
+| Non-overlay Session
+    | N/A
+        | Composited first, appears behind all other XrSessions
+|=======================================================================
+
+The above change only applies to when a session's composition layers are
+applied to the resulting image.
+The order in which composition layers are handled internal to a session does
+not change.
+However, once the sessions have been properly ordered, the runtime should
+behave as if all the composition layers have been placed into a single list
+(maintaining the separation of viewport images) and treat them as if they
+were from one original session.
+From this point forward, the composition behavior of the resulting
+composition layers is the same whether or not this extension is enabled.
+
+ifdef::XR_KHR_composition_layer_depth[]
+
+If the overlay session is created as part of an slink:XrInstance which has
+enabled the <<XR_KHR_composition_layer_depth>> extension, and a
+slink:XrCompositionLayerDepthInfoKHR structure has been provided to one or
+more composition layers, then it intends for those layers to be composited
+into the final image using that depth information.
+This composition occurs as defined in the <<XR_KHR_composition_layer_depth>>
+extension.
+However, this is only possible if the main session has provided depth buffer
+information as part of its swapchain.
+In the event that a main session does not provide depth buffer information
+as part of its swapchain, then overlay application's composition layers
+containing depth information will be composited as if they did not contain
+that information.
+
+endif::XR_KHR_composition_layer_depth[]
+
+
+===== Modifications to xrEndFrame Behavior
+
+<<composition-layer-behavior, Composition Layer Behavior>> currently states
+that if flink:xrEndFrame is called with 0 layers, then the runtime should
+clear the VR display.
+
+If this extension is enabled, the above statement is now only true if the
+session is not an overlay session.
+If the session is an overlay session, and it provides 0 layers in the call
+to flink:xrEndFrame, then the runtime will just ignore the overlay session
+for the current frame.
+
+
+===== Modifications to Input Synchronization
+
+If a runtime supports this extension, it must: separate input tracking on a
+per-session basis.
+This means that reading the input from one active session does not disturb
+the input information that can be read by another active session.
+This may require duplicating events to more than one session.
+
+
+*New Object Types*
+
+
+None
+
+*New Flag Types*
+
+[open,refpage='XrOverlayMainSessionFlagsEXTX',type='flags',desc='XrOverlayMainSessionFlagsEXTX']
+--
+include::{INCS-VAR}/api/flags/XrOverlayMainSessionFlagsEXTX.txt[]
+--
+
+[open,refpage='XrOverlayMainSessionFlagBitsEXTX',type='enums',desc='XrOverlayMainSessionFlagBitsEXTX']
+--
+include::{INCS-VAR}/api/enums/XrOverlayMainSessionFlagBitsEXTX.txt[]
+--
+
+[open,refpage='XrOverlaySessionCreateFlagsEXTX',type='flags',desc='XrOverlaySessionCreateFlagsEXTX']
+--
+include::{INCS-VAR}/api/flags/XrOverlaySessionCreateFlagsEXTX.txt[]
+--
+
+[open,refpage='XrOverlaySessionCreateFlagBitsEXTX',type='enums',desc='XrOverlaySessionCreateFlagBitsEXTX']
+--
+include::{INCS-VAR}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+ename:XR_TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX
+ename:XR_TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX
+
+*New Enums*
+
+ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX
+ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_EXTX
+
+*New Structures*
+
+[open,refpage='XrSessionCreateInfoOverlayEXTX',type='structs',desc='Session creation extension struct providing overlay session parameters']
+--
+include::{INCS-VAR}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the type of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:createFlags is 0 or one or more
+  elink:XrOverlaySessionCreateFlagBitsEXTX which indicate various
+  characteristics desired for the overlay session
+* pname:sessionLayersPlacement is a value indicating the desired placement
+  of the session's composition layers in terms of other sessions.
+****
+
+include::{INCS-VAR}/validity/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+--
+
+
+[open,refpage='XrEventDataMainSessionVisibilityChangedEXTX',type='structs',desc='Event representing main session visibility change']
+--
+include::{INCS-VAR}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+
+Receiving the slink:XrEventDataMainSessionVisibilityChangedEXTX event
+structure indicates that the main session has gained or lost visibility.
+This can occur in many cases, one typical example is when a user switches
+from one OpenXR application to another.
+See slink:XrEventDataMainSessionVisibilityChangedEXTX for more information
+on the standard behavior.
+This structure contains additional information on the main session including
+pname:flags which indicate additional state information of the main session.
+Currently, the only flag value supplied is
+ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX which
+indicates if the main session has enabled the
+<<XR_KHR_composition_layer_depth>> extension.
+
+.Member Descriptions
+****
+* pname:type is
+  ename:XR_TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:visible is an basetype:XrBool32 which indicates if pname:session is
+  now visible or is not.
+* pname:flags is 0 or one or more elink:XrOverlayMainSessionFlagBitsEXTX
+  which indicates various state information for the main session.
+****
+
+include::{INCS-VAR}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+
+--
+
+
+
+*New Functions*
+
+None
+
+*New Function Pointers*
+
+None
+
+*Issues*
+
+None
+
+*Version History*
+
+ * Revision 1, 2018-11-05 (Mark Young)
+ ** Initial draft
+ * Revision 2, 2020-02-12 (Brad Grantham)
+ ** Name change, remove overlay bool, add flags
+ * Revision 3, 2020-03-05 (Brad Grantham)
+ ** Name change
+
+

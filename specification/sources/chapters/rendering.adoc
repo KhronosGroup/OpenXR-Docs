@@ -673,6 +673,11 @@ the runtime predicts a composited frame will be displayed.
 The runtime may: affect this computation by changing the return values and
 throttling of flink:xrWaitFrame in response to feedback from frame
 submission and completion times in flink:xrEndFrame.
+An application must: eventually match each flink:xrWaitFrame call with one
+call to flink:xrBeginFrame.
+A subsequent flink:xrWaitFrame call must: block until the previous frame has
+been begun with flink:xrBeginFrame and must: unblock independently of the
+corresponding call to flink:xrEndFrame.
 When less than one frame interval has passed since the previous return from
 flink:xrWaitFrame, the runtime should: block until the beginning of the next
 frame interval.
@@ -695,9 +700,6 @@ processor contention between the application and the compositor.
 
 flink:xrWaitFrame must: be callable from any thread, including a different
 thread than flink:xrBeginFrame/flink:xrEndFrame are being called from.
-Runtimes must: not block indefinitely on a second flink:xrWaitFrame call in
-the absence of flink:xrBeginFrame/flink:xrEndFrame calls but may do so on
-subsequent flink:xrWaitFrame calls.
 
 Calling flink:xrWaitFrame must: be externally synchronized by the
 application, concurrent calls may: result in undefined behavior.
@@ -829,12 +831,12 @@ The application should: still call flink:xrBeginFrame but omit rendering
 work for the frame if slink:XrFrameState::pname:shouldRender is
 ename:XR_FALSE.
 
+The runtime must: return the error code ename:XR_ERROR_CALL_ORDER_INVALID if
+there was no corresponding successful call to flink:xrWaitFrame.
+
 The runtime must: return the success code ename:XR_FRAME_DISCARDED if a
 prior flink:xrBeginFrame has been called without an intervening call to
 flink:xrEndFrame.
-
-The runtime must: consider the frame in-progress and ready for an
-flink:xrEndFrame call if a success code is returned.
 
 The runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING if the
 pname:session <<session_not_running, is not running>>.
@@ -874,10 +876,8 @@ include::../../generated/api/protos/xrEndFrame.txt[]
 ****
 
 flink:xrEndFrame may: return immediately to the application.
-There is no strong coupling between a specific call to flink:xrWaitFrame,
-and a specific frame description in flink:xrEndFrame.
-However, slink:XrFrameEndInfo does include a display time, which should: be
-computed using values returned by flink:xrWaitFrame.
+slink:XrFrameEndInfo::pname:displayTime should: be computed using values
+returned by flink:xrWaitFrame.
 The runtime should: be robust against variations in the timing of calls to
 flink:xrWaitFrame, since a pipelined system may call flink:xrWaitFrame on a
 separate thread from flink:xrBeginFrame and flink:xrEndFrame without any

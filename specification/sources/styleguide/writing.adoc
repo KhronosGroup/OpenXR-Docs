@@ -1,0 +1,714 @@
+// Copyright (c) 2015-2020 Khronos Group. This work is licensed under a
+// Creative Commons Attribution 4.0 International License; see
+// http://creativecommons.org/licenses/by/4.0/
+
+[[writing]]
+= Writing Style
+
+
+[[writing-misc]]
+== Miscellaneous Grammar, Spelling, and Punctuation Issues
+
+=== Use the Oxford Comma (Serial Comma)
+
+When writing a sentence listing a series of items, include a comma before
+the "`and`" separating the last item.
+
+*Correct:* The red, green, blue, and alpha components.
+
+*Incorrect:* The red, green, blue and alpha components.
+
+Also see http://blog.oxforddictionaries.com/2011/06/oxford-comma/
+
+=== Date Format
+
+Whenever possible, write dates in the <<iso-8601,ISO 8601>> format:
+YYYY-MM-DD.
+
+If needed for consistency with existing dates, e.g. in appendix changelogs,
+you can also write "`Month DD, YYYY`" where "`Month`" is the English name of
+the month.
+
+Never use ambiguous formats such as "`09/12/16`".
+
+[source,asciidoc]
+.Example Markup
+----
+* 2016-09-12
+* September 12, 2016
+----
+
+
+[[writing-misc-a-an]]
+=== A/An and Markup Macros
+
+Use "`a`" and "`an`" http://www.grammar.com/a-vs-an-when-to-use/[correctly],
+based on the *sound* of the letter beginning the following word.
+
+It is easy to get this wrong when talking about OpenXR API names tagged with
+the <<markup-macros,markup macros>>.
+For example, if you wanted to say:
+
+> An flink:xrCreateInstance call
+
+the correct way to mark this up in asciidoc would be:
+
+[source,asciidoc]
+----
+An flink:xrCreateInstance call
+----
+
+However, on first glance at this it *appears* wrong, because the "`word`"
+following "`an`" is the macro name, "`flink{cl}`".
+This word does not start with a vowel, so the temptation is to say
+
+[source,asciidoc]
+----
+A flink:xrCreateInstance call
+----
+
+What matters here is how the *output* document is formatted.
+
+The `checkMarkup` script, executed as a part of the CI process, checks this
+automatically.
+
+=== Numbers in Text
+
+When describing the need for a small number of objects, smaller than ten,
+spell the number out (e.g. "`one`").
+If you are describing a literal value that is a small number, you may use a
+numeric value (e.g. "`1`").
+
+For example, instead of writing that a bitmask "`contains 1 or more bits`",
+write that it "`contains one or more bits`".
+A counter example is that it is okay to write "`For non-stereoscopic-3D
+applications, this value is 1.`"
+
+=== Use American Spelling Conventions
+
+In case of conflict, use American rather than British spelling conventions,
+except for noted exceptions in the table below.
+
+.Spelling
+[width="60%",options="header"]
+|====
+| Use Spelling  | Instead Of     | Comments
+| color         | colour         |
+| signaled      | signalled      |
+| tessellation  | tesselation    | Historical exception
+|====
+
+[[writing-compound-words]]
+=== Compound Words and Preferred Orthography
+
+Unless there is longstanding precedent in computer science literature, or
+the word is a noted exception in the table below, do not arbitrarily cram
+terms together.
+
+This does not apply to parameter names in the API, where capitalization is
+used to distinguish words.
+For example, it is proper to refer to the use of a pname:colorSpace member
+of a structure as a "`color space`" value.
+
+.Spelling
+[width="70%",options="header",cols="20%,20%,60%"]
+|====
+| Use Spelling  | Instead Of     | Comments
+| bit plane     | bitplane       |
+| compile time  | compile-time   | Per Wikipedia "`compile time`"
+| color space   | colorspace     |
+| double-buffer | doublebuffer   |
+| entry point   | entry-point +
+                  entrypoint
+                | Except if needed to disambiguate from surrounding terms
+| flat shading  | flatshading    |
+| GitHub        | Github         | Site's preferred spelling
+| LOD           | lod +
+                  level of detail +
+                  level-of-detail| Acronym for "`Level of Detail`"
+| mip level +
+  mip layer +
+  mip size  +
+  mip tail
+                | miplevel +
+                  miplayer +
+                  mipsize  +
+                  miptail        | "`mipmap *term*`" may be used in time
+3+h| Exceptions
+| mipmap        | mip map        | Exception for historical reasons
+| pname:next chain
+                | pname:next-chain +
+                  pname:next extension chain
+                                 |
+| swapchain     | swap chain     | Exception due to heavy use in WSI extensions
+| happen-before +
+  happen-after  | happen before +
+                  happen after   | As used in concurrent languages such as
+                                   C++11, Java and OpenCL C.
+|====
+
+==== Words With "Pre-" Prefixes
+
+// also: premultiply preorder prerotation predefined
+
+When using the prefix "`pre`" to indicate "`prior to`", such as in the words
+"`preinitialized`", "`preprocess`", and "`pretransform`", do not separate
+the prefix from the word with a hyphen.
+This list is not intended to be complete.
+
+
+[[writing-describing]]
+== Describing Commands and Parameters
+
+The <<openxr-spec,OpenXR Specification>> describes API commands followed by
+descriptions of their parameters, which are usually simple scalar types,
+handles or pointers to OpenXR objects or arrays of objects, enumerated types
+specifying values or bitmasks which affect the operation of a command; or
+structures containing combinations of scalar types and objects.
+The templates and examples shown and annotated here are based on the
+<<openxr-spec,OpenXR Specification>>.
+Do not vary from them without compelling need.
+
+Normative parts of the <<openxr-spec,OpenXR Specification>> should describe
+_what_ something does, rather than _how_ or _why_ an application would want
+to use it or _how_ or _why_ a runtime should implement it.
+
+When explicitly allowed by the Specification, the reserved value code:NULL
+may: be used for pointer parameters and members, and the reserved value
+dname:XR_NULL_HANDLE may: be used for OpenXR object handle parameters and
+members.
+Otherwise, pointers and handles must: refer to valid memory and valid OpenXR
+objects, respectively.
+
+
+[NOTE]
+.Guideline
+====
+As a simple example, say
+
+"`To create an instance, call fname:xrCreateInstance`"
+
+rather than
+
+"`You/The application/The user can create an instance by calling
+fname:xrCreateInstance`".
+
+====
+
+Explanations of _why_ and _how_ should largely be confined to reference
+documentation, sample code, tutorials, and other such documents.
+Occasional non-normative explanations can be included in the
+<<openxr-spec,OpenXR API Specification>> using
+<<markup-informative-notes,informative notes>>.
+
+
+[[writing-latexmath]]
+== Math Markup
+
+There are two ways of marking up math expressions, described below.
+
+=== Asciidoc Math Markup
+
+Where possible, math is marked up using straight asciidoc features.
+For commonality with LaTeX math (see below), some common LaTeX operators and
+names are defined as asciidoc attributes using the same names, expanding to
+the corresponding Unicode entities.
+The complete set of these attributes is found in `config/attribs.adoc`.
+
+.Spelling
+[width="100%",options="header",cols="20%,20%,60%"]
+|====
+| Feature | Result | Sample Markup
+
+| Subscripts
+| [eq]#a~x~#
+| +++[eq]#a~x~#+++
+
+| Superscripts
+| [eq]#-2^(b-1)^#
+| +++[eq]#-2^(b-1)^#+++
+
+| Struct/parameter names as variables
+| [eq]#2^pname:bits^#
+| +++[eq]#2^pname:bits^#+++
+
+| Greek Letters (selected)
+| [eq]#{alpha}, {beta}, {gamma}, {delta}, {DeltaUpper}, {epsilon}, {lambda},
+  {rho}, {tau}#
+| +++[eq]#{alpha}, {beta}, {gamma}, {delta}, {DeltaUpper}, {epsilon}, {lambda},
+  {rho}, {tau}#+++
+
+| Fractions
+| [eq]#{onequarter} {plus} {onehalf}#
+| +++[eq]#{onequarter} {plus} {onehalf}#+++
+
+| Closed Ranges
+| [eq]#[0,1]#
+| +++[eq]#[0,1]#+++
+
+| Open Ranges
+| [eq]#[0,1)#
+| +++[eq]#[0,1)#+++
+
+| Arithmetic and Relational Operators
+| [eq]#a {times} b#, [eq]#a {leq} b#, [eq]#a {neq} b#, [eq]#a {geq} b#, [eq]#{vert}x{vert}#
+| +++[eq]#a {times} b#+++, +++[eq]#a {leq} b#+++, +++[eq]#a {neq} b#+++, +++[eq]#a {geq} b#+++, +++[eq]#{vert}x{vert}#+++
+
+| Floor
+| [eq]#{lfloor}w - {onehalf}{rfloor}#
+| +++[eq]#{lfloor}w - {onehalf}{rfloor}#+++
+
+| Ceiling
+| [eq]#{lceil}log~2~(max(pname:width, pname:height)){rceil} {plus} 1#
+| +++[eq]#{lceil}log~2~(max(pname:width, pname:height)){rceil} {plus} 1#+++
+
+| Logical and Set Operators
+| [eq]#{land} {lnot} {lor} {oplus} {elem}#
+| +++[eq]#{land} {lnot} {lor} {oplus} {elem}#+++
+
+| Partial Derivatives
+| [eq]#{partial}r~x~ / {partial}x = 0#
+| +++[eq]#{partial}r~x~ / {partial}x = 0#+++
+
+| Matrix/Vector Parameter Names
+| [eq]#**P** = t **P**~1~ {plus} (1-t) **P**~2~#
+| +++[eq]#**P** = t **P**~1~ {plus} (1-t) **P**~2~#+++
+
+|====
+
+
+=== LaTeX Math Markup
+
+If we find we need math markup more complex than easily supported in
+straight asciidoc markup, we can re-introduce the use of KaTeX in-browser
+rendering script for HTML outputs, and asciidoctor-mathematical for PDF
+outputs, based on the latest usage in Vulkan.
+KaTeX code was removed from the OpenXR repo to simplify build and packaging
+because it was unused.
+
+[[writing-next-chain]]
+== Describing Structure Chains
+
+When describing a chained structure which is passed to a command by placing
+it in the pname:next chain of a structure parameter of that command,
+introduce the structure description in this fashion:
+
+[source,asciidoc]
+----
+When *performing an operation described by the chained struct*, add
+the slink:XrExtensionStructNameID to the pname:next chain of the
+slink:XrBaseExtensionStructName structure passed to the
+flink:xrBaseFunctionName command *saying what the chained struct
+does*.
+----
+
+Note that while some text still calls these extension structures, it is more
+accurate to call them chained structures, since there are cases where
+structures are chained entirely within the core specification.
+Wording in the spec conflating chained structures and extensions will be
+gradually corrected over time.
+
+[[writing-example]]
+== An Example Command Description
+
+The <<sample-command,next section>> is a sample based on the
+<<openxr-spec,OpenXR API Specification>>, and describes a command in enough
+detail to see the different usage patterns and layout / markup used.
+Informative notes discussing markup and guidelines are interspersed with the
+example description to explain how and why it looks as it does.
+
+
+[[sample-command]]
+== Sample Command Description: Creating an Instance
+
+// Commented out to avoid confusing AsciiDoctor
+//[open,refpage='xrCreateInstance',desc='Creates an OpenXR Instance',type='protos']
+//--
+The flink:xrCreateInstance function is defined as:
+
+include::../../generated/api/protos/xrCreateInstance.txt[]
+
+
+[NOTE]
+.Guideline
+====
+Begin the command description with an open block delimiting the contents as
+a reference page.
+The open block contains several required attribute values, as described for
+<<writing-refpages, automatic extraction into a reference page>>.
+
+Prefer a short, active sentence when describing what commands do, instead of
+more passive phrasing like "`An instance is created by calling:`" or "`The
+application may create an instance by calling:`".
+However, many start with "<__entity__> is defined as", where "<__entity__>"
+is the function, structure, or type name, which was accepted by the group.
+
+After the description, include the autogenerated prototype for the command
+from the `../protos/` directory:
+
+// The 'subs=attributes+' and '{blank}--' are one way to allow the inner
+// [source] block to show the correct two dashes. See
+// http://discuss.asciidoctor.org/Another-markup-escaping-question-td5665.html
+
+[source,asciidoc,subs=attributes+]
+----
+[open,refpage='xrCreateInstance',desc='Creates an OpenXR Instance',type='protos']
+{blank}--
+The flink:xrCreateInstance function is defined as:
+
+\include::../../generated/api/protos/xrCreateInstance.txt[]
+----
+
+Note that each autogenerated command, enumeration, flag, or structure
+definition include file also defines a corresponding asciidoc anchor which
+is the base name of the file.
+In this case, the anchor is named `xrCreateInstance`.
+====
+
+.Parameter Descriptions
+****
+* pname:createInfo points to an instance of slink:XrInstanceCreateInfo
+  controlling creation of the instance.
+* pname:instance points to an slink:XrInstance handle in which the resulting
+  instance is returned.
+****
+
+flink:xrCreateInstance creates the slink:XrInstance, then enables and
+initializes global API layers and extensions requested by the application.
+If an extension is provided by an API layer, both the API layer and
+extension must: be specified at flink:xrCreateInstance time.
+If a specified API layer cannot be found, no slink:XrInstance will be
+created and the function will return ename:XR_ERROR_API_LAYER_NOT_PRESENT.
+Likewise, if a specified extension cannot be found, the call must: return
+ename:XR_ERROR_EXTENSION_NOT_PRESENT and no slink:XrInstance will be
+created.
+
+_(Additional prose excluded from example.)_
+
+
+[NOTE]
+.Guideline
+====
+Each command parameter is described in a separate bullet list entry,
+followed by validity rules, then detailed descriptions of any new
+structures, flags, or enumerations introduced by this command.
+
+Each parameter should appear as a separate bullet list item beginning with
+the parameter name, in the same order as parameters appear in the command.
+This aids in extracting short descriptions of parameters for inclusion in
+annotated headers and similar documentation.
+Make sure to tag each parameter with the pname{cl} macro.
+
+Strive for compact notation, and in particular always try to use the
+phrasing "`pname{cl}param _is_`" rather than wordier forms such as
+"`pname{cl}param _specifies_`" or "`The pname{cl}param parameter
+specifies`".
+
+In general there is no need to describe a parameter which is an OpenXR
+object handle *as* a handle; for example, say "`pname{cl}device is the
+logical device`" rather than "`pname{cl}device is a handle to the logical
+device`".
+An exception is object creation functions, where a pointer to a handle of
+the proper type is used to return the newly created object.
+====
+
+include::../../generated/validity/protos/xrCreateInstance.txt[]
+//--
+
+[NOTE]
+.Guideline
+====
+Some parameter and member validation language for commands and structures is
+_implicit_ (autogenerated from `xr.xml`), and included from the
+`../validity/` directories.
+Enumeration of return codes is also generated and included in that same
+file.
+There may be additional validation language which is explicit, and such
+language is written in a separate block in the specification preceding the
+validity include.
+If there is prose description of a command or structure, it also precedes
+the generated validity include.
+It is harmless to include a nonexistent file, in the rare cases where no
+implicit validity language exists.
+
+[source,asciidoc,subs=attributes+]
+----
+\include::../../generated/validity/protos/xrCreateInstance.txt[]
+{blank}--
+----
+
+End the open block surrounding the command description after the implicit
+validity include.
+All content within the block will be extracted for the corresponding
+reference page.
+====
+
+
+[NOTE]
+.Guideline
+====
+Open blocks delimiting reference page content should not themselves contain
+section headers, as asciidoctor can't render such nested content correctly.
+Reference pages should in general be relatively short, so this limitation is
+not severe.
+====
+
+****
+NOTE: Structures and enumerations first used as parameters of a command are
+described next.
+****
+
+// Commented out to not confuse AsciiDoctor
+//[open,refpage='XrInstanceCreateInfo',desc='Structure specifying params of a newly created instance',type='structs',xrefs='xrCreateInstance XrInstanceCreateFlags']
+//--
+
+The slink:XrInstanceCreateInfo structure is defined as:
+
+include::../../generated/api/structs/XrInstanceCreateInfo.txt[]
+
+[NOTE]
+.Guideline
+====
+Begin the structure description with an open block delimiting the contents
+as a reference page, in the same fashion as described above for commands.
+The open block contains several required attribute values, as described for
+<<writing-refpages, automatic extraction into a reference page>>.
+
+Use a short paragraph to introduce the structure, usually just "`The
+sname:XrStructureName structure is defined as:`".
+
+After the description, include the autogenerated definition for the
+structure from the `../structs/` directory:
+
+[source,asciidoc,subs=attributes+]
+----
+[open,refpage='XrInstanceCreateInfo',desc='Structure specifying params of a newly created instance',type='structs',xrefs='xrCreateInstance XrInstanceCreateFlags']
+{blank}--
+The slink:XrInstanceCreateInfo structure is defined as:
+
+\include::../../generated/api/structs/XrInstanceCreateInfo.txt[]
+----
+====
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that
+  identifies options that apply to the creation.
+* pname:applicationInfo is an instance of slink:XrApplicationInfo.
+  This information helps runtimes recognize behavior inherent to classes of
+  applications.
+  slink:XrApplicationInfo is defined in detail below.
+* pname:enabledApiLayerCount is the number of global API layers to enable.
+* pname:enabledApiLayerNames is a pointer to an array of
+  pname:enabledApiLayerCount strings containing the names of API layers to
+  enable for the created instance.
+  See the <<api-layers-and-extensions,API Layers And Extensions>> section
+  for further details.
+* pname:enabledExtensionCount is the number of global extensions to enable.
+* pname:enabledExtensionNames is a pointer to an array of
+  pname:enabledExtensionCount strings containing the names of extensions to
+  enable.
+****
+
+[NOTE]
+.Guideline
+====
+Each structure member is described in a separate bullet list entry.
+There is standard boilerplate for the pname:type and pname:next members,
+followed by the members specific to the structure.
+
+[source,asciidoc]
+----
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that
+  identifies options that apply to the creation.
+* pname:applicationInfo is an instance of slink:XrApplicationInfo.
+  This information helps runtimes recognize behavior inherent to classes of
+  applications.
+  slink:XrApplicationInfo is defined in detail below.
+* pname:enabledApiLayerCount is the number of global API layers to enable.
+* pname:enabledApiLayerNames is a pointer to an array of
+  pname:enabledApiLayerCount strings containing the names of API layers to
+  enable for the created instance.
+  See the <<api-layers-and-extensions,API Layers And Extensions>> section
+  for further details.
+* pname:enabledExtensionCount is the number of global extensions to enable.
+* pname:enabledExtensionNames is a pointer to an array of
+  pname:enabledExtensionCount strings containing the names of extensions to
+  enable.
+****
+----
+
+These entries should be short and functional, without describing details of
+e.g. new enumerant values, function of individual parameter settings, etc.
+They can refer to other types using the appropriate *link: macros or to
+related sections of the specification using asciidoc xrefs.
+
+In rare cases, an entry will cover multiple paragraphs.
+In these cases the normal list nesting and indentation guidelines cannot be
+applied due to limitations of the asciidoc parser.
+It is usually best to append a continuation block following the first
+paragraph of such a list item.
+
+// Example omitted because this doesn't happen to us.
+====
+
+[NOTE]
+.Guideline
+====
+In addition to implicit validity language, there may be additional
+validation language which is explicit.
+Such language is written in a separate block in the specification,
+_preceding_ the validity include.
+Prose description of the structure also goes here, if the prose associated
+with the command is insufficient.
+The example above does not have any explicit validity language or additional
+prose.
+====
+
+include::../../generated/validity/structs/XrInstanceCreateInfo.txt[]
+
+// This is commented out to not confuse asciidoctor.
+// --
+
+[NOTE]
+.Guideline
+====
+Following the definition of structure members, include a prose description
+of structure usage, if appropriate.
+Though it is not common in OpenXR, any explicit validity language would be
+added next.
+See the Vulkan style guide for guidance on phrasing explicit validity.
+This is followed by including the implicit (automatically generated)
+validity language include for this structure:
+
+[source,asciidoc,subs=attributes+]
+----
+\include::../../generated/validity/structs/XrInstanceCreateInfo.txt[]
+{blank}--
+----
+
+Be clear on the distinction between a "`valid pointer`" and a "`pointer to a
+valid object`" when writing spec language.
+
+Any explicit Valid Usage statements must be assigned Valid Usage ID tags
+before publication.
+This process is normally performed only when preparing to integrate
+functionality into the OpenXR Specification prior to publication.
+It is something authors of new functionality should be aware of, but are not
+themselves responsible for.
+====
+
+[[writing-refpages]]
+== Markup For Automatic Reference Page Extraction
+
+The OpenXR reference pages are (mostly) being extracted from corresponding
+sections of the API Specification.
+This requires that the markup and writing conventions described above be
+adhered to rigidly.
+
+The extraction scripts for a given page rely on the existence of an asciidoc
+`open` block surrounding markup describing that page, with attributes used
+to specify properties of the reference page.
+Additional heuristics and non-asciidoc tags, described below, are used to
+identify subsections of a reference page in some cases.
+
+In general the open block introduction will look like:
+
+[source,asciidoc,subs=attributes+]
+----
+[open,refpage='name',desc='short description',type='pagetype',xrefs='xrefs']
+{blank}--
+----
+
+Attributes which can be set on the block are:
+
+  * *refpage* - the name of the reference page, e.g. the Vulkan interface
+    (command, structure, enumerant, handle, etc.) name.
+    This attribute is required.
+  * *desc* - short description / summary of the page, used in the page
+    title.
+    This attribute is required.
+  * *type* - type of the interface, which must match the directory name
+    following `api/` in the interface `include::` line within the block, and
+    must be one of `basetypes`, `defines`, `enums`, `flags`, `funcpointers`,
+    `handles`, `protos`, or `structs`.
+    This attribute is required.
+  * *xrefs* - list of whitespace-separated names of other reference pages
+    which should be added to the `See Also` section of this page.
+    Most cross-references are automatically generated based on the immediate
+    dependency information in `vk.xml`, but in some cases, such as referring
+    between `*FlagBits` and `*Flags` types, this additional tagging is
+    useful.
+    This attribute is optional.
+
+Attributes of the open block must be written in this format, using single
+quotes as delimiters (even though asciidoc markup also allows double
+quotes), and escape single quotes in e.g. the *desc* attribute value with
+backquotes.
+
+After the open block is started, the following markup should be provided:
+
+  * A single paragraph of text describing the definition of the interface.
+    This paragraph is optional, but strongly recommended.
+  * The `include` line for the interface, which must be consistent with the
+    page name and type in the open block attributes.
+    This paragraph is required.
+  * A bullet list describing function parameters, structure members,
+    enumerants in an enumerated type, etc.
+    This list should contain no empty lines, as the extraction script
+    classifies the uninterrupted block of text following the `include`
+    directive as the `Parameters` or `Members` section of the ref page.
+    This list is required, unless the interface has nothing to describe,
+    such as an empty structure or enumeration, or a function with no
+    parameters.
+  * Paragraphs of text making up the `Description` section of the ref page.
+    This section is optional.
+    If it is necessary due to constraints of asciidoc markup to have an
+    empty line in the bullet list section^1^, add a `// refBody` comment
+    immediately following the bullet list and preceding this section:
++
+* A paragraph of text introducing the definition of the interface.
+  If the `refBegin` comment does not exist, this paragraph must be present.
+* The `include` line for the interface, which must be consistent with the
+  interface name in the comment line.
+* A bullet list describing function parameters, structure members,
+  enumerants in an enumerated type, etc.
+  This list should contain no empty lines, as the extraction script
+  classifies the uninterrupted block of text following the `include`
+  directive as the `Parameters` or `Members` section of the ref page.
+* Optional paragraphs of text making up the `Description` section of the ref
+  page.
+  If it is necessary due to constraints of asciidoc markup to have an empty
+  line in the bullet list section^1^, add a `refBody` comment immediately
+  following the bullet list and preceding this section:
++
+[source,asciidoc]
+----
+// refBody name
+----
++
+* The `include` line for the validity statement of commands and structures.
+  This line is required for commands and structures, but not for interfaces
+  such as enumerated types, which do not have implicit valid usage blocks.
+* Finally, a two-dash asciidoc delimiter closing the open block:
++
+[source,asciidoc,subs=attributes+]
+----
+{blank}--
+----
+
+All elements specifying an interface name (open block `refpage` attributes,
+interface `include` lines, and validity `include` lines) must use the same
+interface name, if present.
+Otherwise the extraction script is either unable to extract that page, or
+will extract the wrong text - and the language will be structurally
+incorrect, as well.
+The extraction process is somewhat fragile, so care should be taken and the
+results of reference page extraction verified after making changes to that
+portion of the specification source.

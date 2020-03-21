@@ -1,0 +1,151 @@
+// Copyright (c) 2014-2020 The Khronos Group Inc. This work is licensed under a
+// Creative Commons Attribution 4.0 International License; see
+// http://creativecommons.org/licenses/by/4.0/
+
+= OpenXR™ Documentation and Extensions: Procedures and Conventions
+Ryan Pavlik, Kaye Mason, Jon Leech, Tobias Hector
+:data-uri:
+:icons: font
+:toc2:
+:toclevels: 3
+:max-width: 100
+:numbered:
+:doctype: book
+:imagewidth: 800
+:fullimagewidth: width="800"
+:cl: &#x3a;
+
+// Various special / math symbols. This is easier to edit with than Unicode.
+include::attribs.adoc[]
+
+:leveloffset: 1
+
+<<<<
+
+include::copyright-ccby.adoc[]
+
+<<<<
+
+[[introduction]]
+= Introduction
+
+This document contains required procedures and conventions when writing
+specifications for new OpenXR APIs, extensions and layers, or related
+Khronos documentation such as white papers and tutorials; or contributing to
+existing OpenXR specifications.
+These are collectively referred to as _OpenXR Documentation_ or just
+_documentation_ below.
+The primary focus is the API Specification and API extensions, although all
+of the markup and most of the writing style is equally applicable to other
+documentation.
+
+It should be noted that the _OpenXR Documentation_ has been branched from
+the Vulkan documentation.
+A deliberate decision was made to keep the API standards similar, although
+this may diverge over time as changes are made to either standard.
+The OpenXR version of this style guide is also influenced by _Etna_, the
+proposal that was adopted as a starting point for the OpenXR specification.
+
+The primary purpose is to achieve consistency across the API, as well as
+across all of our source and output documents.
+Consistency makes it easier for developers, editors, reviewers, and users of
+our documentation to understand and modify it.
+
+This document has been ratified by the OpenXR working group.
+
+This means that unless explicitly stated otherwise, the procedures and
+conventions must be followed when making changes or additions to the OpenXR
+specification.
+If you have a strong desire to modify the procedures and conventions, such
+changes must be made through the normal OpenXR Working group process.
+
+[[introduction-terminology]]
+== Terminology
+
+The key words *must*, *required*, *should*, *recommend*, *may*, and
+*optional* in this document are to be interpreted as described in RFC 2119.
+
+[[introduction-structure]]
+== Document Structure
+
+The style guide is broken into four sections:
+
+* <<naming,API Naming Conventions>> - the required rules for choosing names
+  of OpenXR identifiers of all types.
+* <<extensions,Extensions and Layers>> - the required procedures for
+  creating formal OpenXR extensions and layers.
+* <<markup,Markup Style>> - the required and recommended markup style for
+  writing asciidoc and XML source that follows consistent formatting and
+  layout guidelines, tags special terms and phrases for proper processing by
+  the spec generation tools, etc.
+* <<writing,Writing Style>> - the required and recommended writing style for
+  overall and fine-grained structure and conventions, normative language
+  use, API naming conventions, common words and phrases to use and to avoid,
+  linking and cross-referencing, etc.
+
+
+[[introduction-asciidoc]]
+== Asciidoc Markup
+
+OpenXR Documentation is primarily written in Asciidoc, a form of text markup
+language.
+Specifically we're using the version of Asciidoc that is actively maintained
+by asciidoctor, which is documented on its website at
+http://www.asciidoctor.org/.
+
+References to the Asciidoctor User Manual are to sections in the document at
+http://asciidoctor.org/docs/user-manual/.
+
+Asciidoctor is implemented in Ruby (https://www.ruby-lang.org/), which is
+available for Linux, MacOS, and Microsoft Windows.
+Multiple preview tools also exist for the language, primarily using
+AsciidoctorJ (https://github.com/asciidoctor/asciidoctorj) or asciidoctor.js
+(https://github.com/asciidoctor/asciidoctor.js).
+In particular, GitHub and GitLab both have asciidoc previews for `.adoc` or
+`.asciidoc` files in repositories, and live preview extensions exist for
+Chrome and Firefox.
+
+The Asciidoctor toolchain and build process are not addressed by this
+document, which concentrates solely on source documents.
+
+[[introduction-normative]]
+== Normative References
+
+Normative references are references to external documents or resources to
+which documentation authors must comply.
+
+[[iso-8601]]
+International Organization for Standardization, _Data elements and
+interchange formats -- Information interchange -- Representation of dates
+and times_, http://www.iso.org/iso/catalogue_detail?csnumber=40874,
+2004-12-01.
+Also see https://www.w3.org/QA/Tips/iso-date for colloquial examples.
+
+// Chapters of the text are included below
+
+include::naming.adoc[]
+
+include::extensions.adoc[]
+
+include::markup.adoc[]
+
+include::writing.adoc[]
+
+= Still To Be Done
+
+* Image formats.
+* Include definitions.
+* Something about verb tenses in the writing chapter.
+* Something about the use of abbreviations and acronyms.
+ 
+// Appendices are included below
+// Omitted for now because we have no explicit VUID added.
+// include::vuid.adoc[]
+
+= Revision History
+
+* 2017-06-14 - Branch from Vulkan Style Guide for initial commit.
+  Some basic edits.
+* 2017-07-07 - Changing more things to OpenXR examples.
+  Adding OpenXR issues in most TODOs.
+* 2020-03-12 - Major revisions in preparation for release.

@@ -342,7 +342,7 @@ Extension =
         attribute promotedto { text }?,
         # attribute deprecatedby { text }?,
         # attribute obsoletedby { text }?,
-        # attribute provisional { text }?,
+        attribute provisional { "true" }?,
         CommentAttr?,
         (element require {
              attribute api { text }?,
