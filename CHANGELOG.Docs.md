@@ -11,11 +11,50 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.8 (2020-03-27)
+
+Patch release for the 1.0 series.
+
+Updates version to 1.0.8.
+
+- Registry
+  - `XR_EXTX_overlay`: upgrade overlay bit names to match the convention, and
+    increase extension version number. This is a **source-incompatible change**
+    to a provisional multi-vendor extension.
+    ([internal MR 1697](https://gitlab.khronos.org/openxr/openxr/merge_requests/1697),
+    [internal issue 1318](https://gitlab.khronos.org/openxr/openxr/issues/1318),
+    [internal issue 42](https://gitlab.khronos.org/openxr/openxr/issues/42),
+    [internal MR 171](https://gitlab.khronos.org/openxr/openxr/merge_requests/171))
+  - Introduce `XR_EXT_eye_gaze_interaction` extension for eye gaze interaction
+    profile.
+    ([internal MR 1556](https://gitlab.khronos.org/openxr/openxr/merge_requests/1556))
+  - Add SPDX license identifier tag to registry schema.
+    ([internal MR 1686](https://gitlab.khronos.org/openxr/openxr/merge_requests/1686))
+  - Add missing error codes to `xrCreateActionSet`, `xrCreateAction`, and
+    `xrGetInputSourceLocalizedName`.
+    ([internal MR 1698](https://gitlab.khronos.org/openxr/openxr/merge_requests/1698))
+- Specification
+  - Update `xml_consistency.py` to verify that enum value naming matches style
+    guide conventions.
+    ([internal MR 1696](https://gitlab.khronos.org/openxr/openxr/merge_requests/1696))
+  - `XR_EXTX_overlay`: upgrade overlay bit names to match the convention. This is a
+    **source-incompatible change** to a provisional multi-vendor extension.
+    ([internal MR 1697](https://gitlab.khronos.org/openxr/openxr/merge_requests/1697),
+    [internal issue 1318](https://gitlab.khronos.org/openxr/openxr/issues/1318),
+    [internal issue 42](https://gitlab.khronos.org/openxr/openxr/issues/42),
+    [internal MR 171](https://gitlab.khronos.org/openxr/openxr/merge_requests/171))
+  - Introduce `XR_EXT_eye_gaze_interaction` extension for eye gaze interaction
+    profile.
+    ([internal MR 1556](https://gitlab.khronos.org/openxr/openxr/merge_requests/1556))
+  - Clarify that calling `xrGetInputSourceLocalizedName` when no action set has
+    been attached to the session results in `XR_ERROR_ACTIONSET_NOT_ATTACHED`.
+    ([internal MR 1698](https://gitlab.khronos.org/openxr/openxr/merge_requests/1698))
+
 ## OpenXR Specification 1.0.7 (2020-03-20)
 
 Patch release for the 1.0 series.
 
-Updates version to 1.0.6.
+Updates version to 1.0.7.
 
 Note: Changelogs are now being assembled with the help of the
 [Proclamation](https://pypi.org/project/proclamation/) tool, so the format has

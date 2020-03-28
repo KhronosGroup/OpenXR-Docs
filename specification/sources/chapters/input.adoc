@@ -1385,6 +1385,9 @@ include::../../generated/api/protos/xrGetInputSourceLocalizedName.txt[]
 flink:xrGetInputSourceLocalizedName returns a string for the input source in
 the current system locale.
 
+If flink:xrAttachSessionActionSets has not yet been called for the session,
+the runtime must: return ename:XR_ERROR_ACTIONSET_NOT_ATTACHED.
+
 include::../../generated/validity/protos/xrGetInputSourceLocalizedName.txt[]
 --
 

@@ -3,7 +3,7 @@ include::../meta/XR_EXTX_overlay.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2020-03-05
+    2020-03-23
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -42,7 +42,7 @@ slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
 indicated in the <<extension>> section.
 
 When you are ready to create an overlay session, you will need to create a
-slink:XrSessionCreateInfoOverlayEXTX structure and passing it into the
+slink:XrSessionCreateInfoOverlayEXTX structure and pass it into the
 flink:xrCreateSession via the slink:XrSessionCreateInfo structure's
 pname:next parameter.
 
@@ -52,7 +52,7 @@ If the overlay application's display content is not visually correlated to
 features in the main frame (e.g. a HUD or a notification UI) or the overlay
 application otherwise does not need its frames' display time to be
 synchronized to the main application, the application can set
-ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_EXTX in
+ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX in
 pname:createFlags in slink:XrSessionCreateInfoOverlayEXTX.
 
 ==== Overlay Session Layer Placement
@@ -105,7 +105,7 @@ ifdef::XR_KHR_composition_layer_depth[]
 If <<XR_KHR_composition_layer_depth>> is enabled in the main session, then
 slink:XrEventDataMainSessionVisibilityChangedEXTX pname:flags should:
 contain the value:
-ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX.
+ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX.
 If the overlay session also enables <<XR_KHR_composition_layer_depth>>, then
 when both sessions are visible, the runtime can integrate their projection
 layer content together using depth information as described in the
@@ -130,16 +130,16 @@ process will be changed if this extension is enabled.
 If this extension is enabled, and there is only one active session, then
 there is no change.
 However, if this extension is enabled, and there are multiple active
-sessions, then the composition will occur in order based on the
-overlay session's slink:XrSessionCreateInfoOverlayEXTX::
-pname:sessionLayersPlacement value as described in the table below:
+sessions, then the composition will occur in order based on the overlay
+session's slink:XrSessionCreateInfoOverlayEXTX::pname:sessionLayersPlacement
+value as described in the table below:
 
 .Overlay Session Composition Order
 
 [width="85%",frame="topbot",cols="^.^30%,^.^45%,^.^25%e",options="header"]
 |=======================================================================
 | Session Type
-    | slink:XrSessionCreateInfoOverlayEXTX:: pname:sessionLayersPlacement
+    | slink:XrSessionCreateInfoOverlayEXTX::pname:sessionLayersPlacement
         | Composited
 | Overlay Session
     | UINT32_MAX
@@ -238,13 +238,13 @@ include::{INCS-VAR}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.txt[]
 
 elink:XrStructureType enumeration is extended with:
 
-ename:XR_TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX
-ename:XR_TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX
+* ename:XR_TYPE_SESSION_CREATE_INFO_OVERLAY_EXTX
+* ename:XR_TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX
 
 *New Enums*
 
-ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX
-ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_EXTX
+* ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
+* ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX
 
 *New Structures*
 
@@ -254,11 +254,11 @@ include::{INCS-VAR}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
 
 .Member Descriptions
 ****
-* pname:type is the type of this structure.
+* pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:createFlags is 0 or one or more
+* pname:createFlags is `0` or one or more
   elink:XrOverlaySessionCreateFlagBitsEXTX which indicate various
-  characteristics desired for the overlay session
+  characteristics desired for the overlay session.
 * pname:sessionLayersPlacement is a value indicating the desired placement
   of the session's composition layers in terms of other sessions.
 ****
@@ -280,14 +280,13 @@ on the standard behavior.
 This structure contains additional information on the main session including
 pname:flags which indicate additional state information of the main session.
 Currently, the only flag value supplied is
-ename:XR_MAIN_SESSION_BIT_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_EXTX which
-indicates if the main session has enabled the
+ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
+which indicates if the main session has enabled the
 <<XR_KHR_composition_layer_depth>> extension.
 
 .Member Descriptions
 ****
-* pname:type is
-  ename:XR_TYPE_EVENT_DATA_MAIN_SESSION_VISIBILITY_CHANGED_EXTX.
+* pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
 * pname:visible is an basetype:XrBool32 which indicates if pname:session is
   now visible or is not.
@@ -315,11 +314,13 @@ None
 
 *Version History*
 
- * Revision 1, 2018-11-05 (Mark Young)
- ** Initial draft
- * Revision 2, 2020-02-12 (Brad Grantham)
- ** Name change, remove overlay bool, add flags
- * Revision 3, 2020-03-05 (Brad Grantham)
- ** Name change
+* Revision 1, 2018-11-05 (Mark Young)
+** Initial draft
+* Revision 2, 2020-02-12 (Brad Grantham)
+** Name change, remove overlay bool, add flags
+* Revision 3, 2020-03-05 (Brad Grantham)
+** Name change
+* Revision 4, 2020-03-23 (Brad Grantham)
+** Fix enums
 
 
