@@ -414,7 +414,8 @@ The grip pose is defined as follows:
    holding the controller), the ray that points "forward" through the tube
    formed by your non-thumb fingers.
 ** The grip orientation's +Y axis: The right-handed Up axis implied by the
-   +X (Right) and -Z (Forward) definitions.
+   +X (Right) and -Z (Forward) definitions. This will typically point roughly
+   towards the wrist.
 * aim - A pose that allows applications to point in the world using the
   input source, according to the platform's conventions for aiming with that
   kind of source.
