@@ -47,6 +47,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <tag name="EXT"        author="Multivendor"             contact="Kaye Mason @chaleur"/>
         <tag name="EXTX"       author="Multivendor experimental"             contact="Brad Grantham @bradgrantham-lunarg"/>
         <tag name="GOOGLE"     author="Google"                  contact="Kaye Mason @chaleur"/>
+        <tag name="HUAWEI"     author="Huawei"                  contact="Yihong Huang @rachelhuang"/>
         <tag name="INTEL"      author="Intel"                   contact="Javier Martinez @javier"/>
         <tag name="KHR"        author="Khronos"                 contact="Nick Whiting @whitingn"/>
         <tag name="LUNARG"     author="LunarG"                  contact="Mark Young @marky_lunarg, Karl Schultz @karlschultz"/>
@@ -2577,6 +2578,12 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <enum value="&quot;XR_EPIC_view_configuration_fov&quot;" name="XR_EPIC_VIEW_CONFIGURATION_FOV_EXTENSION_NAME"/>
             <enum offset="0" extends="XrStructureType" name="XR_TYPE_VIEW_CONFIGURATION_VIEW_FOV_EPIC"/>
             <type name="XrViewConfigurationViewFovEPIC"/>
+        </require>
+    </extension>
+    <extension name="XR_HUAWEI_controller_interaction" number="70" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_HUAWEI_controller_interaction_SPEC_VERSION"/>
+            <enum value="&quot;XR_HUAWEI_controller_interaction&quot;" name="XR_HUAWEI_CONTROLLER_INTERACTION_EXTENSION_NAME"/>
         </require>
     </extension>
 
