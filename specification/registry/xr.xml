@@ -2580,7 +2580,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <type name="XrViewConfigurationViewFovEPIC"/>
         </require>
     </extension>
-    <extension name="XR_HUAWEI_controller_interaction" number="70" type="instance" supported="disabled">
+    <extension name="XR_HUAWEI_controller_interaction" number="70" type="instance" supported="openxr">
         <require>
             <enum value="1" name="XR_HUAWEI_controller_interaction_SPEC_VERSION"/>
             <enum value="&quot;XR_HUAWEI_controller_interaction&quot;" name="XR_HUAWEI_CONTROLLER_INTERACTION_EXTENSION_NAME"/>
