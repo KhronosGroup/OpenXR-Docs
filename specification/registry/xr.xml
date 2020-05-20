@@ -51,7 +51,8 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <tag name="KHR"        author="Khronos"                 contact="Nick Whiting @whitingn"/>
         <tag name="LUNARG"     author="LunarG"                  contact="Mark Young @marky_lunarg, Karl Schultz @karlschultz"/>
         <tag name="MAGICLEAP"  author="Magic Leap"              contact="Blake Taylor @theblindprogramm3r"/>
-        <tag name="MND"        author="Monado Project"          contact="Ryan Pavlik @rpavlik"/>
+        <tag name="MND"        author="Monado Project"          contact="Jakob Bornecrantz @wallbraker, Ryan Pavlik @rpavlik"/>
+        <tag name="MNDX"       author="Monado Project experimental" contact="Jakob Bornecrantz @wallbraker, Ryan Pavlik @rpavlik"/>
         <tag name="MSFT"       author="Microsoft"               contact="Alex Turner @alexturn, Yin Li @yl_msft, Bryce Hutchings @brycehutchings, Lachlan Ford @laford_msft, Minmin Gong @gongminmin "/>
         <tag name="NV"         author="NVIDIA Corporation"      contact="Satish Salian @ssalian, Robert Menzel"/>
         <tag name="OCULUS"     author="Oculus"                  contact="Cass Everitt @casseveritt, Paul Pedriana @ppedriana"/>
@@ -79,6 +80,7 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
         <type requires="EGL/egl.h" name="EGLDisplay"/>
         <type requires="EGL/egl.h" name="EGLConfig"/>
         <type requires="EGL/egl.h" name="EGLContext"/>
+        <type requires="EGL/egl.h" name="PFNEGLGETPROCADDRESSPROC"/>
         <type requires="GL/glxext.h" name="GLXFBConfig"/>
         <type requires="GL/glxext.h" name="GLXDrawable"/>
         <type requires="GL/glxext.h" name="GLXContext"/>
@@ -1040,6 +1042,15 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <member><type>XrPosef</type>                         <name>poseInAnchorSpace</name></member>
         </type>
 
+        <!-- types for XR_MNDX_egl_enable -->
+        <type category="struct" name="XrGraphicsBindingEGLMNDX" structextends="XrSessionCreateInfo">
+            <member values="XR_TYPE_GRAPHICS_BINDING_EGL_MNDX"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member><type>PFNEGLGETPROCADDRESSPROC</type> <name>getProcAddress</name></member>
+            <member><type>EGLDisplay</type> <name>display</name></member>
+            <member><type>EGLConfig</type> <name>config</name></member>
+            <member><type>EGLContext</type> <name>context</name></member>
+        </type>
     </types>
 
     <!-- SECTION: OpenXR enumerant (token) definitions. -->
@@ -2502,10 +2513,12 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <command name="xrSetInputDeviceLocationEXT"/>
         </require>
     </extension>
-    <extension name="XR_MND_egl_enable" number="49" type="instance" supported="disabled">
+    <extension name="XR_MNDX_egl_enable" number="49" type="instance" provisional="true" protect="XR_USE_PLATFORM_EGL" supported="openxr">
         <require>
-            <enum value="1" name="XR_MND_egl_enable_SPEC_VERSION"/>
-            <enum value="&quot;XR_MND_egl_enable&quot;" name="XR_MND_EGL_ENABLE_EXTENSION_NAME"/>
+            <enum value="1" name="XR_MNDX_egl_enable_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_egl_enable&quot;" name="XR_MNDX_EGL_ENABLE_EXTENSION_NAME"/>
+            <enum offset="4" extends="XrStructureType" name="XR_TYPE_GRAPHICS_BINDING_EGL_MNDX"/>
+            <type name="XrGraphicsBindingEGLMNDX"/>
         </require>
     </extension>
 
@@ -2579,6 +2592,6 @@ maintained in the master branch of the Khronos OpenXR GitHub project.
             <type name="XrViewConfigurationViewFovEPIC"/>
         </require>
     </extension>
-
     </extensions>
+
 </registry>
