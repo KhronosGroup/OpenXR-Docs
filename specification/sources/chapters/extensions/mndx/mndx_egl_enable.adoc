@@ -1,0 +1,67 @@
+include::../meta/XR_MNDX_egl_enable.adoc[]
+
+*Last Modified Date*::
+    2020-05-21
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Jakob Bornecrantz, Collabora +
+    Drew DeVault, Individual +
+    Simon Ser, Individual
+
+*Overview*
+
+This extension must be provided by runtimes supporting applications using
+the EGL API to create rendering contexts.
+
+* dlink:XR_USE_PLATFORM_EGL
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_GRAPHICS_BINDING_EGL_MNDX
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrGraphicsBindingEGLMNDX',type='structs',desc='The graphics binding structure to be passed at session creation to EGL',xrefs='xrCreateSession']
+--
+The slink:XrGraphicsBindingEGLMNDX structure is defined as:
+
+include::../../../../generated/api/structs/XrGraphicsBindingEGLMNDX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:getProcAddress is a valid function pointer to
+  sname:eglGetProcAddress.
+* pname:display is a valid EGL sname:EGLDisplay.
+* pname:config is a valid EGL sname:EGLConfig.
+* pname:context is a valid EGL sname:EGLContext.
+****
+
+When creating an EGL based slink:XrSession, the application will provide a
+pointer to an slink:XrGraphicsBindingEGLMNDX structure in the pname:next
+chain of the slink:XrSessionCreateInfo.
+
+The required window system configuration define to expose this structure
+type is dlink:XR_USE_PLATFORM_EGL.
+
+include::../../../../generated/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-05-20 (Jakob Bornecrantz)
+** Initial draft
