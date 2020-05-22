@@ -40,15 +40,16 @@ include::../../../../generated/api/structs/XrGraphicsBindingEGLMNDX.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:getProcAddress is a valid function poiner to sname:eglGetProcAddress.
+* pname:getProcAddress is a valid function pointer to
+  sname:eglGetProcAddress.
 * pname:display is a valid EGL sname:EGLDisplay.
 * pname:config is a valid EGL sname:EGLConfig.
 * pname:context is a valid EGL sname:EGLContext.
 ****
 
 When creating an EGL based slink:XrSession, the application will provide a
-pointer to an slink:XrGraphicsBindingEGLMNDX structure in the pname:next chain
-of the slink:XrSessionCreateInfo.
+pointer to an slink:XrGraphicsBindingEGLMNDX structure in the pname:next
+chain of the slink:XrSessionCreateInfo.
 
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_EGL.
