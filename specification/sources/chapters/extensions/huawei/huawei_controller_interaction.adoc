@@ -1,0 +1,67 @@
+include::../meta/XR_HUAWEI_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2020-05-26
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Guodong Chen, Huawei +
+    Kai Shao, Huawei +
+    Yang Tao, Huawei +
+    Gang Shen, Huawei +
+    Yihong Huang, Huawei
+
+*Overview*
+
+This extension defines a new interaction profile for the Huawei Controller,
+including but not limited to Huawei VR Glasses Controller.
+
+*Huawei Controller interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/huawei/controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Huawei Controller.
+
+Supported component paths:
+
+* subpathname:/input/home/click
+* subpathname:/input/back/click
+* subpathname:/input/volume_up/click
+* subpathname:/input/volume_down/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/click
+* subpathname:/input/trackpad/x
+* subpathname:/input/trackpad/y
+* subpathname:/input/trackpad/click
+* subpathname:/input/trackpad/touch
+* subpathname:/input/aim/pose
+* subpathname:/input/grip/pose
+* subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-04-28 (Yihong Huang)
+
+** Initial extension description
