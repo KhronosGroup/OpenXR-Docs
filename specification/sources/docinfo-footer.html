@@ -1,0 +1,16 @@
+<!-- begin footer docinfo -->
+<script>
+  // Don't break between TOC number and first word of title
+  // Particularly painful for extension chapters.
+  const toc = document.querySelectorAll('#toc.toc2 li a');
+  for (let elt of toc) {
+    let words = elt.innerHTML.split(' ');
+    /* if this is a numbered section */
+    if (words.length > 1 && words[0].endsWith('.')) {
+      /* don't split the number from the first word of the title, 
+       * by replacing the first space with nbsp */
+      elt.innerHTML = elt.innerHTML.replace(' ', '&nbsp;');
+    }
+  }
+</script>
+<!-- end footer docinfo -->

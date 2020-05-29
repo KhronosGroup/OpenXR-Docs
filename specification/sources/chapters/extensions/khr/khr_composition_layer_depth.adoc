@@ -51,6 +51,8 @@ include::../../../../generated/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
   associated with the color swapchain.
   The contained pname:imageRect specifies the valid portion of the depth
   image to use, in pixels.
+  It also implicitly defines the transform from normalized image coordinates
+  into pixel coordinates.
   The contained pname:imageArrayIndex is the depth image array index, with 0
   meaning the first or only array element.
 * pname:minDepth and pname:maxDepth are the range of depth values the

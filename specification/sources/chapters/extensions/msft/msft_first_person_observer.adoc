@@ -1,0 +1,85 @@
+include::../meta/XR_MSFT_first_person_observer.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2020-05-02
+
+*IP Status*::
+    No known IP claims.
+    
+*Contributors*::
+    Yin Li, Microsoft +
+    Zonglin Wu, Microsoft +
+    Alex Turner, Microsoft +
+
+==== Overview
+
+This first-person observer view configuration enables the runtime to request
+the application to render an additional first-person view of the scene to be
+composed onto video frames being captured from a camera attached to and
+moved with the primary display on the form factor, which is generally for
+viewing on a 2D screen by an external observer.
+This first-person camera will be facing forward with roughly the same
+perspective as the primary views, and so the application should render its
+view to show objects that surround the user and avoid rendering the user's
+body avatar.
+The runtime is responsible for composing the application's rendered observer
+view onto the camera frame based on the chosen environment blend mode for
+this view configuration, as this extension does not provide the associated
+camera frame to the application.
+
+This extension requires the <<XR_MSFT_secondary_view_configuration>>
+extension to also be enabled.
+
+ename:XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
+requires one element in slink:XrViewConfigurationProperties and one
+projection in each slink:XrCompositionLayerProjection layer.
+
+Runtimes should: only make this view configuration active when the user or
+the application activates a runtime feature that will make use of the
+resulting composed camera frames, for example taking a mixed reality photo.
+Otherwise, the runtime should: leave this view configuration inactive to
+avoid the application wasting CPU and GPU resources rendering unnecessarily
+for this extra view.
+
+Because this is a first-person view of the scene, applications can: share a
+common culling and instanced rendering pass with their primary view renders.
+However, the view state (pose and FOV) of the first-person observer view
+will not match the view state of any of the primary views.
+Applications enabling this view configuration must: call flink:xrLocateViews
+a second time each frame to explicitly query the view state for the
+ename:XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
+configuration.
+
+This secondary view configuration may: support a different set of
+environment blend modes than the primary view configuration.
+For example, a device that only supports additive blending for its primary
+display may support alpha-blending when composing the first-person observer
+view with camera frames.
+The application should render with assets and shaders that produce output
+acceptable to both the primary and observer view configuration's environment
+blend modes when sharing render passes across both view configurations.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrViewConfigurationType enumeration is extended with:
+
+* ename:XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2019-07-30 (Yin LI)
+** Initial extension description

@@ -1,0 +1,697 @@
+include::../meta/XR_MSFT_hand_tracking_mesh.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2020-05-16
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Lachlan Ford, Microsoft +
+    Alex Turner, Microsoft +
+    Bryce Hutchings, Microsoft +
+
+*Overview*
+
+This extension enables hand tracking inputs represented as a dynamic hand
+mesh.
+It enables applications to render hands in XR experiences and interact with
+virtual objects using hand meshes.
+
+The application must: also enable the <<XR_EXT_hand_tracking>> extension in
+order to use this extension.
+
+*Inspect system capability*
+
+[open,refpage='XrSystemHandTrackingMeshPropertiesMSFT',type='structs',desc='System property for hand tracking mesh',xrefs='']
+--
+An application can: inspect whether the system is capable of hand tracking
+meshes by chaining a slink:XrSystemHandTrackingMeshPropertiesMSFT structure
+to the slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+
+include::../../../../generated/api/structs/XrSystemHandTrackingMeshPropertiesMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:supportsHandTrackingMesh is an basetype:XrBool32, indicating if
+  current system is capable of hand tracking mesh input.
+* pname:maxHandMeshIndexCount is a code:uint32_t returns the maximum count
+  of indices that will be returned from the hand tracker.
+* pname:maxHandMeshVertexCount is a code:uint32_t returns the maximum count
+  of vertices that will be returned from the hand tracker.
+****
+
+If a runtime returns ename:XR_FALSE for pname:supportsHandTrackingMesh, the
+system does not support hand tracking mesh input, and therefore must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateHandMeshSpaceMSFT and
+flink:xrUpdateHandMeshMSFT.
+The application should: avoid using hand mesh functionality when
+pname:supportsHandTrackingMesh is ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsHandTrackingMesh, the
+system supports hand tracking mesh input.
+In this case, the runtime must: return a positive number for
+pname:maxHandMeshIndexCount and pname:maxHandMeshVertexCount.
+An application should: use pname:maxHandMeshIndexCount and
+pname:maxHandMeshVertexCount to pre-allocate hand mesh buffers and reuse
+them in their render loop when calling flink:xrUpdateHandMeshMSFT every
+frame.
+
+include::../../../../generated/validity/structs/XrSystemHandTrackingMeshPropertiesMSFT.txt[]
+--
+
+*Obtain a hand tracker handle*
+
+An application first creates an slink:XrHandTrackerEXT handle using the
+flink:xrCreateHandTrackerEXT function for each hand.
+The application can also reuse the same slink:XrHandTrackerEXT handle
+previously created for the hand joint tracking.
+When doing so, the hand mesh input is always in sync with hand joints input
+with the same slink:XrHandTrackerEXT handle.
+
+*Create a hand mesh space*
+
+[open,refpage='xrCreateHandMeshSpaceMSFT',type='protos',desc='Create a space for hand mesh tracking',xrefs='']
+--
+The application creates a hand mesh space using function
+flink:xrCreateHandMeshSpaceMSFT.
+The position and normal of hand mesh vertices will be represented in this
+space.
+
+include::../../../../generated/api/protos/xrCreateHandMeshSpaceMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT handle previously created
+  with the flink:xrCreateHandTrackerEXT function.
+* pname:createInfo is the slink:XrHandMeshSpaceCreateInfoMSFT used to
+  specify the hand mesh space.
+* pname:space is the returned slink:XrSpace handle of the new hand mesh
+  space.
+****
+
+A hand mesh space location is specified by runtime preference to effectively
+represent hand mesh vertices without unnecessary transformations.
+For example, an optical hand tracking system can: define the hand mesh space
+origin at the depth camera's optical center.
+
+An application should create separate hand mesh space handles for each hand
+to retrieve the corresponding hand mesh data.
+The runtime may: use the lifetime of this hand mesh space handle to manage
+the underlying device resources.
+Therefore, the application should: destroy the hand mesh handle after it is
+finished using the hand mesh.
+
+The hand mesh space can be related to other spaces in the session, such as
+view reference space, or grip action space from the
+pathname:/interaction_profiles/khr/simple_controller interaction profile.
+The hand mesh space may be not locatable when the hand is outside of the
+tracking range, or if focus is removed from the application.
+In these cases, the runtime must: not set the
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT bits on calls to
+flink:xrLocateSpace with the hand mesh space, and the application should:
+avoid using the returned poses or query for hand mesh data.
+
+If the underlying slink:XrHandTrackerEXT is destroyed, the runtime must:
+continue to support flink:xrLocateSpace using the hand mesh space, and it
+must: return space location with ename:XR_SPACE_LOCATION_POSITION_VALID_BIT
+and ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT unset.
+
+The application may: create a mesh space for the reference hand by setting
+pname:handPoseType to ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT.
+Hand mesh spaces for the reference hand must: only be locatable in reference
+to mesh spaces or joint spaces of the reference hand.
+
+include::../../../../generated/validity/protos/xrCreateHandMeshSpaceMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshSpaceCreateInfoMSFT',type='structs',desc='The information to create a hand mesh space',xrefs='']
+--
+include::../../../../generated/api/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:handPoseType is an elink:XrHandPoseTypeMSFT used to specify the type
+  of hand this mesh is tracking.
+  Indices and vertices returned from flink:xrUpdateHandMeshMSFT for a hand
+  type will be relative to the corresponding space create with the same hand
+  type.
+* pname:poseInHandMeshSpace is an slink:XrPosef defining the position and
+  orientation of the new space's origin within the natural reference frame
+  of the hand mesh space.
+****
+
+include::../../../../generated/validity/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
+--
+
+*Locate the hand mesh*
+
+[open,refpage='xrUpdateHandMeshMSFT',type='protos',desc='Update hand mesh buffers',xrefs='']
+--
+The application can: use the flink:xrUpdateHandMeshMSFT function to retrieve
+the hand mesh at a given timestamp.
+The hand mesh's vertices position and normal are represented in the hand
+mesh space created by flink:xrCreateHandMeshSpaceMSFT with a same
+slink:XrHandTrackerEXT.
+
+include::../../../../generated/api/protos/xrUpdateHandMeshMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT handle previously created
+  with flink:xrCreateHandTrackerEXT.
+* pname:updateInfo is a slink:XrHandMeshUpdateInfoMSFT which contains
+  information to query the hand mesh.
+* pname:handMesh is an slink:XrHandMeshMSFT structure to receive the updates
+  of hand mesh data.
+****
+
+The application should: pre-allocate the index buffer and vertex buffer in
+slink:XrHandMeshMSFT using the pname:maxHandMeshIndexCount and
+pname:maxHandMeshVertexCount from the
+slink:XrSystemHandTrackingMeshPropertiesMSFT returned from the
+flink:xrGetSystemProperties function.
+
+The application should: pre-allocate the slink:XrHandMeshMSFT structure and
+reuse it for each frame so as to reduce the copies of data when underlying
+tracking data is not changed.
+The application should use pname:indexBufferChanged and
+pname:vertexBufferChanged in slink:XrHandMeshMSFT to detect changes and
+avoid unnecessary data processing when there is no changes.
+
+include::../../../../generated/validity/protos/xrUpdateHandMeshMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshUpdateInfoMSFT',type='structs',desc='The information to update a hand mesh',xrefs='']
+--
+
+A slink:XrHandMeshUpdateInfoMSFT describes the information to update a hand
+mesh.
+
+include::../../../../generated/api/structs/XrHandMeshUpdateInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:time is the basetype:XrTime that describes the time for which the
+  application wishes to query the hand mesh state.
+* pname:handPoseType is an elink:XrHandPoseTypeMSFT which describes the type
+  of hand pose of the hand mesh to update.
+****
+
+A runtime may: not maintain a full history of hand mesh data, therefore the
+returned slink:XrHandMeshMSFT might return data that's not exactly
+corresponding to the pname:time input.
+If the runtime cannot return any tracking data for the given pname:time at
+all, it must: set pname:isActive to ename:XR_FALSE for the call to
+flink:xrUpdateHandMeshMSFT.
+Otherwise, if the runtime returns pname:isActive as ename:XR_TRUE, the data
+in slink:XrHandMeshMSFT must be valid to use.
+
+An application can choose different pname:handPoseType values to query the
+hand mesh data.
+The returned hand mesh must: be consistent to the hand joint space location
+on the same slink:XrHandTrackerEXT when using the same
+elink:XrHandPoseTypeMSFT.
+
+include::../../../../generated/validity/structs/XrHandMeshUpdateInfoMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshMSFT',type='structs',desc='The data of a hand mesh',xrefs='']
+--
+
+A slink:XrHandMeshMSFT structure contains data and buffers to receive
+updates of hand mesh tracking data from flink:xrUpdateHandMeshMSFT function.
+
+include::../../../../generated/api/structs/XrHandMeshMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:isActive is an basetype:XrBool32 indicating if the current hand
+  tracker is active.
+* pname:indexBufferChanged is an basetype:XrBool32 indicating if the
+  pname:indexBuffer content was changed during the update.
+* pname:vertexBufferChanged is an basetype:XrBool32 indicating if the
+  pname:vertexBuffer content was changed during the update.
+* pname:indexBuffer is an slink:XrHandMeshIndexBufferMSFT returns the index
+  buffer of the tracked hand mesh.
+* pname:vertexBuffer is an slink:XrHandMeshVertexBufferMSFT returns the
+  vertex buffer of the tracked hand mesh.
+****
+
+When the returned pname:isActive value is ename:XR_FALSE, the runtime
+indicates the hand is not actively tracked, for example, the hand is outside
+of sensor's range, or the input focus is taken away from the application.
+When the runtime returns ename:XR_FALSE to pname:isActive, it must: set
+pname:indexBufferChanged and pname:vertexBufferChanged to ename:XR_FALSE,
+and must: not change the content in pname:indexBuffer or pname:vertexBuffer,
+
+When the returned pname:isActive value is ename:XR_TRUE, the hand tracking
+mesh represented in pname:indexBuffer and pname:vertexBuffer are updated to
+the latest data of the pname:time given to the flink:xrUpdateHandMeshMSFT
+function.
+The runtime must: set pname:indexBufferChanged and pname:vertexBufferChanged
+to reflect whether the index or vertex buffer's content are changed during
+the update.
+In this way, the application can easily avoid unnecessary processing of
+buffers when there's no new data.
+
+The hand mesh is represented in triangle lists and each triangle's vertices
+are in counter-clockwise order when looking from outside of the hand.
+When hand tracking is active, i.e. when pname:isActive is returned as
+ename:XR_TRUE, the returned `indexBuffer.indexCountOutput` value must: be
+positive and multiple of 3, and `vertexBuffer.vertexCountOutput` value must:
+be equal to or larger than 3.
+
+include::../../../../generated/validity/structs/XrHandMeshMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshIndexBufferMSFT',type='structs',desc='The index buffer of a hand mesh',xrefs='']
+--
+A slink:XrHandMeshIndexBufferMSFT structure includes an array of indices
+describing the triangle list of a hand mesh.
+
+include::../../../../generated/api/structs/XrHandMeshIndexBufferMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:indexBufferKey is a code:uint32_t serving as the key of the returned
+  index buffer content or 0 to indicate a request to retrieve the latest
+  indices regardless of existing content in pname:indices.
+* pname:indexCapacityInput is a positive code:uint32_t describes the
+  capacity of the pname:indices array.
+* pname:indexCountOutput is a code:uint32_t returned by the runtime with the
+  count of indices written in pname:indices.
+* pname:indices is an array of indices filled in by the runtime, specifying
+  the indices of the triangles list in the vertex buffer.
+****
+
+An application should: pre-allocate the indices array using the
+pname:maxHandMeshIndexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+returned from flink:xrGetSystemProperties.
+In this way, the application can avoid possible insufficient buffer sizees
+for each query, and therefore avoid reallocating memory each frame.
+
+The input pname:indexCapacityInput must: not be 0, and pname:indices must:
+not be code:NULL, or else the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE on calls to the flink:xrUpdateHandMeshMSFT
+function.
+
+If the input pname:indexCapacityInput is not sufficient to contain all
+output indices, the runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT on
+calls to flink:xrUpdateHandMeshMSFT, not change the content in
+pname:indexBufferKey and pname:indices, and return 0 for
+pname:indexCountOutput.
+
+If the input pname:indexCapacityInput is equal to or larger than the
+pname:maxHandMeshIndexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+returned from flink:xrGetSystemProperties, the runtime must: not return
+ename:XR_ERROR_SIZE_INSUFFICIENT error on flink:xrUpdateHandMeshMSFT because
+of insufficient index buffer size.
+
+If the input pname:indexBufferKey is 0, the capacity of indices array is
+sufficient, and hand mesh tracking is active, the runtime must: return the
+latest non-zero pname:indexBufferKey, and fill in pname:indexCountOutput and
+pname:indices.
+
+If the input pname:indexBufferKey is not 0, the runtime can: either return
+without changing pname:indexCountOutput or content in pname:indices, and
+return ename:XR_FALSE for pname:indexBufferChanged indicating the indices
+are not changed; or return a new non-zero pname:indexBufferKey and fill in
+latest data in pname:indexCountOutput and pname:indices, and return
+ename:XR_TRUE for pname:indexBufferChanged indicating the indices are
+updated to a newer version.
+
+An application can: keep the slink:XrHandMeshIndexBufferMSFT structure for
+each frame in a frame loop and use the returned pname:indexBufferKey to
+identify different triangle list topology described in pname:indices.
+The application can therefore avoid unnecessary processing of indices, such
+as coping them to GPU memory.
+
+The runtime must: return the same pname:indexBufferKey for the same
+slink:XrHandTrackerEXT at a given time, regardless of the input
+elink:XrHandPoseTypeMSFT in slink:XrHandMeshUpdateInfoMSFT.
+This ensures the index buffer has the same mesh topology and allows the
+application to reason about vertices across different hand pose types.
+For example, the application can: build a procedure to perform UV mapping on
+vertices of a hand mesh using
+ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT, and apply the resultant UV
+data on vertices to the mesh returned from the same hand tracker using
+ename:XR_HAND_POSE_TYPE_TRACKED_MSFT.
+
+include::../../../../generated/validity/structs/XrHandMeshIndexBufferMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshVertexBufferMSFT',type='structs',desc='The vertex buffer of a hand mesh',xrefs='']
+--
+A slink:XrHandMeshVertexBufferMSFT structure includes an array of vertices
+of the hand mesh represented in the hand mesh space.
+
+include::../../../../generated/api/structs/XrHandMeshVertexBufferMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:vertexUpdateTime is an basetype:XrTime representing the time when
+  the runtime receives the vertex buffer content or 0 to indicate a request
+  to retrieve latest vertices regardless of existing content in
+  pname:vertices.
+* pname:vertexCapacityInput is a positive code:uint32_t describes the
+  capacity of the pname:vertices array.
+* pname:vertexCountOutput is a code:uint32_t filled in by the runtime with
+  the count of vertices written in pname:vertices.
+* pname:vertices is an array of slink:XrHandMeshVertexMSFT filled in by the
+  runtime, specifying the vertices of the hand mesh including the position
+  and normal vector in the hand mesh space.
+****
+
+An application should: pre-allocate the vertices array using the
+pname:maxHandMeshVertexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+returned from flink:xrGetSystemProperties.
+In this way, the application can avoid possible insufficient buffer sizes
+for each query, and therefore avoid reallocating memory each frame.
+
+The input pname:vertexCapacityInput must: not be 0, and pname:vertices must:
+not be code:NULL, or else the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE on calls to the flink:xrUpdateHandMeshMSFT
+function.
+
+If the input pname:vertexCapacityInput is not sufficient to contain all
+output vertices, the runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT
+on calls to the flink:xrUpdateHandMeshMSFT, do not change content in
+pname:vertexUpdateTime and pname:vertices, and return 0 for
+pname:vertexCountOutput.
+
+If the input pname:vertexCapacityInput is equal to or larger than the
+pname:maxHandMeshVertexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+returned from flink:xrGetSystemProperties, the runtime must: not return
+ename:XR_ERROR_SIZE_INSUFFICIENT on calls to the flink:xrUpdateHandMeshMSFT
+because of insufficient vertex buffer size.
+
+If the input pname:vertexUpdateTime is 0, and the capacity of the vertices
+array is sufficient, and hand mesh tracking is active, the runtime must:
+return the latest non-zero pname:vertexUpdateTime, and fill in the
+pname:vertexCountOutput and pname:vertices fields.
+
+If the input pname:vertexUpdateTime is not 0, the runtime can: either return
+without changing pname:vertexCountOutput or the content in pname:vertices,
+and return ename:XR_FALSE for pname:vertexBufferChanged indicating the
+vertices are not changed; or return a new non-zero pname:vertexUpdateTime
+and fill in latest data in pname:vertexCountOutput and pname:vertices and
+return ename:XR_TRUE for pname:vertexBufferChanged indicating the vertices
+are updated to a newer version.
+
+An application can: keep the slink:XrHandMeshVertexBufferMSFT structure for
+each frame in frame loop and use the returned pname:vertexUpdateTime to
+detect the changes of the content in pname:vertices.
+The application can therefore avoid unnecessary processing of vertices, such
+as coping them to GPU memory.
+
+include::../../../../generated/validity/structs/XrHandMeshVertexBufferMSFT.txt[]
+--
+
+[open,refpage='XrHandMeshVertexMSFT',type='structs',desc='The vertex of hand mesh',xrefs='']
+--
+Each slink:XrHandMeshVertexMSFT includes the position and normal of a vertex
+of a hand mesh.
+
+include::../../../../generated/api/structs/XrHandMeshVertexMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:position is an slink:XrVector3f structure representing the position
+  of the vertex in the hand mesh space, measured in meters.
+* pname:normal is an slink:XrVector3f structure representing the unweighted
+  normal of the triangle surface at the vertex as a unit vector in hand mesh
+  space.
+****
+
+include::../../../../generated/validity/structs/XrHandMeshVertexMSFT.txt[]
+--
+
+*Example code for hand mesh tracking*
+
+Following example code demos pre-allocating hand mesh buffers and updating
+the hand mesh in rendering loop
+
+[source,C++]
+------------------------------------------------------------------------------
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// Inspect hand tracking mesh system properties
+XrSystemHandTrackingMeshPropertiesMSFT handMeshSystemProperties{XR_TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES, &handMeshSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!handMeshSystemProperties.supportsHandTrackingMesh) {
+    // the system does not support hand mesh tracking
+    return;
+}
+
+// Create a tracker for left hand.
+XrHandTrackerEXT leftHandTracker{};
+{
+    XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
+    createInfo.hand = XR_HAND_LEFT_EXT;
+    createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+    CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
+}
+
+// Create the hand mesh spaces
+XrSpace leftHandMeshSpace{};
+{
+    XrHandMeshSpaceCreateInfoMSFT createInfo{XR_TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT};
+    createInfo.poseInHandMeshSpace = {{0, 0, 0, 1}, {0, 0, 0}};
+    CHK_XR(xrCreateHandMeshSpaceMSFT(leftHandTracker, &createInfo, &leftHandMeshSpace));
+}
+
+// Pre-allocate buffers for hand mesh indices and vertices
+std::vector<uint32_t> handMeshIndices(handMeshSystemProperties.maxHandMeshIndexCount);
+std::vector<XrHandMeshVertexMSFT> handMeshVertices(handMeshSystemProperties.maxHandMeshVertexCount);
+
+XrHandMeshMSFT leftHandMesh{XR_TYPE_HAND_MESH_MSFT};
+leftHandMesh.indexBuffer.indexCapacityInput = (uint32_t)handMeshIndices.size();
+leftHandMesh.indexBuffer.indices = handMeshIndices.data();
+leftHandMesh.vertexBuffer.vertexCapacityInput = (uint32_t)handMeshVertices.size();
+leftHandMesh.vertexBuffer.vertices = handMeshVertices.data();
+
+while(1){
+    // ...
+    // For every frame in frame loop
+    // ...
+    XrFrameState frameState;    // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
+    updateInfo.time = time;
+    CHK_XR(xrUpdateHandMeshMSFT(leftHandTracker, &updateInfo, &leftHandMesh));
+    if (!leftHandMesh.isActive) {
+        // Hand input is not focused or user's hand is out of tracking range. 
+        // Do not process or render hand mesh.
+    } else {
+        if (leftHandMesh.indexBufferChanged) {
+            // Process indices in indexBuffer.indices
+        }
+
+        if (leftHandMesh.vertexBufferChanged) {
+            // Process vertices in vertexBuffer.vertices and leftHandMeshSpace
+        }
+    }
+}
+------------------------------------------------------------------------------
+
+*Get hand reference poses*
+
+By default, a slink:XrHandTrackerEXT tracks a default hand pose type, that
+is to provide best fidelity to the user's actual hand motion.
+This is the same with ename:XR_HAND_POSE_TYPE_TRACKED_MSFT (i.e. value 0) in
+a chained slink:XrHandPoseTypeInfoMSFT structure to the pname:next pointer
+of slink:XrHandTrackerCreateInfoEXT when calling
+flink:xrCreateHandTrackerEXT.
+
+Some hand mesh visualizations may require an initial analysis or processing
+of the hand mesh relative to the joints of the hand.
+For example, a hand visualization may generate a UV mapping for the hand
+mesh vertices by raycasting outward from key joints against the mesh to find
+key vertices.
+
+To avoid biasing such static analysis with the arbitrary tracked hand pose,
+an application can: instead create a different slink:XrHandTrackerEXT handle
+with a reference hand pose type when calling flink:xrCreateHandTrackerEXT.
+This will instruct the runtime to provide a reference hand pose that is
+better suited for such static analysis.
+
+[open,refpage='XrHandPoseTypeInfoMSFT',type='structs',desc='Describes what hand pose type for the hand joint tracking.',xrefs='']
+--
+
+An application can chain an slink:XrHandPoseTypeInfoMSFT structure to the
+slink:XrHandTrackerCreateInfoEXT::pname:next pointer when calling
+flink:xrCreateHandTrackerEXT to indicate the hand tracker to return the hand
+pose of specific elink:XrHandPoseTypeMSFT.
+
+include::../../../../generated/api/structs/XrHandPoseTypeInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:handPoseType is an elink:XrHandPoseTypeMSFT that describes the type
+  of hand pose of the hand tracking.
+****
+
+include::../../../../generated/validity/structs/XrHandPoseTypeInfoMSFT.txt[]
+--
+
+[open,refpage='XrHandPoseTypeMSFT',type='enums',desc='Describe type of input hand pose',xrefs='']
+--
+The elink:XrHandPoseTypeMSFT describes the type of input hand pose from
+slink:XrHandTrackerEXT.
+
+include::../../../../generated/api/enums/XrHandPoseTypeMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_POSE_TYPE_TRACKED_MSFT represents a hand pose provided by
+  actual tracking of the user's hand.
+* ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT represents a stable
+  reference hand pose in a relaxed open hand shape.
+****
+
+The ename:XR_HAND_POSE_TYPE_TRACKED_MSFT input provides best fidelity to the
+user's actual hand motion.
+When the hand tracking input requires the user to be holding a controller in
+their hand, the hand tracking input will appear as the user virtually
+holding the controller.
+This input can be used to render the hand shape together with the controller
+in hand.
+
+The ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT input does not move
+with the user's actual hand.
+Through this reference hand pose, an application can: get a stable hand
+joint and mesh that has the same mesh topology as the tracked hand mesh
+using the same slink:XrHandTrackerEXT, so that the application can apply the
+data computed from a reference hand pose to the corresponding tracked hand.
+
+Although a reference hand pose does not move with user's hand motion, the
+bone length and hand thickness may: be updated, for example when tracking
+result refines, or a different user's hand is detected.
+The application should: update reference hand joints and meshes when the
+tracked mesh's pname:indexBufferKey is changed or when the pname:isActive
+value returned from flink:xrUpdateHandMeshMSFT changes from ename:XR_FALSE
+to ename:XR_TRUE.
+It can use the returned pname:indexBufferKey and pname:vertexUpdateTime from
+flink:xrUpdateHandMeshMSFT to avoid unnecessary CPU or GPU work to process
+the neutral hand inputs.
+--
+
+*Example code for reference hand mesh update *
+
+The following example code demonstrates detecting reference hand mesh
+changes and retrieving data for processing.
+
+[source,C++]
+------------------------------------------------------------------------------
+XrSession session;                  // previously initialized
+XrHandTrackerEXT handTracker;       // previously initialized with handJointSet set to XR_HAND_JOINT_SET_DEFAULT_MSFT
+XrSpace handMeshReferenceSpace;     // previously initialized with handPoseType set to XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT
+XrHandMeshMSFT referenceHandMesh;   // previously initialized with pre-allocated buffers
+
+while(1){
+    // ...
+    // For every frame in frame loop
+    // ...
+    XrFrameState frameState;    // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
+    updateInfo.time = time;
+    updateInfo.handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT;
+    CHK_XR(xrUpdateHandMeshMSFT(handTracker, &updateInfo, &referenceHandMesh));
+
+    // Detect if reference hand mesh is changed.
+    if (referenceHandMesh.indexBufferChanged || referenceHandMesh.vertexBufferChanged) {
+
+        // Query the joint location using "open palm" reference hand pose.
+        XrHandPoseTypeInfoMSFT handPoseTypeInfo{XR_TYPE_HAND_POSE_TYPE_INFO_MSFT};
+        handPoseTypeInfo.handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT;
+
+        XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
+        createInfo.hand = XR_HAND_LEFT_EXT;
+        createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+        createInfo.next = &handPoseTypeInfo;
+
+        XrHandTrackerEXT referenceHandTracker;
+        CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &referenceHandTracker));
+
+        XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
+        locateInfo.next = &handPoseTypeInfo;
+        locateInfo.baseSpace = handMeshReferenceSpace;  // Query joint location relative to hand mesh reference space
+        locateInfo.time = time;
+
+        std::array<XrHandJointLocationEXT, XR_HAND_JOINT_COUNT_EXT> jointLocations;
+        XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+        locations.jointCount = jointLocations.size();
+        locations.jointLocations = jointLocations.data();
+
+        CHK_XR(xrLocateHandJointsEXT(referenceHandTracker, &locateInfo, &locations));
+
+        // Generate UV map using tip/wrist location and referenceHandMesh.vertexBuffer
+        // For example, gradually changes color from the tip of the hand to wrist.
+    }
+}
+------------------------------------------------------------------------------
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT
+* ename:XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT
+* ename:XR_TYPE_HAND_MESH_MSFT
+* ename:XR_TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT
+* ename:XR_TYPE_HAND_POSE_TYPE_INFO_MSFT
+
+*New Enums*
+
+* elink:XrHandPoseTypeMSFT
+
+*New Structures*
+
+* slink:XrHandMeshSpaceCreateInfoMSFT
+* slink:XrHandMeshUpdateInfoMSFT
+* slink:XrHandMeshMSFT
+* slink:XrHandMeshIndexBufferMSFT
+* slink:XrHandMeshVertexBufferMSFT
+* slink:XrHandMeshVertexMSFT
+* slink:XrSystemHandTrackingMeshPropertiesMSFT
+* slink:XrHandPoseTypeInfoMSFT
+
+*New Functions*
+
+* flink:xrCreateHandMeshSpaceMSFT
+* flink:xrUpdateHandMeshMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 2, 2020-04-20 (Yin LI)
+** Change joint spaces to locate joints function.
+
+* Revision 1, 2019-09-20 (Yin LI)
+** Initial extension description

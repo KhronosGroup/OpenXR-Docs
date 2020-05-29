@@ -33,15 +33,15 @@ you must: define dlink:XR_USE_GRAPHICS_API_D3D12 before including the OpenXR
 platform header `openxr_platform.h`, in all portions of your library or
 application that include it.
 
-*Swapchain Image Layout*
+*Swapchain Image Resource State*
 
 When an application acquires a swapchain image by calling
 flink:xrAcquireSwapchainImage in a session create using
 slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: guarantee that:
 
-* The color rendering target image has a memory layout compatible with
+* The color rendering target image has a resource state match with
   ename:D3D12_RESOURCE_STATE_RENDER_TARGET
-* The depth rendering target image has a memory layout compatible with
+* The depth rendering target image has a resource state match with
   ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
 * The sname:ID3D12CommandQueue specified in slink:XrGraphicsBindingD3D12KHR
   can write to the image.
@@ -51,19 +51,18 @@ flink:xrReleaseSwapchainImage, in a session create using
 slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: interpret the
 image as:
 
-* Having a memory layout compatible with
+* Having a resource state match with
   ename:D3D12_RESOURCE_STATE_RENDER_TARGET if the image is a color rendering
   target
-* Having a memory layout compatible with
-  ename:D3D12_RESOURCE_STATE_DEPTH_WRITE if the image is a depth rendering
-  target
+* Having a resource state match with ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
+  if the image is a depth rendering target
 * Being available for read/write on the sname:ID3D12CommandQueue specified
   in slink:XrGraphicsBindingD3D12KHR.
 
 The application is responsible for transitioning the swapchain image back to
-the image layout and queue availability that the OpenXR runtime requires.
-If the image is not in a layout compatible with the above specifications the
-runtime may: exhibit undefined behaviour.
+the resource state and queue availability that the OpenXR runtime requires.
+If the image is not in a resource state match with the above specifications
+the runtime may: exhibit undefined behaviour.
 
 *New Object Types*
 

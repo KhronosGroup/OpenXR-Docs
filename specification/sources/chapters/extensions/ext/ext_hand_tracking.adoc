@@ -1,0 +1,586 @@
+include::../meta/XR_EXT_hand_tracking.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2020-05-16
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Lachlan Ford, Microsoft +
+    Alex Turner, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Cass Everitt, Oculus +
+    Blake Taylor, Magic Leap +
+    Joe van den Heuvel, Valve +
+    Nicholas Benson, Ultraleap +
+
+*Overview*
+
+This extension enables applications to locate the individual joints of hand
+tracking inputs.
+It enables applications to render hands in XR experiences and interact with
+virtual objects using hand joints.
+
+*Inspect system capability*
+
+[open,refpage='XrSystemHandTrackingPropertiesEXT',type='structs',desc='System property for hand tracking',xrefs='']
+--
+An application can: inspect whether the system is capable of hand tracking
+input by extending the slink:XrSystemProperties with
+slink:XrSystemHandTrackingPropertiesEXT structure when calling
+flink:xrGetSystemProperties.
+
+include::../../../../generated/api/structs/XrSystemHandTrackingPropertiesEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:supportsHandTracking is an basetype:XrBool32, indicating if current
+  system is capable of hand tracking input.
+****
+
+include::../../../../generated/validity/structs/XrSystemHandTrackingPropertiesEXT.txt[]
+
+If a runtime returns ename:XR_FALSE for pname:supportsHandTracking, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateHandTrackerEXT.
+--
+
+*Create a hand tracker handle*
+
+[open,refpage='XrHandTrackerEXT',type='handles',desc='Represents a tracker for a hand joints.']
+--
+The slink:XrHandTrackerEXT handle represents the resources for hand tracking
+of the specific hand.
+
+include::../../../../generated/api/handles/XrHandTrackerEXT.txt[]
+
+An application creates separate slink:XrHandTrackerEXT handles for left and
+right hands.
+This handle can be used to locate hand joints using
+flink:xrLocateHandJointsEXT function.
+
+A hand tracker provides accurate fidelity to the user's actual hand shape.
+When the hand tracking input requires the user to be holding a controller in
+their hand, the hand tracking input will appear as the user holding the
+controller.
+This input can be used to render the hand shape together with rendering the
+controller in the hand.
+
+--
+
+[open,refpage='xrCreateHandTrackerEXT',type='protos',desc='Create a hand joints handle.',xrefs='']
+--
+An application can create an slink:XrHandTrackerEXT handle using
+flink:xrCreateHandTrackerEXT function.
+include::../../../../generated/api/protos/xrCreateHandTrackerEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the hand tracker will be
+  active.
+* pname:createInfo is the slink:XrHandTrackerCreateInfoEXT used to specify
+  the hand tracker.
+* pname:handTracker is the returned slink:XrHandTrackerEXT handle.
+****
+
+include::../../../../generated/validity/protos/xrCreateHandTrackerEXT.txt[]
+
+If the system does not support hand tracking, runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateHandTrackerEXT.
+In this case, the runtime must: return ename:XR_FALSE for
+pname:supportsHandTracking in slink:XrSystemHandTrackingPropertiesEXT when
+the function flink:xrGetSystemProperties is called, so that the application
+can: avoid creating a hand tracker.
+--
+
+[open,refpage='XrHandTrackerCreateInfoEXT',type='structs',desc='Information to create a hand joints handle',xrefs='']
+--
+The slink:XrHandTrackerCreateInfoEXT structure describes the information to
+create a slink:XrHandTrackerEXT handle.
+
+include::../../../../generated/api/structs/XrHandTrackerCreateInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:hand is an elink:XrHandEXT which describes which hand the tracker is
+  tracking.
+* pname:handJointSet is an elink:XrHandJointSetEXT describe the set of hand
+  joints to retrieve.
+****
+
+include::../../../../generated/validity/structs/XrHandTrackerCreateInfoEXT.txt[]
+--
+
+[open,refpage='XrHandEXT',type='enums',desc='Describes which hand the tracker is tracking.',xrefs='']
+--
+The elink:XrHandEXT describes which hand the slink:XrHandTrackerEXT is
+tracking.
+
+include::../../../../generated/api/enums/XrHandEXT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_LEFT_EXT specifies the hand tracker will be tracking the
+  user's left hand.
+* ename:XR_HAND_RIGHT_EXT specifies the hand tracker will be tracking the
+  user's right hand.
+****
+--
+
+[open,refpage='XrHandJointSetEXT',type='enums',desc='The set of hand joints to track.',xrefs='XrHandTrackerCreateInfoEXT']
+--
+The elink:XrHandJointSetEXT enum describes the set of hand joints to track
+when creating an slink:XrHandTrackerEXT.
+
+include::../../../../generated/api/enums/XrHandJointSetEXT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_JOINT_SET_DEFAULT_EXT indicates that the created
+  slink:XrHandTrackerEXT tracks the set of hand joints described by
+  elink:XrHandJointEXT enum, i.e. the flink:xrLocateHandJointsEXT function
+  returns an array of joint locations with the count of
+  dlink:XR_HAND_JOINT_COUNT_EXT and can be indexed using
+  elink:XrHandJointEXT.
+****
+--
+
+[open,refpage='xrDestroyHandTrackerEXT',type='protos',desc='Destroy a hand joints handle',xrefs='']
+--
+flink:xrDestroyHandTrackerEXT function releases the pname:handTracker and
+the underlying resources when finished with hand tracking experiences.
+
+include::../../../../generated/api/protos/xrDestroyHandTrackerEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT previously created by
+  flink:xrCreateHandTrackerEXT.
+****
+
+include::../../../../generated/validity/protos/xrDestroyHandTrackerEXT.txt[]
+--
+
+*Locate hand joints*
+
+[open,refpage='xrLocateHandJointsEXT',type='protos',desc='Locate hand joint locations',xrefs='']
+--
+The flink:xrLocateHandJointsEXT function locates an array of hand joints to
+a base space at given time.
+
+include::../../../../generated/api/protos/xrLocateHandJointsEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT previously created by
+  flink:xrCreateHandTrackerEXT.
+* pname:locateInfo is a pointer to slink:XrHandJointsLocateInfoEXT
+  describing information to locate hand joints.
+* pname:locations is a pointer to slink:XrHandJointLocationsEXT receiving
+  the returned hand joint locations.
+****
+
+include::../../../../generated/validity/protos/xrLocateHandJointsEXT.txt[]
+--
+
+[open,refpage='XrHandJointsLocateInfoEXT',type='structs',desc='Describes the information to locate hand joints',xrefs='xrLocateHandJointsEXT']
+--
+The slink:XrHandJointsLocateInfoEXT structure describes the information to
+locate hand joints.
+
+include::../../../../generated/api/structs/XrHandJointsLocateInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:baseSpace is an slink:XrSpace within which the returned hand joint
+  locations will be represented.
+* pname:time is an basetype:XrTime at which to locate the hand joints.
+****
+
+include::../../../../generated/validity/structs/XrHandJointsLocateInfoEXT.txt[]
+--
+
+[open,refpage='XrHandJointLocationsEXT',type='structs',desc='Returns the hand joint locations',xrefs='xrLocateHandJointsEXT']
+--
+slink:XrHandJointLocationsEXT structure returns the state of the hand joint
+locations.
+
+include::../../../../generated/api/structs/XrHandJointLocationsEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:isActive is a basetype:XrBool32 indicating if the hand tracker is
+  actively tracking.
+* pname:jointCount is a code:uint32_t describing the count of elements in
+  pname:jointLocations array.
+* pname:jointLocations is an array of slink:XrHandJointLocationEXT receiving
+  the returned hand joint locations.
+****
+
+The application must: allocate the memory for the output array
+pname:jointLocations that can contain at least pname:jointCount of
+slink:XrHandJointLocationEXT.
+
+The application must: set pname:jointCount as described by the
+elink:XrHandJointSetEXT when creating the slink:XrHandTrackerEXT otherwise
+the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: update the pname:jointLocations array ordered so that the
+application can index elements using the corresponding hand joint enum (e.g.
+elink:XrHandJointEXT) as described by elink:XrHandJointSetEXT when creating
+the slink:XrHandTrackerEXT.
+For example, when the slink:XrHandTrackerEXT is created with
+ename:XR_HAND_JOINT_SET_DEFAULT_EXT, the application must: set the
+pname:jointCount to dlink:XR_HAND_JOINT_COUNT_EXT, and the runtime must:
+fill the pname:jointLocations array ordered so that it may be indexed by the
+elink:XrHandJointEXT enum.
+
+If the returned pname:isActive is true, the runtime must: return all joint
+locations with both ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
+Although, in this case, some joint space locations may: be untracked (i.e.
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT or
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT is unset).
+
+If the returned pname:isActive is false, it indicates the hand tracker did
+not detect the hand input or the application lost input focus.
+In this case, the runtime must: return all pname:jointLocations with neither
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT nor
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
+
+include::../../../../generated/validity/structs/XrHandJointLocationsEXT.txt[]
+--
+
+[open,refpage='XrHandJointLocationEXT',type='structs',desc='Describes the location and radius of a hand joint',xrefs='XrHandJointLocationsEXT']
+--
+slink:XrHandJointLocationEXT structure describes the position, orientation,
+and radius of a hand joint.
+
+include::../../../../generated/api/structs/XrHandJointLocationEXT.txt[]
+
+.Member Descriptions
+****
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits, to indicate which members contain valid
+  data.
+  If none of the bits are set, no other fields in this structure should: be
+  considered to be valid or meaningful.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the origin of a hand joint within the reference frame of the corresponding
+  slink:XrHandJointsLocateInfoEXT::pname:baseSpace.
+* pname:radius is a code:float value radius of the corresponding joint in
+  units of meters.
+****
+
+If the returned pname:locationFlags has
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT set, the returned radius must: be
+a positive value.
+
+If the returned pname:locationFlags has
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT unset, the returned radius value
+is undefined and should be avoided.
+
+include::../../../../generated/validity/structs/XrHandJointLocationEXT.txt[]
+--
+
+[open,refpage='XrHandJointVelocitiesEXT',type='structs',desc='Returns the hand joint velocities',xrefs='XrHandJointLocationsEXT']
+--
+The application can chain an slink:XrHandJointVelocitiesEXT structure to the
+pname:next pointer of slink:XrHandJointLocationsEXT when calling
+flink:xrLocateHandJointsEXT to retrieve the hand joint velocities.
+
+include::../../../../generated/api/structs/XrHandJointVelocitiesEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:jointCount is a code:uint32_t describing the number of elements in
+  pname:jointVelocities array.
+* pname:jointVelocities is an array of slink:XrHandJointVelocityEXT
+  receiving the returned hand joint velocities.
+****
+
+The application must: allocate the memory for the output array
+pname:jointVelocities that can contain at least pname:jointCount of
+slink:XrHandJointVelocityEXT.
+
+The application must: input pname:jointCount as described by the
+elink:XrHandJointSetEXT when creating the slink:XrHandTrackerEXT.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: update the pname:jointVelocities array in the order so
+that the application can index elements using the corresponding hand joint
+enum (e.g. elink:XrHandJointEXT) as described by the elink:XrHandJointSetEXT
+when creating the slink:XrHandTrackerEXT.
+For example, when the slink:XrHandTrackerEXT is created with
+ename:XR_HAND_JOINT_SET_DEFAULT_EXT, the application must: set the
+pname:jointCount to dlink:XR_HAND_JOINT_COUNT_EXT, and the returned
+pname:jointVelocities array must: be ordered to be indexed by enum
+elink:XrHandJointEXT enum.
+
+If the returned slink:XrHandJointLocationsEXT::pname:isActive is false, it
+indicates the hand tracker did not detect a hand input or the application
+lost input focus.
+In this case, the runtime must: return all pname:jointVelocities with
+neither ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT nor
+ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT set.
+
+If an slink:XrHandJointVelocitiesEXT structure is chained to
+slink:XrHandJointLocationsEXT::pname:next, the returned
+slink:XrHandJointLocationsEXT::pname:isActive is true, and the velocity is
+observed or can be calculated by the runtime, the runtime must: fill in the
+linear velocity of each hand joint within the reference frame of
+pname:baseSpace and set the ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
+Similarly, if an slink:XrHandJointVelocitiesEXT structure is chained to
+slink:XrHandJointLocationsEXT::pname:next, the returned
+slink:XrHandJointLocationsEXT::pname:isActive is true, and the __angular
+velocity__ is observed or can be calculated by the runtime, the runtime
+must: fill in the angular velocity of each joint within the reference frame
+of pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
+
+include::../../../../generated/validity/structs/XrHandJointVelocitiesEXT.txt[]
+--
+
+[open,refpage='XrHandJointVelocityEXT',type='structs',desc='Describes the velocity of a hand joint',xrefs='XrHandJointVelocitiesEXT']
+--
+slink:XrHandJointVelocityEXT structure describes the linear and angular
+velocity of a hand joint.
+
+include::../../../../generated/api/structs/XrHandJointVelocityEXT.txt[]
+
+.Member Descriptions
+****
+* pname:velocityFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceVelocityFlagBits, to indicate which members contain valid
+  data.
+  If none of the bits are set, no other fields in this structure should: be
+  considered to be valid or meaningful.
+* pname:linearVelocity is the relative linear velocity of the hand joint
+  with respect to and expressed in the reference frame of the corresponding
+  slink:XrHandJointsLocateInfoEXT::pname:baseSpace, in units of meters per
+  second.
+* pname:angularVelocity is the relative angular velocity of the hand joint
+  with respect to the corresponding
+  slink:XrHandJointsLocateInfoEXT::pname:baseSpace.
+  The vector's direction is expressed in the reference frame of the
+  corresponding slink:XrHandJointsLocateInfoEXT::pname:baseSpace and is
+  parallel to the rotational axis of the hand joint.
+  The vector's magnitude is the relative angular speed of the hand joint in
+  radians per second.
+  The vector follows the right-hand rule for torque/rotation.
+****
+
+include::../../../../generated/validity/structs/XrHandJointVelocityEXT.txt[]
+--
+
+*Example code for locating hand joints*
+
+The following example code demonstrates how to locate all hand joints
+relative to a world space.
+
+[source,C++]
+------------------------------------------------------------------------------
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+XrSpace worldSpace;  // previously initialized, e.g. from
+                     // XR_REFERENCE_SPACE_TYPE_LOCAL
+
+// Inspect hand tracking system properties
+XrSystemHandTrackingPropertiesEXT handTrackingSystemProperties{
+    XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &handTrackingSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!handTrackingSystemProperties.supportsHandTracking) {
+    // The system does not support hand tracking
+    return;
+}
+
+// Create a hand tracker for left hand that tracks default set of hand joints.
+XrHandTrackerEXT leftHandTracker{};
+{
+    XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
+    createInfo.hand = XR_HAND_LEFT_EXT;
+    createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+    CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
+}
+
+// Allocate buffers to receive joint location and velocity data before frame
+// loop starts
+XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
+XrHandJointVelocityEXT jointVelocities[XR_HAND_JOINT_COUNT_EXT];
+
+XrHandJointVelocitiesEXT velocities{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+velocities.jointCount = XR_HAND_JOINT_COUNT_EXT;
+velocities.jointVelocities = jointVelocities;
+
+XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+locations.next = &velocities;
+locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
+locations.jointLocations = jointLocations;
+
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
+    locateInfo.baseSpace = worldSpace;
+    locateInfo.time = time;
+
+    CHK_XR(xrLocateHandJointsEXT(leftHandTracker, &locateInfo, &locations));
+
+    if (locations.isActive) {
+        // The returned joint location array can be directly indexed with
+        // XrHandJointEXT enum.
+        const XrPosef &indexTipInWorld =
+            jointLocations[XR_HAND_JOINT_INDEX_TIP_EXT].pose;
+        const XrPosef &thumbTipInWorld =
+            jointLocations[XR_HAND_JOINT_THUMB_TIP_EXT].pose;
+
+        // using the returned radius and velocity of index finger tip.
+        const float indexTipRadius =
+            jointLocations[XR_HAND_JOINT_INDEX_TIP_EXT].radius;
+        const XrHandJointVelocityEXT &indexTipVelocity =
+            jointVelocities[XR_HAND_JOINT_INDEX_TIP_EXT];
+    }
+}
+------------------------------------------------------------------------------
+
+*Conventions of hand joints*
+
+This extension defines 26 joints for hand tracking: 4 joints for the thumb
+finger, 5 joints for the other four fingers, and the wrist and palm of the
+hands.
+
+image:images/ext_hand_tracking_joint_convention.png[ "Convention of hand
+joints",width=1600]
+
+[open,refpage='XrHandJointEXT',type='enums',desc='The name of hand joints that can be tracked',xrefs='']
+--
+include::../../../../generated/api/enums/XrHandJointEXT.txt[]
+--
+
+The finger joints, except the tips, are named after the corresponding bone
+at the further end of the bone from the finger tips.
+The joint's orientation is defined at a fully opened hand pose facing down
+as in the above picture.
+The backward (+Z) direction is parallel to the corresponding bone and points
+away from the finger tip.
+The up (+Y) direction is pointing out of the back of and perpendicular to
+the corresponding finger nail at the fully opened hand pose.
+The X direction is perpendicular to Y and Z and follows the right hand rule.
+
+The wrist joint is located at the pivot point of the wrist which is location
+invariant when twisting hand without moving the forearm.
+The backward (+Z) direction is parallel to the line from wrist joint to
+middle finger metacarpal joint, and points away from the finger tips.
+The up (+Y) direction points out towards back of hand and perpendicular to
+the skin at wrist.
+The X direction is perpendicular to the Y and Z directions and follows the
+right hand rule.
+
+The palm joint is located at the center of the middle finger's metacarpal
+bone.
+The backward (+Z) direction is parallel to the middle finger's metacarpal
+bone, and points away from the finger tips.
+The up (+Y) direction is perpendicular to palm surface and pointing towards
+the back of the hand.
+The X direction is perpendicular to the Y and Z directions and follows the
+right hand rule.
+
+The radius of each joint is the distance from the joint to the skin in
+meters.
+The application can use a sphere at the joint location with joint radius for
+collision detection for interactions, such as pushing a virtual button using
+the index finger tip.
+
+For example, suppose the radius of the palm joint is `r` then the app can:
+offset `{0, -r, 0}` to palm joint location to get the surface of hand palm
+center, or offset `{0, r, 0}` to get the back surface of the hand.
+
+Note that the palm joint for the hand tracking is not the same as
+subpathname:/input/grip/pose when hand tracking is provided by controller
+tracking.
+A "grip" pose is located at the center of the controller handle when user is
+holding a controller, outside of the user's hand.
+A "palm" pose is located at the center of middle finger metacarpal bone
+which is inside the user's hand.
+
+[open,refpage='XR_HAND_JOINT_COUNT_EXT',type='defines',desc='The number of hand joint enums defined in XrHandJointEXT',xrefs='XrHandJointEXT']
+--
+include::../../../../generated/api/defines/XR_HAND_JOINT_COUNT_EXT.txt[]
+
+dlink:XR_HAND_JOINT_COUNT_EXT defines the number of hand joint enumerants
+defined in elink:XrHandJointEXT
+--
+
+*New Object Types*
+
+* slink:XrHandTrackerEXT
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* dlink:XR_HAND_JOINT_COUNT_EXT
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_HAND_TRACKER_EXT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT
+* ename:XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT
+* ename:XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT
+* ename:XR_TYPE_HAND_JOINT_LOCATIONS_EXT
+* ename:XR_TYPE_HAND_JOINT_VELOCITIES_EXT
+
+*New Enums*
+
+* elink:XrHandEXT
+* elink:XrHandJointEXT
+* elink:XrHandJointSetEXT
+
+*New Structures*
+
+* slink:XrSystemHandTrackingPropertiesEXT
+* slink:XrHandTrackerCreateInfoEXT
+* slink:XrHandJointsLocateInfoEXT
+* slink:XrHandJointLocationEXT
+* slink:XrHandJointVelocityEXT
+* slink:XrHandJointLocationsEXT
+* slink:XrHandJointVelocitiesEXT
+
+*New Functions*
+
+* flink:xrCreateHandTrackerEXT
+* flink:xrDestroyHandTrackerEXT
+* flink:xrLocateHandJointsEXT
+
+*Issues*
+
+*Version History*
+
+* Revision 2, 2020-04-20 (Yin LI)
+** Replace hand joint spaces to locate hand joints function.
+
+* Revision 1, 2019-09-16 (Yin LI)
+** Initial extension description

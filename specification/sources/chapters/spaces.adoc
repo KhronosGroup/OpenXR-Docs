@@ -581,12 +581,15 @@ This enables applications to make use of the runtime's latest knowledge of
 the world, even during tracking loss.
 
 If an slink:XrSpaceVelocity structure is chained to the pname:next pointer
-of slink:XrSpaceLocation, the runtime should: fill in the linear and angular
-velocity of the origin of pname:space within the reference frame of
-pname:baseSpace.
-If the runtime provides linear velocity or angular velocity, it must: set
-ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT or
-ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT, respectively.
+of slink:XrSpaceLocation and the velocity is observed or can be calculated
+by the runtime, the runtime must: fill in the linear velocity of the origin
+of space within the reference frame of pname:baseSpace and set the
+ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
+Similarly, if an slink:XrSpaceVelocity structure is chained to the
+pname:next pointer of slink:XrSpaceLocation and the angular velocity is
+observed or can be calculated by the runtime, the runtime must: fill in the
+angular velocity of the origin of space within the reference frame of
+pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
 
 [[example_locate_space_code]]
 The following example code shows how an application can get both the

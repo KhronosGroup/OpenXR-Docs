@@ -11,6 +11,81 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.9 (2020-05-29)
+
+- Registry
+  - Add an author ID, and reserve a vendor extension for Huawei.
+    ([OpenXR-Docs/#46](https://github.com/KhronosGroup/OpenXR-Docs/pull/46))
+  - Reserve vendor extensions for future LunarG overlay and input focus
+    functionality.
+    ([internal MR 1720](https://gitlab.khronos.org/openxr/openxr/merge_requests/1720))
+  - Reserve vendor extensions for Microsoft.
+    ([internal MR 1723](https://gitlab.khronos.org/openxr/openxr/merge_requests/1723))
+  - Add `XR_EXT_hand_tracking` multi-vendor extension.
+    ([internal MR 1554](https://gitlab.khronos.org/openxr/openxr/merge_requests/1554),
+    [internal issue 1266](https://gitlab.khronos.org/openxr/openxr/issues/1266),
+    [internal issue 1267](https://gitlab.khronos.org/openxr/openxr/issues/1267),
+    [internal issue 1268](https://gitlab.khronos.org/openxr/openxr/issues/1268),
+    [internal issue 1269](https://gitlab.khronos.org/openxr/openxr/issues/1269))
+  - Add `XR_HUAWEI_controller_interaction` vendor extension.
+    ([OpenXR-Docs/#47](https://github.com/KhronosGroup/OpenXR-Docs/pull/47))
+  - Add `XR_MNDX_egl_enable` provisional vendor extension.
+    ([OpenXR-Docs/#48](https://github.com/KhronosGroup/OpenXR-Docs/pull/48))
+  - Add `XR_MSFT_spatial_graph_bridge` vendor extension.
+    ([internal MR 1730](https://gitlab.khronos.org/openxr/openxr/merge_requests/1730))
+  - Add `XR_MSFT_secondary_view_configuration` and `XR_MSFT_first_person_observer`
+    vendor extensions.
+    ([internal MR 1731](https://gitlab.khronos.org/openxr/openxr/merge_requests/1731))
+  - Add `XR_MSFT_hand_mesh_tracking` vendor extension.
+    ([internal MR 1736](https://gitlab.khronos.org/openxr/openxr/merge_requests/1736))
+  - Fix missing space in XML definition of `XrSpatialAnchorCreateInfoMSFT`.
+    ([internal MR 1742](https://gitlab.khronos.org/openxr/openxr/merge_requests/1742),
+    [internal issue 1351](https://gitlab.khronos.org/openxr/openxr/issues/1351),
+    [OpenXR-SDK-Source/#187](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/187))
+  - Update a number of contacts for author/vendor tags.
+    ([internal MR 1788](https://gitlab.khronos.org/openxr/openxr/merge_requests/1788),
+    [internal issue 1326](https://gitlab.khronos.org/openxr/openxr/issues/1326))
+- Specification
+  - Make `xrCreateSession`'s generation of an IDLE event explicit and indicate
+    `xrSuggestInteractionProfileBinding` must accept every whitelisted profile.
+    ([internal MR 1729](https://gitlab.khronos.org/openxr/openxr/merge_requests/1729))
+  - Clarify `KHR_D3D12_enable` spec, for reducing ambiguity, by changing the Vulkan
+    term "memory layout" to D3D12 term "resource state".
+    ([internal MR 1774](https://gitlab.khronos.org/openxr/openxr/merge_requests/1774))
+  - Document new `XR_EXT_hand_tracking` multi-vendor extension.
+    ([internal MR 1554](https://gitlab.khronos.org/openxr/openxr/merge_requests/1554),
+    [internal issue 1266](https://gitlab.khronos.org/openxr/openxr/issues/1266),
+    [internal issue 1267](https://gitlab.khronos.org/openxr/openxr/issues/1267),
+    [internal issue 1268](https://gitlab.khronos.org/openxr/openxr/issues/1268),
+    [internal issue 1269](https://gitlab.khronos.org/openxr/openxr/issues/1269))
+  - Document new `XR_MSFT_spatial_graph_bridge` vendor extension.
+    ([internal MR 1730](https://gitlab.khronos.org/openxr/openxr/merge_requests/1730))
+  - Document new `XR_MSFT_secondary_view_configuration` and
+    `XR_MSFT_first_person_observer` vendor extensions.
+    ([internal MR 1731](https://gitlab.khronos.org/openxr/openxr/merge_requests/1731))
+  - Document new `XR_MSFT_hand_mesh_tracking` vendor extension.
+    ([internal MR 1736](https://gitlab.khronos.org/openxr/openxr/merge_requests/1736))
+  - Document new `XR_MNDX_egl_enable` provisional vendor extension.
+    ([OpenXR-Docs/#48](https://github.com/KhronosGroup/OpenXR-Docs/pull/48))
+  - Simplify generation and appearance of index in PDF specification output through
+    a custom `asciidoctor-pdf` extension.
+    ([internal MR 1738](https://gitlab.khronos.org/openxr/openxr/merge_requests/1738))
+  - scripts: Enable "deflate" compression by default on specification PDF
+    generation. ("Release" PDFs are still separately optimized, but this improves
+    CI and local builds.)
+    ([internal MR 1738](https://gitlab.khronos.org/openxr/openxr/merge_requests/1738))
+  - scripts: Teach `xml_consistency` to check that there is something (typically a
+    space) between the end of a `type` element and the start of a `name` element,
+    to avoid future issues like the referenced issues.
+    ([internal MR 1742](https://gitlab.khronos.org/openxr/openxr/merge_requests/1742),
+    [internal issue 1351](https://gitlab.khronos.org/openxr/openxr/issues/1351),
+    [OpenXR-SDK-Source/#187](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/187))
+  - HTML output: Add small footer script to avoid line breaks between a number in
+    the TOC and the first word. This mainly improves the appearance of the
+    extension chapters, since they start with a very long "first word" (the
+    extension name).
+    ([internal MR 1772](https://gitlab.khronos.org/openxr/openxr/merge_requests/1772))
+
 ## OpenXR Specification 1.0.8 (2020-03-27)
 
 Patch release for the 1.0 series.

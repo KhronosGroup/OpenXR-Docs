@@ -99,7 +99,10 @@ include::../../generated/api/protos/xrCreateSession.txt[]
 
 Creates a session using the provided pname:createInfo and returns a handle
 to that session.
-This session is created in the ename:XR_SESSION_STATE_IDLE state.
+This session is created in the ename:XR_SESSION_STATE_IDLE state, and a
+corresponding slink:XrEventDataSessionStateChanged event to the
+ename:XR_SESSION_STATE_IDLE state must: be generated as the first such event
+for the new session.
 
 include::../../generated/validity/protos/xrCreateSession.txt[]
 --
