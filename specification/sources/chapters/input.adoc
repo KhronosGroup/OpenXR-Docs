@@ -565,10 +565,10 @@ bindings contain paths that do not follow the format defined in
 <<semantic-path-input, Device input subpaths>>, the runtime must: return
 ename:XR_ERROR_PATH_UNSUPPORTED.
 If the interaction profile or input source for any of the suggested bindings
-does not exist in the whitelist defined in
+does not exist in the allowlist defined in
 <<semantic-path-interaction-profiles, Interaction Profile Paths>>, the
 runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED.
-A runtime must: accept every valid binding in the whitelist though it is
+A runtime must: accept every valid binding in the allowlist though it is
 free to ignore any of them.
 
 If the action set for any action referenced in the pname:suggestedBindings
