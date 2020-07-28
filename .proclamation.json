@@ -1,0 +1,47 @@
+{
+    "#": "This is a config file for proclamation, the changelog combiner: https://gitlab.com/ryanpavlik/proclamation",
+    "$schema": "https://ryanpavlik.gitlab.io/proclamation/proclamation.schema.json",
+    "projects": [
+        {
+            "project_name": "OpenXR SDK",
+            "news_filename": "CHANGELOG.SDK.md",
+            "template": "changes/template.md",
+            "sections": {
+                "Registry": {
+                    "directory": "changes/registry",
+                    "sort_by_prefix": true
+                },
+                "SDK": {
+                    "directory": "changes/sdk",
+                    "sort_by_prefix": true
+                }
+            }
+        },
+        {
+            "project_name": "OpenXR Specification",
+            "news_filename": "CHANGELOG.Docs.md",
+            "template": "changes/template.md",
+            "sections": {
+                "Registry": {
+                    "directory": "changes/registry",
+                    "sort_by_prefix": true
+                },
+                "Specification": {
+                    "directory": "changes/specification",
+                    "sort_by_prefix": true
+                }
+            }
+        },
+        {
+            "project_name": "OpenXR CTS",
+            "news_filename": "CHANGELOG.CTS.md",
+            "template": "changes/template.md",
+            "sections": {
+                "Conformance Tests": {
+                    "directory": "changes/conformance",
+                    "sort_by_prefix": true
+                }
+            }
+        }
+    ]
+}
