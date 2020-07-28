@@ -43,7 +43,7 @@ This is still in progress but mostly complete.
     ([internal MR 1835](https://gitlab.khronos.org/openxr/openxr/merge_requests/1835))
   - Add `XR_VALVE_analog_threshold` vendor extension.
     ([internal MR 1859](https://gitlab.khronos.org/openxr/openxr/merge_requests/1859))
-  - Add `XR_MND_swapchain_input_attachment` vendor extension.
+  - Add `XR_MND_swapchain_usage_input_attachment_bit` vendor extension.
     ([internal MR 1865](https://gitlab.khronos.org/openxr/openxr/merge_requests/1865))
   - Reserve extension numbers 71 to 78 for Facebook extensions.
     ([internal MR 1839](https://gitlab.khronos.org/openxr/openxr/merge_requests/1839))
@@ -83,8 +83,8 @@ This is still in progress but mostly complete.
     ([internal MR 1834](https://gitlab.khronos.org/openxr/openxr/merge_requests/1834))
   - Document new `XR_EXT_samsung_odyssey_controller` multi-vendor extension.
     ([internal MR 1835](https://gitlab.khronos.org/openxr/openxr/merge_requests/1835))
-  - Document new provisional vendor extension `XR_MNDX_egl_enable`.
-    ([OpenXR-Docs/#48](https://github.com/KhronosGroup/OpenXR-Docs/pull/48))
+  - Document new `XR_MND_swapchain_usage_input_attachment_bit` vendor extension.
+    ([internal MR 1865](https://gitlab.khronos.org/openxr/openxr/merge_requests/1865))
   - Fix action set text referring to "session" as parent, which should have been
     "instance".
     ([internal MR 1726](https://gitlab.khronos.org/openxr/openxr/merge_requests/1726))
