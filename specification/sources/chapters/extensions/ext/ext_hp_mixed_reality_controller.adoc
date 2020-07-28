@@ -1,0 +1,56 @@
+// Copyright (c) 2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_EXT_hp_mixed_reality_controller.adoc[]
+
+*Last Modified Date*::
+    2020-06-08
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Alain Zanchetta, Microsoft +
+    Lachlan Ford, Microsoft +
+    Alex Turner, Microsoft +
+    Yin Li, Microsoft +
+    Nathan Nuber, HP Inc. +
+
+*Overview*
+
+This extension added a new interaction profile path for the HP Reverb G2
+Controllers:
+
+* pathname:/interaction_profile/hp/mixed_reality_controller
+
+Valid for the user paths
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths:
+
+* On /user/hand/left only
+** subpathname:/input/x/click
+** subpathname:/input/y/click
+
+* On /user/hand/right only
+** subpathname:/input/a/click
+** subpathname:/input/b/click
+
+* On both hands
+** subpathname:/input/menu/click
+** subpathname:/input/squeeze/value
+** subpathname:/input/trigger/value
+** subpathname:/input/thumbstick/x
+** subpathname:/input/thumbstick/y
+** subpathname:/input/thumbstick/click
+** subpathname:/input/grip/pose
+** subpathname:/input/aim/pose
+** subpathname:/output/haptic
+
+*Version History*
+
+* Revision 1, 2020-06-08 (Yin Li)
+** Initial extension proposal

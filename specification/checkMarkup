@@ -23,6 +23,15 @@
 
 FAILED=
 
+list_sources() {
+    (
+        cd $(dirname $0)
+        find sources/chapters -name "*.adoc" | grep -v "extensions/meta/"
+    )
+}
+
+SOURCES=$(list_sources)
+
 # Base function for grepping through sources for errors
 # Params:
 # 1. Description of issue being checked for
@@ -31,7 +40,7 @@ FAILED=
 grep_sources() {
     DESC="$1"
     shift
-    if ${GREPCMD:-egrep} -n "$@" sources/*.adoc sources/chapters/*.adoc sources/chapters/extensions/khr/*.adoc sources/chapters/extensions/ext/*.adoc; then
+    if ${GREPCMD:-egrep} -n "$@" ${SOURCES}; then
         echo ""
         echo "*** Error: Above lines matched grep with  $@"
         echo "*** $DESC"
@@ -275,6 +284,14 @@ grep_sources \
 grep_sources \
     "Remove the word 'follows'" \
     "function is defined as follows"
+
+grep_sources \
+    "This stock description is outdated, see other structures and/or style guide" \
+    "an extension-specific structure"
+
+grep_sources \
+    "This stock description is outdated, see other structures and/or style guide" \
+    "pname:type is the type of this struct"
 
 #grep_sources \
 #    "test" \

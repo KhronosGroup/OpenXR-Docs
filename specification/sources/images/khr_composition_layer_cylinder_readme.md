@@ -1,3 +1,9 @@
+<!--
+Copyright (c) 2017-2020 The Khronos Group Inc.
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 The diagram for this extension was initially composed in
 [SolveSpace](http://solvespace.com) using a master branch (3.0) build.
 The `.slvs` file is that document.

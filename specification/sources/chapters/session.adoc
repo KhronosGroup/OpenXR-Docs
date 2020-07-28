@@ -1,3 +1,6 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 [[session]]
 == Session
 
@@ -116,7 +119,9 @@ include::../../generated/api/structs/XrSessionCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
   Note that in most cases one graphics API extension specific struct needs
   to be in this next chain.
 * pname:createFlags identifies elink:XrSessionCreateFlags that apply to the
@@ -227,7 +232,9 @@ include::../../generated/api/structs/XrSessionBeginInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:primaryViewConfigurationType is the elink:XrViewConfigurationType to
   use during this session to provide images for the form factor's primary
   displays.
@@ -329,7 +336,9 @@ include::../../generated/api/structs/XrEventDataSessionStateChanged.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:session is the slink:XrSession which has changed state.
 * pname:state is the current elink:XrSessionState of the pname:session.
 * pname:time is an basetype:XrTime which indicates the time of the state

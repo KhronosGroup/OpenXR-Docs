@@ -1,3 +1,7 @@
+// Copyright (c) 2018-2020 The Khronos Group, Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_EXT_conformance_automation.adoc[]
 
 *Last Modified Date*::
@@ -35,11 +39,18 @@ and to not assume that the value they requested will be the value observed.
 If any of the functions of this extension are called, control over input
 must: be removed from the physical hardware of the system.
 
+// This should be kept in sync with conformance_automation_warning.adoc
+// which has one additional sentence at the start.
+.Warning
+****
 This extension is **not** intended for use by non-conformance-test
 applications.
 A runtime may: require a runtime-specified configuration such as a
 "developer mode" to be enabled before reporting support for this extension
 or providing a non-stub implementation of it.
+
+**Do not** use this functionality in a non-conformance-test application!
+****
 
 *New Object Types*
 

@@ -254,13 +254,15 @@ EnumInEnums =
         }
     }
 
+BitposAttr =
+    attribute bitpos {
+        xsd:unsignedByte { maxExclusive = "64" }
+    }
 # From inside BitmaskEnums (<enums type="bitmask">):
 # <enum bitpos="0" name="XR_SWAPCHAIN_CREATE_PROTECTED_CONTENT_BIT" comment="Content will be protected from CPU access"/>
 BitmaskEnumInEnums =
     element enum {
-        attribute bitpos {
-            xsd:unsignedByte { maxExclusive = "64" }
-        },
+        BitposAttr,
         attribute name { XrUpperSnakeCase_t },
         CommentAttr?
     }
@@ -396,6 +398,11 @@ InterfaceElement =
              attribute offset { xsd:integer },
              attribute extends { XrTypeNameRef_t },
              attribute dir { "-" }?,
+             CommentAttr?)
+          | (# Extending another bitmask
+             attribute name { XrUpperSnakeCase_t },
+             BitposAttr,
+             attribute extends { XrTypeNameRef_t },
              CommentAttr?)
       }
 

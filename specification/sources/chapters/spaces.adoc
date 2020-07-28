@@ -1,3 +1,6 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 [[spaces]]
 == Spaces
 
@@ -264,7 +267,9 @@ include::../../generated/api/structs/XrEventDataReferenceSpaceChangePending.txt[
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:session is the slink:XrSession for which the reference space is
   changing.
 * pname:referenceSpaceType is the elink:XrReferenceSpaceType that is
@@ -405,7 +410,9 @@ include::../../generated/api/structs/XrReferenceSpaceCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:referenceSpaceType is the chosen elink:XrReferenceSpaceType.
 * pname:poseInReferenceSpace is an slink:XrPosef defining the position and
   orientation of the new space's origin within the natural reference frame
@@ -456,7 +463,9 @@ include::../../generated/api/structs/XrActionSpaceCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:action is a handle to a pose slink:XrAction previously created with
   flink:xrCreateAction.
 * pname:subactionPath is dlink:XR_NULL_PATH or an basetype:XrPath that was
@@ -621,8 +630,8 @@ include::../../generated/api/structs/XrSpaceLocation.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure,
-  such as slink:XrSpaceVelocity.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrSpaceVelocity.
 * pname:locationFlags is a bitfield, with bit masks defined in
   elink:XrSpaceLocationFlagBits, to indicate which members contain valid
   data.
@@ -689,7 +698,9 @@ include::../../generated/api/structs/XrSpaceVelocity.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:velocityFlags is a bitfield, with bit masks defined in
   elink:XrSpaceVelocityFlagBits, to indicate which members contain valid
   data.

@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_EXT_debug_utils.adoc[]
 
 :INCS-VAR: ../../../../generated
@@ -259,7 +263,9 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:objectType is an elink:XrObjectType specifying the type of the
   object to be named.
 * pname:objectHandle is the object to be named.
@@ -286,7 +292,9 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsLabelEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:labelName is a code:NULL terminated UTF-8 string specifying the
   label name.
 ****
@@ -301,7 +309,9 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsMessengerCallbackDataEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:messageId is a code:NULL terminated string that identifies the
   message in a unique way.
   If the callback is triggered by a validation layer, this string
@@ -360,7 +370,9 @@ include::{INCS-VAR}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:messageSeverities is a bitmask of
   elink:XrDebugUtilsMessageSeverityFlagBitsEXT specifying which severity of
   event(s) that will cause this callback to be called.

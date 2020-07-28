@@ -1,0 +1,155 @@
+include::../meta/XR_MSFT_holographic_window_attachment.adoc[]
+
+*Contributors*::
+    Bryce Hutchings, Microsoft +
+    Yin Li, Microsoft +
+    Alex Turner, Microsoft
+
+*Overview*
+
+This extension enables the runtime to attach to app-provided
+HolographicSpace and CoreWindow WinRT objects when an slink:XrSession is
+created.
+Applications may use this extension to create and control the CoreWindow/App
+View objects, allowing the app to subscribe to keyboard input events and
+react to activation event arguments.
+These events and data would otherwise be inaccessible if the application
+simply managed the app state and lifetime exclusively through the OpenXR
+API.
+This extension is only valid to use where an application can create a
+CoreWindow, such as UWP applications on the HoloLens.
+
+[open,refpage='XrHolographicWindowAttachmentMSFT',type='structs',desc='The holographic window binding structure which can be passed at session creation',xrefs='xrCreateSession']
+--
+The slink:XrHolographicWindowAttachmentMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrHolographicWindowAttachmentMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:holographicSpace is a pointer to a valid
+  sname:Windows.Graphics.Holographic.HolographicSpace.
+* pname:coreWindow is a pointer to a valid sname:Windows.UI.Core.CoreWindow.
+****
+
+When creating a holographic window-backed slink:XrSession, the application
+provides a pointer to an slink:XrHolographicWindowAttachmentMSFT in the
+`next` chain of the slink:XrSessionCreateInfo.
+
+The session state of a holographic window-backed slink:XrSession will only
+reach ename:XR_SESSION_STATE_VISIBLE when the provided CoreWindow is made
+visible.
+If the CoreWindow is for a secondary app view, the application must
+programmatically request to make the CoreWindow visible (e.g. with
+`ApplicationViewSwitcher.TryShowAsStandaloneAsync` or
+`ApplicationViewSwitcher.SwitchAsync`).
+
+The app must: not call flink:xrCreateSession while the specified CoreWindow
+thread is blocked, otherwise the call may: deadlock.
+
+include::../../../../generated/validity/structs/XrHolographicWindowAttachmentMSFT.txt[]
+--
+
+==== Sample code
+Following example demos the usage of holographic window attachment and use
+the attached CoreWindow to receive keyboard input, use
+sname:CoreTextEditContext to handle text typing experience, and use
+sname:IActivatedEventArgs to handle protocol launching arguments.
+
+[source,c++,suppress-build]
+----
+struct AppView : implements<AppView, IFrameworkView> {
+    void Initialize(CoreApplicationView const& applicationView) {
+        applicationView.Activated({this, &AppView::OnActivated});
+    }
+
+    void Load(winrt::hstring const& entryPoint) {
+    }
+
+    void Uninitialize() {
+    }
+
+    void Run() {
+        // Creating a HolographicSpace before activating the CoreWindow to make it a holographic window
+        CoreWindow window = CoreWindow::GetForCurrentThread();
+        HolographicSpace holographicSpace = Windows::Graphics::Holographic::HolographicSpace::CreateForCoreWindow(window);
+        window.Activate();
+
+        // [xrCreateInstance, xrGetSystem, and create a graphics binding]
+
+        XrHolographicWindowAttachmentMSFT holographicWindowAttachment{XR_TYPE_ATTACHED_CORE_WINDOW_MSFT};
+        holographicWindowAttachment.next = &graphicsBinding;
+        holographicWindowAttachment.coreWindow = window.as<IUnknown>().get();
+        holographicWindowAttachment.holographicSpace = holographicSpace.as<IUnknown>().get();
+
+        XrSessionCreateInfo sessionCreateInfo{XR_TYPE_SESSION_CREATE_INFO};
+        sessionCreateInfo.next = &holographicWindowAttachment;
+        sessionCreateInfo.systemId = systemId;
+
+        XrSession session;
+        CHECK_XRCMD(xrCreateSession(instance, &sessionCreateInfo, &session));
+
+        while (!m_windowClosed) {
+            window.Dispatcher().ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
+
+            // [OpenXR calls: Poll events, sync actions, render, and submit frames].
+        }
+    }
+
+    void SetWindow(CoreWindow const& window) {
+        window.Closed({this, &AppView::OnWindowClosed});
+        window.KeyDown({this, &AppView::OnKeyDown});
+
+        // This sample customizes the text input pane with manual display policy and email address scope.
+        windows::CoreTextServicesManager manager = windows::CoreTextServicesManager::GetForCurrentView();
+        windows::CoreTextEditContext editingContext = manager.CreateEditContext();
+        editingContext.InputPaneDisplayPolicy(windows::CoreTextInputPaneDisplayPolicy::Manual);
+        editingContext.InputScope(windows::CoreTextInputScope::EmailAddress);
+    }
+
+    void OnWindowClosed(CoreWindow const& sender, CoreWindowEventArgs const& args) {
+        m_windowClosed = true;
+    }
+
+    void OnKeyDown(CoreWindow const& sender, KeyEventArgs const& args) {
+        // [Process key down]
+    }
+
+    void OnActivated(CoreApplicationView const&, IActivatedEventArgs const& args) {
+        if (args.Kind() == windows::ActivationKind::Protocol) {
+            auto eventArgs{args.as<windows::ProtocolActivatedEventArgs>()};
+            // Use the protocol activation parameters in eventArgs.Uri();
+        }
+
+        // Inspecting whether the application is launched from within holographic shell or from desktop.
+        if (windows::HolographicApplicationPreview::IsHolographicActivation(args)) {
+            // App activation is targeted at the holographic shell.
+        } else {
+            // App activation is targeted at the desktop.
+        }
+
+        // NOTE: CoreWindow is activated later after the HolographicSpace has been created.
+    }
+
+    bool m_windowClosed{false};
+};
+
+struct AppViewSource : winrt::implements<AppViewSource, IFrameworkViewSource> {
+    windows::IFrameworkView CreateView() {
+        return winrt::make<AppView>();
+    }
+};
+
+int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
+    CoreApplication::Run(make<AppViewSource>());
+}
+----
+
+*Version History*
+
+* Revision 1, 2020-05-18 (Bryce Hutchings)
+** Initial extension description

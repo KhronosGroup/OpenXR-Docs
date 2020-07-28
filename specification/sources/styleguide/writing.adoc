@@ -1,6 +1,6 @@
-// Copyright (c) 2015-2020 Khronos Group. This work is licensed under a
-// Creative Commons Attribution 4.0 International License; see
-// http://creativecommons.org/licenses/by/4.0/
+// Copyright (c) 2015-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 
 [[writing]]
 = Writing Style
@@ -302,11 +302,12 @@ flink:xrBaseFunctionName command *saying what the chained struct
 does*.
 ----
 
-Note that while some text still calls these extension structures, it is more
-accurate to call them chained structures, since there are cases where
-structures are chained entirely within the core specification.
-Wording in the spec conflating chained structures and extensions will be
-gradually corrected over time.
+Note that while some (outdated) text still calls these extension structures,
+it is more accurate to call them chained structures, since there are cases
+where structures are chained entirely within the core specification.
+Wording in the spec conflating chained structures and extensions has been
+gradually corrected over time, but older references may still make this
+error.
 
 [[writing-example]]
 == An Example Command Description
@@ -493,7 +494,9 @@ The slink:XrInstanceCreateInfo structure is defined as:
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that
   identifies options that apply to the creation.
 * pname:applicationInfo is an instance of slink:XrApplicationInfo.
@@ -519,30 +522,12 @@ Each structure member is described in a separate bullet list entry.
 There is standard boilerplate for the pname:type and pname:next members,
 followed by the members specific to the structure.
 
-[source,asciidoc]
-----
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
-* pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that
-  identifies options that apply to the creation.
-* pname:applicationInfo is an instance of slink:XrApplicationInfo.
-  This information helps runtimes recognize behavior inherent to classes of
-  applications.
-  slink:XrApplicationInfo is defined in detail below.
-* pname:enabledApiLayerCount is the number of global API layers to enable.
-* pname:enabledApiLayerNames is a pointer to an array of
-  pname:enabledApiLayerCount strings containing the names of API layers to
-  enable for the created instance.
-  See the <<api-layers-and-extensions,API Layers And Extensions>> section
-  for further details.
-* pname:enabledExtensionCount is the number of global extensions to enable.
-* pname:enabledExtensionNames is a pointer to an array of
-  pname:enabledExtensionCount strings containing the names of extensions to
-  enable.
-****
-----
+Regarding the pname:next member:
+
+* In extensions, add "or this extension" to the second sentence.
+* If there *is* a known chained structure in the core or this extension,
+  remove the second sentence and instead continue the previous one with ",
+  such as ..."
 
 These entries should be short and functional, without describing details of
 e.g. new enumerant values, function of individual parameter settings, etc.
@@ -563,6 +548,7 @@ paragraph of such a list item.
 ====
 In addition to implicit validity language, there may be additional
 validation language which is explicit.
+This is rare in OpenXR, as such requirements are usually in prose instead.
 Such language is written in a separate block in the specification,
 _preceding_ the validity include.
 Prose description of the structure also goes here, if the prose associated

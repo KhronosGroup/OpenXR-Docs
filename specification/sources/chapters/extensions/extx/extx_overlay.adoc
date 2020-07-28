@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_EXTX_overlay.adoc[]
 
 :INCS-VAR: ../../../../generated
@@ -146,10 +150,10 @@ value as described in the table below:
         | Composited last, appears in front of all other XrSessions
 | Overlay Session
     | <Positive value>
-        | 
+        |
 | Overlay Session
     | 0
-        |  
+        |
 | Non-overlay Session
     | N/A
         | Composited first, appears behind all other XrSessions
@@ -187,9 +191,9 @@ endif::XR_KHR_composition_layer_depth[]
 
 ===== Modifications to xrEndFrame Behavior
 
-<<composition-layer-behavior, Composition Layer Behavior>> currently states
-that if flink:xrEndFrame is called with 0 layers, then the runtime should
-clear the VR display.
+<<frame-submission, Frame Submission>> currently states that if
+flink:xrEndFrame is called with no layers, then the runtime should clear the
+VR display.
 
 If this extension is enabled, the above statement is now only true if the
 session is not an overlay session.
@@ -255,7 +259,9 @@ include::{INCS-VAR}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:createFlags is `0` or one or more
   elink:XrOverlaySessionCreateFlagBitsEXTX which indicate various
   characteristics desired for the overlay session.
@@ -287,7 +293,9 @@ which indicates if the main session has enabled the
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:visible is an basetype:XrBool32 which indicates if pname:session is
   now visible or is not.
 * pname:flags is 0 or one or more elink:XrOverlayMainSessionFlagBitsEXTX

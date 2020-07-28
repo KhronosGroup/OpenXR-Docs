@@ -1,0 +1,100 @@
+include::../meta/XR_VALVE_analog_threshold.adoc[]
+
+*Last Modified Date*::
+    2020-06-29
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Joe Ludwig, Valve
+
+*Overview*
+
+This extension allows the application to control the threshold and haptic
+feedback applied to an analog to digital conversion.
+See slink:XrInteractionProfileAnalogThresholdVALVE for more information.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrInteractionProfileAnalogThresholdVALVE',desc='Interaction profile dpad binding',type='structs']
+--
+The slink:XrInteractionProfileAnalogThresholdVALVE structure is an input
+struct which can be added to the next chain of
+slink:XrInteractionProfileSuggestedBinding to the thresholds and haptic
+feedback to use for a suggested binding.
+
+include::../../../../generated/api/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:action is the handle of an action in the suggested binding list.
+* pname:binding is the input path used for the specified action in the
+  suggested binding list.
+* pname:onThreshold is the value between 0.0 and 1.0 at which the runtime
+  must: consider the binding to be true.
+  The binding must remain true until the input analog value falls below
+  pname:offThreshold.
+* pname:offThreshold is the value between 0.0 and 1.0 at which the runtime
+  must: consider the binding to be false if it was previous true.
+* pname:onHaptic is the haptic output that the runtime must: trigger when
+  the binding changes from false to true.
+  If this field is NULL, the runtime must: not trigger any haptic output on
+  the threshold.
+  This field can: point to any supported sub-type of
+  slink:XrHapticBaseHeader.
+* pname:offHaptic is the haptic output that the runtime must: trigger when
+  the binding changes from true to false.
+  If this field is NULL, the runtime must: not trigger any haptic output on
+  the threshold.
+  This field can: point to any supported sub-type of
+  slink:XrHapticBaseHeader.
+****
+
+Applications can chain an slink:XrInteractionProfileAnalogThresholdVALVE
+struct on the next chain of any flink:xrSuggestInteractionProfileBindings
+call for each analog to boolean conversion for which it wants to set the
+threshold.
+If a threshold struct is present for a given conversion, the runtime must:
+use those thresholds instead of applying its own whenever it is using the
+binding suggested by the application.
+
+pname:onThreshold and pname:offThreshold permit allow the application to
+specify that it wants hysteresis to be applied to the threshold operation.
+If pname:onThreshold is smaller than pname:offThreshold, the runtime must:
+return ename:XR_ERROR_VALIDATION_FAILURE.
+
+pname:onHaptic and pname:offHaptic allow the application to specify that it
+wants automatic haptic feedback to be generated when the boolean output of
+the threshold operation changes from false to true or vice versa.
+If these fields are not NULL, the runtime must: trigger a haptic output with
+the specified characteristics.
+If the device has multiple haptic outputs, the runtime should: use the
+haptic output that is most appropriate for the specified input path.
+
+If a suggested binding with pname:action and pname:binding is not in the
+binding list for this interaction profile, the runtime must: return
+ename:XR_ERROR_PATH_UNSUPPORTED.
+
+include::../../../../generated/validity/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-06-29 (Joe Ludwig)
+** Initial version.
+

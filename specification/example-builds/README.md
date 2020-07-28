@@ -1,5 +1,11 @@
 # Example Builds
 
+<!--
+Copyright (c) 2014-2020 The Khronos Group Inc.
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 The makefile target `build-examples` does the following:
 
 - Runs a Python script (`extract_code.py`) that

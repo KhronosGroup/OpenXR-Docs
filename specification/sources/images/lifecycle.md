@@ -1,3 +1,9 @@
+<!--
+Copyright (c) 2017-2020 The Khronos Group Inc.
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 The diagram `lifecycle-original-draw-io.svg` is created/edited with <https://draw.io>.
 
 For inclusion in the specification, when revised, it is manually exported from draw.io as PDF,

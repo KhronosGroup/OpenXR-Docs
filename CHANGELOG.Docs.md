@@ -1,5 +1,11 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
+<!--
+Copyright (c) 2019-2020 The Khronos Group Inc.
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 Update log for the OpenXR-Docs and OpenXR-Registry repos on GitHub. Updates are
 in reverse chronological order starting with the latest public release.
 
@@ -10,6 +16,105 @@ any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR Specification 1.0.10 (2020-07-28)
+
+Note the relicensing of the registry XML file in this repository. Each file's
+header, or an adjacent file with `.license` appended to the filename, is the
+best reference for its license terms. We are currently working on ensuring all
+files have an SPDX license identifier tag either in them or in an adjacent file.
+This is still in progress but mostly complete.
+
+- Registry
+  - Relicense registry XML from MIT-like "Khronos Free Use License for Software and
+    Documentation" to, at your option, either the Apache License, Version 2.0,
+    found at
+    <http://www.apache.org/licenses/LICENSE-2.0>, or the MIT License, found at
+    <http://opensource.org/licenses/MIT>, for broader license compatibility with
+    downstream projects. (SPDX License Identifier expression "Apache-2.0 OR MIT")
+    ([internal MR 1814](https://gitlab.khronos.org/openxr/openxr/merge_requests/1814),
+    [OpenXR-Docs/#3](https://github.com/KhronosGroup/OpenXR-Docs/issues/3),
+    [internal issue 958](https://gitlab.khronos.org/openxr/openxr/issues/958))
+  - Add `XR_MSFT_holographic_window_attachment` vendor extension.
+    ([internal MR 1833](https://gitlab.khronos.org/openxr/openxr/merge_requests/1833))
+  - Add `XR_EXT_hp_mixed_reality_controller` multi-vendor extension.
+    ([internal MR 1834](https://gitlab.khronos.org/openxr/openxr/merge_requests/1834))
+  - Add `XR_EXT_samsung_odyssey_controller` multi-vendor extension.
+    ([internal MR 1835](https://gitlab.khronos.org/openxr/openxr/merge_requests/1835))
+  - Add `XR_VALVE_analog_threshold` vendor extension.
+    ([internal MR 1859](https://gitlab.khronos.org/openxr/openxr/merge_requests/1859))
+  - Add `XR_MND_swapchain_input_attachment` vendor extension.
+    ([internal MR 1865](https://gitlab.khronos.org/openxr/openxr/merge_requests/1865))
+  - Reserve extension numbers 71 to 78 for Facebook extensions.
+    ([internal MR 1839](https://gitlab.khronos.org/openxr/openxr/merge_requests/1839))
+  - Reserve extension numbers 79 to 88 for Valve extensions.
+    ([internal MR 1842](https://gitlab.khronos.org/openxr/openxr/merge_requests/1842))
+  - Reserve extension numbers 89 to 92 for Khronos extensions.
+    ([internal MR 1844](https://gitlab.khronos.org/openxr/openxr/merge_requests/1844))
+  - Reserve extension numbers 93 to 94 for `EXT_unbounded_reference_space` and
+    `EXT_spatial_anchor`.
+    ([internal MR 1854](https://gitlab.khronos.org/openxr/openxr/merge_requests/1854))
+  - `XR_EPIC_view_configuration_fov`: Fix `recommendedFov` incorrectly being named
+    `recommendedMutableFov`. This is a **source-incompatible change** to a vendor
+    extension.
+    ([internal MR 1812](https://gitlab.khronos.org/openxr/openxr/merge_requests/1812))
+  - schema: Adjust to permit bitmask expansion in extensions, already supported by
+    toolchain thanks to Vulkan.
+    ([internal MR 1865](https://gitlab.khronos.org/openxr/openxr/merge_requests/1865))
+  - scripts: Teach xml-consistency to handle bitmask values defined in extensions.
+    ([internal MR 1865](https://gitlab.khronos.org/openxr/openxr/merge_requests/1865))
+- Specification
+  - Add a note to discourage using 8bpc linear color formats.
+    ([internal MR 1843](https://gitlab.khronos.org/openxr/openxr/merge_requests/1843))
+  - Change stock text in struct member descriptions to clarify that the `next`
+    pointers are not necessarily limited to use by extensions.
+    ([internal MR 1846](https://gitlab.khronos.org/openxr/openxr/merge_requests/1846),
+    [internal issue 1392](https://gitlab.khronos.org/openxr/openxr/issues/1392))
+  - Clarify licensing of personal photo of Johannes van Waveren in dedication (not
+    CC-BY-4.0), and exclude it from non-release builds.
+    ([internal issue 1383](https://gitlab.khronos.org/openxr/openxr/issues/1383),
+    [internal MR 1872](https://gitlab.khronos.org/openxr/openxr/merge_requests/1872))
+  - Clarify `XR_ERROR_VALIDATION_FAILURE` returned by runtime when
+    `xrGetXXXGraphicsRequirements` is not called before `xrCreateSession`.
+    ([internal MR 1544](https://gitlab.khronos.org/openxr/openxr/merge_requests/1544))
+  - Document new `XR_MSFT_holographic_window_attachment` vendor extension.
+    ([internal MR 1833](https://gitlab.khronos.org/openxr/openxr/merge_requests/1833))
+  - Document new `XR_EXT_hp_mixed_reality_controller` multi-vendor extension.
+    ([internal MR 1834](https://gitlab.khronos.org/openxr/openxr/merge_requests/1834))
+  - Document new `XR_EXT_samsung_odyssey_controller` multi-vendor extension.
+    ([internal MR 1835](https://gitlab.khronos.org/openxr/openxr/merge_requests/1835))
+  - Document new provisional vendor extension `XR_MNDX_egl_enable`.
+    ([OpenXR-Docs/#48](https://github.com/KhronosGroup/OpenXR-Docs/pull/48))
+  - Fix action set text referring to "session" as parent, which should have been
+    "instance".
+    ([internal MR 1726](https://gitlab.khronos.org/openxr/openxr/merge_requests/1726))
+  - Fix markup typo in suggested binding section.
+    ([internal MR 1872](https://gitlab.khronos.org/openxr/openxr/merge_requests/1872))
+  - Remove the mentions of the standalone `/user` path, and note its removal as
+    errata.
+    ([internal MR 1818](https://gitlab.khronos.org/openxr/openxr/merge_requests/1818),
+    [internal issue 1380](https://gitlab.khronos.org/openxr/openxr/issues/1380))
+  - Small revisions to vendor extensions to conform to the style guide.
+    ([internal MR 1869](https://gitlab.khronos.org/openxr/openxr/merge_requests/1869))
+  - Spec prose and scripts: Replace biased terminology with a more neutral term,
+    allowlist.
+    ([OpenXR-Docs/#52](https://github.com/KhronosGroup/OpenXR-Docs/pull/52))
+  - Style guide: Fix two broken links.
+    ([internal MR 1806](https://gitlab.khronos.org/openxr/openxr/merge_requests/1806))
+  - `XR_EXTX_overlay`: Fix reference to Composition Layer Behavior.
+    ([internal MR 1801](https://gitlab.khronos.org/openxr/openxr/merge_requests/1801),
+    [internal issue 1367](https://gitlab.khronos.org/openxr/openxr/issues/1367))
+  - `XR_EXT_conformance_automation`: Insert note box into main body, make note a
+    "warning".
+    ([internal issue 1333](https://gitlab.khronos.org/openxr/openxr/issues/1333),
+    [internal MR 1872](https://gitlab.khronos.org/openxr/openxr/merge_requests/1872))
+  - `XR_KHR_composition_layer_depth`: Note that the depth layer doesn't change the
+    order of composition of layers.
+    ([internal MR 1826](https://gitlab.khronos.org/openxr/openxr/merge_requests/1826),
+    [internal issue 1340](https://gitlab.khronos.org/openxr/openxr/issues/1340))
+  - scripts: Improve `xml_consistency` check script, transplanting some checks from
+    generation scripts.
+    ([internal MR 1797](https://gitlab.khronos.org/openxr/openxr/merge_requests/1797))
 
 ## OpenXR Specification 1.0.9 (2020-05-29)
 

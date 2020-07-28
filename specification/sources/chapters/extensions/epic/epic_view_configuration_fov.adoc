@@ -34,7 +34,7 @@ If the view has `fovMutable` set to `XR_FALSE` the runtime must: set
 
 [open,refpage='XrViewConfigurationViewFovEPIC',desc='View Configuration Field-of-View',type='structs']
 --
-The slink:XrViewConfigurationViewFovEPIC struct is an output struct which
+The slink:XrViewConfigurationViewFovEPIC structure is an output struct which
 can be added to the next chain of slink:XrViewConfigurationView to retrieve
 the field-of-view for that view.
 
@@ -42,8 +42,10 @@ include::../../../../generated/api/structs/XrViewConfigurationViewFovEPIC.txt[]
 
 .Member Descriptions
 ****
-* pname:type is the type of this struct
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:recommendedFov is the recommended field-of-view based on the current
   user IPD.
 * pname:maxMutableFov is the maximum field-of-view that the runtime can
@@ -58,6 +60,9 @@ include::../../../../generated/validity/structs/XrViewConfigurationViewFovEPIC.t
 *Issues*
 
 *Version History*
+
+* Revision 2, 2020-06-04 (Jules Blok)
+** Fixed incorrect member name.
 
 * Revision 1, 2020-03-05 (Jules Blok)
 ** Initial version.

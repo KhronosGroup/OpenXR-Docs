@@ -68,7 +68,9 @@ include::../../../../generated/api/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:space is a handle to the slink:XrSpace in which pname:pose is
   specified.
 * pname:pose is the slink:XrPosef within pname:space at pname:time that
@@ -120,7 +122,9 @@ include::../../../../generated/api/structs/XrSpatialAnchorSpaceCreateInfoMSFT.tx
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:anchor is a handle to an slink:XrSpatialAnchorMSFT previously
   created with flink:xrCreateSpatialAnchorMSFT.
 * pname:poseInAnchorSpace is an slink:XrPosef defining the position and

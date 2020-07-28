@@ -5,6 +5,8 @@
 # Copyright (c) 1998-2006 MACS, Inc.
 #
 # Copyright (c) 2007 SiSco, Inc.
+#
+# SPDX-License-Identifier: MIT
 # 
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the

@@ -106,7 +106,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationSwapchain
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationType is the secondary view configuration type the
   application is intending to use this swapchain for.
 ****
@@ -127,10 +129,10 @@ include::../../../../generated/validity/structs/XrSecondaryViewConfigurationSwap
 ==== Enable secondary view configuration
 
 The application indicates to the runtime which secondary view configurations
-it can support by enabling them during the call to flink:xrBeginSession by
-attaching the extension structure
-slink:XrSecondaryViewConfigurationSessionBeginInfoMSFT to the
-slink:XrSessionBeginInfo::pname:next pointer.
+it can support by chaining an
+slink:XrSecondaryViewConfigurationSessionBeginInfoMSFT structure to the
+slink:XrSessionBeginInfo::pname:next pointer when calling
+flink:xrBeginSession.
 
 [open,refpage='XrSecondaryViewConfigurationSessionBeginInfoMSFT',desc='Describes an extension structure to flink:xrBeginSession indicating supported view configuration types.',type='structs',xrefs='XrSessionBeginInfo']
 --
@@ -145,7 +147,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationSessionBe
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationCount is the number of elements in
   pname:enabledViewConfigurationTypes
 * pname:enabledViewConfigurationTypes is an array of enabled secondary view
@@ -189,7 +193,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationFrameStat
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationCount is the number of elements in
   pname:viewConfigurationStates.
 * pname:viewConfigurationStates is an array of
@@ -216,7 +222,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationStateMSFT
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationType is a elink:XrViewConfigurationType that
   represents the returned state.
 * pname:active is an basetype:XrBool32 returns whether the secondary view
@@ -293,7 +301,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationFrameEndI
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationCount is the number of elements in
   pname:viewConfigurationLayersInfo.
 * pname:viewConfigurationLayersInfo is an array of
@@ -339,7 +349,9 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationLayerInfo
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewConfigurationType is elink:XrViewConfigurationType to which the
   composition layers will be displayed.
 * pname:environmentBlendMode is the elink:XrEnvironmentBlendMode value

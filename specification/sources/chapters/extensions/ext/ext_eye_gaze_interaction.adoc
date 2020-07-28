@@ -1,4 +1,8 @@
-﻿include::../meta/XR_EXT_eye_gaze_interaction.adoc[]
+﻿// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_EXT_eye_gaze_interaction.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -87,7 +91,9 @@ include::{INCS-VAR}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:supportsEyeGazeInteraction the runtime must: set this value to
   ename:XR_TRUE when eye gaze sufficient for use cases such as aiming or
   targeting is supported by the current device, otherwise the runtime must:
@@ -170,7 +176,9 @@ include::{INCS-VAR}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:time is when in time the eye gaze pose is expressed.
 ****
 

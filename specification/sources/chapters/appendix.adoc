@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 [[appendix]]
 == Appendix
 
@@ -513,7 +517,12 @@ Those of us lucky enough to have crossed paths with him knew what a
 privilege and great honor it was to know him.
 He is certainly missed.
 
+ifdef::include-dedication-photo[]
+// Only including this in Khronos-built documents subject to the
+// Khronos Specification Copyright license - photo
+// is not CC-BY-4.0 licensed.
 image::images/JP.jpg[align="center",pdfwidth="80%"]
+endif::include-dedication-photo[]
 
 <<<
 [[credits]]
@@ -582,8 +591,10 @@ the time of their most recent contribution, are listed below.
 * Nick Whiting, Epic Games
 * Nigel Williams, Sony
 * Paul Pedriana, Facebook
+* Paulo F. Gomes, Samsung Electronics
 * Peter Kuhn, Unity Technologies
 * Peter Peterson, HP Inc.
+* Philippe Harscoet, Samsung Electronics
 * Pierre-Loup Griffais, Valve Software
 * Rajeev Gupta, Sony
 * Remi Arnaud, Starbreeze

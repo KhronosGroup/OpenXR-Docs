@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_composition_layer_cube.adoc[]
 
 *Last Modified Date*::
@@ -49,7 +53,9 @@ include::../../../../generated/api/structs/XrCompositionLayerCubeKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:layerFlags is any flags to apply to this layer.
 * pname:space is the slink:XrSpace in which the pname:orientation of the
   cube layer is evaluated over time.

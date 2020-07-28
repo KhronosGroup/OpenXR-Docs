@@ -340,7 +340,9 @@ include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:domain : processing domain in which a threshold has been crossed
 * pname:subDomain : system area in which a threshold has been crossed
 * pname:fromLevel : enumerated notification level which has been exited

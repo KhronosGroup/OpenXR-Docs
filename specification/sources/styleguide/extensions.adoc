@@ -1,6 +1,6 @@
-// Copyright (c) 2015-2020 The Khronos Group Inc. This work is licensed under a
-// Creative Commons Attribution 4.0 International License; see
-// http://creativecommons.org/licenses/by/4.0/
+// Copyright (c) 2015-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 
 [[extensions]]
 = API Layers & Extensions
@@ -859,7 +859,7 @@ endif::editing-notes[]
   The revision value indicates a patch version of the extension
   specification, and differences in this version number maintain full
   compatibility, as defined in the
-  link:html/spec.html#fundamentals-versionnum[API Version Numbers and
+  link:html/xrspec.html#fundamentals-versionnum[API Version Numbers and
   Semantics] section of the <<openxr-spec,OpenXR API Specification>>.
 
 [NOTE]
@@ -992,6 +992,9 @@ XrStructureType        type;
 const void*            next;
 ----
 
+If the structure is an output parameter, the pname:next pointer should be
+non-`const`.
+
 It is in principle possible for extensions to provide additional parameters
 through alternate means, such as passing a handle parameter to a structure
 with a pname:type defined by the extension, but this approach is discouraged
@@ -1010,7 +1013,8 @@ specification.
 
 Validation of such extended structure chains is automatically generated from
 the registry, as described in the description of attr:structextends in
-link:registry.html[the registry document].
+link:https://www.khronos.org/registry/vulkan/specs/1.2/registry.html[the
+registry schema document for Vulkan].
 
 Take the following XML structure example:
 

@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_opengl_enable.adoc[]
 
 *Last Modified Date*::
@@ -93,7 +97,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLWin32KHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:hDC is a valid Windows HW device context handle.
 * pname:hGLRC is a valid Windows OpenGL rendering context handle.
 ****
@@ -124,7 +130,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLXlibKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:xDisplay is a valid X11 sname:Display.
 * pname:visualid is a valid X11 visual identifier.
 * pname:glxFBConfig is a valid X11 OpenGL GLX sname:GLXFBConfig.
@@ -153,7 +161,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLXcbKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:connection is a valid sname:xcb_connection_t.
 * pname:screenNumber is an index indicating which screen should be used for
   rendering.
@@ -183,7 +193,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingOpenGLWaylandKHR.txt
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:display is a valid Wayland sname:wl_display.
 ****
 
@@ -207,7 +219,9 @@ include::../../../../generated/api/structs/XrSwapchainImageOpenGLKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:image is the OpenGL texture handle associated with this swapchain
   image.
 ****
@@ -241,7 +255,9 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsOpenGLKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:minApiVersionSupported is the minimum version of OpenGL that the
   runtime supports.
   Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
@@ -281,8 +297,9 @@ include::../../../../generated/api/protos/xrGetOpenGLGraphicsRequirementsKHR.txt
 The flink:xrGetOpenGLGraphicsRequirementsKHR function identifies to the
 application the minimum OpenGL version requirement and the highest known
 tested OpenGL version.
-flink:xrGetOpenGLGraphicsRequirementsKHR must: be called prior to calling
-flink:xrCreateSession.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
+flink:xrCreateSession if flink:xrGetOpenGLGraphicsRequirementsKHR has not
+been called for the same pname:instance and pname:systemId.
 
 include::../../../../generated/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
 --

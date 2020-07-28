@@ -1,3 +1,6 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 [[rendering]]
 == Rendering
 
@@ -23,10 +26,25 @@ Swapchain images can: be 2D or 2D Array.
 Rendering operations involving composition of submitted layers should be
 assumed to be internally performed by the runtime in linear color space.
 Images submitted in sRGB color space must be created using an API-specific
-sRGB format (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, ename:GL_SRGB8_ALPHA8,
-ename:VK_FORMAT_R8G8B8A8_SRGB) to apply automatic sRGB-to-linear conversion
-when read by the runtime.
+sRGB format (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+ename:GL_SRGB8_ALPHA8, ename:VK_FORMAT_R8G8B8A8_SRGB) to apply automatic
+sRGB-to-linear conversion when read by the runtime.
 All other formats will be treated as linear values.
+
+[NOTE]
+.Note
+====
+OpenXR applications should avoid submitting linear encoded 8 bit color data
+(e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM) whenever possible as it may result
+in color banding.
+
+Gritz, L. and d'Eon, E. 2007.
+The Importance of Being Linear.
+In: H. Nguyen, ed., __GPU Gems 3__.
+Addison-Wesley Professional.
+<https://developer.nvidia.com/gpugems/gpugems3/part-iv-image-effects/chapter-24-importance-being-linear>
+
+====
 
 [NOTE]
 .Note
@@ -153,7 +171,9 @@ include::../../generated/api/structs/XrSwapchainCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:createFlags is a bitmask of elink:XrSwapchainCreateFlagBits
   describing additional properties of the swapchain.
 * pname:usageFlags is a bitmask of elink:XrSwapchainUsageFlagBits describing
@@ -307,7 +327,9 @@ include::../../generated/api/structs/XrSwapchainImageBaseHeader.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 The slink:XrSwapchainImageBaseHeader is a base structure that can be
@@ -368,7 +390,9 @@ include::../../generated/api/structs/XrSwapchainImageAcquireInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 Because this structure only exists to support extension-specific structures,
@@ -429,7 +453,9 @@ include::../../generated/api/structs/XrSwapchainImageWaitInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:timeout indicates how many nanoseconds the call should block waiting
   for the image to become available for writing.
 ****
@@ -482,7 +508,9 @@ include::../../generated/api/structs/XrSwapchainImageReleaseInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 Because this structure only exists to support extension-specific structures,
@@ -581,7 +609,9 @@ include::../../generated/api/structs/XrView.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:pose is an slink:XrPosef defining the location and orientation of
   the view in the pname:space specified by the flink:xrLocateViews function.
 * pname:fov is the slink:XrFovf for the four sides of the projection.
@@ -602,7 +632,9 @@ include::../../generated/api/structs/XrViewState.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:viewStateFlags is a bitmask of elink:XrViewStateFlagBits indicating
   state for all views.
 ****
@@ -737,7 +769,9 @@ include::../../generated/api/structs/XrFrameWaitInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 Because this structure only exists to support extension-specific structures,
@@ -756,7 +790,9 @@ include::../../generated/api/structs/XrFrameState.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:predictedDisplayTime is the anticipated display basetype:XrTime for
   the next application-generated frame.
 * pname:predictedDisplayPeriod is the basetype:XrDuration of the display
@@ -858,7 +894,9 @@ include::../../generated/api/structs/XrFrameBeginInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 Because this structure only exists to support extension-specific structures,
@@ -961,7 +999,9 @@ include::../../generated/api/structs/XrFrameEndInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:displayTime is the basetype:XrTime at which this frame should: be
   displayed.
 * pname:environmentBlendMode is the elink:XrEnvironmentBlendMode value
@@ -1109,7 +1149,9 @@ include::../../generated/api/structs/XrCompositionLayerBaseHeader.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits
   describing flags to apply to the layer.
 * pname:space is the slink:XrSpace in which the layer will be kept stable
@@ -1170,7 +1212,9 @@ include::../../generated/api/structs/XrCompositionLayerProjection.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits
   describing flags to apply to the layer.
 * pname:space is the slink:XrSpace in which the pname:pose of each
@@ -1210,7 +1254,9 @@ include::../../generated/api/structs/XrCompositionLayerProjectionView.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:pose is an slink:XrPosef defining the location and orientation of
   this projection element in the pname:space of the corresponding
   slink:XrCompositionLayerProjectionView.
@@ -1247,7 +1293,9 @@ include::../../generated/api/structs/XrCompositionLayerQuad.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits
   describing flags to apply to the layer.
 * pname:space is the slink:XrSpace in which the pname:pose of the quad layer

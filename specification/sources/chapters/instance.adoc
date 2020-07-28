@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 [[instance]]
 == Instance
 [open,refpage='XrInstance',desc='Opaque handle to an instance object',type='handles',xrefs='xrCreateInstance xrGetInstanceProperties XrInstanceCreateInfo XrInstanceProperties']
@@ -100,7 +104,9 @@ include::../../generated/api/structs/XrApiLayerProperties.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:layerName is a string specifying the name of the API layer.
   Use this name in the
   slink:XrInstanceCreateInfo::pname:enabledApiLayerNames array to enable
@@ -200,7 +206,9 @@ include::../../generated/api/structs/XrExtensionProperties.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:extensionName is a code:NULL terminated string specifying the name
   of the extension.
 * pname:extensionVersion is the version of this extension.
@@ -264,7 +272,9 @@ include::../../generated/api/structs/XrInstanceCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:createFlags is a bitmask of elink:XrInstanceCreateFlags that
   identifies options that apply to the creation.
 * pname:applicationInfo is an instance of slink:XrApplicationInfo.
@@ -403,7 +413,9 @@ include::../../generated/api/structs/XrInstanceProperties.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:runtimeVersion is the runtime's version (not necessarily related to
   an OpenXR API version), expressed in the format of dlink:XR_MAKE_VERSION.
 * pname:runtimeName is the name of the runtime.
@@ -416,7 +428,7 @@ include::../../generated/validity/structs/XrInstanceProperties.txt[]
 === Platform-Specific Instance Creation
 
 Some amount of data required for instance creation is exposed through
-extension structures.
+chained structures defined in extensions.
 These structures may be optional: or even required: for instance creation on
 specific platforms, but not on other platforms.
 Separating off platform-specific functionality into extension structures
@@ -483,7 +495,9 @@ passed in.
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:lossTime is the absolute time at which the indicated instance will
   be considered lost and become unusable.
 ****

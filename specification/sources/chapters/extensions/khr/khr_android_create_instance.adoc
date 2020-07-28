@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_android_create_instance.adoc[]
 
 *Last Modified Date*::
@@ -41,7 +45,9 @@ include::../../../../generated/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:applicationVM is a pointer to the JNI's opaque `JavaVM` structure,
   cast to a void pointer.
 * pname:applicationActivity is a JNI reference to an `android.app.Activity`

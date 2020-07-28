@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_EXT_hand_tracking.adoc[]
 
 :INCS-VAR: ../../../../generated
@@ -39,7 +43,9 @@ include::../../../../generated/api/structs/XrSystemHandTrackingPropertiesEXT.txt
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:supportsHandTracking is an basetype:XrBool32, indicating if current
   system is capable of hand tracking input.
 ****
@@ -109,7 +115,9 @@ include::../../../../generated/api/structs/XrHandTrackerCreateInfoEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:hand is an elink:XrHandEXT which describes which hand the tracker is
   tracking.
 * pname:handJointSet is an elink:XrHandJointSetEXT describe the set of hand
@@ -201,7 +209,9 @@ include::../../../../generated/api/structs/XrHandJointsLocateInfoEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:baseSpace is an slink:XrSpace within which the returned hand joint
   locations will be represented.
 * pname:time is an basetype:XrTime at which to locate the hand joints.
@@ -220,7 +230,8 @@ include::../../../../generated/api/structs/XrHandJointLocationsEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrHandJointVelocitiesEXT.
 * pname:isActive is a basetype:XrBool32 indicating if the hand tracker is
   actively tracking.
 * pname:jointCount is a code:uint32_t describing the count of elements in
@@ -306,7 +317,9 @@ include::../../../../generated/api/structs/XrHandJointVelocitiesEXT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:jointCount is a code:uint32_t describing the number of elements in
   pname:jointVelocities array.
 * pname:jointVelocities is an array of slink:XrHandJointVelocityEXT
@@ -424,7 +437,7 @@ XrHandTrackerEXT leftHandTracker{};
 XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
 XrHandJointVelocityEXT jointVelocities[XR_HAND_JOINT_COUNT_EXT];
 
-XrHandJointVelocitiesEXT velocities{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+XrHandJointVelocitiesEXT velocities{XR_TYPE_HAND_JOINT_VELOCITIES_EXT};
 velocities.jointCount = XR_HAND_JOINT_COUNT_EXT;
 velocities.jointVelocities = jointVelocities;
 

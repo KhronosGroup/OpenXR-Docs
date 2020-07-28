@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_D3D11_enable.adoc[]
 
 *Last Modified Date*::
@@ -61,7 +65,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingD3D11KHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:device is a pointer to a valid sname:ID3D11Device to use.
 ****
 
@@ -81,7 +87,9 @@ include::../../../../generated/api/structs/XrSwapchainImageD3D11KHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:texture is a pointer to a valid sname:ID3D11Texture2D to use.
 ****
 
@@ -114,7 +122,9 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsD3D11KHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:adapterLuid identifies what graphics device needs to be used.
 * pname:minFeatureLevel is the minimum feature level that the D3D11 device
   must be initialized with.
@@ -155,11 +165,12 @@ include::../../../../generated/api/protos/xrGetD3D11GraphicsRequirementsKHR.txt[
 The flink:xrGetD3D11GraphicsRequirementsKHR function identifies to the
 application what graphics device (Windows LUID) needs to be used and the
 minimum feature level to use.
-flink:xrGetD3D11GraphicsRequirementsKHR must: be called prior to calling
-flink:xrCreateSession, and the LUID and feature level that
-flink:xrGetD3D11GraphicsRequirementsKHR returns should be used to create the
-sname:ID3D11Device that the application passes to flink:xrCreateSession in
-the slink:XrGraphicsBindingD3D11KHR.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
+flink:xrCreateSession if flink:xrGetD3D11GraphicsRequirementsKHR has not
+been called for the same pname:instance and pname:systemId.
+The LUID and feature level that flink:xrGetD3D11GraphicsRequirementsKHR
+returns should be used to create the sname:ID3D11Device that the application
+passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D11KHR.
 
 include::../../../../generated/validity/protos/xrGetD3D11GraphicsRequirementsKHR.txt[]
 --

@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_EXT_view_configuration_depth_range.adoc[]
 
 *Last Modified Date*::
@@ -60,7 +64,9 @@ include::../../../../generated/api/structs/XrViewConfigurationDepthRangeEXT.txt[
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:recommendedNearZ is the recommended minimum positive distance in
   meters that content should be rendered for the view to achieve the best
   user experience.

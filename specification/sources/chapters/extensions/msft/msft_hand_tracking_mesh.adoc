@@ -37,7 +37,9 @@ include::../../../../generated/api/structs/XrSystemHandTrackingMeshPropertiesMSF
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:supportsHandTrackingMesh is an basetype:XrBool32, indicating if
   current system is capable of hand tracking mesh input.
 * pname:maxHandMeshIndexCount is a code:uint32_t returns the maximum count
@@ -58,9 +60,8 @@ system supports hand tracking mesh input.
 In this case, the runtime must: return a positive number for
 pname:maxHandMeshIndexCount and pname:maxHandMeshVertexCount.
 An application should: use pname:maxHandMeshIndexCount and
-pname:maxHandMeshVertexCount to pre-allocate hand mesh buffers and reuse
-them in their render loop when calling flink:xrUpdateHandMeshMSFT every
-frame.
+pname:maxHandMeshVertexCount to preallocate hand mesh buffers and reuse them
+in their render loop when calling flink:xrUpdateHandMeshMSFT every frame.
 
 include::../../../../generated/validity/structs/XrSystemHandTrackingMeshPropertiesMSFT.txt[]
 --
@@ -138,7 +139,9 @@ include::../../../../generated/api/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:handPoseType is an elink:XrHandPoseTypeMSFT used to specify the type
   of hand this mesh is tracking.
   Indices and vertices returned from flink:xrUpdateHandMeshMSFT for a hand
@@ -174,13 +177,13 @@ include::../../../../generated/api/protos/xrUpdateHandMeshMSFT.txt[]
   of hand mesh data.
 ****
 
-The application should: pre-allocate the index buffer and vertex buffer in
+The application should: preallocate the index buffer and vertex buffer in
 slink:XrHandMeshMSFT using the pname:maxHandMeshIndexCount and
 pname:maxHandMeshVertexCount from the
 slink:XrSystemHandTrackingMeshPropertiesMSFT returned from the
 flink:xrGetSystemProperties function.
 
-The application should: pre-allocate the slink:XrHandMeshMSFT structure and
+The application should: preallocate the slink:XrHandMeshMSFT structure and
 reuse it for each frame so as to reduce the copies of data when underlying
 tracking data is not changed.
 The application should use pname:indexBufferChanged and
@@ -201,7 +204,9 @@ include::../../../../generated/api/structs/XrHandMeshUpdateInfoMSFT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:time is the basetype:XrTime that describes the time for which the
   application wishes to query the hand mesh state.
 * pname:handPoseType is an elink:XrHandPoseTypeMSFT which describes the type
@@ -237,7 +242,9 @@ include::../../../../generated/api/structs/XrHandMeshMSFT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:isActive is an basetype:XrBool32 indicating if the current hand
   tracker is active.
 * pname:indexBufferChanged is an basetype:XrBool32 indicating if the
@@ -297,7 +304,7 @@ include::../../../../generated/api/structs/XrHandMeshIndexBufferMSFT.txt[]
   the indices of the triangles list in the vertex buffer.
 ****
 
-An application should: pre-allocate the indices array using the
+An application should: preallocate the indices array using the
 pname:maxHandMeshIndexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
 returned from flink:xrGetSystemProperties.
 In this way, the application can avoid possible insufficient buffer sizees
@@ -375,7 +382,7 @@ include::../../../../generated/api/structs/XrHandMeshVertexBufferMSFT.txt[]
   and normal vector in the hand mesh space.
 ****
 
-An application should: pre-allocate the vertices array using the
+An application should: preallocate the vertices array using the
 pname:maxHandMeshVertexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
 returned from flink:xrGetSystemProperties.
 In this way, the application can avoid possible insufficient buffer sizes
@@ -441,7 +448,7 @@ include::../../../../generated/validity/structs/XrHandMeshVertexMSFT.txt[]
 
 *Example code for hand mesh tracking*
 
-Following example code demos pre-allocating hand mesh buffers and updating
+Following example code demos preallocating hand mesh buffers and updating
 the hand mesh in rendering loop
 
 [source,C++]
@@ -476,7 +483,7 @@ XrSpace leftHandMeshSpace{};
     CHK_XR(xrCreateHandMeshSpaceMSFT(leftHandTracker, &createInfo, &leftHandMeshSpace));
 }
 
-// Pre-allocate buffers for hand mesh indices and vertices
+// Preallocate buffers for hand mesh indices and vertices
 std::vector<uint32_t> handMeshIndices(handMeshSystemProperties.maxHandMeshIndexCount);
 std::vector<XrHandMeshVertexMSFT> handMeshVertices(handMeshSystemProperties.maxHandMeshVertexCount);
 
@@ -497,7 +504,7 @@ while(1){
     updateInfo.time = time;
     CHK_XR(xrUpdateHandMeshMSFT(leftHandTracker, &updateInfo, &leftHandMesh));
     if (!leftHandMesh.isActive) {
-        // Hand input is not focused or user's hand is out of tracking range. 
+        // Hand input is not focused or user's hand is out of tracking range.
         // Do not process or render hand mesh.
     } else {
         if (leftHandMesh.indexBufferChanged) {
@@ -545,7 +552,9 @@ include::../../../../generated/api/structs/XrHandPoseTypeInfoMSFT.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:handPoseType is an elink:XrHandPoseTypeMSFT that describes the type
   of hand pose of the hand tracking.
 ****
@@ -605,7 +614,7 @@ changes and retrieving data for processing.
 XrSession session;                  // previously initialized
 XrHandTrackerEXT handTracker;       // previously initialized with handJointSet set to XR_HAND_JOINT_SET_DEFAULT_MSFT
 XrSpace handMeshReferenceSpace;     // previously initialized with handPoseType set to XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT
-XrHandMeshMSFT referenceHandMesh;   // previously initialized with pre-allocated buffers
+XrHandMeshMSFT referenceHandMesh;   // previously initialized with preallocated buffers
 
 while(1){
     // ...

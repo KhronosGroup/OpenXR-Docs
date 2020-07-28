@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_vulkan_enable.adoc[]
 
 *Last Modified Date*::
@@ -140,7 +144,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingVulkanKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:instance is a valid Vulkan sname:VkInstance.
 * pname:physicalDevice is a valid Vulkan sname:VkPhysicalDevice.
 * pname:device is a valid Vulkan sname:VkDevice.
@@ -177,7 +183,9 @@ include::../../../../generated/api/structs/XrSwapchainImageVulkanKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:image is a valid Vulkan sname:VkImage to use.
 ****
 
@@ -210,7 +218,9 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsVulkanKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:minApiVersionSupported is the minimum version of Vulkan that the
   runtime supports.
   Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
@@ -250,8 +260,9 @@ include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirementsKHR.txt
 The flink:xrGetVulkanGraphicsRequirementsKHR function identifies to the
 application the minimum Vulkan version requirement and the highest known
 tested Vulkan version.
-flink:xrGetVulkanGraphicsRequirementsKHR must: be called prior to calling
-flink:xrCreateSession.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
+flink:xrCreateSession if flink:xrGetVulkanGraphicsRequirementsKHR has not
+been called for the same pname:instance and pname:systemId.
 
 include::../../../../generated/validity/protos/xrGetVulkanGraphicsRequirementsKHR.txt[]
 --

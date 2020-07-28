@@ -1,3 +1,6 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 [[view_configurations]]
 == View Configurations
 
@@ -154,7 +157,9 @@ include::../../generated/api/structs/XrViewConfigurationProperties.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:viewConfigurationType is the elink:XrViewConfigurationType of the
   configuration.
 * pname:fovMutable indicates if the view field of view can be modified by
@@ -216,7 +221,9 @@ include::../../generated/api/structs/XrViewConfigurationView.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:recommendedImageRectWidth is the optimal width of pname:imageRect to
   use when rendering this view into a swapchain.
 * pname:maxImageRectWidth is the maximum width of pname:imageRect supported
@@ -273,7 +280,7 @@ for(uint32_t i = 0; i < configurationCount; ++i)
     }
 }
 
-if (!configFound) 
+if (!configFound)
     return;   // Cannot support any view configuration of this system.
 
 // Get detailed information of each view element.

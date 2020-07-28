@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
 
 *Last Modified Date*::
@@ -54,7 +58,9 @@ include::../../../../generated/api/structs/XrVulkanSwapchainFormatListCreateInfo
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:viewFormatCount is the number of view formats passed in
   pname:viewFormats.
 * pname:viewFormats is an array of sname:VkFormat.

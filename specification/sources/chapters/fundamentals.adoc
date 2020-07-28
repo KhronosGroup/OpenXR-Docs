@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 [[fundamentals]]
 == Fundamentals
 
@@ -540,8 +544,13 @@ flink:xrCreateInstance.
 A runtime must: ignore all unrecognized structures in a pname:next chain,
 including those associated with an extension that has not been enabled.
 
-Most extension structures are described in the base OpenXR Specification
-under the
+Some structures for use in a chain are described in the core OpenXR
+specification and are mentioned in the Member Descriptions.
+Any structure described in this document intended for use in a chain is
+mentioned in a "See also" list in the implicit valid usage of the structure
+they chain to.
+Most chained structures are associated with extensions, and are described in
+the base OpenXR Specification under the
 ifndef::HAS_DEPRECATED_EXTENSIONS[]
 <<extension-appendices-list, List of Extensions>>.
 endif::HAS_DEPRECATED_EXTENSIONS[]
@@ -551,8 +560,8 @@ endif::HAS_DEPRECATED_EXTENSIONS[]
 Vendor-specific extensions may: be found there as well, or may: only be
 available from the vendor's website or internal document repositories.
 
-Unless otherwise specified: Extension structs which are output structs may:
-be modified by the runtime with the exception of the type and next fields.
+Unless otherwise specified: Chained structs which are output structs may: be
+modified by the runtime with the exception of the type and next fields.
 Upon return from any function, all type and next fields in the chain must:
 be unmodified.
 
@@ -572,7 +581,9 @@ include::../../generated/api/structs/XrBaseInStructure.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 slink:XrBaseInStructure can be used to facilitate iterating through a
@@ -589,7 +600,9 @@ include::../../generated/api/structs/XrBaseOutStructure.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 slink:XrBaseOutStructure can be used to facilitate iterating through a
@@ -1451,7 +1464,9 @@ include::../../generated/api/structs/XrEventDataBaseHeader.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 The slink:XrEventDataBaseHeader is a generic structure used to identify the
@@ -1481,7 +1496,9 @@ include::../../generated/api/structs/XrEventDataBuffer.txt[]
 .Parameter Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:varying is a fixed sized output buffer big enough to hold returned
   data elements for all specified event data types.
 ****
@@ -1509,7 +1526,9 @@ include::../../generated/api/structs/XrEventDataEventsLost.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:lostEventCount is the number of events which have overflowed since
   the last call to flink:xrPollEvent.
 ****

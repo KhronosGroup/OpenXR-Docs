@@ -1,3 +1,7 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 [[input]]
 == Input and Haptics
 
@@ -160,7 +164,9 @@ include::../../generated/api/structs/XrActionSetCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:actionSetName is an array containing a code:NULL terminated
   non-empty string with the name of this action set.
 * pname:localizedActionSetName is an array containing a code:NULL terminated
@@ -198,7 +204,7 @@ If pname:actionSetName or pname:localizedActionSetName are empty strings,
 the runtime must: return ename:XR_ERROR_NAME_INVALID or
 ename:XR_ERROR_LOCALIZED_NAME_INVALID respectively.
 If pname:actionSetName or pname:localizedActionSetName are duplicates of the
-corresponding field for any existing action set in the specified session,
+corresponding field for any existing action set in the specified instance,
 the runtime must: return ename:XR_ERROR_NAME_DUPLICATED or
 ename:XR_ERROR_LOCALIZED_NAME_DUPLICATED respectively.
 If the conflicting action set is destroyed, the conflicting field is no
@@ -281,7 +287,9 @@ include::../../generated/api/structs/XrActionCreateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:actionName is an array containing a code:NULL terminated string with
   the name of this action.
 * pname:actionType is the elink:XrActionType of the action to be created.
@@ -323,16 +331,16 @@ not satisfied, the runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED:
 ** pathname:/user/hand/left
 ** pathname:/user/hand/right
 ** pathname:/user/gamepad
-** pathname:/user
 * No path appears in the list more than once
 
-Including pathname:/user in the list of subaction paths creates an 'other'
-bucket for action data to be filtered into.
-When pathname:/user is included in the list passed to
-ftext:xrGetActionState* the runtime must: include data for all devices which
-are not included in the other subaction paths into the pathname:/user
-bucket.
 Extensions may: append additional top level user paths to the above list.
+
+[NOTE]
+.Note
+====
+Earlier revisions of the spec mentioned pathname:/user but it could not be
+implemented as specified and was removed as errata.
+====
 
 The runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED in the following
 circumstances:
@@ -501,7 +509,7 @@ obeying suggested bindings: Pose input sources must: be bound directly to
 the action.
 If the path refers to the parent of input values instead of to an input
 value itself, the runtime must: use subpathname:/example/path/pose instead
-of pathname:/example/path if it is available.
+of subpathname:/example/path if it is available.
 In any other situation the runtime may: provide an alternate binding for the
 action or it will be unbound.
 
@@ -515,7 +523,9 @@ include::../../generated/api/structs/XrEventDataInteractionProfileChanged.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:session is the slink:XrSession for which at least one of the
   interaction profiles for a top level path has changed.
 ****
@@ -587,7 +597,9 @@ include::../../generated/api/structs/XrInteractionProfileSuggestedBinding.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:interactionProfile is the basetype:XrPath of an interaction profile.
 * pname:countSuggestedBindings is the number of suggested bindings in the
   array pointed to by pname:suggestedBindings.
@@ -661,7 +673,9 @@ include::../../generated/api/structs/XrSessionActionSetsAttachInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:countActionSets is an integer specifying the number of valid
   elements in the pname:actionSets array.
 * pname:actionSets is a pointer to an array of one or more slink:XrActionSet
@@ -719,7 +733,9 @@ include::../../generated/api/structs/XrInteractionProfileState.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:interactionProfile is the basetype:XrPath of the interaction profile
   path for the pname:topLevelUserPath used to retrieve this state, or
   dlink:XR_NULL_PATH if there is no active interaction profile at that top
@@ -825,7 +841,9 @@ include::../../generated/api/structs/XrActionStateGetInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:action is the slink:XrAction being queried.
 * pname:subactionPath is the subaction path basetype:XrPath to query data
   from, or dlink:XR_NULL_PATH to specify all subaction paths.
@@ -854,7 +872,9 @@ include::../../generated/api/structs/XrHapticActionInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:action is the slink:XrAction handle for the desired output haptic
   action.
 * pname:subactionPath is the subaction path basetype:XrPath of the device to
@@ -905,7 +925,9 @@ include::../../generated/api/structs/XrActionStateBoolean.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:currentState is the current state of the action.
 * pname:changedSinceLastSync is ename:XR_TRUE if the value of
   pname:currentState is different than it was before the most recent call to
@@ -960,7 +982,9 @@ include::../../generated/api/structs/XrActionStateFloat.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:currentState is the current state of the Action.
 * pname:changedSinceLastSync is ename:XR_TRUE if the value of
   pname:currentState is different than it was before the most recent call to
@@ -1007,7 +1031,9 @@ include::../../generated/api/structs/XrActionStateVector2f.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:currentState is the current slink:XrVector2f state of the Action.
 * pname:changedSinceLastSync is ename:XR_TRUE if the value of
   pname:currentState is different than it was before the most recent call to
@@ -1062,7 +1088,9 @@ include::../../generated/api/structs/XrActionStatePose.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:isActive is ename:XR_TRUE if and only if there exists an input
   source that is being tracked by this pose action.
 ****
@@ -1143,7 +1171,9 @@ include::../../generated/api/structs/XrHapticBaseHeader.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
   This base structure itself has no associated elink:XrStructureType value.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 ****
 
 include::../../generated/validity/structs/XrHapticBaseHeader.txt[]
@@ -1158,7 +1188,9 @@ include::../../generated/api/structs/XrHapticVibration.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:duration is the number of nanoseconds the vibration should: last.
   If dlink:XR_MIN_HAPTIC_DURATION is specified, the runtime must: produce a
   short haptics pulse of minimal supported duration for the haptic device.
@@ -1255,7 +1287,9 @@ include::../../generated/api/structs/XrActionsSyncInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:countActiveActionSets is an integer specifying the number of valid
   elements in the pname:activeActionSets array.
 * pname:activeActionSets is code:NULL or a pointer to an array of one or
@@ -1353,7 +1387,9 @@ include::../../generated/api/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:action is the handle of the action to query.
 ****
 
@@ -1402,7 +1438,9 @@ include::../../generated/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:source is an basetype:XrPath representing the source.
   Typically this was returned by a call to
   flink:xrEnumerateBoundSourcesForAction.

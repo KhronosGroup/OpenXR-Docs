@@ -1,3 +1,6 @@
+// Copyright (c) 2016-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
 [[system]]
 == System
 
@@ -124,7 +127,9 @@ include::../../generated/api/structs/XrSystemGetInfo.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:formFactor is the elink:XrFormFactor requested by the application.
 ****
 
@@ -193,7 +198,9 @@ include::../../generated/api/structs/XrSystemProperties.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
 * pname:vendorId is a unique identifier for the vendor of the system.
 * pname:systemId is the basetype:XrSystemId identifying the system.
 * pname:systemName is a string containing the name of the system.

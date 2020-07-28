@@ -1,3 +1,7 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_KHR_visibility_mask.adoc[]
 
 *Last Modified Date*::
@@ -87,7 +91,9 @@ include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:vertexCapacityInput is the capacity of the pname:vertices array, or
   `0` to indicate a request to retrieve the required capacity.
 * pname:vertexCountOutput is filled in by the runtime with the count of
@@ -122,7 +128,9 @@ include::../../../../generated/api/structs/XrEventDataVisibilityMaskChangedKHR.t
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to an extension-specific structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
 * pname:session is the slink:XrSession for which the view mask has changed.
 * pname:viewConfigurationType is the view configuration whose mask has
   changed.

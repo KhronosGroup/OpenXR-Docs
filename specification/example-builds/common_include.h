@@ -1,3 +1,9 @@
+/*
+** Copyright (c) 2017-2020 The Khronos Group Inc.
+**
+** SPDX-License-Identifier: Apache-2.0
+*/
+
 /* Included in all extracted example code when building the build-examples target. */
 
 /* If there is a header matching the name of the extracted source in this directory,

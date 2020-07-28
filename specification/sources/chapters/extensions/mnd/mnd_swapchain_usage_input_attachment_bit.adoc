@@ -1,0 +1,44 @@
+// Copyright (c) 2020 Collabora, Ltd.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_MND_swapchain_usage_input_attachment_bit.adoc[]
+
+*Last Modified Date*::
+    2020-07-24
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Jakob Bornecrantz, Collabora
+
+*Overview*
+
+This extension enables application to specify that swapchain images should
+be created in a way so that they can be used as input attachments.
+At the time of writing this bit only affects Vulkan swapchains.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrSwapchainUsageFlagBits enumeration is extended with:
+
+* ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-07-23 (Jakob Bornecrantz)
+** Initial draft
+* Revision 2, 2020-07-24 (Jakob Bornecrantz)
+** Added note about only affecting Vulkan
+** Changed from MNDX to MND
