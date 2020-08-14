@@ -17,6 +17,41 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.11 (2020-08-14)
+
+This release is mainly for SDK improvements, with only small changes to the
+docs. A new error code is provided for `xrCreateSession` for developers
+convenience.
+
+- Registry
+  - Register `ULTRALEAP` author ID for Ultraleap.
+    ([internal MR 1877](https://gitlab.khronos.org/openxr/openxr/merge_requests/1877))
+  - Reserve the extension number 98 to 101 for future MSFT extensions.
+    ([internal MR 1879](https://gitlab.khronos.org/openxr/openxr/merge_requests/1879))
+  - schema: Distinguish `parentstruct` and `structextends` attributes in comments.
+    ([internal MR 1881](https://gitlab.khronos.org/openxr/openxr/merge_requests/1881),
+    [OpenXR-Docs/#51](https://github.com/KhronosGroup/OpenXR-Docs/issues/51),
+    [internal issue 1396](https://gitlab.khronos.org/openxr/openxr/issues/1396))
+  - Add a new result code, `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING`, for
+    runtimes to return if `xrBeginSession` is called before calling one of the
+    `xrGetGraphicsRequirements` calls.
+    ([internal MR 1882](https://gitlab.khronos.org/openxr/openxr/merge_requests/1882),
+    [OpenXR-Docs/#53](https://github.com/KhronosGroup/OpenXR-Docs/issues/53),
+    [internal issue 1397](https://gitlab.khronos.org/openxr/openxr/issues/1397))
+- Specification
+  - Update core spec and graphics binding extensions to describe the new result
+    code, `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING`, which indicates
+    programmer error in omitting the `xrGetGraphicsRequirements`-family call
+    before calling `xrCreateSession`. The previous error code for this case,
+    `XR_ERROR_VALIDATION_FAILURE`, is still permitted for compatibility reasons,
+    but discouraged as it is less useful to developers.
+    ([internal MR 1882](https://gitlab.khronos.org/openxr/openxr/merge_requests/1882),
+    [OpenXR-Docs/#53](https://github.com/KhronosGroup/OpenXR-Docs/issues/53),
+    [internal issue 1397](https://gitlab.khronos.org/openxr/openxr/issues/1397))
+  - Improve language usage to be more respectful.
+    ([internal MR 1881](https://gitlab.khronos.org/openxr/openxr/merge_requests/1881))
+  - Typo fixes in recent interaction profile extensions.
+
 ## OpenXR Specification 1.0.10 (2020-07-28)
 
 Note the relicensing of the registry XML file in this repository. Each file's

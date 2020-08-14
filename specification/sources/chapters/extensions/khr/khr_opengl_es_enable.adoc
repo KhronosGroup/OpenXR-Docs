@@ -187,9 +187,11 @@ include::../../../../generated/api/protos/xrGetOpenGLESGraphicsRequirementsKHR.t
 The flink:xrGetOpenGLESGraphicsRequirementsKHR function identifies to the
 application the minimum OpenGL ES version requirement and the highest known
 tested OpenGL ES version.
-The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
-flink:xrCreateSession if flink:xrGetOpenGLESGraphicsRequirementsKHR has not
-been called for the same pname:instance and pname:systemId.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if
+flink:xrGetOpenGLESGraphicsRequirementsKHR has not been called for the same
+pname:instance and pname:systemId.
 
 include::../../../../generated/validity/protos/xrGetOpenGLESGraphicsRequirementsKHR.txt[]
 --
@@ -210,3 +212,5 @@ include::../../../../generated/validity/protos/xrGetOpenGLESGraphicsRequirements
 ** Description updated
 * Revision 6, 2019-07-12 (Martin Renschler)
 ** Description updated
+* Revision 7, 2020-08-06 (Bryce Hutchings)
+** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code

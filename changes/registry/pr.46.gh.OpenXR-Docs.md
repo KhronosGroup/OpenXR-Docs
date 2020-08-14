@@ -1,1 +1,0 @@
-Add an author ID, and reserve a vendor extension for Huawei.

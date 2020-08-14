@@ -26,11 +26,11 @@ controller differently from the original
 controller>>.
 
 This extension added a new interaction profile
-pathname:/interaction_profile/samsung/odyssey_controller to describe the
+pathname:/interaction_profiles/samsung/odyssey_controller to describe the
 Odyssey controller.
 The action bindings of this interaction profile work exactly the same as the
 <<_microsoft_mixed_reality_motion_controller_profile,
-pathname:/interaction_profile/microsoft/motion_controller>> in terms of
+pathname:/interaction_profiles/microsoft/motion_controller>> in terms of
 valid user paths and supported input and output component paths.
 
 If the application doesn't do its own custom rendering for specific motion

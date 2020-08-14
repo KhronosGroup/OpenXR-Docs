@@ -198,9 +198,10 @@ include::../../../../generated/api/protos/xrGetD3D12GraphicsRequirementsKHR.txt[
 The flink:xrGetD3D12GraphicsRequirementsKHR function identifies to the
 application what graphics device (Windows LUID) needs to be used and the
 minimum feature level to use.
-The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
-flink:xrCreateSession if flink:xrGetD3D12GraphicsRequirementsKHR has not
-been called for the same pname:instance and pname:systemId.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if flink:xrGetD3D12GraphicsRequirementsKHR
+has not been called for the same pname:instance and pname:systemId.
 The LUID and feature level that flink:xrGetD3D12GraphicsRequirementsKHR
 returns should be used to create the sname:ID3D12Device that the application
 passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D12KHR.
@@ -226,3 +227,5 @@ include::../../../../generated/validity/protos/xrGetD3D12GraphicsRequirementsKHR
 ** Added swapchain image resource state details.
 * Revision 6, 2020-03-18 (Minmin Gong)
 ** Specified depth swapchain image resource state.
+* Revision 7, 2020-08-06 (Bryce Hutchings)
+** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code

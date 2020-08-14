@@ -165,9 +165,10 @@ include::../../../../generated/api/protos/xrGetD3D11GraphicsRequirementsKHR.txt[
 The flink:xrGetD3D11GraphicsRequirementsKHR function identifies to the
 application what graphics device (Windows LUID) needs to be used and the
 minimum feature level to use.
-The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
-flink:xrCreateSession if flink:xrGetD3D11GraphicsRequirementsKHR has not
-been called for the same pname:instance and pname:systemId.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if flink:xrGetD3D11GraphicsRequirementsKHR
+has not been called for the same pname:instance and pname:systemId.
 The LUID and feature level that flink:xrGetD3D11GraphicsRequirementsKHR
 returns should be used to create the sname:ID3D11Device that the application
 passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D11KHR.
@@ -189,3 +190,5 @@ include::../../../../generated/validity/protos/xrGetD3D11GraphicsRequirementsKHR
 ** Specified the swapchain texture coordinate origin.
 * Revision 4, 2018-11-16 (Minmin Gong)
 ** Specified Y direction and Z range in clip space
+* Revision 5, 2020-08-06 (Bryce Hutchings)
+** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code

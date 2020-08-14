@@ -122,7 +122,7 @@ pointer`") for each case.
 include::../../generated/validity/protos/xrGetInstanceProcAddr.txt[]
 --
 
-[open,refpage='PFN_xrVoidFunction',desc='Dummy function pointer type returned by queries',type='funcpointers',xrefs='xrGetInstanceProcAddr']
+[open,refpage='PFN_xrVoidFunction',desc='Generic function pointer type returned by queries',type='funcpointers',xrefs='xrGetInstanceProcAddr']
 --
 
 include::../../generated/api/funcpointers/PFN_xrVoidFunction.txt[]
@@ -132,6 +132,6 @@ include::../../generated/api/funcpointers/PFN_xrVoidFunction.txt[]
 * no parameters.
 ****
 
-tlink:PFN_xrVoidFunction is a dummy pointer returned by queries,
-specifically those to flink:xrGetInstanceProcAddr.
+tlink:PFN_xrVoidFunction is a generic function pointer type returned by
+queries, specifically those to flink:xrGetInstanceProcAddr.
 --

@@ -158,11 +158,13 @@ TypeStruct =
     attribute category { "struct" },
     attribute name { XrTypeName_t },
     attribute protect { XrUpperSnakeCase_t }?,
+    # structextends indicates to which struct this may be chained on the next pointer.
     attribute structextends { XrTypeNameRef_t }?,
     MayAliasAttr?,
     ReturnedOnlyAttr?,
     (# Struct has type and next
-     (attribute parentstruct { XrTypeNameRef_t }?,
+     (# parentstruct means this is used "polymorphically" in place of the named parentstruct.
+      attribute parentstruct { XrTypeNameRef_t }?,
       text,
       StructTypeMember,
       text,

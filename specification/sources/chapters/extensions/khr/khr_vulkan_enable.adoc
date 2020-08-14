@@ -260,9 +260,11 @@ include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirementsKHR.txt
 The flink:xrGetVulkanGraphicsRequirementsKHR function identifies to the
 application the minimum Vulkan version requirement and the highest known
 tested Vulkan version.
-The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE on calls to
-flink:xrCreateSession if flink:xrGetVulkanGraphicsRequirementsKHR has not
-been called for the same pname:instance and pname:systemId.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if
+flink:xrGetVulkanGraphicsRequirementsKHR has not been called for the same
+pname:instance and pname:systemId.
 
 include::../../../../generated/validity/protos/xrGetVulkanGraphicsRequirementsKHR.txt[]
 --
@@ -374,3 +376,5 @@ include::../../../../generated/validity/protos/xrGetVulkanDeviceExtensionsKHR.tx
 * Revision 6, 2019-01-25 (Andres Rodriguez)
 ** Reword sections of the spec to shift requirements on to the runtime
    instead of the app
+* Revision 7, 2020-08-06 (Bryce Hutchings)
+** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
