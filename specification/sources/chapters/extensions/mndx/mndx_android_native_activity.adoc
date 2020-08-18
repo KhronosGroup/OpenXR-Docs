@@ -1,0 +1,61 @@
+// Copyright (c) 2019-2020 Collabora, Ltd.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_MNDX_android_native_activity.adoc[]
+
+*Last Modified Date*::
+    2020-08-18
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Ryan Pavlik, Collabora
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright license to incorporate this submission into
+// other works it controls as it desires."
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+
+[open,refpage='XrInstanceCreateInfoAndroidNativeMNDX',type='structs',desc='Structure for passing ANativeActivity and ANativeWindow',xrefs='XrInstanceCreateInfo xrCreateInstance']
+--
+
+include::{INCS-VAR}/api/structs/XrInstanceCreateInfoAndroidNativeMNDX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension
+  specifically for this purpose, though other structures extending
+  slink:XrInstanceCreateInfo exist.
+* pname:nativeActivity is the native activity pointer of the application.
+* pname:nativeWindow is the native window pointer of the application.
+****
+
+include::{INCS-VAR}/validity/structs/XrInstanceCreateInfoAndroidNativeMNDX.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-08-18 (Ryan Pavlik)
+** Initial version reflecting Monado prototype.
