@@ -1,0 +1,372 @@
+include::../meta/XR_MSFT_controller_model.adoc[]
+
+*Contributors*::
+    Bryce Hutchings, Microsoft +
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Lachlan Ford, Microsoft
+
+*Overview*
+
+This extension provides a mechanism to load a GLTF model for controllers.
+An application can: render the controller model using the real time pose
+input from controller's grip action pose and animate controller parts
+representing the user's interactions, such as pressing a button, or pulling
+a trigger.
+
+This extension supports any controller interaction profile that supports
+subpathname:/grip/pose.
+The returned controller model represents the physical controller held in the
+user's hands, and it may: be different from the current interaction profile.
+
+*Query controller model key*
+
+[open,refpage='xrGetControllerModelKeyMSFT',desc='Retrieve the model key for the controller',type='protos']
+--
+flink:xrGetControllerModelKeyMSFT retrieves the
+basetype:XrControllerModelKeyMSFT for a controller.
+This model key may: later be used to retrieve the model data.
+
+The flink:xrGetControllerModelKeyMSFT function is defined as:
+
+include::../../../../generated/api/protos/xrGetControllerModelKeyMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:topLevelUserPath is the top level user path corresponding to the
+  controller render model being queried (e.g. pathname:/user/hand/left or
+  pathname:/user/hand/right).
+* pname:controllerModelKeyState is a pointer to the
+  slink:XrControllerModelKeyStateMSFT to write the model key state to.
+****
+
+include::../../../../generated/validity/protos/xrGetControllerModelKeyMSFT.txt[]
+--
+
+[open,refpage='XrControllerModelKeyStateMSFT',desc='The model key state for a controller',type='structs']
+--
+
+The slink:XrControllerModelKeyStateMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrControllerModelKeyStateMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:modelKey is the model key corresponding to the controller render
+  model being queried.
+****
+
+The pname:modelKey value for the session represents a unique controller
+model that can be retrieved from flink:xrLoadControllerModelMSFT function.
+Therefore, the application can: use pname:modelKey to cache the returned
+data from flink:xrLoadControllerModelMSFT for the session.
+
+A pname:modelKey value of dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT,
+represents an invalid model key and indicates there is no controller model
+yet available.
+The application should: keep calling flink:xrGetControllerModelKeyMSFT
+because the model may: become available at a later point.
+
+
+
+include::../../../../generated/validity/structs/XrControllerModelKeyStateMSFT.txt[]
+--
+
+[open,refpage='XR_NULL_CONTROLLER_MODEL_KEY_MSFT',type='defines',desc='The value representing an invalid model key',xrefs='XrControllerModelKeyMSFT']
+--
+include::../../../../generated/api/defines/XR_NULL_CONTROLLER_MODEL_KEY_MSFT.txt[]
+
+dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT defines an invalid model key value.
+--
+
+[open,refpage='XrControllerModelKeyMSFT',desc='Controller renderable model key',type='basetypes',xrefs='XR_NULL_CONTROLLER_MODEL_KEY_MSFT']
+--
+include::../../../../generated/api/basetypes/XrControllerModelKeyMSFT.txt[]
+
+The controller model key used to retrieve the data for the renderable
+controller model and associated properties and state.
+--
+
+*Load controller model as glTF 2.0 data*
+
+Once the application obtained a valid pname:modelKey, it can: use the
+flink:xrLoadControllerModelMSFT function to load the GLB data for the
+controller model.
+
+[open,refpage='xrLoadControllerModelMSFT',desc='Load controller render model',type='protos']
+--
+The flink:xrLoadControllerModelMSFT function loads the controller model as a
+byte buffer containing a binary form of glTF (a.k.a GLB file format) for the
+controller.
+The binary glTF data must: conform to glTF 2.0 format defined at
+https://github.com/KhronosGroup/glTF/tree/master/specification/2.0.
+
+include::../../../../generated/api/protos/xrLoadControllerModelMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:modelKey is the model key corresponding to the controller render
+  model being queried.
+* pname:bufferCapacityInput is the capacity of the pname:buffer array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:bufferCountOutput filled in by the runtime with the count of
+  elements in pname:buffer array, or returns the required capacity in the
+  case that pname:bufferCapacityInput is 0.
+* pname:buffer is a pointer to an application-allocated array of the model
+  for the device that will be filled with the code:uint8_t values by the
+  runtime.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+The flink:xrLoadControllerModelMSFT function may: be a slow operation and
+therefore should: be invoked from a non-timing critical thread.
+
+If the input pname:modelKey is invalid, i.e. it is
+dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
+slink:XrControllerModelKeyStateMSFT, the runtime must: return
+ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
+
+include::../../../../generated/validity/protos/xrLoadControllerModelMSFT.txt[]
+--
+
+*Animate controller parts*
+
+The application can: animate parts of the glTF model to represent the user's
+interaction on the controller, such as pressing a button or pulling a
+trigger.
+
+Once the application loads the glTF model of the controller, it should:
+first get slink:XrControllerModelPropertiesMSFT containing an array of node
+names in the glTF model that can: be animated.
+These properties, including the order of these node names in the array,
+must: be immutable for a valid pname:modelKey in the session, and therefore
+can: be cached.
+In the frame loop, the application should: get
+slink:XrControllerModelStateMSFT to retrieve the pose of each node
+representing user's interaction on the controller and apply the transform to
+the corresponding node in the glTF model using application's glTF renderer.
+
+[open,refpage='xrGetControllerModelPropertiesMSFT',desc='Get controller model properties',type='protos']
+--
+
+The flink:xrGetControllerModelPropertiesMSFT function returns the controller
+model properties for a given pname:modelKey.
+
+include::../../../../generated/api/protos/xrGetControllerModelPropertiesMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:modelKey is a valid model key obtained from
+  slink:XrControllerModelKeyStateMSFT
+* pname:properties is a slink:XrControllerModelPropertiesMSFT returns the
+  properties of the controller model
+****
+
+The runtime must: return the same data in
+slink:XrControllerModelPropertiesMSFT for a valid pname:modelKey.
+Therefore, the application can: cache the returned
+slink:XrControllerModelPropertiesMSFT using pname:modelKey and reuse the
+data for each frame.
+
+If the input pname:modelKey is invalid, i.e. it is
+dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
+slink:XrControllerModelKeyStateMSFT, the runtime must: return
+ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
+
+include::../../../../generated/validity/protos/xrGetControllerModelPropertiesMSFT.txt[]
+--
+
+[open,refpage='XrControllerModelPropertiesMSFT',desc='Describes the properties of a controller model',type='structs',xrefs='xrGetControllerModelPropertiesMSFT XrControllerModelNodePropertiesMSFT xrLoadControllerModelMSFT']
+--
+The slink:XrControllerModelPropertiesMSFT structure describes the properties
+of a controller model including an array of
+slink:XrControllerModelNodePropertiesMSFT.
+
+include::../../../../generated/api/structs/XrControllerModelPropertiesMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:nodeCapacityInput is the capacity of the pname:nodeProperties array,
+  or 0 to indicate a request to retrieve the required capacity.
+* pname:nodeCountOutput filled in by the runtime with the count of elements
+  in pname:nodeProperties array, or returns the required capacity in the
+  case that pname:nodeCapacityInput is 0.
+* pname:nodeProperties is a pointer to an application-allocated array that
+  will be filled with the slink:XrControllerModelNodePropertiesMSFT values.
+  It can: be code:NULL if pname:nodeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:nodeProperties size.
+****
+
+include::../../../../generated/validity/structs/XrControllerModelPropertiesMSFT.txt[]
+--
+
+[open,refpage='XrControllerModelNodePropertiesMSFT',desc='Describes the controller model node properties',type='structs',xrefs='xrGetControllerModelPropertiesMSFT XrControllerModelPropertiesMSFT xrLoadControllerModelMSFT']
+--
+The slink:XrControllerModelNodePropertiesMSFT structure describes properties
+of animatable nodes, including the node name and parent node name to locate
+a glTF node in the controller model that can: be animated based on user's
+interactions on the controller.
+
+include::../../../../generated/api/structs/XrControllerModelNodePropertiesMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:parentNodeName is the name of the parent node in the provided glTF
+  file.
+  The parent name may: be empty if it should not be used to locate this
+  node.
+* pname:nodeName is the name of this node in the provided glTF file.
+****
+
+The node can be located in the glTF node hierarchy by finding the node(s)
+with the matching node name and parent node name.
+If the pname:parentNodeName is empty, the matching will be solely based on
+the pname:nodeName.
+
+If there are multiple nodes in the glTF file matches the condition above,
+the first matching node using depth-first traversal in the glTF scene
+should: be animated and the rest should: be ignored.
+
+The runtime must: not return any pname:nodeName or pname:parentName that
+doesn't match any gltTF nodes in the corresponding controller model.
+
+include::../../../../generated/validity/structs/XrControllerModelNodePropertiesMSFT.txt[]
+--
+
+[open,refpage='xrGetControllerModelStateMSFT',desc='Get controller model state',type='protos']
+--
+
+The flink:xrGetControllerModelStateMSFT function returns the current state
+of the controller model representing user's interaction to the controller,
+such as pressing a button or pulling a trigger.
+
+include::../../../../generated/api/protos/xrGetControllerModelStateMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:modelKey is the model key corresponding to the controller model
+  being queried.
+* pname:state is a pointer to slink:XrControllerModelNodeStateMSFT returns
+  the current controller model state.
+****
+
+The runtime may: return different state for a model key after each call to
+flink:xrSyncActions, which represents the latest state of the user
+interactions.
+
+If the input pname:modelKey is invalid, i.e. it is
+dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
+slink:XrControllerModelKeyStateMSFT, the runtime must: return
+ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
+
+include::../../../../generated/validity/protos/xrGetControllerModelStateMSFT.txt[]
+--
+
+[open,refpage='XrControllerModelStateMSFT',desc='Describes the state of a controller model',type='structs',xrefs='xrGetControllerModelStateMSFT XrControllerModelNodeStateMSFT']
+--
+The slink:XrControllerModelStateMSFT structure describes the state of a
+controller model, including an array of
+slink:XrControllerModelNodeStateMSFT.
+
+include::../../../../generated/api/structs/XrControllerModelStateMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:nodeCapacityInput is the capacity of the pname:nodeStates array, or
+  0 to indicate a request to retrieve the required capacity.
+* pname:nodeCountOutput filled in by the runtime with the count of elements
+  in pname:nodeStates array, or returns the required capacity in the case
+  that pname:nodeCapacityInput is 0.
+* pname:nodeStates is a pointer to an application-allocated array that will
+  be filled with the slink:XrControllerModelNodeStateMSFT values.
+  It can: be code:NULL if pname:sourceCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:nodeStates size.
+****
+
+include::../../../../generated/validity/structs/XrControllerModelStateMSFT.txt[]
+--
+
+[open,refpage='XrControllerModelNodeStateMSFT',desc='Describes the state of a node in a controller model',type='structs',xrefs='xrGetControllerModelStateMSFT XrControllerModelStateMSFT']
+--
+The slink:XrControllerModelNodeStateMSFT structure describes the state of a
+node in a controller model.
+
+include::../../../../generated/api/structs/XrControllerModelNodeStateMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:nodePose is an slink:XrPosef of the node in its parent node space.
+****
+
+The state is corresponding to the glTF node identified by the pname:nodeName
+and pname:nodeParentName of the node property at the same array index in the
+pname:nodeProperties in slink:XrControllerModelPropertiesMSFT.
+
+The pname:nodePose is based on the user's interaction on the controller at
+the latest flink:xrSyncActions, represented as the slink:XrPosef of the node
+in it's parent node space.
+
+include::../../../../generated/validity/structs/XrControllerModelNodeStateMSFT.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT
+* ename:XR_TYPE_CONTROLLER_MODEL_NODE_PROPERTIES_MSFT
+* ename:XR_TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT
+* ename:XR_TYPE_CONTROLLER_MODEL_NODE_STATE_MSFT
+* ename:XR_TYPE_CONTROLLER_MODEL_STATE_MSFT
+* ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrControllerModelKeyStateMSFT
+* slink:XrControllerModelNodePropertiesMSFT
+* slink:XrControllerModelPropertiesMSFT
+* slink:XrControllerModelNodeStateMSFT
+* slink:XrControllerModelStateMSFT
+
+*New Functions*
+
+* flink:xrGetControllerModelKeyMSFT
+* flink:xrLoadControllerModelMSFT
+* flink:xrGetControllerModelPropertiesMSFT
+* flink:xrGetControllerModelStateMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-03-12 (Yin Li)
+** Initial extension description
+* Revision 2, 2020-08-12 (Bryce Hutchings)
+** Remove a possible error condition

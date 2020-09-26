@@ -1,0 +1,92 @@
+include::../meta/XR_KHR_composition_layer_color_scale_bias.adoc[]
+
+*Last Modified Date*::
+    2019-01-28
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Paul Pedriana, Oculus +
+    Cass Everitt, Oculus +
+    Martin Renschler, Qualcomm
+
+*Overview*
+
+Color scale and bias are applied to a layer color during composition, after
+its conversion to premultiplied alpha representation.
+
+If specified, pname:colorScale and pname:colorBias must: be used to alter
+the LayerColor as follows:
+
+- colorScale = max( vec4( 0, 0, 0, 0 ), colorScale )
+- LayerColor.RGB = LayerColor.A > 0 ? LayerColor.RGB / LayerColor.A : vec3(
+  0, 0, 0 )
+- LayerColor = LayerColor * colorScale + colorBias
+- LayerColor.RGB *= LayerColor.A
+
+This extension specifies the slink:XrCompositionLayerColorScaleBiasKHR
+structure, which, if present in the
+slink:XrCompositionLayerBaseHeader::pname:next chain, must: be applied to
+the composition layer.
+
+This extension does not define a new composition layer type, but rather it
+defines a transform that may be applied to the color derived from existing
+composition layer types.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_COLOR_SCALE_BIAS_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrCompositionLayerColorScaleBiasKHR',desc='defines color scale and bias for layer textures',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerColorScaleBiasKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerColorScaleBiasKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:colorScale is an slink:XrColor4f which will modulate the color
+  sourced from the images.
+* pname:colorBias is an slink:XrColor4f which will offset the color sourced
+  from the images.
+****
+
+slink:XrCompositionLayerColorScaleBiasKHR contains the information needed to
+scale and bias the color of layer textures.
+
+The slink:XrCompositionLayerColorScaleBiasKHR structure can: be applied by
+applications to composition layers by adding an instance of the struct to
+the slink:XrCompositionLayerBaseHeader::pname:next list.
+
+include::../../../../generated/validity/structs/XrCompositionLayerColorScaleBiasKHR.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2017-09-13 (Paul Pedriana)
+** Initial implementation.
+* Revision 2, 2019-01-24 (Martin Renschler)
+** Formatting, spec language changes
+* Revision 3, 2019-01-28 (Paul Pedriana)
+** Revised math to remove premultiplied alpha before applying color scale
+   and offset, then restoring.
+* Revision 4, 2019-07-17 (Cass Everitt)
+** Non-substantive updates to the spec language and equations.
+* Revision 5, 2020-05-20 (Cass Everitt)
+** Changed extension name, simplified language.

@@ -157,6 +157,7 @@ TypeHandle =
 TypeStruct =
     attribute category { "struct" },
     attribute name { XrTypeName_t },
+    attribute alias { XrTypeName_t }?,
     attribute protect { XrUpperSnakeCase_t }?,
     # structextends indicates to which struct this may be chained on the next pointer.
     attribute structextends { XrTypeNameRef_t }?,
@@ -287,30 +288,34 @@ Commands = element commands { CommentAttr?, Command* }
 # <command> defines a single command
 Command =
     element command {
-        attribute errorcodes { ReturnCodes_t }?,
-        attribute successcodes { ReturnCodes_t }?,
-        CommentAttr?,
-
-        element proto {
-            element type { XrTypeNameRef_t },
-            element name { XrFuncName_t }
-        },
-        element param {
-            attribute len { text }?,
-            attribute externsync { xsd:NCName }?,
-            OptionalAttr?,
-            NoAutoValidityAttr?,
-            mixed {
-                TypeRefElt?,
-                ParamOrMemberNameElt,
-                element enum { xsd:NCName }?
-            }
-        }*,
-
-        element implicitexternsyncparams {
-            element param { text }*
-        }?
+        attribute name { XrFuncName_t },
+        attribute alias { XrFuncName_t }
     }
+    | element command {
+          attribute errorcodes { ReturnCodes_t }?,
+          attribute successcodes { ReturnCodes_t }?,
+          CommentAttr?,
+
+          element proto {
+              element type { XrTypeNameRef_t },
+              element name { XrFuncName_t }
+          },
+          element param {
+              attribute len { text }?,
+              attribute externsync { xsd:NCName }?,
+              OptionalAttr?,
+              NoAutoValidityAttr?,
+              mixed {
+                  TypeRefElt?,
+                  ParamOrMemberNameElt,
+                  element enum { xsd:NCName }?
+              }
+          }*,
+
+          element implicitexternsyncparams {
+              element param { text }*
+          }?
+      }
 
 # Each <feature> defines the interface of an API version.
 Feature =
@@ -374,6 +379,7 @@ Extension =
 # <enum value="&quot;XR_KHR_vulkan_enable&quot;" name="XR_KHR_VULKAN_ENABLE_EXTENSION_NAME"/>
 # <enum offset="0" extends="XrObjectType"        name="XR_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"  comment="XrDebugUtilsMessengerEXT"/>
 # <enum offset="0" extends="XrResult"   dir="-"  name="XR_ERROR_DEBUG_UTILS_MESSENGER_INVALID_EXT"/>
+# <enum extends="XrStructureType"      name="XR_TYPE_GRAPHICS_BINDING_VULKAN2_KHR"        alias="XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR"/>
 InterfaceElement =
     element type {
         attribute name { XrEntityName_t | PlatformDefinesName },
@@ -397,9 +403,11 @@ InterfaceElement =
              CommentAttr?)
           | (# Extending another
              attribute name { XrUpperSnakeCase_t },
-             attribute offset { xsd:integer },
+             (attribute offset { xsd:integer } |
+             attribute alias { XrUpperSnakeCase_t }),
              attribute extends { XrTypeNameRef_t },
              attribute dir { "-" }?,
+             
              CommentAttr?)
           | (# Extending another bitmask
              attribute name { XrUpperSnakeCase_t },

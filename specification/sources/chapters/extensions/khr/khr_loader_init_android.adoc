@@ -1,0 +1,67 @@
+include::../meta/XR_KHR_loader_init_android.adoc[]
+
+*Last Modified Date*::
+    2020-05-07
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Cass Everitt, Facebook
+
+*Overview*
+
+On Android, some loader implementations need the application to provide
+additional information on initialization.
+This extension defines the parameters needed by such implementations.
+If this is available on a given implementation, an application must: make
+use of it.
+
+On implementations where use of this is required, the following condition
+must: apply:
+
+* Whenever an OpenXR function accepts an slink:XrLoaderInitInfoBaseHeaderKHR
+  pointer, the runtime (and loader) must: also accept a pointer to an
+  slink:XrLoaderInitInfoAndroidKHR.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_LOADER_INIT_INFO_ANDROID_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrLoaderInitInfoAndroidKHR',desc='Initializes OpenXR loader on Android',type='structs',xrefs='xrInitializeLoaderKHR']
+--
+The slink:XrLoaderInitInfoAndroidKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:applicationVM is a pointer to the JNI's opaque `JavaVM` structure,
+  cast to a void pointer.
+* pname:applicationContext is a JNI reference to an
+  `android.content.Context` associated with the application, cast to a void
+  pointer.
+****
+
+include::../../../../generated/validity/structs/XrLoaderInitInfoAndroidKHR.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-05-07 (Cass Everitt)
+** Initial draft

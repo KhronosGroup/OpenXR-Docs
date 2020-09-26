@@ -156,6 +156,15 @@ It is preferable to avoid talking about those types of extensions within
 Khronos whenever possible.
 
 
+=== Flags
+
+Extensions sometimes need to define new flag bits.
+Only KHR extensions and core specification revisions may allocate new flag
+bits from existing KHR or core flags fields.
+Vendor or EXT extensions should define new flags fields in extension structs
+in their namespace from which they are free to assign flag bits.
+
+
 == Extension Registration Process
 
 Each extension has a unique number used to identify it within the OpenXR

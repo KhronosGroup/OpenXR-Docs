@@ -1,0 +1,490 @@
+include::../meta/XR_KHR_vulkan_enable2.adoc[]
+
+:vkRefPageRoot: https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html
+
+*Last Modified Date*::
+    2020-05-04
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Mark Young, LunarG +
+    Paul Pedriana, Oculus +
+    Ed Hutchins, Oculus +
+    Andres Rodriguez, Valve +
+    Dan Ginsburg, Valve +
+    Bryce Hutchings, Microsoft +
+    Minmin Gong, Microsoft +
+    Robert Menzel, NVIDIA
+
+==== Overview
+
+This extension enables the use of the Vulkan graphics API in an OpenXR
+runtime.
+Without this extension, the OpenXR runtime may not be able to use any Vulkan
+swapchain images.
+
+This extension provides the mechanisms necessary for an application to
+generate a valid slink:XrGraphicsBindingVulkan2KHR structure in order to
+create a Vulkan-based slink:XrSession.
+
+This extension also provides mechanisms for the application to interact with
+images acquired by calling flink:xrEnumerateSwapchainImages.
+
+In order to expose the structures, types, and functions of this extension,
+you must: define dlink:XR_USE_GRAPHICS_API_VULKAN before including the
+OpenXR platform header `openxr_platform.h`, in all portions of your library
+or application that include it.
+
+[NOTE]
+.Note
+====
+This extension is intended as an alternative to `<<XR_KHR_vulkan_enable>>`,
+and does not depend on it.
+====
+
+==== Initialization
+
+When operating in Vulkan mode, the OpenXR runtime and the application will
+share the Vulkan queue described in the slink:XrGraphicsBindingVulkan2KHR
+structure.
+This section of the document describes the mechanisms this extensions
+exposes to ensure the shared Vulkan queue is compatible with the runtime and
+the application's requirements.
+
+===== Vulkan Version Requirements
+
+First, a compatible Vulkan version must: be agreed upon.
+To query the runtime's Vulkan API version requirements an application will
+call:
+
+[open,refpage='xrGetVulkanGraphicsRequirements2KHR',type='protos',desc='Retrieve the Vulkan version requirements for an instance and system',xrefs='XrGraphicsRequirementsVulkan2KHR']
+--
+include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+
+The flink:xrGetVulkanGraphicsRequirementsKHR function identifies to the
+application the runtime's minimum Vulkan version requirement and the highest
+known tested Vulkan version.
+flink:xrGetVulkanGraphicsRequirementsKHR must: be called prior to calling
+flink:xrCreateSession.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+on calls to flink:xrCreateSession if
+flink:xrGetVulkanGraphicsRequirements2KHR has not been called for the same
+pname:instance and pname:systemId.
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:graphicsRequirements is the slink:XrGraphicsRequirementsVulkan2KHR
+  output structure.
+****
+
+include::../../../../generated/validity/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+--
+
+The slink:XrGraphicsRequirementsVulkan2KHR structure populated by
+flink:xrGetVulkanGraphicsRequirements2KHR is defined as:
+
+[open,refpage='XrGraphicsRequirementsVulkan2KHR',type='structs',desc='Vulkan API version requirements',xrefs='xrGetVulkanGraphicsRequirements2KHR']
+--
+include::../../../../generated/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:minApiVersionSupported is the minimum version of Vulkan that the
+  runtime supports.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
+* pname:maxApiVersionSupported is the maximum version of Vulkan that the
+  runtime has been tested on and is known to support.
+  Newer Vulkan versions might work if they are compatible.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
+****
+
+include::../../../../generated/validity/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+--
+
+===== Vulkan Instance Creation
+
+Second, a compatible sname:VkInstance must: be created.
+The flink:xrCreateVulkanInstanceKHR entry point is a wrapper around
+link:{vkRefPageRoot}/vkCreateInstance.html[vkCreateInstance] intended for
+this purpose.
+When called, the runtime must: aggregate the requirements specified by the
+application with its own requirements and forward the sname:VkInstance
+creation request to the fname:vkCreateInstance function pointer returned by
+pname:pfnGetInstanceProcAddr.
+
+[open,refpage='xrCreateVulkanInstanceKHR',type='protos',desc='Create an OpenXR compatible VkInstance',xrefs='xrCreateVulkanDeviceKHR']
+--
+include::../../../../generated/api/protos/xrCreateVulkanInstanceKHR.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:createInfo extensible input struct of type
+  sname:XrCreateVulkanInstanceCreateInfoKHR
+* pname:vulkanInstance points to a sname:VkInstance handle to populate with
+  the new Vulkan instance.
+* pname:vulkanResult points to a sname:VkResult to populate with the result
+  of the fname:vkCreateInstance operation as returned by
+  pname:pfnGetInstanceProcAddr.
+****
+
+include::../../../../generated/validity/protos/xrCreateVulkanInstanceKHR.txt[]
+--
+
+The slink:XrVulkanInstanceCreateInfoKHR structure contains the input
+parameters to flink:xrCreateVulkanInstanceKHR.
+
+[open,refpage='XrVulkanInstanceCreateInfoKHR',type='structs',desc='Vulkan Instance Create Info',xrefs='xrCreateVulkanInstanceKHR']
+--
+include::../../../../generated/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+
+.Member Descriptions
+****
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:pfnGetInstanceProcAddr is a function pointer to
+  fname:vkGetInstanceProcAddr or a compatible entry point.
+* pname:vulkanCreateInfo is the
+  link:{vkRefPageRoot}/VkInstanceCreateInfo.html[sname:VkInstanceCreateInfo
+  as specified by Vulkan].
+* pname:vulkanAllocator is the
+  link:{vkRefPageRoot}/VkAllocationCallbacks.html[sname:VkAllocationCallbacks
+  as specified by Vulkan].
+****
+
+include::../../../../generated/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+--
+
+[open,refpage='XrVulkanInstanceCreateFlagsKHR',type='flags',desc='Vulkan Instance Create Info Flags',xrefs='XrVulkanInstanceCreateInfoKHR']
+--
+include::../../../../generated/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
+--
+
+===== Physical Device Selection
+
+Third, a sname:VkPhysicalDevice must: be chosen.
+Some computer systems may have multiple graphics devices, each of which may
+have independent external display outputs.
+The runtime must: report a sname:VkPhysicalDevice that is compatible with
+the OpenXR implementation when flink:xrGetVulkanGraphicsDevice2KHR is
+invoked.
+The application will use this sname:VkPhysicalDevice to interact with the
+OpenXR runtime.
+
+[open,refpage='xrGetVulkanGraphicsDevice2KHR',type='protos',desc='Retrieve the Vulkan physical device associated with an OpenXR instance and system']
+--
+include::../../../../generated/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:getInfo extensible input struct of type
+  slink:XrVulkanGraphicsDeviceGetInfoKHR
+* pname:vulkanPhysicalDevice is a pointer to a sname:VkPhysicalDevice handle
+  to populate.
+****
+
+include::../../../../generated/validity/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+--
+
+The slink:XrVulkanGraphicsDeviceGetInfoKHR structure contains the input
+parameters to flink:xrCreateVulkanInstanceKHR.
+
+[open,refpage='XrVulkanGraphicsDeviceGetInfoKHR',type='structs',desc='Vulkan Graphics Device Get Info',xrefs='xrGetVulkanGraphicsDevice2KHR']
+--
+include::../../../../generated/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+
+.Member Descriptions
+****
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:vulkanInstance is a valid Vulkan sname:VkInstance.
+****
+
+include::../../../../generated/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+--
+
+===== Vulkan Device Creation
+
+Fourth, a compatible sname:VkDevice must: be created.
+The flink:xrCreateVulkanDeviceKHR entry point is a wrapper around
+link:{vkRefPageRoot}/vkCreateDevice.html[vkCreateDevice] intended for this
+purpose.
+When called, the runtime must: aggregate the requirements specified by the
+application with its own requirements and forward the sname:VkDevice
+creation request to the fname:vkCreateDevice function pointer returned by
+pname:pfnGetInstanceProcAddr.
+
+[open,refpage='xrCreateVulkanDeviceKHR',type='protos',desc='Create an OpenXR compatible VkDevice',xrefs='xrCreateVulkanInstanceKHR']
+--
+include::../../../../generated/api/protos/xrCreateVulkanDeviceKHR.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:createInfo extensible input struct of type
+  sname:XrCreateVulkanDeviceCreateInfoKHR
+* pname:vulkanDevice points to a sname:VkDevice handle to populate with the
+  new Vulkan device.
+* pname:vulkanResult points to a sname:VkResult to populate with the result
+  of the fname:vkCreateDevice operation as returned by
+  pname:pfnGetInstanceProcAddr.
+****
+
+include::../../../../generated/validity/protos/xrCreateVulkanDeviceKHR.txt[]
+--
+
+The slink:XrVulkanDeviceCreateInfoKHR structure contains the input
+parameters to flink:xrCreateVulkanDeviceKHR.
+
+[open,refpage='XrVulkanDeviceCreateInfoKHR',type='structs',desc='Vulkan Device Create Info',xrefs='xrCreateVulkanDeviceKHR']
+--
+include::../../../../generated/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+
+.Member Descriptions
+****
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:pfnGetInstanceProcAddr is a function pointer to
+  fname:vkGetInstanceProcAddr or a compatible entry point.
+* pname:vulkanPhysicalDevice must: match flink:xrGetVulkanGraphicsDeviceKHR.
+* pname:vulkanCreateInfo is the
+  link:{vkRefPageRoot}/VkDeviceCreateInfo.html[sname:VkDeviceCreateInfo as
+  specified by Vulkan].
+* pname:vulkanAllocator is the
+  link:{vkRefPageRoot}/VkAllocationCallbacks.html[sname:VkAllocationCallbacks
+  as specified by Vulkan].
+****
+
+include::../../../../generated/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+--
+
+[open,refpage='XrVulkanDeviceCreateFlagsKHR',type='flags',desc='Vulkan Device Create Info Flags',xrefs='XrVulkanDeviceCreateInfoKHR']
+--
+include::../../../../generated/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
+--
+
+If the pname:vulkanPhysicalDevice parameter does not match the output of
+flink:xrGetVulkanGraphicsDeviceKHR, then the runtime must: return
+ename:XR_ERROR_HANDLE_INVALID.
+
+===== Queue Selection
+
+Last, the application selects a sname:VkQueue from the sname:VkDevice that
+has the sname:VK_QUEUE_GRAPHICS_BIT set.
+
+[NOTE]
+.Note
+====
+The runtime may schedule work on the sname:VkQueue specified in the binding,
+or it may schedule work on any hardware queue in a foreign logical device.
+====
+
+===== Vulkan Graphics Binding
+
+When creating a Vulkan-backed slink:XrSession, the application will chain a
+pointer to an slink:XrGraphicsBindingVulkan2KHR to the
+slink:XrSessionCreateInfo parameter of flink:xrCreateSession.
+With the data collected in the previous sections, the application now has
+all the necessary information to populate an
+slink:XrGraphicsBindingVulkan2KHR structure for session creation.
+
+[open,refpage='XrGraphicsBindingVulkan2KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use Vulkan',xrefs='xrCreateSession']
+--
+include::../../../../generated/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:instance is a valid Vulkan sname:VkInstance.
+* pname:physicalDevice is a valid Vulkan sname:VkPhysicalDevice.
+* pname:device is a valid Vulkan sname:VkDevice.
+* pname:queueFamilyIndex is a valid queue family index on pname:device.
+* pname:queueIndex is a valid queue index on pname:device to be used for
+  synchronization.
+****
+
+.Valid Usage
+****
+* pname:instance must: have enabled a Vulkan API version in the range
+  specified by flink:xrGetVulkanGraphicsRequirements2KHR
+* pname:instance must: have been created using
+  flink:xrCreateVulkanInstanceKHR
+* pname:physicalDevice sname:VkPhysicalDevice must: match the device
+  specified by flink:xrGetVulkanGraphicsDevice2KHR
+* pname:device must: have been created using flink:xrCreateVulkanDeviceKHR
+****
+
+include::../../../../generated/validity/structs/XrGraphicsBindingVulkan2KHR.txt[]
+--
+
+Populating a slink:XrGraphicsBindingVulkan2KHR structure with a member that
+does not meet the requirements outlined by this extension may: result in
+undefined behaviour by the OpenXR runtime.
+
+The requirements outlined in this extension only apply to the
+sname:VkInstance, sname:VkDevice, sname:VkPhysicalDevice and sname:VkQueue
+objects which the application wishes to associate with an
+slink:XrGraphicsBindingVulkan2KHR.
+
+==== Concurrency
+
+Vulkan requires that concurrent access to a sname:VkQueue from multiple
+threads be externally synchronized.
+Therefore, OpenXR functions that may access the sname:VkQueue specified in
+the slink:XrGraphicsBindingVulkan2KHR must: also be externally synchronized
+by the OpenXR application.
+
+The list of OpenXR functions where the OpenXR runtime may: access the
+sname:VkQueue are:
+
+* flink:xrBeginFrame
+* flink:xrEndFrame
+* flink:xrAcquireSwapchainImage
+* flink:xrReleaseSwapchainImage
+
+The runtime must: not access the sname:VkQueue in any OpenXR function that
+is not listed above or in an extension definition.
+
+Failure by the application to synchronize access to sname:VkQueue may:
+result in undefined behaviour in the OpenXR runtime.
+
+==== Swapchain Interactions
+
+===== Swapchain Images
+
+When an application interacts with slink:XrSwapchainImageBaseHeader
+structures in a Vulkan-backed slink:XrSession, the application can interpret
+these to be slink:XrSwapchainImageVulkan2KHR structures.
+These are defined as:
+
+[open,refpage='XrSwapchainImageVulkan2KHR',type='structs',desc='Vulkan-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
+--
+include::../../../../generated/api/structs/XrSwapchainImageVulkan2KHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:image is a valid Vulkan sname:VkImage to use.
+****
+
+If a given session was created with slink:XrGraphicsBindingVulkan2KHR, the
+following conditions must: apply.
+
+* Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
+  session must: return an array of slink:XrSwapchainImageVulkan2KHR
+  structures.
+* Whenever an OpenXR function accepts an slink:XrSwapchainImageBaseHeader
+  pointer as a parameter in that session, the runtime must: also accept a
+  pointer to an slink:XrSwapchainImageVulkan2KHR.
+
+The OpenXR runtime must: interpret the top-left corner of the swapchain
+image as the coordinate origin unless specified otherwise by extension
+functionality.
+
+The OpenXR runtime must: interpret the swapchain images in a clip space of
+positive Y pointing down, near Z plane at 0, and far Z plane at 1.
+
+include::../../../../generated/validity/structs/XrSwapchainImageVulkan2KHR.txt[]
+--
+
+===== Swapchain Image Layout
+
+When an application acquires a swapchain image by calling
+flink:xrAcquireSwapchainImage in a session created using
+slink:XrGraphicsBindingVulkan2KHR, the OpenXR runtime must: guarantee that:
+
+* The image has a memory layout compatible with
+  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or
+  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL for depth images.
+* The sname:VkQueue specified in slink:XrGraphicsBindingVulkan2KHR has
+  ownership of the image.
+
+When an application releases a swapchain image by calling
+flink:xrReleaseSwapchainImage, in a session created using
+slink:XrGraphicsBindingVulkan2KHR, the OpenXR runtime must: interpret the
+image as:
+
+* Having a memory layout compatible with
+  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or
+  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIAL_ATTACHMENT_OPTIMAL for depth images.
+* Being owned by the sname:VkQueue specified in
+  slink:XrGraphicsBindingVulkan2KHR.
+* Being referenced by command buffers submitted to the sname:VkQueue
+  specified in slink:XrGraphicsBindingVulkan2KHR which have not yet
+  completed execution.
+
+The application is responsible for transitioning the swapchain image back to
+the image layout and queue ownership that the OpenXR runtime requires.
+If the image is not in a layout compatible with the above specifications the
+runtime may: exhibit undefined behaviour.
+
+==== Appendix
+
+===== Questions
+
+  1. Should the flink:xrCreateVulkanDeviceKHR and
+     flink:xrCreateVulkanInstanceKHR functions have an output parameter that
+     returns the combined list of parameters used to create the Vulkan
+     device/instance?
+
+    * No.
+      If the application is interested in capturing this data it can set the
+      pname:pfnGetInstanceProcAddr parameter to a local callback that
+      captures the relevant information.
+
+===== Quick Reference
+
+====== New Enum Constants
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_GRAPHICS_REQUIREMENTS_VULKAN2_KHR (alias of
+  ename:XR_TYPE_GRAPHICS_REQUIREMENTS_VULKAN_KHR)
+* ename:XR_TYPE_GRAPHICS_BINDING_VULKAN2_KHR (alias of
+  ename:XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR)
+* ename:XR_TYPE_SWAPCHAIN_IMAGE_VULKAN2_KHR (alias of
+  ename:XR_TYPE_SWAPCHAIN_IMAGE_VULKAN_KHR)
+
+====== New Structures
+
+* slink:XrVulkanInstanceCreateInfoKHR
+* slink:XrVulkanDeviceCreateInfoKHR
+* slink:XrVulkanGraphicsDeviceGetInfoKHR
+* slink:XrGraphicsBindingVulkan2KHR (alias of
+  slink:XrGraphicsBindingVulkanKHR)
+* slink:XrSwapchainImageVulkan2KHR (alias of
+  slink:XrSwapchainImageVulkanKHR)
+* slink:XrGraphicsRequirementsVulkan2KHR (alias of
+  slink:XrGraphicsRequirementsVulkanKHR)
+
+====== New Functions
+
+* flink:xrCreateVulkanInstanceKHR
+* flink:xrCreateVulkanDeviceKHR
+* flink:xrGetVulkanGraphicsDevice2KHR
+* flink:xrGetVulkanGraphicsRequirements2KHR
+
+===== Version History
+
+* Revision 1, 2020-05-04 (Andres Rodriguez)
+** Initial draft

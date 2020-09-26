@@ -21,7 +21,8 @@ When the runtime determines that the system is ready to start transitioning
 to this session's XR content, it notifies the application that its session
 has moved into the ename:XR_SESSION_STATE_READY state.
 When the application is ready to proceed and display its XR content, it
-calls flink:xrBeginSession, which starts its session running.
+calls flink:xrBeginSession and <<sync_frame_loop, starts its frame loop>>,
+which starts its session running.
 While the session is running, the application is expected to continuously
 run its frame loop by calling flink:xrWaitFrame, flink:xrBeginFrame and
 flink:xrEndFrame each frame, to establish synchronization with the runtime.
@@ -367,17 +368,17 @@ include::../../generated/api/enums/XrSessionState.txt[]
   The initial state after calling flink:xrCreateSession or returned to after
   calling flink:xrEndSession.
 * ename:XR_SESSION_STATE_READY.
-  The application is ready to call flink:xrBeginSession and sync its frame
-  loop with the runtime.
+  The application is ready to call flink:xrBeginSession and
+  <<sync_frame_loop, sync its frame loop with the runtime.>>
 * ename:XR_SESSION_STATE_SYNCHRONIZED.
   The application has synced its frame loop with the runtime but is not
   visible to the user.
 * ename:XR_SESSION_STATE_VISIBLE.
-  The application has synced its frame loop with the runtime and is visible
-  to the user but cannot receive XR input.
+  The application has <<sync_frame_loop, synced its frame loop with the
+  runtime>> and is visible to the user but cannot receive XR input.
 * ename:XR_SESSION_STATE_FOCUSED.
-  The application has synced its frame loop with the runtime, is visible to
-  the user and can receive XR input.
+  The application has <<sync_frame_loop, synced its frame loop with the
+  runtime>>, is visible to the user and can receive XR input.
 * ename:XR_SESSION_STATE_STOPPING.
   The application should exit its frame loop and call flink:xrEndSession.
 * ename:XR_SESSION_STATE_LOSS_PENDING.
@@ -400,9 +401,9 @@ continue to call flink:xrPollEvent at some reasonable cadence.
 Receiving the ename:XR_SESSION_STATE_READY state indicates that the runtime
 desires the application to prepare rendering resources, begin its session
 and synchronize its frame loop with the runtime.
-The application does this by successfully calling flink:xrBeginSession and
-then running its frame loop by calling flink:xrWaitFrame, flink:xrBeginFrame
-and flink:xrEndFrame in a loop.
+[[sync_frame_loop]] The application does this by successfully calling
+flink:xrBeginSession and then running its frame loop by calling
+flink:xrWaitFrame, flink:xrBeginFrame and flink:xrEndFrame in a loop.
 If the runtime wishes to return the session to the
 ename:XR_SESSION_STATE_IDLE state, it must: wait until the application calls
 flink:xrBeginSession.
@@ -417,8 +418,8 @@ ename:XR_SESSION_STATE_READY state until the user starts engaging with the
 device.
 
 Receiving the ename:XR_SESSION_STATE_SYNCHRONIZED state indicates that the
-application has synchronized its frame loop with the runtime, but its frames
-are not visible to the user.
+application has <<sync_frame_loop, synchronized its frame loop with the
+runtime>>, but its frames are not visible to the user.
 The application should: continue running its frame loop by calling
 flink:xrWaitFrame, flink:xrBeginFrame and flink:xrEndFrame, although it
 should avoid heavy GPU work so that other visible applications can take CPU
@@ -431,9 +432,9 @@ switching from a previous XR application to this application on a frame
 boundary.
 
 Receiving the ename:XR_SESSION_STATE_VISIBLE state indicates that the
-application has synchronized its frame loop with the runtime, and the
-session's frames will be visible to the user, but the session is not
-eligible to receive XR input.
+application has <<sync_frame_loop, synchronized its frame loop with the
+runtime>>, and the session's frames will be visible to the user, but the
+session is not eligible to receive XR input.
 An application may be visible but not have focus, for example when the
 runtime is composing a modal pop-up on top of the application's rendered
 frames.
@@ -449,9 +450,9 @@ skipping rendering of that action's input avatar (depictions of hands or
 other tracked objects controlled by the user).
 
 Receiving the ename:XR_SESSION_STATE_FOCUSED state indicates that the
-application has synchronized its frame loop with the runtime, the session's
-frames will be visible to the user, and the session is eligible to receive
-XR input.
+application has <<sync_frame_loop, synchronized its frame loop with the
+runtime>>, the session's frames will be visible to the user, and the session
+is eligible to receive XR input.
 The runtime should: only give one session XR input focus at any given time.
 The application should: be running its frame loop, rendering and submitting
 composition layers, including input avatars (depictions of hands or other

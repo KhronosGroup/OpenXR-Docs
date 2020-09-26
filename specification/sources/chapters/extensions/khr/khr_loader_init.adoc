@@ -1,0 +1,71 @@
+include::../meta/XR_KHR_loader_init.adoc[]
+
+*Last Modified Date*::
+    2020-05-07
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Cass Everitt, Facebook
+
+*Overview*
+
+On some platforms, before loading can occur the loader must be initialized
+with platform-specific parameters.
+Unlike other extensions, the presence of this extension is signaled by a
+successful call to flink:xrGetInstanceProcAddr to retrieve the function
+pointer for flink:xrInitializeLoaderKHR using a null instance handle.
+If this extension is supported, its use may be required on some platforms
+and the use of the flink:xrInitializeLoaderKHR function must precede other
+OpenXR calls except flink:xrGetInstanceProcAddr.
+This function exists as part of the loader library that the application is
+using.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrLoaderInitInfoBaseHeaderKHR',desc='Initializes OpenXR loader',type='structs']
+--
+The slink:XrLoaderInitInfoBaseHeaderKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+
+include::../../../../generated/validity/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+--
+
+*New Functions*
+[open,refpage='xrInitializeLoaderKHR',desc='Initializes loader',type='protos']
+--
+To initialize an OpenXR loader with platform or implementation-specific
+parameters, call:
+
+include::../../../../generated/api/protos/xrInitializeLoaderKHR.txt[]
+
+.Parameter Descriptions
+****
+* pname:loaderInitInfo is a pointer to an
+  slink:XrLoaderInitInfoBaseHeaderKHR structure, which is a polymorphic type
+  defined by other platform- or implementation-specific extensions.
+****
+--
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-05-07 (Cass Everitt)
+** Initial draft

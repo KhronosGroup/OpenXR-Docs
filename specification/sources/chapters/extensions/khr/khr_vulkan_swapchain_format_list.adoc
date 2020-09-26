@@ -5,7 +5,7 @@
 include::../meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
 
 *Last Modified Date*::
-    2017-09-13
+    2020-01-01
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -30,9 +30,10 @@ must create OpenXR swapchains with the
 ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT bit set.
 
 Runtimes implementing this extension must: support the
-`<<XR_KHR_vulkan_enable>>` extension and add ename:VK_KHR_image_format_list
-to the list returned by flink:xrGetVulkanDeviceExtensionsKHR, as the runtime
-will need to use that Vulkan extension.
+`<<XR_KHR_vulkan_enable>>` or the `<<XR_KHR_vulkan_enable2>>` extension.
+When `<<XR_KHR_vulkan_enable>>` is used, the runtime must: add
+ename:VK_KHR_image_format_list to the list of extensions enabled in
+flink:xrCreateVulkanDeviceKHR.
 
 *New Object Types*
 
@@ -80,3 +81,5 @@ include::../../../../generated/validity/structs/XrVulkanSwapchainFormatListCreat
 * Revision 2, 2018-06-21 (Bryce Hutchings)
 ** Update reference of `XR_KHR_vulkan_extension_requirements` to
    `XR_KHR_vulkan_enable`
+* Revision 3, 2020-01-01 (Andres Rodriguez)
+** Update for `XR_KHR_vulkan_enable2`

@@ -46,7 +46,7 @@ slink:XrGraphicsBindingVulkanKHR include correct initialization of a
 sname:VkInstance, sname:VkPhysicalDevice, and sname:VkDevice.
 
 A runtime may: require that the sname:VkInstance be initialized to a
-specific vulkan API version.
+specific Vulkan API version.
 Additionally, the runtime may: require a set of instance extensions to be
 enabled in the sname:VkInstance.
 These requirements can be queried by the application using
