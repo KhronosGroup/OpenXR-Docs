@@ -167,7 +167,7 @@ slink:XrSessionCreateInfo.
   flink:xrGetVulkanInstanceExtensionsKHR
 * pname:physicalDevice sname:VkPhysicalDevice must: match the device
   specified by flink:xrGetVulkanGraphicsDeviceKHR
-* pname:device must: have enabled all the instance extensions specified by
+* pname:device must: have enabled all the device extensions specified by
   flink:xrGetVulkanDeviceExtensionsKHR
 ****
 
