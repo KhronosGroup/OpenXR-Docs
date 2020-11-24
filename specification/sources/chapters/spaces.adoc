@@ -661,6 +661,8 @@ where the flags have the following meaning:
   For a space location tracking a device with its own inertial tracking,
   ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT should: remain set when
   this bit is set.
+  Applications must: not read the pname:pose field's pname:orientation if
+  this flag is unset.
 * ename:XR_SPACE_LOCATION_POSITION_VALID_BIT indicates that the pname:pose
   field's pname:position field contains valid data.
   When a space location loses tracking, runtimes should: continue to provide
@@ -668,6 +670,8 @@ where the flags have the following meaning:
   so long as it's still meaningful for the application to use that position,
   clearing ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT until positional
   tracking is recovered.
+  Applications must: not read the pname:pose field's pname:position if this
+  flag is unset.
 * ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT indicates that the
   pname:pose field's pname:orientation field represents an actively tracked
   orientation.

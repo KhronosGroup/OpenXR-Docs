@@ -17,6 +17,58 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.13 (2020-11-24)
+
+This release features a new ratified Khronos extension which will serve as the
+basis of other extensions, a number of new vendor extensions, and some fixes and
+clarifications.
+
+- Registry
+  - Add `XR_HTC_vive_cosmos_controller_interaction` vendor extension.
+    ([internal MR 1907](https://gitlab.khronos.org/openxr/openxr/merge_requests/1907))
+  - Add `XR_FB_display_refresh_rate` vendor extension.
+    ([internal MR 1909](https://gitlab.khronos.org/openxr/openxr/merge_requests/1909))
+  - Add `XR_MSFT_perception_anchor_interop` vendor extension.
+    ([internal MR 1929](https://gitlab.khronos.org/openxr/openxr/merge_requests/1929))
+  - Added ratified `XR_KHR_binding_modifications` Khronos extension.
+    ([internal MR 1878](https://gitlab.khronos.org/openxr/openxr/merge_requests/1878),
+    [internal issue 1413](https://gitlab.khronos.org/openxr/openxr/issues/1413))
+  - Reserve vendor extensions for HTC.
+    ([internal MR 1907](https://gitlab.khronos.org/openxr/openxr/merge_requests/1907))
+  - Reserve extension numbers 109-120 for Facebook extensions.
+    ([internal MR 1913](https://gitlab.khronos.org/openxr/openxr/merge_requests/1913))
+- Specification
+  - Clarify the system resource lifetime in "Fundamentals" chapter.
+    ([internal MR 1900](https://gitlab.khronos.org/openxr/openxr/merge_requests/1900),
+    [internal issue 1435](https://gitlab.khronos.org/openxr/openxr/issues/1435))
+  - Clarify that a running session always starts in a reset state regardless of any
+    state it had if it was previously running.
+    ([internal MR 1918](https://gitlab.khronos.org/openxr/openxr/merge_requests/1918),
+    [internal issue 1461](https://gitlab.khronos.org/openxr/openxr/issues/1461))
+  - Document new ratified `XR_KHR_binding_modifications` Khronos extension.
+    ([internal MR 1878](https://gitlab.khronos.org/openxr/openxr/merge_requests/1878),
+    [internal issue 1413](https://gitlab.khronos.org/openxr/openxr/issues/1413))
+  - Document new `XR_HTC_vive_cosmos_controller_interaction` vendor extension.
+    ([internal MR 1907](https://gitlab.khronos.org/openxr/openxr/merge_requests/1907))
+  - Document new `XR_FB_display_refresh_rate` vendor extension.
+    ([internal MR 1909](https://gitlab.khronos.org/openxr/openxr/merge_requests/1909))
+  - Document new `XR_MSFT_perception_anchor_interop` vendor extension.
+    ([internal MR 1929](https://gitlab.khronos.org/openxr/openxr/merge_requests/1929))
+  - `XR_KHR_vulkan_enable`: Account for depth swapchains in extension.
+    ([internal MR 1920](https://gitlab.khronos.org/openxr/openxr/merge_requests/1920))
+  - `XR_KHR_vulkan_enable`: Clarify API version requirements. The API version
+    requirements only apply to instances since the runtime
+    is in charge of device selection.
+    ([internal MR 1916](https://gitlab.khronos.org/openxr/openxr/merge_requests/1916),
+    [internal issue 1447](https://gitlab.khronos.org/openxr/openxr/issues/1447),
+    [OpenXR-Docs/#62](https://github.com/KhronosGroup/OpenXR-Docs/issues/62))
+  - `XR_KHR_vulkan_enable`: Fix copy/paste error when discussing Vulkan extensions.
+    ([OpenXR-Docs/#63](https://github.com/KhronosGroup/OpenXR-Docs/pull/63))
+  - rendering: Clarify when a swapchain image should be released.
+    ([internal MR 1915](https://gitlab.khronos.org/openxr/openxr/merge_requests/1915),
+    [OpenXR-Docs/#49](https://github.com/KhronosGroup/OpenXR-Docs/issues/49),
+    [internal issue 1363](https://gitlab.khronos.org/openxr/openxr/issues/1363))
+
 ## OpenXR Specification 1.0.12 (2020-09-25)
 
 This release features a number of new ratified KHR extensions, as well as a new

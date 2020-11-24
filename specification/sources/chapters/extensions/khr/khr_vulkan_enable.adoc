@@ -16,7 +16,8 @@ include::../meta/XR_KHR_vulkan_enable.adoc[]
     Dan Ginsburg, Valve +
     Bryce Hutchings, Microsoft +
     Minmin Gong, Microsoft +
-    Robert Menzel, NVIDIA
+    Robert Menzel, NVIDIA +
+    Paulo F. Gomes, Samsung Electronics
 
 *Overview*
 
@@ -92,21 +93,23 @@ is not listed above or in an extension definition.
 *Swapchain Image Layout*
 
 When an application acquires a swapchain image by calling
-flink:xrAcquireSwapchainImage in a session create using
+flink:xrAcquireSwapchainImage in a session created using
 slink:XrGraphicsBindingVulkanKHR, the OpenXR runtime must: guarantee that:
 
 * The image has a memory layout compatible with
-  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or
+  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL for depth images.
 * The sname:VkQueue specified in slink:XrGraphicsBindingVulkanKHR has
   ownership of the image.
 
 When an application releases a swapchain image by calling
-flink:xrReleaseSwapchainImage, in a session create using
+flink:xrReleaseSwapchainImage, in a session created using
 slink:XrGraphicsBindingVulkanKHR, the OpenXR runtime must: interpret the
 image as:
 
 * Having a memory layout compatible with
-  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+  ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or
+  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIAL_ATTACHMENT_OPTIMAL for depth images.
 * Being owned by the sname:VkQueue specified in
   slink:XrGraphicsBindingVulkanKHR.
 
@@ -221,13 +224,13 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsVulkanKHR.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:minApiVersionSupported is the minimum version of Vulkan that the
-  runtime supports.
+* pname:minApiVersionSupported is the minimum Vulkan Instance API version
+  that the runtime supports.
   Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
   patch version component.
-* pname:maxApiVersionSupported is the maximum version of Vulkan that the
-  runtime has been tested on and is known to support.
-  Newer Vulkan versions might work if they are compatible.
+* pname:maxApiVersionSupported is the maximum Vulkan Instance API version
+  that the runtime has been tested on and is known to support.
+  Newer Vulkan Instance API versions might work if they are compatible.
   Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
   patch version component.
 ****

@@ -1,0 +1,117 @@
+include::../meta/XR_MSFT_perception_anchor_interop.adoc[]
+
+*Last Modified Date*::
+    2020-06-16
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Lachlan Ford, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Yin Li, Microsoft +
+
+*Overview*
+
+This extension supports conversion between slink:XrSpatialAnchorMSFT and
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
+An application can: use this extension to persist spatial anchors on the
+Windows device through
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchorStore[SpatialAnchorStore]
+or transfer spatial anchors between devices through
+link:https://docs.microsoft.com/uwp/api/windows.perception.spatial.spatialanchortransfermanager[SpatialAnchorTransferManager].
+
+[open,refpage='xrCreateSpatialAnchorFromPerceptionAnchorMSFT',type='protos',desc='Create a slink:XrSpatialAnchorMSFT from a Windows SpatialAnchor pointer',xrefs='']
+--
+The flink:xrCreateSpatialAnchorFromPerceptionAnchorMSFT function creates a
+slink:XrSpatialAnchorMSFT handle from an `IUnknown` pointer to
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
+
+include::../../../../generated/api/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:perceptionAnchor is an IUnknown pointer to a
+  link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+  object.
+* pname:anchor is a pointer to slink:XrSpatialAnchorMSFT to receive the
+  returned anchor handle.
+****
+
+The input pname:perceptionAnchor must: support successful `QueryInterface`
+to
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+, otherwise the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If the function successfully returned, the output pname:anchor must: be a
+valid handle.
+This also increments the refcount of the pname:perceptionAnchor object.
+
+When application is done with the pname:anchor handle, it can: be destroyed
+using flink:xrDestroySpatialAnchorMSFT function.
+This also decrements the refcount of underlying windows perception anchor
+object.
+
+include::../../../../generated/validity/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.txt[]
+--
+
+[open,refpage='xrTryGetPerceptionAnchorFromSpatialAnchorMSFT',type='protos',desc='Convert a slink:XrSpatialAnchorMSFT to a Windows SpatialAnchor',xrefs='']
+--
+The flink:xrTryGetPerceptionAnchorFromSpatialAnchorMSFT function converts a
+slink:XrSpatialAnchorMSFT handle into an `IUnknown` pointer to
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
+
+include::../../../../generated/api/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:anchor is a valid slink:XrSpatialAnchorMSFT handle.
+* pname:perceptionAnchor is a valid pointer to IUnknown pointer to receive
+the output
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+object.
+****
+
+If the runtime can convert the pname:anchor to a
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+object, this function must: return ename:XR_SUCCESS, and the output
+`IUnknown` in the pointer of pname:perceptionAnchor must: be not code:NULL.
+This also increments the refcount of the object.
+The application can: then use `QueryInterface` to get the pointer for
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+object.
+The application should: release the COM pointer after done with the object,
+or attach it to a smart COM pointer such as `winrt::com_ptr`.
+
+If the runtime cannot convert the pname:anchor to a
+link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor]
+object, the function must: return ename:XR_SUCCESS, and the output
+`IUnknown` in the pointer of pname:perceptionAnchor must: be code:NULL.
+
+include::../../../../generated/validity/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+flink:xrCreateSpatialAnchorFromPerceptionAnchorMSFT
+
+flink:xrTryGetPerceptionAnchorFromSpatialAnchorMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-06-16 (Yin Li)
+** Initial extension proposal

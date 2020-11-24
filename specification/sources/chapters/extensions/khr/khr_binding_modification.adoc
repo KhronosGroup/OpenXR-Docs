@@ -1,0 +1,93 @@
+// Copyright (c) 2017-2020 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_KHR_binding_modification.adoc[]
+
+*Last Modified Date*::
+    2020-07-29
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Joe Ludwig, Valve
+*Contacts*::
+    Joe Ludwig, Valve
+
+*Overview*
+
+This extension adds an optional structure that can be included on the
+slink:XrInteractionProfileSuggestedBinding::pname:next chain passed to
+flink:xrSuggestInteractionProfileBindings to specify additional information
+to modify default binding behavior.
+
+This extension does not define any actual modification structs, but includes
+the list of modifications and the slink:XrBindingModificationBaseHeaderKHR
+structure to allow other extensions to provide specific modifications.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_BINDING_MODIFICATIONS_KHR
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrBindingModificationsKHR',desc='Suggested bindings with binding modification details',type='structs',xrefs='xrSuggestInteractionProfileBindings']
+--
+The slink:XrBindingModificationsKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrBindingModificationsKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:bindingModificationCount is the number of binding modifications in
+  the array pointed to by pname:bindingModifications.
+* pname:bindingModifications is a pointer to an array of pointers to binding
+  modification structures based on slink:XrBindingModificationBaseHeaderKHR,
+  that define all of the application's suggested binding modifications for
+  the specified interaction profile.
+****
+
+include::../../../../generated/validity/structs/XrBindingModificationsKHR.txt[]
+--
+
+
+[open,refpage='XrBindingModificationBaseHeaderKHR',desc='Base struct for all binding modifications',type='structs',xrefs='xrSuggestInteractionProfileBindings XrBindingModificationsKHR']
+--
+The slink:XrBindingModificationBaseHeaderKHR structure is defined as:
+
+include::../../../../generated/api/structs/XrBindingModificationBaseHeaderKHR.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or in this extension.
+****
+
+The slink:XrBindingModificationBaseHeaderKHR is a base structure is
+overridden by stext:XrBindingModification* child structures.
+
+include::../../../../generated/validity/structs/XrBindingModificationBaseHeaderKHR.txt[]
+
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-08-06 (Joe Ludwig)
+** Initial draft.
+

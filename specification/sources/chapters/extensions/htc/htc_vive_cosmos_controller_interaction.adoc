@@ -1,0 +1,75 @@
+// Copyright (c) 2020 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_HTC_vive_cosmos_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2020-09-28
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Chris Kuo, HTC +
+    Kyle Chen, HTC
+
+*Overview*
+
+This extension defines a new interaction profile for the VIVE Cosmos
+Controller.
+
+*VIVE Cosmos Controller interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/htc/vive_cosmos_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+VIVE Cosmos Controller.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/y/click
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/b/click
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/shoulder/click
+* subpathname:/input/squeeze/click
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-09-28 (Chris Kuo)
+
+** Initial extension description

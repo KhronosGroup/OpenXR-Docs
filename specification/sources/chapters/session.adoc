@@ -217,6 +217,10 @@ The application should check whether flink:xrWaitFrame returns an
 slink:XrFrameState with pname:shouldRender set to true before rendering a
 given frame to determine whether that frame will be visible to the user.
 
+Runtime session frame state must: start in a reset state when a session
+transitions to <<session_running, running>> so that no state is carried over
+from when the same session was previously running.
+
 If pname:primaryViewConfigurationType in pname:beginInfo is not supported by
 the basetype:XrSystemId used to create the pname:session, the runtime must:
 return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
@@ -262,7 +266,8 @@ its frame loop and then call flink:xrEndSession to end the
 <<session_running, running>> session.
 This function signals to the runtime that the application will no longer
 call flink:xrWaitFrame, flink:xrBeginFrame or flink:xrEndFrame from any
-thread.
+thread allowing the runtime to safely transition the session to
+ename:XR_SESSION_STATE_IDLE.
 The application must: also avoid reading input state or sending haptic
 output after calling flink:xrEndSession.
 
@@ -274,14 +279,9 @@ calls flink:xrEndSession, but the session is not yet in the
 ename:XR_SESSION_STATE_STOPPING state, the runtime must: return error
 ename:XR_ERROR_SESSION_NOT_STOPPING.
 
-If the application wishes to exit a session that is running but not in the
-ename:XR_SESSION_STATE_STOPPING state, the application should call
-flink:xrRequestExitSession.
-This requests that the runtime transition to the
-ename:XR_SESSION_STATE_STOPPING state, so that the application can call
-flink:xrEndSession, after which the session will transition through
-ename:XR_SESSION_STATE_IDLE to the ename:XR_SESSION_STATE_EXITING state and
-quit the XR experience seamlessly.
+If the application wishes to exit a running session, the application can
+call flink:xrRequestExitSession so that the session transitions from
+ename:XR_SESSION_STATE_IDLE to ename:XR_SESSION_STATE_EXITING.
 
 include::../../generated/validity/protos/xrEndSession.txt[]
 --
@@ -302,12 +302,8 @@ ename:XR_SESSION_STATE_STOPPING state, which allows runtimes to seamlessly
 transition from one application's session to another.
 When an application wishes to exit a <<session_running, running>> session,
 the application can call flink:xrRequestExitSession, requesting that the
-runtime transition the session to the ename:XR_SESSION_STATE_STOPPING state.
-When the application receives an slink:XrEventDataSessionStateChanged event
-indicating that the session has reached the ename:XR_SESSION_STATE_STOPPING
-state, the application can then call flink:xrEndSession to quit the XR
-experience seamlessly, transitioning the session through
-ename:XR_SESSION_STATE_IDLE to the ename:XR_SESSION_STATE_EXITING state.
+runtime transition through the various intermediate session states including
+ename:XR_SESSION_STATE_STOPPING to ename:XR_SESSION_STATE_EXITING.
 
 If pname:session <<session_not_running, is not running>> when
 flink:xrRequestExitSession is called, ename:XR_ERROR_SESSION_NOT_RUNNING

@@ -1,0 +1,203 @@
+include::../meta/XR_FB_color_space.adoc[]
+
+*Contributors*::
+    Volga Aksoy, Facebook +
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+XR devices may use a color space that is different from many monitors used
+in development.
+Application developers may desire to specify the color space in which they
+have authored their application so appropriate colors are shown when the
+application is running on the XR device.
+
+This extension allows:
+
+* An application to get the native color space of the XR device.
+* An application to enumerate the supported color spaces for the session.
+* An application to set the color space for the session.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_COLOR_SPACE_PROPERTIES_FB
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_COLOR_SPACE_UNSUPPORTED_FB
+
+*New Enums*
+
+[open,refpage='XrColorSpaceFB',desc='Color Space Type',type='enums']
+--
+The possible color spaces are specified by the elink:XrColorSpaceFB
+enumeration.
+
+include::../../../../generated/api/enums/XrColorSpaceFB.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_COLOR_SPACE_UNMANAGED_FB.
+  No color correction, not recommended for production use.
+
+* ename:XR_COLOR_SPACE_REC2020_FB.
+  Standard Rec.
+  2020 chromacities.
+  This is the preferred color space for standardized color across all Oculus
+  HMDs with D65 white point.
+
+* ename:XR_COLOR_SPACE_REC709_FB.
+  Standard Rec.
+  709 chromaticities, similar to sRGB.
+
+* ename:XR_COLOR_SPACE_RIFT_CV1_FB.
+  Unique color space, between P3 and Adobe RGB using D75 white point.
++
+Color Space Details with Chromacity Primaries in CIE 1931 xy:
++
+** Red: (0.666, 0.334)
+** Green: (0.238, 0.714)
+** Blue: (0.139, 0.053)
+** White: (0.298, 0.318)
+
+* ename:XR_COLOR_SPACE_RIFT_S_FB.
+  Unique color space.
+  Similar to Rec 709 using D75.
++
+Color Space Details with Chromacity Primaries in CIE 1931 xy:
++
+** Red: (0.640, 0.330)
+** Green: (0.292, 0.586)
+** Blue: (0.156, 0.058)
+** White: (0.298, 0.318)
+
+* ename:XR_COLOR_SPACE_QUEST_FB.
+  Unique color space.
+  Similar to Rift CV1 using D75 white point
++
+Color Space Details with Chromacity Primaries in CIE 1931 xy:
++
+** Red: (0.661, 0.338)
+** Green: (0.228, 0.718)
+** Blue: (0.142, 0.042)
+** White: (0.298, 0.318)
+
+* ename:XR_COLOR_SPACE_P3_FB.
+  Similar to DCI-P3, but uses D65 white point instead.
++
+Color Space Details with Chromacity Primaries in CIE 1931 xy:
++
+** Red: (0.680, 0.320)
+** Green: (0.265, 0.690)
+** Blue: (0.150, 0.060)
+** White: (0.313, 0.329)
+
+* ename:XR_COLOR_SPACE_ADOBE_RGB_FB.
+  Standard Adobe chromacities.
+
+****
+--
+
+
+
+*New Structures*
+
+[open,refpage='XrSystemColorSpacePropertiesFB',type='structs',desc='System property for color space',xrefs='']
+--
+
+An application may inspect the native color space of the system by chaining
+an slink:XrSystemColorSpacePropertiesFB structure to the
+slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+
+The slink:XrSystemColorSpacePropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:colorSpace is the native color space of the XR device.
+****
+
+include::{INCS-VAR}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrEnumerateColorSpacesFB',desc='Enumerates color spaces',type='protos',xrefs='xrSetColorSpaceFB']
+--
+The flink:xrEnumerateColorSpacesFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrEnumerateColorSpacesFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that enumerates the supported color spaces.
+* pname:colorSpaceCapacityInput is the capacity of the pname:colorSpaces
+  array, or 0 to retrieve the required capacity.
+* pname:colorSpaceCountOutput is a pointer to the count of
+  elink:XrColorSpaceFB pname:colorSpaces written, or a pointer to the
+  required capacity in the case that pname:colorSpaceCapacityInput is `0`.
+* pname:colorSpaces is a pointer to an array of elink:XrColorSpaceFB color
+  spaces, but can: be code:NULL if pname:colorSpaceCapacityInput is `0`.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:colorSpaces size.
+****
+
+flink:xrEnumerateColorSpacesFB enumerates the color spaces supported by the
+current session.
+Runtimes must: always return identical buffer contents from this enumeration
+for the lifetime of the session.
+
+include::../../../../generated/validity/protos/xrEnumerateColorSpacesFB.txt[]
+--
+
+[open,refpage='xrSetColorSpaceFB',desc='Set a color space',type='protos',xrefs='xrEnumerateColorSpacesFB']
+--
+The flink:xrSetColorSpaceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSetColorSpaceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:colorSpace is a supported color space.
+  Supported color spaces are indicated by flink:xrEnumerateColorSpacesFB.
+****
+
+flink:xrSetColorSpaceFB provides a mechanism for an application to specify
+the color space used in the final rendered frame.
+If this function is not called, the session will use the color space deemed
+appropriate by the runtime.
+Facebook HMDs for both PC and Mobile product lines default to
+ename:XR_COLOR_SPACE_RIFT_CV1_FB.
+The runtime must: return ename:XR_ERROR_COLOR_SPACE_UNSUPPORTED_FB if
+pname:colorSpace is not one of the values enumerated by
+flink:xrEnumerateColorSpacesFB.
+
+include::../../../../generated/validity/protos/xrSetColorSpaceFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-11-09 (Gloria Kennickell)
+** Initial extension description

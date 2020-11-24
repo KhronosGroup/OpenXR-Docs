@@ -1025,6 +1025,28 @@ A timeout with a duration that refers to the past has the same effect as a
 timeout of dlink:XR_NO_DURATION.
 --
 
+[[prediction-time-limits]]
+=== Prediction Time Limits
+
+Some functions involve prediction.
+For example, flink:xrLocateViews accepts a display time for which to return
+the resulting data.
+Prediction times provided by applications may refer to time in the past or
+the future.
+Times in the past may: be interpolated historical data.
+Runtimes have different practical limits with respect to how far forward or
+backward prediction times can be accurate.
+There is no prescribed forward limit the application can successfully
+request predictions for, though predictions may become less accurate as they
+get farther into the future.
+With respect to backward prediction, the application can pass a prediction
+time equivalent to the timestamp of the most recently received pose plus as
+much as code:50 milliseconds in the past to retrieve accurate historical
+data.
+Requested times predating this time window, or requested times predating the
+earliest received pose, may: result in a best effort data whose accuracy
+reduced or unspecified.
+
 
 [[colors]]
 === Colors
@@ -1062,8 +1084,6 @@ the space.
 
 The API uses 2D, 3D, and 4D floating-point vectors to describe points and
 directions in a space.
-When using slink:XrPosef the rotation described by pname:orientation is
-always applied before the translation described by pname:position.
 
 [open,refpage='XrVector2f',desc='Two-dimensional vector',type='structs',xrefs='XrVector3f XrVector4f XrQuaternionf XrPosef']
 --
@@ -1148,6 +1168,8 @@ include::../../generated/api/structs/XrPosef.txt[]
 A construct representing a position and orientation within a space, with
 position expressed in meters, and orientation represented as a unit
 quaternion.
+When using slink:XrPosef the rotation described by pname:orientation is
+always applied before the translation described by pname:position.
 
 A runtime must: return ename:XR_ERROR_POSE_INVALID if the pname:orientation
 norm deviates by more than 1% from unit length.
@@ -1319,28 +1341,6 @@ flipped horizontally.
 When pname:angleDown > pname:angleUp, the content of the view must: be
 flipped vertically.
 --
-
-[[prediction-time-limits]]
-=== Prediction Time Limits
-
-Some functions involve prediction.
-For example, flink:xrLocateViews accepts a display time for which to return
-the resulting data.
-Prediction times provided by applications may refer to time in the past or
-the future.
-Times in the past may: be interpolated historical data.
-Runtimes have different practical limits with respect to how far forward or
-backward prediction times can be accurate.
-There is no prescribed forward limit the application can successfully
-request predictions for, though predictions may become less accurate as they
-get farther into the future.
-With respect to backward prediction, the application can pass a prediction
-time equivalent to the timestamp of the most recently received pose plus as
-much as code:50 milliseconds in the past to retrieve accurate historical
-data.
-Requested times predating this time window, or requested times predating the
-earliest received pose, may: result in a best effort data whose accuracy
-reduced or unspecified.
 
 
 === Boolean Values
@@ -1542,3 +1542,30 @@ include::../../generated/validity/structs/XrEventDataEventsLost.txt[]
 
 Other event structures are defined in later chapters in the context where
 their definition is most relevant.
+
+[[resource-lifetime]]
+=== System resource lifetime
+
+The creator of an underlying system resource is responsible for ensuring the
+resource's lifetime matches the lifetime of the associated OpenXR handle.
+
+Resources passed as inputs from the application to the runtime when creating
+an OpenXR handle should: not be freed while that handle is valid.
+A runtime must: not free resources passed as inputs or decrease their
+reference counts (if applicable) from the initial value.
+For example, the graphics device handle (or pointer) passed in to
+flink:xrCreateSession in `XrGraphicsBinding*` structure should: be kept
+alive when the corresponding slink:XrSession handle is valid, and should: be
+freed by the application after the slink:XrSession handle is destroyed.
+
+Resources created by the runtime should not be freed by the application, and
+the application should: maintain the same reference count (if applicable) at
+the destruction of the OpenXR handle as it had at its creation.
+For example, the `ID3D*Texture2D` objects in the `XrSwapchainImageD3D*` are
+created by the runtime and associated with the lifetime of the
+slink:XrSwapchain handle.
+The application should: not keep additional reference counts on any
+`ID3D*Texture2D` objects past the lifetime of the slink:XrSwapchain handle,
+or make extra reference count decrease after destroying the
+slink:XrSwapchain handle.
+

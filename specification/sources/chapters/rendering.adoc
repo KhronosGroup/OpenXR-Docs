@@ -463,7 +463,8 @@ include::../../generated/api/structs/XrSwapchainImageWaitInfo.txt[]
 include::../../generated/validity/structs/XrSwapchainImageWaitInfo.txt[]
 --
 
-Once an application is done writing to a swapchain image, it is released.
+Once an application is done submitting commands that reference the swapchain
+image, the application must: release the swapchain image.
 flink:xrReleaseSwapchainImage will implicitly release the oldest swapchain
 image which has been acquired.
 The swapchain image must: have been successfully waited on before it is
@@ -658,6 +659,8 @@ include::../../generated/api/enums/XrViewStateFlagBits.txt[]
 ****
 * ename:XR_VIEW_STATE_ORIENTATION_VALID_BIT indicates whether all
   slink:XrView orientations contain valid data.
+  Applications must: not read any of the slink:XrView pname:pose
+  pname:orientation fields if this flag is unset.
   ename:XR_VIEW_STATE_ORIENTATION_TRACKED_BIT should: generally remain set
   when this bit is set for views on a tracked headset or handheld device.
 * ename:XR_VIEW_STATE_POSITION_VALID_BIT indicates whether all slink:XrView
@@ -667,6 +670,8 @@ include::../../generated/api/enums/XrViewStateFlagBits.txt[]
   long as it's still meaningful for the application to render content using
   that position, clearing ename:XR_VIEW_STATE_POSITION_TRACKED_BIT until
   tracking is recovered.
+  Applications must: not read any of the slink:XrView pname:pose
+  pname:position fields if this flag is unset.
 * ename:XR_VIEW_STATE_ORIENTATION_TRACKED_BIT indicates whether all
   slink:XrView orientations represent an actively tracked orientation.
   This bit should: generally remain set when

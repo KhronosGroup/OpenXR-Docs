@@ -1,0 +1,170 @@
+include::../meta/XR_FB_display_refresh_rate.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+On platforms which support dynamically adjusting the display refresh rate,
+application developers may request a specific display refresh rate in order
+to improve the overall user experience, examples include:
+
+* A video application may choose a display refresh rate which better matches
+  the video content playback rate in order to achieve smoother video frames.
+* An application which can support a higher frame rate may choose to render
+  at the higher rate to improve the overall perceptual quality, for example,
+  lower latency and less flicker.
+
+This extension allows:
+
+ * An application to identify what display refresh rates the session
+   supports and the current display refresh rate.
+ * An application to request a display refresh rate to indicate its
+   preference to the runtime.
+ * An application to receive notification of changes to the display refresh
+   rate which are delivered via events.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_EVENT_DATA_DISPLAY_REFRESH_RATE_CHANGED_FB
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrEventDataDisplayRefreshRateChangedFB',type='structs',desc='Event representing display refresh rate change',xrefs='xrGetDisplayRefreshRateFB']
+--
+Receiving the slink:XrEventDataDisplayRefreshRateChangedFB event structure
+indicates that the display refresh rate has changed.
+
+The slink:XrEventDataDisplayRefreshRateChangedFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:fromDisplayRefreshRate is the previous display refresh rate.
+* pname:toDisplayRefreshRate is the new display refresh rate.
+****
+
+include::{INCS-VAR}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrEnumerateDisplayRefreshRatesFB',desc='Enumerates display refresh rates',type='protos',xrefs='xrGetDisplayRefreshRateFB xrRequestDisplayRefreshRateFB']
+--
+The flink:xrEnumerateDisplayRefreshRatesFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that enumerates the supported display refresh
+  rates.
+* pname:displayRefreshRateCapacityInput is the capacity of the
+  pname:displayRefreshRates, or 0 to retrieve the required capacity.
+* pname:displayRefreshRateCountOutput is a pointer to the count of
+  code:float pname:displayRefreshRates written, or a pointer to the required
+  capacity in the case that pname:displayRefreshRateCapacityInput is `0`.
+* pname:displayRefreshRates is a pointer to an array of code:float display
+  refresh rates, but can: be code:NULL if
+  pname:displayRefreshRateCapacityInput is `0`.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:displayRefreshRates
+  size.
+****
+
+flink:xrEnumerateDisplayRefreshRatesFB enumerates the display refresh rates
+supported by the current session.
+Display refresh rates must: be in order from lowest to highest supported
+display refresh rates.
+Runtimes must: always return identical buffer contents from this enumeration
+for the lifetime of the session.
+
+include::../../../../generated/validity/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+--
+
+[open,refpage='xrGetDisplayRefreshRateFB',desc='Get the current display refresh rate',type='protos',xrefs='xrRequestDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
+--
+The flink:xrGetDisplayRefreshRateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetDisplayRefreshRateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to query.
+* pname:displayRefreshRate is a pointer to a float into which the current
+  display refresh rate will be placed.
+****
+
+flink:xrGetDisplayRefreshRateFB retrieves the current display refresh rate.
+
+include::../../../../generated/validity/protos/xrGetDisplayRefreshRateFB.txt[]
+--
+
+[open,refpage='xrRequestDisplayRefreshRateFB',desc='Request a display refresh rate',type='protos',xrefs='xrGetDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
+--
+The flink:xrRequestDisplayRefreshRateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrRequestDisplayRefreshRateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:displayRefreshRate is `0.0f` or a supported display refresh rate.
+  Supported display refresh rates are indicated by
+  flink:xrEnumerateDisplayRefreshRatesFB.
+****
+
+flink:xrRequestDisplayRefreshRateFB provides a mechanism for an application
+to request the system to dynamically change the display refresh rate to the
+application preferred value.
+The runtime must: return ename:XR_ERROR_DISPLAY_REFRESH_RATE_UNSUPPORTED_FB
+if pname:displayRefreshRate is not either `0.0f` or one of the values
+enumerated by flink:xrEnumerateDisplayRefreshRatesFB.
+A display refresh rate of `0.0f` indicates the application has no
+preference.
+
+Note that this is only a request and does not guarantee the system will
+switch to the requested display refresh rate.
+
+include::../../../../generated/validity/protos/xrRequestDisplayRefreshRateFB.txt[]
+--
+
+*Issues*
+
+Changing the display refresh rate from its system default does not come
+without trade-offs.
+Increasing the display refresh rate puts more load on the entire system and
+can lead to thermal degradation.
+Conversely, lowering the display refresh rate can provide better thermal
+sustainability but at the cost of more perceptual issues, like higher
+latency and flickering.
+
+*Version History*
+
+* Revision 1, 2020-10-05 (Gloria Kennickell)
+** Initial extension description

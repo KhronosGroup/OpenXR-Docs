@@ -100,7 +100,12 @@ include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
   vertices written or the required capacity in the case that
   pname:vertexCapacityInput or pname:indexCapacityInput is `0`.
 * pname:vertices is an array of vertices filled in by the runtime that
-  specifies mask coordinates in the z=-1 plane of the view.
+  specifies mask coordinates in the z=-1 plane of the rendered view--i.e.,
+  one meter in front of the view.
+  When rendering the mask for use in a projection layer, these vertices must
+  be transformed by the application's projection matrix used for the
+  respective slink:XrCompositionLayerProjectionView.
+
 * pname:indexCapacityInput is the capacity of the pname:indices array, or
   `0` to indicate a request to retrieve the required capacity.
 * pname:indexCountOutput is filled in by the runtime with the count of
