@@ -341,7 +341,9 @@ class COutputGenerator(OutputGenerator):
             if self.genOpts.genAliasMacro and self.typeMayAlias(typeName):
                 body += ' ' + self.genOpts.aliasMacro
 
-            body += ' ' + typeName + ' {\n'
+            structextends = typeElem.get('structextends')
+            extends_comment = ' // extends ' + structextends if structextends else ''
+            body += ' ' + typeName + ' {' + extends_comment + '\n'
 
             targetLen = self.getMaxCParamTypeLength(typeinfo)
             for member in typeElem.findall('.//member'):
