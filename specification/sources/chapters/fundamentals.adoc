@@ -682,7 +682,6 @@ below:
   parent handle.
 * etext:_UNAVAILABLE: The specified handle, atom, enumerant or value is
   supported by this function's parent handle but not at this moment.
---
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-successcodes]]
@@ -697,6 +696,7 @@ include::../../generated/api/enums/XrResult.success.comments.txt[]
 
 // Generated from comment attributes in XML
 include::../../generated/api/enums/XrResult.error.comments.txt[]
+--
 
 ==== Convenience Macros
 
