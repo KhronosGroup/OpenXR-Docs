@@ -993,20 +993,20 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member values="XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR"><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>*                    <name>next</name></member>
             <member><type>XrSystemId</type>                     <name>systemId</name></member>
-            <member><type>XrVulkanInstanceCreateFlagsKHR</type> <name>createFlags</name></member>
+            <member optional="true"><type>XrVulkanInstanceCreateFlagsKHR</type> <name>createFlags</name></member>
             <member><type>PFN_vkGetInstanceProcAddr</type>      <name>pfnGetInstanceProcAddr</name></member>
             <member>const <type>VkInstanceCreateInfo</type>*    <name>vulkanCreateInfo</name></member>
-            <member>const <type>VkAllocationCallbacks</type>*   <name>vulkanAllocator</name></member>
+            <member optional="true">const <type>VkAllocationCallbacks</type>*   <name>vulkanAllocator</name></member>
         </type>
         <type category="struct" name="XrVulkanDeviceCreateInfoKHR">
             <member values="XR_TYPE_VULKAN_DEVICE_CREATE_INFO_KHR"><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>*                    <name>next</name></member>
             <member><type>XrSystemId</type>                     <name>systemId</name></member>
-            <member><type>XrVulkanDeviceCreateFlagsKHR</type>   <name>createFlags</name></member>
+            <member optional="true"><type>XrVulkanDeviceCreateFlagsKHR</type>   <name>createFlags</name></member>
             <member><type>PFN_vkGetInstanceProcAddr</type>      <name>pfnGetInstanceProcAddr</name></member>
             <member><type>VkPhysicalDevice</type>               <name>vulkanPhysicalDevice</name></member>
             <member>const <type>VkDeviceCreateInfo</type>*      <name>vulkanCreateInfo</name></member>
-            <member>const <type>VkAllocationCallbacks</type>*   <name>vulkanAllocator</name></member>
+            <member optional="true">const <type>VkAllocationCallbacks</type>*   <name>vulkanAllocator</name></member>
         </type>
         <type category="struct" name="XrGraphicsBindingVulkan2KHR" alias="XrGraphicsBindingVulkanKHR" />
         <type category="struct" name="XrVulkanGraphicsDeviceGetInfoKHR">
