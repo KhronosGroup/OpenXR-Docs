@@ -65,10 +65,10 @@ call:
 --
 include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
 
-The flink:xrGetVulkanGraphicsRequirementsKHR function identifies to the
+The flink:xrGetVulkanGraphicsRequirements2KHR function identifies to the
 application the runtime's minimum Vulkan version requirement and the highest
 known tested Vulkan version.
-flink:xrGetVulkanGraphicsRequirementsKHR must: be called prior to calling
+flink:xrGetVulkanGraphicsRequirements2KHR must: be called prior to calling
 flink:xrCreateSession.
 The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
 on calls to flink:xrCreateSession if
