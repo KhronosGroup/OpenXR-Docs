@@ -3679,6 +3679,68 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <type name="XrBindingModificationBaseHeaderKHR"/>
         </require>
     </extension>
+
+    <extension name="XR_MAGICLEAP_extension_122" number="122" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_122_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_122&quot;" name="XR_MAGICLEAP_extension_122_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_123" number="123" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_123_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_123&quot;" name="XR_MAGICLEAP_extension_123_EXTENSION_NAME"/>
+        </require>
+    </extension>    
+    <extension name="XR_MAGICLEAP_extension_124" number="124" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_124_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_124&quot;" name="XR_MAGICLEAP_extension_124_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_125" number="125" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_125_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_125&quot;" name="XR_MAGICLEAP_extension_125_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_126" number="126" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_126_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_126&quot;" name="XR_MAGICLEAP_extension_126_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_127" number="127" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_127_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_127&quot;" name="XR_MAGICLEAP_extension_127_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_128" number="128" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_128_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_128&quot;" name="XR_MAGICLEAP_extension_128_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_129" number="129" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_129_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_129&quot;" name="XR_MAGICLEAP_extension_129_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_130" number="130" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_130_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_130&quot;" name="XR_MAGICLEAP_extension_130_EXTENSION_NAME"/>
+        </require>
+    </extension>
+    <extension name="XR_MAGICLEAP_extension_131" number="131" type="instance" supported="disabled">
+        <require>
+            <enum value="1" name="XR_MAGICLEAP_extension_131_SPEC_VERSION"/>
+            <enum value="&quot;XR_MAGICLEAP_extension_131&quot;" name="XR_MAGICLEAP_extension_131_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
     </extensions>
 
 </registry>
