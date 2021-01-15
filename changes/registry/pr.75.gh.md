@@ -1,2 +1,2 @@
-Reserved 10 extensions for Magic Leap use.
+Reserved 10 vendor extensions for Magic Leap.
 
