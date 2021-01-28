@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 The Khronos Group Inc.
+// Copyright (c) 2016-2021, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -667,6 +667,7 @@ the two categories below.
 
 [open,refpage='XrResult',desc='Result codes',type='enums']
 --
+
 include::../../generated/api/enums/XrResult.txt[]
 
 All return codes in the API are reported via elink:XrResult return values.
@@ -685,17 +686,30 @@ below:
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-successcodes]]
-==== Success Codes
+ifdef::doctype-manpage[]
+=== Success Codes
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+// Can't have a section title in a delimited block
+**Success Codes**
+endif::doctype-manpage[]
 
 // Generated from comment attributes in XML
 include::../../generated/api/enums/XrResult.success.comments.txt[]
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-errorcodes]]
-==== Error Codes
+ifdef::doctype-manpage[]
+=== Error Codes
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+// Can't have a section title in a delimited block
+**Error Codes**
+endif::doctype-manpage[]
 
 // Generated from comment attributes in XML
 include::../../generated/api/enums/XrResult.error.comments.txt[]
+
 --
 
 ==== Convenience Macros

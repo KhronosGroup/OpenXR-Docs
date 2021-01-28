@@ -1,0 +1,101 @@
+include::../meta/XR_FB_android_surface_swapchain_create.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook +
+    Tomislav Novak, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension provides support for the specification of Android Surface
+specific swapchain create flags.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+To specify the additional create flags, you must create a
+slink:XrAndroidSurfaceSwapchainCreateInfoFB structure and pass it on the
+call to flink:xrCreateSwapchainAndroidSurfaceKHR via the
+slink:XrSwapchainCreateInfo structure's pname:next parameter.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrAndroidSurfaceSwapchainFlagsFB',type='flags',desc='XrAndroidSurfaceSwapchainFlagsFB']
+--
+include::{INCS-VAR}/api/flags/XrAndroidSurfaceSwapchainFlagsFB.txt[]
+--
+
+[open,refpage='XrAndroidSurfaceSwapchainFlagBitsFB',type='enums',desc='XrAndroidSurfaceSwapchainFlagBitsFB']
+--
+include::{INCS-VAR}/api/enums/XrAndroidSurfaceSwapchainFlagBitsFB.txt[]
+--
+
+.Flag Descriptions
+****
+* ename:XR_ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB indicates the
+  underlying BufferQueue should be created in synchronous mode, allowing
+  multiple buffers to be queued instead of always replacing the last buffer.
+  Buffers are retired in order, and the producer may block until a new
+  buffer is available.
+* ename:XR_ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB indicates the
+  compositor should acquire the most recent buffer whose presentation
+  timestamp is not greater than the expected display time of the final
+  composited frame.
+
+****
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_ANDROID_SURFACE_SWAPCHAIN_CREATE_INFO_FB
+
+*New Enums*
+
+* ename:XR_ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB
+* ename:XR_ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB
+
+*New Structures*
+
+[open,refpage='XrAndroidSurfaceSwapchainCreateInfoFB',desc='Creates an Android Surface Swapchain',type='structs',xrefs='xrCreateSwapchainAndroidSurfaceKHR']
+--
+The slink:XrAndroidSurfaceSwapchainCreateInfoFB structure is defined as:
+
+include::../../../../generated/api/structs/XrAndroidSurfaceSwapchainCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:createFlags is `0` or one or more
+  elink:XrAndroidSurfaceSwapchainFlagBitsFB which indicate various
+  characteristics desired for the Android Surface Swapchain.
+****
+
+slink:XrAndroidSurfaceSwapchainCreateInfoFB contains additional Android
+Surface specific create flags when calling
+flink:xrCreateSwapchainAndroidSurfaceKHR.
+The slink:XrAndroidSurfaceSwapchainCreateInfoFB structure must: be provided
+in the pname:next chain of the slink:XrSwapchainCreateInfo structure when
+calling flink:xrCreateSwapchainAndroidSurfaceKHR.
+
+
+include::../../../../generated/validity/structs/XrAndroidSurfaceSwapchainCreateInfoFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-12-10 (Gloria Kennickell)
+** Initial draft

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 The Khronos Group Inc.
+// Copyright (c) 2016-2021, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[semantic-path]]
@@ -480,6 +480,8 @@ Standard components are:
   These vary in value from -1 to 1.
   These represent the 2D position of the input source with 0 being the rest
   state on each axis.
+  -1 means all the way left for x axis or all the way down for y axis.
+  +1 means all the way right for x axis or all the way up for y axis.
   x and y components are present for trackpads, thumbsticks, and joysticks.
 * twist - Some sources, such as flight sticks, have a sensor that allows the
   user to twist the input left or right.

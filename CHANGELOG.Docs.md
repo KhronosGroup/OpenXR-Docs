@@ -1,7 +1,7 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
 <!--
-Copyright (c) 2019-2020 The Khronos Group Inc.
+Copyright (c) 2019-2021, The Khronos Group Inc.
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -16,6 +16,71 @@ any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR Specification 1.0.14 (2021-01-27)
+
+This release contains a collection of fixes and improvements, including one new
+vendor extension.
+
+- Registry
+  - Add new `XR_FB_android_surface_swapchain_create` vendor extension.
+    ([internal MR 1939](https://gitlab.khronos.org/openxr/openxr/merge_requests/1939),
+    [internal issue 1493](https://gitlab.khronos.org/openxr/openxr/issues/1493),
+    [internal MR 1968](https://gitlab.khronos.org/openxr/openxr/merge_requests/1968))
+  - Add missing `optional` attributes to `XR_KHR_vulkan_enable2` structs. Fixes
+    validation layer.
+    ([OpenXR-Docs/#72](https://github.com/KhronosGroup/OpenXR-Docs/pull/72))
+  - Correction to `locationFlags` field in `XrHandJointLocationEXT` to be optional.
+    ([internal MR 1945](https://gitlab.khronos.org/openxr/openxr/merge_requests/1945))
+  - Reserve vendor extensions for Varjo.
+    ([internal MR 1935](https://gitlab.khronos.org/openxr/openxr/merge_requests/1935))
+  - Reserve vendor extensions for Magic Leap.
+    ([internal MR 1967](https://gitlab.khronos.org/openxr/openxr/merge_requests/1967),
+    [internal MR 1970](https://gitlab.khronos.org/openxr/openxr/merge_requests/1970))
+  - Reserve extension number 143 to 148 for MSFT extensions.
+    ([internal MR 1969](https://gitlab.khronos.org/openxr/openxr/merge_requests/1969))
+  - Update Magic Leap ID and contact information.
+    ([internal MR 1967](https://gitlab.khronos.org/openxr/openxr/merge_requests/1967))
+- Specification
+  - Add missing asciidoctor markup to names in `XrResult` comments, and include
+    those comments in the `XrResult` ref page.
+    ([OpenXR-Docs/#71](https://github.com/KhronosGroup/OpenXR-Docs/pull/71))
+  - Clarify specification for thumbstick's Y direction should be pointing Up.
+    ([internal MR 1944](https://gitlab.khronos.org/openxr/openxr/merge_requests/1944))
+  - Clarify in the `xrGetCurrentInteractionProfile` docs, not just in the output
+    struct, that `XR_NULL_PATH` may be returned.
+    ([OpenXR-Docs/#64](https://github.com/KhronosGroup/OpenXR-Docs/pull/64))
+  - Correct specification readme asciidoctor install references
+    ([internal MR 1942](https://gitlab.khronos.org/openxr/openxr/merge_requests/1942))
+  - Document new `XR_FB_android_surface_swapchain_create` vendor extension.
+    ([internal MR 1939](https://gitlab.khronos.org/openxr/openxr/merge_requests/1939),
+    [internal issue 1493](https://gitlab.khronos.org/openxr/openxr/issues/1493),
+    [internal MR 1968](https://gitlab.khronos.org/openxr/openxr/merge_requests/1968))
+  - Fix broken link in `XR_EXTX_overlay`.
+    ([internal MR 1975](https://gitlab.khronos.org/openxr/openxr/merge_requests/1975))
+  - Some typo fixes.
+    ([OpenXR-Docs/#76](https://github.com/KhronosGroup/OpenXR-Docs/pull/76))
+  - XR_KHR_vulkan_enable2: Refer to `xrGetVulkanGraphicsRequirements2KHR` instead
+    of `xrGetVulkanGraphicsRequirementsKHR`.
+    ([OpenXR-Docs/#74](https://github.com/KhronosGroup/OpenXR-Docs/pull/74))
+  - scripts: Enforce that types specified in `structextends` attribute actually
+    exist.
+    ([internal MR 1928](https://gitlab.khronos.org/openxr/openxr/merge_requests/1928))
+  - scripts: Bundle Jinja2 in the OpenXR-Docs repo.
+    ([internal MR 1936](https://gitlab.khronos.org/openxr/openxr/merge_requests/1936),
+    [OpenXR-Docs/#61](https://github.com/KhronosGroup/OpenXR-Docs/issues/61),
+    [internal issue 1446](https://gitlab.khronos.org/openxr/openxr/issues/1446))
+  - scripts: Update bundled Jinja2 to 2.10.3, the last version to support Python
+    3.3 and 3.4.
+    ([internal MR 1936](https://gitlab.khronos.org/openxr/openxr/merge_requests/1936))
+  - scripts: Enforce style guide requirements that enum values should start with
+    the UPPER_SNAKE_CASE type name. (Checks to make sure the longest common token-
+    wise prefix of all values matches the type name, to ensure the type is named
+    appropriately too.)
+    ([internal MR 1948](https://gitlab.khronos.org/openxr/openxr/merge_requests/1948))
+  - scripts: Update AsciiDoctor extensions for no-warning behavior under
+    AsciiDoctor 2.
+    ([internal MR 1975](https://gitlab.khronos.org/openxr/openxr/merge_requests/1975))
 
 ## OpenXR Specification 1.0.13 (2020-11-24)
 
@@ -66,7 +131,7 @@ clarifications.
     ([OpenXR-Docs/#63](https://github.com/KhronosGroup/OpenXR-Docs/pull/63))
   - rendering: Clarify when a swapchain image should be released.
     ([internal MR 1915](https://gitlab.khronos.org/openxr/openxr/merge_requests/1915),
-    [OpenXR-Docs/#49](https://github.com/KhronosGroup/OpenXR-Docs/issues/49),
+    [OpenXR-Docs/#50](https://github.com/KhronosGroup/OpenXR-Docs/issues/50),
     [internal issue 1363](https://gitlab.khronos.org/openxr/openxr/issues/1363))
 
 ## OpenXR Specification 1.0.12 (2020-09-25)

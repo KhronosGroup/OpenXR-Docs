@@ -1,1 +1,0 @@
-XR_KHR_vulkan_enable2: Refer to xrGetVulkanGraphicsRequirements2KHR instead of xrGetVulkanGraphicsRequirementsKHR.

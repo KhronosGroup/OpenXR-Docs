@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 The Khronos Group Inc.
+// Copyright (c) 2016-2021, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[rendering]]
@@ -1130,8 +1130,8 @@ slink:XrCompositionLayerQuad layer types.
 
 The projection layer type represents planar projected images rendered from
 the eye point of each eye using a perspective projection.
-This layer type is typically used to render the virtual world from the user's
-perspective.
+This layer type is typically used to render the virtual world from the
+user's perspective.
 
 The quad layer type describes a posable planar rectangle in the virtual
 world for displaying two-dimensional content.

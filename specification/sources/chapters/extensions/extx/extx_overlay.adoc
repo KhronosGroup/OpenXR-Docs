@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 The Khronos Group Inc.
+// Copyright (c) 2017-2021, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -43,7 +43,7 @@ This extension allows:
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extension>> section.
+indicated in the <<extensions>> section.
 
 When you are ready to create an overlay session, you will need to create a
 slink:XrSessionCreateInfoOverlayEXTX structure and pass it into the

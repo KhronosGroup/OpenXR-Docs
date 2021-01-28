@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (c) 2019-2020 The Khronos Group Inc.
+# Copyright (c) 2019-2021, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -84,10 +84,10 @@ fi
 
 if $HAVE_TRANG; then
     # Need trang to convert rnc->rng well.
-    if which xmllint >/dev/null; then 
+    if which xmllint >/dev/null; then
         doXmllint
     fi
-    if which xmlstarlet >/dev/null; then 
+    if which xmlstarlet >/dev/null; then
         doXmlStarlet
     fi
 fi
