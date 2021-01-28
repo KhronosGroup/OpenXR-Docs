@@ -706,7 +706,8 @@ flink:xrGetCurrentInteractionProfile asks the runtime for the active
 interaction profiles for a top level user path.
 
 The runtime must: return only interaction profiles for which the application
-has provided bindings with flink:xrSuggestInteractionProfileBindings.
+has provided bindings with flink:xrSuggestInteractionProfileBindings or
+dlink:XR_NULL_PATH.
 The runtime may: return interaction profiles that do not represent
 physically present hardware, for example if the runtime is using a known
 interaction profile to bind to hardware that the application is not aware

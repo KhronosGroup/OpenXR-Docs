@@ -65,10 +65,10 @@ call:
 --
 include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
 
-The flink:xrGetVulkanGraphicsRequirementsKHR function identifies to the
+The flink:xrGetVulkanGraphicsRequirements2KHR function identifies to the
 application the runtime's minimum Vulkan version requirement and the highest
 known tested Vulkan version.
-flink:xrGetVulkanGraphicsRequirementsKHR must: be called prior to calling
+flink:xrGetVulkanGraphicsRequirements2KHR must: be called prior to calling
 flink:xrCreateSession.
 The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
 on calls to flink:xrCreateSession if
@@ -430,7 +430,7 @@ image as:
 
 * Having a memory layout compatible with
   ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or
-  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIAL_ATTACHMENT_OPTIMAL for depth images.
+  ename:VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL for depth images.
 * Being owned by the sname:VkQueue specified in
   slink:XrGraphicsBindingVulkan2KHR.
 * Being referenced by command buffers submitted to the sname:VkQueue
