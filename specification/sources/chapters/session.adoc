@@ -85,7 +85,7 @@ next chain of slink:XrSessionCreateInfo. The application must: call the
 `xrGet<*>GraphicsRequirements` type method provided by the chosen graphics API 
 extension before attempting to create the session (for example
 flink:xrGetD3D11GraphicsRequirementsKHR, flink:xrGetD3D12GraphicsRequirementsKHR,
-flink:xrGetOpenGLGraphicsRequirementsKHR, xrGetOpenGLESGraphicsRequirementsKHR,
+flink:xrGetOpenGLGraphicsRequirementsKHR, flink:xrGetOpenGLESGraphicsRequirementsKHR,
 flink:xrGetVulkanGraphicsRequirementsKHR).
 
 Unless specified differently in the graphics API extension, the application
