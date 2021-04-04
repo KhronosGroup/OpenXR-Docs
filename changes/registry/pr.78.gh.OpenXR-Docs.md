@@ -1,0 +1,1 @@
+Replace '<<mr-reserve-extension-number,example>>' in the extension process with a link to the example used in the style guide.
