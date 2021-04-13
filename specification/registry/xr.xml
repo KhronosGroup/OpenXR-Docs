@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <registry>
     <comment>
 Copyright (c) 2017-2021, The Khronos Group Inc.
@@ -121,7 +121,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         -->
         <type category="define">
 #if !defined(XR_MAY_ALIAS)
-#if defined(__clang__) || (defined(__GNUC__) &amp;&amp; (__GNUC__ > 4))
+#if defined(__clang__) || (defined(__GNUC__) &amp;&amp; (__GNUC__ &gt; 4))
 #define <name>XR_MAY_ALIAS</name> __attribute__((__may_alias__))
 #else
 #define XR_MAY_ALIAS
@@ -1345,8 +1345,8 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type category="struct" name="XrControllerModelNodePropertiesMSFT">
             <member values="XR_TYPE_CONTROLLER_MODEL_NODE_PROPERTIES_MSFT"><type>XrStructureType</type> <name>type</name></member>
             <member><type>void</type>* <name>next</name></member>
-            <member><type>char</type> <name>parentNodeName</name>[XR_MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT]</member>
-            <member><type>char</type> <name>nodeName</name>[XR_MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT]</member>
+            <member><type>char</type> <name>parentNodeName</name>[<enum>XR_MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT</enum>]</member>
+            <member><type>char</type> <name>nodeName</name>[<enum>XR_MAX_CONTROLLER_MODEL_NODE_NAME_SIZE_MSFT</enum>]</member>
         </type>
         <type category="struct" name="XrControllerModelPropertiesMSFT">
             <member values="XR_TYPE_CONTROLLER_MODEL_PROPERTIES_MSFT"><type>XrStructureType</type> <name>type</name></member>
