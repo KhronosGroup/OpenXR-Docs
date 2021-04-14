@@ -98,7 +98,7 @@ include::../../generated/api/flags/XrViewStateFlags.txt[]
 This API is defined in C and uses "C" linkage.
 The `openxr.h` header file is opened with:
 
-[source,C]
+[source,C,suppress-build]
 ----
 #ifdef __cplusplus
 extern "C" {
@@ -107,7 +107,7 @@ extern "C" {
 
 and closed with:
 
-[source,C]
+[source,C,suppress-build]
 ----
 #ifdef __cplusplus
 }

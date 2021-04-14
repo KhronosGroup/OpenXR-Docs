@@ -125,8 +125,8 @@ include::../../generated/api/enums/XrSwapchainUsageFlagBits.txt[]
   the source of a copy operation.
 * ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT indicates that the image may be
   the destination of a copy operation.
-* ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT indicates that the image may sampled
-  by a shader.
+* ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT indicates that the image may be
+  sampled by a shader.
 * ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT indicates that the image
   format may be reinterpreted.
 ****
@@ -296,7 +296,7 @@ include::../../generated/api/protos/xrEnumerateSwapchainImages.txt[]
   or a pointer to the required capacity in the case that
   pname:imageCapacityInput is 0.
 * pname:images is a pointer to an array of graphics API-specific
-  `XrSwapchainImage` structures based off of
+  `XrSwapchainImage` structures, all of the same type, based on
   slink:XrSwapchainImageBaseHeader.
   It can: be code:NULL if pname:imageCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
@@ -312,6 +312,21 @@ for the lifetime of the swapchain.
 
 Note: pname:images is a pointer to an array of structures of graphics
 API-specific type, not an array of structure pointers.
+
+The pointer submitted as pname:images will be treated as an array of the
+expected graphics API-specific type based on the graphics API used at
+session creation time.
+If the pname:type member of any array element accessed in this way does not
+match the expected value, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+[NOTE]
+.Note
+====
+Under a typical memory model, a runtime must treat the supplied pointer as
+an opaque blob beginning with slink:XrSwapchainImageBaseHeader, until after
+it has verified the pname:type.
+====
 
 include::../../generated/validity/protos/xrEnumerateSwapchainImages.txt[]
 --
@@ -360,13 +375,13 @@ include::../../generated/api/protos/xrAcquireSwapchainImage.txt[]
 * pname:swapchain is the swapchain from which to acquire an image.
 * pname:acquireInfo exists for extensibility purposes, it is code:NULL or a
   pointer to a valid slink:XrSwapchainImageAcquireInfo.
-* pname:index is a pointer to the image index that was acquired.
+* pname:index is the returned image index that has been acquired.
 ****
 
 Acquires the image corresponding to the pname:index position in the array
 returned by flink:xrEnumerateSwapchainImages.
-The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if pname:index
-has already been acquired and not yet released with
+The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if the next
+available index has already been acquired and not yet released with
 flink:xrReleaseSwapchainImage.
 If the pname:swapchain was created with the
 ename:XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT set in
@@ -434,6 +449,9 @@ call to flink:xrWaitSwapchainImage will wait on the same image index again
 until the function succeeds with ename:XR_SUCCESS.
 Note that this is not an error code;
 `XR_SUCCEEDED(ename:XR_TIMEOUT_EXPIRED)` is code:true.
+
+The runtime must: eventually relinquish ownership of a swapchain image to
+the application and must: not block indefinitely.
 
 The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if no image has
 been acquired by calling flink:xrAcquireSwapchainImage.
@@ -1377,6 +1395,7 @@ ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE blend mode will appear transparent,
 and so an application in that mode may: render a glow as a grounding effect
 around the black shadow to ensure the shadow can be seen.
 Similarly, an application designed for
+ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE or
 ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE rendering may: choose to leave
 garbage in their alpha channel as a side effect of a rendering optimization,
 but this garbage would appear as visible display artifacts if the

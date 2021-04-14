@@ -18,7 +18,8 @@ include::../meta/XR_KHR_vulkan_enable2.adoc[]
     Dan Ginsburg, Valve +
     Bryce Hutchings, Microsoft +
     Minmin Gong, Microsoft +
-    Robert Menzel, NVIDIA
+    Robert Menzel, NVIDIA +
+    Paulo F. Gomes, Samsung Electronics +
 
 ==== Overview
 
@@ -51,9 +52,9 @@ and does not depend on it.
 When operating in Vulkan mode, the OpenXR runtime and the application will
 share the Vulkan queue described in the slink:XrGraphicsBindingVulkan2KHR
 structure.
-This section of the document describes the mechanisms this extensions
-exposes to ensure the shared Vulkan queue is compatible with the runtime and
-the application's requirements.
+This section of the document describes the mechanisms this extension exposes
+to ensure the shared Vulkan queue is compatible with the runtime and the
+application's requirements.
 
 ===== Vulkan Version Requirements
 
@@ -442,6 +443,46 @@ the image layout and queue ownership that the OpenXR runtime requires.
 If the image is not in a layout compatible with the above specifications the
 runtime may: exhibit undefined behaviour.
 
+===== Swapchain Flag Bits
+
+All elink:XrSwapchainUsageFlags values passed in a session created using
+slink:XrGraphicsBindingVulkan2KHR must: be interpreted as follows by the
+runtime, so that the returned swapchain images used by the application may
+be used as if they were created with at least the specified
+`VkImageUsageFlagBits` or `VkImageCreateFlagBits` set.
+
+[cols=2*,options=header]
+|===
+| elink:XrSwapchainUsageFlagBits
+| Corresponding Vulkan flag bit
+
+| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+| `VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+| `VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+| `VK_IMAGE_USAGE_STORAGE_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+| `VK_IMAGE_USAGE_TRANSFER_SRC_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+| `VK_IMAGE_USAGE_TRANSFER_DST_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+| `VK_IMAGE_USAGE_SAMPLED_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+| `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT`
+
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
+  (Added by `<<XR_MND_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+| `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
+
+|===
+
 ==== Appendix
 
 ===== Questions
@@ -492,3 +533,5 @@ elink:XrStructureType enumeration is extended with:
 
 * Revision 1, 2020-05-04 (Andres Rodriguez)
 ** Initial draft
+* Revision 2, 2021-01-21 (Ryan Pavlik)
+** Document mapping for `XrSwapchainUsageFlags`

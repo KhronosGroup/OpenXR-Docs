@@ -7,7 +7,7 @@ include::../meta/XR_EXTX_overlay.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2020-03-23
+    2021-01-13
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -40,24 +40,19 @@ This extension allows:
  * The ability for an overlay session to get information about what is going
    on with the main application
 
-In order to enable the functionality of this extension, you must: pass the
+To enable the functionality of this extension, an application must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
 indicated in the <<extensions>> section.
 
-When you are ready to create an overlay session, you will need to create a
-slink:XrSessionCreateInfoOverlayEXTX structure and pass it into the
-flink:xrCreateSession via the slink:XrSessionCreateInfo structure's
-pname:next parameter.
+To create an overlay session, an application must: pass an
+slink:XrSessionCreateInfoOverlayEXTX structure to flink:xrCreateSession via
+the slink:XrSessionCreateInfo structure's pname:next parameter.
 
-A runtime will attempt to match or lock the display time between main and
-overlay sessions.
-If the overlay application's display content is not visually correlated to
-features in the main frame (e.g. a HUD or a notification UI) or the overlay
-application otherwise does not need its frames' display time to be
-synchronized to the main application, the application can set
-ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX in
-pname:createFlags in slink:XrSessionCreateInfoOverlayEXTX.
+An overlay application should not assume that the values returned to it by
+flink:xrWaitFrame in pname:predictedDisplayTime in slink:XrFrameState will
+be the same as the values returned to the main application or even
+correlated.
 
 ==== Overlay Session Layer Placement
 
@@ -248,7 +243,6 @@ elink:XrStructureType enumeration is extended with:
 *New Enums*
 
 * ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
-* ename:XR_OVERLAY_SESSION_CREATE_RELAXED_DISPLAY_TIME_BIT_EXTX
 
 *New Structures*
 
@@ -330,5 +324,7 @@ None
 ** Name change
 * Revision 4, 2020-03-23 (Brad Grantham)
 ** Fix enums
+* Revision 5, 2021-01-13 (Brad Grantham)
+** Remove bit requesting synchronized display times
 
 

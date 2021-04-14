@@ -16,7 +16,7 @@ include::../meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
 
 Vulkan has the ename:VK_KHR_image_format_list extension which allows
 applications to tell the fname:vkCreateImage function which formats the
-application intends to use when ename:VK_IMAGE_USAGE_MUTABLE_FORMAT_BIT is
+application intends to use when ename:VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT is
 specified.
 This OpenXR extension exposes that Vulkan extension to OpenXR applications.
 In the same way that a Vulkan-based application can pass a
@@ -83,3 +83,5 @@ include::../../../../generated/validity/structs/XrVulkanSwapchainFormatListCreat
    `XR_KHR_vulkan_enable`
 * Revision 3, 2020-01-01 (Andres Rodriguez)
 ** Update for `XR_KHR_vulkan_enable2`
+* Revision 4, 2021-01-21 (Ryan Pavlik)
+** Fix reference to the mutable-format bit in Vulkan.

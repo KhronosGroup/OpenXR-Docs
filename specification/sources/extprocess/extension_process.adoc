@@ -60,6 +60,8 @@ OpenXR extensions fall into three categories:
    temporary or in-development extension, and may imply removal from future
    implementations or a requirement to activate a "developer" setting or
    similar.
+   A revision of an experimental extension has no requirements regarding
+   compatibility with its earlier revisions.
 * Multi-vendor Extensions : Identified by the `EXT` vendor in their name
 ** These are vendor extensions that have contributions and agreement from
    multiple vendors.
@@ -133,8 +135,7 @@ as `KHX`, to indicate the experimental and temporary status.
 A graphical view of the extension discussion flow can be seen in the
 following picture:
 
-image:../images/extension_discussion_flow.png[ "Extension Discussion
-Flow",width=1024]
+image::../images/extension_discussion_flow.png["Extension Discussion Flow",width=1024]
 
 
 === Creating Extensions During Khronos Discussions
@@ -223,7 +224,7 @@ assignment prior to extension publication:
      `supported="disabled"`.
      The extension number will be reserved only once this merge request is
      accepted.
-     Please refer to link:https://www.khronos.org/registry/OpenXR/specs/1.0/styleguide.html#mr-reserve-extension-number[the example in the style guide].
+     See the <<mr-reserve-extension-number,example>> below.
    * The extension number will be reserved only once this merge request is
      accepted.
    * To accommodate internal development of the specification, the spec

@@ -1083,6 +1083,10 @@ Unless otherwise specified, colors are encoded as linear (not with sRGB nor
 other gamma compression) values with individual components being in the
 range of 0.0 through 1.0, and without the RGB components being premultiplied
 by the alpha component.
+
+If color encoding is specified as being premultiplied by the alpha
+component, the RGB components are set to zero if the alpha component is
+zero.
 --
 
 [[coordinate-system]]

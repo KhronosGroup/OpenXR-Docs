@@ -347,7 +347,7 @@ Extension =
         # attribute author { text }?,
         # attribute contact { text }?,
         attribute type { "instance" },
-        attribute requires { XrExtNameRef_t }?,
+        attribute requires { XrExtNameList_t }?,
         # attribute requiresCore { text }?,
         attribute supported { "openxr" | "disabled" }?,
         attribute promotedto { text }?,
@@ -442,6 +442,8 @@ XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 
 XrExtNameId_t = xsd:ID { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
 XrExtNameRef_t = xsd:IDREF { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+
+XrExtNameList_t = xsd:token { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+(,XR_[A-Z]+(_[A-Za-z0-9]+)+)*" }
 
 ReturnCodes_t =
     xsd:token {

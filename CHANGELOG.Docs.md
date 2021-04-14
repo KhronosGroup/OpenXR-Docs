@@ -17,6 +17,85 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.15 (2021-04-13)
+
+This release contains three new vendor extensions plus an assortment of small
+spec fixes.
+
+- Registry
+  - Add `XR_VARJO_foveated_rendering` vendor extension.
+    ([internal MR 1981](https://gitlab.khronos.org/openxr/openxr/merge_requests/1981))
+  - Add `XR_VARJO_composition_layer_depth_test` vendor extension.
+    ([internal MR 1998](https://gitlab.khronos.org/openxr/openxr/merge_requests/1998))
+  - Add `XR_VARJO_environment_depth_estimation` vendor extension.
+    ([internal MR 1998](https://gitlab.khronos.org/openxr/openxr/merge_requests/1998))
+  - Add `uint16_t` to `openxr_platform_defines` (and associated scripts) so it may
+    be used easily by extensions.
+    ([internal MR 2017](https://gitlab.khronos.org/openxr/openxr/merge_requests/2017))
+  - Reserve extension 149 for working group use.
+    ([internal MR 1999](https://gitlab.khronos.org/openxr/openxr/merge_requests/1999))
+  - Reserve extension numbers 150 to 155 for ULTRALEAP extensions
+    ([internal MR 2006](https://gitlab.khronos.org/openxr/openxr/merge_requests/2006))
+  - Reserve extension numbers 156-165 for Facebook.
+    ([internal MR 2018](https://gitlab.khronos.org/openxr/openxr/merge_requests/2018))
+- Specification
+  - Add note to recommend joint names for hand skeletons when using
+    XR_EXT_hand_tracking
+    ([internal MR 1959](https://gitlab.khronos.org/openxr/openxr/merge_requests/1959),
+    [OpenXR-SDK-Source/#223](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/223))
+  - Added anchor to the spec of grip pose and aim pose for easy linking to their
+    definitions.
+    ([internal MR 2016](https://gitlab.khronos.org/openxr/openxr/merge_requests/2016))
+  - Clarify runtime behavior on providing wrong type of images to
+    `xrEnumerateSwapchainImages`.
+    ([internal MR 2000](https://gitlab.khronos.org/openxr/openxr/merge_requests/2000),
+    [internal issue 1512](https://gitlab.khronos.org/openxr/openxr/issues/1512),
+    [OpenXR-Docs/#68](https://github.com/KhronosGroup/OpenXR-Docs/issues/68))
+  - Correct function parameter documentation in `XR_EXT_conformance_automation`.
+    ([internal MR 2003](https://gitlab.khronos.org/openxr/openxr/merge_requests/2003),
+    [internal issue 1445](https://gitlab.khronos.org/openxr/openxr/issues/1445),
+    [OpenXR-Docs/#60](https://github.com/KhronosGroup/OpenXR-Docs/issues/60))
+  - Document new `XR_VARJO_foveated_rendering` vendor extension.
+    ([internal MR 1981](https://gitlab.khronos.org/openxr/openxr/merge_requests/1981))
+  - Document new `XR_VARJO_composition_layer_depth_test` vendor extension.
+    ([internal MR 1998](https://gitlab.khronos.org/openxr/openxr/merge_requests/1998))
+  - Document new `XR_VARJO_environment_depth_estimation` vendor extension.
+    ([internal MR 1998](https://gitlab.khronos.org/openxr/openxr/merge_requests/1998))
+  - Fix generated valid usage language for `xrGetVulkanInstanceExtensionsKHR` and
+    `xrGetVulkanDeviceExtensionsKHR`, and fix minor vulkan_enable2 typo.
+    ([internal MR 2002](https://gitlab.khronos.org/openxr/openxr/merge_requests/2002),
+    [internal issue 1515](https://gitlab.khronos.org/openxr/openxr/issues/1515),
+    [OpenXR-Docs/#77](https://github.com/KhronosGroup/OpenXR-Docs/issues/77))
+  - Fix sample code in `XR_EXT_hand_tracking` to show proper retrieval of function
+    pointers.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Fix sample code in `XR_EXT_performance_settings` to show proper retrieval of
+    function pointers.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Fix sample code callouts in `XR_EXT_performance_settings` that were broken by
+    reflow.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Fix sample code in `XR_MSFT_hand_tracking_mesh` to show proper retrieval of
+    function pointers.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Remove language about display time synchronization for `EXTX_overlay`
+    ([internal MR 1951](https://gitlab.khronos.org/openxr/openxr/merge_requests/1951))
+  - Reword the description for `xrAttachSessionActionSets`.
+    ([internal MR 1986](https://gitlab.khronos.org/openxr/openxr/merge_requests/1986))
+  - Specify interpretation of premultiplied alpha color when alpha is zero.
+    ([internal MR 1971](https://gitlab.khronos.org/openxr/openxr/merge_requests/1971))
+  - Specify that rules for extension revisions compatibility requirements do not
+    apply to experimental extensions.
+    ([internal MR 1992](https://gitlab.khronos.org/openxr/openxr/merge_requests/1992))
+  - Update `reflow.py` so it does not reflow source code callout annotations.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Update `reflow.py` so it does not break directives to include an image.
+    ([internal MR 2019](https://gitlab.khronos.org/openxr/openxr/merge_requests/2019))
+  - Vulkan extensions: Specify expected mapping of swapchain image flags to Vulkan
+    equivalents.
+    ([internal MR 1966](https://gitlab.khronos.org/openxr/openxr/merge_requests/1966),
+    [internal issue 1500](https://gitlab.khronos.org/openxr/openxr/issues/1500))
+
 ## OpenXR Specification 1.0.14 (2021-01-27)
 
 This release contains a collection of fixes and improvements, including one new

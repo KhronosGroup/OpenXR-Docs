@@ -398,18 +398,18 @@ identifiers.
 Standard pose identifiers for tracked hands or motion controllers as
 represented by pathname:/user/hand/left and pathname:/user/hand/right are:
 
-* grip - A pose that allows applications to reliably render a virtual object
-held in the user's hand, whether it is tracked directly or by a motion
-controller.
-The grip pose is defined as follows:
+* grip - [[grip-pose]]A pose that allows applications to reliably render a
+  virtual object held in the user's hand, whether it is tracked directly or
+  by a motion controller.
+  The grip pose is defined as follows:
 ** The grip position:
 *** For tracked hands: The user's palm centroid when closing the fist, at
     the surface of the palm.
 *** For handheld motion controllers: A fixed position within the controller
-   that generally lines up with the palm centroid when held by a hand in a
-   neutral position.
-   This position should be adjusted left or right to center the position
-   within the controller's grip.
+    that generally lines up with the palm centroid when held by a hand in a
+    neutral position.
+    This position should be adjusted left or right to center the position
+    within the controller's grip.
 ** The grip orientation's +X axis: When you completely open your hand to
    form a flat 5-finger pose, the ray that is normal to the user's palm
    (forward from left palm, backward from right palm).
@@ -418,9 +418,10 @@ The grip pose is defined as follows:
    formed by your non-thumb fingers.
 ** The grip orientation's +Y axis: The right-handed Up axis implied by the
    +X (Right) and -Z (Forward) definitions.
-* aim - A pose that allows applications to point in the world using the
-  input source, according to the platform's conventions for aiming with that
-  kind of source.
+
+* aim - [[aim-pose]]A pose that allows applications to point in the world
+  using the input source, according to the platform's conventions for aiming
+  with that kind of source.
   The aim pose is defined as follows:
 ** For tracked hands: The ray that follows platform conventions for how the
    user aims at objects in the world with their entire hand, with +Y up, +X

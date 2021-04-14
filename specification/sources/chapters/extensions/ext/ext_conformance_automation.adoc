@@ -109,7 +109,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateBoolEXT.txt[]
 * pname:inputSourcePath is the full path of the input component for which we
   wish to set the state for (e.g.
   pathname:/user/hand/left/input/select/click).
-* pname:isActive is the requested activation state of the input device.
+* pname:state is the requested boolean state of the input device.
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
@@ -138,7 +138,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateFloatEXT.txt[]
 * pname:inputSourcePath is the full path of the input component for which we
   wish to set the state for (e.g.
   pathname:/user/hand/left/input/trigger/value).
-* pname:isActive is the requested activation state of the input device.
+* pname:state is the requested float state of the input device.
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
@@ -167,7 +167,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateVector2fEXT.txt[]
 * pname:inputSourcePath is the full path of the input component for which we
   wish to set the state for (e.g.
   pathname:/user/hand/left/input/thumbstick).
-* pname:isActive is the requested activation state of the input device.
+* pname:state is the requested two-dimensional state of the input device.
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
@@ -195,7 +195,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceLocationEXT.txt[]
   pathname:/user/hand/left).
 * pname:inputSourcePath is the full path of the input component for which we
   wish to set the pose for (e.g. pathname:/user/hand/left/input/grip/pose).
-* pname:isActive is the requested activation state of the input device.
+* pname:pose is the requested pose state of the input device.
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
@@ -222,3 +222,5 @@ None
 
 * Revision 1, 2019-10-01 (Lachlan Ford)
 ** Initial draft
+* Revision 2, 2021-03-04 (Ryan Pavlik)
+** Correct errors in function parameter documentation.

@@ -7,7 +7,7 @@ include::../meta/XR_MSFT_hand_tracking_mesh.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2020-05-16
+    2021-04-13
 
 *IP Status*::
     No known IP claims.
@@ -25,12 +25,12 @@ mesh.
 It enables applications to render hands in XR experiences and interact with
 virtual objects using hand meshes.
 
-The application must: also enable the <<XR_EXT_hand_tracking>> extension in
-order to use this extension.
+The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
+in order to use this extension.
 
 *Inspect system capability*
 
-[open,refpage='XrSystemHandTrackingMeshPropertiesMSFT',type='structs',desc='System property for hand tracking mesh',xrefs='']
+[open,refpage='XrSystemHandTrackingMeshPropertiesMSFT',type='structs',desc='System property for hand tracking mesh',xrefs='XrSystemProperties xrGetSystemProperties']
 --
 An application can: inspect whether the system is capable of hand tracking
 meshes by chaining a slink:XrSystemHandTrackingMeshPropertiesMSFT structure
@@ -81,7 +81,7 @@ with the same slink:XrHandTrackerEXT handle.
 
 *Create a hand mesh space*
 
-[open,refpage='xrCreateHandMeshSpaceMSFT',type='protos',desc='Create a space for hand mesh tracking',xrefs='']
+[open,refpage='xrCreateHandMeshSpaceMSFT',type='protos',desc='Create a space for hand mesh tracking',xrefs='XrHandTrackerEXT']
 --
 The application creates a hand mesh space using function
 flink:xrCreateHandMeshSpaceMSFT.
@@ -136,7 +136,7 @@ to mesh spaces or joint spaces of the reference hand.
 include::../../../../generated/validity/protos/xrCreateHandMeshSpaceMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshSpaceCreateInfoMSFT',type='structs',desc='The information to create a hand mesh space',xrefs='']
+[open,refpage='XrHandMeshSpaceCreateInfoMSFT',type='structs',desc='The information to create a hand mesh space',xrefs='xrCreateHandMeshSpaceMSFT']
 --
 include::../../../../generated/api/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
 
@@ -161,7 +161,7 @@ include::../../../../generated/validity/structs/XrHandMeshSpaceCreateInfoMSFT.tx
 
 *Locate the hand mesh*
 
-[open,refpage='xrUpdateHandMeshMSFT',type='protos',desc='Update hand mesh buffers',xrefs='']
+[open,refpage='xrUpdateHandMeshMSFT',type='protos',desc='Update hand mesh buffers',xrefs='xrCreateHandMeshSpaceMSFT']
 --
 The application can: use the flink:xrUpdateHandMeshMSFT function to retrieve
 the hand mesh at a given timestamp.
@@ -197,7 +197,7 @@ avoid unnecessary data processing when there is no changes.
 include::../../../../generated/validity/protos/xrUpdateHandMeshMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshUpdateInfoMSFT',type='structs',desc='The information to update a hand mesh',xrefs='']
+[open,refpage='XrHandMeshUpdateInfoMSFT',type='structs',desc='The information to update a hand mesh',xrefs='xrUpdateHandMeshMSFT']
 --
 
 A slink:XrHandMeshUpdateInfoMSFT describes the information to update a hand
@@ -235,7 +235,7 @@ elink:XrHandPoseTypeMSFT.
 include::../../../../generated/validity/structs/XrHandMeshUpdateInfoMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshMSFT',type='structs',desc='The data of a hand mesh',xrefs='']
+[open,refpage='XrHandMeshMSFT',type='structs',desc='The data of a hand mesh',xrefs='xrUpdateHandMeshMSFT']
 --
 
 A slink:XrHandMeshMSFT structure contains data and buffers to receive
@@ -288,7 +288,7 @@ be equal to or larger than 3.
 include::../../../../generated/validity/structs/XrHandMeshMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshIndexBufferMSFT',type='structs',desc='The index buffer of a hand mesh',xrefs='']
+[open,refpage='XrHandMeshIndexBufferMSFT',type='structs',desc='The index buffer of a hand mesh',xrefs='XrSystemHandTrackingMeshPropertiesMSFT xrUpdateHandMeshMSFT']
 --
 A slink:XrHandMeshIndexBufferMSFT structure includes an array of indices
 describing the triangle list of a hand mesh.
@@ -364,7 +364,7 @@ ename:XR_HAND_POSE_TYPE_TRACKED_MSFT.
 include::../../../../generated/validity/structs/XrHandMeshIndexBufferMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshVertexBufferMSFT',type='structs',desc='The vertex buffer of a hand mesh',xrefs='']
+[open,refpage='XrHandMeshVertexBufferMSFT',type='structs',desc='The vertex buffer of a hand mesh',xrefs='XrSystemHandTrackingMeshPropertiesMSFT xrUpdateHandMeshMSFT']
 --
 A slink:XrHandMeshVertexBufferMSFT structure includes an array of vertices
 of the hand mesh represented in the hand mesh space.
@@ -431,7 +431,7 @@ as coping them to GPU memory.
 include::../../../../generated/validity/structs/XrHandMeshVertexBufferMSFT.txt[]
 --
 
-[open,refpage='XrHandMeshVertexMSFT',type='structs',desc='The vertex of hand mesh',xrefs='']
+[open,refpage='XrHandMeshVertexMSFT',type='structs',desc='The vertex of hand mesh',xrefs='XrHandMeshVertexBufferMSFT xrUpdateHandMeshMSFT']
 --
 Each slink:XrHandMeshVertexMSFT includes the position and normal of a vertex
 of a hand mesh.
@@ -456,7 +456,7 @@ Following example code demos preallocating hand mesh buffers and updating
 the hand mesh in rendering loop
 
 [source,C++]
-------------------------------------------------------------------------------
+----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
 XrSession session;   // previously initialized
@@ -470,21 +470,33 @@ if (!handMeshSystemProperties.supportsHandTrackingMesh) {
     return;
 }
 
+// Get function pointer for xrCreateHandTrackerEXT
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateHandTrackerEXT)));
+
 // Create a tracker for left hand.
 XrHandTrackerEXT leftHandTracker{};
 {
     XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
     createInfo.hand = XR_HAND_LEFT_EXT;
     createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
-    CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
+    CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
 }
+
+// Get function pointer for xrCreateHandMeshSpaceMSFT
+PFN_xrCreateHandMeshSpaceMSFT pfnCreateHandMeshSpaceMSFT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandMeshSpaceMSFT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateHandMeshSpaceMSFT)));
 
 // Create the hand mesh spaces
 XrSpace leftHandMeshSpace{};
 {
     XrHandMeshSpaceCreateInfoMSFT createInfo{XR_TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT};
     createInfo.poseInHandMeshSpace = {{0, 0, 0, 1}, {0, 0, 0}};
-    CHK_XR(xrCreateHandMeshSpaceMSFT(leftHandTracker, &createInfo, &leftHandMeshSpace));
+    CHK_XR(pfnCreateHandMeshSpaceMSFT(leftHandTracker, &createInfo, &leftHandMeshSpace));
 }
 
 // Preallocate buffers for hand mesh indices and vertices
@@ -497,6 +509,11 @@ leftHandMesh.indexBuffer.indices = handMeshIndices.data();
 leftHandMesh.vertexBuffer.vertexCapacityInput = (uint32_t)handMeshVertices.size();
 leftHandMesh.vertexBuffer.vertices = handMeshVertices.data();
 
+// Get function pointer for xrUpdateHandMeshMSFT
+PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateHandMeshMSFT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnUpdateHandMeshMSFT)));
 while(1){
     // ...
     // For every frame in frame loop
@@ -506,7 +523,7 @@ while(1){
 
     XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
     updateInfo.time = time;
-    CHK_XR(xrUpdateHandMeshMSFT(leftHandTracker, &updateInfo, &leftHandMesh));
+    CHK_XR(pfnUpdateHandMeshMSFT(leftHandTracker, &updateInfo, &leftHandMesh));
     if (!leftHandMesh.isActive) {
         // Hand input is not focused or user's hand is out of tracking range.
         // Do not process or render hand mesh.
@@ -520,7 +537,7 @@ while(1){
         }
     }
 }
-------------------------------------------------------------------------------
+----
 
 *Get hand reference poses*
 
@@ -543,7 +560,7 @@ with a reference hand pose type when calling flink:xrCreateHandTrackerEXT.
 This will instruct the runtime to provide a reference hand pose that is
 better suited for such static analysis.
 
-[open,refpage='XrHandPoseTypeInfoMSFT',type='structs',desc='Describes what hand pose type for the hand joint tracking.',xrefs='']
+[open,refpage='XrHandPoseTypeInfoMSFT',type='structs',desc='Describes what hand pose type for the hand joint tracking.',xrefs='XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
 --
 
 An application can chain an slink:XrHandPoseTypeInfoMSFT structure to the
@@ -566,7 +583,7 @@ include::../../../../generated/api/structs/XrHandPoseTypeInfoMSFT.txt[]
 include::../../../../generated/validity/structs/XrHandPoseTypeInfoMSFT.txt[]
 --
 
-[open,refpage='XrHandPoseTypeMSFT',type='enums',desc='Describe type of input hand pose',xrefs='']
+[open,refpage='XrHandPoseTypeMSFT',type='enums',desc='Describe type of input hand pose',xrefs='XrHandPoseTypeMSFT XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
 --
 The elink:XrHandPoseTypeMSFT describes the type of input hand pose from
 slink:XrHandTrackerEXT.
@@ -608,18 +625,36 @@ flink:xrUpdateHandMeshMSFT to avoid unnecessary CPU or GPU work to process
 the neutral hand inputs.
 --
 
-*Example code for reference hand mesh update *
+*Example code for reference hand mesh update*
 
 The following example code demonstrates detecting reference hand mesh
 changes and retrieving data for processing.
 
 [source,C++]
-------------------------------------------------------------------------------
+----
+XrInstance instance;                // previously initialized
 XrSession session;                  // previously initialized
 XrHandTrackerEXT handTracker;       // previously initialized with handJointSet set to XR_HAND_JOINT_SET_DEFAULT_MSFT
 XrSpace handMeshReferenceSpace;     // previously initialized with handPoseType set to XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT
 XrHandMeshMSFT referenceHandMesh;   // previously initialized with preallocated buffers
 
+// Get function pointer for xrUpdateHandMeshMSFT
+PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateHandMeshMSFT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnUpdateHandMeshMSFT)));
+
+// Get function pointer for xrCreateHandTrackerEXT
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateHandTrackerEXT)));
+
+// Get function pointer for xrLocateHandJointsEXT
+PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateHandJointsEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnLocateHandJointsEXT)));
 while(1){
     // ...
     // For every frame in frame loop
@@ -630,7 +665,7 @@ while(1){
     XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
     updateInfo.time = time;
     updateInfo.handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT;
-    CHK_XR(xrUpdateHandMeshMSFT(handTracker, &updateInfo, &referenceHandMesh));
+    CHK_XR(pfnUpdateHandMeshMSFT(handTracker, &updateInfo, &referenceHandMesh));
 
     // Detect if reference hand mesh is changed.
     if (referenceHandMesh.indexBufferChanged || referenceHandMesh.vertexBufferChanged) {
@@ -645,7 +680,7 @@ while(1){
         createInfo.next = &handPoseTypeInfo;
 
         XrHandTrackerEXT referenceHandTracker;
-        CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &referenceHandTracker));
+        CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &referenceHandTracker));
 
         XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
         locateInfo.next = &handPoseTypeInfo;
@@ -657,13 +692,13 @@ while(1){
         locations.jointCount = jointLocations.size();
         locations.jointLocations = jointLocations.data();
 
-        CHK_XR(xrLocateHandJointsEXT(referenceHandTracker, &locateInfo, &locations));
+        CHK_XR(pfnLocateHandJointsEXT(referenceHandTracker, &locateInfo, &locations));
 
         // Generate UV map using tip/wrist location and referenceHandMesh.vertexBuffer
         // For example, gradually changes color from the tip of the hand to wrist.
     }
 }
-------------------------------------------------------------------------------
+----
 
 *New Object Types*
 
@@ -703,8 +738,9 @@ elink:XrStructureType enumeration is extended with:
 
 *Version History*
 
-* Revision 2, 2020-04-20 (Yin LI)
-** Change joint spaces to locate joints function.
-
 * Revision 1, 2019-09-20 (Yin LI)
 ** Initial extension description
+* Revision 2, 2020-04-20 (Yin LI)
+** Change joint spaces to locate joints function.
+* Revision 3, 2021-04-13 (Ryan Pavlik, Collabora)
+** Correctly show function pointer retrieval in sample code

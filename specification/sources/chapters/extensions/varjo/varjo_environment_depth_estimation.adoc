@@ -1,0 +1,74 @@
+// Copyright (c) 2021 Varjo Technologies
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_VARJO_environment_depth_estimation.adoc[]
+
+*Last Modified Date*::
+    2021-02-17
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Sergiy Dubovik, Varjo Technologies +
+    Antti Hirvonen, Varjo Technologies +
+    Rémi Arnaud, Varjo Technologies
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright  license to incorporate this submission into
+// other works it controls as it desires."
+
+*Overview*
+
+This extension provides a mechanism for enabling depth estimation of the
+environment in the runtime-supplied compositor.
+This is an extension to ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND mode to
+not only use the color but also depth for composition of the final image.
+
+Mixed reality applications might want to mix real and virtual content based
+on the depth information for proper occlusion.
+XR hardware and runtime may offer various ways to estimate the depth of the
+environment inside the compositor.
+When this estimation is enabled, the compositor can generate properly
+occluded final image when layers are submitted with depth information (both
+`<<XR_KHR_composition_layer_depth>>` and
+`<<XR_VARJO_composition_layer_depth_test>>`).
+
+This extension defines a new function,
+flink:xrSetEnvironmentDepthEstimationVARJO, which can: be used to toggle
+environment depth estimation in the compositor.
+Toggling depth estimation is an asynchronous operation and the feature may:
+not be activated immediately.
+Function can be called immediately after the session is created.
+Composition of the environment layer follows the rules as described in
+`<<XR_VARJO_composition_layer_depth_test>>`.
+
+*New Structures*
+
+[open,refpage='xrSetEnvironmentDepthEstimationVARJO',type='protos',desc='Enable or disable environment depth estimation functionality']
+--
+The flink:xrSetEnvironmentDepthEstimationVARJO function is defined as:
+
+include::../../../../generated/api/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:enabled is a boolean that specifies whether depth estimation
+  functionality should be activated.
+  Compositor will disable depth estimation functionality if environment
+  blend mode is not ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND and will
+  enable the functionality when environment blend mode is set to
+  ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND.
+****
+
+include::../../../../generated/validity/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+--
+
+*New Functions*
+
+*Version History*
+
+* Revision 1, 2021-02-16 (Sergiy Dubovik)
+** Initial extension description

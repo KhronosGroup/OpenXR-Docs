@@ -653,12 +653,12 @@ immutable.
 See flink:xrCreateAction and flink:xrSuggestInteractionProfileBindings for
 details.
 
+After action sets are attached to a session, if any unattached actions are
+passed to functions for the same session, then for those functions the
+runtime must: return ename:XR_ERROR_ACTIONSET_NOT_ATTACHED.
+
 The runtime must: return ename:XR_ERROR_ACTIONSETS_ALREADY_ATTACHED if
 flink:xrAttachSessionActionSets is called more than once for a given
-pname:session.
-The runtime must: return ename:XR_ERROR_ACTIONSET_NOT_ATTACHED for any
-action created after flink:xrAttachSessionActionSets is called for a given
-pname:session if that handle is used with any call for the same
 pname:session.
 
 include::../../generated/validity/protos/xrAttachSessionActionSets.txt[]

@@ -160,6 +160,10 @@ grep_sources \
     "This should be spelled OpenXR" \
     '[Oo]penXr'
 
+grep_sources \
+    "Please replace with a non-smart quote" \
+    '’'
+
 # AsciiDoctor markup errors
 grep_sources \
     "ifdef/endif/include lines must end in []" \

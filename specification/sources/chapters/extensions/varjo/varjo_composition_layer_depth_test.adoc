@@ -1,0 +1,134 @@
+// Copyright (c) 2021 Varjo Technologies
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_VARJO_composition_layer_depth_test.adoc[]
+
+*Last Modified Date*::
+    2021-02-16
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Sergiy Dubovik, Varjo Technologies +
+    Antti Hirvonen, Varjo Technologies +
+    Rémi Arnaud, Varjo Technologies
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright  license to incorporate this submission into
+// other works it controls as it desires."
+
+*Overview*
+
+This extension enables depth-based layer composition inside the compositor.
+
+Core OpenXR specifies that layer compositing must happen in the layer
+submission order (as described in <<Compositing>>).
+However, an application may want to composite the final image against the
+other layers based on depth information for proper occlusion.
+Layers can now provide depth information that will be used to calculate
+occlusion between those layers, as well as with the environment depth
+estimator (`<<XR_VARJO_environment_depth_estimation>>`) when enabled.
+
+This extension defines a new type, slink:XrCompositionLayerDepthTestVARJO,
+which can be chained to slink:XrCompositionLayerProjection in order to
+activate this functionality.
+An application must also specify a range where depth testing will happen,
+potentially covering only a subset of the full depth range.
+
+*Composition*
+
+Layer composition rules change when this extension is enabled.
+
+If the application does not chain slink:XrCompositionLayerDepthTestVARJO,
+"painter's algorithm" such as described in <<Compositing>> must be used for
+layer composition.
+
+Overall, composition should be performed in the following way:
+
+ 1. Layers must be composited in the submission order.
+    The compositor must track the depth value nearest to the virtual camera.
+    Initial value for the nearest depth should be infinity.
+ 2. If the currently processed layer does not contain depth, compositor
+    should composite the layer against the previous layers with "painter's
+    algorithm" and move to the next layer.
+ 3. If the layer depth or the active nearest depth fall inside the depth
+    test range of the layer, the compositor must perform depth test against
+    the layer and active depth.
+    If the layer depth is less or equal than the active depth, layer is
+    composited normally with the previous layers and active depth is updated
+    to match the layer depth.
+    Otherwise the layer pixel is discarded, and compositor should move to
+    composite the next layer.
+
+*Example*
+
+Mixed reality applications may want to show hands on top of the rendered VR
+content.
+For this purpose the application should enable environment depth estimation
+(see `<<XR_VARJO_environment_depth_estimation>>` extension) and depth
+testing with range 0m to 1m.
+
+The following code illustrates how to enable depth testing:
+[source, c++, suppress-build]
+----
+XrCompositionLayerProjection layer{XR_TYPE_COMPOSITION_LAYER_PROJECTION};
+layer.space = ...;
+layer.viewCount = ...;
+layer.views = ...;
+layer.layerFlags = ...;
+
+XrCompositionLayerDepthTestVARJO depthTest{XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO, layer.next};
+depthTest.depthTestRangeNearZ = 0.0f; // in meters
+depthTest.depthTestRangeFarZ = 1.0f; // in meters
+layer.next = &depthTest
+----
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerDepthTestVARJO',type='structs',desc='The structure to be passed when submitting layers to enable depth testing',xrefs='xrEndFrame']
+--
+
+Applications can: enable depth testing by adding
+slink:XrCompositionLayerDepthTestVARJO to the pname:next chain for all
+slink:XrCompositionLayerProjectionView structures in the given layer in
+addition to slink:XrCompositionLayerDepthInfoKHR.
+Missing slink:XrCompositionLayerDepthInfoKHR automatically disables the
+depth testing functionality.
+
+The slink:XrCompositionLayerDepthTestVARJO structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerDepthTestVARJO.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:depthTestRangeNearZ in a non-negative distance in meters that
+  specifies the lower bound of the range where depth testing should be
+  performed.
+  Must be less than pname:depthTestRangeFarZ.
+  Value of zero means that there is no lower bound.
+* pname:depthTestRangeFarZ is a positive distance in meters that specifies
+  the upper bound of the range where depth testing should be performed.
+  Must be greater than pname:depthTestRangeNearZ.
+  Value of floating point positive infinity means that there is no upper
+  bound.
+****
+
+include::../../../../generated/validity/structs/XrCompositionLayerDepthTestVARJO.txt[]
+
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO
+
+*Version History*
+
+* Revision 1, 2021-02-16 (Sergiy Dubovik)
+** Initial extension description

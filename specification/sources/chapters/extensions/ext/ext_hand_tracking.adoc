@@ -7,7 +7,7 @@ include::../meta/XR_EXT_hand_tracking.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2020-05-16
+    2021-04-13
 
 *IP Status*::
     No known IP claims.
@@ -21,6 +21,7 @@ include::../meta/XR_EXT_hand_tracking.adoc[]
     Blake Taylor, Magic Leap +
     Joe van den Heuvel, Valve +
     Nicholas Benson, Ultraleap +
+    Ryan Pavlik, Collabora +
 
 *Overview*
 
@@ -405,7 +406,7 @@ The following example code demonstrates how to locate all hand joints
 relative to a world space.
 
 [source,C++]
-------------------------------------------------------------------------------
+----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
 XrSession session;   // previously initialized
@@ -423,13 +424,19 @@ if (!handTrackingSystemProperties.supportsHandTracking) {
     return;
 }
 
+// Get function pointer for xrCreateHandTrackerEXT
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateHandTrackerEXT)));
+
 // Create a hand tracker for left hand that tracks default set of hand joints.
 XrHandTrackerEXT leftHandTracker{};
 {
     XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
     createInfo.hand = XR_HAND_LEFT_EXT;
     createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
-    CHK_XR(xrCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
+    CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
 }
 
 // Allocate buffers to receive joint location and velocity data before frame
@@ -446,6 +453,11 @@ locations.next = &velocities;
 locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
 locations.jointLocations = jointLocations;
 
+// Get function pointer for xrLocateHandJointsEXT
+PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateHandJointsEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnLocateHandJointsEXT)));
 while (1) {
     // ...
     // For every frame in frame loop
@@ -457,7 +469,7 @@ while (1) {
     locateInfo.baseSpace = worldSpace;
     locateInfo.time = time;
 
-    CHK_XR(xrLocateHandJointsEXT(leftHandTracker, &locateInfo, &locations));
+    CHK_XR(pfnLocateHandJointsEXT(leftHandTracker, &locateInfo, &locations));
 
     if (locations.isActive) {
         // The returned joint location array can be directly indexed with
@@ -474,7 +486,7 @@ while (1) {
             jointVelocities[XR_HAND_JOINT_INDEX_TIP_EXT];
     }
 }
-------------------------------------------------------------------------------
+----
 
 *Conventions of hand joints*
 
@@ -482,8 +494,7 @@ This extension defines 26 joints for hand tracking: 4 joints for the thumb
 finger, 5 joints for the other four fingers, and the wrist and palm of the
 hands.
 
-image:images/ext_hand_tracking_joint_convention.png[ "Convention of hand
-joints",width=1600]
+image::images/ext_hand_tracking_joint_convention.png["Convention of hand joints",width=1600]
 
 [open,refpage='XrHandJointEXT',type='enums',desc='The name of hand joints that can be tracked',xrefs='']
 --
@@ -494,6 +505,22 @@ The finger joints, except the tips, are named after the corresponding bone
 at the further end of the bone from the finger tips.
 The joint's orientation is defined at a fully opened hand pose facing down
 as in the above picture.
+
+[NOTE]
+.Note
+====
+Many applications and game engines use names to identify joints rather than
+using indices.
+If possible, applications should use the joint name part of the
+elink:XrHandJointEXT enum plus a hand identifier to help prevent joint name
+clashes (e.g. Index_Metacarpal_L, Thumb_Tip_R).
+Using consistent names increases the portability of assets between
+applications and engines.
+Including the hand in the identifier prevents ambiguity when both hands are
+used in the same skeleton, such as when they are combined with additional
+joints to form a full body skeleton.
+====
+
 The backward (+Z) direction is parallel to the corresponding bone and points
 away from the finger tip.
 The up (+Y) direction is pointing out of the back of and perpendicular to
@@ -592,8 +619,11 @@ elink:XrStructureType enumeration is extended with:
 
 *Version History*
 
-* Revision 2, 2020-04-20 (Yin LI)
-** Replace hand joint spaces to locate hand joints function.
-
 * Revision 1, 2019-09-16 (Yin LI)
 ** Initial extension description
+* Revision 2, 2020-04-20 (Yin LI)
+** Replace hand joint spaces to locate hand joints function.
+* Revision 3, 2021-04-13 (Ryan Pavlik)
+** Fix example code to properly use `xrGetInstanceProcAddr`.
+
+
