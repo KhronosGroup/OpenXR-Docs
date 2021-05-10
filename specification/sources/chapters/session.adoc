@@ -118,9 +118,9 @@ corresponding slink:XrEventDataSessionStateChanged event to the
 ename:XR_SESSION_STATE_IDLE state must: be generated as the first such event
 for the new session.
 
-The runtime must: return XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
-(XR_ERROR_VALIDATION_FAILURE may be returned due to legacy behavior) on
-calls to flink:xrCreateSession if a function named like
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may be returned due to legacy behavior)
+on calls to flink:xrCreateSession if a function named like
 ftext:xrGet*GraphicsRequirements has not been called for the same
 pname:instance and slink:XrSessionCreateInfo::pname:systemId.
 (See graphics binding extensions for details.)
