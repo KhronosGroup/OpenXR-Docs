@@ -336,9 +336,11 @@ Unlike the `KHR` extension approval process:
    request to the Working Group for approval and indicate that it has been
    approved by all relevant members.
 6. The Specification editor must: review the merge request and ensure that:
-   * CI does not failed for any reason due to the changes within the merge
+   * CI does not fail for any reason due to the changes within the merge
      request.
    * There are no pending conflicts.
+   * There are no additions to core or KHR bitmasks or other limited-space
+     entities (see <<bitmasks>>).
    * The reviewer may: also perform a check of the correctness and style of
      the specification and registry (`xr.xml`) changes.
 7. Because `EXT` extensions share a namespace, the usage/assignment of names
@@ -354,6 +356,28 @@ Unlike the `KHR` extension approval process:
    and it has been merged to the `master` branch of the public OpenXR-Docs
    repository.
 
+[[bitmasks]]
+==== Extending Bitmasks
+
+Vendor and multi-vendor extensions must: not add new bits directly to a core
+or KHR bit mask, due to the limited number of bits available to express
+functionality.
+Only KHR extensions may extend core and KHR bitmasks, and vendors should not
+extend each others' extensions' bitmasks but rather collaborate on a
+replacement multi-vendor extension to satisfy those requirements.
+If the functionality desired is not suitable for a KHR extension, a chained
+struct should be used to contain a new bitmask field, instead of adding a
+value to the existing one.
+Similarly, vendor and multi-vendor `EXT` extensions must: not add to any
+other similarly-limited spaces in the spec.
+The `XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND` bit was added before this
+policy was established, and is left as a historical artifact.
+See also
+https://www.khronos.org/registry/OpenXR/specs/1.0/styleguide.html#extensions-reserving-bitmask-values[the
+Style Guide discussion of this].
+
+Regular enums are not subject to this restriction, as a dedicated range in
+each enum is assigned to each extension based on extension number.
 
 === Vendor-Specific Extension Approval Process
 
@@ -369,9 +393,11 @@ For vendor-specific extensions, the main process is:
    the OpenXR Specification editor submitting an merge request with
    completed extension's changes.
 3. The Specification editor must: review the merge request and ensure that:
-   * CI does not failed for any reason due to the changes within the merge
+   * CI does not fail for any reason due to the changes within the merge
      request.
    * There are no pending conflicts.
+   * There are no additions to core or KHR bitmasks or other limited-space
+     entities (see <<bitmasks>>).
    * The reviewer may: also perform a check of the correctness and style of
      the specification and registry (`xr.xml`) changes.
 4. Once the editor is satisfied with their simple review, they (or someone

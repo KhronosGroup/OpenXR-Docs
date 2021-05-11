@@ -1,1 +1,0 @@
-Session: Explicitly name the pattern for "get graphics requirements" functions, and place a generic version of the `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` return code text from graphics extensions in the core spec.

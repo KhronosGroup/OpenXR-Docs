@@ -412,12 +412,13 @@ represented by pathname:/user/hand/left and pathname:/user/hand/right are:
     within the controller's grip.
 ** The grip orientation's +X axis: When you completely open your hand to
    form a flat 5-finger pose, the ray that is normal to the user's palm
-   (forward from left palm, backward from right palm).
+   (away from the palm in the left hand, into the palm in the right hand).
 ** The grip orientation's -Z axis: When you close your hand partially (as if
-   holding the controller), the ray that points "forward" through the tube
-   formed by your non-thumb fingers.
-** The grip orientation's +Y axis: The right-handed Up axis implied by the
-   +X (Right) and -Z (Forward) definitions.
+   holding the controller), the ray that goes through the center of the tube
+   formed by your non-thumb fingers, in the direction of little finger to
+   thumb.
+** The grip orientation's +Y axis: orthogonal to +Z and +X using the
+   right-hand rule.
 
 * aim - [[aim-pose]]A pose that allows applications to point in the world
   using the input source, according to the platform's conventions for aiming

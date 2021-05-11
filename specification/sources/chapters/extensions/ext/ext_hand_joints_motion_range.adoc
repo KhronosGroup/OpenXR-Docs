@@ -1,0 +1,113 @@
+// Copyright (c) 2017-2021 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_EXT_hand_joints_motion_range.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2021-04-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Joe van den Heuvel, Valve +
+    Rune Berg, Valve +
+    Joe Ludwig, Valve +
+
+*Overview*
+
+This extension augments the `<<XR_EXT_hand_tracking>>` extension to enable
+applications to request that the slink:XrHandJointLocationsEXT returned by
+flink:xrLocateHandJointsEXT should return hand joint locations conforming to
+a range of motion specified by the application.
+
+The application must: enable the `<<XR_EXT_hand_tracking>>` extension in
+order to use this extension.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+[open,refpage='XrHandJointsMotionRangeEXT',type='enums',desc='Describes the hand animation range of motion.',xrefs='xrLocateHandJointsEXT XrHandJointsMotionRangeInfoEXT']
+--
+The elink:XrHandJointsMotionRangeEXT describes the hand joints' range of
+motion returned by flink:xrLocateHandJointsEXT.
+
+Runtimes must: support both
+ename:XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT and
+ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT for each controller
+interaction profile that supports hand joint data.
+
+include::../../../../generated/api/enums/XrHandJointsMotionRangeEXT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT This option refers to
+  the range of motion of a human hand, without any obstructions.
+  Input systems that obstruct the movement of the user’s hand (eg: a held
+  controller preventing the user from making a fist) or have only limited
+  ability to track finger positions must: use the information available to
+  them to emulate an unobstructed range of motion.
+
+* ename:XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT This option
+  refers to the range of motion of the hand joints taking into account any
+  physical limits imposed by the controller itself.
+  This will tend to be the most accurate pose compared to the user's actual
+  hand pose, but might not allow a closed fist for example.
+
+** If the current interaction profile represents a controller, or other
+   device that obstructs the hand, the implementation must: return joint
+   locations conforming to the shape of that device.
+   If the current interaction profile is being emulated by a different
+   physical controller, the implementation may: return joint locations
+   conforming to the shape of either the current interaction profile or the
+   actual physical controller.
+
+** If the current interaction profile does not represent a controller, the
+   implementation must: return joint locations based on the unobstructed
+   joint locations.
+****
+--
+
+*New Structures*
+
+[open,refpage='XrHandJointsMotionRangeInfoEXT',type='structs',desc='Chains to XrHandJointsLocateInfoEXT to specify final hand tracking grip pose',xrefs='XrHandJointsLocateInfoEXT']
+--
+The slink:XrHandJointsMotionRangeInfoEXT is a structure that an application
+can: chain in slink:XrHandJointsLocateInfoEXT to request the joint motion
+range specified by the pname:handJointsMotionRange field.
+
+Runtimes must: return the appropriate joint locations depending on the
+pname:handJointsMotionRange field and the currently active interaction
+profile.
+
+include::../../../../generated/api/structs/XrHandJointsMotionRangeInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:handJointsMotionRange is an elink:XrHandJointsMotionRangeEXT that
+  defines the hand joint range of motion the application wants.
+****
+
+include::../../../../generated/validity/structs/XrHandJointsMotionRangeInfoEXT.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-04-15 (Rune Berg)
+** Initial extension description

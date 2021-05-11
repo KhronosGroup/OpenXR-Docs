@@ -472,8 +472,9 @@ is obeying suggested bindings: Boolean input sources must: be bound directly
 to the action.
 If the path is to a scalar value, a threshold must: be applied to the value
 and values over that threshold will be ename:XR_TRUE.
-The threshold may vary from device to device or component to component and
-is left as an implementation detail.
+The runtime should: use hysteresis when applying this threshold.
+The threshold and hysteresis range may: vary from device to device or
+component to component and are left as an implementation detail.
 If the path refers to the parent of input values instead of to an input
 value itself, the runtime must: use subpathname:/example/path/value instead
 of subpathname:/example/path if it is available and apply the same

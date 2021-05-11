@@ -41,6 +41,16 @@ can call flink:xrEndSession to stop the XR session, after which the session
 will transition through ename:XR_SESSION_STATE_IDLE to the
 ename:XR_SESSION_STATE_EXITING state.
 
+On platforms that have applications with lifecycle managed by the system,
+session state changes may be implicitly triggered by application lifecycle
+state changes.
+On such platforms, using platform-specific methods to alter application
+lifecycle state may be the preferred method of provoking session state
+changes.
+The behavior of flink:xrRequestExitSession is not altered, however explicit
+session exit may: not interact with the platform-specific application
+lifecycle.
+
 [[session_running]]A session is considered **running** after a successful
 call to flink:xrBeginSession and remains running until any call is made to
 flink:xrEndSession.

@@ -7,7 +7,7 @@
     let words = elt.innerHTML.split(' ');
     /* if this is a numbered section */
     if (words.length > 1 && words[0].endsWith('.')) {
-      /* don't split the number from the first word of the title, 
+      /* don't split the number from the first word of the title,
        * by replacing the first space with nbsp */
       elt.innerHTML = elt.innerHTML.replace(' ', '&nbsp;');
     }

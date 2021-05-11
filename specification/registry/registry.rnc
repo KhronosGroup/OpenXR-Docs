@@ -407,7 +407,7 @@ InterfaceElement =
              attribute alias { XrUpperSnakeCase_t }),
              attribute extends { XrTypeNameRef_t },
              attribute dir { "-" }?,
-             
+
              CommentAttr?)
           | (# Extending another bitmask
              attribute name { XrUpperSnakeCase_t },

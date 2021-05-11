@@ -1,7 +1,7 @@
 include::../meta/XR_EXT_thermal_query.adoc[]
 
 *Last Modified Date*::
-    2017-11-30
+    2021-04-14
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -77,5 +77,5 @@ include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
 *Version History*
 
 * Revision 1, 2017-11-30 (Armelle Laine)
-+
-+
+* Revision 2, 2021-04-14 (Ryan Pavlik, Collabora)
+** Fix missing error code

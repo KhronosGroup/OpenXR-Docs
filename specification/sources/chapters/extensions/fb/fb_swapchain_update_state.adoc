@@ -1,0 +1,188 @@
+// Copyright (c) 2021 Facebook
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_swapchain_update_state.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension enables the application to modify specific mutable state
+associated with a swapchain, examples include:
+
+* A video application may need to update the default size of the image
+  buffers associated with an Android Surface Swapchain.
+* A video application may need to communicate a new width and height for an
+  Android Surface Swapchain, as the surface dimensions may be implicitly
+  updated by the producer during the life of the Swapchain.
+  This is important for correct application of the non-normalized
+  pname:imageRect specified via slink:XrSwapchainSubImage.
+* On platforms where composition runs in a separate process from the
+  application, swapchains must be created in a cross-process friendly way.
+  In such cases, the texture image memory may be shared between processes,
+  but the texture state may not; and, an explicit mechanism to synchronize
+  this texture state between the application and the compositor is required.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SWAPCHAIN_STATE_ANDROID_SURFACE_DIMENSIONS_FB
+* ename:XR_TYPE_SWAPCHAIN_STATE_SAMPLER_OPENGL_ES_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSwapchainStateBaseHeaderFB',desc='Base header for swapchain update state',type='structs',xrefs='xrUpdateSwapchainFB']
+--
+
+The slink:XrSwapchainStateBaseHeaderFB structure is defined as:
+
+include::../../../../generated/api/structs/XrSwapchainStateBaseHeaderFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+  This base structure itself has no associated elink:XrStructureType value.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrSwapchainStateBaseHeaderFB is a base structure that can be
+overridden by a specific stext:XrSwapchainState* child structure.
+
+include::../../../../generated/validity/structs/XrSwapchainStateBaseHeaderFB.txt[]
+--
+
+These structures are only available when the corresponding
+`XR_USE_PLATFORM_` macro is defined before including `openxr_platform.h`.
+
+[open,refpage='XrSwapchainStateAndroidSurfaceDimensionsFB',type='structs',desc='Android Surface Swapchain specific dimensions structure',xrefs='xrUpdateSwapchainFB']
+--
+The slink:XrSwapchainStateAndroidSurfaceDimensionsFB structure is defined
+as:
+
+include::../../../../generated/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:width is the width of the image buffer, must not be greater than the
+  graphics API's maximum limit.
+* pname:height is the height of the image buffer, must not be greater than
+  the graphics API's maximum limit.
+****
+
+When slink:XrSwapchainStateAndroidSurfaceDimensionsFB is specified in the
+call to flink:xrUpdateSwapchainFB, the dimensions provided will be used to
+update the default size of the image buffers associated with the Android
+Surface swapchain.
+
+Additionally, the dimensions provided will become the new source of truth
+for the swapchain width and height, affecting operations such as computing
+the normalized imageRect for the swapchain.
+
+To use slink:XrSwapchainStateAndroidSurfaceDimensionsFB,
+dlink:XR_USE_PLATFORM_ANDROID must be defined before including
+`openxr_platform.h`.
+
+include::../../../../generated/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+--
+
+[open,refpage='XrSwapchainStateSamplerOpenGLESFB',type='structs',desc='OpenGL ES-specific swapchain sampler state structure',xrefs='xrUpdateSwapchainFB']
+--
+The slink:XrSwapchainStateSamplerOpenGLESFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSwapchainStateSamplerOpenGLESFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:minFilter is a valid Android OpenGL ES sname:EGLenum.
+* pname:magFilter is a valid Android OpenGL ES sname:EGLenum.
+* pname:wrapModeS is a valid Android OpenGL ES sname:EGLenum.
+* pname:wrapModeT is a valid Android OpenGL ES sname:EGLenum.
+* pname:swizzleRed is a valid Android OpenGL ES sname:EGLenum.
+* pname:swizzleGreen is a valid Android OpenGL ES sname:EGLenum.
+* pname:swizzleBlue is a valid Android OpenGL ES sname:EGLenum.
+* pname:swizzleAlpha is a valid Android OpenGL ES sname:EGLenum.
+* pname:maxAnisotropy is a valid float used to represent max anisotropy.
+* pname:borderColor is an RGBA color to be used as border texels.
+****
+
+When slink:XrSwapchainStateSamplerOpenGLESFB is specified in the call to
+flink:xrUpdateSwapchainFB, all images in the slink:XrSwapchain will have the
+specified sampler state applied and the state synchronized with the
+compositor.
+Applications are expected to handle synchronization of the sampler state
+update with application-side rendering.
+Similarly, the compositor will synchronize the sampler state update with
+rendering of the next compositor frame.
+An sname:EGLContext, either the sname:EGLContext bound during
+slink:XrSwapchain creation or an sname:EGLContext in the same share group,
+is required to be bound on the application calling thread.
+Current texture bindings may be altered by the call, including the active
+texture.
+
+To use slink:XrSwapchainStateSamplerOpenGLESFB,
+dlink:XR_USE_PLATFORM_ANDROID and dlink:XR_USE_GRAPHICS_API_OPENGL_ES must
+both be defined before including `openxr_platform.h`.
+
+include::../../../../generated/validity/structs/XrSwapchainStateSamplerOpenGLESFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrUpdateSwapchainFB',desc='Updates state for the corresponding swapchain',type='protos',xrefs='xrCreateSwapchain XrSwapchainStateBaseHeaderFB']
+--
+The flink:xrUpdateSwapchainFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrUpdateSwapchainFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:swapchain is the slink:XrSwapchain to update state for.
+* pname:state is a pointer to a `XrSwapchainState` structure based off of
+  slink:XrSwapchainStateBaseHeaderFB.
+****
+
+flink:xrUpdateSwapchainFB provides support for an application to update
+specific mutable state associated with an slink:XrSwapchain.
+
+To use flink:xrUpdateSwapchainFB, dlink:XR_USE_PLATFORM_ANDROID must be
+defined before including `openxr_platform.h`.
+
+include::../../../../generated/validity/protos/xrUpdateSwapchainFB.txt[]
+--
+
+*Issues*
+
+- Given we allow mutable state to be updated by the application, should we
+  provide a mechanism to query the current state for all update structures?
+
+*Version History*
+
+* Revision 1, 2021-04-16 (Gloria Kennickell)
+** Initial extension description

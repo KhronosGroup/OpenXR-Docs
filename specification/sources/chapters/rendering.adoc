@@ -120,7 +120,7 @@ include::../../generated/api/enums/XrSwapchainUsageFlagBits.txt[]
 * ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT indicates that the
   image may be a depth/stencil rendering target.
 * ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT indicates that the image may
-  be used as data source.
+  be accessed out of order and that access may be via atomic operations.
 * ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT indicates that the image may be
   the source of a copy operation.
 * ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT indicates that the image may be

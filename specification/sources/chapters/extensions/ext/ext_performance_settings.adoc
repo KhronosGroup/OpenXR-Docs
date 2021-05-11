@@ -1,7 +1,7 @@
 include::../meta/XR_EXT_performance_settings.adoc[]
 
 *Last Modified Date*::
-    2017-11-30
+    2021-04-14
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -391,5 +391,7 @@ include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.txt[]
 * Revision 2, 2021-04-13 (Ryan Pavlik)
 ** Correctly show function pointer retrieval in sample code
 ** Fix sample code callouts
+* Revision 3, 2021-04-14 (Ryan Pavlik)
+** Fix missing error code
 
 

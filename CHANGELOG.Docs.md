@@ -17,6 +17,77 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.16 (2021-05-11)
+
+This release contains improved/clarified behavior for `xrCreateInstance` and
+`xrEnumerateInstanceProperties`, a new multi-vendor extension, a new vendor
+extension, and a collection of clarifications.
+
+- Registry
+  - Add new `XR_ERROR_RUNTIME_UNAVAILABLE` error code, add
+    `XR_ERROR_RUNTIME_UNAVAILABLE` as a supported error code to `xrCreateInstance`
+    and `xrEnumerateInstanceProperties`, and remove `XR_ERROR_INSTANCE_LOST` as a
+    supported error code from `xrCreateInstance`.
+    ([internal MR 2024](https://gitlab.khronos.org/openxr/openxr/merge_requests/2024),
+    [internal issue 1552](https://gitlab.khronos.org/openxr/openxr/issues/1552),
+    [OpenXR-SDK-Source/#177](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/177))
+  - Add `XR_EXT_hand_joint_motion_range` multi-vendor extension.
+    ([internal MR 1995](https://gitlab.khronos.org/openxr/openxr/merge_requests/1995))
+  - Add `XR_FB_swapchain_update_state` vendor extension.
+    ([internal MR 1997](https://gitlab.khronos.org/openxr/openxr/merge_requests/1997))
+  - Fix missing `XR_ERROR_INSTANCE_LOST` return codes for extension functions in
+    `XR_EXT_performance_settings`, `XR_EXT_debug_utils`,
+    `XR_EXT_conformance_automation`, and `XR_EXT_thermal_query`.
+    ([internal MR 2023](https://gitlab.khronos.org/openxr/openxr/merge_requests/2023),
+    [OpenXR-Docs/#10](https://github.com/KhronosGroup/OpenXR-Docs/issues/10),
+    [internal issue 1256](https://gitlab.khronos.org/openxr/openxr/issues/1256))
+  - Reserve extension 166 for working group use.
+    ([internal MR 2025](https://gitlab.khronos.org/openxr/openxr/merge_requests/2025))
+- Specification
+  - Clarify use of `xrRequestExitSession` on platforms with managed application
+    lifecycle.
+    ([internal MR 1978](https://gitlab.khronos.org/openxr/openxr/merge_requests/1978))
+  - Clarify hand grip orientation Z semantics.
+    ([internal MR 2008](https://gitlab.khronos.org/openxr/openxr/merge_requests/2008))
+  - Clarify unordered swapchain usage flag meaning.
+    ([internal MR 2029](https://gitlab.khronos.org/openxr/openxr/merge_requests/2029),
+    [internal issue 1543](https://gitlab.khronos.org/openxr/openxr/issues/1543))
+  - Clarify that hysteresis should be used when applying thresholds to scalar
+    input.
+    ([internal MR 2031](https://gitlab.khronos.org/openxr/openxr/merge_requests/2031),
+    [internal issue 1260](https://gitlab.khronos.org/openxr/openxr/issues/1260),
+    [OpenXR-Docs/#27](https://github.com/KhronosGroup/OpenXR-Docs/issues/27))
+  - Document new multi-vendor extension `XR_EXT_hand_joint_motion_range` - allows
+    applications to request specific motion ranges when using
+    `XR_EXT_hand_tracking`.
+    ([internal MR 1995](https://gitlab.khronos.org/openxr/openxr/merge_requests/1995))
+  - Document new `XR_FB_swapchain_update_state` vendor extension.
+    ([internal MR 1997](https://gitlab.khronos.org/openxr/openxr/merge_requests/1997))
+  - Fix `xml_consistency` scripts to properly identify missing error codes from
+    handle ancestors, and suppress warnings about all missing `_LOST` and
+    `_LOSS_PENDING` on `xrDestroy` functions.
+    ([internal MR 2023](https://gitlab.khronos.org/openxr/openxr/merge_requests/2023),
+    [OpenXR-Docs/#10](https://github.com/KhronosGroup/OpenXR-Docs/issues/10),
+    [internal issue 1256](https://gitlab.khronos.org/openxr/openxr/issues/1256))
+  - Modify language in `XR_EXT_hand_tracking` to explicitly state that an "empty
+    hand" range of motion is the default.
+    ([internal MR 1995](https://gitlab.khronos.org/openxr/openxr/merge_requests/1995))
+  - Session: Explicitly name the pattern for "get graphics requirements" functions,
+    and place a generic version of the
+    `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` return code text from graphics
+    extensions in the core spec.
+    ([OpenXR-Docs/#79](https://github.com/KhronosGroup/OpenXR-Docs/pull/79),
+    [internal issue 1547](https://gitlab.khronos.org/openxr/openxr/issues/1547))
+  - Style guide: Update "Extensions" chapter to simplify and reflect actual
+    practice and policy.
+    ([internal MR 2027](https://gitlab.khronos.org/openxr/openxr/merge_requests/2027))
+  - Extension process document: Update to note the working group policy on extending
+    core/KHR bitmasks.
+    ([internal MR 2025](https://gitlab.khronos.org/openxr/openxr/merge_requests/2025))
+  - scripts: Have `reflow.py` identify a file's current newline convention, and
+    reproduce it upon writing the output.
+    ([internal MR 2028](https://gitlab.khronos.org/openxr/openxr/merge_requests/2028))
+
 ## OpenXR Specification 1.0.15 (2021-04-13)
 
 This release contains three new vendor extensions plus an assortment of small

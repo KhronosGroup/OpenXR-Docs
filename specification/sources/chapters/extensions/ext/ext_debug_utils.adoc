@@ -7,18 +7,19 @@ include::../meta/XR_EXT_debug_utils.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2018-11-16
+    2021-04-14
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Mark Young, LunarG +
-    Karl Schultz, LunarG
+    Karl Schultz, LunarG +
+    Ryan Pavlik, Collabora +
 
 *Overview*
 
 Due to the nature of the OpenXR interface, there is very little error
 information available to the developer and application.
-By using the +XR_EXT_debug_utils+ extension, developers can: obtain more
+By using the `<<XR_EXT_debug_utils>>` extension, developers can: obtain more
 information.
 When combined with validation layers, even more detailed feedback on the
 application's use of OpenXR will be provided.
@@ -904,4 +905,7 @@ None
 ** Added session labels
 * Revision 3, 2019-07-19 (Ryan Pavlik)
 ** Update examples.
-** Improve formatting
+** Improve formatting.
+* Revision 4, 2021-04-04 (Ryan Pavlik)
+** Fix missing error code.
+** Improve formatting.

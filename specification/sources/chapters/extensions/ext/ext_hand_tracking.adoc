@@ -7,7 +7,7 @@ include::../meta/XR_EXT_hand_tracking.adoc[]
 :INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
-    2021-04-13
+    2021-04-15
 
 *IP Status*::
     No known IP claims.
@@ -20,6 +20,7 @@ include::../meta/XR_EXT_hand_tracking.adoc[]
     Cass Everitt, Oculus +
     Blake Taylor, Magic Leap +
     Joe van den Heuvel, Valve +
+    Rune Berg, Valve +
     Nicholas Benson, Ultraleap +
     Ryan Pavlik, Collabora +
 
@@ -72,13 +73,15 @@ right hands.
 This handle can be used to locate hand joints using
 flink:xrLocateHandJointsEXT function.
 
-A hand tracker provides accurate fidelity to the user's actual hand shape.
-When the hand tracking input requires the user to be holding a controller in
-their hand, the hand tracking input will appear as the user holding the
-controller.
-This input can be used to render the hand shape together with rendering the
-controller in the hand.
+A hand tracker provides joint locations with an unobstructed range of motion
+of an empty human hand.
 
+[NOTE]
+.Note
+====
+This behavior can be modified by the `<<XR_EXT_hand_joints_motion_range>>`
+extension
+====
 --
 
 [open,refpage='xrCreateHandTrackerEXT',type='protos',desc='Create a hand joints handle.',xrefs='']
@@ -248,6 +251,13 @@ slink:XrHandJointLocationEXT.
 The application must: set pname:jointCount as described by the
 elink:XrHandJointSetEXT when creating the slink:XrHandTrackerEXT otherwise
 the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: return pname:jointLocations representing the range of
+motion of a human hand, without any obstructions.
+Input systems that obstruct the movement of the user’s hand (eg: a held
+controller preventing the user from making a fist) or that have only limited
+ability to track finger positions must: use the information available to
+them to emulate an unobstructed range of motion.
 
 The runtime must: update the pname:jointLocations array ordered so that the
 application can index elements using the corresponding hand joint enum (e.g.
@@ -623,7 +633,9 @@ elink:XrStructureType enumeration is extended with:
 ** Initial extension description
 * Revision 2, 2020-04-20 (Yin LI)
 ** Replace hand joint spaces to locate hand joints function.
-* Revision 3, 2021-04-13 (Ryan Pavlik)
+* Revision 3, 2021-04-13 (Ryan Pavlik, Rune Berg)
 ** Fix example code to properly use `xrGetInstanceProcAddr`.
-
-
+** Add recommended bone names
+* Revision 4, 2021-04-15 (Rune Berg)
+** Clarify that use of this extension produces an unobstructed hand range of
+   motion.

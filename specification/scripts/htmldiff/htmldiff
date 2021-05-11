@@ -127,7 +127,7 @@ if __name__ == '__main__':
     if (len(docs) != 2):
         usage()
     refdoc = tidyFile(docs[0])
-    
+
     newdoc = tidyFile(docs[1])
     passthru_args.append(refdoc.name)
     passthru_args.append(newdoc.name)
