@@ -79,12 +79,22 @@ number of extensions of which each runtime can support any subset.
 These extensions can be activated during slink:XrInstance create time.
 
 During slink:XrSession creation the application must: provide information
-about which graphics API it intends to use by adding an XrGraphicsBinding...
-struct of one (and only one) of the enabled graphics API extensions to the
-next chain of slink:XrSessionCreateInfo.
+about which graphics API it intends to use by adding an
+ftext:XrGraphicsBinding* struct of one (and only one) of the enabled
+graphics API extensions to the next chain of slink:XrSessionCreateInfo.
+The application must: call the ftext:xrGet*GraphicsRequirements method
+(where `*` is a placeholder) provided by the chosen graphics API extension
+before attempting to create the session (for example
+flink:xrGetD3D11GraphicsRequirementsKHR,
+flink:xrGetD3D12GraphicsRequirementsKHR,
+flink:xrGetOpenGLGraphicsRequirementsKHR,
+flink:xrGetOpenGLESGraphicsRequirementsKHR,
+flink:xrGetVulkanGraphicsRequirementsKHR).
+
 Unless specified differently in the graphics API extension, the application
-is responsible for creating a valid graphics device binding (for details
-refer to the extension specification of the graphics API).
+is responsible for creating a valid graphics device binding based on the
+requirements returned by ftext:xrGet*GraphicsRequirements methods (for
+details refer to the extension specification of the graphics API).
 
 [open,refpage='xrCreateSession',desc='Creates an XrSession',type='protos',xrefs='xrDestroySession xrBeginSession xrEndSession XrSessionCreateInfo XrSessionCreateFlags XrExtensionProperties']
 --
@@ -107,6 +117,13 @@ This session is created in the ename:XR_SESSION_STATE_IDLE state, and a
 corresponding slink:XrEventDataSessionStateChanged event to the
 ename:XR_SESSION_STATE_IDLE state must: be generated as the first such event
 for the new session.
+
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may be returned due to legacy behavior)
+on calls to flink:xrCreateSession if a function named like
+ftext:xrGet*GraphicsRequirements has not been called for the same
+pname:instance and slink:XrSessionCreateInfo::pname:systemId.
+(See graphics binding extensions for details.)
 
 include::../../generated/validity/protos/xrCreateSession.txt[]
 --
@@ -137,7 +154,7 @@ include::../../generated/api/structs/XrSessionCreateInfo.txt[]
   ename:XR_ERROR_SYSTEM_INVALID must: be returned.
 * pname:next, unless otherwise specified via an extension, must: contain
   exactly one graphics API binding structure (a structure whose name begins
-  with `"XrGraphicsBinding"`) or ename:XR_ERROR_GRAPHICS_DEVICE_INVALID
+  with "`XrGraphicsBinding`") or ename:XR_ERROR_GRAPHICS_DEVICE_INVALID
   must: be returned.
 ****
 
