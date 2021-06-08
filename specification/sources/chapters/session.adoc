@@ -90,16 +90,30 @@ These extensions can be activated during slink:XrInstance create time.
 
 During slink:XrSession creation the application must: provide information
 about which graphics API it intends to use by adding an
-ftext:XrGraphicsBinding* struct of one (and only one) of the enabled
+stext:XrGraphicsBinding* struct of one (and only one) of the enabled
 graphics API extensions to the next chain of slink:XrSessionCreateInfo.
 The application must: call the ftext:xrGet*GraphicsRequirements method
 (where `*` is a placeholder) provided by the chosen graphics API extension
-before attempting to create the session (for example
-flink:xrGetD3D11GraphicsRequirementsKHR,
-flink:xrGetD3D12GraphicsRequirementsKHR,
-flink:xrGetOpenGLGraphicsRequirementsKHR,
-flink:xrGetOpenGLESGraphicsRequirementsKHR,
-flink:xrGetVulkanGraphicsRequirementsKHR).
+before attempting to create the session (for example,
+ifdef::XR_KHR_d3d11_enable[]
+flink:xrGetD3D11GraphicsRequirementsKHR
+endif::XR_KHR_d3d11_enable[]
+ifdef::XR_KHR_d3d12_enable[]
+flink:xrGetD3D12GraphicsRequirementsKHR
+endif::XR_KHR_d3d12_enable[]
+ifdef::XR_KHR_opengl_enable[]
+flink:xrGetOpenGLGraphicsRequirementsKHR
+endif::XR_KHR_opengl_enable[]
+ifdef::XR_KHR_opengles_enable[]
+flink:xrGetOpenGLESGraphicsRequirementsKHR
+endif::XR_KHR_opengles_enable[]
+ifdef::XR_KHR_vulkan_enable[]
+flink:xrGetVulkanGraphicsRequirementsKHR
+endif::XR_KHR_vulkan_enable[]
+ifdef::XR_KHR_vulkan_enable2[]
+flink:xrGetVulkanGraphicsRequirements2KHR
+endif::XR_KHR_vulkan_enable2[]
+).
 
 Unless specified differently in the graphics API extension, the application
 is responsible for creating a valid graphics device binding based on the

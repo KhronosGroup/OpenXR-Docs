@@ -21,11 +21,11 @@
 #
 # Usage: checkMarkup
 
-FAILED=
+set -e
 
 list_sources() {
     (
-        cd $(dirname $0)
+        cd "$(dirname $0)"
         find sources/chapters -name "*.adoc" | grep -v "extensions/meta/"
     )
 }
@@ -42,7 +42,7 @@ grep_sources() {
     shift
     if ${GREPCMD:-egrep} -n "$@" ${SOURCES}; then
         echo ""
-        echo "*** Error: Above lines matched grep with  $@"
+        echo "*** Error: Above lines matched grep with  $*"
         echo "*** $DESC"
         echo ""
         echo ""
@@ -107,8 +107,8 @@ check_markups() {
     shift
     pattern="$1"
     shift
-    for markup_type in $@; do
-        check_${markup_type}_markup $letter "$category" "$expected" "$pattern"
+    for markup_type in "$@"; do
+        "check_${markup_type}_markup" "$letter" "$category" "$expected" "$pattern"
     done
 }
 
@@ -116,7 +116,9 @@ check_markups() {
 # Actual Checks
 ###
 (
-cd $(dirname $0)
+export FAILED=
+
+cd "$(dirname $0)"
 # "f" markup: check function naming convention
 check_markups f "function names" "start with xr" "X[rR]" link name text
 
@@ -212,6 +214,7 @@ grep_sources \
     "We have decided to consistently use 'projection' rather than 'multiprojection'" \
     "\b[Mm]ulti(-?)[Pp]rojection"
 
+# shellcheck disable=SC2016
 grep_sources \
     "Per the style guide, the text NULL should be marked up as code:NULL" \
     '`NULL`'
@@ -301,9 +304,10 @@ grep_sources \
 #    "test" \
 #    "basetype:"
 
-)
-
-if [ "$FAILED" ]; then
+if [ "$FAILED" != "" ]; then
     echo "Failures detected"
     exit 1
 fi
+
+)
+

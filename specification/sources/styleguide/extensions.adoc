@@ -725,15 +725,6 @@ Extension Process discussion of this].
 In addition to any tokens specific to the functionality of an extension, all
 extensions must define two additional tokens.
 
-ifdef::editing-notes[]
-[NOTE]
-.editing-note
-====
-TODO(OpenXR): Issue 138: We need to update this for OpenXR.
-====
-endif::editing-notes[]
-
-
 * `XR_extname_SPEC_VERSION` is an integer constant which is the revision of
   the extension named `XR_extname` (where `extname` is the capitalization of
   the actual extension name) in `openxr.h` or `openxr_platform.h` (the

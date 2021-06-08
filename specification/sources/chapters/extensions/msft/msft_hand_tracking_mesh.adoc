@@ -583,7 +583,7 @@ include::../../../../generated/api/structs/XrHandPoseTypeInfoMSFT.txt[]
 include::../../../../generated/validity/structs/XrHandPoseTypeInfoMSFT.txt[]
 --
 
-[open,refpage='XrHandPoseTypeMSFT',type='enums',desc='Describe type of input hand pose',xrefs='XrHandPoseTypeMSFT XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
+[open,refpage='XrHandPoseTypeMSFT',type='enums',desc='Describe type of input hand pose',xrefs='XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
 --
 The elink:XrHandPoseTypeMSFT describes the type of input hand pose from
 slink:XrHandTrackerEXT.

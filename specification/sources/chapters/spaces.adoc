@@ -737,12 +737,7 @@ include::../../generated/api/enums/XrSpaceVelocityFlagBits.txt[]
 
 where the flags have the following meaning:
 
-.Flag Descriptions
-****
-* ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT indicates that the
-  pname:linearVelocity field contains valid data.
-* ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT indicates that the
-  pname:angularVelocity field contains valid data.
-****
+include::../../generated/api/enums/XrSpaceVelocityFlagBits.comments.txt[]
+
 --
 

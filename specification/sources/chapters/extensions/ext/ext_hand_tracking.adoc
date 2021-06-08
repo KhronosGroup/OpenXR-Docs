@@ -254,7 +254,7 @@ the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
 
 The runtime must: return pname:jointLocations representing the range of
 motion of a human hand, without any obstructions.
-Input systems that obstruct the movement of the user’s hand (eg: a held
+Input systems that obstruct the movement of the user's hand (e.g.: a held
 controller preventing the user from making a fist) or that have only limited
 ability to track finger positions must: use the information available to
 them to emulate an unobstructed range of motion.

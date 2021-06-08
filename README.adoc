@@ -40,3 +40,13 @@ The document sources are marked up in Asciidoctor format, and we use
 See link:specification/README.md[specification/README.md]
 for more information on installing the toolchain and building the
 Specification.
+
+== Note about `git blame`
+
+We are tracking "bulk commits" in the `.git-blame-ignore-revs` file, for better
+git blame output. Sadly it appears that web interfaces do not yet handle this
+file, but you can if using the command line. See
+link:https://git-scm.com/docs/git-blame#Documentation/git-blame.txt---ignore-revs-fileltfilegt[--ignore-revs-file docs]
+for details, and
+link:https://www.moxio.com/blog/43/ignoring-bulk-change-commits-with-git-blame[this blog post about ignore-revs]
+for some useful usage details.

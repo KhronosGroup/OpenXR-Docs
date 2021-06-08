@@ -84,14 +84,20 @@ formats correspond to the DXGI formats, such as
 ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB.
 Texture formats should: be in order from highest to lowest runtime
 preference.
+The application should: use the highest preference format that it supports
+for optimal performance and quality.
 
+ifdef::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
 With an OpenGL-based graphics API, the texture formats correspond to OpenGL
 internal formats.
+endif::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
 
+ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 With a Direct3D-based graphics API, flink:xrEnumerateSwapchainFormats never
 returns typeless formats (e.g. ename:DXGI_FORMAT_R8G8B8A8_TYPELESS).
 Only concrete formats are returned, and only concrete formats may be
 specified by applications for swapchain creation.
+endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
 Runtimes must: always return identical buffer contents from this enumeration
 for the lifetime of the session.
@@ -101,7 +107,7 @@ include::../../generated/validity/protos/xrEnumerateSwapchainFormats.txt[]
 
 [open,refpage='XrSwapchainUsageFlags',desc='Swapchain usage flags',type='flags',xrefs='xrCreateSwapchain xrEnumerateSwapchainFormats']
 --
-elink:XrSwapchainUsageFlags Specify the intended usage of the swapchain
+elink:XrSwapchainUsageFlags specify the intended usage of the swapchain
 images.
 When images are created, the runtime needs to know how the images are used
 in a way that requires more information than simply the image format.
@@ -113,23 +119,7 @@ Flags include:
 
 include::../../generated/api/enums/XrSwapchainUsageFlagBits.txt[]
 
-.Flag Descriptions
-****
-* ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT indicates that the image may
-  be a color rendering target.
-* ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT indicates that the
-  image may be a depth/stencil rendering target.
-* ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT indicates that the image may
-  be accessed out of order and that access may be via atomic operations.
-* ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT indicates that the image may be
-  the source of a copy operation.
-* ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT indicates that the image may be
-  the destination of a copy operation.
-* ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT indicates that the image may be
-  sampled by a shader.
-* ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT indicates that the image
-  format may be reinterpreted.
-****
+include::../../generated/api/enums/XrSwapchainUsageFlagBits.comments.txt[]
 --
 
 [open,refpage='xrCreateSwapchain',desc='Creates an XrSwapchain',type='protos',xrefs='xrEnumerateSwapchainFormats XrSwapchainCreateInfo xrEnumerateSwapchainImages xrAcquireSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
@@ -235,6 +225,7 @@ the case of a static swapchain.
 To obtain the number of images actually allocated, call
 flink:xrEnumerateSwapchainImages.
 
+ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 With a Direct3D-based graphics API, the swapchain returned by
 flink:xrCreateSwapchain will be a typeless format if the requested format
 has a typeless analogue.
@@ -242,6 +233,7 @@ Applications are required to reinterpret the swapchain as a compatible
 non-typeless type.
 Upon submitting such swapchains to the runtime, they are interpreted as the
 format specified by the application in the slink:XrSwapchainCreateInfo.
+endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
 Swapchains will be created with graphics API-specific flags appropriate to
 the type of underlying image and its usage.
@@ -250,10 +242,12 @@ swapchains.
 
 Runtimes must: honor underlying graphics API limits when creating resources.
 
+ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 flink:xrEnumerateSwapchainFormats never returns typeless formats (e.g.
 code:DXGI_FORMAT_R8G8B8A8_TYPELESS).
 Only concrete formats are returned, and only concrete formats may be
 specified by applications for swapchain creation.
+endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
 [open,refpage='xrDestroySwapchain',desc='Destroys an XrSwapchain',type='protos',xrefs='xrCreateSwapchain']
 --
@@ -1089,17 +1083,7 @@ include::../../generated/api/enums/XrCompositionLayerFlagBits.txt[]
 elink:XrCompositionLayerFlags specify options for individual composition
 layers.
 
-.Flag Descriptions
-****
-* ename:XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT enables
-  optical chromatic aberration correction for the layer when not done by
-  default.
-* ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT enables the
-  layer's texture alpha channel.
-* ename:XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT indicates that the
-  layer's color components have not been premultiplied with the layer's
-  alpha component.
-****
+include::../../generated/api/enums/XrCompositionLayerFlagBits.comments.txt[]
 --
 
 [[composition-layer-blending]]

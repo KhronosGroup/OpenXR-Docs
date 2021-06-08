@@ -17,6 +17,80 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.17 (2021-06-08)
+
+This release includes a variety of new vendor extensions, as well as some
+clean-up changes to the API registry and specification, mostly related to
+valid/available return codes. An update to an earlier vendor extension is also
+included.
+
+- Registry
+  - Add `XR_MSFT_scene_understanding` vendor extension.
+    ([internal MR 2032](https://gitlab.khronos.org/openxr/openxr/merge_requests/2032))
+  - Add `XR_MSFT_scene_understanding_serialization` vendor extension.
+    ([internal MR 2032](https://gitlab.khronos.org/openxr/openxr/merge_requests/2032))
+  - Add `XR_MSFT_composition_layer_reprojection` vendor extension.
+    ([internal MR 2033](https://gitlab.khronos.org/openxr/openxr/merge_requests/2033))
+  - Add `XR_OCULUS_audio_device_guid` vendor extension.
+    ([internal MR 2053](https://gitlab.khronos.org/openxr/openxr/merge_requests/2053))
+  - Add version 3 of `XR_FB_swapchain_update_state` vendor extension, which splits
+    platform and graphics API specific structs into separate extensions.
+    ([internal MR 2059](https://gitlab.khronos.org/openxr/openxr/merge_requests/2059))
+  - Apply formatting to registry XML by selectively committing changes made by
+    <https://github.com/rpavlik/PrettyRegistryXml>.
+    ([internal MR 2070](https://gitlab.khronos.org/openxr/openxr/merge_requests/2070),
+    [OpenXR-SDK-Source/#256](https://github.com/KhronosGroup/OpenXR-SDK-Source/pull/256))
+  - Enforce that all `xrCreate` functions must be able to return
+    `XR_ERROR_LIMIT_REACHED` and `XR_ERROR_OUT_OF_MEMORY`, and adjust lists of
+    error codes accordingly.
+    ([internal MR 2064](https://gitlab.khronos.org/openxr/openxr/merge_requests/2064))
+  - Fix a usage of `>` without escaping as an XML entity.
+    ([internal MR 2064](https://gitlab.khronos.org/openxr/openxr/merge_requests/2064))
+  - Fix all cases of a success code (most often `XR_SESSION_LOSS_PENDING`)
+    appearing in the `errorcodes` attribute of a command.
+    ([internal MR 2064](https://gitlab.khronos.org/openxr/openxr/merge_requests/2064),
+    [internal issue 1566](https://gitlab.khronos.org/openxr/openxr/issues/1566))
+  - Improve comments for several enum values.
+    ([internal MR 1982](https://gitlab.khronos.org/openxr/openxr/merge_requests/1982))
+  - Perform some script clean-up and refactoring, including selective type
+    annotation and moving the Conventions abstract base class to `spec_tools`.
+    ([internal MR 2064](https://gitlab.khronos.org/openxr/openxr/merge_requests/2064))
+  - Sort return codes, with some general, popular codes made to be early. Script
+    `sort_codes.py` can be used to maintain this, though it mangles other XML
+    formatting, so use it with care. <https://github.com/rpavlik/PrettyRegistryXml>
+    can format, and eventually sort return codes (currently sort order does not
+    match).
+    ([internal MR 2064](https://gitlab.khronos.org/openxr/openxr/merge_requests/2064),
+    [OpenXR-SDK-Source/#256](https://github.com/KhronosGroup/OpenXR-SDK-Source/pull/256))
+- Specification
+  - Clarify that values for a given query to `xrEnumerateBoundSourcesForAction` may
+    only change at `xrSyncActions`.
+    ([internal MR 2026](https://gitlab.khronos.org/openxr/openxr/merge_requests/2026),
+    [internal issue 1540](https://gitlab.khronos.org/openxr/openxr/issues/1540),
+    [OpenXR-Docs/#82](https://github.com/KhronosGroup/OpenXR-Docs/issues/82))
+  - Document new `XR_MSFT_scene_understanding` extension.
+    ([internal MR 2032](https://gitlab.khronos.org/openxr/openxr/merge_requests/2032))
+  - Document new `XR_MSFT_scene_understanding_serialization` extension.
+    ([internal MR 2032](https://gitlab.khronos.org/openxr/openxr/merge_requests/2032))
+  - Document new `XR_MSFT_composition_layer_reprojection` vendor extension.
+    ([internal MR 2033](https://gitlab.khronos.org/openxr/openxr/merge_requests/2033))
+  - Document new `XR_OCULUS_audio_device_guid` extension.
+    ([internal MR 2053](https://gitlab.khronos.org/openxr/openxr/merge_requests/2053))
+  - Document version 2 of `XR_FB_swapchain_update_state` which provides a mechanism
+    to query state.
+    ([internal MR 2048](https://gitlab.khronos.org/openxr/openxr/merge_requests/2048))
+  - Document version 3 of `XR_FB_swapchain_update_state` which splits platform and
+    graphics API specific structs into separate extensions.
+    ([internal MR 2059](https://gitlab.khronos.org/openxr/openxr/merge_requests/2059))
+  - Make explicit the recommended use of preferred swapchain texture formats.
+    ([internal MR 2061](https://gitlab.khronos.org/openxr/openxr/merge_requests/2061))
+  - Reserve extension numbers 167-176 for Facebook use.
+    ([internal MR 2060](https://gitlab.khronos.org/openxr/openxr/merge_requests/2060))
+  - Use flag descriptions generated from XML comments for
+    `XrSpaceVelocityFlagBits`, `XrSwapchainUsageFlagBits`, and
+    `XrCompositionLayerFlagBits` in the specification.
+    ([internal MR 1982](https://gitlab.khronos.org/openxr/openxr/merge_requests/1982))
+
 ## OpenXR Specification 1.0.16 (2021-05-11)
 
 This release contains improved/clarified behavior for `xrCreateInstance` and

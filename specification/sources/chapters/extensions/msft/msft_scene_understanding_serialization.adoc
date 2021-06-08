@@ -1,0 +1,230 @@
+// Copyright (c) 2019-2020 Microsoft Corporation
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_MSFT_scene_understanding_serialization.adoc[]
+
+*Last Modified Date*::
+    2021-05-03
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Alex Turner, Microsoft +
+    Simon Stachniak, Microsoft +
+    David Fields, Microsoft +
+
+*Overview*
+
+This extension extends the scene understanding extension and enables scenes
+to be serialized or deserialized.
+It enables computing a new scene into a serialized binary stream and it
+enables deserializing a binary stream into an slink:XrSceneMSFT handle.
+
+*Serialize a scene*
+
+This extension adds ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT to
+elink:XrSceneComputeFeatureMSFT, which can: be passed to
+flink:xrComputeNewSceneMSFT plus one or more of
+ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT,
+ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT,
+ename:XR_SCENE_COMPUTE_FEATURE_VISUAL_MESH_MSFT or
+ename:XR_SCENE_COMPUTE_FEATURE_COLLIDER_MESH_MSFT to inform the runtime that
+it should: compute a serialized binary representation of the scene.
+If ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT is the only
+elink:XrSceneComputeFeatureMSFT passed to flink:xrComputeNewSceneMSFT then
+ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT must: be returned.
+
+If an slink:XrSceneMSFT was created using
+ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT then
+ename:XR_SCENE_COMPONENT_TYPE_SERIALIZED_SCENE_FRAGMENT_MSFT can be passed
+to the flink:xrGetSceneComponentsMSFT function to read the list of
+serialized scene fragment slink:XrUuidMSFT values from
+slink:XrSceneComponentMSFT::pname:id.
+The slink:XrUuidMSFT of a scene fragment can be passed to
+flink:xrGetSerializedSceneFragmentDataMSFT to read the binary data of the
+given scene fragment.
+
+[open,refpage='xrGetSerializedSceneFragmentDataMSFT',type='protos',desc='Get serialized scene fragment data',xrefs='XrSerializedSceneFragmentDataGetInfoMSFT']
+--
+The application can: call the flink:xrGetSerializedSceneFragmentDataMSFT
+function to read the binary data of a serialized scene fragment from the
+slink:XrSceneMSFT handle.
+This function follows the two-call idiom for filling the buffer.
+
+The flink:xrGetSerializedSceneFragmentDataMSFT function is defined as:
+
+include::../../../../generated/api/protos/xrGetSerializedSceneFragmentDataMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is the slink:XrSceneMSFT handle to read from.
+* pname:getInfo is a pointer to an
+  slink:XrSerializedSceneFragmentDataGetInfoMSFT structure.
+* pname:countInput is the number of bytes that should be read.
+* pname:readOutput is the number of bytes read.
+* pname:buffer is a pointer to the buffer where the data should be copied.
+****
+
+The runtime must: return ename:XR_ERROR_SCENE_COMPONENT_ID_INVALID_MSFT if
+the given scene fragment slink:XrUuidMSFT was not found.
+
+include::../../../../generated/validity/protos/xrGetSerializedSceneFragmentDataMSFT.txt[]
+--
+
+[open,refpage='XrSerializedSceneFragmentDataGetInfoMSFT',desc='The information to get the serialized scene fragment data',type='structs',xrefs='xrGetSerializedSceneFragmentDataMSFT']
+--
+The slink:XrSerializedSceneFragmentDataGetInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSerializedSceneFragmentDataGetInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:sceneFragmentId is the slink:XrUuidMSFT of the serialized scene
+  fragment that was previously read from flink:xrGetSceneComponentsMSFT with
+  ename:XR_SCENE_COMPONENT_TYPE_SERIALIZED_SCENE_FRAGMENT_MSFT.
+****
+
+include::../../../../generated/validity/structs/XrSerializedSceneFragmentDataGetInfoMSFT.txt[]
+--
+
+*Deserialize a scene*
+
+This extension enables an application to deserialize the binary
+representation of a scene that was previously serialized.
+
+For a given slink:XrSceneObserverMSFT handle, instead of calling
+flink:xrComputeNewSceneMSFT, which computes the scene from the system's
+sensors, the application can: use flink:xrDeserializeSceneMSFT to produce a
+scene from the given binary scene fragment data.
+
+[open,refpage='xrDeserializeSceneMSFT',type='protos',desc='Deserialize scene',xrefs='XrSceneDeserializeInfoMSFT XrSceneObserverMSFT']
+--
+The flink:xrDeserializeSceneMSFT function is defined as:
+
+include::../../../../generated/api/protos/xrDeserializeSceneMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:sceneObserver is a handle to an slink:XrSceneObserverMSFT previously
+  created with flink:xrCreateSceneObserverMSFT.
+* pname:deserializeInfo is a pointer to an slink:XrSceneDeserializeInfoMSFT
+  structure.
+****
+
+The flink:xrDeserializeSceneMSFT function begins deserializing a list of
+serialized scene fragments.
+The runtime must: return quickly without waiting for the deserialization to
+complete.
+The application should: use flink:xrGetSceneComputeStateMSFT to inspect the
+completeness of the deserialization.
+
+The flink:xrGetSceneComputeStateMSFT function must: return
+ename:XR_SCENE_COMPUTE_STATE_UPDATING_MSFT while the deserialization is in
+progress, and ename:XR_SCENE_COMPUTE_STATE_COMPLETED_MSFT when the
+deserialization has completed successfully.
+If the runtime fails to deserialize the binary stream,
+flink:xrGetSceneComputeStateMSFT must: return
+ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT to indicate that the
+deserialization has completed but an error occurred.
+
+When flink:xrGetSceneComputeStateMSFT returns
+ename:XR_SCENE_COMPUTE_STATE_COMPLETED_MSFT, the application may: call
+flink:xrCreateSceneMSFT to create the slink:XrSceneMSFT handle.
+If flink:xrCreateSceneMSFT is called while flink:xrGetSceneComputeStateMSFT
+returns ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT, a valid
+slink:XrSceneMSFT handle must: be returned, but that handle must: contain
+zero scene components.
+
+include::../../../../generated/validity/protos/xrDeserializeSceneMSFT.txt[]
+--
+
+[open,refpage='XrSceneDeserializeInfoMSFT',desc='The information to deserialize a binary scene',type='structs',xrefs='XrDeserializeSceneFragmentMSFT xrDeserializeSceneMSFT']
+--
+slink:XrSceneDeserializeInfoMSFT is an input structure that describes the
+array of serialized scene fragments that will be deserialized by the
+flink:xrDeserializeSceneMSFT function.
+
+include::../../../../generated/api/structs/XrSceneDeserializeInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:fragmentCount is the count of slink:XrDeserializeSceneFragmentMSFT
+structures in the pname:fragments array.
+* pname:fragments is an array of slink:XrDeserializeSceneFragmentMSFT.
+****
+
+If the scene fragments are not in the same order as returned by
+flink:xrGetSceneComponentsMSFT or the runtime failed to deserialized the
+binary data then flink:xrGetSceneComputeStateMSFT must: return
+ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT.
+
+include::../../../../generated/validity/structs/XrSceneDeserializeInfoMSFT.txt[]
+--
+
+[open,refpage='XrDeserializeSceneFragmentMSFT',desc='Deserialize Scene Fragment',type='structs',xrefs='XrSceneDeserializeInfoMSFT']
+--
+The slink:XrDeserializeSceneFragmentMSFT structure represents a single
+fragment of a binary stream to be deserialized.
+It is defined as:
+
+include::../../../../generated/api/structs/XrDeserializeSceneFragmentMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:bufferSize is the size of the pname:buffer array.
+* pname:buffer is an array of code:uint_8 data for the scene fragment to be
+  deserialized.
+****
+
+include::../../../../generated/validity/structs/XrDeserializeSceneFragmentMSFT.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrSceneComponentTypeMSFT enumeration is extended with:
+
+* ename:XR_SCENE_COMPONENT_TYPE_SERIALIZED_SCENE_FRAGMENT_MSFT
+
+elink:XrSceneComputeFeatureMSFT enumeration is extended with:
+
+* ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SERIALIZED_SCENE_FRAGMENT_DATA_GET_INFO_MSFT
+* ename:XR_TYPE_SCENE_DESERIALIZE_INFO_MSFT
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrSerializedSceneFragmentDataGetInfoMSFT
+* slink:XrSceneDeserializeInfoMSFT
+* slink:XrDeserializeSceneFragmentMSFT
+
+*New Functions*
+
+* flink:xrGetSerializedSceneFragmentDataMSFT
+* flink:xrDeserializeSceneMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-03 (Darryl Gough)
+** Initial extension description

@@ -29,7 +29,7 @@ This extension allows:
 
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
 indicated in the <<extensions>> section.
 
 *New Object Types*

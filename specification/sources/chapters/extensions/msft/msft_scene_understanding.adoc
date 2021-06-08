@@ -1,0 +1,1601 @@
+// Copyright (c) 2019-2020 Microsoft Corporation
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_MSFT_scene_understanding.adoc[]
+
+*Last Modified Date*::
+    2021-05-03
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Alex Turner, Microsoft +
+    Simon Stachniak, Microsoft +
+    David Fields, Microsoft +
+
+*Overview*
+
+Scene understanding provides applications with a structured, high-level
+representation of the planes, meshes, and objects in the user's environment,
+enabling the development of spatially-aware applications.
+
+The application requests computation of a scene, receiving the list of scene
+components observed in the environment around the user.
+These scene components contain information such as:
+
+* The type of the discovered objects (wall, floor, ceiling, or other surface
+  type).
+* The planes and their bounds that represent the object.
+* The visual and collider triangle meshes that represent the object.
+
+The application can use this information to reason about the structure and
+location of the environment, to place holograms on surfaces, or render clues
+for grounding objects.
+
+An application typically uses this extension in the following steps:
+
+1. Create an slink:XrSceneObserverMSFT handle to manage the system resource
+   of the scene understanding compute.
+2. Start the scene compute by calling flink:xrComputeNewSceneMSFT with
+   slink:XrSceneBoundsMSFT to specify the scan range and a list of
+   elink:XrSceneComputeFeatureMSFT features.
+3. Inspect the completion of computation by polling
+   flink:xrGetSceneComputeStateMSFT.
+4. Once compute is completed, create an slink:XrSceneMSFT handle to the
+   result by calling flink:xrCreateSceneMSFT.
+5. Get properties of scene components using flink:xrGetSceneComponentsMSFT.
+6. Locate scene components using flink:xrLocateSceneComponentsMSFT.
+
+*Create a scene observer handle*
+
+[open,refpage='XrSceneObserverMSFT',type='handles',desc='Represents a scene observer',xrefs='xrCreateSceneObserverMSFT xrDestroySceneObserverMSFT']
+--
+The slink:XrSceneObserverMSFT handle represents the resources for computing
+scenes.
+It maintains a correlation of scene component identifiers across multiple
+scene computes.
+
+[NOTE]
+.Note
+====
+The application should destroy the slink:XrSceneObserverMSFT handle when it
+is done with scene compute and scene component data to save system power
+consumption.
+====
+
+include::../../../../generated/api/handles/XrSceneObserverMSFT.txt[]
+--
+
+[open,refpage='xrCreateSceneObserverMSFT',type='protos',desc='Create a scene observer handle',xrefs='XrSceneObserverMSFT XrSceneObserverCreateInfoMSFT xrDestroySceneObserverMSFT']
+--
+An slink:XrSceneObserverMSFT handle is created using
+flink:xrCreateSceneObserverMSFT.
+
+include::../../../../generated/api/protos/xrCreateSceneObserverMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the scene observer will be
+  active.
+* pname:createInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrSceneObserverCreateInfoMSFT structure.
+* pname:sceneObserver is the returned slink:XrSceneObserverMSFT handle.
+****
+
+include::../../../../generated/validity/protos/xrCreateSceneObserverMSFT.txt[]
+--
+
+[open,refpage='XrSceneObserverCreateInfoMSFT',desc='The information to create a scene observer handle',type='structs',xrefs='xrCreateSceneObserverMSFT XrSceneObserverMSFT']
+--
+The slink:XrSceneObserverCreateInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneObserverCreateInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::../../../../generated/validity/structs/XrSceneObserverCreateInfoMSFT.txt[]
+--
+
+[open,refpage='xrDestroySceneObserverMSFT',type='protos',desc='Destroy a scene observer handle',xrefs='xrCreateSceneObserverMSFT XrSceneObserverMSFT']
+--
+The flink:xrDestroySceneObserverMSFT function releases the
+pname:sceneObserver and the underlying resources.
+
+include::../../../../generated/api/protos/xrDestroySceneObserverMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:sceneObserver is an slink:XrSceneObserverMSFT previously created by
+  flink:xrCreateSceneObserverMSFT.
+****
+
+include::../../../../generated/validity/protos/xrDestroySceneObserverMSFT.txt[]
+--
+
+*Compute a new scene and wait for completion*
+
+[open,refpage='xrComputeNewSceneMSFT',type='protos',desc='Compute new scene',xrefs='XrNewSceneComputeInfoMSFT xrEnumerateSceneComputeFeaturesMSFT']
+--
+The flink:xrComputeNewSceneMSFT function begins the compute of a new scene
+and the runtime must: return quickly without waiting for the compute to
+complete.
+The application should: use flink:xrGetSceneComputeStateMSFT to inspect the
+compute status.
+
+The application can: control the compute features by passing a list of
+elink:XrSceneComputeFeatureMSFT via
+slink:XrNewSceneComputeInfoMSFT::pname:requestedFeatures.
+
+* If ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT is passed, but
+  ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT is not passed, then:
+** The application may: be able to read
+   ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT and
+   ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT scene components from the
+   resulting slink:XrSceneMSFT handle.
+** slink:XrScenePlaneMSFT::pname:meshBufferId must: be zero to indicate that
+   the plane scene component does not have a mesh buffer available to read.
+* If ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT and
+  ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT are passed, then:
+** the application may: be able to read
+   ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT and
+   ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT scene components from the
+   resulting slink:XrSceneMSFT handle
+** slink:XrScenePlaneMSFT::pname:meshBufferId may: contain a non-zero mesh
+   buffer identifier to indicate that the plane scene component has a mesh
+   buffer available to read.
+* If ename:XR_SCENE_COMPUTE_FEATURE_VISUAL_MESH_MSFT is passed then:
+** the application may: be able to read
+   ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT and
+   ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT scene components from the
+   resulting slink:XrSceneMSFT handle.
+* If ename:XR_SCENE_COMPUTE_FEATURE_COLLIDER_MESH_MSFT is passed then:
+** the application may: be able to read
+   ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT and
+   ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT scene components from the
+   resulting slink:XrSceneMSFT handle.
+
+include::../../../../generated/api/protos/xrComputeNewSceneMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:sceneObserver is a handle to an slink:XrSceneObserverMSFT.
+* pname:computeInfo is a pointer to an slink:XrNewSceneComputeInfoMSFT
+  structure.
+****
+
+The runtime must: return
+ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT if incompatible
+features were passed or no compatible features were passed.
+
+The runtime must: return
+ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT if
+ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT was passed but
+ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT was not passed.
+
+The runtime must: return ename:XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT
+if flink:xrComputeNewSceneMSFT is called while the scene computation is in
+progress.
+
+An application that wishes to use
+ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT must: create an
+slink:XrSceneObserverMSFT handle that passes neither
+ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_COMPLETE_MSFT nor
+ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_INCOMPLETE_FAST_MSFT to
+flink:xrComputeNewSceneMSFT for the lifetime of that
+slink:XrSceneObserverMSFT handle.
+This allows the runtime to return occlusion mesh at a different cadence than
+non-occlusion mesh or planes.
+
+* The runtime must: return
+  ename:XR_ERROR_SCENE_COMPUTE_CONSISTENCY_MISMATCH_MSFT if:
+** ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT is passed to
+   flink:xrComputeNewSceneMSFT **and**
+** a previous call to flink:xrComputeNewSceneMSFT did not pass
+   ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT for the same
+   slink:XrSceneObserverMSFT handle.
+* The runtime must: return
+  ename:XR_ERROR_SCENE_COMPUTE_CONSISTENCY_MISMATCH_MSFT if:
+** ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT is not passed
+   to flink:xrComputeNewSceneMSFT **and**
+** a previous call to flink:xrComputeNewSceneMSFT did pass
+   ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT for the same
+   slink:XrSceneObserverMSFT handle.
+* The runtime must: return
+  ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT if:
+** ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT is passed to
+   flink:xrComputeNewSceneMSFT **and**
+** neither ename:XR_SCENE_COMPUTE_FEATURE_VISUAL_MESH_MSFT nor
+   ename:XR_SCENE_COMPUTE_FEATURE_COLLIDER_MESH_MSFT are also passed.
+* The runtime must: return
+  ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT if:
+** ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT is passed to
+   flink:xrComputeNewSceneMSFT **and**
+** at least one of ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT,
+   ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT,
+   ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT, or
+   ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT are also passed.
+
+include::../../../../generated/validity/protos/xrComputeNewSceneMSFT.txt[]
+--
+
+[open,refpage='XrSceneMSFT',type='handles',desc='Represents a scene',xrefs='xrCreateSceneMSFT xrDestroySceneMSFT']
+--
+An slink:XrSceneMSFT handle represents the collection of scene components
+that were detected during the scene computation.
+
+include::../../../../generated/api/handles/XrSceneMSFT.txt[]
+--
+
+[open,refpage='XrNewSceneComputeInfoMSFT',desc='The information to compute a new scene',type='structs',xrefs='xrComputeNewSceneMSFT']
+--
+The slink:XrNewSceneComputeInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrNewSceneComputeInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:requestedFeatureCount is the number of features.
+* pname:requestedFeatures is an array of elink:XrSceneComputeFeatureMSFT.
+* pname:consistency indicates the requested
+  elink:XrSceneComputeConsistencyMSFT, trading off speed against the quality
+  of the resulting scene.
+* pname:bounds is an slink:XrSceneBoundsMSFT representing the culling
+  volume.
+  Scene components entirely outside this volume should: culled.
+****
+
+include::../../../../generated/validity/structs/XrNewSceneComputeInfoMSFT.txt[]
+--
+
+[open,refpage='XrSceneComputeFeatureMSFT',desc='Scene compute feature',type='enums',xrefs='xrComputeNewSceneMSFT']
+--
+The elink:XrSceneComputeFeatureMSFT enumeration identifies the different
+scene compute features that may be passed to flink:xrComputeNewSceneMSFT.
+
+include::../../../../generated/api/enums/XrSceneComputeFeatureMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT specifies that plane data for
+  objects should be included in the resulting scene.
+* ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT specifies that planar
+  meshes for objects should be included in the resulting scene.
+* ename:XR_SCENE_COMPUTE_FEATURE_VISUAL_MESH_MSFT specifies that 3D
+  visualization meshes for objects should be included in the resulting
+  scene.
+* ename:XR_SCENE_COMPUTE_FEATURE_COLLIDER_MESH_MSFT specifies that 3D
+  collider meshes for objects should be included in the resulting scene.
+****
+
+[NOTE]
+.Note
+====
+Applications wanting to use the scene for analysis, or in a physics
+simulation should set pname:consistency to
+ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_COMPLETE_MSFT in order to avoid
+physics objects falling through the gaps and escaping the scene.
+
+Setting pname:consistency to
+ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_INCOMPLETE_FAST_MSFT might speed
+up the compute but it will result in gaps in the scene.
+
+Setting pname:consistency to
+ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT should be done
+when the resulting mesh will only be used to occlude virtual objects that
+are behind real-world surfaces.
+This mode will be most efficient and have the lowest-latency, but will
+return meshes less suitable for analysis or visualization.
+====
+--
+
+[open,refpage='XrSceneComputeConsistencyMSFT',desc='Scene compute consistency',type='enums',xrefs='xrComputeNewSceneMSFT']
+--
+The elink:XrSceneComputeConsistencyMSFT enumeration identifies the different
+scene compute consistencies that may be passed to
+flink:xrComputeNewSceneMSFT.
+
+include::../../../../generated/api/enums/XrSceneComputeConsistencyMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_COMPLETE_MSFT.
+  The runtime must: return a scene that is a consistent and complete
+  snapshot of the environment, inferring the size and shape of objects as
+  needed where the objects were not directly observed, in order to generate
+  a watertight representation of the scene.
+* ename:XR_SCENE_COMPUTE_CONSISTENCY_SNAPSHOT_INCOMPLETE_FAST_MSFT.
+  The runtime must: return a consistent snapshot of the scene with meshes
+  that do not overlap adjacent meshes at their edges, but may: skip
+  returning objects with elink:XrSceneObjectTypeMSFT of
+  ename:XR_SCENE_OBJECT_TYPE_INFERRED_MSFT in order to return the scene
+  faster.
+* ename:XR_SCENE_COMPUTE_CONSISTENCY_OCCLUSION_OPTIMIZED_MSFT.
+  The runtime may: react to this value by computing scenes more quickly and
+  reusing existing mesh buffer IDs more often to minimize app overhead, with
+  potential tradeoffs such as returning meshes that are not watertight,
+  meshes that overlap adjacent meshes at their edges to allow partial
+  updates in the future, or other reductions in mesh quality that are less
+  observable when mesh is used for occlusion only.
+****
+--
+
+[open,refpage='XrSceneBoundsMSFT',desc='The scene bounds',type='structs',xrefs='XrNewSceneComputeInfoMSFT xrComputeNewSceneMSFT']
+--
+An application can: pass one or more bounding volumes when calling
+flink:xrComputeNewSceneMSFT.
+These bounding volumes are used to determine which scene components to
+include in the resulting scene.
+Scene components that intersect one or more of the bounding volumes should:
+be included, and all other scene components should: be excluded.
+If an application inputs no bounding volumes, then the runtime must: not
+associate any scene components with the resulting slink:XrSceneMSFT handle.
+
+include::../../../../generated/api/structs/XrSceneBoundsMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:space is a handle to the slink:XrSpace in which the bounds are
+  specified.
+* pname:time is the basetype:XrTime at which the bounds will be evaluated
+  within pname:space.
+* pname:sphereCount is the number of sphere bounds.
+* pname:spheres is an array of slink:XrSceneSphereBoundMSFT.
+* pname:boxCount is the number of oriented box bounds.
+* pname:boxes is an array of slink:XrSceneOrientedBoxBoundMSFT.
+* pname:frustumCount is the number of frustum bounds.
+* pname:frustums is an array of slink:XrSceneFrustumBoundMSFT.
+****
+
+include::../../../../generated/validity/structs/XrSceneBoundsMSFT.txt[]
+--
+
+[open,refpage='XrSceneSphereBoundMSFT',desc='Describe a scene sphere bounds',type='structs',xrefs='XrSceneBoundsMSFT']
+--
+An slink:XrSceneSphereBoundMSFT structure describes the center and radius of
+a sphere bounds.
+
+include::../../../../generated/api/structs/XrSceneSphereBoundMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:center is an slink:XrVector3f representing the center of the sphere
+  bound within the reference frame of the corresponding
+  slink:XrSceneBoundsMSFT::pname:space.
+* pname:radius is the finite positive radius of the sphere bound.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if pname:radius
+is not a finite positive value.
+
+include::../../../../generated/validity/structs/XrSceneSphereBoundMSFT.txt[]
+--
+
+[open,refpage='XrSceneOrientedBoxBoundMSFT',desc='Describe a scene oriented box bounds',type='structs',xrefs='XrSceneBoundsMSFT']
+--
+An slink:XrSceneOrientedBoxBoundMSFT structure describes the pose and
+extents of an oriented box bounds.
+
+include::../../../../generated/api/structs/XrSceneOrientedBoxBoundMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:pose is an slink:XrPosef defining the center position and
+  orientation of the oriented bounding box bound within the reference frame
+  of the corresponding slink:XrSceneBoundsMSFT::pname:space.
+* pname:extents is an slink:XrVector3f defining the edge-to-edge length of
+  the box along each dimension with pname:pose as the center.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if any component
+of pname:extents is not finite or less than or equal to zero.
+
+include::../../../../generated/validity/structs/XrSceneOrientedBoxBoundMSFT.txt[]
+--
+
+[open,refpage='XrSceneFrustumBoundMSFT',desc='Describe a scene frustum bounds',type='structs',xrefs='XrSceneBoundsMSFT']
+--
+An slink:XrSceneFrustumBoundMSFT structure describes the pose, field of
+view, and far distance of a frustum bounds.
+
+include::../../../../generated/api/structs/XrSceneFrustumBoundMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the tip of the frustum bound within the reference frame of the
+  corresponding slink:XrSceneBoundsMSFT::pname:space.
+* pname:fov is an slink:XrFovf for the four sides of the frustum bound where
+  pname:angleLeft and pname:angleRight are along the X axis and
+  pname:angleUp and pname:angleDown are along the Y axis of the frustum
+  bound space.
+* pname:farDistance is the positive distance of the far plane of the frustum
+  bound along the -Z direction of the frustum bound space.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:farDistance is less than or equal to zero.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the pname:fov
+angles are not between between [eq]#-{pi}/2# and [eq]#{pi}/2# exclusively.
+
+include::../../../../generated/validity/structs/XrSceneFrustumBoundMSFT.txt[]
+--
+
+[open,refpage='XrVisualMeshComputeLodInfoMSFT',desc='Visual mesh compute level of detail info',type='structs',xrefs='XrNewSceneComputeInfoMSFT xrComputeNewSceneMSFT']
+--
+Applications can: request a desired visual mesh level of detail by including
+slink:XrVisualMeshComputeLodInfoMSFT in the
+slink:XrNewSceneComputeInfoMSFT::pname:next chain.
+If slink:XrVisualMeshComputeLodInfoMSFT is not included in the
+slink:XrNewSceneComputeInfoMSFT::pname:next chain, then
+ename:XR_MESH_COMPUTE_LOD_COARSE_MSFT must: be used for the visual mesh
+level of detail.
+
+The slink:XrVisualMeshComputeLodInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:lod is the requested mesh level of detail specified by
+  elink:XrMeshComputeLodMSFT.
+****
+
+include::../../../../generated/validity/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
+--
+
+[open,refpage='XrMeshComputeLodMSFT',desc='Mesh compute level of detail enumeration',type='enums',xrefs='XrVisualMeshComputeLodInfoMSFT']
+--
+The elink:XrMeshComputeLodMSFT enumeration identifies the level of detail of
+visual mesh compute.
+
+include::../../../../generated/api/enums/XrMeshComputeLodMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_MESH_COMPUTE_LOD_COARSE_MSFT.
+  Coarse mesh compute level of detail will generate roughly 100 triangles
+  per cubic meter.
+* ename:XR_MESH_COMPUTE_LOD_MEDIUM_MSFT.
+  Medium mesh compute level of detail will generate roughly 400 triangles
+  per cubic meter.
+* ename:XR_MESH_COMPUTE_LOD_FINE_MSFT.
+  Fine mesh compute level of detail will generate roughly 2000 triangles per
+  cubic meter.
+* ename:XR_MESH_COMPUTE_LOD_UNLIMITED_MSFT.
+  Unlimited mesh compute level of detail.
+  There is no guarantee as to the number of triangles returned.
+****
+--
+
+[open,refpage='xrEnumerateSceneComputeFeaturesMSFT',type='protos',desc='Enumerates scene compute features',xrefs='xrComputeNewSceneMSFT XrSceneComputeFeatureMSFT']
+--
+The flink:xrEnumerateSceneComputeFeaturesMSFT function enumerates the
+supported scene compute features of the given system.
+
+This function follows the <<buffer-size-parameters,two-call idiom>> for
+filling the pname:features array.
+
+include::../../../../generated/api/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance.
+* pname:systemId is the basetype:XrSystemId whose scene compute features
+  will be enumerated.
+* pname:featureCapacityInput is the capacity of the array, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:featureCountOutput is a pointer to the count of scene compute
+  features, or a pointer to the required capacity in the case that
+  pname:featureCapacityInput is 0.
+* pname:features is an array of elink:XrSceneComputeFeatureMSFT.
+****
+
+include::../../../../generated/validity/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
+--
+
+[open,refpage='xrGetSceneComputeStateMSFT',type='protos',desc='Get the scene compute state',xrefs='XrSceneComputeStateMSFT XrSceneObserverMSFT']
+--
+An application can: inspect the completion of the compute by polling
+flink:xrGetSceneComputeStateMSFT.
+This function should: typically be called once per frame per
+slink:XrSceneObserverMSFT.
+
+include::../../../../generated/api/protos/xrGetSceneComputeStateMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:sceneObserver is a handle to an slink:XrSceneObserverMSFT.
+* pname:state is the returned elink:XrSceneComputeStateMSFT value.
+****
+
+include::../../../../generated/validity/protos/xrGetSceneComputeStateMSFT.txt[]
+--
+
+[open,refpage='XrSceneComputeStateMSFT',desc='Scene compute state type',type='enums',xrefs='xrGetSceneComputeStateMSFT']
+--
+elink:XrSceneComputeStateMSFT identifies the different states of computing a
+new scene.
+
+include::../../../../generated/api/enums/XrSceneComputeStateMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_COMPUTE_STATE_NONE_MSFT indicates that no scene is
+  available, and that a scene is not being computed.
+  The application may: call flink:xrComputeNewSceneMSFT to start computing a
+  scene.
+
+* ename:XR_SCENE_COMPUTE_STATE_UPDATING_MSFT indicates that a new scene is
+  being computed.
+  Calling flink:xrCreateSceneMSFT or flink:xrComputeNewSceneMSFT must:
+  return the error ename:XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT.
+
+* ename:XR_SCENE_COMPUTE_STATE_COMPLETED_MSFT indicates that a new scene has
+  completed computing.
+  The application may: call flink:xrCreateSceneMSFT to get the results of
+  the query or the application may: call flink:xrComputeNewSceneMSFT to
+  start computing a new scene.
+
+* ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT indicates that the
+  new scene computation completed with an error.
+  Calling flink:xrCreateSceneMSFT must: return a valid slink:XrSceneMSFT
+  handle but calling flink:xrGetSceneComponentsMSFT with that handle must:
+  return zero scene components.
+  The runtime must: allow the application to call
+  flink:xrComputeNewSceneMSFT to try computing a scene again, even if the
+  last call to flink:xrComputeNewSceneMSFT resulted in
+  ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT.
+****
+--
+
+- The flink:xrGetSceneComputeStateMSFT function must: return
+  ename:XR_SCENE_COMPUTE_STATE_NONE_MSFT if it is called before
+  flink:xrComputeNewSceneMSFT is called for the first time for the given
+  slink:XrSceneObserverMSFT handle.
+- After calling flink:xrComputeNewSceneMSFT but before the asynchronous
+  operation has completed, any calls to flink:xrGetSceneComputeStateMSFT
+  should: return ename:XR_SCENE_COMPUTE_STATE_UPDATING_MSFT.
+- Once the asynchronous operation has completed successfully,
+  flink:xrGetSceneComputeStateMSFT must: return
+  ename:XR_SCENE_COMPUTE_STATE_COMPLETED_MSFT until
+  flink:xrComputeNewSceneMSFT is called again.
+
+*Create a scene handle after a new scene compute has completed*
+
+[open,refpage='xrCreateSceneMSFT',type='protos',desc='Create a scene handle',xrefs='XrSceneMSFT XrSceneCreateInfoMSFT xrDestroySceneMSFT']
+--
+
+The flink:xrCreateSceneMSFT functions creates an slink:XrSceneMSFT handle.
+It can only be called after flink:xrGetSceneComputeStateMSFT returns
+ename:XR_SCENE_COMPUTE_STATE_COMPLETED_MSFT to indicate that the
+asynchronous operation has completed.
+The slink:XrSceneMSFT handle manages the collection of scene components that
+represents the detected objects found during the query.
+
+After an slink:XrSceneMSFT handle is created, the handle and associated data
+must: remain valid until destroyed, even after flink:xrCreateSceneMSFT is
+called again to create the next scene.
+The runtime must: keep alive any component data and mesh buffers relating to
+this historical scene until its handle is destroyed.
+
+include::../../../../generated/api/protos/xrCreateSceneMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:sceneObserver is a handle to an slink:XrSceneObserverMSFT.
+* pname:createInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrSceneCreateInfoMSFT structure.
+* pname:scene is the returned slink:XrSceneMSFT handle.
+****
+
+include::../../../../generated/validity/protos/xrCreateSceneMSFT.txt[]
+
+Calling flink:xrCreateSceneMSFT when flink:xrGetSceneComputeStateMSFT
+returns ename:XR_SCENE_COMPUTE_STATE_NONE_MSFT or
+ename:XR_SCENE_COMPUTE_STATE_UPDATING_MSFT must: return the error
+ename:XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT.
+--
+
+[open,refpage='XrSceneCreateInfoMSFT',desc='The information to create a scene handle',type='structs',xrefs='xrCreateSceneMSFT']
+--
+The slink:XrSceneCreateInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneCreateInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::../../../../generated/validity/structs/XrSceneCreateInfoMSFT.txt[]
+--
+
+[open,refpage='xrDestroySceneMSFT',type='protos',desc='Destroy a scene handle',xrefs='xrCreateSceneMSFT']
+--
+The flink:xrDestroySceneMSFT function releases the pname:scene and the
+underlying resources.
+
+include::../../../../generated/api/protos/xrDestroySceneMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is an slink:XrSceneMSFT previously created by
+  flink:xrCreateSceneMSFT.
+****
+
+include::../../../../generated/validity/protos/xrDestroySceneMSFT.txt[]
+--
+
+*Scene component types and Universally Unique Identifiers*
+
+Each slink:XrSceneMSFT may contain one or more scene components.
+Scene components are uniquely identified by a Universally Unique Identifier,
+represented by slink:XrUuidMSFT.
+Each scene component belongs to one elink:XrSceneComponentTypeMSFT.
+The elink:XrSceneComponentTypeMSFT denotes which additional properties can
+be read for that scene component.
+
+* Get a list of scene objects and their properties in the scene by calling
+  flink:xrGetSceneComponentsMSFT with
+  ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT and including
+  slink:XrSceneObjectsMSFT in the slink:XrSceneComponentsMSFT::pname:next
+  chain.
+* Get the list of scene planes and their properties in the scene if
+  ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MSFT was passed to
+  flink:xrComputeNewSceneMSFT by calling flink:xrGetSceneComponentsMSFT with
+  ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT and including
+  slink:XrScenePlanesMSFT in the slink:XrSceneComponentsMSFT::pname:next
+  chain.
+* Get the list of scene visual meshes and their properties in the scene if
+  ename:XR_SCENE_COMPUTE_FEATURE_VISUAL_MESH_MSFT was passed to
+  flink:xrComputeNewSceneMSFT by calling flink:xrGetSceneComponentsMSFT with
+  ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT and including
+  slink:XrSceneMeshesMSFT in the slink:XrSceneComponentsMSFT::pname:next
+  chain.
+* Get the list of scene collider meshes and their properties in the scene if
+  ename:XR_SCENE_COMPUTE_FEATURE_COLLIDER_MESH_MSFT was passed to
+  flink:xrComputeNewSceneMSFT by calling flink:xrGetSceneComponentsMSFT with
+  ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT and including
+  slink:XrSceneMeshesMSFT in the slink:XrSceneComponentsMSFT::pname:next
+  chain.
+
+[open,refpage='XrUuidMSFT',desc='Universally Unique Identifier',type='structs',xrefs='XrSceneComponentMSFT']
+--
+The slink:XrUuidMSFT structure is a 128-bit UUID (Universally Unique
+IDentifier) that follows
+link:https://www.rfc-editor.org/rfc/rfc4122.html#section-4.1.1[RFC 4122
+Variant 1].
+The structure is composed of 16 octets, typically with the sizes and order
+of the fields defined in
+link:https://www.rfc-editor.org/rfc/rfc4122.html#section-4.1.2[RFC 4122
+section 4.1.2].
+The slink:XrUuidMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrUuidMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:bytes is a 128-bit Variant-1 Universally Unique Identifier.
+****
+
+include::../../../../generated/validity/structs/XrUuidMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentTypeMSFT',desc='Scene component type',type='enums',xrefs='XrSceneComponentMSFT XrSceneComponentsGetInfoMSFT']
+--
+The elink:XrSceneComponentTypeMSFT enumeration identifies the scene
+component type.
+
+include::../../../../generated/api/enums/XrSceneComponentTypeMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_COMPONENT_TYPE_INVALID_MSFT indicates an invalid scene
+  component type.
+* ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT indicates a discrete object
+  detected in the world, such as a wall, floor, ceiling or table.
+  Scene objects then provide their geometric representations such as planes
+  and meshes as child scene components with the types below.
+* ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT indicates a flat 2D
+  representation of a surface in the world, such as a wall, floor, ceiling
+  or table.
+* ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT indicates a visual mesh
+  representation of an object in the world, optimized for visual quality
+  when directly rendering a wireframe or other mesh visualization to the
+  user.
+  Visual mesh can also be used for rendering the silhouettes of objects.
+  Applications can request varying levels of detail for visual meshes when
+  calling flink:xrComputeNewSceneMSFT using
+  slink:XrVisualMeshComputeLodInfoMSFT.
+* ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT indicates a collider mesh
+  representation of an object in the world, optimized to maintain the
+  silhouette of an object while reducing detail on mostly-flat surfaces.
+  Collider mesh is useful when calculating physics collisions or when
+  rendering silhouettes of objects for occlusion.
+****
+--
+
+*Get scene components*
+
+[open,refpage='xrGetSceneComponentsMSFT',type='protos',desc='Get scene components from a scene',xrefs='XrSceneComponentsGetInfoMSFT XrSceneComponentsMSFT']
+--
+Scene components are read from an slink:XrSceneMSFT using
+flink:xrGetSceneComponentsMSFT and passing one
+elink:XrSceneComponentTypeMSFT.
+This function follows the <<buffer-size-parameters,two-call idiom>> for
+filling multiple buffers in a struct.
+Different scene component types may: have additional properties that can: be
+read by chaining additional structures to slink:XrSceneComponentsMSFT.
+Those additional structures must: have an array size that is at least as
+large as slink:XrSceneComponentsMSFT::componentCapacityInput, otherwise the
+runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
+
+- If ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT is passed to
+  flink:xrGetSceneComponentsMSFT, then slink:XrSceneObjectsMSFT may be
+  included in the slink:XrSceneComponentsMSFT::pname:next chain.
+- If ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT is passed to
+  flink:xrGetSceneComponentsMSFT, then slink:XrScenePlanesMSFT may be
+  included in the slink:XrSceneComponentsMSFT::pname:next chain.
+- If ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT or
+  ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT are passed to
+  flink:xrGetSceneComponentsMSFT, then slink:XrSceneMeshesMSFT may be
+  included in the slink:XrSceneComponentsMSFT::pname:next chain.
+
+include::../../../../generated/api/protos/xrGetSceneComponentsMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is an slink:XrSceneMSFT previously created by
+  flink:xrCreateSceneMSFT.
+* pname:getInfo is a pointer to an slink:XrSceneComponentsGetInfoMSFT
+  structure.
+* pname:components is the slink:XrSceneComponentsMSFT output structure.
+****
+
+include::../../../../generated/validity/protos/xrGetSceneComponentsMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentsGetInfoMSFT',desc='The information to get the scene components',type='structs',xrefs='XrSceneComponentTypeMSFT xrGetSceneComponentsMSFT']
+--
+An application can: use slink:XrSceneComponentsGetInfoMSFT to read the state
+of a specific component type using the flink:xrGetSceneComponentsMSFT
+function.
+Applications can chain one or more of following extension structures to the
+slink:XrSceneComponentsGetInfoMSFT::pname:next chain to further narrow the
+returned components.
+The returned components must: satisfy all conditions in the extension
+structs.
+
+- slink:XrSceneComponentParentFilterInfoMSFT to return only scene components
+  that match the given parent object identifier.
+- slink:XrSceneObjectTypesFilterInfoMSFT to return only scene components
+  that match any of the given elink:XrSceneObjectTypeMSFT values or if a
+  scene component does not have an elink:XrSceneObjectTypeMSFT property then
+  the parent's elink:XrSceneObjectTypeMSFT property will be compared.
+- slink:XrScenePlaneAlignmentFilterInfoMSFT to return only scene components
+  that match any of the given elink:XrScenePlaneAlignmentTypeMSFT values.
+
+The slink:XrSceneComponentsGetInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneComponentsGetInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:componentType is the scene component type requested.
+****
+
+include::../../../../generated/validity/structs/XrSceneComponentsGetInfoMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentsMSFT',desc='Scene components',type='structs',xrefs='XrSceneComponentMSFT xrGetSceneComponentsMSFT']
+--
+The slink:XrSceneComponentsMSFT structure contains an array of
+slink:XrSceneComponentMSFT returning the components that satisfy the
+conditions in flink:xrGetSceneComponentsMSFT::pname:getInfo.
+The slink:XrSceneComponentsMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneComponentsMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:componentCapacityInput is the capacity of the array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:componentCountOutput is a pointer to the count of components, or a
+  pointer to the required capacity in the case that
+  pname:componentCapacityInput is 0.
+* pname:components is an array of slink:XrSceneComponentMSFT.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:components size.
+****
+
+include::../../../../generated/validity/structs/XrSceneComponentsMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentMSFT',desc='Scene component',type='structs',xrefs='XrSceneComponentTypeMSFT XrSceneComponentsMSFT']
+--
+The slink:XrSceneComponentMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneComponentMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:componentType is the elink:XrSceneComponentTypeMSFT of the scene
+  component.
+* pname:id is the slink:XrUuidMSFT of the scene component.
+* pname:parentId is the slink:XrUuidMSFT of the parent scene object.
+  If the scene component does not have a parent, then pname:parentId will be
+  equal to zero.
+* pname:updateTime is the basetype:XrTime that this scene component was last
+  updated.
+****
+
+The runtime must: set pname:parentId to either zero or a valid
+slink:XrUuidMSFT that corresponds to a scene component of type
+ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT that exists in the
+slink:XrSceneMSFT.
+
+[NOTE]
+.Note
+====
+The parent scene object is intended to allow scene components to be grouped.
+For example, the scene object for a wall might have multiple scene component
+children like ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT,
+ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT, and
+ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT.
+Those child scene components would be alternative representations of the
+same wall.
+====
+
+include::../../../../generated/validity/structs/XrSceneComponentMSFT.txt[]
+--
+
+*Get scene components using filters*
+
+The scene components that are returned by flink:xrGetSceneComponentsMSFT
+can: be filtered by chaining optional structures to
+slink:XrSceneComponentsGetInfoMSFT.
+The runtime must: combine multiple filters with a logical AND.
+
+[open,refpage='XrSceneComponentParentFilterInfoMSFT',desc='Scene component parent filter',type='structs',xrefs='XrSceneComponentsGetInfoMSFT']
+--
+The slink:XrSceneComponentParentFilterInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:parentId is the slink:XrUuidMSFT of the parent scene component to
+  filter by.
+****
+
+The runtime must: return only scene components with matching pname:parentId.
+If pname:parentId is zero then the runtime must: return only scene
+components that do not have a parent.
+
+include::../../../../generated/validity/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
+--
+
+[open,refpage='XrSceneObjectTypesFilterInfoMSFT',desc='Scene object types filter',type='structs',xrefs='XrSceneComponentsGetInfoMSFT']
+--
+The slink:XrSceneObjectTypesFilterInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:objectTypeCount is a code:uint32_t describing the count of elements
+  in the pname:objectTypes array.
+* pname:objectTypes is an array of elink:XrSceneObjectTypeMSFT to filter by.
+****
+
+The runtime must: return only scene components that match any of the
+elink:XrSceneObjectTypeMSFT in pname:objectTypes.
+If a scene component does not have an elink:XrSceneObjectTypeMSFT then the
+parent's elink:XrSceneObjectTypeMSFT value will be used for the comparison
+if it exists.
+
+include::../../../../generated/validity/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
+--
+
+[open,refpage='XrScenePlaneAlignmentFilterInfoMSFT',desc='Plane alignment filter',type='structs',xrefs='XrSceneComponentsGetInfoMSFT']
+--
+The slink:XrScenePlaneAlignmentFilterInfoMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:alignmentCount is a code:uint32_t describing the count of elements
+  in the pname:alignments array.
+* pname:alignments is an array of elink:XrScenePlaneAlignmentTypeMSFT to
+  filter by.
+****
+
+The runtime must: return only scene components that match one of the
+elink:XrScenePlaneAlignmentTypeMSFT values passed in pname:alignments.
+
+include::../../../../generated/validity/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
+--
+
+*Get scene objects*
+
+[open,refpage='XrSceneObjectsMSFT',desc='Scene objects',type='structs',xrefs='XrSceneComponentsMSFT']
+--
+The runtime must: fill out the slink:XrSceneObjectsMSFT structure when
+included in the slink:XrSceneComponentsMSFT::pname:next chain.
+The slink:XrSceneComponentsGetInfoMSFT::componentType must: be
+ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT when slink:XrSceneObjectsMSFT is
+included in the next chain.
+If it is not, the ename:XR_ERROR_SCENE_COMPONENT_TYPE_MISMATCH_MSFT error
+must: be returned.
+
+The slink:XrSceneObjectsMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneObjectsMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:sceneObjectCount is a code:uint32_t describing the count of elements
+  in the pname:sceneObjects array.
+* pname:sceneObjects is an array of slink:XrSceneObjectMSFT.
+****
+
+The runtime must: only set slink:XrSceneObjectMSFT::pname:objectType to any
+of the following elink:XrSceneObjectTypeMSFT values:
+
+* ename:XR_SCENE_OBJECT_TYPE_UNCATEGORIZED_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_BACKGROUND_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_WALL_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_FLOOR_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_CEILING_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_PLATFORM_MSFT
+* ename:XR_SCENE_OBJECT_TYPE_INFERRED_MSFT
+
+include::../../../../generated/validity/structs/XrSceneObjectsMSFT.txt[]
+--
+
+[open,refpage='XrSceneObjectMSFT',desc='Scene object',type='structs',xrefs='XrSceneObjectTypeMSFT XrSceneObjectsMSFT']
+--
+The slink:XrSceneObjectMSFT structure represents the state of a scene
+object.
+
+It is defined as:
+
+include::../../../../generated/api/structs/XrSceneObjectMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:objectType is the type of the object specified by
+  elink:XrSceneObjectTypeMSFT.
+****
+
+include::../../../../generated/validity/structs/XrSceneObjectMSFT.txt[]
+--
+
+[open,refpage='XrSceneObjectTypeMSFT',desc='Scene object type',type='enums',xrefs='XrNewSceneComputeInfoMSFT XrSceneObjectMSFT XrSceneObjectTypesFilterInfoMSFT']
+--
+The elink:XrSceneObjectTypeMSFT enumeration identifies the different types
+of scene objects.
+
+include::../../../../generated/api/enums/XrSceneObjectTypeMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_OBJECT_TYPE_UNCATEGORIZED_MSFT.
+  This scene object has yet to be classified and assigned a type.
+  This should not be confused with background, as this object could be
+  anything; the system has just not come up with a strong enough
+  classification for it yet.
+* ename:XR_SCENE_OBJECT_TYPE_BACKGROUND_MSFT.
+  The scene object is known to be not one of the other recognized types of
+  scene object.
+  This class should not be confused with uncategorized where background is
+  known not to be wall/floor/ceiling etc.
+  while uncategorized is not yet categorized.
+* ename:XR_SCENE_OBJECT_TYPE_WALL_MSFT.
+  A physical wall.
+  Walls are assumed to be immovable environmental structures.
+* ename:XR_SCENE_OBJECT_TYPE_FLOOR_MSFT.
+  Floors are any surfaces on which one can walk.
+  Note: stairs are not floors.
+  Also note, that floors assume any walkable surface and therefore there is
+  no explicit assumption of a singular floor.
+  Multi-level structures, ramps, etc.
+  should all classify as floor.
+* ename:XR_SCENE_OBJECT_TYPE_CEILING_MSFT.
+  The upper surface of a room.
+* ename:XR_SCENE_OBJECT_TYPE_PLATFORM_MSFT.
+  A large flat surface on which you could place holograms.
+  These tend to represent tables, countertops, and other large horizontal
+  surfaces.
+* ename:XR_SCENE_OBJECT_TYPE_INFERRED_MSFT.
+  An imaginary object that was added to the scene in order to make the scene
+  watertight and avoid gaps.
+****
+--
+
+*Get scene planes*
+
+[open,refpage='XrScenePlanesMSFT',desc='Scene planes',type='structs',xrefs='XrSceneComponentsMSFT']
+--
+The runtime must: fill out the slink:XrScenePlanesMSFT structure when
+included in the slink:XrSceneComponentsMSFT::pname:next chain.
+The slink:XrSceneComponentsGetInfoMSFT::componentType must: be
+ename:XR_SCENE_COMPONENT_TYPE_PLANE_MSFT when slink:XrScenePlanesMSFT is
+included in the next chain.
+If it is not, the ename:XR_ERROR_SCENE_COMPONENT_TYPE_MISMATCH_MSFT error
+must: be returned.
+
+The slink:XrScenePlanesMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrScenePlanesMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:scenePlaneCount is a code:uint32_t describing the count of elements
+  in the slink:XrScenePlaneMSFT array.
+* pname:scenePlanes is an array of slink:XrScenePlaneMSFT.
+****
+
+include::../../../../generated/validity/structs/XrScenePlanesMSFT.txt[]
+--
+
+[open,refpage='XrScenePlaneMSFT',desc='Scene plane',type='structs',xrefs='XrScenePlanesMSFT']
+--
+The slink:XrScenePlaneMSFT structure represents the state of a scene plane.
+
+It is defined as:
+
+include::../../../../generated/api/structs/XrScenePlaneMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:alignment is the alignment type of the plane specified by
+  elink:XrScenePlaneAlignmentTypeMSFT.
+* pname:size is the 2D size of the plane's extent, where
+  pname:size::pname:width is the width of the plane along the X axis, and
+  pname:size::pname:height is the height of the plane along the Y axis.
+* pname:meshBufferId is the code:uint64_t identifier that specifies the
+  scene mesh buffer of this plane's triangle mesh.
+  If pname:meshBufferId is zero then this plane does not have a mesh.
+  The triangles in a planar mesh are coplanar.
+* pname:supportsIndicesUint16 is ename:XR_TRUE if the mesh supports reading
+  16-bit unsigned indices.
+****
+
+The pname:size of a plane refers to the plane's size in the [eq]#x-y# plane
+of the plane's coordinate system.
+A plane with a position of {0,0,0}, rotation of {0,0,0,1} (no rotation), and
+an extent of {1,1} refers to a 1 meter x 1 meter plane centered at {0,0,0}
+with its front face normal vector pointing towards the +Z direction in the
+plane component's space.
+For planes with an alignment of
+ename:XR_SCENE_PLANE_ALIGNMENT_TYPE_VERTICAL_MSFT, the +Y direction must:
+point up away from the direction of gravity.
+
+
+image::images/xr_msft_scene_understanding_plane_coordinate_system.svg[align="center", title="Scene Understanding Plane Coordinate System"]
+
+[NOTE]
+.Note
+====
+OpenXR uses an X-Y plane with +Z as the plane normal but other APIs may use
+an X-Z plane with +Y as the plane normal.
+The X-Y plane can be converted to an X-Z plane by rotating [eq]#-{pi}/2#
+radians around the +X axis.
+====
+
+include::../../../../generated/validity/structs/XrScenePlaneMSFT.txt[]
+--
+
+[open,refpage='XrScenePlaneAlignmentTypeMSFT',desc='Scene plane alignment type',type='enums',xrefs='XrScenePlaneMSFT XrScenePlaneAlignmentFilterInfoMSFT']
+--
+elink:XrScenePlaneAlignmentTypeMSFT identifies the different plane alignment
+types.
+
+include::../../../../generated/api/enums/XrScenePlaneAlignmentTypeMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_PLANE_ALIGNMENT_TYPE_NON_ORTHOGONAL_MSFT means the plane's
+  normal is not orthogonal or parallel to the gravity direction.
+* ename:XR_SCENE_PLANE_ALIGNMENT_TYPE_HORIZONTAL_MSFT means the plane's
+  normal is roughly parallel to the gravity direction.
+* ename:XR_SCENE_PLANE_ALIGNMENT_TYPE_VERTICAL_MSFT means the plane's normal
+  is roughly orthogonal to the gravity direction.
+****
+--
+
+*Get scene mesh*
+
+[open,refpage='XrSceneMeshesMSFT',desc='Scene meshes',type='structs',xrefs='XrSceneComponentsMSFT']
+--
+The runtime must: fill out the slink:XrSceneMeshesMSFT structure when
+included in the slink:XrSceneComponentsMSFT::pname:next chain.
+The slink:XrSceneComponentsGetInfoMSFT::componentType must: be
+ename:XR_SCENE_COMPONENT_TYPE_VISUAL_MESH_MSFT or
+ename:XR_SCENE_COMPONENT_TYPE_COLLIDER_MESH_MSFT when
+slink:XrSceneMeshesMSFT is included in the next chain.
+If it is not, the ename:XR_ERROR_SCENE_COMPONENT_TYPE_MISMATCH_MSFT error
+must: be returned.
+
+The slink:XrSceneMeshesMSFT structure is defined as:
+
+include::../../../../generated/api/structs/XrSceneMeshesMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:sceneMeshCount is a code:uint32_t describing the count of elements
+  in the pname:sceneMeshes array.
+* pname:sceneMeshes is an array of slink:XrSceneMeshMSFT.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshesMSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshMSFT',desc='Scene mesh',type='structs',xrefs='XrSceneMeshesMSFT']
+--
+The slink:XrSceneMeshMSFT structure represents the state of a scene
+component's mesh.
+
+It is defined as:
+
+include::../../../../generated/api/structs/XrSceneMeshMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:meshBufferId is the code:uint64_t identifier that specifies the
+  scene mesh buffer.
+  If pname:meshBufferId is zero then this scene component does not have mesh
+  data of corresponding elink:XrSceneComponentTypeMSFT in
+  flink:xrGetSceneComponentsMSFT::pname:getInfo.
+* pname:supportsIndicesUint16 is ename:XR_TRUE if the mesh supports reading
+  16-bit unsigned indices.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshMSFT.txt[]
+--
+
+*Read scene mesh buffer*
+
+[open,refpage='xrGetSceneMeshBuffersMSFT',type='protos',desc='Get scene mesh buffers',xrefs='XrSceneMeshBuffersGetInfoMSFT XrSceneMeshBuffersMSFT']
+--
+The flink:xrGetSceneMeshBuffersMSFT function retrieves the scene mesh vertex
+buffer and index buffer for the given scene mesh buffer identifier.
+
+[NOTE]
+.Note
+====
+Applications may use the scene mesh buffer identifier as a key to cache the
+vertices and indices of a mesh for reuse within an slink:XrSceneMSFT or
+across multiple slink:XrSceneMSFT for the same slink:XrSession.
+
+Applications can avoid unnecessarily calling flink:xrGetSceneMeshBuffersMSFT
+for a scene component if slink:XrSceneComponentMSFT::pname:updateTime is
+equal to the slink:XrSceneComponentMSFT::pname:updateTime value in the
+previous slink:XrSceneMSFT.
+A scene component is uniquely identified by slink:XrUuidMSFT.
+====
+
+This function follows the two-call idiom for filling multiple buffers in a
+struct.
+
+The flink:xrGetSceneMeshBuffersMSFT function is defined as:
+
+include::../../../../generated/api/protos/xrGetSceneMeshBuffersMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is an slink:XrSceneMSFT previously created by
+  flink:xrCreateSceneMSFT.
+* pname:getInfo is a pointer to an slink:XrSceneMeshBuffersGetInfoMSFT
+  structure.
+* pname:buffers is a pointer to an slink:XrSceneMeshBuffersMSFT structure
+  for reading a scene mesh buffer.
+****
+
+Applications can: request the vertex buffer of the mesh by including
+slink:XrSceneMeshVertexBufferMSFT in the
+slink:XrSceneMeshBuffersMSFT::pname:next chain.
+Runtimes must: support requesting a 32-bit index buffer and may: support
+requesting a 16-bit index buffer.
+Applications can: request a 32-bit index buffer by including
+slink:XrSceneMeshIndicesUint32MSFT in the
+slink:XrSceneMeshBuffersMSFT::pname:next chain.
+Applications can: request a 16-bit index buffer by including
+slink:XrSceneMeshIndicesUint16MSFT in the
+slink:XrSceneMeshBuffersMSFT::pname:next chain.
+If the runtime for the given scene mesh buffer does not support requesting a
+16-bit index buffer then ename:XR_ERROR_VALIDATION_FAILURE must: be
+returned.
+The runtime must: support reading a 16-bit index buffer for the given scene
+mesh buffer if slink:XrScenePlaneMSFT:supportsIndicesUint16 or
+slink:XrSceneMeshMSFT:supportsIndicesUint16 are ename:XR_TRUE for the scene
+component that contained that scene mesh buffer identifier.
+
+The runtime must: return ename:XR_ERROR_SCENE_MESH_BUFFER_ID_INVALID_MSFT if
+none of the scene components in the given slink:XrSceneMSFT contain
+slink:XrSceneMeshBuffersGetInfoMSFT::pname:meshBufferId.
+The runtime must: return ename:XR_ERROR_SCENE_MESH_BUFFER_ID_INVALID_MSFT if
+slink:XrSceneMeshBuffersGetInfoMSFT::pname:meshBufferId is zero.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if both
+slink:XrSceneMeshIndicesUint32MSFT and slink:XrSceneMeshIndicesUint16MSFT
+are included in the slink:XrSceneMeshBuffersMSFT::pname:next chain.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+slink:XrSceneMeshBuffersMSFT::pname:next does not contain at least one of
+slink:XrSceneMeshVertexBufferMSFT, slink:XrSceneMeshIndicesUint32MSFT or
+slink:XrSceneMeshIndicesUint16MSFT.
+
+The runtime must: return the same vertices and indices for a given scene
+mesh buffer identifier and slink:XrSession.
+A runtime may: return zero vertices and indices if the underlying mesh data
+is no longer available.
+
+include::../../../../generated/validity/protos/xrGetSceneMeshBuffersMSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshBuffersGetInfoMSFT',desc='The information to get the scene mesh buffer data',type='structs',xrefs='xrGetSceneMeshBuffersMSFT']
+--
+slink:XrSceneMeshBuffersGetInfoMSFT is an input structure for the
+flink:xrGetSceneMeshBuffersMSFT function.
+
+include::../../../../generated/api/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:meshBufferId is the code:uint64_t identifier that specifies the
+  scene mesh buffer to read.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshBuffersMSFT',desc='Scene mesh buffers',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshVertexBufferMSFT XrSceneMeshIndicesUint32MSFT XrSceneMeshIndicesUint16MSFT']
+--
+slink:XrSceneMeshBuffersMSFT is an input/output structure for reading scene
+mesh buffers.
+
+include::../../../../generated/api/structs/XrSceneMeshBuffersMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshBuffersMSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshVertexBufferMSFT',desc='Scene mesh vertex buffer',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
+--
+slink:XrSceneMeshVertexBufferMSFT is an input/output structure for reading
+scene mesh buffer vertices.
+
+include::../../../../generated/api/structs/XrSceneMeshVertexBufferMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:vertexCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:vertexCountOutput is a pointer to the count of vertices, or a
+  pointer to the required capacity in the case that
+  pname:vertexCapacityInput is 0.
+* pname:vertices is an array of slink:XrVector3f filled in by the runtime
+  returns the position of vertices in the mesh component's space.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:vertices size.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshVertexBufferMSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshIndicesUint32MSFT',desc='Scene mesh 32-bit indices',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
+--
+slink:XrSceneMeshIndicesUint32MSFT is an input/output structure for reading
+32-bit indices from a scene mesh buffer.
+
+include::../../../../generated/api/structs/XrSceneMeshIndicesUint32MSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:indexCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:indexCountOutput is a pointer to the count of indices, or a pointer
+  to the required capacity in the case that pname:indexCapacityInput is 0.
+* pname:indices is an array of triangle indices filled in by the runtime,
+  specifying the indices of the scene mesh buffer in the vertices array.
+  The triangle indices must: be returned in counter-clockwise order and
+  three indices denote one triangle.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:indices size.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshIndicesUint32MSFT.txt[]
+--
+
+[open,refpage='XrSceneMeshIndicesUint16MSFT',desc='Scene mesh 16-bit indices',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
+--
+slink:XrSceneMeshIndicesUint16MSFT is an input/output structure for reading
+16-bit indices from a scene mesh buffer.
+
+include::../../../../generated/api/structs/XrSceneMeshIndicesUint16MSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:indexCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:indexCountOutput is a pointer to the count of indices, or a pointer
+  to the required capacity in the case that pname:indexCapacityInput is 0.
+* pname:indices is an array of triangle indices filled in by the runtime,
+  specifying the indices of the scene mesh buffer in the vertices array.
+  The triangle indices must: be returned in counter-clockwise order and
+  three indices denote one triangle.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:indices size.
+****
+
+include::../../../../generated/validity/structs/XrSceneMeshIndicesUint16MSFT.txt[]
+--
+
+*Locate scene objects*
+
+[open,refpage='xrLocateSceneComponentsMSFT',type='protos',desc='Locate scene components',xrefs='XrSceneComponentsLocateInfoMSFT XrSceneComponentLocationsMSFT']
+--
+The flink:xrLocateSceneComponentsMSFT function locates an array of scene
+components to a base space at a given time.
+
+include::../../../../generated/api/protos/xrLocateSceneComponentsMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is a handle to an slink:XrSceneMSFT.
+* pname:locateInfo is a pointer to slink:XrSceneComponentsLocateInfoMSFT
+  describing information to locate scene components.
+* pname:locations is a pointer to slink:XrSceneComponentLocationsMSFT
+  receiving the returned scene component locations.
+****
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT if
+slink:XrSceneComponentLocationsMSFT::pname:locationCount is less than
+slink:XrSceneComponentsLocateInfoMSFT::pname:componentIdCount.
+
+[NOTE]
+.Note
+====
+Similar to flink:xrLocateSpace, apps should call
+flink:xrLocateSceneComponentsMSFT each frame because the location returned
+by flink:xrLocateSceneComponentsMSFT in later frames may change over time as
+the target space or the scene components may refine their locations.
+====
+
+include::../../../../generated/validity/protos/xrLocateSceneComponentsMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentsLocateInfoMSFT',desc='Describes the information to locate scene components',type='structs',xrefs='xrLocateSceneComponentsMSFT']
+--
+The slink:XrSceneComponentsLocateInfoMSFT structure describes the
+information to locate scene components.
+
+include::../../../../generated/api/structs/XrSceneComponentsLocateInfoMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is an slink:XrSpace within which the scene components will
+  be located.
+* pname:time is an basetype:XrTime at which to locate the scene components.
+* pname:componentIdCount is a code:uint32_t describing the count of elements
+  in the pname:componentIds array.
+* pname:componentIds is an array of slink:XrUuidMSFT identifiers for the
+  scene components to location.
+****
+
+include::../../../../generated/validity/structs/XrSceneComponentsLocateInfoMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentLocationsMSFT',desc='Returns the scene component locations',type='structs',xrefs='XrSceneComponentLocationMSFT xrLocateSceneComponentsMSFT']
+--
+The slink:XrSceneComponentLocationsMSFT structure returns scene component
+locations.
+
+include::../../../../generated/api/structs/XrSceneComponentLocationsMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:locationCount is a code:uint32_t describing the count of elements in
+  the pname:locations array.
+* pname:locations is an array of slink:XrSceneComponentLocationMSFT scene
+  component locations.
+****
+
+include::../../../../generated/validity/structs/XrSceneComponentLocationsMSFT.txt[]
+--
+
+[open,refpage='XrSceneComponentLocationMSFT',desc='Describes the location of a scene component',type='structs',xrefs='XrSpaceLocationFlags XrSceneComponentLocationsMSFT']
+--
+The slink:XrSceneComponentLocationMSFT structure describes the position and
+orientation of a scene component to space
+slink:XrSceneComponentsLocateInfoMSFT::pname:baseSpace at time
+slink:XrSceneComponentsLocateInfoMSFT::pname:time.
+If the scene component identified by slink:XrUuidMSFT is not found,
+pname:flags should be empty.
+
+include::../../../../generated/api/structs/XrSceneComponentLocationMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:flags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits, to indicate which members contain valid
+  data.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the scene component within the reference frame of the corresponding
+  slink:XrSceneComponentsLocateInfoMSFT::pname:baseSpace.
+****
+
+include::../../../../generated/validity/structs/XrSceneComponentLocationMSFT.txt[]
+--
+
+*New Object Types*
+
+* slink:XrSceneObserverMSFT
+* slink:XrSceneMSFT
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_SCENE_OBSERVER_MSFT
+* ename:XR_OBJECT_TYPE_SCENE_MSFT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SCENE_OBSERVER_CREATE_INFO_MSFT
+* ename:XR_TYPE_SCENE_CREATE_INFO_MSFT
+* ename:XR_TYPE_NEW_SCENE_COMPUTE_INFO_MSFT
+* ename:XR_TYPE_VISUAL_MESH_COMPUTE_LOD_INFO_MSFT
+* ename:XR_TYPE_SCENE_COMPONENTS_MSFT
+* ename:XR_TYPE_SCENE_COMPONENTS_GET_INFO_MSFT
+* ename:XR_TYPE_SCENE_COMPONENT_LOCATIONS_MSFT
+* ename:XR_TYPE_SCENE_COMPONENTS_LOCATE_INFO_MSFT
+* ename:XR_TYPE_SCENE_OBJECTS_MSFT
+* ename:XR_TYPE_SCENE_COMPONENT_PARENT_FILTER_INFO_MSFT
+* ename:XR_TYPE_SCENE_OBJECT_TYPES_FILTER_INFO_MSFT
+* ename:XR_TYPE_SCENE_PLANES_MSFT
+* ename:XR_TYPE_SCENE_PLANE_ALIGNMENT_FILTER_INFO_MSFT
+* ename:XR_TYPE_SCENE_MESHES_MSFT
+* ename:XR_TYPE_SCENE_MESH_BUFFERS_GET_INFO_MSFT
+* ename:XR_TYPE_SCENE_MESH_BUFFERS_MSFT
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT
+* ename:XR_ERROR_SCENE_COMPONENT_ID_INVALID_MSFT
+* ename:XR_ERROR_SCENE_COMPONENT_TYPE_MISMATCH_MSFT
+* ename:XR_ERROR_SCENE_MESH_BUFFER_ID_INVALID_MSFT
+* ename:XR_ERROR_SCENE_COMPUTE_FEATURE_INCOMPATIBLE_MSFT
+* ename:XR_ERROR_SCENE_COMPUTE_CONSISTENCY_MISMATCH_MSFT
+
+*New Enums*
+
+* elink:XrSceneComputeFeatureMSFT
+* elink:XrSceneComputeConsistencyMSFT
+* elink:XrSceneObjectTypeMSFT
+* elink:XrScenePlaneAlignmentTypeMSFT
+* elink:XrSceneComputeStateMSFT
+* elink:XrSceneComponentTypeMSFT
+* elink:XrMeshComputeLodMSFT
+
+*New Structures*
+
+* slink:XrSceneObserverCreateInfoMSFT
+* slink:XrSceneCreateInfoMSFT
+* slink:XrNewSceneComputeInfoMSFT
+* slink:XrUuidMSFT
+* slink:XrSceneObserverCreateInfoMSFT
+* slink:XrSceneCreateInfoMSFT
+* slink:XrNewSceneComputeInfoMSFT
+* slink:XrVisualMeshComputeLodInfoMSFT
+* slink:XrSceneSphereBoundMSFT
+* slink:XrSceneOrientedBoxBoundMSFT
+* slink:XrSceneFrustumBoundMSFT
+* slink:XrSceneBoundsMSFT
+* slink:XrSceneComponentMSFT
+* slink:XrSceneComponentsMSFT
+* slink:XrSceneComponentsGetInfoMSFT
+* slink:XrSceneComponentLocationMSFT
+* slink:XrSceneComponentLocationsMSFT
+* slink:XrSceneComponentsLocateInfoMSFT
+* slink:XrSceneObjectMSFT
+* slink:XrSceneObjectsMSFT
+* slink:XrSceneComponentParentFilterInfoMSFT
+* slink:XrSceneObjectTypesFilterInfoMSFT
+* slink:XrScenePlaneMSFT
+* slink:XrScenePlanesMSFT
+* slink:XrScenePlaneAlignmentFilterInfoMSFT
+* slink:XrSceneMeshMSFT
+* slink:XrSceneMeshesMSFT
+* slink:XrSceneMeshBuffersGetInfoMSFT
+* slink:XrSceneMeshBuffersMSFT
+
+*New Functions*
+
+* flink:xrCreateSceneObserverMSFT
+* flink:xrDestroySceneObserverMSFT
+* flink:xrCreateSceneMSFT
+* flink:xrDestroySceneMSFT
+* flink:xrComputeNewSceneMSFT
+* flink:xrGetSceneComponentsMSFT
+* flink:xrLocateSceneComponentsMSFT
+* flink:xrGetSceneMeshBuffersMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-03 (Darryl Gough)
+** Initial extension description

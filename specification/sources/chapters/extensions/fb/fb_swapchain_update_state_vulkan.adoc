@@ -1,0 +1,96 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_swapchain_update_state_vulkan.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension enables the application to modify and query Vulkan-specific
+mutable state associated with a swapchain, examples include:
+
+* On platforms where composition runs in a separate process from the
+  application, swapchains must be created in a cross-process friendly way.
+  In such cases, the texture image memory may be shared between processes,
+  but the texture state may not; and, an explicit mechanism to synchronize
+  this texture state between the application and the compositor is required.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SWAPCHAIN_STATE_SAMPLER_VULKAN_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSwapchainStateSamplerVulkanFB',type='structs',desc='Vulkan-specific swapchain sampler state structure',xrefs='xrUpdateSwapchainFB xrGetSwapchainStateFB']
+--
+The slink:XrSwapchainStateSamplerVulkanFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSwapchainStateSamplerVulkanFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:minFilter is a valid Vulkan sname:VkFilter.
+* pname:magFilter is a valid Vulkan sname:VkFilter.
+* pname:mipmapMode is a valid Vulkan sname:VkSamplerMipmapMode.
+* pname:wrapModeS is a valid Vulkan sname:VkSamplerAddressMode.
+* pname:wrapModeT is a valid Vulkan sname:VkSamplerAddressMode.
+* pname:swizzleRed is a valid Vulkan sname:VkComponentSwizzle.
+* pname:swizzleGreen is a valid Vulkan sname:VkComponentSwizzle.
+* pname:swizzleBlue is a valid Vulkan sname:VkComponentSwizzle.
+* pname:swizzleAlpha is a valid Vulkan sname:VkComponentSwizzle.
+* pname:maxAnisotropy is a valid float used to represent max anisotropy.
+* pname:borderColor is an RGBA color to be used as border texels.
+****
+
+When slink:XrSwapchainStateSamplerVulkanFB is specified in the call to
+flink:xrUpdateSwapchainFB, texture sampler state for all images in the
+slink:XrSwapchain will be updated for the compositor process.
+For most cases, the sampler state update is only required compositor-side,
+as that is where the swapchain images are sampled.
+If the application requires sampling of the swapchain images, the
+application will be responsible for updating the texture state using normal
+Vulkan mechanisms and synchronizing appropriately with application-side
+rendering.
+
+When slink:XrSwapchainStateSamplerVulkanFB is specified in the call to
+flink:xrGetSwapchainStateFB, the sampler state will be populated with the
+current swapchain sampler state.
+
+To use slink:XrSwapchainStateSamplerVulkanFB,
+dlink:XR_USE_GRAPHICS_API_VULKAN must be defined before including
+`openxr_platform.h`.
+
+include::../../../../generated/validity/structs/XrSwapchainStateSamplerVulkanFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-27 (Gloria Kennickell)
+** Initial draft

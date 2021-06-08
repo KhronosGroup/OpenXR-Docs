@@ -1,0 +1,231 @@
+// Copyright (c) 2019-2020 Microsoft Corporation
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_MSFT_composition_layer_reprojection.adoc[]
+
+*Last Modified Date*::
+    2020-06-20
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zonglin Wu, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Alex Turner, Microsoft +
+    Yin Li, Microsoft +
+
+*Overview*
+
+This extension enables an application to provide additional reprojection
+information for a projection composition layer to help the runtime produce
+better hologram stability and visual quality.
+
+[open,refpage='xrEnumerateReprojectionModesMSFT',desc='Queries the supported reprojection modes.',type='protos',xrefs='XrReprojectionModeMSFT']
+--
+First, the application uses flink:xrEnumerateReprojectionModesMSFT to
+inspect what reprojection mode the view configuration supports.
+
+The flink:xrEnumerateReprojectionModesMSFT function returns the supported
+reprojection modes of the view configuration.
+
+include::../../../../generated/api/protos/xrEnumerateReprojectionModesMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:systemId is the basetype:XrSystemId whose reprojection modes will be
+  enumerated.
+* pname:viewConfigurationType is the elink:XrViewConfigurationType to
+  enumerate.
+* pname:modeCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:modeCountOutput is a pointer to the count of the array, or a pointer
+  to the required capacity in the case that pname:modeCapacityInput is 0.
+* pname:modes is a pointer to an application-allocated array that will be
+  filled with the elink:XrReprojectionModeMSFT values that are supported by
+  the runtime.
+  It can: be code:NULL if pname:modeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:mode size.
+****
+
+include::../../../../generated/validity/protos/xrEnumerateReprojectionModesMSFT.txt[]
+
+A system may: support different sets of reprojection modes for different
+view configuration types.
+--
+
+[open,refpage='XrCompositionLayerReprojectionInfoMSFT',type='structs',desc='The information to help reprojection of a projection layer.',xrefs='XrReprojectionModeMSFT XrCompositionLayerProjection']
+--
+Then, the application can: provide reprojection mode for the projection
+composition layer to inform the runtime that the XR experience may: benefit
+from the provided reprojection mode.
+
+An slink:XrCompositionLayerReprojectionInfoMSFT structure can: be added to
+the pname:next chain of slink:XrCompositionLayerProjection structure when
+calling flink:xrEndFrame.
+
+include::../../../../generated/api/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:reprojectionMode is an elink:XrReprojectionModeMSFT enum providing a
+  hint to the reprojection mode to the corresponding projection layer.
+****
+
+include::../../../../generated/validity/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
+
+When the application chained this structure when calling flink:xrEndFrame,
+the pname:mode must: be one of the supported elink:XrReprojectionModeMSFT
+returned by flink:xrEnumerateReprojectionModesMSFT function for the
+corresponding elink:XrViewConfigurationType.
+Otherwise, the runtime must: return error
+ename:XR_ERROR_REPROJECTION_MODE_UNSUPPORTED_MSFT on the flink:xrEndFrame
+function.
+
+The runtime must: only use the given information for the corresponding frame
+in flink:xrEndFrame function, and it must: not affect other frames.
+
+--
+
+[open,refpage='XrReprojectionModeMSFT',type='enums',desc='Describes the reprojection mode of a composition layer',xrefs='XrCompositionLayerReprojectionInfoMSFT']
+--
+
+The elink:XrReprojectionModeMSFT describes the reprojection mode of a
+projection composition layer.
+
+include::../../../../generated/api/enums/XrReprojectionModeMSFT.txt[]
+
+****
+* ename:XR_REPROJECTION_MODE_DEPTH_MSFT indicates the corresponding layer
+  may: benefit from per-pixel depth reprojection provided by
+  slink:XrCompositionLayerDepthInfoKHR to the projection layer.
+  This mode is typically used for world-locked content that should remain
+  physically stationary as the user walks around.
+
+* ename:XR_REPROJECTION_MODE_PLANAR_FROM_DEPTH_MSFT indicates the
+  corresponding layer may: benefit from planar reprojection and the plane
+  can: be calculated from the corresponding depth information provided by
+  slink:XrCompositionLayerDepthInfoKHR to the projection layer.
+  This mode works better when the application knows the content is mostly
+  placed on a plane.
+
+* ename:XR_REPROJECTION_MODE_PLANAR_MANUAL_MSFT indicates that the
+  corresponding layer may: benefit from planar reprojection.
+  The application can: customize the plane by chaining an
+  slink:XrCompositionLayerReprojectionPlaneOverrideMSFT structure to the
+  same layer.
+  The app can: also omit the plane override, indicating the runtime should
+  use the default reprojection plane settings.
+  This mode works better when the application knows the content is mostly
+  placed on a plane, or when it cannot afford to submit depth information.
+
+* ename:XR_REPROJECTION_MODE_ORIENTATION_ONLY_MSFT indicates the layer
+  should be stabilized only for changes to orientation, ignoring positional
+  changes.
+  This mode works better for body-locked content that should follow the user
+  as they walk around, such as 360-degree video.
+****
+
+When the application passes ename:XR_REPROJECTION_MODE_DEPTH_MSFT or
+ename:XR_REPROJECTION_MODE_PLANAR_FROM_DEPTH_MSFT mode, it should: also
+provide the depth buffer for the corresponding layer using
+slink:XrCompositionLayerDepthInfoKHR in <<XR_KHR_composition_layer_depth>>
+extension.
+However, if the application does not submit this depth buffer, the runtime
+must: apply a runtime defined fallback reprojection mode, and must: not fail
+the flink:xrEndFrame function because of this missing depth.
+
+When the application passes ename:XR_REPROJECTION_MODE_PLANAR_MANUAL_MSFT or
+ename:XR_REPROJECTION_MODE_ORIENTATION_ONLY_MSFT mode, it should: avoid
+providing a depth buffer for the corresponding layer using
+slink:XrCompositionLayerDepthInfoKHR in <<XR_KHR_composition_layer_depth>>
+extension.
+However, if the application does submit this depth buffer, the runtime must:
+not fail the flink:xrEndFrame function because of this unused depth data.
+
+--
+
+[open,refpage='XrCompositionLayerReprojectionPlaneOverrideMSFT',type='structs',desc='Describe the parameters to override the reprojection plane.',xrefs='']
+--
+When the application is confident that overriding the reprojection plane can
+benefit hologram stability, it can: provide
+slink:XrCompositionLayerReprojectionPlaneOverrideMSFT structure to further
+help the runtime to fine tune the reprojection details.
+
+An application can: add an
+slink:XrCompositionLayerReprojectionPlaneOverrideMSFT structure to the
+pname:next chain of slink:XrCompositionLayerProjection structure.
+
+The runtime must: only use the given plane override for the corresponding
+frame in flink:xrEndFrame function, and it must: not affect other frames.
+
+include::../../../../generated/api/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:position describes the position of the focus plane represented in
+  the corresponding slink:XrCompositionLayerProjection::pname:space.
+
+* pname:normal is a unit vector describes the focus plane normal represented
+  in the corresponding slink:XrCompositionLayerProjection::pname:space.
+
+* pname:velocity is a velocity of the position in the corresponding
+  slink:XrCompositionLayerProjection::pname:space measured in meters per
+  second.
+****
+
+A runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the pname:normal
+vector deviates by more than 1% from unit length.
+
+Adding a reprojection plane override may: benefit various reprojection modes
+including ename:XR_REPROJECTION_MODE_DEPTH_MSFT,
+ename:XR_REPROJECTION_MODE_PLANAR_FROM_DEPTH_MSFT and
+ename:XR_REPROJECTION_MODE_PLANAR_MANUAL_MSFT.
+
+When application choose ename:XR_REPROJECTION_MODE_ORIENTATION_ONLY_MSFT
+mode, the reprojection plane override may: be ignored by the runtime.
+
+include::../../../../generated/validity/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.txt[]
+
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_REPROJECTION_INFO_MSFT
+* ename:XR_TYPE_COMPOSITION_LAYER_REPROJECTION_PLANE_OVERRIDE_MSFT
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_REPROJECTION_MODE_UNSUPPORTED_MSFT
+
+*New Enums*
+
+* elink:XrReprojectionModeMSFT
+
+*New Structures*
+
+* slink:XrCompositionLayerReprojectionInfoMSFT
+* slink:XrCompositionLayerReprojectionPlaneOverrideMSFT
+
+*New Functions*
+
+* flink:xrEnumerateReprojectionModesMSFT
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-06-20 (Yin Li)
+** Initial extension proposal

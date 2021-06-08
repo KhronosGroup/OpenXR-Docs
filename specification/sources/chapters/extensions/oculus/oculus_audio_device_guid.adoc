@@ -1,0 +1,72 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_OCULUS_audio_device_guid.adoc[]
+
+*Overview*
+
+This extension enables the querying of audio device information associated
+with an OpenXR instance.
+
+On Windows, there may be multiple audio devices available on the system.
+This extensions allows applications to query the runtime for the appropriate
+audio devices for the active HMD.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_MAX_AUDIO_DEVICE_STR_SIZE_OCULUS
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+[open,refpage='xrGetAudioOutputDeviceGuidOculus',type='protos',desc='Query the GUID for the active audio output device',xrefs='xrGetAudioInputDeviceGuidOculus']
+--
+include::../../../../generated/api/protos/xrGetAudioOutputDeviceGuidOculus.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance to query the audio device state in.
+* pname:buffer is a fixed size buffer which will contain the audio device
+  GUID.
+  The format of this data matches the
+  link:https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-getid[IMMDevice::GetId]
+  API.
+****
+
+include::../../../../generated/validity/protos/xrGetAudioOutputDeviceGuidOculus.txt[]
+
+--
+
+[open,refpage='xrGetAudioInputDeviceGuidOculus',type='protos',desc='Query the GUID for the active audio input device',xrefs='xrGetAudioOutputDeviceGuidOculus']
+--
+include::../../../../generated/api/protos/xrGetAudioInputDeviceGuidOculus.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance to query the audio device state in.
+* pname:buffer is a fixed size buffer which will contain the audio device
+  GUID.
+  The format of this data matches the
+  link:https://docs.microsoft.com/en-us/windows/win32/api/mmdeviceapi/nf-mmdeviceapi-immdevice-getid[IMMDevice::GetId]
+  API.
+****
+
+include::../../../../generated/validity/protos/xrGetAudioInputDeviceGuidOculus.txt[]
+
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-13 (John Kearney)
+** Initial extension description
+

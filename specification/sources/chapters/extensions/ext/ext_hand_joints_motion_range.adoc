@@ -16,6 +16,7 @@ include::../meta/XR_EXT_hand_joints_motion_range.adoc[]
     Joe van den Heuvel, Valve +
     Rune Berg, Valve +
     Joe Ludwig, Valve +
+    Jakob Bornecrantz, Collabora +
 
 *Overview*
 
@@ -51,7 +52,7 @@ include::../../../../generated/api/enums/XrHandJointsMotionRangeEXT.txt[]
 ****
 * ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT This option refers to
   the range of motion of a human hand, without any obstructions.
-  Input systems that obstruct the movement of the user’s hand (eg: a held
+  Input systems that obstruct the movement of the user's hand (e.g.: a held
   controller preventing the user from making a fist) or have only limited
   ability to track finger positions must: use the information available to
   them to emulate an unobstructed range of motion.

@@ -1,0 +1,92 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_swapchain_update_state_android_surface.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension enables the application to modify and query specific mutable
+state associated with an Android surface swapchain, examples include:
+
+* A video application may need to update the default size of the image
+  buffers associated with an Android Surface Swapchain.
+* A video application may need to communicate a new width and height for an
+  Android Surface Swapchain, as the surface dimensions may be implicitly
+  updated by the producer during the life of the Swapchain.
+  This is important for correct application of the non-normalized
+  pname:imageRect specified via slink:XrSwapchainSubImage.
+
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SWAPCHAIN_STATE_ANDROID_SURFACE_DIMENSIONS_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSwapchainStateAndroidSurfaceDimensionsFB',type='structs',desc='Android Surface Swapchain specific dimensions structure',xrefs='xrUpdateSwapchainFB xrGetSwapchainStateFB']
+--
+The slink:XrSwapchainStateAndroidSurfaceDimensionsFB structure is defined
+as:
+
+include::../../../../generated/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:width is the width of the image buffer, must not be greater than the
+  graphics API's maximum limit.
+* pname:height is the height of the image buffer, must not be greater than
+  the graphics API's maximum limit.
+****
+
+When slink:XrSwapchainStateAndroidSurfaceDimensionsFB is specified in the
+call to flink:xrUpdateSwapchainFB, the dimensions provided will be used to
+update the default size of the image buffers associated with the Android
+Surface swapchain.
+
+Additionally, the dimensions provided will become the new source of truth
+for the swapchain width and height, affecting operations such as computing
+the normalized imageRect for the swapchain.
+
+When slink:XrSwapchainStateAndroidSurfaceDimensionsFB is specified in the
+call to flink:xrGetSwapchainStateFB, the dimensions will be populated with
+the current swapchain width and height.
+
+To use slink:XrSwapchainStateAndroidSurfaceDimensionsFB,
+dlink:XR_USE_PLATFORM_ANDROID must be defined before including
+`openxr_platform.h`.
+
+include::../../../../generated/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-27 (Gloria Kennickell)
+** Initial draft

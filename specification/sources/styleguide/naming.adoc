@@ -49,7 +49,7 @@ There are however a few exceptions:
 * Definitions that denote the presence of an extension follow the
   <<extensions-naming-conventions-name-strings,extension name string
   convention>>.
-** Example: `XR_KHR_rich_layer_types`
+** Example: `XR_KHR_opengl_enable`
 * Three `XRAPI_*` definitions are defined by the platform header to alias
   certain platform-specific identifiers related to calling conventions.
 ** Examples: `XRAPI_ATTR`, `XRAPI_CALL` and `XRAPI_PTR`

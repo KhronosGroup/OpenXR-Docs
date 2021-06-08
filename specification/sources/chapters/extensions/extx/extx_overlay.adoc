@@ -42,7 +42,7 @@ This extension allows:
 
 To enable the functionality of this extension, an application must: pass the
 name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
 indicated in the <<extensions>> section.
 
 To create an overlay session, an application must: pass an

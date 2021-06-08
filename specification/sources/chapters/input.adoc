@@ -1377,6 +1377,11 @@ flink:xrEnumerateBoundSourcesForAction must: return
 ename:XR_ERROR_ACTIONSET_NOT_ATTACHED if passed an action in an action set
 never attached to the session with flink:xrAttachSessionActionSets.
 
+As bindings for actions do not change between calls to flink:xrSyncActions,
+flink:xrEnumerateBoundSourcesForAction must: enumerate the same set of bound
+sources, or absence of bound sources, for a given query (defined by the
+pname:enumerateInfo parameter) between any two calls to flink:xrSyncActions.
+
 include::../../generated/validity/protos/xrEnumerateBoundSourcesForAction.txt[]
 --
 

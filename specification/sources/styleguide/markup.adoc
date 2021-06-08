@@ -384,81 +384,72 @@ table:
 .API Markup Macros
 [width="100%",options="header",cols="20%,80%"]
 |====
-| Macro Name    | Usage and Meaning
-| flink{cl}     | Generates a cross-reference or link to the definition of
-                  the command name in the macro argument. Example:
-                  flink{cl}xrCreateInstance -> flink:xrCreateInstance.
-| fname{cl}     | Formats the macro argument like flink{cl}. Does not
-                  generate a cross-reference. Example:
-                  fname{cl}xrCreateInstance -> fname:xrCreateInstance.
+| Macro Name       | Usage and Meaning
+| flink{cl}        | Generates a cross-reference or link to the definition of
+                     the command name in the macro argument. Example:
+                     flink{cl}xrCreateInstance -> flink:xrCreateInstance.
+| fname{cl}        | Formats the macro argument like flink{cl}. Does not
+                     generate a cross-reference. Example:
+                     fname{cl}xrCreateInstance -> fname:xrCreateInstance.
 
-                  Only use this macro <<markup-macros-api-name, when
-                  necessary>>.
-| ftext{cl}     | Formats the macro argument like fname{cl}. May contain
-                  asterisks for wildcards. Not validated. Example:
-                  ftext{cl}xrCreate* -> ftext:xrCreate*.
+                     Only use this macro <<markup-macros-api-name, when
+                     necessary>>.
+| ftext{cl}        | Formats the macro argument like fname{cl}. May contain
+                     asterisks for wildcards. Not validated. Example:
+                     ftext{cl}xrCreate* -> ftext:xrCreate*.
 
-                  Only use this macro <<markup-macros-api-text, when
-                  necessary>>.
-| slink{cl}     | Generates a cross-reference or link to the definition
-                  of the structure or handle in the macro argument. Example:
-                  slink{cl}XrInstanceCreateInfo -> slink:XrInstanceCreateInfo
-| sname{cl}     | Formats the macro argument like slink{cl}. Does not
-                  generate a cross-reference. May also be an abstract
-                  structure or handle name. Example:
-                  sname{cl}XrInstanceCreateInfo ->
-                  sname:XrInstanceCreateInfo.
+                     Only use this macro <<markup-macros-api-text, when
+                     necessary>>.
+| slink{cl}        | Generates a cross-reference or link to the definition
+                     of the structure or handle in the macro argument. Example:
+                     slink{cl}XrInstanceCreateInfo -> slink:XrInstanceCreateInfo
+| sname{cl}        | Formats the macro argument like slink{cl}. Does not
+                     generate a cross-reference. May also be an abstract
+                     structure or handle name. Example:
+                     sname{cl}XrInstanceCreateInfo ->
+                     sname:XrInstanceCreateInfo.
 
-                  Only use this macro <<markup-macros-api-name, when
-                  necessary>>.
-| stext{cl}     | Formats the macro argument like sname{cl}. May contain
-                  asterisks for wildcards. Not validated. Example:
-                  stext{cl}Xr*CreateInfo -> stext:Xr*CreateInfo.
+                     Only use this macro <<markup-macros-api-name, when
+                     necessary>>.
+| stext{cl}        | Formats the macro argument like sname{cl}. May contain
+                     asterisks for wildcards. Not validated. Example:
+                     stext{cl}Xr*CreateInfo -> stext:Xr*CreateInfo.
 
-                  Only use this macro <<markup-macros-api-text, when
-                  necessary>>.
-| elink{cl}     | Formats the macro argument as an OpenXR enumerated
-                  type name and links to the definition of that enumeration
-                  type. Example: ename{cl}XrResult -> ename:XrResult.
-| ename{cl}     | Formats the macro argument as an OpenXR enumerant name.
-                  Example: ename{cl}XR_SUCCESS -> ename:XR_SUCCESS.
-| etext{cl}     | Formats the macro argument like ename{cl}. Not validated.
-                  Examples: etext{cl}_RANGE_SIZE -> etext:_RANGE_SIZE,
-                  etext{cl}XR_ERROR_* ->
-                  etext:XR_ERROR_*
+                     Only use this macro <<markup-macros-api-text, when
+                     necessary>>.
+| elink{cl}        | Formats the macro argument as an OpenXR enumerated
+                     type name and links to the definition of that enumeration
+                     type. Example: ename{cl}XrResult -> ename:XrResult.
+| ename{cl}        | Formats the macro argument as an OpenXR enumerant name.
+                     Example: ename{cl}XR_SUCCESS -> ename:XR_SUCCESS.
+| etext{cl}        | Formats the macro argument like ename{cl}. Not validated.
+                     Examples: etext{cl}_RANGE_SIZE -> etext:_RANGE_SIZE,
+                     etext{cl}XR_ERROR_* ->
+                     etext:XR_ERROR_*
 
-                  Only use this macro <<markup-macros-api-text, when
-                  necessary>>.
-| pname{cl}     | Formats the macro argument as a OpenXR parameter or
-                  structure member name. Example: pname{cl}device ->
-                  pname:device.
-| ptext{cl}     | Formats the macro argument like pname{cl}. May contain
-                  asterisks for wildcards. Not validated. Example:
-                  ptext{cl}sparseResidency* -> ptext:sparseResidency*.
+                     Only use this macro <<markup-macros-api-text, when
+                     necessary>>.
+| pname{cl}        | Formats the macro argument as a OpenXR parameter or
+                     structure member name. Example: pname{cl}device ->
+                     pname:device.
+| ptext{cl}        | Formats the macro argument like pname{cl}. May contain
+                     asterisks for wildcards. Not validated. Example:
+                     ptext{cl}sparseResidency* -> ptext:sparseResidency*.
 
-                  Only use this macro <<markup-macros-api-text, when
-                  necessary>>.
-| tlink{cl}     | Generates a cross-reference or link to the definition
-                  of the OpenXR type in the macro argument. Example:
-                  tlink{cl}PFN_xrCreateInstance ->
-                  tlink:PFN_xrCreateInstance. This is only used for
-                  function pointer types at present.
-| tname{cl}     | Formats the macro argument like tlink{cl}. Does not
-                  generate a cross-reference. Example:
-                  tname{cl}PFN_xrCreateInstance ->
-                  tname:PFN_xrCreateInstance.
+                     Only use this macro <<markup-macros-api-text, when
+                     necessary>>.
+| tlink{cl}        | Generates a cross-reference or link to the definition
+                     of the OpenXR type in the macro argument. Example:
+                     tlink{cl}PFN_xrCreateInstance ->
+                     tlink:PFN_xrCreateInstance. This is only used for
+                     function pointer types at present.
+| tname{cl}        | Formats the macro argument like tlink{cl}. Does not
+                     generate a cross-reference. Example:
+                     tname{cl}PFN_xrCreateInstance ->
+                     tname:PFN_xrCreateInstance.
 
-                  Only use this macro <<markup-macros-api-name, when
-                  necessary>>.
-ifdef::editing-notes[]
-[NOTE]
-.editing-note
-====
-TODO(OpenXR): We don't nicely unify our macros like this suggests.
-Should we? Otherwise, should we reword this to list all sections?
-====
-endif::editing-notes[]
-
+                     Only use this macro <<markup-macros-api-name, when
+                     necessary>>.
 | dlink{cl}        | Generates a cross-reference or link to the definition of
                      the OpenXR C macro in the macro argument. Example:
                      dlink{cl}XR_NULL_HANDLE -> dlink:XR_NULL_HANDLE. There are
@@ -745,15 +736,6 @@ Always use the words in the first column instead of the alternate terms.
 This list may not be comprehensive; when in doubt, be guided by the existing
 <<openxr-spec,OpenXR API Specification>>.
 
-ifdef::editing-notes[]
-[NOTE]
-.editing-note
-====
-TODO(OpenXR): Evaluate vkBegin and vkEnd below and replace appropriately or
-remove the rule.
-====
-endif::editing-notes[]
-
 .Word Choices
 [width="100%",options="header"]
 |====
@@ -803,13 +785,6 @@ endif::editing-notes[]
 | component     | channel        | Specifically this refers to color channels/components
 |====
 
-[NOTE]
-.Note
-====
-The "`begin/start`" and "`end/finish`" distinction is still being sorted
-out.
-See Vulkan Gitlab issue #61.
-====
 
 
 [[markup-avoid-contractions]]
