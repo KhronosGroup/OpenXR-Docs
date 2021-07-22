@@ -48,6 +48,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <tag name="STARBREEZE" author="Starbreeze"                  contact="David Srour @dsrour"/>
         <tag name="TOBII"      author="Tobii"                       contact="Denny Rönngren @denron"/>
         <tag name="ULTRALEAP"  author="Ultraleap"                   contact="Robert Blenkinsopp @rblenkinsopp"/>
+        <tag name="UNITY"      author="Unity Technologies"          contact="Jack Pritz @jackpritz, Peter Kuhn @peterunity"/>
         <tag name="VALVE"      author="Valve"                       contact="Joe Ludwig @JoeLudwig"/>
         <tag name="VARJO"      author="Varjo"                       contact="Sergiy Dubovik @dubik, Rémi Arnaud @VarjoRemi"/>
     </tags>
@@ -4680,10 +4681,10 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_KHR_hand_model_pose" number="177" type="instance" supported="disabled">
+    <extension name="XR_UNITY_hand_model_pose" number="177" type="instance" supported="disabled">
         <require>
-            <enum value="1" name="XR_KHR_hand_model_pose_SPEC_VERSION"/>
-            <enum value="&quot;XR_KHR_hand_model_pose&quot;" name="XR_KHR_hand_model_pose_EXTENSION_NAME"/>
+            <enum value="1" name="XR_UNITY_hand_model_pose_SPEC_VERSION"/>
+            <enum value="&quot;XR_UNITY_hand_model_pose&quot;" name="XR_UNITY_hand_model_pose_EXTENSION_NAME"/>
         </require>
     </extension>
 
