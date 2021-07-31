@@ -1,3 +1,7 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_FB_android_surface_swapchain_create.adoc[]
 
 *Contributors*::
@@ -12,15 +16,14 @@ include::../meta/XR_FB_android_surface_swapchain_create.adoc[]
 This extension provides support for the specification of Android Surface
 specific swapchain create flags.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
 indicated in the <<extensions>> section.
 
-To specify the additional create flags, you must create a
-slink:XrAndroidSurfaceSwapchainCreateInfoFB structure and pass it on the
-call to flink:xrCreateSwapchainAndroidSurfaceKHR via the
-slink:XrSwapchainCreateInfo structure's pname:next parameter.
+These additional create flags are specified by attaching a
+slink:XrAndroidSurfaceSwapchainCreateInfoFB structure to the pname:next
+chain of an slink:XrSwapchainCreateInfo structure.
 
 *New Object Types*
 

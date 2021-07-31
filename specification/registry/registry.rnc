@@ -341,9 +341,9 @@ Extensions = element extensions { CommentAttr?, Extension* }
 # tag, but with slightly different attributes.
 Extension =
     element extension {
-        attribute name { XrExtNameId_t },
+        NameAttr,
         attribute number { IntegerOrHex_t },
-        attribute protect { XrUpperSnakeCase_t }?,
+        ProtectAttr?,
         # attribute author { text }?,
         # attribute contact { text }?,
         attribute type { "instance" },
@@ -440,8 +440,8 @@ XrPFNName_t = xsd:NCName { pattern = "PFN_xr([A-Z]+[a-z0-9]*)+" }
 XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 
-XrExtNameId_t = xsd:ID { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
-XrExtNameRef_t = xsd:IDREF { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+
 
 XrExtNameList_t = xsd:token { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+(,XR_[A-Z]+(_[A-Za-z0-9]+)+)*" }
 
@@ -458,7 +458,7 @@ XrEntityName_t =
     XrUpperSnakeCase_t | XrFuncName_t | XrPFNName_t | XrTypeName_t
 
 # Repeatedly used attributes
-ExtensionNameAttr = attribute extension { XrExtNameRef_t }
+ExtensionNameAttr = attribute extension { XrExtName_t }
 VendorAttr = attribute vendor { VendorIdRef_t }
 CommentAttr = attribute comment { text }
 NameAttr = attribute name { xsd:NCName }

@@ -66,7 +66,7 @@ image as:
 The application is responsible for transitioning the swapchain image back to
 the resource state and queue availability that the OpenXR runtime requires.
 If the image is not in a resource state match with the above specifications
-the runtime may: exhibit undefined behaviour.
+the runtime may: exhibit undefined behavior.
 
 *New Object Types*
 

@@ -5,7 +5,7 @@
 include::../meta/XR_VARJO_composition_layer_depth_test.adoc[]
 
 *Last Modified Date*::
-    2021-02-16
+    2021-07-15
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -70,18 +70,15 @@ For this purpose the application should enable environment depth estimation
 testing with range 0m to 1m.
 
 The following code illustrates how to enable depth testing:
-[source, c++, suppress-build]
+
+[source,c++]
 ----
-XrCompositionLayerProjection layer{XR_TYPE_COMPOSITION_LAYER_PROJECTION};
-layer.space = ...;
-layer.viewCount = ...;
-layer.views = ...;
-layer.layerFlags = ...;
+XrCompositionLayerProjection layer; // previously populated
 
 XrCompositionLayerDepthTestVARJO depthTest{XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO, layer.next};
 depthTest.depthTestRangeNearZ = 0.0f; // in meters
 depthTest.depthTestRangeFarZ = 1.0f; // in meters
-layer.next = &depthTest
+layer.next = &depthTest;
 ----
 
 *New Structures*
@@ -132,3 +129,5 @@ elink:XrStructureType enumeration is extended with:
 
 * Revision 1, 2021-02-16 (Sergiy Dubovik)
 ** Initial extension description
+* Revision 2, 2021-07-15 (Ryan Pavlik, Collabora, and Sergiy Dubovik)
+** Update sample code so it is buildable

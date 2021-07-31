@@ -112,7 +112,7 @@ can: avoid creating a hand tracker.
 [open,refpage='XrHandTrackerCreateInfoEXT',type='structs',desc='Information to create a hand joints handle',xrefs='']
 --
 The slink:XrHandTrackerCreateInfoEXT structure describes the information to
-create a slink:XrHandTrackerEXT handle.
+create an slink:XrHandTrackerEXT handle.
 
 include::../../../../generated/api/structs/XrHandTrackerCreateInfoEXT.txt[]
 
@@ -236,7 +236,7 @@ include::../../../../generated/api/structs/XrHandJointLocationsEXT.txt[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain, such as slink:XrHandJointVelocitiesEXT.
-* pname:isActive is a basetype:XrBool32 indicating if the hand tracker is
+* pname:isActive is an basetype:XrBool32 indicating if the hand tracker is
   actively tracking.
 * pname:jointCount is a code:uint32_t describing the count of elements in
   pname:jointLocations array.

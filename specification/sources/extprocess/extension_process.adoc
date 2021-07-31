@@ -202,8 +202,8 @@ See the style guide for more details.
 [NOTE]
 .Note
 ====
-Merge requests on OpenXR-Docs are not accepted directly into `master` and
-published immediately.
+Merge requests on OpenXR-Docs are not accepted directly into the main branch
+and published immediately.
 Instead, they are accepted into a staging branch which will be merged and
 published in conjunction with the next OpenXR patch release.
 ====
@@ -231,7 +231,7 @@ assignment prior to extension publication:
      editor may modify number in the extension reservation when merging it.
      A registration is not official until merged, and the number is not
      guaranteed to be fixed until the registration is released with a patch
-     release to the `master` branch.
+     release to the main branch.
 2. Develop and test the extension using the registered extension number.
 3. Create a second merge request with the completed extension using the
    previously registered extension number, and submit it to the
@@ -285,7 +285,7 @@ volunteer to *champion* the extension.
 The champion is required to document the extension and all concerns as well
 as create the final Merge Request to integrate the extension into the
 appropriate branch.
-Often, the appropriate branch will be the master branch, but this may vary.
+Often, the appropriate branch will be the main branch, but this may vary.
 This champion should work with all companies interested and address their
 concerns about the extension when creating the final merge request.
 
@@ -353,8 +353,8 @@ Unlike the `KHR` extension approval process:
    (This may be a release-specific branch in the internal repo, or a staging
    branch in the public repo.) As mentioned earlier, changes to the
    specification are only considered published once a release contains it
-   and it has been merged to the `master` branch of the public OpenXR-Docs
-   repository.
+   and it has been merged to the main (default) branch of the public
+   OpenXR-Docs repository.
 
 [[bitmasks]]
 ==== Extending Bitmasks

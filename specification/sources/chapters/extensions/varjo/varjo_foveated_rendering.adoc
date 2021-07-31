@@ -5,7 +5,7 @@
 include::../meta/XR_VARJO_foveated_rendering.adoc[]
 
 *Last Modified Date*::
-    2020-12-16
+    2021-04-13
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -59,7 +59,7 @@ should:
 [open,refpage='XrSystemFoveatedRenderingPropertiesVARJO',type='structs',desc='System property for foveated rendering',xrefs='']
 --
 An application can: inspect whether the system is capable of foveated
-rendering by chaining a slink:XrSystemFoveatedRenderingPropertiesVARJO
+rendering by chaining an slink:XrSystemFoveatedRenderingPropertiesVARJO
 structure to the slink:XrSystemProperties structure when calling
 flink:xrGetSystemProperties.
 
@@ -116,9 +116,17 @@ include::../../../../generated/api/structs/XrFoveatedViewConfigurationViewVARJO.
 include::../../../../generated/validity/structs/XrFoveatedViewConfigurationViewVARJO.txt[]
 
 For example:
-[source, c++, suppress-build]
+
+[source,c++]
 ----
-XrViewConfigurationType viewConfigType... // Select XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO
+XrInstance instance; // previously populated
+XrSystemId systemId; // previously populated
+XrViewConfigurationType viewConfigType; // Select XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO
+
+XrSystemFoveatedRenderingPropertiesVARJO foveatedRenderingProperties{XR_TYPE_SYSTEM_FOVEATED_RENDERING_PROPERTIES_VARJO};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES, &foveatedRenderingProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+
 uint32_t viewCount;
 CHK_XR(xrEnumerateViewConfigurationViews(instance, systemId, viewConfigType, 0, &viewCount, nullptr));
 // Non-foveated rendering views dimensions
@@ -158,30 +166,36 @@ After calling flink:xrLocateSpace, application should: inspect
 ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT bit.
 If it's set, rendering gaze is available otherwise not.
 
-[source, c++, suppress-build]
+[source,c++]
 ----
-...
+XrSession session; // previously populated
+
 // Create needed spaces
-XrSpace renderGazeSpace;
 XrSpace viewSpace;
 XrReferenceSpaceCreateInfo createViewSpaceInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
 createViewSpaceInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
 createViewSpaceInfo.poseInReferenceSpace.orientation.w = 1.0f;
 CHK_XR(xrCreateReferenceSpace(session, &createViewSpaceInfo, &viewSpace));
 
+XrSpace renderGazeSpace;
 XrReferenceSpaceCreateInfo createReferenceSpaceInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
 createReferenceSpaceInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_COMBINED_EYE_VARJO;
 createReferenceSpaceInfo.poseInReferenceSpace.orientation.w = 1.0f;
 CHK_XR(xrCreateReferenceSpace(session, &createReferenceSpaceInfo, &renderGazeSpace));
 
-...
+// ...
+// in frame loop
+// ...
+
+XrFrameState frameState; // previously populated by xrWaitFrame
+
 // Query rendering gaze status
 XrSpaceLocation renderGazeLocation{XR_TYPE_SPACE_LOCATION};
 CHK_XR(xrLocateSpace(renderGazeSpace, viewSpace, frameState.predictedDisplayTime, &renderGazeLocation));
 
 const bool foveationActive = (renderGazeLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT) != 0;
 
-if(foveationActive){
+if (foveationActive) {
   // Rendering gaze is available
 } else {
   // Rendering gaze is not available
@@ -215,8 +229,18 @@ pname:foveatedRenderingActive is ename:XR_TRUE.
 include::../../../../generated/validity/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
 --
 
-[source, c++, suppress-build]
+[source,c++]
 ----
+// ...
+// in frame loop
+// ...
+
+XrSession session; // previously populated
+XrSpace appSpace; // previously populated
+XrFrameState frameState; // previously populated by xrWaitFrame
+std::vector<XrView> views; // previously populated/resized to the correct size
+bool foveationActive; // previously populated, as in the previous example
+
 XrViewState viewState{XR_TYPE_VIEW_STATE};
 uint32_t viewCapacityInput = static_cast<uint32_t>(views.size());
 uint32_t viewCountOutput;
@@ -252,3 +276,5 @@ elink:XrReferenceSpaceType enumeration is extended with:
 
 * Revision 1, 2020-12-16 (Sergiy Dubovik)
 ** Initial extension description
+* Revision 2, 2021-04-13 (Ryan Pavlik, Collabora, and Sergiy Dubovik)
+** Update sample code so it is buildable

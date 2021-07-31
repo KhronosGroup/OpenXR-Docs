@@ -33,7 +33,7 @@ in order to use this extension.
 [open,refpage='XrSystemHandTrackingMeshPropertiesMSFT',type='structs',desc='System property for hand tracking mesh',xrefs='XrSystemProperties xrGetSystemProperties']
 --
 An application can: inspect whether the system is capable of hand tracking
-meshes by chaining a slink:XrSystemHandTrackingMeshPropertiesMSFT structure
+meshes by chaining an slink:XrSystemHandTrackingMeshPropertiesMSFT structure
 to the slink:XrSystemProperties when calling flink:xrGetSystemProperties.
 
 include::../../../../generated/api/structs/XrSystemHandTrackingMeshPropertiesMSFT.txt[]
@@ -175,7 +175,7 @@ include::../../../../generated/api/protos/xrUpdateHandMeshMSFT.txt[]
 ****
 * pname:handTracker is an slink:XrHandTrackerEXT handle previously created
   with flink:xrCreateHandTrackerEXT.
-* pname:updateInfo is a slink:XrHandMeshUpdateInfoMSFT which contains
+* pname:updateInfo is an slink:XrHandMeshUpdateInfoMSFT which contains
   information to query the hand mesh.
 * pname:handMesh is an slink:XrHandMeshMSFT structure to receive the updates
   of hand mesh data.
@@ -541,7 +541,7 @@ while(1){
 
 *Get hand reference poses*
 
-By default, a slink:XrHandTrackerEXT tracks a default hand pose type, that
+By default, an slink:XrHandTrackerEXT tracks a default hand pose type, that
 is to provide best fidelity to the user's actual hand motion.
 This is the same with ename:XR_HAND_POSE_TYPE_TRACKED_MSFT (i.e. value 0) in
 a chained slink:XrHandPoseTypeInfoMSFT structure to the pname:next pointer

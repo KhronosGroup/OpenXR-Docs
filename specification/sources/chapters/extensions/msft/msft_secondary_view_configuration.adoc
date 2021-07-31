@@ -229,7 +229,7 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationStateMSFT
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:viewConfigurationType is a elink:XrViewConfigurationType that
+* pname:viewConfigurationType is an elink:XrViewConfigurationType that
   represents the returned state.
 * pname:active is an basetype:XrBool32 returns whether the secondary view
   configuration is active and displaying frames to users.

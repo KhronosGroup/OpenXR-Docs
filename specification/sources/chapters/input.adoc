@@ -476,11 +476,11 @@ The runtime should: use hysteresis when applying this threshold.
 The threshold and hysteresis range may: vary from device to device or
 component to component and are left as an implementation detail.
 If the path refers to the parent of input values instead of to an input
-value itself, the runtime must: use subpathname:/example/path/value instead
-of subpathname:/example/path if it is available and apply the same
-thresholding that would be applied to any scalar input.
-If a parent path does not have a subpathname:/value subpath, the runtime
-must: use subpathname:/click.
+value itself, the runtime must: use subpathname:/example/path/click instead
+of subpathname:/example/path if it is available.
+If a parent path does not have a subpathname:/click subpath, the runtime
+must: use subpathname:/value and apply the same thresholding that would be
+applied to any scalar input.
 In any other situation the runtime may: provide an alternate binding for the
 action or it will be unbound.
 
@@ -490,6 +490,8 @@ scalar, the input value must: be bound directly to the float.
 If the path refers to the parent of input values instead of to an input
 value itself, the runtime must: use pathname:/example/path/value instead of
 subpathname:/example/path as the source of the value.
+If a parent path does not have a subpathname:/value subpath, the runtime
+must: use subpathname:/click.
 If the input value is boolean, the runtime must: supply 0.0 or 1.0 as a
 conversion of the boolean value.
 In any other situation, the runtime may: provide an alternate binding for
