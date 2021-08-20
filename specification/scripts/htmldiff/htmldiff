@@ -94,7 +94,7 @@ def call_perl(args):
     p.stdin.close()
     if err:
         print(out)
-        sys.stderr.write('htmldiff: An error occured when running htmldiff.pl on the documents: %s\n'% str(err))
+        sys.stderr.write('htmldiff: An error occurred when running htmldiff.pl on the documents: %s\n'% str(err))
         exit(1)
     else:
         print(out)

@@ -25,7 +25,7 @@ link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor
 or transfer spatial anchors between devices through
 link:https://docs.microsoft.com/uwp/api/windows.perception.spatial.spatialanchortransfermanager[SpatialAnchorTransferManager].
 
-[open,refpage='xrCreateSpatialAnchorFromPerceptionAnchorMSFT',type='protos',desc='Create a slink:XrSpatialAnchorMSFT from a Windows SpatialAnchor pointer',xrefs='']
+[open,refpage='xrCreateSpatialAnchorFromPerceptionAnchorMSFT',type='protos',desc='Create an slink:XrSpatialAnchorMSFT from a Windows SpatialAnchor pointer',xrefs='']
 --
 The flink:xrCreateSpatialAnchorFromPerceptionAnchorMSFT function creates a
 slink:XrSpatialAnchorMSFT handle from an `IUnknown` pointer to
@@ -60,7 +60,7 @@ object.
 include::../../../../generated/validity/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.txt[]
 --
 
-[open,refpage='xrTryGetPerceptionAnchorFromSpatialAnchorMSFT',type='protos',desc='Convert a slink:XrSpatialAnchorMSFT to a Windows SpatialAnchor',xrefs='']
+[open,refpage='xrTryGetPerceptionAnchorFromSpatialAnchorMSFT',type='protos',desc='Convert an slink:XrSpatialAnchorMSFT to a Windows SpatialAnchor',xrefs='']
 --
 The flink:xrTryGetPerceptionAnchorFromSpatialAnchorMSFT function converts a
 slink:XrSpatialAnchorMSFT handle into an `IUnknown` pointer to

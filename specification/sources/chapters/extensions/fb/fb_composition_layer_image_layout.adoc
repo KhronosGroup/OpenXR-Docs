@@ -1,0 +1,90 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_composition_layer_image_layout.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension does not define a new composition layer type, but rather it
+defines parameters that change the interpretation of the image layout, where
+the default image layout is dictated by the Graphics API.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrCompositionLayerImageLayoutFlagsFB',type='flags',desc='XrCompositionLayerImageLayoutFlagsFB',xrefs='XrCompositionLayerImageLayoutFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrCompositionLayerImageLayoutFlagsFB.txt[]
+--
+
+[open,refpage='XrCompositionLayerImageLayoutFlagBitsFB',type='enums',desc='XrCompositionLayerImageLayoutFlagBitsFB',xrefs='XrCompositionLayerImageLayoutFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrCompositionLayerImageLayoutFlagBitsFB.txt[]
+--
+
+.Flag Descriptions
+****
+* ename:XR_COMPOSITION_LAYER_IMAGE_LAYOUT_VERTICAL_FLIP_BIT_FB indicates the
+  coordinate origin must be considered flipped vertically.
+
+****
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_IMAGE_LAYOUT_FB
+
+*New Enums*
+
+* ename:XR_COMPOSITION_LAYER_IMAGE_LAYOUT_VERTICAL_FLIP_BIT_FB
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerImageLayoutFB',desc='specifies image layout for composition layers',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerImageLayoutFB structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerImageLayoutFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrCompositionLayerImageLayoutFlagBitsFB.
+****
+
+slink:XrCompositionLayerImageLayoutFB contains additional flags used to
+change the interpretation of the image layout for a composition layer.
+
+To specify the additional flags, you must: create a
+slink:XrCompositionLayerImageLayoutFB structure and pass it via the
+slink:XrCompositionLayerBaseHeader structure's pname:next parameter.
+
+
+include::../../../../generated/validity/structs/XrCompositionLayerImageLayoutFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-07-06 (Gloria Kennickell)
+** Initial draft

@@ -164,7 +164,7 @@ grep_sources \
 
 grep_sources \
     "Please replace with a non-smart quote" \
-    '’'
+    "’"
 
 # AsciiDoctor markup errors
 grep_sources \
@@ -213,6 +213,9 @@ grep_sources \
 grep_sources \
     "We have decided to consistently use 'projection' rather than 'multiprojection'" \
     "\b[Mm]ulti(-?)[Pp]rojection"
+grep_sources \
+    "Per the style guide, use American spelling: behavior" \
+    "\b[Bb]ehaviour"
 
 # shellcheck disable=SC2016
 grep_sources \
@@ -299,6 +302,14 @@ grep_sources \
 grep_sources \
     "This stock description is outdated, see other structures and/or style guide" \
     "pname:type is the type of this struct"
+
+grep_sources \
+    "This should be 'an' instead of 'a'" \
+    "\ba [sfe]link:"
+
+grep_sources \
+    "This should be 'an' instead of 'a'" \
+    "\ba basetype:X"
 
 #grep_sources \
 #    "test" \

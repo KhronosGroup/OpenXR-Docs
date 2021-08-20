@@ -1,3 +1,7 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::../meta/XR_FB_display_refresh_rate.adoc[]
 
 *Contributors*::
@@ -27,8 +31,8 @@ This extension allows:
  * An application to receive notification of changes to the display refresh
    rate which are delivered via events.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
 indicated in the <<extensions>> section.
 

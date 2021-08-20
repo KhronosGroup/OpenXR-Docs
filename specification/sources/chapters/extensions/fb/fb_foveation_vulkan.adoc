@@ -1,0 +1,84 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_foveation_vulkan.adoc[]
+
+*Contributors*::
+    Kevin Xiao, Facebook +
+    Ross Ning, Facebook +
+    Remi Palandri, Facebook +
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+The Vulkan graphics API requires an image to be applied to the swapchain to
+apply a foveation pattern.
+
+This extension allows:
+
+* An application to obtain foveation textures or constructs needed for
+  foveated rendering in Vulkan.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SWAPCHAIN_IMAGE_FOVEATION_VULKAN_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSwapchainImageFoveationVulkanFB',type='structs',desc='Profile with properties defining a foveation pattern',xrefs='XrSwapchainImageVulkanKHR xrEnumerateSwapchainImages']
+--
+
+slink:XrSwapchainImageFoveationVulkanFB can: be provided in the pname:next
+chain of slink:XrSwapchainImageVulkanKHR when calling
+flink:xrEnumerateSwapchainImages on a swapchain created with
+flink:xrCreateSwapchain, if slink:XrSwapchainCreateInfoFoveationFB was in
+the pname:next chain of slink:XrSwapchainCreateInfo and
+slink:XrSwapchainCreateInfoFoveationFB had the
+ename:XR_SWAPCHAIN_CREATE_FOVEATION_FRAGMENT_DENSITY_MAP_BIT_FB flag set.
+The pname:image, pname:width, and pname:height will be populated by
+flink:xrEnumerateSwapchainImages to be compatible with the corresponding
+slink:XrSwapchainImageVulkanKHR.
+
+The slink:XrSwapchainImageFoveationVulkanFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:image is a valid Vulkan sname:VkImage to use.
+* pname:width is the horizontal width in pixels of the image.
+* pname:height is the vertical height in pixels of the image.
+****
+
+include::{INCS-VAR}/validity/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-26 (Kevin Xiao)
+** Initial extension description

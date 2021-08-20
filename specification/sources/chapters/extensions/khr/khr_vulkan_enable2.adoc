@@ -339,9 +339,9 @@ include::../../../../generated/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
 include::../../../../generated/validity/structs/XrGraphicsBindingVulkan2KHR.txt[]
 --
 
-Populating a slink:XrGraphicsBindingVulkan2KHR structure with a member that
+Populating an slink:XrGraphicsBindingVulkan2KHR structure with a member that
 does not meet the requirements outlined by this extension may: result in
-undefined behaviour by the OpenXR runtime.
+undefined behavior by the OpenXR runtime.
 
 The requirements outlined in this extension only apply to the
 sname:VkInstance, sname:VkDevice, sname:VkPhysicalDevice and sname:VkQueue
@@ -368,7 +368,7 @@ The runtime must: not access the sname:VkQueue in any OpenXR function that
 is not listed above or in an extension definition.
 
 Failure by the application to synchronize access to sname:VkQueue may:
-result in undefined behaviour in the OpenXR runtime.
+result in undefined behavior in the OpenXR runtime.
 
 ==== Swapchain Interactions
 
@@ -441,7 +441,7 @@ image as:
 The application is responsible for transitioning the swapchain image back to
 the image layout and queue ownership that the OpenXR runtime requires.
 If the image is not in a layout compatible with the above specifications the
-runtime may: exhibit undefined behaviour.
+runtime may: exhibit undefined behavior.
 
 ===== Swapchain Flag Bits
 
@@ -477,9 +477,17 @@ be used as if they were created with at least the specified
 | ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
 | `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT`
 
-| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
-  (Added by `<<XR_MND_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+ifdef::XR_KHR_swapchain_usage_input_attachment_bit[]
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+  (Added by `<<XR_KHR_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
 | `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
+endif::XR_KHR_swapchain_usage_input_attachment_bit[]
+
+ifdef::XR_MND_swapchain_usage_input_attachment_bit[]
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
+  (Added by the now deprecated `<<XR_MND_swapchain_usage_input_attachment_bit>>` extension and only available when that extension is enabled)
+| `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
+endif::XR_MND_swapchain_usage_input_attachment_bit[]
 
 |===
 

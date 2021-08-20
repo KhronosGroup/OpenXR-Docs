@@ -24,15 +24,15 @@ include::../meta/XR_EXT_eye_gaze_interaction.adoc[]
 
 *Overview*
 
-This extension provides a basetype:XrPath for getting eye gaze input from an
-eye tracker to enable eye gaze interactions.
+This extension provides an basetype:XrPath for getting eye gaze input from
+an eye tracker to enable eye gaze interactions.
 
 The intended use for this extension is to provide:
 
 * system properties to inform if eye gaze interaction is supported by the
   current device.
 
-* a basetype:XrPath for real time eye tracking that exposes an accurate and
+* an basetype:XrPath for real time eye tracking that exposes an accurate and
   precise eye gaze pose to be used to enable eye gaze interactions.
 
 * a structure slink:XrEyeGazeSampleTimeEXT that allows for an application to
@@ -158,7 +158,7 @@ An application can expect that a nominal eye gaze pose can be used for use
 cases such as aiming or targeting, while a sub-nominal eye gaze pose has
 degraded performance and should not be relied on for all input scenarios.
 Applications should be very careful when using sub-nominal eye gaze pose,
-since the behaviour can vary considerably for different users and
+since the behavior can vary considerably for different users and
 manufacturers, and some manufacturers may: not provide sub-nominal eye gaze
 pose at all.
 

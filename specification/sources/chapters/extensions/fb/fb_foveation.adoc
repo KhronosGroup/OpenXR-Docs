@@ -1,0 +1,232 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_foveation.adoc[]
+
+*Contributors*::
+    Kevin Xiao, Facebook +
+    Ross Ning, Facebook +
+    Remi Palandri, Facebook +
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+Foveation in the context of XR is a rendering technique that allows the area
+of an image near the focal point or fovea of the eye to be displayed at
+higher resolution than areas in the periphery.
+This trades some visual fidelity in the periphery, where it is less
+noticeable for the user, for improved rendering performance, most notably
+regarding the fragment shader, as fewer pixels or subpixels in the periphery
+need to be shaded and processed.
+On platforms which support foveation patterns and features tailored towards
+the optical properties, performance profiles, and hardware support of
+specific HMDs, application developers may request and use available
+foveation profiles from the runtime.
+Foveation profiles refer to a set of properties describing how, when, and
+where foveation will be applied.
+
+This extension allows:
+
+* An application to create swapchains that can support foveation for its
+  graphics API.
+* An application to request foveation profiles supported by the runtime and
+  apply them to foveation-supported swapchains.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+[open,refpage='XrFoveationProfileFB',type='handles',desc='Foveation profile']
+--
+include::{INCS-VAR}/api/handles/XrFoveationProfileFB.txt[]
+
+slink:XrFoveationProfileFB represents a set of properties and resources that
+define a foveation pattern for the runtime, which can: be applied to
+individual swapchains.
+--
+
+*New Flag Types*
+
+[open,refpage='XrSwapchainCreateFoveationFlagsFB',type='flags',desc='XrSwapchainCreateFoveationFlagsFB',xrefs='XrSwapchainCreateFoveationFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrSwapchainCreateFoveationFlagsFB.txt[]
+--
+
+[open,refpage='XrSwapchainCreateFoveationFlagBitsFB',type='enums',desc='XrSwapchainCreateFoveationFlagBitsFB',xrefs='XrSwapchainCreateFoveationFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.txt[]
+include::{INCS-VAR}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.comments.txt[]
+--
+
+[open,refpage='XrSwapchainStateFoveationFlagsFB',type='flags',desc='XrSwapchainStateFoveationFlagsFB',xrefs='XrSwapchainStateFoveationFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrSwapchainStateFoveationFlagsFB.txt[]
+--
+
+[open,refpage='XrSwapchainStateFoveationFlagBitsFB',type='enums',desc='XrSwapchainStateFoveationFlagBitsFB',xrefs='XrSwapchainStateFoveationFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrSwapchainStateFoveationFlagBitsFB.txt[]
+
+// include::{INCS-VAR}/api/enums/XrSwapchainStateFoveationFlagBitsFB.comments.txt[]
+There are currently no foveation swapchain state flags.
+This is reserved for future use.
+--
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_FOVEATION_PROFILE_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_FOVEATION_PROFILE_CREATE_INFO_FB
+* ename:XR_TYPE_SWAPCHAIN_CREATE_INFO_FOVEATION_FB
+* ename:XR_TYPE_SWAPCHAIN_STATE_FOVEATION_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrFoveationProfileCreateInfoFB',type='structs',desc='The information to create a foveation profile',xrefs='XrSwapchainCreateFoveationFlagBitsFB']
+--
+
+slink:XrFoveationProfileCreateInfoFB must: be provided when calling
+flink:xrCreateFoveationProfileFB.
+The runtime must: interpret slink:XrFoveationProfileCreateInfoFB without any
+additional structs in its pname:next chain as a request to create a
+foveation profile that will apply no foveation to any area of the swapchain.
+
+The slink:XrFoveationProfileCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::{INCS-VAR}/validity/structs/XrFoveationProfileCreateInfoFB.txt[]
+--
+
+[open,refpage='XrSwapchainCreateInfoFoveationFB',type='structs',desc='The information to create a swapchain supporting foveation',xrefs='']
+--
+
+slink:XrSwapchainCreateInfoFoveationFB can: be provided in the pname:next
+chain of slink:XrSwapchainCreateInfo when calling flink:xrCreateSwapchain to
+indicate to the runtime that the swapchain must: be created with foveation
+support in the corresponding graphics API.
+slink:XrSwapchainCreateInfoFoveationFB contains additional
+foveation-specific flags for swapchain creation.
+
+The slink:XrSwapchainCreateInfoFoveationFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrSwapchainCreateFoveationFlagBitsFB
+  which indicate various characteristics for how foveation is enabled on the
+  swapchain.
+****
+
+include::{INCS-VAR}/validity/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+--
+
+[open,refpage='XrSwapchainStateFoveationFB',type='structs',desc='Foveation swapchain state,xrefs='XrSwapchainStateFoveationFlagsFB']
+--
+
+slink:XrSwapchainStateFoveationFB can: be provided in place of
+slink:XrSwapchainStateBaseHeaderFB when calling flink:xrUpdateSwapchainFB to
+update the foveation properties of the swapchain.
+slink:XrSwapchainCreateInfoFoveationFB contains the desired foveation
+profile and additional foveation specific flags for updating the swapchain.
+
+The slink:XrSwapchainStateFoveationFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSwapchainStateFoveationFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrSwapchainStateFoveationFlagBitsFB
+  which indicate various characteristics of how and when the foveation
+  properties of the swapchain must: be updated.
+* pname:profile is an slink:XrFoveationProfileFB defining the desired
+  foveation properties to be applied to the swapchain.
+****
+
+include::{INCS-VAR}/validity/structs/XrSwapchainStateFoveationFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreateFoveationProfileFB',desc='Create a foveation profile',type='protos',xrefs='']
+--
+The flink:xrCreateFoveationProfileFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreateFoveationProfileFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that created the swapchains to which
+  this foveation profile will be applied.
+* pname:createInfo is a pointer to an slink:XrFoveationProfileCreateInfoFB
+  structure containing parameters to be used to create the foveation
+  profile.
+* pname:profile is a pointer to a handle in which the created
+  slink:XrFoveationProfileFB is returned.
+****
+
+Creates an slink:XrFoveationProfileFB handle.
+The returned foveation profile handle may: be subsequently used in API
+calls.
+
+include::{INCS-VAR}/validity/protos/xrCreateFoveationProfileFB.txt[]
+--
+
+[open,refpage='xrDestroyFoveationProfileFB',desc='Destroy a foveation profile',type='protos',xrefs='']
+--
+The flink:xrDestroyFoveationProfileFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrDestroyFoveationProfileFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:profile is the slink:XrFoveationProfileFB to destroy.
+****
+
+slink:XrFoveationProfileFB handles are destroyed using
+flink:xrDestroyFoveationProfileFB.
+A slink:XrFoveationProfileFB may: be safely destroyed after being applied to
+a swapchain state using flink:xrUpdateSwapchainFB without affecting the
+foveation parameters of the swapchain.
+The application is responsible for ensuring that it has no calls using
+profile in progress when the foveation profile is destroyed.
+
+include::{INCS-VAR}/validity/protos/xrDestroyFoveationProfileFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-05-13 (Kevin Xiao)
+** Initial extension description

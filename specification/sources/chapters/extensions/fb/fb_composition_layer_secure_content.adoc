@@ -1,0 +1,94 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_composition_layer_secure_content.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension does not define a new composition layer type, but rather it
+provides support for the application to specify an existing composition
+layer type has secure content and whether it must be completely excluded
+from external outputs, like video or screen capture, or if proxy content
+must be rendered in its place.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrCompositionLayerSecureContentFlagsFB',type='flags',desc='XrCompositionLayerSecureContentFlagsFB',xrefs='XrCompositionLayerSecureContentFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrCompositionLayerSecureContentFlagsFB.txt[]
+--
+
+[open,refpage='XrCompositionLayerSecureContentFlagBitsFB',type='enums',desc='XrCompositionLayerSecureContentFlagBitsFB',xrefs='XrCompositionLayerSecureContentFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrCompositionLayerSecureContentFlagBitsFB.txt[]
+
+include::{INCS-VAR}/api/enums/XrCompositionLayerSecureContentFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_SECURE_CONTENT_FB
+
+*New Enums*
+
+* ename:XR_COMPOSITION_LAYER_SECURE_CONTENT_EXCLUDE_LAYER_BIT_FB
+* ename:XR_COMPOSITION_LAYER_SECURE_CONTENT_REPLACE_LAYER_BIT_FB
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerSecureContentFB',desc='specifies secure content mode for composition layers',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerSecureContentFB structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerSecureContentFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of
+  elink:XrCompositionLayerSecureContentFlagBitsFB.
+****
+
+slink:XrCompositionLayerSecureContentFB contains additional flags to
+indicate a composition layer contains secure content and must not be written
+to external outputs.
+
+If both ename:XR_COMPOSITION_LAYER_SECURE_CONTENT_EXCLUDE_LAYER_BIT_FB and
+ename:XR_COMPOSITION_LAYER_SECURE_CONTENT_REPLACE_LAYER_BIT_FB are set,
+ename:XR_COMPOSITION_LAYER_SECURE_CONTENT_EXCLUDE_LAYER_BIT_FB will take
+precedence.
+
+To specify the additional flags, you must: create a
+slink:XrCompositionLayerSecureContentFB structure and pass it via the
+slink:XrCompositionLayerBaseHeader structure's pname:next parameter.
+
+include::../../../../generated/validity/structs/XrCompositionLayerSecureContentFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2020-06-16 (Gloria Kennickell)
+** Initial draft

@@ -398,6 +398,8 @@ identifiers.
 Standard pose identifiers for tracked hands or motion controllers as
 represented by pathname:/user/hand/left and pathname:/user/hand/right are:
 
+image::images/grip_axes_diagram.png[align="center", title="Example grip and aim poses for generic motion controllers"]
+
 * grip - [[grip-pose]]A pose that allows applications to reliably render a
   virtual object held in the user's hand, whether it is tracked directly or
   by a motion controller.

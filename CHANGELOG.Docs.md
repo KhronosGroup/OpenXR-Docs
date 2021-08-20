@@ -17,6 +17,86 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.18 (2021-07-30)
+
+The main changes in this release include clarifications to the Session chapter
+of the specification, plus the addition of diagrams to the text describing grip
+and aim pose. The release also adds one new ratified KHR extension (promoted
+from a vendor extension), and a number of new vendor extensions.
+
+- Registry
+  - Add ratified `XR_KHR_swapchain_usage_input_attachment_bit` Khronos extension.
+    (Promotion of `XR_MND_swapchain_usage_input_attachment_bit`, which is now
+    deprecated.)
+    ([internal MR 2045](https://gitlab.khronos.org/openxr/openxr/merge_requests/2045))
+  - Add new `XR_FB_foveation`, `XR_FB_foveation_configuration`, and
+    `XR_FB_foveation_vulkan` vendor extensions.
+    ([internal MR 2050](https://gitlab.khronos.org/openxr/openxr/merge_requests/2050))
+  - Add additional extension dependencies to `XR_FB_swapchain_update_state`.
+    ([internal MR 2072](https://gitlab.khronos.org/openxr/openxr/merge_requests/2072),
+    [internal issue 1572](https://gitlab.khronos.org/openxr/openxr/issues/1572))
+  - Add new `XR_FB_composition_layer_secure_content` vendor extension.
+    ([internal MR 2075](https://gitlab.khronos.org/openxr/openxr/merge_requests/2075))
+  - Add new `XR_FB_composition_layer_alpha_blend` vendor extension.
+    ([internal MR 2078](https://gitlab.khronos.org/openxr/openxr/merge_requests/2078))
+  - Add new `XR_FB_composition_layer_image_layout` vendor extension.
+    ([internal MR 2090](https://gitlab.khronos.org/openxr/openxr/merge_requests/2090))
+  - Add new `XR_MSFT_spatial_anchor_persistence` vendor extension.
+    ([internal MR 2093](https://gitlab.khronos.org/openxr/openxr/merge_requests/2093))
+  - Add some simple [Schematron](https://schematron.com) rules and a script to
+    check the XML registry against them.
+    ([internal MR 2103](https://gitlab.khronos.org/openxr/openxr/merge_requests/2103))
+  - Register author ID and reserve vendor extensions for Unity.
+    ([internal MR 2105](https://gitlab.khronos.org/openxr/openxr/merge_requests/2105))
+  - Reserve extension ID range 187-196 for LIV Inc.
+    ([internal MR 2102](https://gitlab.khronos.org/openxr/openxr/merge_requests/2102))
+- Specification
+  - Rewrite the introduction of Session chapter to explain a typical session
+    lifecycle.
+    ([internal MR 2087](https://gitlab.khronos.org/openxr/openxr/merge_requests/2087))
+  - Add grip diagram to specification
+    ([internal MR 2092](https://gitlab.khronos.org/openxr/openxr/merge_requests/2092),
+    [internal issue 1545](https://gitlab.khronos.org/openxr/openxr/issues/1545),
+    [OpenXR-Docs PR 45](https://github.com/KhronosGroup/OpenXR-Docs/pull/45),
+    [OpenXR-Docs issue 44](https://github.com/KhronosGroup/OpenXR-Docs/issues/44))
+  - Describe how runtimes may register themselves at installation time for manual
+    selection.
+    ([internal MR 2081](https://gitlab.khronos.org/openxr/openxr/merge_requests/2081),
+    [internal MR 2109](https://gitlab.khronos.org/openxr/openxr/merge_requests/2109),
+    [internal issue 1574](https://gitlab.khronos.org/openxr/openxr/issues/1574))
+  - Document new ratified `XR_KHR_swapchain_usage_input_attachment_bit` Khronos
+    extension. (Promotion of `XR_MND_swapchain_usage_input_attachment_bit`, which
+    is now deprecated.)
+    ([internal MR 2045](https://gitlab.khronos.org/openxr/openxr/merge_requests/2045))
+  - Document new `XR_FB_foveation`, `XR_FB_foveation_configuration`, and
+    `XR_FB_foveation_vulkan` vendor extensions.
+    ([internal MR 2050](https://gitlab.khronos.org/openxr/openxr/merge_requests/2050))
+  - Document new `XR_FB_composition_layer_secure_content` vendor extension.
+    ([internal MR 2075](https://gitlab.khronos.org/openxr/openxr/merge_requests/2075))
+  - Document new `XR_FB_composition_layer_alpha_blend` vendor extension.
+    ([internal MR 2078](https://gitlab.khronos.org/openxr/openxr/merge_requests/2078))
+  - Document new `XR_FB_composition_layer_image_layout` vendor extension.
+    ([internal MR 2090](https://gitlab.khronos.org/openxr/openxr/merge_requests/2090))
+  - Document new `XR_MSFT_spatial_anchor_persistence` vendor extension.
+    ([internal MR 2093](https://gitlab.khronos.org/openxr/openxr/merge_requests/2093))
+  - Minor cleanups to the loader documentation/specification.
+    ([internal MR 2108](https://gitlab.khronos.org/openxr/openxr/merge_requests/2108))
+  - Revise Varjo vendor extensions so that the sample code is buildable (and build
+    during CI testing).
+    ([internal MR 2020](https://gitlab.khronos.org/openxr/openxr/merge_requests/2020))
+  - Scripts: Verify `externsync` attributes of destroy calls.
+    ([internal MR 2065](https://gitlab.khronos.org/openxr/openxr/merge_requests/2065))
+  - Update `XR_MSFT_spatial_anchor` to note the external sync requirements of the
+    destroy call.
+    ([internal MR 2065](https://gitlab.khronos.org/openxr/openxr/merge_requests/2065))
+  - Add missing copyright/license notice for FB extension sources
+    ([internal MR 2076](https://gitlab.khronos.org/openxr/openxr/merge_requests/2076),
+    [internal issue 1562](https://gitlab.khronos.org/openxr/openxr/issues/1562))
+  - Add missing item to new enum constants of spatial anchors extension
+    ([internal MR 2088](https://gitlab.khronos.org/openxr/openxr/merge_requests/2088))
+  - scripts: Handle aliased bitmask values properly in header files.
+    ([internal MR 2045](https://gitlab.khronos.org/openxr/openxr/merge_requests/2045))
+
 ## OpenXR Specification 1.0.17 (2021-06-08)
 
 This release includes a variety of new vendor extensions, as well as some

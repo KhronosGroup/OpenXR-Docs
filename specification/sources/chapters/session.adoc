@@ -11,45 +11,93 @@ include::../../generated/api/handles/XrSession.txt[]
 A session represents an application's intention to display XR content to the
 user.
 
-First, the application creates a session by choosing a <<system, system>>
-and a graphics API and calling flink:xrCreateSession, which creates a
-session in the ename:XR_SESSION_STATE_IDLE state.
-The application then sets up an flink:xrPollEvent loop to monitor for
-session state changes delivered through the
-slink:XrEventDataSessionStateChanged event.
-When the runtime determines that the system is ready to start transitioning
-to this session's XR content, it notifies the application that its session
-has moved into the ename:XR_SESSION_STATE_READY state.
-When the application is ready to proceed and display its XR content, it
-calls flink:xrBeginSession and <<sync_frame_loop, starts its frame loop>>,
-which starts its session running.
-While the session is running, the application is expected to continuously
-run its frame loop by calling flink:xrWaitFrame, flink:xrBeginFrame and
-flink:xrEndFrame each frame, to establish synchronization with the runtime.
-Once the runtime is synchronized with the application's frame loop and ready
-to display its frames, the session will move into the
-ename:XR_SESSION_STATE_SYNCHRONIZED state.
-For frames where flink:xrWaitFrame returns an slink:XrFrameState with
-pname:shouldRender set to true, the application should render its
-composition layers and submit them to flink:xrEndFrame.
-If the application desires to leave a running session, it should call the
-flink:xrRequestExitSession function to request that the runtime transition
-its session to the ename:XR_SESSION_STATE_STOPPING state as soon as
-possible.
-Once the application reaches the ename:XR_SESSION_STATE_STOPPING state, it
-can call flink:xrEndSession to stop the XR session, after which the session
-will transition through ename:XR_SESSION_STATE_IDLE to the
-ename:XR_SESSION_STATE_EXITING state.
+--
 
-On platforms that have applications with lifecycle managed by the system,
-session state changes may be implicitly triggered by application lifecycle
-state changes.
-On such platforms, using platform-specific methods to alter application
-lifecycle state may be the preferred method of provoking session state
-changes.
-The behavior of flink:xrRequestExitSession is not altered, however explicit
-session exit may: not interact with the platform-specific application
-lifecycle.
+[[session-lifecycle]]
+=== Session Lifecycle
+
+image::images/lifecycle.svg[align="center", title="Session Life-cycle"]
+
+[NOTE]
+====
+
+A typical XR session coordinates the application and the runtime through
+session control functions and session state events.
+
+1. The application creates a session by choosing a <<system, system>> and a
+graphics API and passing them into flink:xrCreateSession.
+The newly created session is in the <<session_idle,
+ename:XR_SESSION_STATE_IDLE>> state.
+
+2. The application then monitors for session state changes via
+slink:XrEventDataSessionStateChanged events.
+
+3. When the runtime determines that the system is ready to start
+transitioning to this session's XR content, the application receives a
+notification of session state change to <<session_ready,
+ename:XR_SESSION_STATE_READY>>.
+Once the application is also ready to proceed and display its XR content, it
+calls flink:xrBeginSession and <<sync_frame_loop, starts its frame loop>>,
+which begins <<session_running, a running session>>.
+
+4. While the session is running, the application is expected to continuously
+execute its frame loop by calling flink:xrWaitFrame, flink:xrBeginFrame and
+flink:xrEndFrame each frame, establishing synchronization with the runtime.
+Once the runtime is synchronized with the application's frame loop and ready
+to display application's frames, the session moves into the
+<<session_synchronized, ename:XR_SESSION_STATE_SYNCHRONIZED>> state.
+In this state, the submitted frames will not be displayed or visible to the
+user yet.
+
+5. When the runtime intends to display frames from the application, it
+notifies with <<session_visible, ename:XR_SESSION_STATE_VISIBLE>> state, and
+sets slink:XrFrameState::pname:shouldRender to code:true in
+flink:xrWaitFrame.
+The application should render XR content and submit the composition layers
+to flink:xrEndFrame.
+
+6. When the runtime determines the application is eligible to receive XR
+inputs, e.g. motion controller or hand tracking inputs, it notifies with
+<<session_focused, ename:XR_SESSION_STATE_FOCUSED>> state.
+The application can expect to receive active <<input, action inputs>>.
+
+7. When the runtime determines the application has lost XR input focus, it
+moves the session state from <<session_focused,
+ename:XR_SESSION_STATE_FOCUSED>> to <<session_visible,
+ename:XR_SESSION_STATE_VISIBLE>> state.
+The application may need to change its own internal state while input is
+unavailable.
+Since the session is still visible, the application needs to render and
+submit frames at full frame rate, but may wish to change visually to
+indicate its input suspended state.
+When the runtime returns XR focus back to the application, it moves the
+session state back to <<session_focused, ename:XR_SESSION_STATE_FOCUSED>>.
+
+8. When the runtime needs to end <<session_running, a running session>> due
+to the user closing or switching the application, the runtime will change
+the session state through appropriate intermediate ones and finally to
+<<session_stopping, ename:XR_SESSION_STATE_STOPPING>>.
+When the application receives the <<session_stopping,
+ename:XR_SESSION_STATE_STOPPING>> event, it should stop its frame loop and
+then call flink:xrEndSession to tell the runtime to <<session_running, stop
+the running session>>.
+
+9. After flink:xrEndSession, the runtime transitions the session state to
+<<session_idle, ename:XR_SESSION_STATE_IDLE>>.
+If the XR session is temporarily paused in the background, the runtime will
+keep the session state at <<session_idle, ename:XR_SESSION_STATE_IDLE>> and
+later transition the session state back to <<session_ready,
+ename:XR_SESSION_STATE_READY>> when the XR session is resumed.
+If the runtime determines that its use of this XR session has concluded, it
+will transition the session state from <<session_idle,
+ename:XR_SESSION_STATE_IDLE>> to <<session_exiting,
+ename:XR_SESSION_STATE_EXITING>>.
+
+10. When the application receives the <<session_exiting,
+ename:XR_SESSION_STATE_EXITING>> event, it releases the resources related to
+the session and calls flink:xrDestroySession.
+
+====
 
 [[session_running]]A session is considered **running** after a successful
 call to flink:xrBeginSession and remains running until any call is made to
@@ -77,10 +125,24 @@ This is important because without a running session, the runtime no longer
 has to spend resources on sub-systems (tracking etc.) that are no longer
 needed by the application.
 
---
+An application must: call flink:xrBeginSession when the session is in the
+<<session_ready, ename:XR_SESSION_STATE_READY>> state, or
+ename:XR_ERROR_SESSION_NOT_READY will be returned; it must: call
+flink:xrEndSession when the session is in the <<session_stopping,
+ename:XR_SESSION_STATE_STOPPING>> state, otherwise
+ename:XR_ERROR_SESSION_NOT_STOPPING will be returned.
+This is to allow the runtimes to seamlessly transition from one
+application's session to another.
 
-[[session-lifecycle]]
-=== Session Lifecycle
+The application can: call flink:xrDestroySession at any time during the
+session life cycle, however, it must: stop using the slink:XrSession handle
+immediately in all threads and stop using any related resources.
+Therefore, it's typically undesirable to destroy <<session_running, a
+running session>> and instead it's recommended to wait for
+<<session_exiting, ename:XR_SESSION_STATE_EXITING>> to destroy a session.
+
+[[session-creation]]
+=== Session Creation
 
 To present graphical content on an output device, OpenXR applications need
 to pick a graphics API which is supported by the runtime.
@@ -329,6 +391,21 @@ include::../../generated/validity/protos/xrEndSession.txt[]
 
 [open,refpage='xrRequestExitSession',desc='Request to exit a running session.',type='protos',xrefs='xrDestroySession xrEndSession']
 --
+When an application wishes to exit a <<session_running, running>> session,
+it can: call flink:xrRequestExitSession, requesting that the runtime
+transition through the various intermediate session states including
+ename:XR_SESSION_STATE_STOPPING to ename:XR_SESSION_STATE_EXITING.
+
+On platforms where an application's lifecycle is managed by the system,
+session state changes may be implicitly triggered by application lifecycle
+state changes.
+On such platforms, using platform-specific methods to alter application
+lifecycle state may be the preferred method of provoking session state
+changes.
+The behavior of flink:xrRequestExitSession is not altered, however explicit
+session exit may: not interact with the platform-specific application
+lifecycle.
+
 The flink:xrRequestExitSession function is defined as:
 
 include::../../generated/api/protos/xrRequestExitSession.txt[]
@@ -337,14 +414,6 @@ include::../../generated/api/protos/xrRequestExitSession.txt[]
 ****
 * pname:session is a handle to a running slink:XrSession.
 ****
-
-An application can only call flink:xrEndSession when the session is in the
-ename:XR_SESSION_STATE_STOPPING state, which allows runtimes to seamlessly
-transition from one application's session to another.
-When an application wishes to exit a <<session_running, running>> session,
-the application can call flink:xrRequestExitSession, requesting that the
-runtime transition through the various intermediate session states including
-ename:XR_SESSION_STATE_STOPPING to ename:XR_SESSION_STATE_EXITING.
 
 If pname:session <<session_not_running, is not running>> when
 flink:xrRequestExitSession is called, ename:XR_ERROR_SESSION_NOT_RUNNING
@@ -355,8 +424,6 @@ include::../../generated/validity/protos/xrRequestExitSession.txt[]
 
 [[session-states]]
 === Session States
-
-image::images/lifecycle.svg[align="center", title="Session Life-cycle"]
 
 While events can be expanded upon, there are a minimum set of lifecycle
 events which can occur which all OpenXR applications must be aware of.
@@ -430,11 +497,13 @@ include::../../generated/api/enums/XrSessionState.txt[]
 The ename:XR_SESSION_STATE_UNKNOWN state must: not be returned by the
 runtime, and is only defined to avoid code:0 being a valid state.
 
+[[session_idle]]
 Receiving the ename:XR_SESSION_STATE_IDLE state indicates that the runtime
 considers the session is idle.
 Applications in this state should: minimize resource consumption but
 continue to call flink:xrPollEvent at some reasonable cadence.
 
+[[session_ready]]
 Receiving the ename:XR_SESSION_STATE_READY state indicates that the runtime
 desires the application to prepare rendering resources, begin its session
 and synchronize its frame loop with the runtime.
@@ -454,6 +523,7 @@ ename:XR_SESSION_STATE_IDLE state, the runtime should: not transition to the
 ename:XR_SESSION_STATE_READY state until the user starts engaging with the
 device.
 
+[[session_synchronized]]
 Receiving the ename:XR_SESSION_STATE_SYNCHRONIZED state indicates that the
 application has <<sync_frame_loop, synchronized its frame loop with the
 runtime>>, but its frames are not visible to the user.
@@ -468,6 +538,7 @@ A runtime may: use this frame synchronization to facilitate seamless
 switching from a previous XR application to this application on a frame
 boundary.
 
+[[session_visible]]
 Receiving the ename:XR_SESSION_STATE_VISIBLE state indicates that the
 application has <<sync_frame_loop, synchronized its frame loop with the
 runtime>>, and the session's frames will be visible to the user, but the
@@ -486,6 +557,7 @@ unfocused, and applications should react to an inactive input action by
 skipping rendering of that action's input avatar (depictions of hands or
 other tracked objects controlled by the user).
 
+[[session_focused]]
 Receiving the ename:XR_SESSION_STATE_FOCUSED state indicates that the
 application has <<sync_frame_loop, synchronized its frame loop with the
 runtime>>, the session's frames will be visible to the user, and the session
@@ -499,6 +571,7 @@ The runtime should: avoid rendering its own input avatars when an
 application is focused, unless input from a given source is being captured
 by the runtime at the moment.
 
+[[session_stopping]]
 Receiving the ename:XR_SESSION_STATE_STOPPING state indicates that the
 runtime has determined that the application should halt its rendering loop.
 Applications should: exit their rendering loop and call flink:xrEndSession
@@ -509,12 +582,14 @@ If the system supports a user engagement sensor and the session is running,
 the runtime should: transition to the ename:XR_SESSION_STATE_STOPPING state
 when the user stops engaging with the device.
 
+[[session_exiting]]
 Receiving the ename:XR_SESSION_STATE_EXITING state indicates the runtime
 wishes the application to terminate its XR experience, typically due to a
 user request via a runtime user interface.
 Applications should: gracefully end their process when in this state if they
 do not have a non-XR user experience.
 
+[[session_loss_pending]]
 Receiving the ename:XR_SESSION_STATE_LOSS_PENDING state indicates the
 runtime is no longer able to operate with the current session, for example
 due to the loss of a display hardware connection.

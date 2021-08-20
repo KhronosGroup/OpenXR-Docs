@@ -6,7 +6,7 @@
 == API Initialization
 
 Before using an OpenXR runtime, an application must: initialize it by
-creating a slink:XrInstance object.
+creating an slink:XrInstance object.
 The following functions are useful for gathering information about the API
 layers and extensions installed on the system and creating the instance.
 

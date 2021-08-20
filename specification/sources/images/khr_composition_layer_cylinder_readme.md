@@ -5,7 +5,7 @@ SPDX-License-Identifier: CC-BY-4.0
 -->
 
 The diagram for this extension was initially composed in
-[SolveSpace](http://solvespace.com) using a master branch (3.0) build.
+[SolveSpace](http://solvespace.com) using version 3.0.
 The `.slvs` file is that document.
 
 It was then exported to a PDF file and imported into Inkscape,

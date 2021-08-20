@@ -1,0 +1,99 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_composition_layer_alpha_blend.adoc[]
+
+*Contributors*::
+    Cass Everitt, Facebook +
+    Gloria Kennickell, Facebook +
+    Johannes Schmid, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension provides explicit control over source and destination blend
+factors, with separate controls for color and alpha.
+When specified, these blend controls supersede the behavior of
+ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT.
+
+When ename:XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT is specified, the
+source color is unpremultiplied alpha.
+
+Like color, destination alpha is initialized to 0 before composition begins.
+
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+These blend factors are specified by attaching a
+slink:XrCompositionLayerAlphaBlendFB structure to the pname:next chain of a
+slink:XrCompositionLayerBaseHeader-derived layer structure.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_ALPHA_BLEND_FB
+
+*New Enums*
+
+[open,refpage='XrBlendFactorFB',desc='Blend Factor Types',type='enums']
+--
+The possible blend factors are specified by the elink:XrBlendFactorFB
+enumeration.
+
+include::../../../../generated/api/enums/XrBlendFactorFB.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerAlphaBlendFB',desc='specifies blend factors for composition layers',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerAlphaBlendFB structure is defined as:
+
+include::../../../../generated/api/structs/XrCompositionLayerAlphaBlendFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:srcFactorColor specifies the source color blend factor.
+* pname:dstFactorColor specifies the destination color blend factor.
+* pname:srcFactorAlpha specifies the source alpha blend factor.
+* pname:dstFactorAlpha specifies the destination alpha blend factor.
+****
+
+slink:XrCompositionLayerAlphaBlendFB provides applications with explicit
+control over source and destination blend factors.
+
+The slink:XrCompositionLayerAlphaBlendFB structure must: be provided in the
+pname:next chain of the slink:XrCompositionLayerBaseHeader structure.
+
+
+include::../../../../generated/validity/structs/XrCompositionLayerAlphaBlendFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+* Should we add separate blend controls for color and alpha?
+
+** Yes.
+   New use cases necessitated adding separate blend controls for color and
+   alpha.
+
+*Version History*
+
+* Revision 1, 2020-06-22 (Gloria Kennickell)
+** Initial draft
+* Revision 2, 2020-06-22 (Gloria Kennickell)
+** Provide separate controls for color and alpha blend factors.

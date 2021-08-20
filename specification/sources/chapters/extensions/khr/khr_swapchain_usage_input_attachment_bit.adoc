@@ -1,15 +1,16 @@
-// Copyright (c) 2020 Collabora, Ltd.
+// Copyright (c) 2020-2021, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_MND_swapchain_usage_input_attachment_bit.adoc[]
+include::../meta/XR_KHR_swapchain_usage_input_attachment_bit.adoc[]
 
 *Last Modified Date*::
-    2020-07-24
+    2021-05-11
 *IP Status*::
     No known IP claims.
 *Contributors*::
-    Jakob Bornecrantz, Collabora
+    Jakob Bornecrantz, Collabora +
+    Ryan Pavlik, Collabora +
 
 *Overview*
 
@@ -25,7 +26,8 @@ At the time of writing this bit only affects Vulkan swapchains.
 
 elink:XrSwapchainUsageFlagBits enumeration is extended with:
 
-* ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
+* ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR - indicates that the
+  image format may: be used as an input attachment.
 
 *New Enums*
 
@@ -42,3 +44,5 @@ elink:XrSwapchainUsageFlagBits enumeration is extended with:
 * Revision 2, 2020-07-24 (Jakob Bornecrantz)
 ** Added note about only affecting Vulkan
 ** Changed from MNDX to MND
+* Revision 3, 2021-05-11 (Ryan Pavlik)
+** Updated for promotion from MND to KHR
