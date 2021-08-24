@@ -266,9 +266,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type bitvalues="XrSwapchainCreateFoveationFlagBitsFB" category="bitmask">typedef <type>XrFlags64</type> <name>XrSwapchainCreateFoveationFlagsFB</name>;</type>
         <type bitvalues="XrSwapchainStateFoveationFlagBitsFB"  category="bitmask">typedef <type>XrFlags64</type> <name>XrSwapchainStateFoveationFlagsFB</name>;</type>
 
-        <!-- Bitmask types for XR_ALMALENCE_digital_lens_control -->
-        <type bitvalues="XrDigitalLensControlFlagsAlmalence" category="bitmask">typedef <type>XrFlags64</type> <name>XrDigitalLensControlFlagsAlmalence</name>;</type>
-
         <!-- Handles referring to internally-maintained objects. -->
         <!-- These types which can be 64-bit integers or opaque pointers, selected at compile time based on pointer size -->
         <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
@@ -1786,13 +1783,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member><type>XrSpatialAnchorPersistenceNameMSFT</type>     <name>spatialAnchorPersistenceName</name></member>
         </type>
 
-        <!-- XR_ALMALENCE_digital_lens_control -->
-        <type category="struct" name="XrDigitalLensControlAlmalence">
-            <member values="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"><type>XrStructureType</type><name>type</name></member>
-            <member>const <type>void</type>*                            <name>next</name></member>
-            <member><type>XrDigitalLensControlFlagsAlmalence</type>     <name>flags</name></member>
-        </type>
-
     </types>
 
     <!-- SECTION: OpenXR enumerant (token) definitions. -->
@@ -3144,12 +3134,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <proto><type>XrResult</type> <name>xrClearSpatialAnchorStoreMSFT</name></proto>
             <param><type>XrSpatialAnchorStoreConnectionMSFT</type> <name>spatialAnchorStore</name></param>
         </command>
-
-        <!-- commands for XR_ALMALENCE_digital_lens_control -->
-        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_INSTANCE_LOST,XR_ERROR_FEATURE_UNSUPPORTED">
-            <proto><type>XrResult</type> <name>xrSetDigitalLensStateAlmalence</name></proto>
-            <param><type>XrDigitalLensControlAlmalence</type>* <name>digitalLensState</name></param>
-        </command>        
 
     </commands>
 
@@ -5095,15 +5079,8 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_ALMALENCE_digital_lens_control" number="197" type="instance" supported="disabled">
-        <require>
-            <enum value="1"                                              name="XR_ALMALENCE_digital_lens_control_SPEC_VERSION"/>
-            <enum value="&quot;XR_ALMALENCE_digital_lens_control&quot;"  name="XR_ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME"/>
-            <enum offset="0" extends="XrStructureType"                   name="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"/>
-            <type name="XrDigitalLensControlAlmalence"/>
-            <command name="xrSetDigitalLensStateAlmalence"/>
-        </require>
-    </extension>
+    <extension name="XR_ALMALENCE_digital_lens_control" number="197" type="instance" supported="disabled"/>
+
 
     </extensions>
 
