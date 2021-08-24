@@ -1,17 +1,22 @@
 include::../meta/XR_VALVE_analog_threshold.adoc[]
 
 *Last Modified Date*::
-    2020-06-29
+    2021-06-09
 *IP Status*::
     No known IP claims.
 *Contributors*::
-    Joe Ludwig, Valve
+    Joe Ludwig, Valve +
+    Rune Berg, Valve +
+    Andres Rodriguez, Valve +
 
 *Overview*
 
 This extension allows the application to control the threshold and haptic
 feedback applied to an analog to digital conversion.
 See slink:XrInteractionProfileAnalogThresholdVALVE for more information.
+
+Applications should: also enable the `<<XR_KHR_binding_modification>>`
+extension to be able to define multiple thresholds.
 
 *New Object Types*
 
@@ -26,9 +31,11 @@ See slink:XrInteractionProfileAnalogThresholdVALVE for more information.
 [open,refpage='XrInteractionProfileAnalogThresholdVALVE',desc='Interaction profile dpad binding',type='structs']
 --
 The slink:XrInteractionProfileAnalogThresholdVALVE structure is an input
-struct which can be added to the next chain of
-slink:XrInteractionProfileSuggestedBinding to the thresholds and haptic
-feedback to use for a suggested binding.
+struct that defines thresholds and haptic feedback behavior for action
+bindings and should: be added to the pname:bindingModifications array of the
+slink:XrBindingModificationsKHR structure (See
+`<<XR_KHR_binding_modification>>` extension).
+
 
 include::../../../../generated/api/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
 
@@ -61,10 +68,13 @@ include::../../../../generated/api/structs/XrInteractionProfileAnalogThresholdVA
   slink:XrHapticBaseHeader.
 ****
 
-Applications can chain an slink:XrInteractionProfileAnalogThresholdVALVE
-struct on the next chain of any flink:xrSuggestInteractionProfileBindings
-call for each analog to boolean conversion for which it wants to set the
-threshold.
+Applications can also chain a single
+slink:XrInteractionProfileAnalogThresholdVALVE structure on the next chain
+of any flink:xrSuggestInteractionProfileBindings call.
+Runtimes must: support this kind of chaining.
+This method of specifying analog thresholds is deprecated however, and
+should not be used by any new applications.
+
 If a threshold struct is present for a given conversion, the runtime must:
 use those thresholds instead of applying its own whenever it is using the
 binding suggested by the application.
@@ -97,4 +107,9 @@ include::../../../../generated/validity/structs/XrInteractionProfileAnalogThresh
 
 * Revision 1, 2020-06-29 (Joe Ludwig)
 ** Initial version.
+* Revision 2, 2021-07-28 (Rune Berg)
+** Deprecate chaining of struct in
+   slink:XrInteractionProfileSuggestedBinding, applications should use
+   slink:XrBindingModificationsKHR defined in the
+   `<<XR_KHR_binding_modification>>` extension instead.
 

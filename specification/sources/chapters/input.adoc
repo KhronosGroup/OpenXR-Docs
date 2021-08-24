@@ -783,8 +783,10 @@ In all cases the runtime must: not change the results of
 ftext:xrGetActionState* calls between calls to flink:xrSyncActions.
 
 When ftext:xrGetActionState* or haptic output functions are called while the
-session <<session_not_running, is not running>>, the runtime must: set the
+session <<session_focused, is not focused>>, the runtime must: set the
 pname:isActive value to ename:XR_FALSE and suppress all haptic output.
+Furthermore, the runtime should stop all in-progress haptic events when a
+session loses focus.
 
 When retrieving action state, pname:lastChangeTime must: be set to the
 runtime's best estimate of when the physical state of the part of the device
@@ -1126,7 +1128,7 @@ completes, the latest event will take precedence and the runtime must:
 cancel all preceding incomplete haptic events on that action.
 
 Output action requests must: be discarded and have no effect on hardware if
-the application's session is not active.
+the application's session is not focused.
 
 Output action requests for an action in an action set never attached to the
 session with flink:xrAttachSessionActionSets must: return
@@ -1157,6 +1159,9 @@ exactly which device, if any, this event is sent to is up to the runtime to
 decide.
 If an appropriate device is unavailable the runtime may: ignore this request
 for haptic feedback.
+
+If pname:session is not focused, the runtime must: return
+ename:XR_SESSION_NOT_FOCUSED, and not trigger a haptic event.
 
 If another haptic event from this session is currently happening on the
 device bound to this action, the runtime must: interrupt that other event
@@ -1244,6 +1249,9 @@ include::../../generated/api/protos/xrStopHapticFeedback.txt[]
 
 If a haptic event from this slink:XrAction is in progress, when this
 function is called the runtime must: stop that event.
+
+If pname:session is not focused, the runtime must: return
+ename:XR_SESSION_NOT_FOCUSED.
 
 include::../../generated/validity/protos/xrStopHapticFeedback.txt[]
 --

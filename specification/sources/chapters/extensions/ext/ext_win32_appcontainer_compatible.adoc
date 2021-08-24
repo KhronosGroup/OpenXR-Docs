@@ -21,11 +21,11 @@ include::../meta/XR_EXT_win32_appcontainer_compatible.adoc[]
 *Overview*
 
 To minimize opportunities for malicious manipulation, a common practice on
-the Windows OS is to isolate the application process in an {url-appcontainer-isolation}[AppContainer
-execution environment].
+the Windows OS is to isolate the application process in an
+{url-appcontainer-isolation}[AppContainer execution environment].
 In order for a runtime to work properly in such an application process, the
-runtime must: properly {url-appcontainer-impl}[set ACL to device resources and cross process
-resources].
+runtime must: properly {url-appcontainer-impl}[set ACL to device resources
+and cross process resources].
 
 An application running in an AppContainer process can: request for a runtime
 to enable such AppContainer compatibility by adding

@@ -1,0 +1,153 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_space_warp.adoc[]
+
+*Contributors*::
+    Jian Zhang, Facebook +
+    Neel Bedekar, Facebook +
+    Xiang Wei, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension provides support to enable space warp technology on
+application.
+By feeding application generated motion vector and depth buffer images, the
+runtime can do high quality frame extrapolation and reprojection, allow
+applications to run at half fps but still providing smooth experience to
+users.
+
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+[NOTE]
+.Note
+====
+This extension is independent of <<XR_KHR_composition_layer_depth>>, and
+both may be enabled and used at the same time, for different purposes.
+The slink:XrCompositionLayerSpaceWarpInfoFB::pname:depthSubImage depth data
+is dedicated for space warp, and its resolution is usually lower than
+slink:XrCompositionLayerDepthInfoKHR::pname:subImage.
+See slink:XrSystemSpaceWarpPropertiesFB for suggested resolution of
+pname:depthSubImage.
+
+====
+
+*New Flag Types*
+
+[open,refpage='XrCompositionLayerSpaceWarpInfoFlagsFB',type='flags',desc='XrCompositionLayerSpaceWarpInfoFlagsFB']
+--
+include::{INCS-VAR}/api/flags/XrCompositionLayerSpaceWarpInfoFlagsFB.txt[]
+--
+
+[open,refpage='XrCompositionLayerSpaceWarpInfoFlagBitsFB',type='enums',desc='XrCompositionLayerSpaceWarpInfoFlagBitsFB',xrefs='XrCompositionLayerSpaceWarpInfoFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrCompositionLayerSpaceWarpInfoFlagBitsFB.txt[]
+
+There are currently no space warp info flags.
+This is reserved for future use.
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_SPACE_WARP_INFO_FB
+* ename:XR_TYPE_SYSTEM_SPACE_WARP_PROPERTIES_FB
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerSpaceWarpInfoFB',type='structs',desc='Composition Layer Space Warp structure',xrefs='XrCompositionLayerProjectionView XrCompositionLayerProjection XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
+--
+
+When submitting motion vector buffer and depth buffers along with projection
+layers, add an slink:XrCompositionLayerSpaceWarpInfoFB structure to the
+slink:XrCompositionLayerProjectionView::pname:next chain, for each
+slink:XrCompositionLayerProjectionView structure in the given layer.
+
+The slink:XrCompositionLayerSpaceWarpInfoFB structure is defined as:
+include::{INCS-VAR}/api/structs/XrCompositionLayerSpaceWarpInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:layerFlags is a bitmask of
+  elink:XrCompositionLayerSpaceWarpInfoFlagsFB.
+* pname:motionVectorSubImage identifies the motion vector image
+  slink:XrSwapchainSubImage to be associated with the submitted layer
+  slink:XrCompositionLayerProjection.
+* pname:appSpaceDeltaPose is the incremental application-applied transform,
+  if any, since the previous frame that affects the view.
+  When artificial locomotion (scripted movement, teleportation, etc.)
+  happens, the application might transform the whole
+  slink:XrCompositionLayerProjection::space from one application space pose
+  to another pose between frames.
+  The pose should be identity when there is no
+  slink:XrCompositionLayerProjection::space transformation in application.
+* pname:depthSubImage identifies the depth image slink:XrSwapchainSubImage
+  to be associated with motionVectorSubImage.
+  The swapchain should be created with ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+  | ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT.
+* pname:minDepth and pname:maxDepth are the range of depth values the
+  pname:depthSwapchain could have, in the range of [eq]#[0.0,1.0]#.
+  This is akin to min and max values of OpenGL's fname:glDepthRange, but
+  with the requirement here that [eq]#maxDepth {geq} minDepth#.
+* pname:nearZ is the positive distance in meters of the pname:minDepth value
+  in the depth swapchain.
+  Applications may: use a pname:nearZ that is greater than pname:farZ to
+  indicate depth values are reversed.
+  pname:nearZ can be infinite.
+* pname:farZ is the positive distance in meters of the pname:maxDepth value
+  in the depth swapchain.
+  pname:farZ can be infinite.
+****
+The motion vector data is stored in the pname:motionVectorSubImage's RGB
+channels, defined in NDC (normalized device coordinates) space, for example,
+the same surface point's NDC is PrevNDC in previous frame, CurrNDC in
+current frame, then the motion vector value is "highp vec3 motionVector = (
+CurrNDC - PrevNDC ).xyz;".
+Signed 16 bit float pixel format is recommended for this image.
+
+The runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE if
+pname:nearZ == pname:farZ.
+
+include::{INCS-VAR}/validity/structs/XrCompositionLayerSpaceWarpInfoFB.txt[]
+--
+
+[open,refpage='XrSystemSpaceWarpPropertiesFB',type='structs',desc='Composition Layer Space Warp structure',xrefs='XrSystemProperties']
+--
+When this extension is enabled, an application can: pass in an
+slink:XrSystemSpaceWarpPropertiesFB structure in the
+slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties to acquire information about recommended motion
+vector buffer resolution.
+The slink:XrSystemSpaceWarpPropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemSpaceWarpPropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:recommendedMotionVectorImageRectWidth: recommended motion vector and
+  depth image width
+* pname:recommendedMotionVectorImageRectHeight: recommended motion vector
+  and depth image height
+****
+include::{INCS-VAR}/validity/structs/XrSystemSpaceWarpPropertiesFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-08-04 (Jian Zhang)
+** Initial extension description

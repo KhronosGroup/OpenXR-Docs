@@ -1194,6 +1194,9 @@ include::../../generated/api/structs/XrSwapchainSubImage.txt[]
   the image to use, in pixels.
   It also implicitly defines the transform from normalized image coordinates
   into pixel coordinates.
+  The coordinate origin depends on which graphics API is being used.
+  See the graphics API extension details for more information on the
+  coordinate origin definition.
   Note that the compositor may: bleed in pixels from outside the bounds in
   some cases, for instance due to mipmapping.
 * pname:imageArrayIndex is the image array index, with 0 meaning the first

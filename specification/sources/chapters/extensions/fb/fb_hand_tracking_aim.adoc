@@ -1,0 +1,99 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_hand_tracking_aim.adoc[]
+
+*Contributors*::
+    Federico Schliemann, Facebook +
+    James Hillery, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
+which represent the current configuration of the tracked hands.
+This extension adds a layer of gesture recognition that is used by the
+system.
+
+This extension allows:
+
+* An application to get a set of basic gesture states for the hand when
+  using the <<XR_EXT_hand_tracking>> extension.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrHandTrackingAimFlagsFB',type='flags',desc='XrHandTrackingAimFlagsFB',xrefs='XrHandTrackingAimFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrHandTrackingAimFlagsFB.txt[]
+--
+
+
+[open,refpage='XrHandTrackingAimFlagBitsFB',type='enums',desc='XrHandTrackingAimFlagBitsFB',xrefs='XrHandTrackingAimFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrHandTrackingAimFlagBitsFB.txt[]
+
+include::{INCS-VAR}/api/enums/XrHandTrackingAimFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_HAND_TRACKING_AIM_STATE_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrHandTrackingAimStateFB',type='structs',desc='Current aiming gesture state for the hand',xrefs='']
+--
+
+slink:XrHandTrackingAimStateFB can: be provided in the pname:next chain of
+slink:XrHandJointsLocateInfoEXT when calling flink:xrLocateHandJointsEXT to
+request aiming gesture information associated with this hand.
+
+The slink:XrHandTrackingAimStateFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrHandTrackingAimStateFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:status is a bitmask of elink:XrHandTrackingAimFlagBitsFB describing
+  the availability and state of other signals.
+* pname:aimPose is a system-determined "aim" pose, similar in intent and
+  convention to the <<aim-pose,aim poses>> used with the action system,
+  based on hand data.
+* pname:pinchStrengthIndex is the current pinching strength for the index
+  finger of this hand.
+  Range is 0.0 to 1.0, with 1.0 meaning index and thumb are fully touching.
+* pname:pinchStrengthMiddle is the current pinching strength for the middle
+  finger of this hand.
+  Range is 0.0 to 1.0, with 1.0 meaning middle and thumb are fully touching.
+* pname:pinchStrengthRing is the current pinching strength for the ring
+  finger of this hand.
+  Range is 0.0 to 1.0, with 1.0 meaning ring and thumb are fully touching.
+* pname:pinchStrengthLittle is the current pinching strength for the little
+  finger of this hand.
+  Range is 0.0 to 1.0, with 1.0 meaning little and thumb are fully touching.
+****
+
+include::{INCS-VAR}/validity/structs/XrHandTrackingAimStateFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-07-07 (Federico Schliemann)
+** Initial extension description

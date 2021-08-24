@@ -1,0 +1,93 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_hand_tracking_capsules.adoc[]
+
+*Contributors*::
+    Federico Schliemann, Facebook +
+    James Hillery, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
+which include a collision sphere for each joint.
+However some physics systems prefer to use capsules as a collision stand in
+for the hands.
+
+This extension allows:
+
+* An application to get a list of capsules that represent the volume of the
+  hand when using the <<XR_EXT_hand_tracking>> extension.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT
+* ename:XR_FB_HAND_TRACKING_CAPSULE_COUNT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_HAND_TRACKING_CAPSULES_STATE_FB
+
+*New Enums*
+
+*New Structures*
+
+
+[open,refpage='XrHandCapsuleFB',type='structs',desc='A 3D capsule defined by two points and a radius',xrefs='']
+--
+The slink:XrHandCapsuleFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrHandCapsuleFB.txt[]
+
+It describes a collision capsule associated with a hand joint.
+
+.Member Descriptions
+****
+* pname:points are the two points defining the capsule length.
+* pname:radius is the radius of the capsule.
+* pname:joint is the hand joint that drives this capsule's transform.
+  Multiple capsules can be attached to the same joint.
+****
+
+include::{INCS-VAR}/validity/structs/XrHandCapsuleFB.txt[]
+--
+
+[open,refpage='XrHandTrackingCapsulesStateFB',type='structs',desc='A list of capsules associated to hand joints',xrefs='']
+--
+
+slink:XrHandTrackingCapsulesStateFB can: be provided in the pname:next chain
+of slink:XrHandJointsLocateInfoEXT when calling flink:xrLocateHandJointsEXT
+to request collision capsule information associated with this hand.
+
+The slink:XrHandTrackingCapsulesStateFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:capsules is an array of capsules.
+****
+
+include::{INCS-VAR}/validity/structs/XrHandTrackingCapsulesStateFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-07-07 (Federico Schliemann)
+** Initial extension description

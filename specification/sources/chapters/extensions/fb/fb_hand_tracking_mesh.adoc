@@ -1,0 +1,193 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_hand_tracking_mesh.adoc[]
+
+*Contributors*::
+    Federico Schliemann, Facebook +
+    James Hillery, Facebook +
+    Gloria Kennickell, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
+but no mechanism to render a skinned hand mesh.
+
+This extension allows:
+
+* An application to get a skinned hand mesh and a bind pose skeleton that
+  can be used to render a hand object driven by the joints from the
+  <<XR_EXT_hand_tracking>> extension.
+* Control the scale of the hand joints returned by <<XR_EXT_hand_tracking>>.
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_HAND_TRACKING_MESH_FB
+* ename:XR_TYPE_HAND_TRACKING_SCALE_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrVector4sFB',type='structs',desc='A four component short integer vector',xrefs='']
+--
+The slink:XrVector4sFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrVector4sFB.txt[]
+
+This is a short integer, four component vector type, used for per-vertex
+joint indexing for mesh skinning.
+
+.Member Descriptions
+****
+* pname:x is the `x` component of the vector.
+* pname:y is the `y` component of the vector.
+* pname:z is the `z` component of the vector.
+* pname:w is the `w` component of the vector.
+****
+
+include::{INCS-VAR}/validity/structs/XrVector4sFB.txt[]
+--
+
+[open,refpage='XrHandTrackingMeshFB',type='structs',desc='A container of mesh data',xrefs='']
+--
+
+The slink:XrHandTrackingMeshFB structure contains three sets of parallel,
+application-allocated arrays: one with per-joint data, one with vertex data,
+and one with index data.
+
+The slink:XrHandTrackingMeshFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrHandTrackingMeshFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:jointCapacityInput is the capacity of the joint data arrays in this
+  structure, or `0` to indicate a request to retrieve the required capacity.
+* pname:jointCountOutput is filled in by the runtime with the count of joint
+  data elements written, or the required capacity in the case that any of
+  pname:jointCapacityInput, pname:vertexCapacityInput, or
+  pname:indexCapacityInput is `0`.
+* pname:jointBindPoses is an array of poses that matches what is returned by
+  flink:xrLocateHandJointsEXT which describes the hand skeleton's bind pose.
+* pname:jointRadii is an array of joint radii at bind pose.
+* pname:jointParents is an array of joint parents to define a bone hierarchy
+  for the hand skeleton.
+* pname:vertexCapacityInput is the capacity of the vertex data arrays in
+  this structure, or `0` to indicate a request to retrieve the required
+  capacity.
+* pname:vertexCountOutput is filled in by the runtime with the count of
+  vertex data elements written, or the required capacity in the case that
+  any of pname:jointCapacityInput, pname:vertexCapacityInput, or
+  pname:indexCapacityInput is `0`.
+* pname:vertexPositions is an array of 3D vertex positions.
+* pname:vertexNormals is an array of 3D vertex normals.
+* pname:vertexUVs is an array of texture coordinates for this vertex.
+* pname:vertexBlendIndices is an array of bone blend indices.
+* pname:vertexBlendWeights is an array of bone blend weights.
+* pname:indexCapacityInput is the capacity of the index data arrays in this
+  structure, or `0` to indicate a request to retrieve the required capacity.
+* pname:indexCountOutput is filled in by the runtime with the count of index
+  data elements written, or the required capacity in the case that any of
+  pname:jointCapacityInput, pname:vertexCapacityInput, or
+  pname:indexCapacityInput is `0`.
+* pname:indices is an array of triangle indices.
+* See the <<buffer-size-parameters> section for a detailed description of
+  retrieving the required array sizes in the "struct form" as used here.
+****
+
+All arrays are application-allocated, and all may: be code:NULL if any of
+pname:jointCapacityInput, pname:vertexCapacityInput, or
+pname:indexCapacityInput is `0`.
+
+The data in a fully-populated slink:XrHandTrackingMeshFB is immutable during
+the lifetime of the corresponding slink:XrInstance, and is intended to be
+retrieved once then used in combination with data changing per-frame
+retrieved from flink:xrLocateHandJointsEXT.
+
+include::{INCS-VAR}/validity/structs/XrHandTrackingMeshFB.txt[]
+--
+
+
+[open,refpage='XrHandTrackingScaleFB',type='structs',desc='The information to query and modify hand joint overall scale',xrefs='']
+--
+
+slink:XrHandTrackingScaleFB can: be provided in the pname:next chain of
+slink:XrHandJointsLocateInfoEXT when calling flink:xrLocateHandJointsEXT to
+indicate to the runtime that the requested joints need to be scaled to a
+different size and to query the existing scale value.
+This is useful in breaking up the overall scale out of the skinning
+transforms.
+
+The slink:XrHandTrackingScaleFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrHandTrackingScaleFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:sensorOutput is an output value: the currently measured scale as
+  would be applied without passing this structure.
+* pname:currentOutput is an output value: the effective output that the bind
+  skeleton is getting on the current call, which may be subject to
+  filtering, scaling, or validation.
+* pname:overrideHandScale indicates whether the runtime should scale the
+  output of this flink:xrLocateHandJointsEXT call according to
+  pname:overrideValueInput
+* pname:overrideValueInput is an optional input value, enabled only when the
+  pname:overrideHandScale parameter is set.
+  Setting this to 1.0 and setting pname:overrideHandScale to code:true will
+  give the joints in mesh binding scale.
+****
+
+include::{INCS-VAR}/validity/structs/XrHandTrackingScaleFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrGetHandMeshFB',desc='Create a foveation profile',type='protos',xrefs='']
+--
+The flink:xrGetHandMeshFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetHandMeshFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is the slink:XrHandTrackerEXT that is associated with a
+  particular hand.
+* pname:mesh is the slink:XrHandTrackingMeshFB output structure.
+****
+
+The flink:xrGetHandMeshFB function populates an slink:XrHandTrackingMeshFB
+structure with enough information to render a skinned mesh driven by the
+hand joints.
+As discussed in the specification for that structure, the data enumerated by
+this call is constant during the lifetime of an slink:XrInstance.
+
+include::{INCS-VAR}/validity/protos/xrGetHandMeshFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-07-07 (Federico Schliemann)
+** Initial extension description
+
