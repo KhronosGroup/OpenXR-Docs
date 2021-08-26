@@ -560,7 +560,7 @@ def reflowFile(filename, args):
     try:
         fp = open(outFilename, 'w', encoding='utf8', newline=newline_string)
     except:
-        logWarn('Cannot open output file', filename, ':', sys.exc_info()[0])
+        logWarn('Cannot open output file', outFilename, ':', sys.exc_info()[0])
         return
 
     state = ReflowState(filename,
