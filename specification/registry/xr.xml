@@ -27,7 +27,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <!-- SECTION: OpenXR vendor/author tags for extensions and layers -->
     <tags>
         <!--  Sorted alphabetically by tag name -->
-        <tag name="ALMALENCE"  author="Almalence"                   contact="Ivan Chupakhin @ivan.chupakhin, Dmity Shmunk @dmitry.shmunk"/>
+        <tag name="ALMALENCE"  author="Almalence"                   contact="Ivan Chupakhin @ivan.chupakhin, Dmitry Shmunk @dmitry.shmunk"/>
         <tag name="ARM"        author="Arm Limited"                 contact="Andreas Loeve Selvik @selvik, Sam Martin @sammartin"/>
         <tag name="COLLABORA"  author="Collabora"                   contact="Ryan Pavlik @rpavlik"/>
         <tag name="EPIC"       author="Epic"                        contact="Nick Whiting @whitingn"/>
@@ -266,6 +266,10 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type bitvalues="XrSwapchainCreateFoveationFlagBitsFB" category="bitmask">typedef <type>XrFlags64</type> <name>XrSwapchainCreateFoveationFlagsFB</name>;</type>
         <type bitvalues="XrSwapchainStateFoveationFlagBitsFB"  category="bitmask">typedef <type>XrFlags64</type> <name>XrSwapchainStateFoveationFlagsFB</name>;</type>
 
+        <!-- Bitmask types for XR_ALMALENCE_digital_lens_control -->
+        <type bitvalues="XrDigitalLensControlFlagBitsALMALENCE"  category="bitmask">typedef <type>XrFlags64</type> <name>XrDigitalLensControlFlagsALMALENCE</name>;</type>
+
+
         <!-- Handles referring to internally-maintained objects. -->
         <!-- These types which can be 64-bit integers or opaque pointers, selected at compile time based on pointer size -->
         <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
@@ -342,6 +346,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <!-- enums and flag bits for XR_FB_foveation -->
         <type name="XrSwapchainCreateFoveationFlagBitsFB" category="enum"/>
         <type name="XrSwapchainStateFoveationFlagBitsFB" category="enum"/>
+
+        <!-- enums and flag bits for XR_ALMALENCE_digital_lens_control -->
+        <type name="XrDigitalLensControlFlagBitsALMALENCE" category="enum"/>
 
         <!-- Struct types -->
         <type category="struct" name="XrVector2f">
@@ -1783,6 +1790,13 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member><type>XrSpatialAnchorPersistenceNameMSFT</type>     <name>spatialAnchorPersistenceName</name></member>
         </type>
 
+        <!-- XR_ALMALENCE_digital_lens_control -->
+        <type category="struct" name="XrDigitalLensControlALMALENCE">
+            <member values="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>*                            <name>next</name></member>
+            <member><type>XrDigitalLensControlFlagsALMALENCE</type>     <name>flags</name></member>
+        </type>
+
     </types>
 
     <!-- SECTION: OpenXR enumerant (token) definitions. -->
@@ -2278,6 +2292,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <enums name="XrFoveationDynamicFB" type="enum">
         <enum value="0"   name="XR_FOVEATION_DYNAMIC_DISABLED_FB"      comment="Static foveation at the maximum desired level"/>
         <enum value="1"   name="XR_FOVEATION_DYNAMIC_LEVEL_ENABLED_FB" comment="Dynamic changing foveation based on performance headroom available up to the maximum desired level"/>
+    </enums>
+
+    <!-- flags for XR_ALMALENCE_digital_lens_control -->
+    <enums name="XrDigitalLensControlFlagBitsALMALENCE" type="bitmask">
+        <enum bitpos="0" name="XR_DIGITAL_LENS_CONTROL_PROCESSING_DISABLE_BIT_ALMALENCE" comment="disables Digital Lens processing of render textures"/>
     </enums>
 
     <!-- SECTION: OpenXR command definitions -->
@@ -3134,6 +3153,12 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <proto><type>XrResult</type> <name>xrClearSpatialAnchorStoreMSFT</name></proto>
             <param><type>XrSpatialAnchorStoreConnectionMSFT</type> <name>spatialAnchorStore</name></param>
         </command>
+
+        <!-- commands for XR_ALMALENCE_digital_lens_control -->
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED">
+            <proto><type>XrResult</type> <name>xrSetDigitalLensStateALMALENCE</name></proto>
+            <param>const <type>XrDigitalLensControlALMALENCE</type>* <name>digitalLensState</name></param>
+        </command>        
 
     </commands>
 
@@ -5083,6 +5108,12 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <require>
             <enum value="1"                                              name="XR_ALMALENCE_digital_lens_control_SPEC_VERSION"/>
             <enum value="&quot;XR_ALMALENCE_digital_lens_control&quot;"  name="XR_ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME"/>
+            
+            <type name="XrDigitalLensControlALMALENCE"/>
+
+            <command name="xrSetDigitalLensStateALMALENCE"/>
+
+            <enum offset="0" extends="XrStructureType"                   name="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"/>
         </require>
     </extension>
 
