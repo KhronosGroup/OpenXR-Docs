@@ -1,0 +1,608 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_passthrough.adoc[]
+
+*Contributors*::
+    Anton Vaneev, Facebook +
+    Cass Everitt, Facebook +
+    Federico Schliemann, Facebook +
+    Johannes Schmid, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+Passthrough is a way to show a user their physical environment in a
+light-blocking VR headset.
+Applications may use passthrough in a multitude of ways, including:
+
+* Creating AR-like experiences, where virtual objects augment the user's
+  environment.
+* Bringing real objects into a VR experience.
+* Mapping the playspace such that a VR experience is customized to it.
+
+This extension allows:
+
+* An application to request passthrough to be composited with the
+  application content.
+* An application to specify the compositing and blending rules between
+  passthrough and VR content.
+* An application to apply styles, such as color mapping and edge rendering,
+  to passthrough.
+* An application to provide a geometry to be used in place of the user's
+  physical environment.
+  Camera images will be projected onto the surface provided by the
+  application.
+  In some cases where a part of the environment, such as a desk, can be
+  approximated well, this provides better visual experience.
+
+*New Object Types*
+
+[open,refpage='XrPassthroughFB',type='handles',desc='Passthrough feature']
+--
+include::{INCS-VAR}/api/handles/XrPassthroughFB.txt[]
+
+slink:XrPassthroughFB represents a passthrough feature.
+--
+
+[open,refpage='XrPassthroughLayerFB',type='handles',desc='Passthrough layer']
+--
+include::{INCS-VAR}/api/handles/XrPassthroughLayerFB.txt[]
+
+slink:XrPassthroughLayerFB represents a layer of passthrough content.
+--
+
+[open,refpage='XrGeometryInstanceFB',type='handles',desc='Triangle mesh']
+--
+include::{INCS-VAR}/api/handles/XrGeometryInstanceFB.txt[]
+
+slink:XrGeometryInstanceFB represents a geometry instance used in a
+passthrough layer.
+--
+
+*New Flag Types*
+
+[open,refpage='XrPassthroughFlagsFB',type='flags',desc='XrPassthroughFlagsFB',xrefs='XrPassthroughFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrPassthroughFlagsFB.txt[]
+--
+
+[open,refpage='XrPassthroughFlagBitsFB',type='enums',desc='XrPassthroughFlagBitsFB',xrefs='XrPassthroughFlagsFB']
+--
+Specify additional creation behavior.
+
+include::{INCS-VAR}/api/enums/XrPassthroughFlagBitsFB.txt[]
+
+
+include::{INCS-VAR}/api/enums/XrPassthroughFlagBitsFB.comments.txt[]
+--
+
+[open,refpage='XrPassthroughStateChangedFlagsFB',type='flags',desc='XrPassthroughStateChangedFlagsFB',xrefs='XrPassthroughStateChangedFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrPassthroughStateChangedFlagsFB.txt[]
+--
+
+[open,refpage='XrPassthroughStateChangedFlagBitsFB',type='enums',desc='XrPassthroughStateChangedFlagBitsFB',xrefs='XrPassthroughStateChangedFlagsFB']
+--
+Specify additional state change behavior.
+
+include::{INCS-VAR}/api/enums/XrPassthroughStateChangedFlagBitsFB.txt[]
+
+include::{INCS-VAR}/api/enums/XrPassthroughStateChangedFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+* ename:XR_PASSTHROUGH_COLOR_MAP_MONO_SIZE_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_PASSTHROUGH_PROPERTIES_FB
+* ename:XR_TYPE_PASSTHROUGH_CREATE_INFO_FB
+* ename:XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_FB
+* ename:XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_FB
+* ename:XR_TYPE_GEOMETRY_INSTANCE_CREATE_INFO_FB
+* ename:XR_TYPE_GEOMETRY_INSTANCE_TRANSFORM_FB
+* ename:XR_TYPE_PASSTHROUGH_STYLE_FB
+* ename:XR_TYPE_PASSTHROUGH_COLOR_MAP_MONO_TO_RGBA_FB
+* ename:XR_TYPE_PASSTHROUGH_COLOR_MAP_MONO_TO_MONO_FB
+* ename:XR_TYPE_EVENT_DATA_PASSTHROUGH_STATE_CHANGED_FB
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_UNEXPECTED_STATE_PASSTHROUGH_FB The state of an object for
+  which a function is called is not one of the expected states for that
+  function.
+* ename:XR_ERROR_FEATURE_ALREADY_CREATED_PASSTHROUGH_FB An application
+  attempted to create a feature when one has already been created and only
+  one can exist.
+* ename:XR_ERROR_FEATURE_REQUIRED_PASSTHROUGH_FB A feature is required
+  before the function can be called.
+* ename:XR_ERROR_NOT_PERMITTED_PASSTHROUGH_FB Operation is not permitted.
+* ename:XR_ERROR_INSUFFICIENT_RESOURCES_PASSTHROUGH_FB The runtime does not
+  have sufficient resources to perform the operation.
+  Either the object being created is too large, or too many objects of a
+  specific kind have been created.
+
+*New Enums*
+
+[open,refpage='XrPassthroughLayerPurposeFB',desc='Layer purpose',type='enums']
+--
+Specify the kind of passthrough behavior the layer provides.
+
+include::{INCS-VAR}/api/enums/XrPassthroughLayerPurposeFB.txt[]
+
+include::{INCS-VAR}/api/enums/XrPassthroughLayerPurposeFB.comments-box.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrSystemPassthroughPropertiesFB',type='structs',desc='A passthrough system property',xrefs='']
+--
+The slink:XrSystemPassthroughPropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemPassthroughPropertiesFB.txt[]
+
+It describes a passthrough system property.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsPassthrough defines whether the system supports the
+  passthrough feature.
+****
+
+include::{INCS-VAR}/validity/structs/XrSystemPassthroughPropertiesFB.txt[]
+--
+
+[open,refpage='XrPassthroughCreateInfoFB',type='structs',desc='A create structure for passthrough',xrefs='']
+--
+The slink:XrPassthroughCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughCreateInfoFB.txt[]
+
+It contains parameters used to specify a new passthrough feature.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrPassthroughFlagBitsFB that specify
+  additional behavior.
+****
+
+include::{INCS-VAR}/validity/structs/XrPassthroughCreateInfoFB.txt[]
+--
+
+[open,refpage='XrPassthroughLayerCreateInfoFB',type='structs',desc='A create structure for passthrough layers',xrefs='']
+--
+The slink:XrPassthroughLayerCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughLayerCreateInfoFB.txt[]
+
+It contains parameters used to specify a new passthrough layer.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags elink:XrPassthroughFlagsFB that specify additional behavior.
+* pname:purpose elink:XrPassthroughLayerPurposeFB that specifies the layer's
+  purpose.
+****
+
+include::{INCS-VAR}/validity/structs/XrPassthroughLayerCreateInfoFB.txt[]
+--
+
+[open,refpage='XrCompositionLayerPassthroughFB',type='structs',desc='A composition layer for passthrough',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerPassthroughFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrCompositionLayerPassthroughFB.txt[]
+
+It is a composition layer type that may be submitted in flink:xrEndFrame
+where an slink:XrCompositionLayerBaseHeader is specified, as a stand-in for
+the actual passthrough contents.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrCompositionLayerFlagBits that specify
+  additional behavior.
+* pname:space is the slink:XrSpace that specifies the layer's space - must:
+  be dlink:XR_NULL_HANDLE.
+* pname:layer is the slink:XrPassthroughLayerFB that defines this layer's
+  behavior.
+****
+
+include::{INCS-VAR}/validity/structs/XrCompositionLayerPassthroughFB.txt[]
+--
+
+[open,refpage='XrGeometryInstanceCreateInfoFB',type='structs',desc='A create structure for geometry instance',xrefs='']
+--
+The slink:XrGeometryInstanceCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrGeometryInstanceCreateInfoFB.txt[]
+
+It contains parameters to specify a new geometry instance.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:layer is the slink:XrPassthroughLayerFB.
+* pname:mesh is the slink:XrTriangleMeshFB.
+* pname:baseSpace is the slink:XrSpace that defines the geometry instance's
+  base space for transformations.
+* pname:pose is the slink:XrPosef that defines the geometry instance's pose.
+* pname:scale is the slink:XrVector3f that defines the geometry instance's
+  scale.
+****
+
+include::{INCS-VAR}/validity/structs/XrGeometryInstanceCreateInfoFB.txt[]
+--
+
+[open,refpage='XrGeometryInstanceTransformFB',type='structs',desc='A geometry transformation',xrefs='']
+--
+The slink:XrGeometryInstanceTransformFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrGeometryInstanceTransformFB.txt[]
+
+It describes a transformation for a geometry instance.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is the slink:XrSpace that defines the geometry instance's
+  base space for transformations.
+* pname:time is the basetype:XrTime that define the time at which the
+  transform is applied.
+* pname:pose is the slink:XrPosef that defines the geometry instance's pose.
+* pname:scale is the slink:XrVector3f that defines the geometry instance's
+  scale.
+****
+
+include::{INCS-VAR}/validity/structs/XrGeometryInstanceTransformFB.txt[]
+--
+
+[open,refpage='XrPassthroughStyleFB',type='structs',desc='A layer style',xrefs='']
+--
+The slink:XrPassthroughStyleFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughStyleFB.txt[]
+
+It describes a style for a layer.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrPassthroughColorMapMonoToRgbaFB or
+  slink:XrPassthroughColorMapMonoToRgbaFB.
+  The color map structures are mutually exclusive.
+* pname:textureOpacityFactor is the opacity factor in range 0.0 to 1.0.
+* pname:edgeColor is the slink:XrColor4f that defines the color of the edge.
+  Setting edge color to ( 0, 0, 0, 0 ) disables edge rendering.
+****
+
+include::{INCS-VAR}/validity/structs/XrPassthroughStyleFB.txt[]
+--
+
+[open,refpage='XrPassthroughColorMapMonoToRgbaFB',type='structs',desc='A layer color map',xrefs='']
+--
+The slink:XrPassthroughColorMapMonoToRgbaFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughColorMapMonoToRgbaFB.txt[]
+
+It describes a color map style for a layer.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:textureColorMap is the array of slink:XrColor4f colors that map to
+  intensity values.
+****
+
+include::{INCS-VAR}/validity/structs/XrPassthroughColorMapMonoToRgbaFB.txt[]
+--
+
+[open,refpage='XrPassthroughColorMapMonoToMonoFB',type='structs',desc='A layer color map',xrefs='']
+--
+The slink:XrPassthroughColorMapMonoToMonoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughColorMapMonoToMonoFB.txt[]
+
+It describes a color map style for a layer.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:textureColorMap is the array of code:uint8_t intensity values that
+  map to original intensity values.
+****
+
+include::{INCS-VAR}/validity/structs/XrPassthroughColorMapMonoToMonoFB.txt[]
+--
+
+[open,refpage='XrEventDataPassthroughStateChangedFB',type='structs',desc='An event for passthrough state changes',xrefs='']
+--
+The slink:XrEventDataPassthroughStateChangedFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataPassthroughStateChangedFB.txt[]
+
+It describes an event data for state changes return by flink:xrPollEvent.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags elink:XrPassthroughStateChangedFlagsFB that specify additional
+  behavior.
+****
+
+include::{INCS-VAR}/validity/structs/XrEventDataPassthroughStateChangedFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreatePassthroughFB',desc='Create a passthrough feature',type='protos',xrefs='']
+--
+The flink:xrCreatePassthroughFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreatePassthroughFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:createInfo is the slink:XrPassthroughCreateInfoFB.
+* pname:outPassthrough is the slink:XrPassthroughFB.
+****
+
+Creates an slink:XrPassthroughFB handle.
+The returned passthrough handle may: be subsequently used in API calls.
+
+include::{INCS-VAR}/validity/protos/xrCreatePassthroughFB.txt[]
+--
+
+[open,refpage='xrDestroyPassthroughFB',desc='Destroy a passthrough feature',type='protos',xrefs='']
+--
+The flink:xrDestroyPassthroughFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrDestroyPassthroughFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:passthrough is the slink:XrPassthroughFB to be destroyed.
+****
+
+Destroys an slink:XrPassthroughFB handle.
+
+include::{INCS-VAR}/validity/protos/xrDestroyPassthroughFB.txt[]
+--
+
+[open,refpage='xrPassthroughStartFB',desc='Start a passthrough feature',type='protos',xrefs='']
+--
+The flink:xrPassthroughStartFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughStartFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:passthrough is the slink:XrPassthroughFB to be started.
+****
+
+Starts an slink:XrPassthroughFB feature.
+If the feature is not started, either explicitly with a call to
+flink:xrPassthroughStartFB, or implicitly at creation using the behavior
+flags, it is considered paused.
+When the feature is paused, runtime will stop rendering and compositing all
+passthrough layers produced on behalf of the application, and may free up
+some or all the resources used to produce passthrough until
+flink:xrPassthroughStartFB is called.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughStartFB.txt[]
+--
+
+[open,refpage='xrPassthroughPauseFB',desc='Pause a passthrough feature',type='protos',xrefs='']
+--
+The flink:xrPassthroughPauseFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughPauseFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:passthrough is the slink:XrPassthroughFB to be paused.
+****
+
+Pauses an slink:XrPassthroughFB feature.
+When the feature is paused, runtime will stop rendering and compositing all
+passthrough layers produced on behalf of the application, and may free up
+some or all the resources used to produce passthrough until
+flink:xrPassthroughStartFB is called.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughPauseFB.txt[]
+--
+
+[open,refpage='xrCreatePassthroughLayerFB',desc='Create a passthrough layer',type='protos',xrefs='']
+--
+The flink:xrCreatePassthroughLayerFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreatePassthroughLayerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:createInfo is the slink:XrPassthroughLayerCreateInfoFB.
+* pname:outLayer is the slink:XrPassthroughLayerFB.
+****
+
+Creates an slink:XrPassthroughLayerFB handle.
+The returned layer handle may: be subsequently used in API calls.
+Layer objects may be used to specify rendering properties of the layer, such
+as styles, and compositing rules.
+
+include::{INCS-VAR}/validity/protos/xrCreatePassthroughLayerFB.txt[]
+--
+
+[open,refpage='xrDestroyPassthroughLayerFB',desc='Destroy a passthrough layer',type='protos',xrefs='']
+--
+The flink:xrDestroyPassthroughLayerFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrDestroyPassthroughLayerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerFB to be destroyed.
+****
+
+Destroys an slink:XrPassthroughLayerFB handle.
+
+include::{INCS-VAR}/validity/protos/xrDestroyPassthroughLayerFB.txt[]
+--
+
+[open,refpage='xrPassthroughLayerPauseFB',desc='Pause a passthrough layer',type='protos',xrefs='']
+--
+The flink:xrPassthroughLayerPauseFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughLayerPauseFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerFB to be paused.
+****
+
+Pauses an slink:XrPassthroughLayerFB layer.
+Runtime will not render or composite paused layers.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughLayerPauseFB.txt[]
+--
+
+[open,refpage='xrPassthroughLayerResumeFB',desc='Resume a passthrough layer',type='protos',xrefs='']
+--
+The flink:xrPassthroughLayerResumeFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughLayerResumeFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerFB to be resumed.
+****
+
+Resumes an slink:XrPassthroughLayerFB layer.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughLayerResumeFB.txt[]
+--
+
+[open,refpage='xrPassthroughLayerSetStyleFB',desc='Set style on a passthrough layer',type='protos',xrefs='']
+--
+The flink:xrPassthroughLayerSetStyleFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughLayerSetStyleFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerFB to get the style.
+* pname:style is the slink:XrPassthroughStyleFB to be set.
+****
+
+Sets an slink:XrPassthroughStyleFB style on an slink:XrPassthroughLayerFB
+layer.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughLayerSetStyleFB.txt[]
+--
+
+[open,refpage='xrCreateGeometryInstanceFB',desc='Create a triangle mesh',type='protos',xrefs='']
+--
+The flink:xrCreateGeometryInstanceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreateGeometryInstanceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:createInfo is the slink:XrGeometryInstanceCreateInfoFB.
+* pname:outGeometryInstance is the slink:XrGeometryInstanceFB.
+****
+
+Creates an slink:XrGeometryInstanceFB handle.
+Geometry instance functionality requires <<XR_FB_triangle_mesh>> extension
+to be enabled.
+An slink:XrGeometryInstanceFB connects a layer, a mesh, and a
+transformation, with the semantics that a specific mesh will be instantiated
+in a specific layer with a specific transformation.
+A mesh can be instantiated multiple times, in the same or in different
+layers.
+
+include::{INCS-VAR}/validity/protos/xrCreateGeometryInstanceFB.txt[]
+--
+
+[open,refpage='xrDestroyGeometryInstanceFB',desc='Destroy a geometry instance',type='protos',xrefs='']
+--
+The flink:xrDestroyGeometryInstanceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrDestroyGeometryInstanceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:geometryInstance is the slink:XrGeometryInstanceFB to be destroyed.
+****
+
+Destroys an slink:XrGeometryInstanceFB handle.
+Destroying an slink:XrGeometryInstanceFB does not destroy a mesh and does
+not free mesh resources.
+Destroying a layer invalidates all geometry instances attached to it.
+Destroying a mesh invalidates all its instances.
+
+include::{INCS-VAR}/validity/protos/xrDestroyGeometryInstanceFB.txt[]
+--
+
+[open,refpage='xrGeometryInstanceSetTransformFB',desc='Create a triangle mesh',type='protos',xrefs='']
+--
+The flink:xrGeometryInstanceSetTransformFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGeometryInstanceSetTransformFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:geometryInstance is the slink:XrGeometryInstanceFB to get the
+  transform.
+* pname:transform is the slink:XrGeometryInstanceTransformFB to be set.
+****
+
+Sets an slink:XrGeometryInstanceTransformFB transform on an
+slink:XrGeometryInstanceFB geometry instance.
+
+include::{INCS-VAR}/validity/protos/xrGeometryInstanceSetTransformFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-09-01 (Anton Vaneev)
+** Initial extension description

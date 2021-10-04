@@ -35,6 +35,48 @@ In order to expose the structures, types, and functions of this extension,
 you must: define dlink:XR_USE_GRAPHICS_API_D3D11 before including the OpenXR
 platform header `openxr_platform.h`, in all portions of your library or
 application that include it.
+*Swapchain Flag Bits*
+
+All elink:XrSwapchainUsageFlags values passed in a session created using
+slink:XrGraphicsBindingD3D11KHR must: be interpreted as follows by the
+runtime, so that the returned swapchain images used by the application may
+be used as if they were created with the corresponding D3D11_BIND_FLAG
+flags.
+The runtime may: set additional bind flags but must: not restrict usage.
+
+[cols=2*,options=header]
+|===
+| elink:XrSwapchainUsageFlagBits
+| Corresponding D3D11 bind flag bits
+
+| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+| `D3D11_BIND_RENDER_TARGET`
+
+| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+| `D3D11_BIND_DEPTH_STENCIL`
+
+| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+| `D3D11_BIND_UNORDERED_ACCESS`
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+| `D3D11_BIND_SHADER_RESOURCE`
+
+| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+  (Added by `<<XR_KHR_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+| _ignored_
+
+|===
+
+All D3D11 swapchain textures are created with D3D11_USAGE_DEFAULT usage.
 
 *New Object Types*
 
@@ -192,3 +234,5 @@ include::../../../../generated/validity/protos/xrGetD3D11GraphicsRequirementsKHR
 ** Specified Y direction and Z range in clip space
 * Revision 5, 2020-08-06 (Bryce Hutchings)
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
+* Revision 8, 2021-09-09 (Bryce Hutchings)
+** Document mapping for `XrSwapchainUsageFlags`

@@ -14,7 +14,8 @@ include::../meta/XR_KHR_opengl_es_enable.adoc[]
     Paul Pedriana, Oculus +
     Minmin Gong, Microsoft +
     Robert Menzel, NVIDIA +
-    Martin Renschler, Qualcomm
+    Martin Renschler, Qualcomm +
+    Paulo F. Gomes, Samsung Electronics
 
 *Overview*
 
@@ -47,6 +48,26 @@ or application that include it.
 The only window system define currently supported by this extension is:
 
 * dlink:XR_USE_PLATFORM_ANDROID
+
+*Swapchain Flag Bits*
+
+All elink:XrSwapchainUsageFlags valid values passed in a session created
+using slink:XrGraphicsBindingOpenGLESAndroidKHR should: be ignored as there
+is no mapping to OpenGL ES texture settings.
+
+[NOTE]
+.Note
+====
+
+In such a session, a runtime may: use a supporting graphics API, such as
+Vulkan, to allocate images that are intended to alias with OpenGLES
+textures, and be part of an slink:XrSwapchain.
+A runtime which allocates the texture with a different graphics API may:
+need to enable several usage flags on the underlying native texture resource
+to ensure compatibility with OpenGL ES.
+
+====
+
 
 *New Object Types*
 
@@ -214,3 +235,5 @@ include::../../../../generated/validity/protos/xrGetOpenGLESGraphicsRequirements
 ** Description updated
 * Revision 7, 2020-08-06 (Bryce Hutchings)
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
+* Revision 8, 2021-08-27 (Paulo F. Gomes)
+** Document handling of `XrSwapchainUsageFlags`

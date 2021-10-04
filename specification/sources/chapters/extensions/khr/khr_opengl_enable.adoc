@@ -14,7 +14,8 @@ include::../meta/XR_KHR_opengl_enable.adoc[]
     Paul Pedriana, Oculus +
     Minmin Gong, Microsoft +
     Robert Menzel, NVIDIA +
-    Jakob Bornecrantz, Collabora
+    Jakob Bornecrantz, Collabora +
+    Paulo F. Gomes, Samsung Electronics
 
 *Overview*
 
@@ -61,6 +62,27 @@ It may: be bound in the thread calling those functions.
 The runtime must: not access the context from any other function.
 In particular the application must be able to call flink:xrWaitFrame from a
 different thread than the rendering thread.
+
+*Swapchain Flag Bits*
+
+All elink:XrSwapchainUsageFlags valid values passed in a session created
+using slink:XrGraphicsBindingOpenGLWin32KHR,
+slink:XrGraphicsBindingOpenGLXlibKHR, slink:XrGraphicsBindingOpenGLXcbKHR or
+slink:XrGraphicsBindingOpenGLWaylandKHR should: be ignored as there is no
+mapping to OpenGL texture settings.
+
+[NOTE]
+.Note
+====
+
+In such a session, a runtime may: use a supporting graphics API, such as
+Vulkan, to allocate images that are intended to alias with OpenGL textures,
+and be part of an slink:XrSwapchain.
+A runtime which allocates the texture with a different graphics API may:
+need to enable several usage flags on the underlying native texture resource
+to ensure compatibility with OpenGL.
+
+====
 
 *New Object Types*
 
@@ -328,3 +350,5 @@ include::../../../../generated/validity/protos/xrGetOpenGLGraphicsRequirementsKH
 ** Added note about context not allowed to be current in a different thread.
 * Revision 9, 2020-08-06 (Bryce Hutchings)
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
+* Revision 10, 2021-08-31 (Paulo F. Gomes)
+** Document handling of `XrSwapchainUsageFlags`

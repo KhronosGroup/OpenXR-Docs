@@ -430,8 +430,8 @@ wait on the image to avoid writing to it before the compositor has finished
 reading from it.
 flink:xrWaitSwapchainImage will implicitly wait on the oldest acquired
 swapchain image which has not yet been successfully waited on.
-Once a swapchain image has been successfully waited on, it must: be released
-before waiting on the next acquired swapchain image.
+Once a swapchain image has been successfully waited on without timeout, the
+app must: release before waiting on the next acquired swapchain image.
 
 This function may block for longer than the timeout specified in
 slink:XrSwapchainImageWaitInfo due to scheduling or contention.
@@ -479,8 +479,8 @@ Once an application is done submitting commands that reference the swapchain
 image, the application must: release the swapchain image.
 flink:xrReleaseSwapchainImage will implicitly release the oldest swapchain
 image which has been acquired.
-The swapchain image must: have been successfully waited on before it is
-released.
+The swapchain image must: have been successfully waited on without timeout
+before it is released.
 flink:xrEndFrame will use the most recently released swapchain image.
 In each frame submitted to the compositor only one image index from each
 swapchain will be used.

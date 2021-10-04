@@ -68,6 +68,47 @@ the resource state and queue availability that the OpenXR runtime requires.
 If the image is not in a resource state match with the above specifications
 the runtime may: exhibit undefined behavior.
 
+All elink:XrSwapchainUsageFlags values passed in a session created using
+slink:XrGraphicsBindingD3D12KHR must: be interpreted as follows by the
+runtime, so that the returned swapchain images used by the application may
+be used as if they were created with the corresponding D3D12_BIND_FLAG flags
+and heap type.
+The runtime may: set additional resource flags but must: not restrict usage.
+
+[cols=2*,options=header]
+|===
+| elink:XrSwapchainUsageFlagBits
+| Corresponding D3D12 resource flag bits
+
+| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+| `D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET`
+
+| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+| `D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL`
+
+| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+| `D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS`
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT *omitted*
+| `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
+
+| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+  (Added by `<<XR_KHR_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+| _ignored_
+
+|===
+
+All D3D12 swapchain textures are created with D3D12_HEAP_TYPE_DEFAULT usage.
+
 *New Object Types*
 
 *New Flag Types*
@@ -229,3 +270,5 @@ include::../../../../generated/validity/protos/xrGetD3D12GraphicsRequirementsKHR
 ** Specified depth swapchain image resource state.
 * Revision 7, 2020-08-06 (Bryce Hutchings)
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
+* Revision 8, 2021-09-09 (Bryce Hutchings)
+** Document mapping for `XrSwapchainUsageFlags`

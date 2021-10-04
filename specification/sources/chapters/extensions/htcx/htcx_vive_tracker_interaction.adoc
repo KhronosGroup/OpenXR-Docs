@@ -1,0 +1,346 @@
+// Copyright (c) 2021 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_HTCX_vive_tracker_interaction.adoc[]
+
+*Last Modified Date*::
+    2021-09-23
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Kyle Chen, HTC +
+    Chris Kuo, HTC
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension defines a new interaction profile for HTC VIVE Tracker.
+HTC VIVE Tracker is a generic tracked device which can be attached to
+anything to make them trackable.
+For example, it can be attached to user's hands or feet to track the motion
+of human body.
+It can also be attached to any other devices the user wants to track and
+interact with.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+This extension allows:
+
+* An application to enumerate the subpaths of all current connected VIVE
+  trackers.
+* An application to receive notification of the top level paths of a VIVE
+  tracker when it is connected.
+
+The paths of a VIVE tracker contains two paths below:
+
+* VIVE tracker persistent path indicate a specific tracker whose lifetime
+  lasts longer than an instance, which means it must: not change during its
+  hardware lifetime.
+  The format of this path string is unspecified and should be treated as an
+  opaque string.
+* VIVE tracker role path may: be constructed as
+  "/user/vive_tracker_htcx/role/__ROLE_VALUE__", where __ROLE_VALUE__ takes
+  one of the following values.
+  The role path may: be assigned from the tool provided by the runtime and
+  is dlink:XR_NULL_PATH if it has not been assigned.
+  If this role path refers to more than one tracker, the runtime should:
+  choose one of them to be currently active.
+  The role path may: be changed during the lifetime of instance.
+  Whenever it is changed, the runtime must: send event
+  ename:XR_TYPE_EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX to provide the new
+  role path of that tracker.
+  ROLE_VALUE::
+** `XR_NULL_PATH`
+** `handheld_object`
+** `left_foot`
+** `right_foot`
+** `left_shoulder`
+** `right_shoulder`
+** `left_elbow`
+** `right_elbow`
+** `left_knee`
+** `right_knee`
+** `waist`
+** `chest`
+** `camera`
+** `keyboard`
+* Either the persistent path or the role path can be be passed as a
+  subaction path to indicate a specific tracker.
+  For example, slink:XrActionCreateInfo::pname:subactionPath into function
+  flink:xrCreateAction or slink:XrActionSpaceCreateInfo::pname:subactionPath
+  into function flink:xrCreateActionSpace.
+  Please see Example 1 below.
+
+<<input-suggested-bindings,As with other controllers>>, if a VIVE tracker is
+connected and bound to a top-level user path, or disconnected while bound to
+top-level user path, the runtime must: send event
+ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED, and the application
+may: call flink:xrGetCurrentInteractionProfile to check if the tracker is
+active or not.
+
+[NOTE]
+====
+The device that a tracker is attached to probably has a different motion
+model than what the tracker assumes.
+The motion tracking might not be as expected in this case.
+====
+
+*VIVE Tracker interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/htc/vive_tracker_htcx
+
+This interaction profile represents the input sources and haptics on the
+VIVE Tracker.
+
+Supported component paths:
+
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/menu/click
+* subpathname:/input/trigger/click
+* subpathname:/input/squeeze/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trackpad/x
+* subpathname:/input/trackpad/y
+* subpathname:/input/trackpad/click
+* subpathname:/input/trackpad/touch
+* subpathname:/input/grip/pose
+* subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_VIVE_TRACKER_PATHS_HTCX
+* ename:XR_TYPE_EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX
+
+*New Enums*
+
+*New Structures*
+[open,refpage='XrViveTrackerPathsHTCX',type='structs',desc='Struct contains two paths of VIVE tracker']
+--
+
+The slink:XrViveTrackerPathsHTCX structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrViveTrackerPathsHTCX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:persistentPath is the unique path of the VIVE tracker which is
+  persistent over the lifetime of the hardware.
+* pname:rolePath is the path of the VIVE tracker role.
+  This may: be dlink:XR_NULL_PATH if the role is not assigned.
+****
+
+The slink:XrViveTrackerPathsHTCX structure contains two paths of VIVE
+tracker.
+
+include::{INCS-VAR}/validity/structs/XrViveTrackerPathsHTCX.txt[]
+--
+
+[open,refpage='XrEventDataViveTrackerConnectedHTCX',type='structs',desc='Event representing a new VIVE tracker connected',xrefs='xrPollEvent']
+--
+
+The slink:XrEventDataViveTrackerConnectedHTCX structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:paths contains two paths of the connected VIVE tracker.
+****
+
+Receiving the slink:XrEventDataViveTrackerConnectedHTCX event structure
+indicates that a new VIVE tracker was connected or its role changed.
+It is received via flink:xrPollEvent.
+
+include::{INCS-VAR}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+--
+
+
+*New Functions*
+
+[open,refpage='xrEnumerateViveTrackerPathsHTCX',desc='Enumerates all connected VIVE trackers',type='protos']
+--
+
+The flink:xrEnumerateViveTrackerPathsHTCX function is defined as:
+
+include::{INCS-VAR}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is an instance previously created.
+* pname:pathsCapacityInput is the capacity of the pname:viveTrackerPaths, or
+  `0` to retrieve the required capacity.
+* pname:pathsCountOutput is a pointer to the count of
+  slink:XrViveTrackerPathsHTCX pname:viveTrackerPaths written, or a pointer
+  to the required capacity in the case that pname:pathsCapacityInput is `0`.
+* pname:viveTrackerPaths is a pointer to an array of
+  slink:XrViveTrackerPathsHTCX VIVE tracker paths, but can: be code:NULL if
+  pname:pathsCapacityInput is `0`.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:viveTrackerPaths
+  size.
+****
+
+flink:xrEnumerateViveTrackerPathsHTCX enumerates all connected VIVE trackers
+to retrieve their paths under current instance.
+
+include::{INCS-VAR}/validity/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+--
+
+*Examples*
+
+**Example 1**
+
+This example illustrates how to locate a VIVE tracker which is attached on
+the chest.
+First of all, create an action with
+pathname:/user/vive_tracker_htcx/role/chest as the subaction path.
+Then, submit a suggested binding for that action to the role path plus
+subpathname:/input/grip/pose, for the interaction profile
+pathname:/interaction_profiles/htc/vive_tracker_htcx, using
+flink:xrSuggestInteractionProfileBindings.
+To locate the tracker, create an action space from that action, with
+pathname:/user/vive_tracker_htcx/role/chest once again specified as the
+subaction path.
+
+[source,c++]
+----
+extern XrInstance instance;  // previously initialized
+extern XrSession session;  // previously initialized
+extern XrActionSet actionSet;  // previously initialized
+
+// Create the action with subaction path
+XrPath chestTrackerRolePath;
+CHK_XR(xrStringToPath(instance, "/user/vive_tracker_htcx/role/chest",
+    &chestTrackerRolePath));
+
+XrAction chestPoseAction;
+XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
+actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
+actionInfo.countSubactionPaths = 1;
+actionInfo.subactionPaths = &chestTrackerRolePath;
+CHK_XR(xrCreateAction(actionSet, &actionInfo, &chestPoseAction));
+
+// Describe a suggested binding for that action and subaction path.
+XrPath suggestedBindingPath;
+CHK_XR(xrStringToPath(instance,
+    "/user/vive_tracker_htcx/role/chest/input/grip/pose",
+    &suggestedBindingPath));
+
+std::vector<XrActionSuggestedBinding> actionSuggBindings;
+XrActionSuggestedBinding actionSuggBinding;
+actionSuggBinding.action = chestPoseAction;
+actionSuggBinding.binding = suggestedBindingPath;
+actionSuggBindings.push_back(actionSuggBinding);
+
+// Suggest that binding for the VIVE tracker interaction profile
+XrPath viveTrackerInteractionProfilePath;
+CHK_XR(xrStringToPath(instance, "/interaction_profiles/htc/vive_tracker_htcx",
+    &viveTrackerInteractionProfilePath));
+
+XrInteractionProfileSuggestedBinding profileSuggBindings{
+    XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
+profileSuggBindings.interactionProfile =
+    viveTrackerInteractionProfilePath;
+profileSuggBindings.suggestedBindings =
+    actionSuggBindings.data();
+profileSuggBindings.countSuggestedBindings =
+    (uint32_t)actionSuggBindings.size();
+
+CHK_XR(xrSuggestInteractionProfileBindings(instance, &profileSuggBindings));
+
+// Create action space for locating tracker
+XrSpace chestTrackerSpace;
+XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+actionSpaceInfo.action = chestPoseAction;
+actionSpaceInfo.subactionPath = chestTrackerRolePath;
+CHK_XR(xrCreateActionSpace(session, &actionSpaceInfo, &chestTrackerSpace));
+----
+
+**Example 2**
+
+This example illustrates how to handle the VIVE tracker when it is connected
+or disconnected.
+When a VIVE tracker is connected or its role changed, event
+ename:XR_TYPE_EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX will be received.
+The role path and persistent path of this tracker can be retrieved with this
+event.
+When a VIVE tracker is connected or disconnected, event
+ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED will also be received.
+The slink:XrInteractionProfileState::pname:interactionProfile will be
+dlink:XR_NULL_PATH if the tracker represented by that top level path is not
+connected.
+
+[source,c++]
+----
+extern XrInstance instance;  // previously initialized
+extern XrSession session;  // previously initialized
+extern XrEventDataBuffer xrEvent; // previously received from xrPollEvent
+
+switch ( xrEvent.type )
+{
+    case XR_TYPE_EVENT_DATA_VIVE_TRACKER_CONNECTED_HTCX: {
+        const XrEventDataViveTrackerConnectedHTCX& viveTrackerConnected =
+            *reinterpret_cast<XrEventDataViveTrackerConnectedHTCX*>(&xrEvent);
+        uint32_t nCount;
+        char sPersistentPath[XR_MAX_PATH_LENGTH];
+        CHK_XR(xrPathToString(instance,
+            viveTrackerConnected.paths->persistentPath,
+            sizeof(sPersistentPath), &nCount, sPersistentPath));
+
+        std::printf("Vive Tracker connected: %s \n", sPersistentPath);
+        if (viveTrackerConnected.paths->rolePath != XR_NULL_PATH) {
+            char sRolePath[XR_MAX_PATH_LENGTH];
+            CHK_XR(xrPathToString(instance,
+                viveTrackerConnected.paths->rolePath, sizeof(sRolePath),
+                &nCount, sRolePath));
+
+            std::printf(" New role is: %s\n\n", sRolePath);
+        } else {
+            std::printf(" No role path.\n\n");
+        }
+        break;
+    }
+
+    case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED: {
+        XrPath chestTrackerRolePath;
+        XrInteractionProfileState xrInteractionProfileState {
+            XR_TYPE_INTERACTION_PROFILE_STATE};
+
+        CHK_XR(xrStringToPath(instance, "/user/vive_tracker_htcx/role/chest",
+            &chestTrackerRolePath));
+        CHK_XR(xrGetCurrentInteractionProfile(session, chestTrackerRolePath,
+            &xrInteractionProfileState));
+        break;
+    }
+}
+----
+
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-09-23 (Kyle Chen)
+** Initial extension description

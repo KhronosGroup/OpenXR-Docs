@@ -1,0 +1,318 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_triangle_mesh.adoc[]
+
+*Contributors*::
+    Anton Vaneev, Facebook +
+    Cass Everitt, Facebook +
+    Federico Schliemann, Facebook +
+    Johannes Schmid, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+Meshes may be useful in XR applications when representing parts of the
+environment.
+In particular, application may provide the surfaces of real-world objects
+tagged manually to the runtime, or obtain automatically detected environment
+contents.
+
+This extension allows:
+
+* An application to create a triangle mesh and specify the mesh data.
+* An application to update mesh contents if a mesh is mutable.
+
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+[open,refpage='XrTriangleMeshFB',type='handles',desc='Triangle mesh']
+--
+include::{INCS-VAR}/api/handles/XrTriangleMeshFB.txt[]
+
+slink:XrTriangleMeshFB represents a triangle mesh with its corresponding
+mesh data: a vertex buffer and an index buffer.
+--
+
+*New Flag Types*
+
+[open,refpage='XrTriangleMeshFlagsFB',type='flags',desc='XrTriangleMeshFlagsFB',xrefs='XrTriangleMeshFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrTriangleMeshFlagsFB.txt[]
+--
+
+[open,refpage='XrTriangleMeshFlagBitsFB',type='enums',desc='XrTriangleMeshFlagBitsFB',xrefs='XrTriangleMeshFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrTriangleMeshFlagBitsFB.txt[]
+include::{INCS-VAR}/api/enums/XrTriangleMeshFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_TRIANGLE_MESH_CREATE_INFO_FB
+
+*New Enums*
+
+[open,refpage='XrWindingOrderFB',desc='Triangle winding order',type='enums']
+--
+Applications may specify the triangle winding order of a mesh - whether the
+vertices of an outward-facing side of a triangle appear in clockwise or
+counter-clockwise order - using elink:XrWindingOrderFB enumeration.
+
+include::../../../../generated/api/enums/XrWindingOrderFB.txt[]
+include::{INCS-VAR}/api/enums/XrWindingOrderFB.comments-box.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrTriangleMeshCreateInfoFB',type='structs',desc='The information to create a triangle mesh',xrefs='']
+--
+
+slink:XrTriangleMeshCreateInfoFB must: be provided when calling
+flink:xrCreateTriangleMeshFB.
+
+The slink:XrTriangleMeshCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrTriangleMeshCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrTriangleMeshFlagBitsFB that specify
+  behavior.
+* pname:windingOrder is the elink:XrWindingOrderFB value defining the
+  winding order of the mesh triangles.
+* pname:vertexCount is the number of vertices in the mesh.
+  In the case of the mutable mesh, the value is treated as the maximum
+  number of vertices the mesh will be able to represent at any time in its
+  lifecycle.
+  The actual number of vertices can vary and is defined when
+  flink:xrTriangleMeshEndUpdateFB is called.
+* pname:vertexBuffer is a pointer to the vertex data.
+  The size of the array must be pname:vertexCount elements.
+  When the mesh is mutable (`(pname:flags &
+  ename:XR_TRIANGLE_MESH_MUTABLE_BIT_FB) != 0`), the pname:vertexBuffer
+  parameter must: be code:NULL and mesh data must: be populated separately.
+* pname:triangleCount is the number of triangles in the mesh.
+  In the case of the mutable mesh, the value is treated as the maximum
+  number of triangles the mesh will be able to represent at any time in its
+  lifecycle.
+  The actual number of triangles can vary and is defined when
+  flink:xrTriangleMeshEndUpdateFB is called.
+* pname:indexBuffer the triangle indices.
+  The size of the array must be pname:triangleCount elements.
+  When the mesh is mutable (`(pname:flags &
+  ename:XR_TRIANGLE_MESH_MUTABLE_BIT_FB) != 0`), the pname:indexBuffer
+  parameter must: be code:NULL and mesh data must: be populated separately.
+****
+
+Mesh buffers can be updated between flink:xrTriangleMeshBeginUpdateFB and
+flink:xrTriangleMeshEndUpdateFB calls.
+
+include::{INCS-VAR}/validity/structs/XrTriangleMeshCreateInfoFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreateTriangleMeshFB',desc='Create a triangle mesh',type='protos',xrefs='XrTriangleMeshFB XrTriangleMeshCreateInfoFB']
+--
+The flink:xrCreateTriangleMeshFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreateTriangleMeshFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to which the mesh will belong.
+* pname:createInfo is a pointer to an slink:XrTriangleMeshCreateInfoFB
+  structure containing parameters to be used to create the mesh.
+* pname:outTriangleMesh is a pointer to a handle in which the created
+  slink:XrTriangleMeshFB is returned.
+****
+
+This creates an slink:XrTriangleMeshFB handle.
+The returned triangle mesh handle may: be subsequently used in API calls.
+
+include::{INCS-VAR}/validity/protos/xrCreateTriangleMeshFB.txt[]
+--
+
+[open,refpage='xrDestroyTriangleMeshFB',desc='Destroy a triangle mesh',type='protos',xrefs='XrTriangleMeshFB']
+--
+The flink:xrDestroyTriangleMeshFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrDestroyTriangleMeshFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to destroy.
+****
+
+slink:XrTriangleMeshFB handles and their associated data are destroyed by
+flink:xrDestroyTriangleMeshFB.
+The mesh buffers retrieved by flink:xrTriangleMeshGetVertexBufferFB and
+flink:xrTriangleMeshGetIndexBufferFB must: not be accessed anymore after
+their parent mesh object has been destroyed.
+
+include::{INCS-VAR}/validity/protos/xrDestroyTriangleMeshFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshGetVertexBufferFB',desc='Obtain the vertex buffer of a triangle mesh',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshGetVertexBufferFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshGetVertexBufferFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to get the vertex buffer for.
+* pname:outVertexBuffer is a pointer to return the vertex buffer into.
+****
+
+Retrieves a pointer to the vertex buffer.
+The vertex buffer is structured as an array of slink:XrVector3f.
+The size of the buffer is pname:vertexCount.
+The application must call flink:xrTriangleMeshBeginUpdateFB or
+flink:xrTriangleMeshBeginVertexBufferUpdateFB before making modifications to
+the vertex buffer.
+The buffer location is guaranteed to remain constant over the lifecycle of
+the mesh object.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshGetVertexBufferFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshGetIndexBufferFB',desc='Obtain the index buffer of a triangle mesh',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshGetIndexBufferFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshGetIndexBufferFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to get the index buffer for.
+* pname:outIndexBuffer is a pointer to return the index buffer into.
+****
+
+Retrieves a pointer to the index buffer that defines the topology of the
+triangle mesh.
+Each triplet of consecutive elements points to three vertices in the vertex
+buffer and thus form a triangle.
+
+The application must: call flink:xrTriangleMeshBeginUpdateFB before making
+modifications to the index buffer.
+The buffer location is guaranteed to remain constant over the lifecycle of
+the mesh object.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshGetIndexBufferFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshBeginUpdateFB',desc='Begin an update of the mesh data',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshBeginUpdateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshBeginUpdateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to update.
+****
+
+Begins updating the mesh buffer data.
+The application must: call this function before it makes any modifications
+to the buffers retrieved by flink:xrTriangleMeshGetVertexBufferFB and
+flink:xrTriangleMeshGetIndexBufferFB.
+If only the vertex buffer needs to be updated,
+flink:xrTriangleMeshBeginVertexBufferUpdateFB may: be used instead.
+To commit the modifications, the application must: call
+flink:xrTriangleMeshEndUpdateFB.
+Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+immutable.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshBeginUpdateFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshEndUpdateFB',desc='End an update of the mesh data',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshEndUpdateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshEndUpdateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to update.
+* pname:vertexCount is the vertex count after the update.
+* pname:triangleCount is the triangle count after the update.
+****
+
+Signals to the runtime that the application has finished updating the mesh
+buffers following a call to flink:xrTriangleMeshBeginUpdateFB.
+pname:vertexCount and pname:triangleCount specify the actual number of
+primitives that make up the mesh after the update.
+They must be larger than zero but smaller or equal to the maximum counts
+defined at create time.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshEndUpdateFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshBeginVertexBufferUpdateFB',desc='Begin an update of the vertex data',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshBeginVertexBufferUpdateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to update.
+* pname:outVertexCount is the current vertex count.
+  The updated data must have the exact same number of vertices.
+****
+
+Begins an update of the vertex positions of a triangle mesh.
+Can only be called once the mesh topology has been set using
+flink:xrTriangleMeshBeginUpdateFB followed by
+flink:xrTriangleMeshEndUpdateFB.
+The vertex count is defined by the last invocation to
+flink:xrTriangleMeshEndUpdateFB.
+Once the modification is done, call
+flink:xrTriangleMeshEndVertexBufferUpdateFB to commit the changes.
+Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if an invalid count
+is passed.
+Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+immutable.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
+--
+
+[open,refpage='xrTriangleMeshEndVertexBufferUpdateFB',desc='End an update of the vertex data',type='protos',xrefs='']
+--
+The flink:xrTriangleMeshEndVertexBufferUpdateFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:mesh is the slink:XrTriangleMeshFB to update.
+****
+
+Signals to the runtime that the application has finished updating the vertex
+buffer data following a call to
+flink:xrTriangleMeshBeginVertexBufferUpdateFB.
+
+include::{INCS-VAR}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-09-01 (Anton Vaneev)
+** Initial extension description
