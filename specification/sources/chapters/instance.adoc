@@ -76,7 +76,7 @@ include::../../generated/api/protos/xrEnumerateApiLayerProperties.txt[]
   to indicate a request to retrieve the required capacity.
 * pname:propertyCountOutput is a pointer to the count of properties written,
   or a pointer to the required capacity in the case that
-  propertyCapacityInput is 0.
+  propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrApiLayerProperties
   structures, but can: be code:NULL if propertyCapacityInput is 0.
 * See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
@@ -168,7 +168,7 @@ include::../../generated/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
   `0` to indicate a request to retrieve the required capacity.
 * pname:propertyCountOutput is a pointer to the count of properties written,
   or a pointer to the required capacity in the case that
-  pname:propertyCapacityInput is `0`.
+  pname:propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrExtensionProperties
   structures, but can: be code:NULL if pname:propertyCapacityInput is `0`.
 * See the <<buffer-size-parameters, Buffer Size Parameters>> section for a

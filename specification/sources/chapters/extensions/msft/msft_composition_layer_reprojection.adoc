@@ -42,7 +42,8 @@ include::../../../../generated/api/protos/xrEnumerateReprojectionModesMSFT.txt[]
 * pname:modeCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
 * pname:modeCountOutput is a pointer to the count of the array, or a pointer
-  to the required capacity in the case that pname:modeCapacityInput is 0.
+  to the required capacity in the case that pname:modeCapacityInput is
+  insufficient.
 * pname:modes is a pointer to an application-allocated array that will be
   filled with the elink:XrReprojectionModeMSFT values that are supported by
   the runtime.

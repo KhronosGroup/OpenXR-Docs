@@ -120,7 +120,7 @@ include::../../../../generated/api/protos/xrLoadControllerModelMSFT.txt[]
   to indicate a request to retrieve the required capacity.
 * pname:bufferCountOutput filled in by the runtime with the count of
   elements in pname:buffer array, or returns the required capacity in the
-  case that pname:bufferCapacityInput is 0.
+  case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an application-allocated array of the model
   for the device that will be filled with the code:uint8_t values by the
   runtime.
@@ -205,7 +205,7 @@ include::../../../../generated/api/structs/XrControllerModelPropertiesMSFT.txt[]
   or 0 to indicate a request to retrieve the required capacity.
 * pname:nodeCountOutput filled in by the runtime with the count of elements
   in pname:nodeProperties array, or returns the required capacity in the
-  case that pname:nodeCapacityInput is 0.
+  case that pname:nodeCapacityInput is insufficient.
 * pname:nodeProperties is a pointer to an application-allocated array that
   will be filled with the slink:XrControllerModelNodePropertiesMSFT values.
   It can: be code:NULL if pname:nodeCapacityInput is 0.
@@ -299,7 +299,7 @@ include::../../../../generated/api/structs/XrControllerModelStateMSFT.txt[]
   0 to indicate a request to retrieve the required capacity.
 * pname:nodeCountOutput filled in by the runtime with the count of elements
   in pname:nodeStates array, or returns the required capacity in the case
-  that pname:nodeCapacityInput is 0.
+  that pname:nodeCapacityInput is insufficient.
 * pname:nodeStates is a pointer to an application-allocated array that will
   be filled with the slink:XrControllerModelNodeStateMSFT values.
   It can: be code:NULL if pname:sourceCapacityInput is 0.

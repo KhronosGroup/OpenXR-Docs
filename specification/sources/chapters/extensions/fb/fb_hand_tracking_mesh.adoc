@@ -104,7 +104,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingMeshFB.txt[]
 * pname:indexCountOutput is filled in by the runtime with the count of index
   data elements written, or the required capacity in the case that any of
   pname:jointCapacityInput, pname:vertexCapacityInput, or
-  pname:indexCapacityInput is `0`.
+  pname:indexCapacityInput is insufficient.
 * pname:indices is an array of triangle indices.
 * See the <<buffer-size-parameters> section for a detailed description of
   retrieving the required array sizes in the "struct form" as used here.

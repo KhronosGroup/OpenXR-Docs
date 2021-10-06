@@ -347,7 +347,7 @@ include::../../generated/api/protos/xrEnumerateReferenceSpaces.txt[]
   indicate a request to retrieve the required capacity.
 * pname:spaceCountOutput is a pointer to the count of spaces written, or a
   pointer to the required capacity in the case that pname:spaceCapacityInput
-  is 0.
+  is insufficient.
 * pname:spaces is a pointer to an application-allocated array that will be
   filled with the enumerant of each supported reference space.
   It can: be code:NULL if pname:spaceCapacityInput is 0.

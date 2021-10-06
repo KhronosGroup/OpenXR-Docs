@@ -1371,7 +1371,8 @@ include::../../generated/api/protos/xrEnumerateBoundSourcesForAction.txt[]
 * pname:sourceCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
 * pname:sourceCountOutput is a pointer to the count of sources, or a pointer
-  to the required capacity in the case that pname:sourceCapacityInput is 0.
+  to the required capacity in the case that pname:sourceCapacityInput is
+  insufficient.
 * pname:sources is a pointer to an application-allocated array that will be
   filled with the basetype:XrPath values for all sources.
   It can: be code:NULL if pname:sourceCapacityInput is 0.
@@ -1429,7 +1430,7 @@ include::../../generated/api/protos/xrGetInputSourceLocalizedName.txt[]
   a request to retrieve the required capacity.
 * pname:bufferCountOutput is a pointer to the count of name characters
   written (including the terminating `\0`), or a pointer to the required
-  capacity in the case that pname:bufferCapacityInput is 0.
+  capacity in the case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the source name.
   It can: be code:NULL if pname:bufferCapacityInput is 0.

@@ -239,7 +239,7 @@ include::../../generated/api/protos/xrPathToString.txt[]
   a request to retrieve the required capacity.
 * pname:bufferCountOutput is a pointer to the count of characters written
   (including the terminating '\0'), or a pointer to the required capacity in
-  the case that pname:bufferCapacityInput is 0.
+  the case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the semantic path string.
   It can: be code:NULL if pname:bufferCapacityInput is 0.

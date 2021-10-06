@@ -98,7 +98,7 @@ include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
   `0` to indicate a request to retrieve the required capacity.
 * pname:vertexCountOutput is filled in by the runtime with the count of
   vertices written or the required capacity in the case that
-  pname:vertexCapacityInput or pname:indexCapacityInput is `0`.
+  pname:vertexCapacityInput or pname:indexCapacityInput is insufficient.
 * pname:vertices is an array of vertices filled in by the runtime that
   specifies mask coordinates in the z=-1 plane of the rendered view--i.e.
   one meter in front of the view.
@@ -110,7 +110,7 @@ include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
   `0` to indicate a request to retrieve the required capacity.
 * pname:indexCountOutput is filled in by the runtime with the count of
   indices written or the required capacity in the case that
-  pname:vertexCapacityInput or pname:indexCapacityInput is `0`.
+  pname:vertexCapacityInput or pname:indexCapacityInput is insufficient.
 * pname:indices is an array of indices filled in by the runtime, specifying
   the indices of the mask geometry in the pname:vertices array.
 ****
