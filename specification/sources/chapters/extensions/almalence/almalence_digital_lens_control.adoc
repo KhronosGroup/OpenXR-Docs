@@ -1,0 +1,118 @@
+// Copyright (c) 2021, Almalence Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_ALMALENCE_digital_lens_control.adoc[]
+
+*Last Modified Date*::
+   2021-09-02
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Ivan Chupakhin, Almalence Inc. +
+    Dmitry Shmunk, Almalence Inc.
+
+
+*Overview*
+
+Digital Lens for VR (DLVR) is a computational lens aberration correction technology enabling high resolution, visual clarity and fidelity in VR head mounted displays. The Digital Lens allows to overcome two fundamental factors limiting VR picture quality, size constraints and presence of a moving optical element — the eye pupil.
+
+Features:
+****
+* Complete removal of lateral chromatic aberrations, across the entire FoV, at all gaze directions.
+* Correction of longitudinal chromatic aberrations, lens blur and higher order aberrations.
+* Increase of visible resolution.
+* Enhancement of edge contrast (otherwise degraded due to lens smear).
+* Enables high quality at wide FoV.
+
+****
+
+For OpenXR runtimes DLVR is implemented as implicit API Layer distributed by Almalence Inc. as installable package.
+DLVR utilize eye tracking data (eye pupil coordinates and gaze direction) to produce corrections of render frames.
+As long as current core OpenXR API doesn't expose an eye tracking data, DLVR API Layer relies on 3rd-party eye tracking runtimes.
+
+List of supported eye tracking devices:
+****
+* _Tobii_ _VR4_ _CARBON_ _P1_ (HP Reverb G2 Omnicept Edition)
+* _Tobii_ _VR4_ _U2_ _P2_ (HTC Vive Pro Eye)
+
+****
+
+This extension enables the handling of the Digital Lens for VR API Layer by calling flink:xrSetDigitalLensStateALMALENCE.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrDigitalLensControlFlagsALMALENCE',type='flags',desc='XrDigitalLensControlFlagsALMALENCE']
+--
+include::{INCS-VAR}/api/flags/XrDigitalLensControlFlagsALMALENCE.txt[]
+--
+
+[open,refpage='XrDigitalLensControlFlagBitsALMALENCE',type='enums',desc='XrDigitalLensControlFlagBitsALMALENCE']
+--
+include::{INCS-VAR}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.txt[]
+--
+
+.Flag Descriptions
+****
+* ename:XR_DIGITAL_LENS_CONTROL_PROCESSING_DISABLE_BIT_ALMALENCE disables Digital Lens processing of render textures.
+
+****
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrDigitalLensControlALMALENCE',type='structs',desc='The digital lens control structure to be passed to change state of DLVR API Layer']
+--
+* slink:XrDigitalLensControlALMALENCE
+
+include::../../../../generated/api/structs/XrDigitalLensControlALMALENCE.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must be code:NULL.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is one or more
+  elink:XrDigitalLensControlFlagBitsALMALENCE which indicate various
+  characteristics desired for the Digital Lens.
+
+****
+
+include::../../../../generated/validity/structs/XrDigitalLensControlALMALENCE.txt[]
+
+--
+
+*New Functions*
+
+[open,refpage='xrSetDigitalLensStateALMALENCE',type='protos',desc='Handles DLVR state (ON\OFF)']
+--
+The flink:xrSetDigitalLensStateALMALENCE function is defined as:
+
+include::../../../../generated/api/protos/xrSetDigitalLensStateALMALENCE.txt[]
+
+.Parameter Descriptions
+****
+* pname:digitalLensState is an slink:XrDigitalLensControlALMALENCE
+
+****
+
+flink:xrSetDigitalLensStateALMALENCE handles state of Digital Lens API Layer
+
+include::../../../../generated/validity/protos/xrSetDigitalLensStateALMALENCE.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-09-02 (Ivan Chupakhin)
+** Initial draft
