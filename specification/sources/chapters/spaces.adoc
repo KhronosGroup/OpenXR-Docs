@@ -236,7 +236,7 @@ include::../../generated/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
 include::../../generated/validity/protos/xrGetReferenceSpaceBoundsRect.txt[]
 --
 
-[open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XR_REFERENCE_SPACE_TYPE_STAGE']
+[open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XrReferenceSpaceType']
 --
 
 The slink:XrEventDataReferenceSpaceChangePending event is sent to the
@@ -519,7 +519,7 @@ of the components of the location.
 
 ==== xrLocateSpace
 
-[open,refpage='xrLocateSpace',desc='Locates a space with reference to another space',type='protos',xrefs='XrSpace XrSpaceLocationFlagBits']
+[open,refpage='xrLocateSpace',desc='Locates a space with reference to another space',type='protos',xrefs='XrSpace XrSpaceLocationFlags']
 --
 flink:xrLocateSpace provides the physical location of a space in a base
 space at a specified time, if currently known by the runtime.

@@ -17,6 +17,54 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.20 (2021-10-04)
+
+This release includes a number of new vendor extensions and a few minor clarifications.
+
+- Registry
+  - Add new `XR_HTCX_vive_tracker_interaction` provisional vendor extension.
+    ([internal MR 1983](https://gitlab.khronos.org/openxr/openxr/merge_requests/1983))
+  - Add new `XR_VARJO_marker_tracking` vendor extension.
+    ([internal MR 2129](https://gitlab.khronos.org/openxr/openxr/merge_requests/2129))
+  - Add new `XR_FB_triangle_mesh` vendor extension.
+    ([internal MR 2130](https://gitlab.khronos.org/openxr/openxr/merge_requests/2130))
+  - Add new `XR_FB_passthrough` vendor extension.
+    ([internal MR 2130](https://gitlab.khronos.org/openxr/openxr/merge_requests/2130))
+  - Reserve vendor extensions for Facebook.
+    ([internal MR 2131](https://gitlab.khronos.org/openxr/openxr/merge_requests/2131))
+  - Reserve a vendor extension for Almalence.
+    ([OpenXR-Docs PR 99](https://github.com/KhronosGroup/OpenXR-Docs/pull/99))
+  - XR_FB_color_space: Fix XML markup to indicate that
+    `XrSystemColorSpacePropertiesFB` is chained to `XrSystemProperties`.
+    ([internal MR 2143](https://gitlab.khronos.org/openxr/openxr/merge_requests/2143))
+- Specification
+  - Clarify that swapchain image wait must not timeout before releasing.
+    ([internal MR 2134](https://gitlab.khronos.org/openxr/openxr/merge_requests/2134),
+    [OpenXR-Docs issue 101](https://github.com/KhronosGroup/OpenXR-Docs/issues/101),
+    [internal issue 1603](https://gitlab.khronos.org/openxr/openxr/issues/1603))
+  - D3D11 and D3D12 extensions: Specify handling of swapchain usage flags.
+    ([internal MR 2133](https://gitlab.khronos.org/openxr/openxr/merge_requests/2133),
+    [internal issue 1500](https://gitlab.khronos.org/openxr/openxr/issues/1500))
+  - OpenGL and OpenGL ES extensions: Specify handling of swapchain usage flags.
+    ([internal MR 2127](https://gitlab.khronos.org/openxr/openxr/merge_requests/2127),
+    [internal issue 1500](https://gitlab.khronos.org/openxr/openxr/issues/1500))
+  - Document new `XR_HTCX_vive_tracker_interaction` provisional vendor extension.
+    ([internal MR 1983](https://gitlab.khronos.org/openxr/openxr/merge_requests/1983))
+  - Document new `XR_VARJO_marker_tracking` vendor extension.
+    ([internal MR 2129](https://gitlab.khronos.org/openxr/openxr/merge_requests/2129))
+  - Document new `XR_FB_triangle_mesh` vendor extension.
+    ([internal MR 2130](https://gitlab.khronos.org/openxr/openxr/merge_requests/2130))
+  - Document new `XR_FB_passthrough` vendor extension.
+    ([internal MR 2130](https://gitlab.khronos.org/openxr/openxr/merge_requests/2130))
+  - Fix generated links from OpenXR ref pages to Vulkan ref pages.
+    ([internal MR 2126](https://gitlab.khronos.org/openxr/openxr/merge_requests/2126))
+  - Loader specification: Describe a cross-vendor loader for use on Android.
+    ([internal MR 1949](https://gitlab.khronos.org/openxr/openxr/merge_requests/1949),
+    [internal issue 1425](https://gitlab.khronos.org/openxr/openxr/issues/1425))
+  - Scripts: Fix reflow script error message and make sure it creates the necessary
+    output directory.
+    ([OpenXR-Docs PR 97](https://github.com/KhronosGroup/OpenXR-Docs/pull/97))
+
 ## OpenXR Specification 1.0.19 (2021-08-24)
 
 This release features a number of new or updated vendor extensions, as well as

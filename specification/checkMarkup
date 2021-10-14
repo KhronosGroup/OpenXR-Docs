@@ -288,6 +288,10 @@ grep_sources \
     "The flink:[a-zA-Z0-9]+ is defined as"
 
 grep_sources \
+    "Colon goes after the normative word, not before" \
+    ":(may|must|can|should)\b"
+
+grep_sources \
     "Remove the word 'follows'" \
     "structure is defined as follows"
 

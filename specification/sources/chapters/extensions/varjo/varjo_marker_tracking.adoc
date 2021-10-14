@@ -1,0 +1,374 @@
+// Copyright (c) 2021 Varjo Technologies
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_VARJO_marker_tracking.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2021-09-30
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Roman Golovanov, Varjo Technologies +
+    Rémi Arnaud, Varjo Technologies +
+    Sergiy Dubovik, Varjo Technologies
+
+// "This submission is provided subject to and covered by the Khronos Group Intellectual
+// Property ("IP") Rights Policy. No other rights are granted by this submission, and
+// Khronos may elect to exercise its Copyright  license to incorporate this submission into
+// other works it controls as it desires."
+
+==== Overview
+
+Varjo Markers are physical markers tracked by the video cameras of the HMD.
+Different types of markers can: be used for different purposes.
+As an example, Varjo Markers can: be used as cheap replacements for
+electronic trackers.
+The cost per printed tracker is significantly lower and the markers require
+no power to function.
+
+This extension provides the tracking interface to a set of marker types and
+sizes.
+Markers can: be printed out from the PDF documents and instructions freely
+available at
+https://developer.varjo.com/docs/get-started/varjo-markers#printing-varjo-markers.
+Note that the printed marker must: have the exact physical size for its ID.
+
+Object markers are used to track static or dynamic objects in the user
+environment.
+You may: use object markers in both XR and VR applications.
+Each marker has a unique ID, and you must: not use the same physical marker
+more than once in any given environment.
+For added precision, an application may: use multiple markers to track a
+single object.
+For example, you could track a monitor by placing a marker in each corner.
+
+There is a set of marker IDs recognized by runtime and if the application
+uses ID which is not in the set then runtime must: return
+ename:XR_ERROR_MARKER_ID_INVALID_VARJO.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enums*
+
+*New Functions*
+
+[open,refpage='xrSetMarkerTrackingVARJO',desc='Enables marker tracking',type='protos',xrefs='']
+--
+The flink:xrSetMarkerTrackingVARJO function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSetMarkerTrackingVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:enabled is the flag to enable or disable marker tracking.
+****
+
+The flink:xrSetMarkerTrackingVARJO function enables or disables marker
+tracking functionality.
+As soon as feature is become disabled all trackable markers become inactive
+and corresponding events will be generated.
+An application may: call any of the functions in this extension regardless
+if the marker tracking functionality is enabled or disabled.
+
+include::{INCS-VAR}/validity/protos/xrSetMarkerTrackingVARJO.txt[]
+--
+
+[open,refpage='xrSetMarkerTrackingTimeoutVARJO',desc='Sets marker lifetime duration',type='protos',xrefs='']
+--
+
+The flink:xrSetMarkerTrackingTimeoutVARJO function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSetMarkerTrackingTimeoutVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:markerId is the unique identifier of the marker for which the
+  timeout will be updated.
+* pname:timeout is the desired lifetime duration for a specified marker.
+****
+
+The flink:xrSetMarkerTrackingTimeoutVARJO function sets a desired lifetime
+duration for a specified marker.
+The default value is dlink:XR_NO_DURATION.
+Negative value will be clamped to dlink:XR_NO_DURATION.
+It defines the time period during which the runtime must: keep returning
+poses of previously tracked markers.
+The tracking may be lost if the marker went outside of the trackable field
+of view.
+In this case the runtime still will try to predict marker's pose for the
+timeout period.
+The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
+supplied pname:markerId is invalid.
+
+include::{INCS-VAR}/validity/protos/xrSetMarkerTrackingTimeoutVARJO.txt[]
+--
+
+[open,refpage='xrSetMarkerTrackingPredictionVARJO',desc='Sets marker tracking with prediction',type='protos',xrefs='']
+--
+The flink:xrSetMarkerTrackingPredictionVARJO function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSetMarkerTrackingPredictionVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:markerId is the unique identifier of the marker which should be
+  tracked with prediction.
+* pname:enable is whether to enable the prediction feature.
+****
+
+The flink:xrSetMarkerTrackingPredictionVARJO function enables or disables
+the prediction feature for a specified marker.
+By default, markers are created with disabled prediction.
+This works well for markers that are supposed to be stationary.
+The prediction can: be used to improve tracking of movable markers.
+The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
+supplied pname:markerId is invalid.
+
+include::{INCS-VAR}/validity/protos/xrSetMarkerTrackingPredictionVARJO.txt[]
+--
+
+[open,refpage='xrGetMarkerSizeVARJO',desc='Gets physical size of marker',type='protos',xrefs='']
+--
+The flink:xrGetMarkerSizeVARJO function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetMarkerSizeVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:markerId is the unique identifier of the marker for which size is
+  requested.
+* pname:size is pointer to the size to populate by the runtime with the
+  physical size of plane marker in meters.
+****
+
+The flink:xrGetMarkerSizeVARJO function retrieves the height and width of an
+active marker.
+The runtime must: return ename:XR_ERROR_MARKER_NOT_TRACKED_VARJO if marker
+tracking functionality is disabled or the marker with given pname:markerId
+is inactive.
+The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
+supplied pname:markerId is invalid.
+
+include::{INCS-VAR}/validity/protos/xrGetMarkerSizeVARJO.txt[]
+--
+
+[open,refpage='xrCreateMarkerSpaceVARJO',desc='Creates marker space',type='protos',xrefs='XrMarkerSpaceCreateInfoVARJO']
+--
+The flink:xrCreateMarkerSpaceVARJO function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreateMarkerSpaceVARJO.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:createInfo is the structure containing information about how to
+  create the space based on marker.
+* pname:space is a pointer to a handle in which the created slink:XrSpace is
+  returned.
+****
+
+The flink:xrCreateMarkerSpaceVARJO function creates marker slink:XrSpace for
+pose relative to the marker specified in slink:XrMarkerSpaceCreateInfoVARJO.
+The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
+supplied pname:markerId is invalid.
+
+include::{INCS-VAR}/validity/protos/xrCreateMarkerSpaceVARJO.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrSystemMarkerTrackingPropertiesVARJO',type='structs',desc='System property for marker tracking',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+
+The slink:XrSystemMarkerTrackingPropertiesVARJO structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemMarkerTrackingPropertiesVARJO.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsMarkerTracking is an basetype:XrBool32, indicating if
+  current system is capable of performing marker tracking.
+****
+
+An application may: inspect whether the system is capable of marker tracking
+by chaining an slink:XrSystemMarkerTrackingPropertiesVARJO structure to the
+slink:XrSystemProperties structure when calling flink:xrGetSystemProperties.
+
+The runtime should: return ename:XR_TRUE for pname:supportsMarkerTracking
+when marker tracking is available in the system, otherwise ename:XR_FALSE.
+Marker tracking calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+marker tracking is not available in the system.
+
+include::{INCS-VAR}/validity/structs/XrSystemMarkerTrackingPropertiesVARJO.txt[]
+--
+
+[open,refpage='XrEventDataMarkerTrackingUpdateVARJO',type='structs',desc='Structure representing marker tracking information',xrefs='xrPollEvent']
+--
+The slink:XrEventDataMarkerTrackingUpdateVARJO structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:markerId unique identifier of the marker that has been updated.
+* pname:isActive the tracking state of the marker.
+* pname:time the time of the marker update.
+****
+
+Receiving the slink:XrEventDataMarkerTrackingUpdateVARJO event structure
+indicates that the tracking information has changed.
+The runtime must: not send more than one event per frame per marker.
+The runtime must: send an event if the marker has changed its state (active
+or inactive).
+The runtime must: send an event if it has detected pose change of the active
+marker.
+
+include::{INCS-VAR}/validity/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
+--
+
+[open,refpage='XrMarkerSpaceCreateInfoVARJO',type='structs',desc='Information to create a space from a spatial anchor',xrefs='xrCreateMarkerSpaceVARJO']
+--
+
+The slink:XrMarkerSpaceCreateInfoVARJO structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrMarkerSpaceCreateInfoVARJO.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:markerId unique identifier of the marker.
+* pname:poseInMarkerSpace is an slink:XrPosef defining the position and
+  orientation of the new space's origin relative to the marker's natural
+  origin.
+****
+
+include::{INCS-VAR}/validity/structs/XrMarkerSpaceCreateInfoVARJO.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_MARKER_TRACKING_PROPERTIES_VARJO
+* ename:XR_TYPE_EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO
+* ename:XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_MARKER_ID_INVALID_VARJO
+* ename:XR_ERROR_MARKER_NOT_TRACKED_VARJO
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-09-30 (Roman Golovanov)
+** Initial extension description
+
+==== Example
+
+The example below represents the routine which enables marker tracking
+feature and then polls events.
+The event type ename:XR_TYPE_EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO has a
+special handler to process marker state change.
+
+[source, c++, suppress-build]
+----
+
+XrSession session; // previously initialized
+if(XR_SUCCESS != xrSetMarkerTrackingVARJO(session, XR_TRUE)) {
+    return;
+}
+
+XrInstance instance; // previously initialized
+XrFrameState frameState; // previously initialized
+XrSpace baseSpace; // previously initialized
+XrSpaceLocation location; // previously initialized
+
+// Collection of tracked markers and their space handlers
+std::unordered_map<uint64_t, XrSpace> markerSpaces;
+// Initialize an event buffer to hold the output.
+XrEventDataBuffer event{XR_TYPE_EVENT_DATA_BUFFER};
+XrResult result = xrPollEvent(instance, &event);
+if (result == XR_SUCCESS) {
+    switch (event.type) {
+        case XR_TYPE_EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO: {
+            const auto& marker_update =
+              *reinterpret_cast<XrEventDataMarkerTrackingUpdateVARJO*>(&event);
+
+            const auto id = marker_update.markerId;
+
+            // If marker appeared for the first time then set some settings and
+            // add it to collection
+            if(0 == markerSpaces.count(id)) {
+                XrMarkerSpaceCreateInfoVARJO spaceInfo{0};
+                spaceInfo.type = XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO;
+                spaceInfo.markerId = id;
+                spaceInfo.poseInMarkerSpace = XrPosef{0};
+                spaceInfo.poseInMarkerSpace.orientation.w = 1.0f;
+                XrSpace markerSpace;
+                // Set 1 second timeout
+                if(XR_SUCCESS != xrSetMarkerTrackingTimeoutVARJO(
+                                    session, id, 1000000000))
+                {
+                    break;
+                }
+                // Enable prediction for markers with `odd` ids.
+                if(XR_SUCCESS != xrSetMarkerTrackingPredictionVARJO(
+                                    session, id, id % 2))
+                {
+                    break;
+                }
+                if(XR_SUCCESS != xrCreateMarkerSpaceVARJO(session, &spaceInfo,
+                                    &markerSpace)) {
+                    break;
+                }
+                markerSpaces[id] = markerSpace;
+            }
+
+            if(marker_update.isActive) {
+                if(XR_SUCCESS != xrLocateSpace(markerSpaces.at(id), baseSpace,
+                                    frameState.predictedDisplayTime, &location)){
+                   break;
+                }
+                if(marker_update.isPredicted) {
+                    // Process marker as dynamic
+                } else {
+                    // Process marker as stationary
+                }
+
+            } else {
+                // Remove previously tracked marker
+                markerSpaces.erase(id);
+            }
+
+            // ...
+            break;
+        }
+    }
+}
+----
