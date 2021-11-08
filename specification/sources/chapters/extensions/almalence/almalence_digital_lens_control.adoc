@@ -5,7 +5,7 @@
 include::../meta/XR_ALMALENCE_digital_lens_control.adoc[]
 
 *Last Modified Date*::
-   2021-10-14
+   2021-11-08
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -18,25 +18,22 @@ include::../meta/XR_ALMALENCE_digital_lens_control.adoc[]
 Digital Lens for VR (DLVR) is a computational lens aberration correction technology enabling high resolution, visual clarity and fidelity in VR head mounted displays. The Digital Lens allows to overcome two fundamental factors limiting VR picture quality, size constraints and presence of a moving optical element — the eye pupil.
 
 Features:
-****
+
 * Complete removal of lateral chromatic aberrations, across the entire FoV, at all gaze directions.
 * Correction of longitudinal chromatic aberrations, lens blur and higher order aberrations.
 * Increase of visible resolution.
 * Enhancement of edge contrast (otherwise degraded due to lens smear).
 * Enables high quality at wide FoV.
 
-****
-
 For OpenXR runtimes DLVR is implemented as implicit API Layer distributed by Almalence Inc. as installable package.
 DLVR utilize eye tracking data (eye pupil coordinates and gaze direction) to produce corrections of render frames.
 As long as current core OpenXR API doesn't expose an eye tracking data, DLVR API Layer relies on 3rd-party eye tracking runtimes.
 
 List of supported eye tracking devices:
-****
+
 * _Tobii_ _VR4_ _CARBON_ _P1_ (HP Reverb G2 Omnicept Edition)
 * _Tobii_ _VR4_ _U2_ _P2_ (HTC Vive Pro Eye)
 
-****
 
 This extension enables the handling of the Digital Lens for VR API Layer by calling flink:xrSetDigitalLensStateALMALENCE.
 
@@ -101,7 +98,8 @@ include::../../../../generated/api/protos/xrSetDigitalLensStateALMALENCE.txt[]
 
 .Parameter Descriptions
 ****
-* pname:digitalLensState is an slink:XrDigitalLensControlALMALENCE
+* pname:session is a handle to a running slink:XrSession. 
+* pname:digitalLensState is the slink:XrDigitalLensControlALMALENCE that contains desired characteristics for the Digital Lens
 
 ****
 
@@ -114,5 +112,5 @@ include::../../../../generated/validity/protos/xrSetDigitalLensStateALMALENCE.tx
 
 *Version History*
 
-* Revision 1, 2021-10-14 (Ivan Chupakhin)
+* Revision 1, 2021-11-08 (Ivan Chupakhin)
 ** Initial draft
