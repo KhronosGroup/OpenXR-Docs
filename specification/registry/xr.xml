@@ -3537,7 +3537,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <param><type>XrSpatialAnchorStoreConnectionMSFT</type> <name>spatialAnchorStore</name></param>
         </command>
 
-
         <!-- XR_HTCX_vive_tracker_interaction -->
         <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_INSTANCE_LOST,XR_ERROR_SIZE_INSUFFICIENT">
             <proto><type>XrResult</type> <name>xrEnumerateViveTrackerPathsHTCX</name></proto>
@@ -3581,7 +3580,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <param>const <type>XrMarkerSpaceCreateInfoVARJO</type>* <name>createInfo</name></param>
             <param><type>XrSpace</type>* <name>space</name></param>
         </command>
-      
       
         <!-- commands for XR_ALMALENCE_digital_lens_control -->
         <command successcodes="XR_SUCCESS,XR_SESSION_LOSS_PENDING" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_HANDLE_INVALID,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST">
