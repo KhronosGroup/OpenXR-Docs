@@ -3583,9 +3583,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
       
         <!-- commands for XR_ALMALENCE_digital_lens_control -->
         <command successcodes="XR_SUCCESS,XR_SESSION_LOSS_PENDING" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_HANDLE_INVALID,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST">
-            <proto><type>XrResult</type> <name>xrSetDigitalLensStateALMALENCE</name></proto>
+            <proto><type>XrResult</type> <name>xrSetDigitalLensControlALMALENCE</name></proto>
             <param><type>XrSession</type> <name>session</name></param>
-            <param>const <type>XrDigitalLensControlALMALENCE</type>* <name>digitalLensState</name></param>
+            <param>const <type>XrDigitalLensControlALMALENCE</type>* <name>digitalLensControl</name></param>
         </command>  
 
     </commands>
@@ -5653,7 +5653,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             
             <type name="XrDigitalLensControlALMALENCE"/>
 
-            <command name="xrSetDigitalLensStateALMALENCE"/>
+            <command name="xrSetDigitalLensControlALMALENCE"/>
 
             <enum offset="0" extends="XrStructureType"                   name="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"/>
         </require>
