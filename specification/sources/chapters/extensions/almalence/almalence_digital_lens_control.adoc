@@ -99,7 +99,7 @@ include::../../../../generated/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 .Parameter Descriptions
 ****
 * pname:session is a handle to a running slink:XrSession. 
-* pname:digitalLensState is the slink:XrDigitalLensControlALMALENCE that contains desired characteristics for the Digital Lens
+* pname:digitalLensControl is the slink:XrDigitalLensControlALMALENCE that contains desired characteristics for the Digital Lens
 
 ****
 
