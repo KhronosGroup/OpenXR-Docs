@@ -35,7 +35,7 @@ List of supported eye tracking devices:
 * _Tobii_ _VR4_ _U2_ _P2_ (HTC Vive Pro Eye)
 
 
-This extension enables the handling of the Digital Lens for VR API Layer by calling flink:xrSetDigitalLensStateALMALENCE.
+This extension enables the handling of the Digital Lens for VR API Layer by calling flink:xrSetDigitalLensControlALMALENCE.
 
 *New Object Types*
 
@@ -90,11 +90,11 @@ include::../../../../generated/validity/structs/XrDigitalLensControlALMALENCE.tx
 
 *New Functions*
 
-[open,refpage='xrSetDigitalLensStateALMALENCE',type='protos',desc='Handles DLVR state (ON\OFF)']
+[open,refpage='xrSetDigitalLensControlALMALENCE',type='protos',desc='Handles DLVR state (ON\OFF)']
 --
-The flink:xrSetDigitalLensStateALMALENCE function is defined as:
+The flink:xrSetDigitalLensControlALMALENCE function is defined as:
 
-include::../../../../generated/api/protos/xrSetDigitalLensStateALMALENCE.txt[]
+include::../../../../generated/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 
 .Parameter Descriptions
 ****
@@ -103,9 +103,9 @@ include::../../../../generated/api/protos/xrSetDigitalLensStateALMALENCE.txt[]
 
 ****
 
-flink:xrSetDigitalLensStateALMALENCE handles state of Digital Lens API Layer
+flink:xrSetDigitalLensControlALMALENCE handles state of Digital Lens API Layer
 
-include::../../../../generated/validity/protos/xrSetDigitalLensStateALMALENCE.txt[]
+include::../../../../generated/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
 --
 
 *Issues*
