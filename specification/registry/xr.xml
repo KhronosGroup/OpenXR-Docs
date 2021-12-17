@@ -2019,13 +2019,12 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member><type>uint64_t</type>                   <name>markerId</name></member>
             <member><type>XrPosef</type>                    <name>poseInMarkerSpace</name></member>
         </type>
-      
-      
+
         <!-- XR_ALMALENCE_digital_lens_control -->
         <type category="struct" name="XrDigitalLensControlALMALENCE">
             <member values="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>*                            <name>next</name></member>
-            <member><type>XrDigitalLensControlFlagsALMALENCE</type>     <name>flags</name></member>
+            <member>const <type>void</type>*                        <name>next</name></member>
+            <member><type>XrDigitalLensControlFlagsALMALENCE</type> <name>flags</name></member>
         </type>
 
     </types>
@@ -3580,13 +3579,13 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <param>const <type>XrMarkerSpaceCreateInfoVARJO</type>* <name>createInfo</name></param>
             <param><type>XrSpace</type>* <name>space</name></param>
         </command>
-      
+
         <!-- commands for XR_ALMALENCE_digital_lens_control -->
         <command successcodes="XR_SUCCESS,XR_SESSION_LOSS_PENDING" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_HANDLE_INVALID,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST">
             <proto><type>XrResult</type> <name>xrSetDigitalLensControlALMALENCE</name></proto>
             <param><type>XrSession</type> <name>session</name></param>
             <param>const <type>XrDigitalLensControlALMALENCE</type>* <name>digitalLensControl</name></param>
-        </command>  
+        </command>
 
     </commands>
 
@@ -5648,14 +5647,14 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
     <extension name="XR_ALMALENCE_digital_lens_control" number="197" type="instance" supported="openxr">
         <require>
-            <enum value="1"                                              name="XR_ALMALENCE_digital_lens_control_SPEC_VERSION"/>
-            <enum value="&quot;XR_ALMALENCE_digital_lens_control&quot;"  name="XR_ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME"/>
-            
+            <enum value="1"                                             name="XR_ALMALENCE_digital_lens_control_SPEC_VERSION"/>
+            <enum value="&quot;XR_ALMALENCE_digital_lens_control&quot;" name="XR_ALMALENCE_DIGITAL_LENS_CONTROL_EXTENSION_NAME"/>
+
             <type name="XrDigitalLensControlALMALENCE"/>
 
             <command name="xrSetDigitalLensControlALMALENCE"/>
 
-            <enum offset="0" extends="XrStructureType"                   name="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"/>
+            <enum offset="0" extends="XrStructureType" name="XR_TYPE_DIGITAL_LENS_CONTROL_ALMALENCE"/>
         </require>
     </extension>
 
