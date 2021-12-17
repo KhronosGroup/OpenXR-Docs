@@ -42,8 +42,8 @@ API Layer relies on 3rd-party eye tracking runtimes.
 
 List of supported eye tracking devices:
 
-* _Tobii_ _VR4_ _CARBON_ _P1_ (HP Reverb G2 Omnicept Edition)
-* _Tobii_ _VR4_ _U2_ _P2_ (HTC Vive Pro Eye)
+* _Tobii_VR4_CARBON_P1_ (HP Reverb G2 Omnicept Edition)
+* _Tobii_VR4_U2_P2_ (HTC Vive Pro Eye)
 
 
 This extension enables the handling of the Digital Lens for VR API Layer by
@@ -61,14 +61,9 @@ include::{INCS-VAR}/api/flags/XrDigitalLensControlFlagsALMALENCE.txt[]
 [open,refpage='XrDigitalLensControlFlagBitsALMALENCE',type='enums',desc='XrDigitalLensControlFlagBitsALMALENCE']
 --
 include::{INCS-VAR}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.txt[]
+
+include::{INCS-VAR}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.comments.txt[]
 --
-
-.Flag Descriptions
-****
-* ename:XR_DIGITAL_LENS_CONTROL_PROCESSING_DISABLE_BIT_ALMALENCE disables
-  Digital Lens processing of render textures.
-
-****
 
 *New Enum Constants*
 
@@ -82,9 +77,9 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrDigitalLensControlALMALENCE',type='structs',desc='The digital lens control structure to be passed to change state of DLVR API Layer']
 --
-* slink:XrDigitalLensControlALMALENCE
+The slink:XrDigitalLensControlALMALENCE structure is defined as:
 
-include::../../../../generated/api/structs/XrDigitalLensControlALMALENCE.txt[]
+include::{INCS-VAR}/api/structs/XrDigitalLensControlALMALENCE.txt[]
 
 .Member Descriptions
 ****
@@ -93,11 +88,9 @@ include::../../../../generated/api/structs/XrDigitalLensControlALMALENCE.txt[]
   No such structures are defined in core OpenXR or this extension.
 * pname:flags is one or more elink:XrDigitalLensControlFlagBitsALMALENCE
   which indicate various characteristics desired for the Digital Lens.
-
 ****
 
-include::../../../../generated/validity/structs/XrDigitalLensControlALMALENCE.txt[]
-
+include::{INCS-VAR}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
 --
 
 *New Functions*
@@ -106,20 +99,19 @@ include::../../../../generated/validity/structs/XrDigitalLensControlALMALENCE.tx
 --
 The flink:xrSetDigitalLensControlALMALENCE function is defined as:
 
-include::../../../../generated/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{INCS-VAR}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 
 .Parameter Descriptions
 ****
 * pname:session is a handle to a running slink:XrSession.
 * pname:digitalLensControl is the slink:XrDigitalLensControlALMALENCE that
   contains desired characteristics for the Digital Lens
-
 ****
 
 flink:xrSetDigitalLensControlALMALENCE handles state of Digital Lens API
 Layer
 
-include::../../../../generated/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{INCS-VAR}/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
 --
 
 *Issues*
