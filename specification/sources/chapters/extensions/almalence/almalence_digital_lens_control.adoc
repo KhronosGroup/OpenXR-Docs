@@ -86,8 +86,8 @@ include::{INCS-VAR}/api/structs/XrDigitalLensControlALMALENCE.txt[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next must be code:NULL.
   No such structures are defined in core OpenXR or this extension.
-* pname:flags is one or more elink:XrDigitalLensControlFlagBitsALMALENCE
-  which indicate various characteristics desired for the Digital Lens.
+* pname:flags is a bitmask of elink:XrDigitalLensControlFlagBitsALMALENCE
+  indicating various characteristics desired for the Digital Lens.
 ****
 
 include::{INCS-VAR}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
