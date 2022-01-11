@@ -29,8 +29,12 @@ This extension allows:
 
 *New Enum Constants*
 
-* ename:XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT
-* ename:XR_FB_HAND_TRACKING_CAPSULE_COUNT
+* ename:XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB
+** ename:XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT was the original name, and
+   is still provided as an alias for backward compatibility.
+* ename:XR_HAND_TRACKING_CAPSULE_COUNT_FB
+** ename:XR_FB_HAND_TRACKING_CAPSULE_COUNT was the original name, and is
+   still provided as an alias for backward compatibility.
 
 elink:XrStructureType enumeration is extended with:
 
@@ -91,3 +95,10 @@ include::{INCS-VAR}/validity/structs/XrHandTrackingCapsulesStateFB.txt[]
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description
+* Revision 2, 2021-11-18 (Ryan Pavlik, Collabora, Ltd)
+** Fix typos/naming convention errors: rename
+   `XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT` to
+   `XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB` and
+   `XR_FB_HAND_TRACKING_CAPSULE_COUNT` to
+   `XR_HAND_TRACKING_CAPSULE_COUNT_FB`, providing the old names as
+   compatibility aliases.

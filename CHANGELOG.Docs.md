@@ -1,7 +1,7 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
 <!--
-Copyright (c) 2019-2021, The Khronos Group Inc.
+Copyright (c) 2019-2022, The Khronos Group Inc.
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -16,6 +16,90 @@ any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR Specification 1.0.21 (2022-01-10)
+
+This release features a number of new vendor and multi-vendor extensions, plus a
+few extension corrections. There are a few small core specification fixes as
+well, including a clarification that going forward, `xrBeginFrame` is not a
+blocking function (which was implied but not explicitly stated).
+
+- Registry
+  - Add new `XR_FB_render_model` vendor extension.
+    ([internal MR 2117](https://gitlab.khronos.org/openxr/openxr/merge_requests/2117),
+    [internal MR 2169](https://gitlab.khronos.org/openxr/openxr/merge_requests/2169))
+  - Add new `XR_HTC_facial_expression` vendor extension.
+    ([internal MR 2120](https://gitlab.khronos.org/openxr/openxr/merge_requests/2120))
+  - Add new `XR_FB_keyboard_tracking` vendor extension.
+    ([internal MR 2128](https://gitlab.khronos.org/openxr/openxr/merge_requests/2128))
+  - Add new `XR_EXT_uuid` multi-vendor extension.
+    ([internal MR 2152](https://gitlab.khronos.org/openxr/openxr/merge_requests/2152))
+  - Add new `XR_FB_passthrough_keyboard_hands` vendor extension.
+    ([internal MR 2162](https://gitlab.khronos.org/openxr/openxr/merge_requests/2162))
+  - Add new `XR_HTC_vive_focus3_controller_interaction` vendor extension.
+    ([internal MR 2178](https://gitlab.khronos.org/openxr/openxr/merge_requests/2178))
+  - Add new `XR_ALMALENCE_digital_lens_control` vendor extension.
+    ([OpenXR-Docs PR 104](https://github.com/KhronosGroup/OpenXR-Docs/pull/104),
+    [internal issue 1615](https://gitlab.khronos.org/openxr/openxr/issues/1615))
+  - Correct winding order for `XR_MSFT_hand_tracking_mesh` extension to clockwise
+    to match runtime behavior.
+    ([internal MR 2151](https://gitlab.khronos.org/openxr/openxr/merge_requests/2151))
+  - Fix typos/naming convention errors in `XR_FB_hand_tracking_capsules`: rename
+    `XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT` to
+    `XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB` and
+    `XR_FB_HAND_TRACKING_CAPSULE_COUNT` to `XR_HAND_TRACKING_CAPSULE_COUNT_FB`,
+    providing the old names as compatibility aliases.
+    ([internal MR 1547](https://gitlab.khronos.org/openxr/openxr/merge_requests/1547),
+    [internal issue 1519](https://gitlab.khronos.org/openxr/openxr/issues/1519))
+  - Reserve vendor extensions 208 - 299 for Facebook.
+    ([internal MR 2158](https://gitlab.khronos.org/openxr/openxr/merge_requests/2158))
+  - Reserve extension numbers for anticipated multi-vendor extensions.
+    ([internal MR 2173](https://gitlab.khronos.org/openxr/openxr/merge_requests/2173))
+- Specification
+  - Clarify that `xrBeginFrame` is not a blocking function for frame
+    synchronization purposes.
+    ([internal MR 2145](https://gitlab.khronos.org/openxr/openxr/merge_requests/2145))
+  - Correct winding order for `XR_MSFT_hand_tracking_mesh` extension to clockwise
+    to match runtime behavior.
+    ([internal MR 2151](https://gitlab.khronos.org/openxr/openxr/merge_requests/2151))
+  - Document new `XR_FB_render_model` vendor extension.
+    ([internal MR 2117](https://gitlab.khronos.org/openxr/openxr/merge_requests/2117),
+    [internal MR 2169](https://gitlab.khronos.org/openxr/openxr/merge_requests/2169))
+  - Document new `XR_HTC_facial_tracker` vendor extension.
+    ([internal MR 2120](https://gitlab.khronos.org/openxr/openxr/merge_requests/2120))
+  - Document new `XR_FB_keyboard_tracking` vendor extension.
+    ([internal MR 2128](https://gitlab.khronos.org/openxr/openxr/merge_requests/2128))
+  - Document new `XR_EXT_uuid` multi-vendor extension.
+    ([internal MR 2152](https://gitlab.khronos.org/openxr/openxr/merge_requests/2152))
+  - Document new `XR_FB_passthrough_keyboard_hands` vendor extension.
+    ([internal MR 2162](https://gitlab.khronos.org/openxr/openxr/merge_requests/2162))
+  - Document new `XR_HTC_vive_focus3_controller_interaction` vendor extension.
+    ([internal MR 2178](https://gitlab.khronos.org/openxr/openxr/merge_requests/2178))
+  - Document new `XR_ALMALENCE_digital_lens_control` vendor extension.
+    ([OpenXR-Docs PR 104](https://github.com/KhronosGroup/OpenXR-Docs/pull/104),
+    [internal issue 1615](https://gitlab.khronos.org/openxr/openxr/issues/1615))
+  - Fix typos/naming convention errors in `XR_FB_hand_tracking_capsules`: rename
+    `XR_FB_HAND_TRACKING_CAPSULE_POINT_COUNT` to
+    `XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB` and
+    `XR_FB_HAND_TRACKING_CAPSULE_COUNT` to `XR_HAND_TRACKING_CAPSULE_COUNT_FB`,
+    providing the old names as compatibility aliases.
+    ([internal MR 1547](https://gitlab.khronos.org/openxr/openxr/merge_requests/1547),
+    [internal issue 1519](https://gitlab.khronos.org/openxr/openxr/issues/1519))
+  - Semantic paths: Note that "back" (as a button) is an acceptable standard
+    identifier: the core specification already includes interaction profiles using
+    it, but it was inadvertently omitted from the standard identifier list.
+    ([internal MR 2166](https://gitlab.khronos.org/openxr/openxr/merge_requests/2166))
+  - Update xml consistency script to verify correct application of vendor naming
+    rules.
+    ([internal MR 1547](https://gitlab.khronos.org/openxr/openxr/merge_requests/1547),
+    [internal issue 1618](https://gitlab.khronos.org/openxr/openxr/issues/1618))
+  - Update docs for `XR_TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING` to specify that
+    `xrCreateInstance` returns `XR_ERROR_RUNTIME_UNAVAILABLE` as long as it is
+    unable to create the instance.
+    ([internal MR 2149](https://gitlab.khronos.org/openxr/openxr/merge_requests/2149))
+  - Update docs for `XR_FB_color_space` to correct preferred color space for Oculus
+    HMDs.
+    ([internal MR 2155](https://gitlab.khronos.org/openxr/openxr/merge_requests/2155))
 
 ## OpenXR Specification 1.0.20 (2021-10-04)
 

@@ -1,0 +1,207 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_keyboard_tracking.adoc[]
+
+*Contributors*::
+    Federico Schliemann, Facebook +
+    Robert Memmot, Facebook +
+    Cass Everitt, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension allows the application to query the system for a supported
+trackable keyboard type and obtain an slink:XrSpace handle to track it.
+It also provides relevant metadata about the keyboard itself, including
+bounds and a human readable identifier.
+
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrKeyboardTrackingFlagsFB',type='flags',desc='XrKeyboardTrackingFlagsFB']
+--
+include::{INCS-VAR}/api/flags/XrKeyboardTrackingFlagsFB.txt[]
+--
+
+[open,refpage='XrKeyboardTrackingFlagBitsFB',type='enums',desc='XrKeyboardTrackingFlagBitsFB',xrefs='XrKeyboardTrackingFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrKeyboardTrackingFlagBitsFB.txt[]
+
+
+include::{INCS-VAR}/api/enums/XrKeyboardTrackingFlagBitsFB.comments.txt[]
+--
+
+
+[open,refpage='XrKeyboardTrackingQueryFlagsFB',type='flags',desc='XrKeyboardTrackingQueryFlagsFB']
+--
+include::{INCS-VAR}/api/flags/XrKeyboardTrackingQueryFlagsFB.txt[]
+--
+
+[open,refpage='XrKeyboardTrackingQueryFlagBitsFB',type='enums',desc='XrKeyboardTrackingQueryFlagBitsFB',xrefs='XrKeyboardTrackingQueryFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.txt[]
+
+
+include::{INCS-VAR}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+* ename:XR_MAX_KEYBOARD_TRACKING_NAME_SIZE_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_KEYBOARD_SPACE_CREATE_INFO_FB
+* ename:XR_TYPE_KEYBOARD_TRACKING_QUERY_FB
+* ename:XR_TYPE_SYSTEM_KEYBOARD_TRACKING_PROPERTIES_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSystemKeyboardTrackingPropertiesFB',type='structs',desc='Information from the system about tracked keyboard support.',xrefs='XrSystemProperties']
+--
+The slink:XrSystemKeyboardTrackingPropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsKeyboardTracking defines whether the system supports the
+  tracked keyboard feature.
+****
+
+slink:XrSystemKeyboardTrackingPropertiesFB is populated with information
+from the system about tracked keyboard support.
+
+include::{INCS-VAR}/validity/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
+--
+
+[open,refpage='XrKeyboardTrackingQueryFB',type='structs',desc='Input data needed to determine which type of tracked keyboard to query for.',xrefs='']
+--
+The slink:XrKeyboardTrackingQueryFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrKeyboardTrackingQueryFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:flags is a bitmask of elink:XrKeyboardTrackingQueryFlagsFB.
+****
+
+
+slink:XrKeyboardTrackingQueryFB specifies input data needed to determine
+which type of tracked keyboard to query for.
+
+include::{INCS-VAR}/validity/structs/XrKeyboardTrackingQueryFB.txt[]
+--
+
+[open,refpage='XrKeyboardTrackingDescriptionFB',type='structs',desc='Description of a trackable keyboard.',xrefs='']
+--
+The slink:XrKeyboardTrackingDescriptionFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrKeyboardTrackingDescriptionFB.txt[]
+
+.Member Descriptions
+****
+* pname:trackedKeyboardId abstract identifier describing the type of
+  keyboard.
+* pname:size bounding box.
+* pname:flags additional information on the type of keyboard available.
+  If ename:XR_KEYBOARD_TRACKING_EXISTS_BIT_FB is not set there is no
+  keyboard.
+* pname:name human readable keyboard identifier.
+****
+
+slink:XrKeyboardTrackingDescriptionFB describes a trackable keyboard and its
+associated metadata.
+
+include::{INCS-VAR}/validity/structs/XrKeyboardTrackingDescriptionFB.txt[]
+--
+
+[open,refpage='XrKeyboardSpaceCreateInfoFB',type='structs',desc='Input data needed by the system to start tracking a keyboard.',xrefs='']
+--
+The slink:XrKeyboardSpaceCreateInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrKeyboardSpaceCreateInfoFB.txt[]
+
+
+.Member Descriptions
+****
+* pname:trackedKeyboardId abstract identifier describing the type of
+  keyboard to track.
+****
+
+slink:XrKeyboardSpaceCreateInfoFB describes a request for the system needed
+to create a trackable slink:XrSpace associated with the keyboard.
+
+include::{INCS-VAR}/validity/structs/XrKeyboardSpaceCreateInfoFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrQuerySystemTrackedKeyboardFB', desc='Queries the system keyboard',type='protos',xrefs='']
+--
+The flink:xrQuerySystemTrackedKeyboardFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrQuerySystemTrackedKeyboardFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that will be associated with a keyboard
+  space.
+* pname:queryInfo is the slink:XrKeyboardTrackingQueryFB that describes the
+  type of keyboard to return.
+  queryInfo must have either ename:XR_KEYBOARD_TRACKING_QUERY_LOCAL_BIT_FB
+  or ename:XR_KEYBOARD_TRACKING_QUERY_REMOTE_BIT_FB set.
+* pname:keyboard is the slink:XrKeyboardTrackingDescriptionFB output
+  structure.
+****
+
+The flink:xrQuerySystemTrackedKeyboardFB function populates an
+slink:XrKeyboardTrackingDescriptionFB structure with enough information to
+describe a keyboard that the system can locate.
+
+include::{INCS-VAR}/validity/protos/xrQuerySystemTrackedKeyboardFB.txt[]
+--
+
+[open,refpage='xrCreateKeyboardSpaceFB',desc='Create a foveation profile',type='protos',xrefs='']
+--
+The flink:xrCreateKeyboardSpaceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrCreateKeyboardSpaceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that will be associated with the returned
+  keyboard space.
+* pname:createInfo is the slink:XrKeyboardSpaceCreateInfoFB that describes
+  the type of keyboard to track.
+* pname:keyboardSpace is the slink:XrSpace output structure.
+****
+
+The flink:xrCreateKeyboardSpaceFB function returns an slink:XrSpace that can
+be used to locate a physical keyboard in space.
+The origin of the created slink:XrSpace is located in the center of the
+bounding box in the x and z axes, and at the top of the y axis (meaning the
+keyboard is located entirely in negative y).
+
+include::{INCS-VAR}/validity/protos/xrCreateKeyboardSpaceFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-08-27 (Federico Schliemann)
+** Initial extension description

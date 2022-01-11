@@ -1,0 +1,67 @@
+// Copyright (c) 2017-2022, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_EXT_uuid.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2021-10-27
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Alex Turner, Microsoft +
+    David Fields, Microsoft +
+
+*Overview*
+
+This extension defines a Universally Unique Identifier that follows
+link:https://www.rfc-editor.org/rfc/rfc4122.html[RFC 4122].
+
+[open,refpage='XrUuidEXT',desc='Universally Unique Identifier',type='structs',xrefs='']
+--
+The slink:XrUuidEXT structure is a 128-bit Universally Unique Identifier and
+is defined as:
+
+include::../../../../generated/api/structs/XrUuidEXT.txt[]
+
+.Member Descriptions
+****
+* pname:data is a 128-bit Universally Unique Identifier.
+****
+
+The structure is composed of 16 octets, with the size and order of the
+fields defined in
+link:https://www.rfc-editor.org/rfc/rfc4122.html#section-4.1.2[RFC 4122
+section 4.1.2].
+
+include::../../../../generated/validity/structs/XrUuidEXT.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_UUID_SIZE_EXT
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrUuidEXT
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-10-27 (Darryl Gough)
+** Initial extension description

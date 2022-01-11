@@ -1,6 +1,6 @@
 <sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2" xmlns:sqf="http://www.schematron-quickfix.com/validator/process">
     <!--
-         Copyright (c) 2021, The Khronos Group Inc.
+         Copyright (c) 2021-2022, The Khronos Group Inc.
 
          SPDX-License-Identifier: Apache-2.0
     -->

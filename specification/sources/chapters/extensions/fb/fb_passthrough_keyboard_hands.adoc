@@ -1,0 +1,111 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_passthrough_keyboard_hands.adoc[]
+
+*Contributors*::
+    Ante Trbojevic, Facebook +
+    Cass Everitt, Facebook +
+    Federico Schliemann, Facebook +
+    Anton Vaneev, Facebook +
+    Johannes Schmid, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension enables applications to show passthrough hands when hands are
+placed over the tracked keyboard.
+It enables users to see their hands over the keyboard in a mixed reality
+application.
+This extension is dependent on <<XR_FB_passthrough>> extension which can be
+used to create a passthrough layer for hand presence use-case.
+
+The extension supports a single pair of hands (one left and one right hand),
+multiple pair of hands are not supported.
+
+This extension allows:
+
+* Creation of keyboard hands passthrough layer using
+  flink:xrCreatePassthroughLayerFB
+* Setting the level of intensity for the hand mask in a passthrough layer
+  with purpose elink:XrPassthroughLayerPurposeFB as
+  ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_HANDS_FB
+
+
+*New Enum Constants*
+
+elink:XrPassthroughLayerPurposeFB enumeration is extended with a new
+constant:
+
+* ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_HANDS_FB - It defines
+  a keyboard hands presence purpose of passthrough layer.
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_PASSTHROUGH_KEYBOARD_HANDS_INTENSITY_FB
+
+*New Structures*
+
+[open,refpage='XrPassthroughKeyboardHandsIntensityFB',type='structs',desc='A struct for setting the level of intensity for hands in the passthrough layer',xrefs='']
+--
+The slink:XrPassthroughKeyboardHandsIntensityFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPassthroughKeyboardHandsIntensityFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:leftHandIntensity defines an intensity for the left tracked hand.
+* pname:rightHandIntensity defines an intensity for the right tracked hand.
+****
+
+slink:XrPassthroughKeyboardHandsIntensityFB describes intensities of
+passthrough hands, and is used as a parameter to
+flink:xrPassthroughLayerSetKeyboardHandsIntensityFB.
+
+Each of the intensity values pname:leftHandIntensity and
+pname:rightHandIntensity must: be in the range [0.0, 1.0].
+The hand intensity value represents the level of visibility of rendered
+hand, the minimal value of the intensity 0.0 represents the fully
+transparent hand (not visible), the maximal value of 1.0 represented fully
+opaque hands (maximal visibility).
+
+If either pname:leftHandIntensity or pname:rightHandIntensity is outside the
+range [0.0, 1.0], the runtime must return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{INCS-VAR}/validity/structs/XrPassthroughKeyboardHandsIntensityFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrPassthroughLayerSetKeyboardHandsIntensityFB',desc='Renders hands over the keyboard (keyboard hands) with a specific intensity of hands passthrough layer',type='protos',xrefs='']
+--
+The flink:xrPassthroughLayerSetKeyboardHandsIntensityFB function is defined
+as:
+
+include::{INCS-VAR}/api/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerFB to apply the intensity.
+* pname:intensity is the slink:XrPassthroughKeyboardHandsIntensityFB to be
+  set.
+****
+
+Sets an slink:XrPassthroughKeyboardHandsIntensityFB intensity on an
+slink:XrPassthroughLayerFB layer.
+
+include::{INCS-VAR}/validity/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-11-23 (Ante Trbojevic)
+** Initial extension description

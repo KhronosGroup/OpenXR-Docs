@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2021, The Khronos Group Inc.
+// Copyright (c) 2016-2022, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[rendering]]
@@ -888,6 +888,10 @@ flink:xrBeginFrame is called prior to the start of frame rendering.
 The application should: still call flink:xrBeginFrame but omit rendering
 work for the frame if slink:XrFrameState::pname:shouldRender is
 ename:XR_FALSE.
+
+Runtimes must: not perform frame synchronization or throttling through the
+flink:xrBeginFrame function and should: instead do so through
+flink:xrWaitFrame.
 
 The runtime must: return the error code ename:XR_ERROR_CALL_ORDER_INVALID if
 there was no corresponding successful call to flink:xrWaitFrame.

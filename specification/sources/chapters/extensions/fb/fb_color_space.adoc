@@ -60,9 +60,7 @@ include::../../../../generated/api/enums/XrColorSpaceFB.txt[]
 
 * ename:XR_COLOR_SPACE_REC2020_FB.
   Standard Rec.
-  2020 chromacities.
-  This is the preferred color space for standardized color across all Oculus
-  HMDs with D65 white point.
+  2020 chromacities with D65 white point.
 
 * ename:XR_COLOR_SPACE_REC709_FB.
   Standard Rec.
@@ -70,6 +68,9 @@ include::../../../../generated/api/enums/XrColorSpaceFB.txt[]
 
 * ename:XR_COLOR_SPACE_RIFT_CV1_FB.
   Unique color space, between P3 and Adobe RGB using D75 white point.
+  This is the preferred color space for standardized color across all Oculus
+  HMDs.
+
 +
 Color Space Details with Chromacity Primaries in CIE 1931 xy:
 +
@@ -195,6 +196,22 @@ ename:XR_COLOR_SPACE_RIFT_CV1_FB.
 The runtime must: return ename:XR_ERROR_COLOR_SPACE_UNSUPPORTED_FB if
 pname:colorSpace is not one of the values enumerated by
 flink:xrEnumerateColorSpacesFB.
+
+Formal definitions of color spaces contain a number of aspects such as gamma
+correction, max luminance and more.
+However, flink:xrSetColorSpaceFB will only affect the color gamut of the
+output by transforming the color gamut from the source (defined by the
+pname:colorSpace parameter) to the HMD display's color gamut (defined by the
+hardware internally).
+This call will not affect gamma correction, leaving that to follow the GPU
+texture format standards.
+Luminance, tonemapping, and other aspects of the color space will also
+remain unaffected.
+
+For more info on color management in Oculus HMDs, please refer to this
+guide:
+link:https://developer.oculus.com/resources/color-management-guide/[Color
+Management in Oculus Headsets]
 
 include::../../../../generated/validity/protos/xrSetColorSpaceFB.txt[]
 --

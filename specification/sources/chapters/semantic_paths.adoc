@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2021, The Khronos Group Inc.
+// Copyright (c) 2016-2022, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[semantic-path]]
@@ -378,8 +378,8 @@ examples of input subpaths.
   Extensions may: add new identifiers as detailed in the next section.
   Groups of four buttons in a diamond shape should: use the diamond-prefix
   names above instead of using the labels on the buttons themselves.
-* volume_up, volume_down, mute_mic, play_pause, menu, view - Some other
-  standard controls are often identified by icons.
+* volume_up, volume_down, mute_mic, play_pause, menu, view, back - Some
+  other standard controls are often identified by icons.
   These are their standard names.
 * thumbrest - Some controllers have a place for the user to rest their
   thumb.

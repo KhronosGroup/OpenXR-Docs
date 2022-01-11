@@ -1,0 +1,330 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../meta/XR_FB_render_model.adoc[]
+
+*Contributors*::
+    Leonard Tsai, Facebook +
+    Xiang Wei, Facebook +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension allows applications to request GLTF models for certain
+connected devices supported by the runtime.
+Paths that correspond to these devices will be provided through the
+extension and can be used to get information about the models as well as
+loading them.
+
+*New Flag Types*
+
+[open,refpage='XrRenderModelFlagsFB',type='flags',desc='XrRenderModelFlagsFB']
+--
+include::{INCS-VAR}/api/flags/XrRenderModelFlagsFB.txt[]
+--
+
+[open,refpage='XrRenderModelFlagBitsFB',type='enums',desc='XrRenderModelFlagBitsFB',xrefs='XrRenderModelFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrRenderModelFlagBitsFB.txt[]
+
+There are currently no render model flags.
+This is reserved for future use.
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_RENDER_MODEL_PROPERTIES_FB
+* ename:XR_TYPE_RENDER_MODEL_PATH_INFO_FB
+* ename:XR_TYPE_RENDER_MODEL_PROPERTIES_FB
+* ename:XR_TYPE_RENDER_MODEL_BUFFER_FB
+* ename:XR_TYPE_RENDER_MODEL_LOAD_INFO_FB
+* ename:XR_MAX_RENDER_MODEL_NAME_SIZE_FB
+
+*New Defines*
+
+[open,refpage='XR_NULL_RENDER_MODEL_KEY_FB',type='defines',desc='The value representing an invalid model key',xrefs='XrRenderModelKeyFB XrRenderModelPropertiesFB']
+--
+include::../../../../generated/api/defines/XR_NULL_RENDER_MODEL_KEY_FB.txt[]
+
+dlink:XR_NULL_RENDER_MODEL_KEY_FB defines an invalid model key atom.
+--
+
+*New Base Types*
+
+[open,refpage='XrRenderModelKeyFB',desc='Model key',type='basetypes',xrefs='XR_NULL_RENDER_MODEL_KEY_FB']
+--
+include::../../../../generated/api/basetypes/XrRenderModelKeyFB.txt[]
+
+The unique model key used to retrieve the data for the render model that is
+valid across multiple instances and installs.
+The application can use this key along with the model version to update its
+cached or saved version of the model.
+--
+
+*New Structures*
+
+[open,refpage='XrSystemRenderModelPropertiesFB',type='structs',desc='A render model system property',xrefs='']
+--
+The slink:XrSystemRenderModelPropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSystemRenderModelPropertiesFB.txt[]
+
+It describes a render model system property.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsRenderModelLoading defines whether the system supports
+  loading render models.
+****
+
+include::{INCS-VAR}/validity/structs/XrSystemRenderModelPropertiesFB.txt[]
+--
+
+[open,refpage='XrRenderModelPathInfoFB',type='structs',desc='Supported model paths',xrefs='xrEnumerateRenderModelPathsFB']
+--
+The slink:XrRenderModelPathInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrRenderModelPathInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:path is a valid basetype:XrPath used for retrieving model properties
+  from flink:xrGetRenderModelPropertiesFB.
+****
+
+slink:XrRenderModelPathInfoFB contains a model path supported by the device
+when returned from flink:xrEnumerateRenderModelPathsFB.
+This path can be used to request information about the render model for the
+connected device that the path represents using
+flink:xrGetRenderModelPropertiesFB.
+
+.Possible Render Model Paths
+****
+* Controller models with origin at the grip pose.
+** pathname:/model_fb/controller/left
+** pathname:/model_fb/controller/right
+* Keyboard models with origin at the center of its bounding box.
+** pathname:/model_fb/keyboard/local
+** pathname:/model_fb/keyboard/remote
+****
+
+include::{INCS-VAR}/validity/structs/XrRenderModelPathInfoFB.txt[]
+--
+
+[open,refpage='XrRenderModelPropertiesFB',type='structs',desc='The information about the render model',xrefs='xrGetRenderModelPropertiesFB']
+--
+
+
+The slink:XrRenderModelPropertiesFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrRenderModelPropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:vendorId is the vendor id of the model.
+* pname:modelName is the name of the model.
+* pname:modelKey is the unique model key used to load the model in
+  flink:xrLoadRenderModelFB.
+* pname:modelVersion is the version number of the model.
+* pname:flags is a bitmask of elink:XrRenderModelFlagsFB.
+****
+
+slink:XrRenderModelPropertiesFB contains information about the render model
+for a device.
+slink:XrRenderModelPropertiesFB must: be provided when calling
+flink:xrGetRenderModelPropertiesFB.
+The basetype:XrRenderModelKeyFB included in the properties is a unique key
+for each render model that is valid across multiple instances and installs.
+
+If the application decides to cache or save the render model in any way,
+pname:modelVersion can be used to determine if the render model has changed.
+The application should: then update its cached or saved version.
+
+include::{INCS-VAR}/validity/structs/XrRenderModelPropertiesFB.txt[]
+--
+
+[open,refpage='XrRenderModelLoadInfoFB',type='structs',desc='The information for which render model to load',xrefs='xrLoadRenderModelFB']
+--
+The slink:XrRenderModelLoadInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrRenderModelLoadInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:modelKey is the unique model key for a connected device.
+****
+
+
+slink:XrRenderModelLoadInfoFB is used to provide information about which
+render model to load.
+slink:XrRenderModelLoadInfoFB must: be provided when calling
+flink:xrLoadRenderModelFB.
+
+include::{INCS-VAR}/validity/structs/XrRenderModelLoadInfoFB.txt[]
+--
+
+[open,refpage='XrRenderModelBufferFB',type='structs',desc='The buffer containing the data for the render model',xrefs='xrLoadRenderModelFB']
+--
+
+The slink:XrRenderModelBufferFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrRenderModelBufferFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:bufferCapacityInput is the capacity of the pname:buffer, or `0` to
+  retrieve the required capacity.
+* pname:bufferCountOutput is the count of code:uint8_t pname:buffer written,
+  or the required capacity in the case that pname:bufferCapacityInput is
+  `0`.
+* pname:buffer is a pointer to an application-allocated array that will be
+  filled with the render model binary data.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+slink:XrRenderModelBufferFB is used when loading the binary data for a
+render model.
+slink:XrRenderModelBufferFB must: be provided when calling
+flink:xrLoadRenderModelFB.
+
+include::{INCS-VAR}/validity/structs/XrRenderModelBufferFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrEnumerateRenderModelPathsFB',desc='Enumerate supported render model paths',type='protos',xrefs='']
+--
+The flink:xrEnumerateRenderModelPathsFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrEnumerateRenderModelPathsFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:pathCapacityInput is the capacity of the pname:paths, or 0 to
+  retrieve the required capacity.
+* pname:pathCountOutput is a pointer to the count of code:float pname:paths
+  written, or a pointer to the required capacity in the case that
+  pname:pathCapacityInput is `0`.
+* pname:paths is a pointer to an application-allocated array that will be
+  filled with slink:XrRenderModelPathInfoFB values that are supported by the
+  runtime, but can: be code:NULL if pname:pathCapacityInput is `0`
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:paths size.
+****
+
+The application must: call flink:xrEnumerateRenderModelPathsFB to enumerate
+the valid render model paths that are supported by the runtime before
+calling flink:xrGetRenderModelPropertiesFB.
+The paths returned may: be used later in flink:xrGetRenderModelPropertiesFB.
+
+include::{INCS-VAR}/validity/protos/xrEnumerateRenderModelPathsFB.txt[]
+--
+
+[open,refpage='xrGetRenderModelPropertiesFB',desc='Get information for a render model',type='protos',xrefs='']
+--
+The flink:xrGetRenderModelPropertiesFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetRenderModelPropertiesFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:path is the path of the render model to get the properties for.
+* pname:properties is a pointer to the slink:XrRenderModelPropertiesFB to
+  write the render model information to.
+****
+
+flink:xrGetRenderModelPropertiesFB is used for getting information for a
+render model using a path retrieved from
+flink:xrEnumerateRenderModelPathsFB.
+The information returned will be for the connected device that corresponds
+to the path given.
+For example, using pathname:/model_fb/controller/left will return
+information for the left controller that is currently connected and will
+change if a different device that also represents a left controller is
+connected.
+
+The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if
+flink:xrGetRenderModelPropertiesFB is called with render model paths before
+calling flink:xrEnumerateRenderModelPathsFB.
+The runtime must: return ename:XR_ERROR_PATH_INVALID if a path not given by
+flink:xrEnumerateRenderModelPathsFB is used.
+
+If flink:xrGetRenderModelPropertiesFB returns a success code of
+ename:XR_RENDER_MODEL_UNAVAILABLE_FB and has a pname:modelKey of
+dlink:XR_NULL_RENDER_MODEL_KEY_FB, this indicates that the model for the
+device is unavailable.
+The application may: keep calling flink:xrGetRenderModelPropertiesFB because
+the model may: become available later when a device is connected.
+
+include::{INCS-VAR}/validity/protos/xrGetRenderModelPropertiesFB.txt[]
+--
+
+[open,refpage='xrLoadRenderModelFB',desc='Load binary data for a render model',type='protos',xrefs='']
+--
+The flink:xrLoadRenderModelFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrLoadRenderModelFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:info is a pointer to the slink:XrRenderModelLoadInfoFB structure.
+* pname:buffer is a pointer to the slink:XrRenderModelBufferFB structure to
+  write the binary data into.
+****
+
+flink:xrLoadRenderModelFB is used to load the GLTF model data using a valid
+pname:modelKey.
+flink:xrLoadRenderModelFB loads the model as a byte buffer containing the
+GLTF in the binary format (GLB).
+The GLB data must: conform to the glTF 2.0 format defined at
+https://github.com/KhronosGroup/glTF/tree/master/specification/2.0.
+The GLB may: contain texture data in a format that requires the use of the
+`KHR_texture_basisu` GLTF extension defined at
+https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_texture_basisu.
+Therefore, the application should: ensure it can handle this extension.
+
+If the device for the requested model is disconnected or does not match the
+pname:modelKey provided, flink:xrLoadRenderModelFB must: return
+ename:XR_RENDER_MODEL_UNAVAILABLE_FB as well as a pname:bufferCountOutput
+value of 0 indicating that the model was not available.
+
+The flink:xrLoadRenderModelFB function may: be slow, therefore applications
+should: call it from a non-time sensitive thread.
+
+include::{INCS-VAR}/validity/protos/xrLoadRenderModelFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-08-17 (Leonard Tsai)
+** Initial extension description

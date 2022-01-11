@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2021, The Khronos Group Inc.
+# Copyright (c) 2013-2022, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -401,6 +401,10 @@ InterfaceElement =
              attribute name { XrDefineOrEnumName_t },
              attribute value { xsd:unsignedInt }?,
              CommentAttr?)
+          | (# An alias of a plain define.
+             attribute name { XrDefineOrEnumName_t },
+             attribute alias { XrDefineOrEnumName_t },
+             CommentAttr)
           | (# Extending another
              attribute name { XrUpperSnakeCase_t },
              (attribute offset { xsd:integer } |

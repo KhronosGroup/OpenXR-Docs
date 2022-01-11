@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2021, The Khronos Group Inc.
+// Copyright (c) 2016-2022, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -486,7 +486,7 @@ After the application has destroyed all of its instances and their children
 and waited past the specified time, it may then re-try
 flink:xrCreateInstance in a loop waiting for whatever maintenance the
 runtime is performing to complete.
-The runtime will return ename:XR_ERROR_INSTANCE_LOST from
+The runtime will return ename:XR_ERROR_RUNTIME_UNAVAILABLE from
 flink:xrCreateInstance as long as it is unable to create the instance.
 Once the runtime has returned and is able to continue, it must: resume
 returning ename:XR_SUCCESS from flink:xrCreateInstance if valid data is
