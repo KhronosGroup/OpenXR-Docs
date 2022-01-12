@@ -17,7 +17,7 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
-## OpenXR Specification 1.0.21 (2022-01-10)
+## OpenXR Specification 1.0.22 (2022-01-12)
 
 This release features a number of new vendor and multi-vendor extensions, plus a
 few extension corrections. There are a few small core specification fixes as
@@ -100,6 +100,11 @@ blocking function (which was implied but not explicitly stated).
   - Update docs for `XR_FB_color_space` to correct preferred color space for Oculus
     HMDs.
     ([internal MR 2155](https://gitlab.khronos.org/openxr/openxr/merge_requests/2155))
+
+## OpenXR Specification 1.0.21 (2022-01-10)
+
+This release was withdrawn due to a typo noticed after initial publication.
+All changes are now listed under 1.0.22.
 
 ## OpenXR Specification 1.0.20 (2021-10-04)
 
