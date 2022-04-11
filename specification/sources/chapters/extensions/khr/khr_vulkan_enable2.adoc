@@ -136,7 +136,7 @@ include::../../../../generated/api/protos/xrCreateVulkanInstanceKHR.txt[]
 * pname:instance is an slink:XrInstance handle previously created with
   flink:xrCreateInstance.
 * pname:createInfo extensible input struct of type
-  sname:XrCreateVulkanInstanceCreateInfoKHR
+  sname:XrVulkanInstanceCreateInfoKHR
 * pname:vulkanInstance points to a sname:VkInstance handle to populate with
   the new Vulkan instance.
 * pname:vulkanResult points to a sname:VkResult to populate with the result
