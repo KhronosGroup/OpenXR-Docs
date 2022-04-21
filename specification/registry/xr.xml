@@ -263,6 +263,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type bitvalues="XrDebugUtilsMessageSeverityFlagBitsEXT" category="bitmask">typedef <type>XrFlags64</type> <name>XrDebugUtilsMessageSeverityFlagsEXT</name>;</type>
         <type bitvalues="XrDebugUtilsMessageTypeFlagBitsEXT"     category="bitmask">typedef <type>XrFlags64</type> <name>XrDebugUtilsMessageTypeFlagsEXT</name>;</type>
 
+        <!-- Bitmask types for XR_EXT_composition_layer_frame_synthesis -->
+        <type bitvalues="XrCompositionLayerFrameSynthesisInfoFlagBitsEXT" category="bitmask">typedef <type>XrFlags64</type> <name>XrCompositionLayerFrameSynthesisInfoFlagsEXT</name>;</type>
+
         <!-- Bitmask types for XR_EXTX_overlay -->
         <type bitvalues="XrOverlayMainSessionFlagBitsEXTX"   category="bitmask">typedef <type>XrFlags64</type> <name>XrOverlayMainSessionFlagsEXTX</name>;</type>
         <type bitvalues="XrOverlaySessionCreateFlagBitsEXTX" category="bitmask">typedef <type>XrFlags64</type> <name>XrOverlaySessionCreateFlagsEXTX</name>;</type>
@@ -361,6 +364,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <!-- flag bits for XR_EXT_debug_utils -->
         <type name="XrDebugUtilsMessageSeverityFlagBitsEXT" category="enum"/>
         <type name="XrDebugUtilsMessageTypeFlagBitsEXT" category="enum"/>
+
+        <!-- flag bits for XR_EXT_composition_layer_frame_synthesis -->
+        <type name="XrCompositionLayerFrameSynthesisInfoFlagBitsEXT" category="enum"/>
 
         <!-- flag bits for XR_EXTX_overlay -->
         <type name="XrOverlayMainSessionFlagBitsEXTX" category="enum"/>
@@ -1220,6 +1226,28 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member values="XR_TYPE_EYE_GAZE_SAMPLE_TIME_EXT"><type>XrStructureType</type> <name>type</name></member>
             <member><type>void</type>*   <name>next</name></member>
             <member><type>XrTime</type>  <name>time</name></member>
+        </type>
+
+        <!-- XR_EXT_composition_layer_frame_synthesis -->
+        <type category="struct" name="XrCompositionLayerFrameSynthesisInfoEXT" structextends="XrCompositionLayerProjectionView">
+            <member values="XR_TYPE_COMPOSITION_LAYER_FRAME_SYNTHESIS_INFO_EXT"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>*                                                  <name>next</name></member>
+            <member optional="true"><type>XrCompositionLayerFrameSynthesisInfoFlagsEXT</type> <name>layerFlags</name></member>
+            <member><type>XrSwapchainSubImage</type>                                          <name>motionVectorSubImage</name></member>
+            <member><type>XrVector4f</type>                                                   <name>motionVectorScale</name></member>
+            <member><type>XrVector4f</type>                                                   <name>motionVectorOffset</name></member>
+            <member><type>XrPosef</type>                                                      <name>appSpaceDeltaPose</name></member>
+            <member><type>XrSwapchainSubImage</type>                                          <name>depthSubImage</name></member>
+            <member><type>float</type>                                                        <name>minDepth</name></member>
+            <member><type>float</type>                                                        <name>maxDepth</name></member>
+            <member><type>float</type>                                                        <name>nearZ</name></member>
+            <member><type>float</type>                                                        <name>farZ</name></member>
+        </type>
+        <type category="struct" name="XrCompositionLayerFrameSynthesisConfigViewEXT" structextends="XrViewConfigurationView">
+            <member values="XR_TYPE_COMPOSITION_LAYER_FRAME_SYNTHESIS_CONFIG_VIEW_EXT"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>*    <name>next</name></member>
+            <member><type>uint32_t</type> <name>recommendedMotionVectorImageRectWidth</name></member>
+            <member><type>uint32_t</type> <name>recommendedMotionVectorImageRectHeight</name></member>
         </type>
 
         <!-- types for XR_MSFT_spatial_anchor -->
@@ -2440,6 +2468,12 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <enums name="XrHandJointsMotionRangeEXT" type="enum">
         <enum value="1"   name="XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT"/>
         <enum value="2"   name="XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT"/>
+    </enums>
+
+    <!-- flags for XR_EXT_composition_layer_frame_synthesis -->
+    <enums name="XrCompositionLayerFrameSynthesisInfoFlagBitsEXT" type="bitmask">
+        <enum bitpos="0" name="XR_COMPOSITION_LAYER_FRAME_SYNTHESIS_INFO_USE_2D_MOTION_VECTOR_BIT_EXT"             comment="2D motion vector will be used"/>
+        <enum bitpos="1" name="XR_COMPOSITION_LAYER_FRAME_SYNTHESIS_INFO_ALLOW_HALF_REFRESH_RATE_THROTTLE_BIT_EXT" comment="Runtime might throttle the application's frame rate to half of display refresh rate"/>
     </enums>
 
     <!-- XR_MSFT_hand_tracking_mesh -->
@@ -6084,10 +6118,15 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_FB_extension_212" number="212" type="instance" supported="disabled">
+    <extension name="XR_EXT_composition_layer_frame_synthesis" number="212" type="instance" supported="openxr">
         <require>
-            <enum value="1"                               name="XR_FB_extension_212_SPEC_VERSION"/>
-            <enum value="&quot;XR_FB_extension_212&quot;" name="XR_FB_EXTENSION_212_EXTENSION_NAME"/>
+            <enum value="1"                                                    name="XR_EXT_composition_layer_frame_synthesis_SPEC_VERSION"/>
+            <enum value="&quot;XR_EXT_composition_layer_frame_synthesis&quot;" name="XR_EXT_COMPOSITION_LAYER_FRAME_SYNTHESIS_EXTENSION_NAME"/>
+
+            <enum offset="0" extends="XrStructureType"                         name="XR_TYPE_COMPOSITION_LAYER_FRAME_SYNTHESIS_INFO_EXT"/>
+            <enum offset="1" extends="XrStructureType"                         name="XR_TYPE_COMPOSITION_LAYER_FRAME_SYNTHESIS_CONFIG_VIEW_EXT"/>
+            <type name="XrCompositionLayerFrameSynthesisInfoEXT"/>
+            <type name="XrCompositionLayerFrameSynthesisConfigViewEXT"/>
         </require>
     </extension>
 
