@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_KHR_convert_timespec_time.adoc[]
+include::../metadata/XR_KHR_convert_timespec_time.adoc[]
 
 *Last Modified Date*::
    2019-01-24
@@ -43,8 +43,8 @@ include::../../../../generated/api/protos/xrConvertTimespecTimeToTimeKHR.txt[]
 ****
 * pname:instance is an slink:XrInstance handle previously created with
   flink:xrCreateInstance.
-* pname:timespecTime is a code:timespec obtained from code:clock_gettime with
-  code:CLOCK_MONOTONIC.
+* pname:timespecTime is a code:timespec obtained from code:clock_gettime
+  with code:CLOCK_MONOTONIC.
 * pname:time is the resulting basetype:XrTime that is equivalent to the
   pname:timespecTime.
 ****

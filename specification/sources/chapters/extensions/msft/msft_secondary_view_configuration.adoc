@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_MSFT_secondary_view_configuration.adoc[]
+include::../metadata/XR_MSFT_secondary_view_configuration.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -367,8 +367,6 @@ include::../../../../generated/api/structs/XrSecondaryViewConfigurationLayerInfo
   slink:XrSystemGraphicsProperties::maxLayerCount.
   If layerCount is greater than the maximum supported layer count then
   ename:XR_ERROR_LAYER_LIMIT_EXCEEDED is returned.
-  The runtime must: support at least
-  ename:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
 * pname:layers is a pointer to an array of
   slink:XrCompositionLayerBaseHeader pointers.
 ****

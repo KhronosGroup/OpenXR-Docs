@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_HTC_vive_focus3_controller_interaction.adoc[]
+include::../metadata/XR_HTC_vive_focus3_controller_interaction.adoc[]
 
 *Last Modified Date*::
-    2022-01-03
+    2022-04-29
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -43,6 +43,7 @@ Supported component paths:
    use)
 * subpathname:/input/squeeze/click
 * subpathname:/input/squeeze/touch
+* subpathname:/input/squeeze/value
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/touch
 * subpathname:/input/trigger/value
@@ -74,3 +75,7 @@ Supported component paths:
 * Revision 1, 2022-01-03 (Ria Hsu)
 
 ** Initial extension description
+
+* Revision 2, 2022-04-29 (Ria Hsu)
+
+** Support component path "/input/squeeze/value"

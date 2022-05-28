@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_KHR_composition_layer_depth.adoc[]
+include::../metadata/XR_KHR_composition_layer_depth.adoc[]
 
 *Last Modified Date*::
     2019-01-24
@@ -17,8 +17,8 @@ include::../meta/XR_KHR_composition_layer_depth.adoc[]
 *Overview*
 
 This extension defines an extra layer type which allows applications to
-submit valid depth buffers along with images submitted in projection layers,
-i.e. slink:XrCompositionLayerProjection.
+submit depth images along with color images in projection layers, i.e.
+slink:XrCompositionLayerProjection.
 
 The XR runtime may: use this information to perform more accurate
 reprojections taking depth into account.
@@ -41,7 +41,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrCompositionLayerDepthInfoKHR',desc='Depth map layer info',type='structs',xrefs='XrCompositionLayerProjectionView XrCompositionLayerProjection XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
 --
-When submitting depth buffers along with projection layers, add the
+When submitting depth images along with projection layers, add the
 slink:XrCompositionLayerDepthInfoKHR to the pname:next chain for all
 slink:XrCompositionLayerProjectionView structures in the given layer.
 
@@ -57,32 +57,49 @@ include::../../../../generated/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
   No such structures are defined in core OpenXR or this extension.
 * pname:subImage identifies the depth image slink:XrSwapchainSubImage to be
   associated with the color swapchain.
-  The contained pname:imageRect specifies the valid portion of the depth
-  image to use, in pixels.
-  It also implicitly defines the transform from normalized image coordinates
-  into pixel coordinates.
-  The contained pname:imageArrayIndex is the depth image array index, with 0
-  meaning the first or only array element.
-* pname:minDepth and pname:maxDepth are the range of depth values the
-  pname:depthSwapchain could have, in the range of [eq]#[0.0,1.0]#.
-  This is akin to min and max values of OpenGL's fname:glDepthRange, but
-  with the requirement here that [eq]#maxDepth {geq} minDepth#.
-* pname:nearZ is the positive distance in meters of the pname:minDepth value
-  in the depth swapchain.
-  Applications may: use a pname:nearZ that is greater than pname:farZ to
-  indicate depth values are reversed.
-  pname:nearZ can be infinite.
-* pname:farZ is the positive distance in meters of the pname:maxDepth value
-  in the depth swapchain.
-  pname:farZ can be infinite.
-  Applications must: not use the same value as pname:nearZ.
+* pname:minDepth and pname:maxDepth are the window space depths that
+  correspond to the near and far frustum planes, respectively.
+  pname:minDepth must be less than pname:maxDepth.
+  pname:minDepth and pname:maxDepth must be in the range [0, 1].
+* pname:nearZ and pname:farZ are the positive distances in meters to the
+  near and far frustum planes, respectively.
+  pname:nearZ and pname:farZ must: not be equal.
+  pname:nearZ and pname:farZ must: be in the range (0, +infinity].
 ****
 
+[NOTE]
+.Note
+====
+The window space depth values pname:minDepth and pname:maxDepth are akin to
+the parameters of fname:glDepthRange that specify the mapping from
+normalized device coordinates into window space.
+====
+
+[NOTE]
+.Note
+====
+A reversed mapping of depth, such that points closer to the view have a
+window space depth that is greater than points further away can be achieved
+by making nearZ > farZ.
+====
+
 slink:XrCompositionLayerDepthInfoKHR contains the information needed to
-specify an extra layer with depth information.
-When submitting depth buffers along with projection layers, add the
+associate depth with the color information in a projection layer.
+When submitting depth images along with projection layers, add the
 slink:XrCompositionLayerDepthInfoKHR to the pname:next chain for all
 slink:XrCompositionLayerProjectionView structures in the given layer.
+
+The homogeneous transform from view space z to window space depth is given
+by the following matrix, where a = minDepth, b = maxDepth, n = nearZ, and f
+= farZ.
+
+image::images/windowFromView.png[align="center", title="Homogeneous transform from view space to window space depth"]
+
+Homogeneous values are constructed from real values by appending a w
+component with value 1.0.
+
+General homogeneous values are projected back to real space by dividing by
+the w component.
 
 include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.txt[]
 --
@@ -90,6 +107,38 @@ include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.t
 *New Functions*
 
 *Issues*
+
+. Should the range of pname:minDepth and pname:maxDepth be constrained to [0,1]?
++
+*RESOLVED*: Yes.
++
+There is no compelling mathematical reason for this constraint, however, it
+does not impose any hardship currently, and the constraint could be relaxed
+in a future version of the extension if needed.
+
+. Should we require pname:minDepth be less than pname:maxDepth?
++
+*RESOLVED*: Yes.
++
+There is no compelling mathematical reason for this constraint, however, it
+does not impose any hardship currently, and the constraint could be relaxed
+in a future version of the extension if needed.
+Reverse z mappings can be achieved by making pname:nearZ > pname:farZ.
+
+. Does this extension support view space depth images?
++
+*RESOLVED*: No. +
+The formulation of the transform between view and window depths implies
+projected depth.
+A different extension would be needed to support a different interpretation
+of depth.
+
+. Is there any constraint on the resolution of the depth subimage?
++
+*RESOLVED*: No.
++
+The resolution of the depth image need not match that of the corresponding
+color image.
 
 *Version History*
 
@@ -106,3 +155,5 @@ include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.t
 to slink:XrSwapchainSubImage
 ** reformat and spec language changes
 ** removed vendor specific terminology
+* Revision 6, 2022-02-16 (Cass Everitt)
+** Provide homogeneous transform as function of provided parameters

@@ -1,0 +1,62 @@
+<mxfile host="65bd71144e" pages="1">
+    <diagram id="PiE7FUJ211FEbH9YiN3b" name="Page-1">
+        <mxGraphModel dx="1296" dy="553" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2336" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-4" value="xrTriangleMeshBeginUpdateFB" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Pr3aZXG59zV-8SN4lU0j-1" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="170" y="310" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-1" value="Topology Undefined" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="120" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-6" value="xrTriangleMeshEndUpdateFB" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;curved=1;" parent="1" source="Pr3aZXG59zV-8SN4lU0j-2" target="Pr3aZXG59zV-8SN4lU0j-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-2" value="Updating Mesh" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="720" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-10" value="xrTriangleMeshEndVertexBufferUpdateFB" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="Pr3aZXG59zV-8SN4lU0j-3" target="Pr3aZXG59zV-8SN4lU0j-5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                        <mxPoint x="440" y="570" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-3" value="Updating Vertices" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="450" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-9" value="xrTriangleMeshBeginVertexBufferUpdateFB" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Pr3aZXG59zV-8SN4lU0j-5" target="Pr3aZXG59zV-8SN4lU0j-3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-11" value="xrTriangleMeshBeginUpdateFB" style="edgeStyle=orthogonalEdgeStyle;curved=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="Pr3aZXG59zV-8SN4lU0j-5" target="Pr3aZXG59zV-8SN4lU0j-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Pr3aZXG59zV-8SN4lU0j-5" value="Ready" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="390" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="May change vertex buffer size and/or contents, index buffer size and/or contents." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="655" y="570" width="250" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="May change vertex buffer contents, but not size." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="45" y="570" width="250" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="xrTriangleMeshEndUpdateFB after setting both the index and vertex buffers" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="Pr3aZXG59zV-8SN4lU0j-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Defining Topology" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="410" y="260" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="xrCreateTriangleMeshFB" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="Pr3aZXG59zV-8SN4lU0j-1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="470" y="70" as="sourcePoint"/>
+                        <mxPoint x="490" y="20" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

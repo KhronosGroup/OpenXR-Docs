@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_FB_passthrough_keyboard_hands.adoc[]
+include::../metadata/XR_FB_passthrough_keyboard_hands.adoc[]
 
 *Contributors*::
     Ante Trbojevic, Facebook +
@@ -31,7 +31,8 @@ This extension allows:
   flink:xrCreatePassthroughLayerFB
 * Setting the level of intensity for the hand mask in a passthrough layer
   with purpose elink:XrPassthroughLayerPurposeFB as
-  ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_HANDS_FB
+  ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_HANDS_FB or
+  ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_MASKED_HANDS_FB
 
 
 *New Enum Constants*
@@ -40,7 +41,13 @@ elink:XrPassthroughLayerPurposeFB enumeration is extended with a new
 constant:
 
 * ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_HANDS_FB - It defines
-  a keyboard hands presence purpose of passthrough layer.
+  a keyboard hands presence purpose of passthrough layer (i.e. basic mode,
+  without hand transitions).
+* ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_MASKED_HANDS_FB - It
+  defines a keyboard hands presence purpose of passthrough layer with
+  keyboard masked hand transitions.
+  A hand mask will be visible only when hands are inside the region of VR
+  keyboard (i.e. hands over the keyboard).
 
 elink:XrStructureType enumeration is extended with:
 
@@ -109,3 +116,6 @@ include::{INCS-VAR}/validity/protos/xrPassthroughLayerSetKeyboardHandsIntensityF
 
 * Revision 1, 2021-11-23 (Ante Trbojevic)
 ** Initial extension description
+* Revision 2, 2022-03-16 (Ante Trbojevic)
+** Introduce
+   ename:XR_PASSTHROUGH_LAYER_PURPOSE_TRACKED_KEYBOARD_MASKED_HANDS_FB

@@ -1,0 +1,406 @@
+// Copyright (c) 2017-2022, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_EXT_dpad_binding.adoc[]
+
+*Last Modified Date*::
+    2022-04-20
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Joe Ludwig, Valve +
+    Keith Bradner, Valve +
+    Rune Berg, Valve +
+    Nathan Nuber, Valve +
+    Jakob Bornecrantz, Collabora +
+    Ryan Pavlik, Collabora +
+    Jules Blok, Epic Games +
+
+*Overview*
+
+This extension allows the application to bind one or more digital actions to
+a trackpad or thumbstick as though it were a dpad by defining additional
+component paths to suggest bindings for.
+The behavior of this dpad-like mapping may be customized using
+slink:XrInteractionProfileDpadBindingEXT.
+
+Applications must: also enable the `<<XR_KHR_binding_modification>>`
+extension that this builds on top of.
+
+*New Component Paths*
+
+When this extension is enabled, a runtime must: accept otherwise-valid
+suggested bindings that refer to the following component paths added to
+certain existing input source paths.
+
+* For a given interaction profile,
+** For each <<semantic-path-input,input source path>> valid in that
+   interaction profile that has identifier _trackpad_ but without a
+   component specified (i.e. subpathname:/input/trackpad or
+   subpathname:/input/trackpad_<location>), a runtime must: accept the
+   following components appended to that path in a suggested binding:
+*** subpathname:/dpad_up
+*** subpathname:/dpad_down
+*** subpathname:/dpad_left
+*** subpathname:/dpad_right
+*** subpathname:/dpad_center
+** For each <<semantic-path-input,input source path>> valid in that
+   interaction profile that has identifier _thumbstick_ but without a
+   component specified (i.e. subpathname:/input/thumbstick or
+   subpathname:/input/thumbstick_<location>), a runtime must: accept the
+   following components appended to that path in a suggested binding:
+*** subpathname:/dpad_up
+*** subpathname:/dpad_down
+*** subpathname:/dpad_left
+*** subpathname:/dpad_right
+
+While a runtime may: ignore accepted suggested bindings, and may: use their
+contents as suggestions for automatic remapping when not obeying them, this
+extension defines interpretations the runtime must: make in the case that a
+suggested binding using one of these paths is being obeyed.
+
+An application can: pass slink:XrInteractionProfileDpadBindingEXT in the
+slink:XrBindingModificationsKHR::pname:bindingModifications array associated
+with a suggested binding to customize the behavior of this mapping in the
+case that suggested bindings are being obeyed, and to provide remapping
+hints in other cases.
+If no slink:XrInteractionProfileDpadBindingEXT structure is present in
+slink:XrBindingModificationsKHR::pname:bindingModifications for a given
+action set and component-less input source path, the runtime must: behave as
+if one were passed with the following values:
+
+* pname:forceThreshold = 0.5
+* pname:forceThresholdReleased = 0.4
+* pname:centerRegion = 0.5
+* pname:wedgeAngle = [eq]#{onehalf} {pi}#
+* pname:isSticky = ename:XR_FALSE
+* pname:onHaptic = code:NULL
+* pname:offHaptic = code:NULL
+
+For the purposes of description, the [eq]#(-1, 1)# ranges of the _x_ and _y_
+components of trackpad and thumbstick inputs are depicted in this extension
+as if their scale were equal between axes.
+However, this is *not* required by this extension: while their numeric scale
+is treated as equal, their physical scale may: not be.
+
+Each of the component paths defined by this extension behave as boolean
+inputs.
+The center component subpathname:/dpad_center (only present when the path
+identifier is _trackpad_) must: not be active at the same time as any other
+dpad component.
+For the other components, zero, one, or (depending on the pname:wedgeAngle)
+two of them may: be active at any time, though only adjacent components on a
+single logical dpad may be active simultaneously.
+For example, subpathname:/dpad_down and subpathname:/dpad_left are adjacent,
+and thus may: be active simultaneously, while subpathname:/dpad_up and
+subpathname:/dpad_down are not adjacent and must: not be active
+simultaneously.
+
+[NOTE]
+.Note
+====
+If [eq]#pname:wedgeAngle > {onehalf} {pi}#, it is possible for two
+components referring to adjacent directions (excluding
+subpathname:/dpad_center) to be active at the same time, as the directional
+regions overlap.
+If [eq]#pname:wedgeAngle < {onehalf} {pi}#, there are wedges between
+directional regions that correspond to no dpad component.
+====
+
+The following components are defined by possibly-overlapping truncated
+wedges pointing away from [eq]#0, 0# in _x_, _y_ input space, with their
+angular size of slink:XrInteractionProfileDpadBindingEXT::pname:wedgeAngle
+centered around the indicated direction.
+
+* subpathname:/dpad_up: direction [eq]#(0, 1)#
+* subpathname:/dpad_down: direction [eq]#(0, -1)#
+* subpathname:/dpad_left: direction [eq]#(-1, 0)#
+* subpathname:/dpad_right: direction [eq]#(1, 0)#
+
+Typical values for pname:wedgeAngle are [eq]#{onehalf} {pi}# (or 90°) for
+regions that don't overlap or [eq]#{threequarters} {pi}# (or 135°) for
+regions are evenly divided between the exclusive region for one cardinal
+direction and the overlap with neighboring regions.
+
+Each of these regions are truncated by an arc to exclude the area within a
+radius of slink:XrInteractionProfileDpadBindingEXT::pname:centerRegion away
+from [eq]#0, 0#.
+When used with an input path with an identifier of _trackpad_, the area
+within this radius corresponds to the subpathname:/dpad_center component.
+When used with an input path with an identifier of _thumbstick_, the area
+within this radius is a region where all dpad components must: be inactive.
+
+image::images/ext_dpad_binding_wedge.svg[align="center", title="Wedge Angles"]
+
+*Behavior*
+
+For both the _trackpad_ and _thumbstick_ input identifiers, there are
+conditions that must: be true for any dpad component to report active.
+If these conditions are true, the selection of which component or components
+are active, if any, takes place.
+
+* Activation of a dpad component when appended to an input path with
+  identifier _trackpad_ on the values of the subpathname:/x and
+  subpathname:/y components, as well as on an overall activation state.
+  If the overall state is inactive, the runtime must: treat all
+  corresponding dpad components as inactive.
+** If the component subpathname:/click is also valid for the trackpad, the
+   overall activation state is equal to the value of the subpathname:/click.
+** If the component subpathname:/click is *not* valid for the trackpad, but
+   the component subpathname:/force *is* valid, the overall activation state
+   depends on the value of that subpathname:/force component, as well as the
+   previous overall activation state for hysteresis.
+   The subpathname:/force component value hysteresis thresholds for overall
+   activation are
+   slink:XrInteractionProfileDpadBindingEXT::pname:forceThreshold and
+   pname:forceThresholdReleased.
+   More explicitly:
+*** If the previous overall state was inactive, the current overall state
+    must: be active if and only if the value of the subpathname:/force
+    component is greater than or equal to pname:forceThreshold.
+*** If the previous overall state was active, the current state must: be
+    inactive if and only if the value of the subpathname:/force component is
+    strictly less than pname:forceThresholdReleased.
+* Activation of a dpad component when appended to an input path with
+  identifier _thumbstick_ depends only on the value of the subpathname:/x
+  and subpathname:/y components of that input.
+  ** If the thumbstick _x_ and _y_ values correspond to a deflection from
+     center of less than pname:centerRegion, all dpad components must: be
+     reported as inactive.
+
+Hysteresis is desirable to avoid an unintentional, rapid toggling between
+the active and inactive state that can occur when the amount of force
+applied by the user is very close to the threshold at which the input is
+considered active.
+Hysteresis is optional, and is achieved through a difference between
+pname:forceThreshold and pname:forceThresholdReleased.
+
+When slink:XrInteractionProfileDpadBindingEXT::pname:isSticky is
+ename:XR_FALSE, and the above logic indicates that some dpad component is
+active, a runtime obeying suggested bindings must: select which dpad
+components to report as active based solely on the current _x_, _y_ values.
+
+If slink:XrInteractionProfileDpadBindingEXT::pname:isSticky is
+ename:XR_TRUE, the region(s) to be made active must: be latched when the
+above logic begins to indicate that some dpad component is active, and the
+_x_ and _y_ values are within at least one region.
+The latched region(s) must: continue to be reported as active until the
+activation logic indicates that all dpad components must: be inactive.
+The latched region(s) remain active even if the input leaves that region or
+enters another region.
+
+The runtime must: latch the _x_ and _y_ values, and thus the region or
+regions (in the case of overlapping dpad component wedges), when the sticky
+activation toggle becomes true.
+The latched regions must: continue to be true until the input returns to the
+center region (for a thumbstick) or is released (for a trackpad).
+In this way, sticky dpads maintain their selected region across touch/click
+transitions.
+
+.Examples for isSticky == ename:XR_TRUE
+****
+* Trackpad example: If the user clicks a trackpad in the
+  subpathname:/dpad_up region, then (while clicked) slides their finger to
+  the subpathname:/dpad_down region, subpathname:/dpad_up will remain true.
+* Thumbstick example: If the user presses up on the thumbstick and activates
+  the subpathname:/dpad_up region, then slides the thumbstick around to the
+  subpathname:/dpad_down region without crossing the pname:centerRegion,
+  subpathname:/dpad_up is the virtual input that will be true.
+* Thumbstick example: If the user presses up on the thumbstick and activates
+  the subpathname:/dpad_up region, then slides the thumbstick directly down
+  and through the region specified by pname:centerRegion to
+  subpathname:/dpad_down.
+  Initially subpathname:/dpad_up will activate.
+  Then when the thumbstick enters the pname:centerRegion it will deactivate.
+  Finally, when entering the subpathname:/dpad_down region
+  subpathname:/dpad_down will activate.
+****
+
+*New Structures*
+
+[open,refpage='XrInteractionProfileDpadBindingEXT',desc='Interaction profile dpad binding',type='structs',xrefs='xrSuggestInteractionProfileBindings XrBindingModificationBaseHeaderKHR']
+--
+The slink:XrInteractionProfileDpadBindingEXT structure is defined as:
+
+include::../../../../generated/api/structs/XrInteractionProfileDpadBindingEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:binding is the input path used for the specified actions in the
+  suggested binding list to be used as a dpad.
+  E.g. path:/user/hand/right/input/thumbstick
+* pname:actionSet is the action set for which this dpad will be active.
+  The implementation must: use the parameters from this structure for any
+  actions from this action set that are bound to one of the dpad subpaths
+  for this input path.
+* pname:forceThreshold a number in the half-open range [eq]#(0, 1]#
+  representing the force value threshold at or above which ({geq}) a dpad
+  input will transition from inactive to active.
+* pname:forceThresholdReleased a number in the half-open range [eq]#(0, 1]#
+  representing the force value threshold strictly below which (<) a dpad
+  input will transition from active to inactive.
+* pname:centerRegion defines the center region of the thumbstick or
+  trackpad.
+  This is the radius, in the input value space, of a logically circular
+  region in the center of the input, in the range [eq]#(0, 1)#.
+* pname:wedgeAngle indicates the angle in radians of each direction region
+  and is a value in the half-open range [eq]#[0, {pi})#.
+* pname:isSticky indicates that the implementation will latch the first
+  region that is activated and continue to indicate that the binding for
+  that region is true until the user releases the input underlying the
+  virtual dpad.
+* pname:onHaptic is the haptic output that the runtime must: trigger when
+  the binding changes from false to true.
+  If this field is code:NULL, the runtime must: not trigger any haptic
+  output on the threshold.
+  This field can: point to any supported sub-type of
+  slink:XrHapticBaseHeader.
+* pname:offHaptic is the haptic output that the runtime must: trigger when
+  the binding changes from true to false.
+  If this field is NULL, the runtime must: not trigger any haptic output on
+  the threshold.
+  This field can: point to any supported sub-type of
+  slink:XrHapticBaseHeader.
+****
+
+The slink:XrInteractionProfileDpadBindingEXT structure is an input struct
+that defines how to use any two-axis input to provide dpad-like
+functionality to the application.
+The struct must: be added for each input that should be treated as a dpad to
+the pname:bindingModifications array of the slink:XrBindingModificationsKHR
+structure (See `<<XR_KHR_binding_modification>>` extension).
+
+Runtimes are free to ignore any of the fields when not obeying the bindings,
+but may: use it for automatic rebindings of actions.
+
+The implementation must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrSuggestInteractionProfileBindings if any of the following are true:
+
+* pname:forceThreshold or pname:forceThresholdReleased are outside the
+  half-open range [eq]#(0, 1]#
+* [eq]#pname:forceThreshold < pname:forceThresholdReleased#
+* pname:centerRegion is outside the exclusive range [eq]#(0, 1)#
+* pname:wedgeAngle outside the half-open range [eq]#[0, {pi})#
+
+If more than one slink:XrInteractionProfileDpadBindingEXT is provided for
+the same input identifier, including top level path (e.g.
+pathname:/user/hand/left/input/thumbstick), and two or more of them specify
+the same actionset, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+If the same input identifier, including top level path, is used for more
+than one action set, in addition to inputs being <<input-action-creation,
+suppressed by higher priority action sets>>, haptic events from dpads are
+also suppressed.
+
+For example, a Valve Index controller binding with a "Walking" action set
+can have a dpad on each of:
+
+* left thumbstick
+* right thumbstick
+* left trackpad
+* right trackpad
+
+Another action set can also have a dpad active on each of those inputs, and
+they can have different settings.
+If both action sets are active, the higher priority one trumps the lower
+priority one, and the lower priority one is suppressed.
+
+include::../../../../generated/validity/structs/XrInteractionProfileDpadBindingEXT.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+* What if an interaction profile is added that contains a _trackpad_
+  identifier, for which there is neither a subpathname:/click or a
+  subpathname:/force component?
+** Equivalent logic would apply to whatever component is available to
+   distinguish action from inaction.
+* Is zero a valid wedge angle? Is {pi}?
+** Yes, though it is mostly useless, as it makes the directional regions
+   empty in size and thus impossible to activate.
+   The user could only activate subpathname:/dpad_center on a _trackpad_
+   identifier.
+   {pi} is not a valid wedge angle because that would imply being able to
+   activate three adjacent directions, of which two must be opposite.
+   In practice, the sensors underlying these inputs make it effectively
+   impossible to input an exact floating point value.
+
+*Example*
+
+The following sample code shows how to create dpad bindings using this
+extension.
+
+[source,c++,suppress-build]
+----
+	// Create dpad paths
+	XrPath pathThumbstick, pathDpadUp, pathDpadDown;
+	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick", &pathThumbstick);
+	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick/dpad_up", &pathDpadUp );
+	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick/dpad_down", &pathDpadDown );
+
+	// Set dpad binding modifiers
+	XrInteractionProfileDpadBindingEXT xrDpadModification { XR_TYPE_INTERACTION_PROFILE_DPAD_BINDING_EXT };
+	xrDpadModification.actionSet = xrActionSet_Main;
+	xrDpadModification.binding = pathThumbstick;
+	xrDpadModification.centerRegion = 0.25f;
+	xrDpadModification.wedgeAngle = 2.0f;
+	// A gap between these next two members creates hysteresis, to avoid rapid toggling
+	xrDpadModification.forceThreshold = 0.8f;
+	xrDpadModification.forceThresholdReleased = 0.2f;
+
+	// Add dpad binding modifiers to binding modifications vector
+	std::vector< XrInteractionProfileDpadBindingEXT > vBindingModifs;
+	vBindingModifs.push_back( xrDpadModification );
+
+	std::vector< XrBindingModificationBaseHeaderKHR* > vBindingModifsBase;
+	for ( XrInteractionProfileDpadBindingEXT &modif : vBindingModifs )
+	{
+		vBindingModifsBase.push_back( reinterpret_cast< XrBindingModificationBaseHeaderKHR* >( &modif) );
+	}
+
+	XrBindingModificationsKHR xrBindingModifications { XR_TYPE_BINDING_MODIFICATIONS_KHR };
+	xrBindingModifications.bindingModifications = vBindingModifsBase.data();
+	xrBindingModifications.bindingModificationCount = ( uint32_t )vBindingModifsBase.size();
+
+	// Set dpad input path as suggested binding for an action
+	XrActionSuggestedBinding xrActionBindingTeleport, xrActionBindingMenu;
+
+	xrActionBindingTeleport.action = xrAction_Teleport;
+	xrActionBindingTeleport.binding = pathDpadUp;
+
+	xrActionBindingMenu.action = xrAction_Menu;
+	xrActionBindingMenu.binding = pathDpadDown;
+
+	std::vector< XrActionSuggestedBinding > vActionBindings;
+	vActionBindings.push_back( xrActionBindingTeleport );
+	vActionBindings.push_back( xrActionBindingMenu );
+
+	// Create interaction profile/controller path
+	XrPath xrInteractionProfilePath;
+	xrStringToPath( pInstance, "/interaction_profiles/valve/index_controller", &xrInteractionProfilePath );
+
+	// Set suggested binding to interaction profile
+	XrInteractionProfileSuggestedBinding xrInteractionProfileSuggestedBinding { XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING };
+	xrInteractionProfileSuggestedBinding.interactionProfile = xrInteractionProfilePath;
+	xrInteractionProfileSuggestedBinding.suggestedBindings = vActionBindings.data();
+	xrInteractionProfileSuggestedBinding.countSuggestedBindings = ( uint32_t )vActionBindings.size();
+
+	// Set binding modifications to interaction profile's suggested binding
+	xrInteractionProfileSuggestedBinding.next = &xrBindingModifications;
+
+	// Finally, suggest interaction profile bindings to runtime
+	xrSuggestInteractionProfileBindings( pInstance, &xrInteractionProfileSuggestedBinding );
+----
+
+
+*Version History*
+
+* Revision 1, 2022-02-18 (Rune Berg)
+** Initial extension description

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_EXT_debug_utils.adoc[]
+include::../metadata/XR_EXT_debug_utils.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -868,8 +868,6 @@ lifetime of a session.
     // End the session/begun region started above
     // (in this case it's the "Session Active" label)
     pfnSessionEndDebugUtilsLabelRegionEXT(session);
-
-    xrEndSession(session);
 ----------------------------------------
 
 In the above example, if an error occurred in the `// Do stuff 1` section,

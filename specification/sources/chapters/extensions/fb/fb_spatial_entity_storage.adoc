@@ -1,0 +1,235 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_FB_spatial_entity_storage.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook +
+    Yuichi Taguchi, Facebook +
+    Cass Everitt, Facebook +
+    Curtis Arink, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension enables spatial entities to be stored and persisted across
+sessions.
+If the ename:XR_SPACE_COMPONENT_TYPE_STORABLE_FB component has been enabled
+on the spatial entity, application developers may: save, load, and erase
+persisted slink:XrSpace entities.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACE_SAVE_INFO_FB
+* ename:XR_TYPE_SPACE_ERASE_INFO_FB
+* ename:XR_TYPE_EVENT_DATA_SPACE_SAVE_COMPLETE_FB
+* ename:XR_TYPE_EVENT_DATA_SPACE_ERASE_COMPLETE_FB
+
+*New Enums*
+
+[open,refpage='XrSpaceStorageLocationFB',desc='Storage location to persist spatial entities',type='enums']
+--
+include::{INCS-VAR}/api/enums/XrSpaceStorageLocationFB.txt[]
+
+The elink:XrSpaceStorageLocationFB enumeration contains the storage
+locations used to store, erase, and query spatial entities.
+
+include::{INCS-VAR}/api/enums/XrSpaceStorageLocationFB.comments-box.txt[]
+--
+
+[open,refpage='XrSpacePersistenceModeFB',desc='Persistence mode',type='enums']
+--
+include::{INCS-VAR}/api/enums/XrSpacePersistenceModeFB.txt[]
+
+The elink:XrSpacePersistenceModeFB enumeration specifies the persistence
+mode for the save operation.
+
+include::{INCS-VAR}/api/enums/XrSpacePersistenceModeFB.comments-box.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrSpaceSaveInfoFB',type='structs',desc='Parameters for a save operation',xrefs='']
+--
+The slink:XrSpaceSaveInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSpaceSaveInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:space is the slink:XrSpace handle to the reference space that
+  defines the pname:poseInSpace of the entity to be saved.
+* pname:location is the storage location.
+* pname:persistenceMode is the persistence mode.
+****
+
+The slink:XrSpaceSaveInfoFB structure contains information used to save the
+spatial entity.
+
+include::{INCS-VAR}/validity/structs/XrSpaceSaveInfoFB.txt[]
+--
+
+[open,refpage='XrSpaceEraseInfoFB',type='structs',desc='Parameters for an erase operation',xrefs='']
+--
+The slink:XrSpaceEraseInfoFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSpaceEraseInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:space is the slink:XrSpace handle to the reference space that
+  defines the entity to be erased.
+* pname:location is the storage location.
+****
+
+The slink:XrSpaceEraseInfoFB structure contains information used to erase
+the spatial entity.
+
+include::{INCS-VAR}/validity/structs/XrSpaceEraseInfoFB.txt[]
+--
+
+[open,refpage='XrEventDataSpaceSaveCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
+--
+The slink:XrEventDataSpaceSaveCompleteFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataSpaceSaveCompleteFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the ID of the asynchronous request to save an entity.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded or if an error occurred.
+* pname:space is the spatial entity being saved.
+* pname:uuid is the UUID for the spatial entity being saved.
+* pname:location is the location of the spatial entity being saved.
+****
+
+The save result event contains the success of the save/write operation to
+the specified location, as well as the slink:XrSpace handle on which the
+save operation was attempted on, the unique UUID, and the triggered async
+request ID from the initial calling function.
+
+include::{INCS-VAR}/validity/structs/XrEventDataSpaceSaveCompleteFB.txt[]
+--
+
+[open,refpage='XrEventDataSpaceEraseCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
+--
+The slink:XrEventDataSpaceEraseCompleteFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrEventDataSpaceEraseCompleteFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the ID of the asynchronous request to erase an entity.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded or if an error occurred.
+* pname:space is the spatial entity being erased.
+* pname:uuid is the UUID for the spatial entity being erased.
+* pname:location is the location of the spatial entity being erased.
+****
+
+The erase result event contains the success of the erase operation from the
+specified storage location.
+It also provides the UUID of the entity and the async request ID from the
+initial calling function.
+
+include::{INCS-VAR}/validity/structs/XrEventDataSpaceEraseCompleteFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrSaveSpaceFB',desc='Saves a spatial entity to persistent storage',type='protos',xrefs='xrEraseSpaceFB']
+--
+The flink:xrSaveSpaceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSaveSpaceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the parameters for the save operation.
+* pname:requestId is an output parameter, and the variable it points to will
+  be populated with the ID of this asynchronous request.
+****
+
+The flink:xrSaveSpaceFB function persists the spatial entity at the
+specified location with the specified mode.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrSpaceSaveInfoFB::pname:space is dlink:XR_NULL_HANDLE or otherwise
+invalid.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrSpaceSaveInfoFB::pname:location or
+slink:XrSpaceSaveInfoFB::pname:persistenceMode is invalid.
+This operation is asynchronous and the runtime must: post an
+slink:XrEventDataSpaceSaveCompleteFB event when the operation completes
+successfully or encounters an error.
+
+include::{INCS-VAR}/validity/protos/xrSaveSpaceFB.txt[]
+--
+
+[open,refpage='xrEraseSpaceFB',desc='Erases a spatial entity from persistent storage',type='protos',xrefs='xrSaveSpaceFB']
+--
+The flink:xrEraseSpaceFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrEraseSpaceFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the parameters for the erase operation.
+* pname:requestId is an output parameter, and the variable it points to will
+  be populated with the ID of this asynchronous request.
+****
+
+The flink:xrEraseSpaceFB function erases a spatial entity from storage at
+the specified location.
+The slink:XrSpace remains valid in the current session until the application
+destroys it or the session ends.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrSpaceEraseInfoFB::pname:space is dlink:XR_NULL_HANDLE or otherwise
+invalid.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrSpaceEraseInfoFB::pname:location is invalid.
+This operation is asynchronous and the runtime must: post an
+slink:XrEventDataSpaceEraseCompleteFB event when the operation completes
+successfully or encounters an error.
+
+include::{INCS-VAR}/validity/protos/xrEraseSpaceFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-01-22 (John Schofield)
+** Initial draft

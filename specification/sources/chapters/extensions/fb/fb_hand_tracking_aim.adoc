@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_FB_hand_tracking_aim.adoc[]
+include::../metadata/XR_FB_hand_tracking_aim.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
@@ -54,7 +54,7 @@ elink:XrStructureType enumeration is extended with:
 --
 
 slink:XrHandTrackingAimStateFB can: be provided in the pname:next chain of
-slink:XrHandJointsLocateInfoEXT when calling flink:xrLocateHandJointsEXT to
+slink:XrHandJointLocationsEXT when calling flink:xrLocateHandJointsEXT to
 request aiming gesture information associated with this hand.
 
 The slink:XrHandTrackingAimStateFB structure is defined as:
@@ -97,3 +97,6 @@ include::{INCS-VAR}/validity/structs/XrHandTrackingAimStateFB.txt[]
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description
+* Revision 2, 2022-04-20 (John Kearney)
+** Correct next chain parent for `XrHandTrackingAimStateFB` to
+   `XrHandJointLocationsEXT`

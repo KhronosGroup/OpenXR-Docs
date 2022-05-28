@@ -228,10 +228,21 @@ include::../../generated/api/structs/XrSystemGraphicsProperties.txt[]
 * pname:maxLayerCount is the maximum number of composition layers supported
   by this system.
   The runtime must: support at least
-  ename:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
+  dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
 ****
 
 include::../../generated/validity/structs/XrSystemGraphicsProperties.txt[]
+--
+
+[open,refpage='XR_MIN_COMPOSITION_LAYERS_SUPPORTED',desc='Defines the minimum composition layers that a conformant runtime must support',type='defines',xrefs='XrSystemGraphicsProperties']
+--
+include::../../generated/api/defines/XR_MIN_COMPOSITION_LAYERS_SUPPORTED.txt[]
+
+dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED defines the minimum number of
+composition layers that a conformant runtime must support.
+A runtime must: return the
+slink:XrSystemGraphicsProperties::pname:maxLayerCount at least the value of
+dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED.
 --
 
 [open,refpage='XrSystemTrackingProperties',desc='Tracking-related properties of a particular system',type='structs',xrefs='XrSystemId xrGetSystem xrGetSystemProperties XrSystemProperties XrSystemGraphicsProperties']

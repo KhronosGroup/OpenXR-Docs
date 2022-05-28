@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_MSFT_spatial_anchor_persistence.adoc[]
+include::../metadata/XR_MSFT_spatial_anchor_persistence.adoc[]
 
 *Last Modified Date*::
     2021-07-15
@@ -17,7 +17,7 @@ include::../meta/XR_MSFT_spatial_anchor_persistence.adoc[]
     Alex Turner, Microsoft +
     Bryce Hutchings, Microsoft
 
-*Overview*
+==== Overview
 
 This extension allows persistence and retrieval of spatial anchors sharing
 and localization across application sessions on a device.
@@ -26,7 +26,7 @@ only be able to be retrieved during sessions of that same application on the
 same device.
 This extension requires <<XR_MSFT_spatial_anchor>> to also be enabled.
 
-*Spatial Anchor Store Connection*
+==== Spatial Anchor Store Connection
 
 [open,refpage='XrSpatialAnchorStoreConnectionMSFT',type='handles',desc='Represents an open connection to the spatial anchor store']
 --
@@ -81,7 +81,7 @@ include::../../../../generated/api/protos/xrDestroySpatialAnchorStoreConnectionM
 include::../../../../generated/validity/protos/xrDestroySpatialAnchorStoreConnectionMSFT.txt[]
 --
 
-*Persist Spatial Anchor*
+==== Persist Spatial Anchor
 
 [open,refpage='xrPersistSpatialAnchorMSFT',type='protos',desc='Persist the spatial anchor in the spatial anchor store',xrefs='']
 --

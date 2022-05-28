@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_EXT_hand_tracking.adoc[]
+include::../metadata/XR_EXT_hand_tracking.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -24,14 +24,14 @@ include::../meta/XR_EXT_hand_tracking.adoc[]
     Nicholas Benson, Ultraleap +
     Ryan Pavlik, Collabora +
 
-*Overview*
+==== Overview
 
 This extension enables applications to locate the individual joints of hand
 tracking inputs.
 It enables applications to render hands in XR experiences and interact with
 virtual objects using hand joints.
 
-*Inspect system capability*
+==== Inspect system capability
 
 [open,refpage='XrSystemHandTrackingPropertiesEXT',type='structs',desc='System property for hand tracking',xrefs='']
 --
@@ -59,7 +59,7 @@ runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateHandTrackerEXT.
 --
 
-*Create a hand tracker handle*
+==== Create a hand tracker handle
 
 [open,refpage='XrHandTrackerEXT',type='handles',desc='Represents a tracker for a hand joints.']
 --
@@ -181,7 +181,7 @@ include::../../../../generated/api/protos/xrDestroyHandTrackerEXT.txt[]
 include::../../../../generated/validity/protos/xrDestroyHandTrackerEXT.txt[]
 --
 
-*Locate hand joints*
+==== Locate hand joints
 
 [open,refpage='xrLocateHandJointsEXT',type='protos',desc='Locate hand joint locations',xrefs='']
 --
@@ -410,7 +410,7 @@ include::../../../../generated/api/structs/XrHandJointVelocityEXT.txt[]
 include::../../../../generated/validity/structs/XrHandJointVelocityEXT.txt[]
 --
 
-*Example code for locating hand joints*
+==== Example code for locating hand joints
 
 The following example code demonstrates how to locate all hand joints
 relative to a world space.
@@ -498,7 +498,7 @@ while (1) {
 }
 ----
 
-*Conventions of hand joints*
+==== Conventions of hand joints
 
 This extension defines 26 joints for hand tracking: 4 joints for the thumb
 finger, 5 joints for the other four fingers, and the wrist and palm of the

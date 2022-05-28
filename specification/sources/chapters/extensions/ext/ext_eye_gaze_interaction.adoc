@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_EXT_eye_gaze_interaction.adoc[]
+include::../metadata/XR_EXT_eye_gaze_interaction.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -144,10 +144,8 @@ The application should: inspect the pname:time field to understand when in
 time the pose is expressed.
 The pname:time field may: be in the future if a runtime can predict gaze
 poses.
-If an slink:XrEyeGazeSampleTimeEXT structure is passed into the
-flink:xrLocateSpace call, and while neither pname:space or pname:baseSpace
-are bound to an action with toplevel path pathname:/user/eyes_ext/ the
-runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+The runtime must: set the pname:time field to 0 if the sample time is not
+available.
 
 When the runtime provides a nominal eye gaze pose, the
 ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT must: be set if the eye
@@ -276,3 +274,5 @@ while(true)
 
 * Revision 1, 2020-02-20 (Denny Rönngren)
 ** Initial version
+* Revision 2, 2022-05-27 (Bryce Hutchings)
+** Remove error-prone `XrEyeGazeSampleTimeEXT` validation requirement

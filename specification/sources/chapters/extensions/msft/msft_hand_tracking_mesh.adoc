@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_MSFT_hand_tracking_mesh.adoc[]
+include::../metadata/XR_MSFT_hand_tracking_mesh.adoc[]
 
 :INCS-VAR: ../../../../generated
 
@@ -18,7 +18,7 @@ include::../meta/XR_MSFT_hand_tracking_mesh.adoc[]
     Alex Turner, Microsoft +
     Bryce Hutchings, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension enables hand tracking inputs represented as a dynamic hand
 mesh.
@@ -70,7 +70,7 @@ in their render loop when calling flink:xrUpdateHandMeshMSFT every frame.
 include::../../../../generated/validity/structs/XrSystemHandTrackingMeshPropertiesMSFT.txt[]
 --
 
-*Obtain a hand tracker handle*
+==== Obtain a hand tracker handle
 
 An application first creates an slink:XrHandTrackerEXT handle using the
 flink:xrCreateHandTrackerEXT function for each hand.
@@ -79,7 +79,7 @@ previously created for the hand joint tracking.
 When doing so, the hand mesh input is always in sync with hand joints input
 with the same slink:XrHandTrackerEXT handle.
 
-*Create a hand mesh space*
+==== Create a hand mesh space
 
 [open,refpage='xrCreateHandMeshSpaceMSFT',type='protos',desc='Create a space for hand mesh tracking',xrefs='XrHandTrackerEXT']
 --
@@ -159,7 +159,7 @@ include::../../../../generated/api/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
 include::../../../../generated/validity/structs/XrHandMeshSpaceCreateInfoMSFT.txt[]
 --
 
-*Locate the hand mesh*
+==== Locate the hand mesh
 
 [open,refpage='xrUpdateHandMeshMSFT',type='protos',desc='Update hand mesh buffers',xrefs='xrCreateHandMeshSpaceMSFT']
 --
@@ -450,7 +450,7 @@ include::../../../../generated/api/structs/XrHandMeshVertexMSFT.txt[]
 include::../../../../generated/validity/structs/XrHandMeshVertexMSFT.txt[]
 --
 
-*Example code for hand mesh tracking*
+==== Example code for hand mesh tracking
 
 Following example code demos preallocating hand mesh buffers and updating
 the hand mesh in rendering loop
@@ -539,7 +539,7 @@ while(1){
 }
 ----
 
-*Get hand reference poses*
+==== Get hand reference poses
 
 By default, an slink:XrHandTrackerEXT tracks a default hand pose type, that
 is to provide best fidelity to the user's actual hand motion.
@@ -625,7 +625,7 @@ flink:xrUpdateHandMeshMSFT to avoid unnecessary CPU or GPU work to process
 the neutral hand inputs.
 --
 
-*Example code for reference hand mesh update*
+==== Example code for reference hand mesh update
 
 The following example code demonstrates detecting reference hand mesh
 changes and retrieving data for processing.

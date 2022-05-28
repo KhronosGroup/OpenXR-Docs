@@ -320,6 +320,9 @@ If flink:xrLocateSpace is called with an unlocatable action space, the
 implementation must: return no position or orientation and both
 ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
 ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT must: be unset.
+If slink:XrSpaceVelocity is also supplied,
+ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT and
+ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT must: be unset.
 If flink:xrLocateViews is called with an unlocatable action space, the
 implementation must: return no position or orientation and both
 ename:XR_VIEW_STATE_POSITION_VALID_BIT and

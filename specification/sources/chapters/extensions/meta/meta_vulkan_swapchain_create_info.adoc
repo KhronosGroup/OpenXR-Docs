@@ -1,0 +1,84 @@
+// Copyright (c) 2017-2022, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_META_vulkan_swapchain_create_info.adoc[]
+
+*Last Modified Date*::
+    2022-05-19
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    John Kearney, Meta Platforms +
+    Andreas L. Selvik, Meta Platforms +
+    Jakob Bornecrantz, Collabora +
+    Ross Ning, Meta Platforms
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+Using this extension, a Vulkan-based application can: pass through
+additional ename:VkImageCreateFlags or ename:VkImageUsageFlags by chaining
+an slink:XrVulkanSwapchainCreateInfoMETA structure to the
+slink:XrSwapchainCreateInfo when calling flink:xrCreateSwapchain.
+
+The application is still encouraged to use the common bits like
+ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT defined in
+elink:XrSwapchainUsageFlags.
+However, the application may: present both
+ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT in elink:XrSwapchainUsageFlags and
+ename:VK_IMAGE_USAGE_TRANSFER_SRC_BIT in ename:VkImageUsageFlags at the same
+time.
+
+The application must: enable the corresponding Vulkan extensions before
+requesting additional Vulkan flags.
+For example, ename:VK_EXT_fragment_density_map device extension must: be
+enabled if an application requests ename:VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
+bit.
+Otherwise, it may: cause undefined behavior, including an application crash.
+
+Runtimes that implement this extension must: support the
+`<<XR_KHR_vulkan_enable>>` or the `<<XR_KHR_vulkan_enable2>>` extension.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrVulkanSwapchainCreateInfoMETA',type='structs',desc='Debug utils object name info']
+--
+include::{INCS-VAR}/api/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:additionalCreateFlags is a bitmask of ename:VkImageCreateFlags
+  describing additional parameters of an image.
+* pname:additionalUsageFlags is a bitmask of ename:VkImageUsageFlags
+  describing additional parameters of an image.
+****
+
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if any bit of
+either pname:additionalCreateFlags or pname:additionalUsageFlags is not
+supported.
+
+include::{INCS-VAR}/validity/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-05-05 (Ross Ning)
+** Initial draft

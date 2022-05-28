@@ -2,11 +2,12 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_FB_render_model.adoc[]
+include::../metadata/XR_FB_render_model.adoc[]
 
 *Contributors*::
-    Leonard Tsai, Facebook +
-    Xiang Wei, Facebook +
+    Leonard Tsai, Meta +
+    Xiang Wei, Meta +
+    Robert Memmott, Meta +
 
 :INCS-VAR: ../../../../generated
 
@@ -20,7 +21,7 @@ loading them.
 
 *New Flag Types*
 
-[open,refpage='XrRenderModelFlagsFB',type='flags',desc='XrRenderModelFlagsFB']
+[open,refpage='XrRenderModelFlagsFB',type='flags',desc='XrRenderModelFlagsFB',xrefs='XrRenderModelFlagBitsFB']
 --
 include::{INCS-VAR}/api/flags/XrRenderModelFlagsFB.txt[]
 --
@@ -29,8 +30,19 @@ include::{INCS-VAR}/api/flags/XrRenderModelFlagsFB.txt[]
 --
 include::{INCS-VAR}/api/enums/XrRenderModelFlagBitsFB.txt[]
 
-There are currently no render model flags.
-This is reserved for future use.
+include::{INCS-VAR}/api/enums/XrRenderModelFlagBitsFB.comments.txt[]
+
+Render Model Support Levels: An application should: request a model of a
+certain complexity via the slink:XrRenderModelCapabilitiesRequestFB on the
+structure chain of slink:XrRenderModelPropertiesFB passed into
+flink:xrGetRenderModelPropertiesFB.
+The flags on the slink:XrRenderModelCapabilitiesRequestFB are an
+acknowledgement of the application's ability to render such a model.
+Multiple values of elink:XrRenderModelFlagBitsFB can be set on this variable
+to indicate acceptance of different support levels.
+The flags parameter on the slink:XrRenderModelPropertiesFB will indicate
+what capabilities the model in the runtime actually requires.
+It will be set to a single value of elink:XrRenderModelFlagBitsFB.
 --
 
 *New Enum Constants*
@@ -136,13 +148,17 @@ include::{INCS-VAR}/api/structs/XrRenderModelPropertiesFB.txt[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
-  No such structures are defined in core OpenXR or this extension.
+  slink:XrRenderModelCapabilitiesRequestFB is a structure in this structure
+  chain and should: be linked when this structure is passed to
+  flink:xrGetRenderModelPropertiesFB.
 * pname:vendorId is the vendor id of the model.
 * pname:modelName is the name of the model.
 * pname:modelKey is the unique model key used to load the model in
   flink:xrLoadRenderModelFB.
 * pname:modelVersion is the version number of the model.
 * pname:flags is a bitmask of elink:XrRenderModelFlagsFB.
+  After a successful call to flink:xrGetRenderModelPropertiesFB, flags must
+  contain the support level of the model and no other support levels.
 ****
 
 slink:XrRenderModelPropertiesFB contains information about the render model
@@ -157,6 +173,42 @@ pname:modelVersion can be used to determine if the render model has changed.
 The application should: then update its cached or saved version.
 
 include::{INCS-VAR}/validity/structs/XrRenderModelPropertiesFB.txt[]
+--
+
+[open,refpage='XrRenderModelCapabilitiesRequestFB',type='structs',desc='A render model system property',xrefs='']
+--
+The slink:XrRenderModelCapabilitiesRequestFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrRenderModelCapabilitiesRequestFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bit mask of the model complexities that the application
+  is able to support.
+****
+
+
+slink:XrRenderModelCapabilitiesRequestFB contains information about the
+render capabilities requested for a model.
+slink:XrRenderModelCapabilitiesRequestFB must: be set in the structure chain
+of the pname:next pointer on the slink:XrRenderModelPropertiesFB passed into
+the flink:xrGetRenderModelPropertiesFB call.
+The pname:flags on slink:XrRenderModelCapabilitiesRequestFB represent an
+acknowledgement of being able to handle the individual model capability
+levels.
+If no slink:XrRenderModelCapabilitiesRequestFB is on the structure chain
+then the runtime should: treat it as if a value of
+ename:XR_RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_1_BIT_FB was set.
+If the runtime does not have a model available that matches any of the
+supports flags set, then it must: return a
+ename:XR_RENDER_MODEL_UNAVAILABLE_FB result.
+
+
+include::{INCS-VAR}/validity/structs/XrRenderModelCapabilitiesRequestFB.txt[]
 --
 
 [open,refpage='XrRenderModelLoadInfoFB',type='structs',desc='The information for which render model to load',xrefs='xrLoadRenderModelFB']
@@ -328,3 +380,5 @@ include::{INCS-VAR}/validity/protos/xrLoadRenderModelFB.txt[]
 
 * Revision 1, 2021-08-17 (Leonard Tsai)
 ** Initial extension description
+* Revision 2, 2022-05-03 (Robert Memmott)
+** Render Model Support Subsets

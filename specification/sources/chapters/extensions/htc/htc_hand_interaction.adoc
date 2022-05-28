@@ -1,0 +1,70 @@
+// Copyright (c) 2022 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_HTC_hand_interaction.adoc[]
+
+*Last Modified Date*::
+    2022-05-27
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Ria Hsu, HTC +
+    Bill Chang, HTC
+
+*Overview*
+
+This extension defines a new interaction profile for tracked hands.
+
+*Hand interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/htc/hand_interaction
+
+Valid for user paths:
+
+* pathname:/user/hand_htc/left
+* pathname:/user/hand_htc/right
+
+This interaction profile represents basic pose and actions for interaction
+of tracked hands.
+
+Supported component paths for far interaction:
+
+* subpathname:/input/select/value
+* subpathname:/input/aim/pose
+
+The application should: use subpathname:/input/aim/pose path to aim at
+objects in the world and use subpathname:/input/select/value path to decide
+user selection from pinch shape strength which the range of value is `0.0f`
+to `1.0f`, with `1.0f` meaning pinch fingers touched.
+
+Supported component paths for near interaction:
+
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+
+The application should: use subpathname:/input/grip/pose path to interact
+with the nearby objects and locate the position of handheld objects, and use
+subpathname:/input/squeeze/value path to decide the hand picking up or
+holding the nearby objects from grip shape strength which the range of value
+is `0.0f` to `1.0f`, with `1.0f` meaning hand grip shape is closed.
+
+[NOTE]
+.Note
+====
+
+Far and near interaction depends on the support capabilities of hand
+tracking engine.
+The application can: check isActive of slink:XrActionStatePose of aim and
+grip to know far and near interaction supported or not then decide the
+interaction behavior in content.
+
+====
+
+*Version History*
+
+* Revision 1, 2022-05-27 (Ria Hsu)
+
+** Initial extension description

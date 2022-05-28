@@ -1,0 +1,95 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_FB_composition_layer_settings.adoc[]
+
+*Contributors*::
+    Grant Yang, Meta Platforms
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension allows applications to request the use of processing options
+such as sharpening or super-sampling on a composition layer.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrCompositionLayerSettingsFlagsFB',type='flags',desc='XrCompositionLayerSettingsFlagsFB',xrefs='XrCompositionLayerSettingsFlagBitsFB']
+--
+include::{INCS-VAR}/api/flags/XrCompositionLayerSettingsFlagsFB.txt[]
+--
+
+[open,refpage='XrCompositionLayerSettingsFlagBitsFB',type='enums',desc='XrCompositionLayerSettingsFlagBitsFB',xrefs='XrCompositionLayerSettingsFlagsFB']
+--
+include::{INCS-VAR}/api/enums/XrCompositionLayerSettingsFlagBitsFB.txt[]
+
+include::{INCS-VAR}/api/enums/XrCompositionLayerSettingsFlagBitsFB.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_SETTINGS_FB
+
+*New Enums*
+
+* ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SUPER_SAMPLING_BIT_FB
+* ename:XR_COMPOSITION_LAYER_SETTINGS_QUALITY_SUPER_SAMPLING_BIT_FB
+* ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SHARPENING_BIT_FB
+* ename:XR_COMPOSITION_LAYER_SETTINGS_QUALITY_SHARPENING_BIT_FB
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerSettingsFB',desc='specifies processing options for composition layers',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerSettingsFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrCompositionLayerSettingsFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrCompositionLayerSettingsFlagBitsFB.
+****
+
+slink:XrCompositionLayerSettingsFB contains additional flags to indicate
+which processing steps to perform on a composition layer.
+
+If both ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SUPER_SAMPLING_BIT_FB and
+ename:XR_COMPOSITION_LAYER_SETTINGS_QUALITY_SUPER_SAMPLING_BIT_FB are set,
+ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SUPER_SAMPLING_BIT_FB will take
+precedence.
+
+If both ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SHARPENING_BIT_FB and
+ename:XR_COMPOSITION_LAYER_SETTINGS_QUALITY_SHARPENING_BIT_FB are set,
+ename:XR_COMPOSITION_LAYER_SETTINGS_NORMAL_SHARPENING_BIT_FB will take
+precedence.
+
+To specify the additional flags, create an
+slink:XrCompositionLayerSettingsFB structure and pass it via the
+slink:XrCompositionLayerBaseHeader structure's pname:next parameter.
+
+include::{INCS-VAR}/validity/structs/XrCompositionLayerSettingsFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-03-08 (Grant Yang)
+** Initial draft

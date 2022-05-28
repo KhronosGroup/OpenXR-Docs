@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_FB_hand_tracking_mesh.adoc[]
+include::../metadata/XR_FB_hand_tracking_mesh.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
@@ -127,7 +127,7 @@ include::{INCS-VAR}/validity/structs/XrHandTrackingMeshFB.txt[]
 --
 
 slink:XrHandTrackingScaleFB can: be provided in the pname:next chain of
-slink:XrHandJointsLocateInfoEXT when calling flink:xrLocateHandJointsEXT to
+slink:XrHandJointLocationsEXT when calling flink:xrLocateHandJointsEXT to
 indicate to the runtime that the requested joints need to be scaled to a
 different size and to query the existing scale value.
 This is useful in breaking up the overall scale out of the skinning
@@ -190,4 +190,7 @@ include::{INCS-VAR}/validity/protos/xrGetHandMeshFB.txt[]
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description
+* Revision 2, 2022-04-20 (John Kearney)
+** Correct next chain parent for `XrHandTrackingScaleFB` to
+   `XrHandJointLocationsEXT`
 

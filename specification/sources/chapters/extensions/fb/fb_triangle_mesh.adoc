@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_FB_triangle_mesh.adoc[]
+include::../metadata/XR_FB_triangle_mesh.adoc[]
 
 *Contributors*::
     Anton Vaneev, Facebook +
@@ -117,11 +117,55 @@ include::{INCS-VAR}/api/structs/XrTriangleMeshCreateInfoFB.txt[]
   parameter must: be code:NULL and mesh data must: be populated separately.
 ****
 
-Mesh buffers can be updated between flink:xrTriangleMeshBeginUpdateFB and
+Mesh buffers can: be updated between flink:xrTriangleMeshBeginUpdateFB and
 flink:xrTriangleMeshEndUpdateFB calls.
+
+If the mesh is non-mutable, pname:vertexBuffer must: be a pointer to an
+array of pname:vertexCount slink:XrVector3f structures.
+If the mesh is non-mutable, pname:indexBuffer must: be a pointer to an array
+of 3 * pname:triangleCount code:uint32_t vertex indices.
 
 include::{INCS-VAR}/validity/structs/XrTriangleMeshCreateInfoFB.txt[]
 --
+
+*Mutable Mesh Update States*
+
+Mutable meshes have a state machine controlling how they may be updated.
+
+image::images/fb_trimesh_states.svg[align="center", title="Mutable Triangle Mesh States"]
+
+The states are as follows:
+
+[[fb_triangle_mesh_state_undefined_topology]]Undefined Topology::
+  The default state immediately after creation of a mutable mesh.
+  Move to <<fb_triangle_mesh_state_defining_topology>> by calling
+  flink:xrTriangleMeshBeginUpdateFB.
+
+[[fb_triangle_mesh_state_defining_topology]]Defining Topology::
+  The application must: set the initial vertex buffer and index buffer
+  before moving to <<fb_triangle_mesh_state_ready>> by calling
+  flink:xrTriangleMeshEndUpdateFB.
+
+[[fb_triangle_mesh_state_ready]]Ready::
+  In this state, the buffer contents/size must: not be modified.
+  To move to <<fb_triangle_mesh_state_updating_mesh>> call
+  flink:xrTriangleMeshBeginUpdateFB.
+  To move to <<fb_triangle_mesh_state_updating_vertices>> call
+  flink:xrTriangleMeshBeginVertexBufferUpdateFB.
+
+[[fb_triangle_mesh_state_updating_mesh]]Updating Mesh::
+  The application may: modify the vertex buffer contents and/or the vertex
+  count.
+  The application may: modify the index buffer contents and/or the index
+  buffer element count.
+  Move to <<fb_triangle_mesh_state_ready>> and commit changes by calling
+  flink:xrTriangleMeshEndUpdateFB.
+
+[[fb_triangle_mesh_state_updating_vertices]]Updating Vertices::
+  The application may: modify the vertex buffer contents, but not the vertex
+  count.
+  Move to <<fb_triangle_mesh_state_ready>> and commit changes by calling
+  flink:xrTriangleMeshEndVertexBufferUpdateFB.
 
 *New Functions*
 
@@ -142,6 +186,14 @@ include::{INCS-VAR}/api/protos/xrCreateTriangleMeshFB.txt[]
 
 This creates an slink:XrTriangleMeshFB handle.
 The returned triangle mesh handle may: be subsequently used in API calls.
+
+When the mesh is mutable (the ename:XR_TRIANGLE_MESH_MUTABLE_BIT_FB bit is
+set in pname:createInfo->pname:flags), the created triangle mesh starts in
+the <<fb_triangle_mesh_state_undefined_topology>> state.
+
+Immutable meshes have no state machine; they may be considered to be in
+state <<fb_triangle_mesh_state_ready>> with no valid edges leaving that
+state.
 
 include::{INCS-VAR}/validity/protos/xrCreateTriangleMeshFB.txt[]
 --
@@ -166,7 +218,7 @@ their parent mesh object has been destroyed.
 include::{INCS-VAR}/validity/protos/xrDestroyTriangleMeshFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshGetVertexBufferFB',desc='Obtain the vertex buffer of a triangle mesh',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshGetVertexBufferFB',desc='Obtain the vertex buffer of a triangle mesh',type='protos',xrefs='xrTriangleMeshGetIndexBufferFB']
 --
 The flink:xrTriangleMeshGetVertexBufferFB function is defined as:
 
@@ -180,17 +232,29 @@ include::{INCS-VAR}/api/protos/xrTriangleMeshGetVertexBufferFB.txt[]
 
 Retrieves a pointer to the vertex buffer.
 The vertex buffer is structured as an array of slink:XrVector3f.
-The size of the buffer is pname:vertexCount.
-The application must call flink:xrTriangleMeshBeginUpdateFB or
-flink:xrTriangleMeshBeginVertexBufferUpdateFB before making modifications to
-the vertex buffer.
+The size of the buffer is
+slink:XrTriangleMeshCreateInfoFB::pname:vertexCount elements.
 The buffer location is guaranteed to remain constant over the lifecycle of
 the mesh object.
+
+A mesh must: be mutable and in a specific state for the application to
+**modify** it through the retrieved vertex buffer.
+
+* A mutable triangle mesh must: be in state
+  <<fb_triangle_mesh_state_defining_topology>>,
+  <<fb_triangle_mesh_state_updating_mesh>>, or
+  <<fb_triangle_mesh_state_updating_vertices>> to modify the *contents* of
+  the vertex buffer retrieved by this function.
+* A mutable triangle mesh must: be in state
+  <<fb_triangle_mesh_state_defining_topology>> or
+  <<fb_triangle_mesh_state_updating_mesh>> to modify the *count* of elements
+  in the vertex buffer retrieved by this function.
+  The new count is passed as a parameter to flink:xrTriangleMeshEndUpdateFB.
 
 include::{INCS-VAR}/validity/protos/xrTriangleMeshGetVertexBufferFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshGetIndexBufferFB',desc='Obtain the index buffer of a triangle mesh',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshGetIndexBufferFB',desc='Obtain the index buffer of a triangle mesh',type='protos',xrefs='xrTriangleMeshGetVertexBufferFB']
 --
 The flink:xrTriangleMeshGetIndexBufferFB function is defined as:
 
@@ -206,16 +270,21 @@ Retrieves a pointer to the index buffer that defines the topology of the
 triangle mesh.
 Each triplet of consecutive elements points to three vertices in the vertex
 buffer and thus form a triangle.
-
-The application must: call flink:xrTriangleMeshBeginUpdateFB before making
-modifications to the index buffer.
+The size of the buffer is slink:XrTriangleMeshCreateInfoFB::pname:indexCount
+elements.
 The buffer location is guaranteed to remain constant over the lifecycle of
 the mesh object.
+
+A triangle mesh must: be mutable and in state
+<<fb_triangle_mesh_state_defining_topology>> or
+<<fb_triangle_mesh_state_updating_mesh>> for the application to **modify**
+the contents and/or triangle count in the index buffer retrieved by this
+function.
 
 include::{INCS-VAR}/validity/protos/xrTriangleMeshGetIndexBufferFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshBeginUpdateFB',desc='Begin an update of the mesh data',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshBeginUpdateFB',desc='Begin an update of the mesh data',type='protos',xrefs='xrTriangleMeshEndUpdateFB']
 --
 The flink:xrTriangleMeshBeginUpdateFB function is defined as:
 
@@ -230,17 +299,30 @@ Begins updating the mesh buffer data.
 The application must: call this function before it makes any modifications
 to the buffers retrieved by flink:xrTriangleMeshGetVertexBufferFB and
 flink:xrTriangleMeshGetIndexBufferFB.
-If only the vertex buffer needs to be updated,
+If only the vertex buffer contents need to be updated, and the mesh is in
+state <<fb_triangle_mesh_ready>>,
 flink:xrTriangleMeshBeginVertexBufferUpdateFB may: be used instead.
 To commit the modifications, the application must: call
 flink:xrTriangleMeshEndUpdateFB.
-Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+
+The triangle mesh pname:mesh must: be mutable.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
 immutable.
+
+The triangle mesh pname:mesh must: be in state
+<<fb_triangle_mesh_topology_undefined>> or <<fb_triangle_mesh_ready>>.
+
+* If the triangle mesh is in state <<fb_triangle_mesh_topology_undefined>>
+  before this call, a successful call moves it to state
+  <<fb_triangle_mesh_state_defining_topology>>.
+* If the triangle mesh is in state <<fb_triangle_mesh_ready>> before this
+  call, a successful call moves it to state
+  <<fb_triangle_mesh_state_updating_mesh>>.
 
 include::{INCS-VAR}/validity/protos/xrTriangleMeshBeginUpdateFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshEndUpdateFB',desc='End an update of the mesh data',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshEndUpdateFB',desc='End an update of the mesh data',type='protos',xrefs='xrTriangleMeshBeginUpdateFB']
 --
 The flink:xrTriangleMeshEndUpdateFB function is defined as:
 
@@ -253,17 +335,29 @@ include::{INCS-VAR}/api/protos/xrTriangleMeshEndUpdateFB.txt[]
 * pname:triangleCount is the triangle count after the update.
 ****
 
-Signals to the runtime that the application has finished updating the mesh
-buffers following a call to flink:xrTriangleMeshBeginUpdateFB.
+Signals to the runtime that the application has finished initially
+populating or updating the mesh buffers.
 pname:vertexCount and pname:triangleCount specify the actual number of
 primitives that make up the mesh after the update.
-They must be larger than zero but smaller or equal to the maximum counts
+They must: be larger than zero but smaller or equal to the maximum counts
 defined at create time.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if an invalid
+count is passed.
+
+The triangle mesh pname:mesh must: be mutable.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+immutable.
+
+The triangle mesh pname:mesh must: be in state
+<<fb_triangle_mesh_state_defining_topology>> or
+<<fb_triangle_mesh_state_updating_mesh>>.
+
+A successful call moves pname:mesh to state <<fb_triangle_mesh_ready>>.
 
 include::{INCS-VAR}/validity/protos/xrTriangleMeshEndUpdateFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshBeginVertexBufferUpdateFB',desc='Begin an update of the vertex data',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshBeginVertexBufferUpdateFB',desc='Begin an update of the vertex data',type='protos',xrefs='xrTriangleMeshBeginUpdateFB xrTriangleMeshEndVertexBufferUpdateFB']
 --
 The flink:xrTriangleMeshBeginVertexBufferUpdateFB function is defined as:
 
@@ -272,27 +366,31 @@ include::{INCS-VAR}/api/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
 .Parameter Descriptions
 ****
 * pname:mesh is the slink:XrTriangleMeshFB to update.
-* pname:outVertexCount is the current vertex count.
+* pname:outVertexCount is a pointer to a value to populate with the current
+  vertex count.
   The updated data must have the exact same number of vertices.
 ****
 
-Begins an update of the vertex positions of a triangle mesh.
-Can only be called once the mesh topology has been set using
-flink:xrTriangleMeshBeginUpdateFB followed by
-flink:xrTriangleMeshEndUpdateFB.
-The vertex count is defined by the last invocation to
-flink:xrTriangleMeshEndUpdateFB.
+Begins an update of the vertex positions of a mutable triangle mesh.
+The vertex count returned through pname:outVertexCount is defined by the
+last call to flink:xrTriangleMeshEndUpdateFB.
 Once the modification is done, call
-flink:xrTriangleMeshEndVertexBufferUpdateFB to commit the changes.
-Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if an invalid count
-is passed.
-Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+flink:xrTriangleMeshEndVertexBufferUpdateFB to commit the changes and move
+to state <<fb_triangle_mesh_ready>>.
+
+The triangle mesh pname:mesh must: be mutable.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
 immutable.
+
+The triangle mesh pname:mesh must: be in state <<fb_triangle_mesh_ready>>.
+
+A successful call moves pname:mesh to state
+<<fb_triangle_mesh_state_updating_vertices>>.
 
 include::{INCS-VAR}/validity/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
 --
 
-[open,refpage='xrTriangleMeshEndVertexBufferUpdateFB',desc='End an update of the vertex data',type='protos',xrefs='']
+[open,refpage='xrTriangleMeshEndVertexBufferUpdateFB',desc='End an update of the vertex data',type='protos',xrefs='xrTriangleMeshBeginVertexBufferUpdateFB']
 --
 The flink:xrTriangleMeshEndVertexBufferUpdateFB function is defined as:
 
@@ -307,6 +405,15 @@ Signals to the runtime that the application has finished updating the vertex
 buffer data following a call to
 flink:xrTriangleMeshBeginVertexBufferUpdateFB.
 
+The triangle mesh pname:mesh must: be mutable.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
+immutable.
+
+The triangle mesh pname:mesh must: be in state
+<<fb_triangle_mesh_state_updating_vertices>>.
+
+A successful call moves pname:mesh to state <<fb_triangle_mesh_ready>>.
+
 include::{INCS-VAR}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
 --
 
@@ -316,3 +423,6 @@ include::{INCS-VAR}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
 
 * Revision 1, 2021-09-01 (Anton Vaneev)
 ** Initial extension description
+* Revision 2, 2022-01-07 (Ryan Pavlik, Collabora, Ltd.)
+** Add a state diagram to clarify valid usage, and allow
+   ename:XR_ERROR_CALL_ORDER_INVALID.

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../meta/XR_KHR_D3D11_enable.adoc[]
+include::../metadata/XR_KHR_D3D11_enable.adoc[]
 
 *Last Modified Date*::
    2018-11-16
@@ -12,7 +12,8 @@ include::../meta/XR_KHR_D3D11_enable.adoc[]
     Bryce Hutchings, Microsoft +
     Paul Pedriana, Oculus +
     Mark Young, LunarG +
-    Minmin Gong, Microsoft
+    Minmin Gong, Microsoft +
+    Matthieu Bucchianeri, Microsoft
 
 *Overview*
 
@@ -114,8 +115,13 @@ include::../../../../generated/api/structs/XrGraphicsBindingD3D11KHR.txt[]
 ****
 
 When creating a D3D11-backed slink:XrSession, the application will provide a
-pointer to an slink:XrGraphicsBindingD3D11KHR in the `next` chain of the
-slink:XrSessionCreateInfo.
+pointer to an slink:XrGraphicsBindingD3D11KHR in the
+slink:XrSessionCreateInfo::pname:next field of structure passed to
+flink:xrCreateSession.
+The D3D11 device specified in slink:XrGraphicsBindingD3D11KHR::pname:device
+must: be created in accordance with the requirements retrieved through
+flink:xrGetD3D11GraphicsRequirementsKHR, otherwise flink:xrCreateSession
+must: return ename:XR_ERROR_GRAPHICS_DEVICE_INVALID.
 
 include::../../../../generated/validity/structs/XrGraphicsBindingD3D11KHR.txt[]
 --
@@ -212,7 +218,7 @@ The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
 on calls to flink:xrCreateSession if flink:xrGetD3D11GraphicsRequirementsKHR
 has not been called for the same pname:instance and pname:systemId.
 The LUID and feature level that flink:xrGetD3D11GraphicsRequirementsKHR
-returns should be used to create the sname:ID3D11Device that the application
+returns must: be used to create the sname:ID3D11Device that the application
 passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D11KHR.
 
 include::../../../../generated/validity/protos/xrGetD3D11GraphicsRequirementsKHR.txt[]
@@ -236,3 +242,5 @@ include::../../../../generated/validity/protos/xrGetD3D11GraphicsRequirementsKHR
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
 * Revision 8, 2021-09-09 (Bryce Hutchings)
 ** Document mapping for `XrSwapchainUsageFlags`
+* Revision 9, 2021-12-28 (Matthieu Bucchianeri)
+** Added missing `XR_ERROR_GRAPHICS_DEVICE_INVALID` error condition

@@ -1,0 +1,244 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_META_performance_metrics.adoc[]
+
+*Contributors*::
+    Xiang Wei, Meta Platforms +
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension provides APIs to enumerate and query performance metrics
+counters of the current XR device and XR application.
+Developers can: perform performance analysis and do targeted optimization to
+the XR application using the performance metrics counters being collected.
+The application should: not change its behavior based on the counter reads.
+
+The performance metrics counters are organized into predefined
+basetype:XrPath, under the root path pathname:/perfmetrics_meta.
+You can: query the available counters through
+flink:xrEnumeratePerformanceMetricsCounterPathsMETA.
+Here is a list of the performance metrics counter paths that may: be
+provided on Meta devices:
+
+* pathname:/perfmetrics_meta/app/cpu_frametime
+* pathname:/perfmetrics_meta/app/gpu_frametime
+* pathname:/perfmetrics_meta/app/motion_to_photon_latency
+* pathname:/perfmetrics_meta/compositor/cpu_frametime
+* pathname:/perfmetrics_meta/compositor/gpu_frametime
+* pathname:/perfmetrics_meta/compositor/dropped_frame_count
+* pathname:/perfmetrics_meta/compositor/spacewarp_mode
+* pathname:/perfmetrics_meta/device/cpu_utilization_average
+* pathname:/perfmetrics_meta/device/cpu_utilization_worst
+* pathname:/perfmetrics_meta/device/gpu_utilization
+* pathname:/perfmetrics_meta/device/cpu0_utilization through
+  pathname:/perfmetrics_meta/device/cpuX_utilization
+
+After a session is created, you can: use
+flink:xrSetPerformanceMetricsStateMETA to enable the performance metrics
+system for that session.
+You can: use flink:xrQueryPerformanceMetricsCounterMETA to query performance
+metrics counter on a session that has performance metrics system enabled, or
+use flink:xrGetPerformanceMetricsStateMETA to get the enablement state.
+
+Note: the measurement intervals of individual performance metrics counters
+are defined by the OpenXR runtime.
+The application must: not make assumptions or change its behavior at runtime
+by measuring them.
+
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Flag Types*
+
+[open,refpage='XrPerformanceMetricsCounterFlagsMETA',type='flags',desc='XrPerformanceMetricsCounterFlagsMETA',xrefs='XrPerformanceMetricsCounterFlagBitsMETA']
+--
+include::{INCS-VAR}/api/flags/XrPerformanceMetricsCounterFlagsMETA.txt[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterFlagBitsMETA',type='enums',desc='XrPerformanceMetricsCounterFlagBitsMETA',xrefs='XrPerformanceMetricsCounterFlagsMETA']
+--
+include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.txt[]
+include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_PERFORMANCE_METRICS_STATE_META
+* ename:XR_TYPE_PERFORMANCE_METRICS_COUNTER_META
+
+*New Enums*
+[open,refpage='XrPerformanceMetricsCounterUnitMETA',type='enums',desc='XrPerformanceMetricsCounterUnitMETA']
+--
+include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterUnitMETA.txt[]
+include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrPerformanceMetricsStateMETA',type='structs',desc='Performance metrics enablement state',xrefs='']
+--
+
+The slink:XrPerformanceMetricsStateMETA structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPerformanceMetricsStateMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:enabled is set to ename:XR_TRUE to indicate the performance metrics
+  system is enabled, ename:XR_FALSE otherwise, when getting state.
+  When setting state, set to ename:XR_TRUE to enable the performance metrics
+  system and ename:XR_FALSE to disable it.
+****
+
+slink:XrPerformanceMetricsStateMETA is provided as input when calling
+flink:xrSetPerformanceMetricsStateMETA to enable or disable the performance
+metrics system.
+slink:XrPerformanceMetricsStateMETA is populated as an output parameter when
+calling flink:xrGetPerformanceMetricsStateMETA to query the enablement
+status of the performance metrics system.
+
+include::{INCS-VAR}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterMETA',type='structs',desc='Performance metrics counter value',xrefs='xrQueryPerformanceMetricsCounterMETA']
+--
+
+The slink:XrPerformanceMetricsCounterMETA structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrPerformanceMetricsCounterMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:counterFlags is a bitmask of
+  elink:XrPerformanceMetricsCounterFlagBitsMETA describing the validity of
+  value members.
+* pname:counterUnit is a enum of elink:XrPerformanceMetricsCounterUnitMETA
+  describing the measurement unit.
+* pname:uintValue is the counter value in code:uint32_t format.
+  It is valid if pname:counterFlags contains
+  ename:XR_PERFORMANCE_METRICS_COUNTER_UINT_VALUE_VALID_BIT_META.
+* pname:floatValue is the counter value in code:float format.
+  It is valid if pname:counterFlags contains
+  ename:XR_PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_META.
+****
+
+
+slink:XrPerformanceMetricsCounterMETA is populated by calling
+flink:xrQueryPerformanceMetricsCounterMETA to query real-time performance
+metrics counter information.
+
+include::{INCS-VAR}/validity/structs/XrPerformanceMetricsCounterMETA.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrEnumeratePerformanceMetricsCounterPathsMETA',desc='Enumerate all performance metrics counter paths that supported by the runtime',type='protos',xrefs='']
+--
+The flink:xrEnumeratePerformanceMetricsCounterPathsMETA function enumerate
+all performance metrics counter paths that supported by the runtime, it is
+defined as:
+
+include::{INCS-VAR}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:counterPathCapacityInput is the capacity of the pname:counterPaths
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:counterPathCountOutput is filled in by the runtime with the count of
+  pname:counterPaths written or the required capacity in the case that
+  pname:counterPathCapacityInput is 0.
+* pname:counterPaths is an array of basetype:XrPath filled in by the runtime
+  which contains all the available performance metrics counters, but can: be
+  code:NULL if pname:counterPathCapacityInput is `0`.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:counterPaths size.
+****
+
+include::{INCS-VAR}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+--
+
+[open,refpage='xrSetPerformanceMetricsStateMETA',desc='Enable/disable performance metrics',type='protos',xrefs='xrGetPerformanceMetricsStateMETA']
+--
+The flink:xrSetPerformanceMetricsStateMETA function is defined as:
+
+include::{INCS-VAR}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:state is a pointer to an slink:XrPerformanceMetricsStateMETA
+  structure.
+****
+
+The flink:xrSetPerformanceMetricsStateMETA function enables or disables the
+performance metrics system.
+
+include::{INCS-VAR}/validity/protos/xrSetPerformanceMetricsStateMETA.txt[]
+--
+
+[open,refpage='xrGetPerformanceMetricsStateMETA',desc='Get current state of performance metrics',type='protos',xrefs='xrSetPerformanceMetricsStateMETA']
+--
+The flink:xrGetPerformanceMetricsStateMETA function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:state is a pointer to an slink:XrPerformanceMetricsStateMETA
+  structure.
+****
+
+The flink:xrGetPerformanceMetricsStateMETA function gets the current state
+of the performance metrics system.
+
+include::{INCS-VAR}/validity/protos/xrGetPerformanceMetricsStateMETA.txt[]
+--
+
+[open,refpage='xrQueryPerformanceMetricsCounterMETA',desc='Query performance metrics counter',type='protos',xrefs='']
+--
+The flink:xrQueryPerformanceMetricsCounterMETA function is defined as:
+
+include::{INCS-VAR}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:counterPath is a valid performance metrics counter path.
+* pname:counter is a pointer to an slink:XrPerformanceMetricsCounterMETA
+  structure.
+****
+
+The flink:xrQueryPerformanceMetricsCounterMETA function queries a
+performance metrics counter.
+
+include::{INCS-VAR}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-04-28 (Xiang Wei)
+** Initial extension description

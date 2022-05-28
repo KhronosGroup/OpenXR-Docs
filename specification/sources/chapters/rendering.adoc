@@ -677,13 +677,13 @@ include::../../generated/api/enums/XrViewStateFlagBits.txt[]
   when this bit is set for views on a tracked headset or handheld device.
 * ename:XR_VIEW_STATE_POSITION_VALID_BIT indicates whether all slink:XrView
   positions contain valid data.
+  Applications must: not read any of the slink:XrView::pname:pose
+  pname:position fields if this flag is unset.
   When a view loses tracking, runtimes should: continue to provide valid but
   untracked view pname:position values that are inferred or last-known, so
   long as it's still meaningful for the application to render content using
   that position, clearing ename:XR_VIEW_STATE_POSITION_TRACKED_BIT until
   tracking is recovered.
-  Applications must: not read any of the slink:XrView pname:pose
-  pname:position fields if this flag is unset.
 * ename:XR_VIEW_STATE_ORIENTATION_TRACKED_BIT indicates whether all
   slink:XrView orientations represent an actively tracked orientation.
   This bit should: generally remain set when
@@ -1209,6 +1209,11 @@ include::../../generated/api/structs/XrSwapchainSubImage.txt[]
 
 include::../../generated/validity/structs/XrSwapchainSubImage.txt[]
 --
+
+Runtimes must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+slink:XrSwapchainSubImage::pname:imageArrayIndex is equal to or greater than
+the slink:XrSwapchainCreateInfo::pname:arraySize that the
+slink:XrSwapchainSubImage::pname:swapchain was created with.
 
 [[projection-composition]]
 ===== Projection Composition

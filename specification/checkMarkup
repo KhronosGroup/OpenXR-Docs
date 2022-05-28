@@ -315,6 +315,10 @@ grep_sources \
     "This should be 'an' instead of 'a'" \
     "\ba basetype:X"
 
+grep_sources \
+    "The extension metadata files have moved to 'metadata' to fix a naming collision" \
+    "include::[.][.]/meta/"
+
 #grep_sources \
 #    "test" \
 #    "basetype:"

@@ -350,6 +350,33 @@ needed.
 |============================================
 
 
+[[android-notes]]
+=== Android Notes
+Android specific notes for using the OpenXR specification.
+
+[[android-runtime-category]]
+==== Android Runtime category tag for immersive mode selection
+
+Android applications should add the `<category
+android:name="org.khronos.openxr.intent.category.IMMERSIVE_HMD" />` tag
+inside the intent-filter to indicate that the activity starts in an
+immersive OpenXR mode and will not touch the native Android 2D surface.
+
+The HMD suffix indicates the preferred form-factor used by the application
+and can be used by launchers to filter applications listed.
+
+For example:
+
+[source,xml]
+----
+<intent-filter>
+   <action android:name="android.intent.action.MAIN" />
+   <category android:name="android.intent.category.LAUNCHER" />
+   <category android:name="org.khronos.openxr.intent.category.IMMERSIVE_HMD" />
+</intent-filter>
+----
+
+
 [[glossary]]
 === Glossary
 
@@ -556,7 +583,7 @@ the time of their most recent contribution, are listed below.
 * Dave Houlton, LunarG
 * Dave Shreiner, Unity Technologies
 * Denny Rönngren, Tobii
-* Dmitriy Vasilev, Samsung
+* Dmitriy Vasilev, Samsung Electronics
 * Doug Twileager, ZSpace
 * Ed Hutchins, Facebook
 * Gloria Kennickell, Facebook
@@ -571,7 +598,7 @@ the time of their most recent contribution, are listed below.
 * Johannes van Waveren, Facebook
 * Jon Leech, Khronos
 * Jonathan Wright, Facebook
-* Juan Wee, Samsung
+* Juan Wee, Samsung Electronics
 * Jules Blok, Epic Games
 * Karl Schultz, LunarG
 * Kaye Mason, Google
@@ -591,7 +618,7 @@ the time of their most recent contribution, are listed below.
 * Nick Whiting, Epic Games
 * Nigel Williams, Sony
 * Paul Pedriana, Facebook
-* Paulo F. Gomes, Samsung Electronics
+* Paulo Gomes, Samsung Electronics
 * Peter Kuhn, Unity Technologies
 * Peter Peterson, HP Inc.
 * Philippe Harscoet, Samsung Electronics
@@ -613,7 +640,7 @@ the time of their most recent contribution, are listed below.
 * Sophia Baldonado, PlutoVR
 * Steve Smith, Epic Games
 * Sungye Kim, Intel
-* Tom Flynn, Samsung
+* Tom Flynn, Samsung Electronics
 * Trevor F. Smith, Mozilla
 * Vivek Viswanathan, Dell
 * Yin Li, Microsoft

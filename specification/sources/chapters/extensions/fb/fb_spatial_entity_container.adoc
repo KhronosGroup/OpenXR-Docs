@@ -1,0 +1,103 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_FB_spatial_entity_container.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook +
+    Yuichi Taguchi, Facebook
+
+:INCS-VAR: ../../../../generated
+
+*Overview*
+
+This extension expands on the concept of spatial entities to include a way
+for one spatial entity to contain multiple child spatial entities, forming a
+hierarchy.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACE_CONTAINER_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSpaceContainerFB',type='structs',desc='Represents a collection of other spaces, represented by UUIDs, contained by this space',xrefs='']
+--
+The slink:XrSpaceContainerFB structure is defined as:
+
+include::{INCS-VAR}/api/structs/XrSpaceContainerFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:uuidCapacityInput is an input parameter for the application to
+  specify a capacity for the output list
+* pname:uuidCountOutput is an output parameter which will hold the number of
+  UUIDs included in the output list
+* pname:uuids is an output parameter which will hold a list of space UUIDs
+  contained by the space to which the component is attached.
+* **Note** that usage of this structure varies slightly from normal
+  structure-style two-call idiom usage and more closely resembles the
+  function-style of that pattern: the pname:uuidCountOutput parameter is a
+  pointer, rather than the value itself.
+****
+
+The slink:XrSpaceContainerFB structure can: be used by an application to
+perform the two calls required to obtain information about which spatial
+entities are contained by a specified spatial entity.
+
+include::{INCS-VAR}/validity/structs/XrSpaceContainerFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrGetSpaceContainerFB',desc='Gets a XrSpaceContainerFB which lists contained spaces',type='protos',xrefs='']
+--
+The flink:xrGetSpaceContainerFB function is defined as:
+
+include::{INCS-VAR}/api/protos/xrGetSpaceContainerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:space is a handle to an slink:XrSpace.
+* pname:spaceContainerOutput is the output parameter that points to an
+  slink:XrSpaceContainerFB containing information about which spaces are
+  contained by pname:space.
+****
+
+The flink:xrGetSpaceContainerFB function is used by an application to
+perform the two calls required to obtain information about which spatial
+entities are contained by a specified spatial entity.
+
+The ename:XR_SPACE_COMPONENT_TYPE_SPACE_CONTAINER_FB component type must: be
+enabled, otherwise this function will return
+ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
+
+include::{INCS-VAR}/validity/protos/xrGetSpaceContainerFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-03-09 (John Schofield)
+** Initial draft
