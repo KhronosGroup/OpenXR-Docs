@@ -193,7 +193,8 @@ include::{INCS-VAR}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
   `0` to retrieve the required capacity.
 * pname:pathsCountOutput is a pointer to the count of
   slink:XrViveTrackerPathsHTCX pname:viveTrackerPaths written, or a pointer
-  to the required capacity in the case that pname:pathsCapacityInput is `0`.
+  to the required capacity in the case that pname:pathsCapacityInput is
+  insufficient.
 * pname:viveTrackerPaths is a pointer to an array of
   slink:XrViveTrackerPathsHTCX VIVE tracker paths, but can: be code:NULL if
   pname:pathsCapacityInput is `0`.

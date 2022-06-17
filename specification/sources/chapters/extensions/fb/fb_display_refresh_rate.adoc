@@ -92,7 +92,8 @@ include::{INCS-VAR}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
   pname:displayRefreshRates, or 0 to retrieve the required capacity.
 * pname:displayRefreshRateCountOutput is a pointer to the count of
   code:float pname:displayRefreshRates written, or a pointer to the required
-  capacity in the case that pname:displayRefreshRateCapacityInput is `0`.
+  capacity in the case that pname:displayRefreshRateCapacityInput is
+  insufficient.
 * pname:displayRefreshRates is a pointer to an array of code:float display
   refresh rates, but can: be code:NULL if
   pname:displayRefreshRateCapacityInput is `0`.

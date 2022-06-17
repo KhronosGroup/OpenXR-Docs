@@ -93,7 +93,7 @@ include::../../generated/api/protos/xrEnumerateViewConfigurations.txt[]
   required capacity.
 * pname:viewConfigurationsTypeCountOutput is a pointer to the count of
   pname:viewConfigurations written, or a pointer to the required capacity in
-  the case that pname:viewConfigurationsTypeCapacityInput is 0.
+  the case that pname:viewConfigurationsTypeCapacityInput is insufficient.
 * pname:viewConfigurationsTypes is a pointer to an array of
   elink:XrViewConfigurationType values, but can: be code:NULL if
   pname:viewConfigurationsTypeCapacityInput is 0.

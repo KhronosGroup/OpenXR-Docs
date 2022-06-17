@@ -369,7 +369,7 @@ include::../../../../generated/api/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
   indicate a request to retrieve the required capacity.
 * pname:bufferCountOutput is a pointer to the count of characters written
   (including terminating `\0`), or a pointer to the required capacity in the
-  case that pname:bufferCapacityInput is 0.
+  case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an array of characters, but can: be code:NULL
   if pname:bufferCapacityInput is 0.
   The format of the output is a single space (ASCII `0x20`) delimited string
@@ -395,7 +395,7 @@ include::../../../../generated/api/protos/xrGetVulkanDeviceExtensionsKHR.txt[]
   indicate a request to retrieve the required capacity.
 * pname:bufferCountOutput is a pointer to the count of characters written
   (including terminating `\0`), or a pointer to the required capacity in the
-  case that pname:bufferCapacityInput is 0.
+  case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an array of characters, but can: be code:NULL
   if pname:bufferCapacityInput is 0.
   The format of the output is a single space (ASCII `0x20`) delimited string

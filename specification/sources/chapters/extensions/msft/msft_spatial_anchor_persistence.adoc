@@ -178,7 +178,7 @@ include::../../../../generated/api/protos/xrEnumeratePersistedSpatialAnchorNames
   the required capacity.
 * pname:spatialAnchorNamesCountOutput is filled in by the runtime with the
   count of anchor names written or the required capacity in the case that
-  pname:spatialAnchorNamesCapacityInput is `0`.
+  pname:spatialAnchorNamesCapacityInput is insufficient.
 * pname:persistedAnchorNames is a pointer to an array of
   slink:XrSpatialAnchorPersistenceNameMSFT structures, but can: be code:NULL
   if propertyCapacityInput is `0`.
