@@ -335,6 +335,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <!-- XR_EXT_hand_tracking -->
         <type category="handle" parent="XrSession"><type>XR_DEFINE_HANDLE</type>(<name>XrHandTrackerEXT</name>)</type>
 
+        <!-- XR_EXT_event_channel -->
+        <type category="handle" parent="XrInstance"><type>XR_DEFINE_HANDLE</type>(<name>XrEventChannelEXT</name>)</type>
+
         <!-- XR_FB_foveation -->
         <type category="handle" parent="XrSession"><type>XR_DEFINE_HANDLE</type>(<name>XrFoveationProfileFB</name>)</type>
 
@@ -2159,6 +2162,30 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member><type>XrBool32</type>       <name>supportsFoveatedRendering</name></member>
         </type>
 
+        <!-- XR_EXT_event_channel structs -->
+        <type category="struct" name="XrEventChannelCreateInfoEXT">
+          <member values="XR_TYPE_EVENT_CHANNEL_CREATE_INFO_EXT"><type>XrStructureType</type> <name>type</name></member>
+          <member><type>void</type>* <name>next</name></member>
+        </type>
+
+        <type category="struct" name="XrEventChannelTargetEXT">
+          <member values="XR_TYPE_EVENT_CHANNEL_TARGET_EXT"><type>XrStructureType</type> <name>type</name></member>
+          <member><type>void</type>* <name>next</name></member>
+          <member><type>XrEventChannelEXT</type> <name>channel</name></member>
+        </type>
+
+        <type name="XrSelectEventChannelFlagsEXT" category="enum"/>
+
+        <type category="struct" name="XrSelectEventChannelInfoEXT">
+          <member values="XR_TYPE_SELECT_EVENT_CHANNEL_INFO_EXT"><type>XrStructureType</type> <name>type</name></member>
+          <member>const <type>void</type>* <name>next</name></member>
+          <member><type>XrSelectEventChannelFlagsEXT</type> <name>flags</name></member>
+          <member><type>XrDuration</type> <name>timeout</name></member>
+          <member><type>uint32_t</type> <name>eventChannelCount</name></member>
+          <member>const <type>XrEventChannelEXT</type>* <name>eventChannels</name></member>
+        </type>
+
+
         <!-- XR_MSFT_composition_layer_reprojection -->
         <type name="XrReprojectionModeMSFT" category="enum"/>
         <type category="struct" name="XrCompositionLayerReprojectionInfoMSFT" structextends="XrCompositionLayerProjection">
@@ -2899,6 +2926,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <enums name="XrAndroidSurfaceSwapchainFlagBitsFB" type="bitmask">
         <enum bitpos="0" name="XR_ANDROID_SURFACE_SWAPCHAIN_SYNCHRONOUS_BIT_FB"    comment="Create the underlying BufferQueue in synchronous mode"/>
         <enum bitpos="1" name="XR_ANDROID_SURFACE_SWAPCHAIN_USE_TIMESTAMPS_BIT_FB" comment="Acquire most recent buffer whose presentation timestamp is not greater than display time of final composited frame"/>
+    </enums>
+
+    <!-- flags for XR_EXT_event_channel -->
+    <enums name="XrSelectEventChannelFlagsEXT" type="enum">
+        <!-- This is currently empty, awaiting future flags. -->
     </enums>
 
     <!-- flags for XR_FB_composition_layer_image_layout -->
@@ -3964,6 +3996,38 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <proto><type>XrResult</type> <name>xrSetEnvironmentDepthEstimationVARJO</name></proto>
             <param><type>XrSession</type> <name>session</name></param>
             <param><type>XrBool32</type> <name>enabled</name></param>
+        </command>
+
+         <!-- XR_EXT_event_channel -->
+        <command successcodes="XR_SUCCESS"
+            errorcodes="XR_ERROR_INSTANCE_LOST,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_FEATURE_UNSUPPORTED,XR_ERROR_OUT_OF_MEMORY,XR_ERROR_LIMIT_REACHED">
+            <proto><type>XrResult</type> <name>xrCreateEventChannelEXT</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param optional="true">const <type>XrEventChannelCreateInfoEXT</type>* <name>createInfo</name></param>
+            <param><type>XrEventChannelEXT</type>* <name>channel</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_HANDLE_INVALID,XR_ERROR_FUNCTION_UNSUPPORTED">
+            <proto><type>XrResult</type> <name>xrDestroyEventChannelEXT</name></proto>
+            <param externsync="true"><type>XrEventChannelEXT</type> <name>channel</name></param>
+            <implicitexternsyncparams>
+                <param>the slink:XrInstance used to create pname:channel, and all of its child handles</param>
+            </implicitexternsyncparams>
+        </command>
+        <command successcodes="XR_SUCCESS,XR_EVENT_UNAVAILABLE" errorcodes="XR_ERROR_INSTANCE_LOST,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_FUNCTION_UNSUPPORTED">
+            <proto><type>XrResult</type> <name>xrPollEventChannelEXT</name></proto>
+            <param externsync="true"><type>XrEventChannelEXT</type> <name>channel</name></param>
+            <param><type>XrEventDataBuffer</type>* <name>eventData</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS,XR_TIMEOUT_EXPIRED" errorcodes="XR_ERROR_INSTANCE_LOST,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_FUNCTION_UNSUPPORTED">
+          <proto><type>XrResult</type> <name>xrSelectEventChannelsEXT</name></proto>
+          <param><type>XrInstance</type> <name>instance</name></param>
+          <param><type>XrSelectEventChannelInfoEXT</type>* <name>info</name></param>
+          <param><type>uint32_t</type>* <name>channelWithEvent</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_INSTANCE_LOST,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_FUNCTION_UNSUPPORTED">
+            <proto><type>XrResult</type> <name>xrGetDefaultEventChannelEXT</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param externsync="true"><type>XrEventChannelEXT</type>* <name>channel</name></param>
         </command>
 
         <!-- XR_MSFT_composition_layer_reprojection -->
@@ -6118,10 +6182,24 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_KHR_extension_149" number="149" type="instance" supported="disabled">
+    <extension name="XR_EXT_event_channel" number="149" type="instance" supported="openxr">
         <require>
-            <enum value="1" name="XR_KHR_extension_149_SPEC_VERSION"/>
-            <enum value="&quot;XR_KHR_extension_149&quot;" name="XR_KHR_extension_149_EXTENSION_NAME"/>
+            <enum value="1" name="XR_EXT_event_channel_SPEC_VERSION"/>
+            <enum value="&quot;XR_EXT_event_channel&quot;" name="XR_EXT_EVENT_CHANNEL_EXTENSION_NAME"/>
+            <enum offset="0" extends="XrStructureType"     name="XR_TYPE_EVENT_CHANNEL_CREATE_INFO_EXT"/>
+            <enum offset="1" extends="XrStructureType"     name="XR_TYPE_EVENT_CHANNEL_TARGET_EXT"/>
+            <enum offset="2" extends="XrStructureType"     name="XR_TYPE_SELECT_EVENT_CHANNEL_INFO_EXT"/>
+            <enum offset="0" extends="XrObjectType"        name="XR_OBJECT_TYPE_EVENT_CHANNEL_EXT"  comment="XrEventChannelEXT"/>
+            <type name="XrEventChannelCreateInfoEXT"/>
+            <type name="XrEventChannelEXT"/>
+            <type name="XrEventChannelTargetEXT"/>
+            <type name="XrSelectEventChannelFlagsEXT" />
+            <type name="XrSelectEventChannelInfoEXT"/>
+            <command name="xrCreateEventChannelEXT"/>
+            <command name="xrDestroyEventChannelEXT"/>
+            <command name="xrPollEventChannelEXT"/>
+            <command name="xrSelectEventChannelsEXT"/>
+            <command name="xrGetDefaultEventChannelEXT"/>
         </require>
     </extension>
 

@@ -1,0 +1,217 @@
+// Copyright (c) 2021, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_EXT_event_channel.adoc[]
+
+*Last Modified Date*::
+    2022-05-17
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Bryce Hutchings, Microsoft +
+    Yin Li, Microsoft +
+    Jonathan Wright, Meta Platforms +
+    Brandon Furtwangler, Meta Platforms +
+    Wenlin Mao, Meta Platforms +
+    Andreas Selvik, Meta Platforms +
+    John Schofield, Meta Platforms
+*Contacts*::
+    Cass Everitt, Meta Platforms +
+    Wenlin Mao, Meta Platforms
+
+*Overview*
+
+The OpenXR 1.0 event model is very simple.
+There is a single implicit event channel per instance, and the application
+polls it for events via flink:xrPollEvent.
+This design is sufficient for limited use, but introduces extra burden on
+modular application code making use of events for disparate purposes, as it
+is the application's responsibility to route any events to the module or
+modules that need to handle the event.
+
+This extension expands on the OpenXR event model to add support for multiple
+separate event channels.
+These event channels are created and destroyed by the application, and they
+can: be polled independently.
+Operations that may generate events may: also optionally allow the
+application to specify the event channel where the events will be delivered.
+If left unspecified, such events will be delivered to the implicit
+per-instance event channel by default.
+
+*New Handle Type*
+
+[open,refpage='XrEventChannelEXT',type='handles',desc='Event channel']
+--
+include::../../../../generated/api/handles/XrEventChannelEXT.txt[]
+
+slink:XrEventChannelEXT is an independent event channel, which may be polled
+independently from the implicit per-instance event channel used by default.
+
+--
+
+*New Flag*
+[open,refpage='XrSelectEventChannelFlagsEXT',desc='The flag of select event channel',type='enums']
+--
+include::../../../../generated/api/enums/XrSelectEventChannelFlagsEXT.txt[]
+
+The enum elink:XrSelectEventChannelFlagsEXT reserved flags for future use in
+select event channel.
+--
+
+*New Structures*
+
+[open,refpage='XrEventChannelCreateInfoEXT',type='structs',desc='Event channel create info']
+--
+include::../../../../generated/api/structs/XrEventChannelCreateInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::../../../../generated/validity/structs/XrEventChannelCreateInfoEXT.txt[]
+--
+
+Operations that allow the specification of a target channel allow the
+slink:XrEventChannelTargetEXT to be added to their next chain.
+
+[open,refpage='XrEventChannelTargetEXT',type='structs',desc='Event channel target']
+--
+include::../../../../generated/api/structs/XrEventChannelTargetEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:channel is the target slink:XrEventChannelEXT for events generated
+  by the associated entity or action.
+****
+
+include::../../../../generated/validity/structs/XrEventChannelTargetEXT.txt[]
+--
+
+[open,refpage='XrSelectEventChannelInfoEXT',type='structs',desc='Event channel select info']
+--
+include::../../../../generated/api/structs/XrSelectEventChannelInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:flags is elink:XrSelectEventChannelFlagsEXT and must be 0
+* pname:timeout is the basetype:XrDuration to wait for events to arrive.
+* pname:eventChannelCount is the number of event channels to monitor.
+* pname:eventChannels is the list of event channels to monitor.
+****
+
+include::../../../../generated/validity/structs/XrSelectEventChannelInfoEXT.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreateEventChannelEXT',type='protos',desc='Creates a new event channel object']
+--
+include::../../../../generated/api/protos/xrCreateEventChannelEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance of the new event channel.
+* pname:createInfo points to an slink:XrEventChannelCreateInfoEXT structure,
+  which contains no additional parameters beyond type and next pointer for
+  extensibility.
+* pname:channel is a pointer to which the created slink:XrEventChannelEXT
+  object is returned.
+****
+
+include::../../../../generated/validity/protos/xrCreateEventChannelEXT.txt[]
+
+The application must: ensure that flink:xrCreateEventChannelEXT is not
+executed in parallel with any OpenXR function that is also called with
+pname:instance or child of pname:instance.
+--
+
+[open,refpage='xrDestroyEventChannelEXT',type='protos',desc='Destroys event channel object']
+--
+include::../../../../generated/api/protos/xrDestroyEventChannelEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:channel is the slink:XrEventChannelEXT to be destroyed.
+****
+
+include::../../../../generated/validity/protos/xrDestroyEventChannelEXT.txt[]
+
+The application must: ensure that flink:xrDestroyEventChannelEXT is not
+executed in parallel with any OpenXR function that is also called with
+pname:instance or child of pname:instance.
+--
+
+[open,refpage='xrPollEventChannelEXT',type='protos',desc='Polls for an event on a channel']
+--
+include::../../../../generated/api/protos/xrPollEventChannelEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:channel is the slink:XrEventChannelEXT to be destroyed.
+* pname:eventData is a pointer to a valid slink:XrEventDataBuffer.
+****
+
+include::../../../../generated/validity/protos/xrPollEventChannelEXT.txt[]
+
+The application must: ensure that multiple calls to
+flink:xrPollEventChannelEXT for this channel do not overlap.
+--
+
+[open,refpage='xrSelectEventChannelsEXT',type='protos',desc='Wait for events to arrive on multiple event channels']
+--
+include::../../../../generated/api/protos/xrSelectEventChannelsEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance parent for the event channels.
+* pname:info points to an slink:XrSelectEventChannelInfoEXT structure,
+* pname:channelWithEvent is a pointer to an output code:uint32_t indicating
+  the index of event channel in the input list contains event.
+****
+
+include::../../../../generated/validity/protos/xrSelectEventChannelsEXT.txt[]
+--
+
+[open,refpage='xrGetDefaultEventChannelEXT',type='protos',desc='get default event channel handle']
+--
+include::../../../../generated/api/protos/xrGetDefaultEventChannelEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance parent for the event channels.
+* pname:channel is a pointer to which the default slink:XrEventChannelEXT
+  object is returned.
+****
+
+include::../../../../generated/validity/protos/xrGetDefaultEventChannelEXT.txt[]
+--
+
+*Issues*
+
+What happens to events whose target has been destroyed?
+
+Resolved: Events are not delivered.
+
+Two options: 1.
+events are suppressed, or 2.
+events revert to the default channel.
+
+Suggested resolution: Default channel.
+That way no events are silently lost, but well written applications should
+not encounter this issue.
+
+*Version History*
+
+* Revision 1, 2021-03-04 (Cass Everitt)
+** Initial draft.
