@@ -159,7 +159,8 @@ include::{INCS-VAR}/api/protos/xrEnumerateColorSpacesFB.txt[]
   array, or 0 to retrieve the required capacity.
 * pname:colorSpaceCountOutput is a pointer to the count of
   elink:XrColorSpaceFB pname:colorSpaces written, or a pointer to the
-  required capacity in the case that pname:colorSpaceCapacityInput is `0`.
+  required capacity in the case that pname:colorSpaceCapacityInput is
+  insufficient.
 * pname:colorSpaces is a pointer to an array of elink:XrColorSpaceFB color
   spaces, but can: be code:NULL if pname:colorSpaceCapacityInput is `0`.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a

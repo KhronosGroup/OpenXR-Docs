@@ -67,7 +67,7 @@ include::../../generated/api/protos/xrEnumerateSwapchainFormats.txt[]
   retrieve the required capacity.
 * pname:formatCountOutput is a pointer to the count of code:uint64_t formats
   written, or a pointer to the required capacity in the case that
-  pname:formatCapacityInput is `0`.
+  pname:formatCapacityInput is insufficient.
 * pname:formats is a pointer to an array of code:int64_t format ids, but
   can: be code:NULL if pname:formatCapacityInput is `0`.
   The format ids are specific to the specified graphics API.
@@ -288,7 +288,7 @@ include::../../generated/api/protos/xrEnumerateSwapchainImages.txt[]
   to indicate a request to retrieve the required capacity.
 * pname:imageCountOutput is a pointer to the count of pname:images written,
   or a pointer to the required capacity in the case that
-  pname:imageCapacityInput is 0.
+  pname:imageCapacityInput is insufficient.
 * pname:images is a pointer to an array of graphics API-specific
   `XrSwapchainImage` structures, all of the same type, based on
   slink:XrSwapchainImageBaseHeader.
@@ -1436,7 +1436,7 @@ include::../../generated/api/protos/xrEnumerateEnvironmentBlendModes.txt[]
   the required capacity.
 * pname:environmentBlendModeCountOutput is a pointer to the count of
   pname:environmentBlendModes written, or a pointer to the required capacity
-  in the case that pname:environmentBlendModeCapacityInput is 0.
+  in the case that pname:environmentBlendModeCapacityInput is insufficient.
 * pname:environmentBlendModes is a pointer to an array of
   elink:XrEnvironmentBlendMode values, but can: be code:NULL if
   pname:environmentBlendModeCapacityInput is 0.
