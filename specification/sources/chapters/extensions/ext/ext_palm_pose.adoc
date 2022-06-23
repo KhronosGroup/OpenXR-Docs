@@ -1,0 +1,117 @@
+// Copyright (c) 2020-2022, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::../metadata/XR_EXT_palm_pose.adoc[]
+
+*Last Modified Date*::
+    2022-05-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Jack Pritz, Unity Technologies +
+    Joe Ludwig, Valve +
+    Rune Berg, Valve +
+    John Kearney, Facebook +
+    Peter Kuhn, Unity Technologies +
+    Lachlan Ford, Microsoft +
+
+*Overview*
+
+This extension defines a new "standard pose identifier" for interaction
+profiles, named "palm_ext".
+The new identifier is a pose that can be used to place application-specific
+visual content such as avatar visuals that may or may not match human hands.
+This extension also adds a new input component path using this "palm_ext"
+pose identifier to existing interaction profiles when active.
+
+The application can: use the subpathname:/input/palm_ext/pose component path
+to place visual content representing the user's physical hand location.
+Application visuals may depict, for example, realistic human hands that are
+very simply animated or creative depictions such as an animal, an alien, or
+robot limb extremity.
+
+Note that this is not intended to be an alternative to extensions that
+perform hand tracking for more complex use cases: the use of "palm" in the
+name is to reflect that it is a user-focused pose rather than a
+held-object-focused pose.
+
+*Pose Identifier*
+
+When this extension is active, a runtime must: behave as if the following
+were added to the list of <<semantic-path-standard-pose-identifiers>>.
+
+* palm_ext - a pose that allows applications to reliably anchor visual
+  content relative to the user's physical hand, whether the user's hand is
+  tracked directly or its position and orientation is inferred by a physical
+  controller.
+  The palm pose is defined as follows:
+
+** The palm position: The user's physical palm centroid, at the surface of
+   the palm.
+** The palm orientation's +X axis: When a user is holding the controller and
+   straightens their index finger, the ray that is normal to the user's palm
+   (away from the palm in the left hand, into the palm in the right hand).
+** The palm orientation's -Z axis: When a user is holding the controller and
+   straightens their index finger, the ray that is parallel to their
+   finger's pointing direction.
+** The palm orientation's +Y axis: orthogonal to +Z and +X using the
+   right-hand rule.
+
+image::images/palm_pose.png[align="center", title="Example palm pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar). The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
+
+This pose is explicitly static for rigid controller type devices.
+
+*Interaction Profile Additions*
+
+When this extension is active, a runtime must: accept the
+subpathname:/input/palm_ext/pose component path for all interaction profiles
+that are valid for at least one of the user paths listed below listed below,
+including those interaction profiles enabled through extensions.
+Actions bound to such palm input component paths must: behave as though
+those paths were listed in the original definition of an interaction
+profile.
+
+Valid for the user paths
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths:
+
+* On both user paths
+** subpathname:/input/palm_ext/pose
+
+[NOTE]
+.Note
+****
+While this extension itself does not add the
+subpathname:/input/palm_ext/pose input component path to interaction
+profiles defined in extensions, extension authors may: update existing
+extensions to add this path, or submit new extensions defining new
+interaction profiles using this pose identifier and component path.
+For consistency, it is recommended that the subpathname:/input/palm_ext/pose
+path in extension-defined interaction profiles be specified as only valid
+when this `<<XR_EXT_palm_pose>>` extension is also enabled.
+
+This extension does pose a challenge to API layer implementers attempting to
+provide interaction profile support through their layer.
+If a runtime implements `<<XR_EXT_palm_pose>>`, and an application enables
+it, but such an API layer is unaware of it, the runtime may "accept" (not
+error) the additional suggested binding but the layer will not know to
+provide data or indicate an active binding.
+This behavior, while unexpected, does not violate the specification, and
+does not substantially increase the difficulty of providing additional input
+support using an API layer.
+****
+
+*Version History*
+
+* Revision 1, 2020-07-26 (Jack Pritz)
+** Initial extension proposal
+
+* Revision 2, 2022-05-18 (Lachlan Ford)
+** Modification and cleanup of extension proposal based on working group
+   discussion

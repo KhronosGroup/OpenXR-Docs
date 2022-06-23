@@ -318,7 +318,7 @@ include::{INCS-VAR}/api/protos/xrEnumerateSpaceSupportedComponentsFB.txt[]
   required capacity.
 * pname:componentTypeCountOutput is a pointer to the count of
   pname:componentTypes written, or a pointer to the required capacity in the
-  case that pname:componentTypeCapacityInput is 0.
+  case that pname:componentTypeCapacityInput is insufficient.
 * pname:componentTypes is a pointer to an array of
   elink:XrSpaceComponentTypeFB values, but can: be code:NULL if
   pname:componentTypeCapacityInput is `0`.

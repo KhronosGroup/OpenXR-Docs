@@ -252,7 +252,7 @@ include::{INCS-VAR}/api/structs/XrRenderModelBufferFB.txt[]
   retrieve the required capacity.
 * pname:bufferCountOutput is the count of code:uint8_t pname:buffer written,
   or the required capacity in the case that pname:bufferCapacityInput is
-  `0`.
+  insufficient.
 * pname:buffer is a pointer to an application-allocated array that will be
   filled with the render model binary data.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
@@ -282,7 +282,7 @@ include::{INCS-VAR}/api/protos/xrEnumerateRenderModelPathsFB.txt[]
   retrieve the required capacity.
 * pname:pathCountOutput is a pointer to the count of code:float pname:paths
   written, or a pointer to the required capacity in the case that
-  pname:pathCapacityInput is `0`.
+  pname:pathCapacityInput is insufficient.
 * pname:paths is a pointer to an application-allocated array that will be
   filled with slink:XrRenderModelPathInfoFB values that are supported by the
   runtime, but can: be code:NULL if pname:pathCapacityInput is `0`

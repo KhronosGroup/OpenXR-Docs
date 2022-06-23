@@ -251,7 +251,7 @@ include::{INCS-VAR}/api/structs/XrSpaceQueryResultsFB.txt[]
   to indicate a request to retrieve the required capacity.
 * pname:resultCountOutput is an output parameter containing the count of
   results retrieved, or returns the required capacity in the case that
-  pname:resultCapacityInput is 0.
+  pname:resultCapacityInput is insufficient.
 * pname:results is a pointer to an array of results, but can: be code:NULL
   if pname:resultCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a

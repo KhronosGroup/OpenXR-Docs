@@ -1153,7 +1153,7 @@ include::../../generated/api/protos/xrApplyHapticFeedback.txt[]
 ****
 
 Triggers a haptic event through the specified action of type
-ename:XR_TYPE_HAPTIC_VIBRATION.
+ename:XR_ACTION_TYPE_VIBRATION_OUTPUT.
 The runtime should: deliver this request to the appropriate device, but
 exactly which device, if any, this event is sent to is up to the runtime to
 decide.

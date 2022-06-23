@@ -81,7 +81,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingMeshFB.txt[]
 * pname:jointCountOutput is filled in by the runtime with the count of joint
   data elements written, or the required capacity in the case that any of
   pname:jointCapacityInput, pname:vertexCapacityInput, or
-  pname:indexCapacityInput is `0`.
+  pname:indexCapacityInput is insufficient.
 * pname:jointBindPoses is an array of poses that matches what is returned by
   flink:xrLocateHandJointsEXT which describes the hand skeleton's bind pose.
 * pname:jointRadii is an array of joint radii at bind pose.
@@ -93,7 +93,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingMeshFB.txt[]
 * pname:vertexCountOutput is filled in by the runtime with the count of
   vertex data elements written, or the required capacity in the case that
   any of pname:jointCapacityInput, pname:vertexCapacityInput, or
-  pname:indexCapacityInput is `0`.
+  pname:indexCapacityInput is insufficient.
 * pname:vertexPositions is an array of 3D vertex positions.
 * pname:vertexNormals is an array of 3D vertex normals.
 * pname:vertexUVs is an array of texture coordinates for this vertex.

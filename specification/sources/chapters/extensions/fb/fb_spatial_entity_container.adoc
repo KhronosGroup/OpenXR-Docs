@@ -51,13 +51,12 @@ include::{INCS-VAR}/api/structs/XrSpaceContainerFB.txt[]
 * pname:uuidCapacityInput is an input parameter for the application to
   specify a capacity for the output list
 * pname:uuidCountOutput is an output parameter which will hold the number of
-  UUIDs included in the output list
+  UUIDs included in the output list, or the required capacity in the case
+  that pname:uuidCapacityInput is insufficient
 * pname:uuids is an output parameter which will hold a list of space UUIDs
   contained by the space to which the component is attached.
-* **Note** that usage of this structure varies slightly from normal
-  structure-style two-call idiom usage and more closely resembles the
-  function-style of that pattern: the pname:uuidCountOutput parameter is a
-  pointer, rather than the value itself.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:uuids size.
 ****
 
 The slink:XrSpaceContainerFB structure can: be used by an application to
@@ -101,3 +100,5 @@ include::{INCS-VAR}/validity/protos/xrGetSpaceContainerFB.txt[]
 
 * Revision 1, 2022-03-09 (John Schofield)
 ** Initial draft
+* Revision 2, 2022-05-31 (John Schofield)
+** Fix types of `XrSpaceContainerFB` fields.

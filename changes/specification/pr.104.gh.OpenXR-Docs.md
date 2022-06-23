@@ -1,6 +1,0 @@
----
-- issue.94.gh.OpenXR-Docs
-- issue.1599.gl
-- issue.1612.gl
----
-- Clarify inconsistent specified semantics for array getters, resolving ambiguity in favor of the fundamentals section on buffer size parameters.

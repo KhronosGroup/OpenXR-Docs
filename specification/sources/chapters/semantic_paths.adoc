@@ -340,6 +340,7 @@ See <<input-suggested-bindings, Suggested Bindings>> for more details.
 See <<semantic-path-interaction-profiles, Interaction Profiles>> for
 examples of input subpaths.
 
+[[semantic-path-standard-identifiers]]
 ===== Standard identifiers
 
 * trackpad - A 2D input source that usually includes click and touch
@@ -392,6 +393,9 @@ examples of input subpaths.
   conventions for their components.
 * wheel - A steering wheel.
 
+[[semantic-path-standard-pose-identifiers]]
+===== Standard pose identifiers
+
 Input sources whose orientation and/or position are tracked also expose pose
 identifiers.
 
@@ -440,6 +444,25 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
    object.
    The ray chosen will be runtime-dependent, although this will often emerge
    from the frontmost tip of a motion controller.
+
+// Linking to the palm pose extension here is a special exception due to its
+// effect on existing interaction profiles and its anticipated widespread
+// availability. Do not add even conditional links to extensions in this
+// chapter normally. If many extensions start to add identifiers,
+// we may consider a generated list here from registry markup.
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the `<<XR_EXT_palm_pose>>` extension is available and enabled, an
+additional "palm_ext" standard pose identifier is available, and a path is
+added to all interaction profiles valid for pathname:/user/hand/left or
+pathname:/user/hand/right.
+This includes interaction profiles defined in the core spec and in
+extensions.
+See the extension for details.
+****
+endif::XR_EXT_palm_pose[]
 
 ===== Standard locations
 
@@ -549,6 +572,22 @@ to coordinate action bindings.
 Interaction profile paths are of the form:
 
 * pathname:/interaction_profiles/<vendor_name>/<type_name>
+
+// Linking to the palm pose extension here is a special exception due to its
+// effect on existing interaction profiles and its anticipated widespread
+// availability. Do not add even conditional links to extensions in this
+// chapter normally. We may consider including a generated list of links once
+// interaction profiles are in the XML registry.
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the `<<XR_EXT_palm_pose>>` extension is available and enabled, an
+additional input component path is added to all core interaction profiles
+valid for pathname:/user/hand/left or pathname:/user/hand/right.
+See the extension for more details.
+****
+endif::XR_EXT_palm_pose[]
 
 ==== Khronos Simple Controller Profile
 

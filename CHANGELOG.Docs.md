@@ -17,6 +17,36 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.24 (2022-06-23)
+
+- Registry
+  - Add new `XR_EXT_palm_pose` multi-vendor extension.
+    ([internal MR 2112](https://gitlab.khronos.org/openxr/openxr/merge_requests/2112))
+  - Add new `XR_FB_scene` vendor extension.
+    ([internal MR 2237](https://gitlab.khronos.org/openxr/openxr/merge_requests/2237))
+  - Fix structure definition in `XR_FB_spatial_entity_container`.
+    ([internal MR 2278](https://gitlab.khronos.org/openxr/openxr/merge_requests/2278))
+  - scripts: Teach xr_conventions that 2D, 3D, etc. are words for the purposes of
+    structure type enum generation.
+    ([internal MR 2237](https://gitlab.khronos.org/openxr/openxr/merge_requests/2237))
+- Specification
+  - Clarify inconsistent specified semantics for array getters/two-call idiom,
+    resolving ambiguity in favor of the fundamentals section on buffer size
+    parameters.
+    ([OpenXR-Docs PR 104](https://github.com/KhronosGroup/OpenXR-Docs/pull/104),
+    [OpenXR-Docs issue 94](https://github.com/KhronosGroup/OpenXR-Docs/issues/94),
+    [internal issue 1599](https://gitlab.khronos.org/openxr/openxr/issues/1599),
+    [internal issue 1612](https://gitlab.khronos.org/openxr/openxr/issues/1612))
+  - Document new `XR_EXT_palm_pose` multi-vendor extension.
+    ([internal MR 2112](https://gitlab.khronos.org/openxr/openxr/merge_requests/2112))
+  - Document new `XR_FB_scene` vendor extension.
+    ([internal MR 2237](https://gitlab.khronos.org/openxr/openxr/merge_requests/2237))
+  - Fix documentation for `xrApplyHapticFeedback` to specify the correct action
+    type.
+    ([internal MR 2268](https://gitlab.khronos.org/openxr/openxr/merge_requests/2268))
+  - Fix structure definition in `XR_FB_spatial_entity_container`.
+    ([internal MR 2278](https://gitlab.khronos.org/openxr/openxr/merge_requests/2278))
+
 ## OpenXR Specification 1.0.23 (2022-05-27)
 
 This release includes a large number of new vendor and multi-vendor extensions,

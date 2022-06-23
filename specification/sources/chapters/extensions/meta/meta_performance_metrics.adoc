@@ -164,7 +164,7 @@ include::{INCS-VAR}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt
   array, or 0 to indicate a request to retrieve the required capacity.
 * pname:counterPathCountOutput is filled in by the runtime with the count of
   pname:counterPaths written or the required capacity in the case that
-  pname:counterPathCapacityInput is 0.
+  pname:counterPathCapacityInput is insufficient.
 * pname:counterPaths is an array of basetype:XrPath filled in by the runtime
   which contains all the available performance metrics counters, but can: be
   code:NULL if pname:counterPathCapacityInput is `0`.
