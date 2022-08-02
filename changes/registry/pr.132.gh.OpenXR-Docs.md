@@ -1,0 +1,1 @@
+Register author ID for Acer
