@@ -7876,8 +7876,64 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <enum value="1"                                name="XR_MNDX_extension_371_SPEC_VERSION"/>
             <enum value="&quot;XR_MNDX_extension_371&quot;" name="XR_MNDX_extension_371_EXTENSION_NAME"/>
         </require>
+     </extension>
+        
+     <extension name="XR_MNDX_extension_372" number="372" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_372_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_372&quot;" name="XR_MNDX_extension_372_EXTENSION_NAME"/>
+        </require>
     </extension>
 
+    <extension name="XR_MNDX_extension_373" number="373" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_373_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_373&quot;" name="XR_MNDX_extension_373_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_374" number="374" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_374_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_374&quot;" name="XR_MNDX_extension_374_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_375" number="375" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_375_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_375&quot;" name="XR_MNDX_extension_375_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_376" number="376" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_376_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_376&quot;" name="XR_MNDX_extension_376_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_377" number="377" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_377_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_377&quot;" name="XR_MNDX_extension_377_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_378" number="378" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_378_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_378&quot;" name="XR_MNDX_extension_378_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
+    <extension name="XR_MNDX_extension_379" number="379" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_MNDX_extension_379_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_379&quot;" name="XR_MNDX_extension_379_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
     </extensions>
 
 </registry>
