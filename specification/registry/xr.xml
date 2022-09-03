@@ -27,6 +27,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <!-- SECTION: OpenXR vendor/author tags for extensions and layers -->
     <tags>
         <!--  Sorted alphabetically by tag name -->
+        <tag name="ACER"       author="Acer"                        contact="OC Lin @aceroc"/>
         <tag name="ALMALENCE"  author="Almalence"                   contact="Ivan Chupakhin @ivan.chupakhin, Dmitry Shmunk @dmitry.shmunk"/>
         <tag name="ARM"        author="Arm Limited"                 contact="Andreas Loeve Selvik @selvik, Sam Martin @sammartin"/>
         <tag name="COLLABORA"  author="Collabora"                   contact="Ryan Pavlik @rpavlik"/>
@@ -34,6 +35,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <tag name="EXT"        author="Multivendor"                 contact="Ryan Pavlik @rpavlik"/>
         <tag name="EXTX"       author="Multivendor experimental"    contact="Brad Grantham @bradgrantham-lunarg"/>
         <tag name="FB"         author="Facebook"                    contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
+        <tag name="FREDEMMOTT" author="Frederick Emmott"            contact="Frederick Emmott @fredemmott"/>
         <tag name="GOOGLE"     author="Google"                      contact="Kaye Mason @chaleur"/>
         <tag name="HTC"        author="HTC"                         contact="Chris Kuo @ggkuo, Kyle Chen @kylechen76"/>
         <tag name="HTCX"       author="HTC"                         contact="Chris Kuo @ggkuo, Kyle Chen @kylechen76"/>
@@ -49,6 +51,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <tag name="MSFT"       author="Microsoft"                   contact="Alex Turner @alexturn, Yin Li @yl_msft, Bryce Hutchings @brycehutchings, Lachlan Ford @laford_msft, Minmin Gong @gongminmin "/>
         <tag name="NV"         author="NVIDIA Corporation"          contact="Satish Salian @ssalian, Robert Menzel"/>
         <tag name="OCULUS"     author="Oculus"                      contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
+        <tag name="OPPO"       author="OPPO"                        contact="Buyi Xu @fantastxu, Haomiao Jiang @hjiang36"/>
         <tag name="PLUTO"      author="Pluto VR"                    contact="Jared Cheshier @Jared, Sophia Baldonado @sophia"/>
         <tag name="QCOM"       author="Qualcomm Technologies"       contact="Armelle @alaine_qcom, Martin Renschler @martinr"/>
         <tag name="STARBREEZE" author="Starbreeze"                  contact="David Srour @dsrour"/>
@@ -7868,6 +7871,69 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <require>
             <enum value="1"                                name="XR_HTC_extension_370_SPEC_VERSION"/>
             <enum value="&quot;XR_HTC_extension_370&quot;" name="XR_HTC_extension_370_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_376" number="376" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_376_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_376&quot;" name="XR_MNDX_extension_376_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_377" number="377" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_377_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_377&quot;" name="XR_MNDX_extension_377_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_378" number="378" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_378_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_378&quot;" name="XR_MNDX_extension_378_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_379" number="379" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_379_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_379&quot;" name="XR_MNDX_extension_379_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_380" number="380" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_380_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_380&quot;" name="XR_MNDX_extension_380_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_381" number="381" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_381_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_381&quot;" name="XR_MNDX_extension_381_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_382" number="382" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_382_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_382&quot;" name="XR_MNDX_extension_382_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_383" number="383" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_383_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_383&quot;" name="XR_MNDX_extension_383_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_MNDX_extension_384" number="384" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_MNDX_extension_384_SPEC_VERSION"/>
+            <enum value="&quot;XR_MNDX_extension_384&quot;" name="XR_MNDX_extension_384_EXTENSION_NAME"/>
         </require>
     </extension>
 

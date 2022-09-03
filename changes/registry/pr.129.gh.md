@@ -1,0 +1,1 @@
+Register Oppo for author ID for OpenXR collaboration.
