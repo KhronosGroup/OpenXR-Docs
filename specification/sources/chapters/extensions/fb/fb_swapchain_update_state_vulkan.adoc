@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_swapchain_update_state_vulkan.adoc[]
+include::{generated}/meta/XR_FB_swapchain_update_state_vulkan.adoc[]
 
 *Contributors*::
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook +
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -44,7 +43,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSwapchainStateSamplerVulkanFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSwapchainStateSamplerVulkanFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateSamplerVulkanFB.txt[]
 
 .Member Descriptions
 ****
@@ -83,7 +82,7 @@ To use slink:XrSwapchainStateSamplerVulkanFB,
 dlink:XR_USE_GRAPHICS_API_VULKAN must be defined before including
 `openxr_platform.h`.
 
-include::../../../../generated/validity/structs/XrSwapchainStateSamplerVulkanFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateSamplerVulkanFB.txt[]
 --
 
 *New Functions*

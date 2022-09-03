@@ -6,7 +6,7 @@
 # for "htmldiffy.py".
 #
 # Copyright (c) 2008-2020 w3c
-# Copyright (c) 2016-2022, The Khronos Group Inc.
+# Copyright 2016-2022 The Khronos Group Inc.
 # SPDX-License-Identifier: MIT
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -87,6 +87,7 @@ def call_perl(args):
     cmd = [perlscript]
     cmd.extend(args)
     p = Popen(cmd,
+              text=True,
               stdin=PIPE, stdout=PIPE, stderr=PIPE)
     sys.stdout.flush()
     sys.stderr.flush()
@@ -101,7 +102,7 @@ def call_perl(args):
         exit(0)
 
 def usage():
-    # didn't investigate fully what -c does - something about mhtml comments?
+    # did not investigate fully what -c does - something about mhtml comments?
     sys.stderr.write("""htmldiff: need two filename args file1 file2
 
 May also pass arguments:

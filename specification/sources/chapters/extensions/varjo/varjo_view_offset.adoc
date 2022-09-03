@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_VARJO_view_offset.adoc[]
+include::{generated}/meta/XR_VARJO_view_offset.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2021-09-30
@@ -75,7 +74,7 @@ a session.
 --
 The flink:xrSetViewOffsetVARJO function is defined as:
 
-include::{INCS-VAR}/api/protos/xrSetViewOffsetVARJO.txt[]
+include::{generated}/api/protos/xrSetViewOffsetVARJO.txt[]
 
 .Parameter Descriptions
 ****
@@ -100,7 +99,7 @@ active, a.k.a.
 in MR (ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND or
 ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE).
 
-include::{INCS-VAR}/validity/protos/xrSetViewOffsetVARJO.txt[]
+include::{generated}/validity/protos/xrSetViewOffsetVARJO.txt[]
 
 *Version History*
 

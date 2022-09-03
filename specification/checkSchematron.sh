@@ -22,8 +22,11 @@
 # Usage: checkSchematron.sh
 
 set -e
+SCHEMATRON_VERSION=1.9.1
+# from https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.9.1/cli-1.9.1.jar.sha1
+SCHEMATRON_SHA1SUM=de755ac742caad2e8e3a33262d0abb937e568243
+URL=https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/$SCHEMATRON_VERSION/cli-$SCHEMATRON_VERSION.jar
 
-URL=https://github.com/schxslt/schxslt/releases/download/v1.7.3/schxslt-cli.jar
 SCHXSLT_CLI=registry/$(basename "$URL")
 
 XML=registry/xr.xml
@@ -43,6 +46,11 @@ REPORT=registry/report.srvl
         echo "Skipping schematron validation: no java."
         exit 0
     fi
+    if ! command -v sha1sum > /dev/null; then
+        echo "Skipping schematron validation: no sha1sum."
+        exit 0
+    fi
+
     if ! command -v grep > /dev/null; then
         echo "Skipping schematron validation: no grep. (!?)"
         exit 0
@@ -56,6 +64,11 @@ REPORT=registry/report.srvl
 
     if [ ! -f "$SCHXSLT_CLI" ]; then
         echo "Skipping schematron validation: download of SchXslt failed."
+        exit 0
+    fi
+
+    if ! (echo "$SCHEMATRON_SHA1SUM $SCHXSLT_CLI" | sha1sum --check); then
+        echo "Verification of download failed."
         exit 0
     fi
 

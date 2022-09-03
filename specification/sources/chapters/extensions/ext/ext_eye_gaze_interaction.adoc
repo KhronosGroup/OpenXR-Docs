@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_eye_gaze_interaction.adoc[]
+include::{generated}/meta/XR_EXT_eye_gaze_interaction.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2020-02-20
@@ -86,7 +85,7 @@ returned by the flink:xrGetSystemProperties call.
 
 [open,refpage='XrSystemEyeGazeInteractionPropertiesEXT',type='structs',desc='Eye gaze interaction system properties']
 --
-include::{INCS-VAR}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
+include::{generated}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
 
 .Member Descriptions
 ****
@@ -100,7 +99,7 @@ include::{INCS-VAR}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
   set this to ename:XR_FALSE.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
+include::{generated}/validity/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
 --
 
 ==== Eye gaze input
@@ -169,7 +168,7 @@ yet been requested.
 
 [open,refpage='XrEyeGazeSampleTimeEXT',type='structs',desc='Eye gaze sample time structure']
 --
-include::{INCS-VAR}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
+include::{generated}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
 
 .Member Descriptions
 ****
@@ -180,7 +179,7 @@ include::{INCS-VAR}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
 * pname:time is when in time the eye gaze pose is expressed.
 ****
 
-include::{INCS-VAR}/validity/structs/XrEyeGazeSampleTimeEXT.txt[]
+include::{generated}/validity/structs/XrEyeGazeSampleTimeEXT.txt[]
 --
 
 ==== Sample code

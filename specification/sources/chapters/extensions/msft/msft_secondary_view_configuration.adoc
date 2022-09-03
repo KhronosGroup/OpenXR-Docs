@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_MSFT_secondary_view_configuration.adoc[]
+include::{generated}/meta/XR_MSFT_secondary_view_configuration.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2020-05-02
@@ -105,7 +104,7 @@ This hints to the runtime that the created swapchain image will be submitted
 to the given secondary view configuration, allowing the runtime to make
 optimizations for such usage when there is opportunity.
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationSwapchainCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationSwapchainCreateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -127,7 +126,7 @@ the runtime may: need to copy the resource across view configurations.
 However, the runtime must: correctly compose the image regardless which view
 configuration type was hinted when swapchain image was created.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationSwapchainCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationSwapchainCreateInfoMSFT.txt[]
 --
 
 ==== Enable secondary view configuration
@@ -146,7 +145,7 @@ elink:XrViewConfigurationType to enable for this session.
 
 It is defined as:
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationSessionBeginInfoMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationSessionBeginInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -173,7 +172,7 @@ flink:xrEnumerateViewConfigurations in the array of
 pname:enabledViewConfigurationTypes, the runtime must: return error
 ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationSessionBeginInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationSessionBeginInfoMSFT.txt[]
 --
 
 ==== Per-frame active view configurations
@@ -192,7 +191,7 @@ whether the enabled view configurations are active or inactive.
 
 It is defined as as:
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationFrameStateMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationFrameStateMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -213,7 +212,7 @@ slink:XrSecondaryViewConfigurationSessionBeginInfoMSFT when calling
 flink:xrBeginSession earlier, otherwise the runtime must: return error
 ename:XR_ERROR_VALIDATION_FAILURE.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationFrameStateMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationFrameStateMSFT.txt[]
 --
 
 [open,refpage='XrSecondaryViewConfigurationStateMSFT',desc='Returns the state of an enabled secondary view configuration.',type='structs',xrefs='XrFrameState XrSecondaryViewConfigurationFrameStateMSFT']
@@ -221,7 +220,7 @@ include::../../../../generated/validity/structs/XrSecondaryViewConfigurationFram
 The slink:XrSecondaryViewConfigurationStateMSFT structure returns the state
 of an enabled secondary view configurations.
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationStateMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationStateMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -266,7 +265,7 @@ example when user stops video capture, the runtime makes the view
 configuration inactive by setting the corresponding pname:active in the
 slink:XrSecondaryViewConfigurationStateMSFT structure to false.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationStateMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationStateMSFT.txt[]
 --
 
 ==== Locate and inspect view states of secondary view configurations
@@ -300,7 +299,7 @@ pointer of slink:XrFrameEndInfo structure.
 The slink:XrSecondaryViewConfigurationFrameEndInfoMSFT structure is defined
 as as:
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationFrameEndInfoMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationFrameEndInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -335,7 +334,7 @@ submitted to this view configuration may: be ignored by the runtime.
 Applications should: avoid rendering into secondary views when the view
 configuration is inactive.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationFrameEndInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationFrameEndInfoMSFT.txt[]
 --
 
 [open,refpage='XrSecondaryViewConfigurationLayerInfoMSFT', desc='Describe an array of composition layers to be submitted to given elink:XrViewConfigurationType.', type='structs',xrefs='xrEndFrame XrSecondaryViewConfigurationFrameEndInfoMSFT']
@@ -348,7 +347,7 @@ view configuration type when calling flink:xrEndFrame.
 The slink:XrSecondaryViewConfigurationLayerInfoMSFT structure is defined as
 as:
 
-include::../../../../generated/api/structs/XrSecondaryViewConfigurationLayerInfoMSFT.txt[]
+include::{generated}/api/structs/XrSecondaryViewConfigurationLayerInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -394,7 +393,7 @@ frame's flink:xrWaitFrame call.
 The runtime must: ignore composition layers submitted for an inactive view
 configuration.
 
-include::../../../../generated/validity/structs/XrSecondaryViewConfigurationLayerInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSecondaryViewConfigurationLayerInfoMSFT.txt[]
 --
 
 *New Object Types*

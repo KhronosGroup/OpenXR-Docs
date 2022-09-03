@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_VARJO_environment_depth_estimation.adoc[]
+include::{generated}/meta/XR_VARJO_environment_depth_estimation.adoc[]
 
 *Last Modified Date*::
     2021-02-17
@@ -49,7 +49,7 @@ Composition of the environment layer follows the rules as described in
 --
 The flink:xrSetEnvironmentDepthEstimationVARJO function is defined as:
 
-include::../../../../generated/api/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+include::{generated}/api/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
 
 .Parameter Descriptions
 ****
@@ -63,7 +63,7 @@ include::../../../../generated/api/protos/xrSetEnvironmentDepthEstimationVARJO.t
   ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND.
 ****
 
-include::../../../../generated/validity/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+include::{generated}/validity/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
 --
 
 *New Functions*

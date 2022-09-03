@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_view_configuration_depth_range.adoc[]
+include::{generated}/meta/XR_EXT_view_configuration_depth_range.adoc[]
 
 *Last Modified Date*::
     2019-08-16
@@ -59,7 +59,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrViewConfigurationDepthRangeEXT structure is defined as:
 
-include::../../../../generated/api/structs/XrViewConfigurationDepthRangeEXT.txt[]
+include::{generated}/api/structs/XrViewConfigurationDepthRangeEXT.txt[]
 
 .Member Descriptions
 ****
@@ -84,7 +84,7 @@ flink:xrEnumerateViewConfigurationViews, the application can: provide a
 pointer to an slink:XrViewConfigurationDepthRangeEXT in the pname:next chain
 of slink:XrViewConfigurationView.
 
-include::../../../../generated/validity/structs/XrViewConfigurationDepthRangeEXT.txt[]
+include::{generated}/validity/structs/XrViewConfigurationDepthRangeEXT.txt[]
 --
 
 *New Functions*

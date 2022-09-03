@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_vulkan_enable2.adoc[]
+include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
 
 :vkRefPageRoot: https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html
 
@@ -64,7 +64,7 @@ call:
 
 [open,refpage='xrGetVulkanGraphicsRequirements2KHR',type='protos',desc='Retrieve the Vulkan version requirements for an instance and system',xrefs='XrGraphicsRequirementsVulkan2KHR']
 --
-include::../../../../generated/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
 
 The flink:xrGetVulkanGraphicsRequirements2KHR function identifies to the
 application the runtime's minimum Vulkan version requirement and the highest
@@ -86,7 +86,7 @@ pname:instance and pname:systemId.
   output structure.
 ****
 
-include::../../../../generated/validity/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
 --
 
 The slink:XrGraphicsRequirementsVulkan2KHR structure populated by
@@ -94,7 +94,7 @@ flink:xrGetVulkanGraphicsRequirements2KHR is defined as:
 
 [open,refpage='XrGraphicsRequirementsVulkan2KHR',type='structs',desc='Vulkan API version requirements',xrefs='xrGetVulkanGraphicsRequirements2KHR']
 --
-include::../../../../generated/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+include::{generated}/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
 
 .Member Descriptions
 ****
@@ -113,7 +113,7 @@ include::../../../../generated/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[
   patch version component.
 ****
 
-include::../../../../generated/validity/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
 --
 
 ===== Vulkan Instance Creation
@@ -129,7 +129,7 @@ pname:pfnGetInstanceProcAddr.
 
 [open,refpage='xrCreateVulkanInstanceKHR',type='protos',desc='Create an OpenXR compatible VkInstance',xrefs='xrCreateVulkanDeviceKHR']
 --
-include::../../../../generated/api/protos/xrCreateVulkanInstanceKHR.txt[]
+include::{generated}/api/protos/xrCreateVulkanInstanceKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -144,7 +144,7 @@ include::../../../../generated/api/protos/xrCreateVulkanInstanceKHR.txt[]
   pname:pfnGetInstanceProcAddr.
 ****
 
-include::../../../../generated/validity/protos/xrCreateVulkanInstanceKHR.txt[]
+include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.txt[]
 --
 
 The slink:XrVulkanInstanceCreateInfoKHR structure contains the input
@@ -152,7 +152,7 @@ parameters to flink:xrCreateVulkanInstanceKHR.
 
 [open,refpage='XrVulkanInstanceCreateInfoKHR',type='structs',desc='Vulkan Instance Create Info',xrefs='xrCreateVulkanInstanceKHR']
 --
-include::../../../../generated/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 
 .Member Descriptions
 ****
@@ -168,12 +168,12 @@ include::../../../../generated/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
   as specified by Vulkan].
 ****
 
-include::../../../../generated/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 --
 
 [open,refpage='XrVulkanInstanceCreateFlagsKHR',type='flags',desc='Vulkan Instance Create Info Flags',xrefs='XrVulkanInstanceCreateInfoKHR']
 --
-include::../../../../generated/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
+include::{generated}/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
 --
 
 ===== Physical Device Selection
@@ -189,7 +189,7 @@ OpenXR runtime.
 
 [open,refpage='xrGetVulkanGraphicsDevice2KHR',type='protos',desc='Retrieve the Vulkan physical device associated with an OpenXR instance and system']
 --
-include::../../../../generated/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -201,7 +201,7 @@ include::../../../../generated/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
   to populate.
 ****
 
-include::../../../../generated/validity/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
 --
 
 The slink:XrVulkanGraphicsDeviceGetInfoKHR structure contains the input
@@ -209,7 +209,7 @@ parameters to flink:xrCreateVulkanInstanceKHR.
 
 [open,refpage='XrVulkanGraphicsDeviceGetInfoKHR',type='structs',desc='Vulkan Graphics Device Get Info',xrefs='xrGetVulkanGraphicsDevice2KHR']
 --
-include::../../../../generated/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
 
 .Member Descriptions
 ****
@@ -218,7 +218,7 @@ include::../../../../generated/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[
 * pname:vulkanInstance is a valid Vulkan sname:VkInstance.
 ****
 
-include::../../../../generated/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
 --
 
 ===== Vulkan Device Creation
@@ -234,7 +234,7 @@ pname:pfnGetInstanceProcAddr.
 
 [open,refpage='xrCreateVulkanDeviceKHR',type='protos',desc='Create an OpenXR compatible VkDevice',xrefs='xrCreateVulkanInstanceKHR']
 --
-include::../../../../generated/api/protos/xrCreateVulkanDeviceKHR.txt[]
+include::{generated}/api/protos/xrCreateVulkanDeviceKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -249,7 +249,7 @@ include::../../../../generated/api/protos/xrCreateVulkanDeviceKHR.txt[]
   pname:pfnGetInstanceProcAddr.
 ****
 
-include::../../../../generated/validity/protos/xrCreateVulkanDeviceKHR.txt[]
+include::{generated}/validity/protos/xrCreateVulkanDeviceKHR.txt[]
 --
 
 The slink:XrVulkanDeviceCreateInfoKHR structure contains the input
@@ -257,7 +257,7 @@ parameters to flink:xrCreateVulkanDeviceKHR.
 
 [open,refpage='XrVulkanDeviceCreateInfoKHR',type='structs',desc='Vulkan Device Create Info',xrefs='xrCreateVulkanDeviceKHR']
 --
-include::../../../../generated/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
 
 .Member Descriptions
 ****
@@ -274,12 +274,12 @@ include::../../../../generated/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
   as specified by Vulkan].
 ****
 
-include::../../../../generated/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
 --
 
 [open,refpage='XrVulkanDeviceCreateFlagsKHR',type='flags',desc='Vulkan Device Create Info Flags',xrefs='XrVulkanDeviceCreateInfoKHR']
 --
-include::../../../../generated/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
+include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
 --
 
 If the pname:vulkanPhysicalDevice parameter does not match the output of
@@ -309,7 +309,7 @@ slink:XrGraphicsBindingVulkan2KHR structure for session creation.
 
 [open,refpage='XrGraphicsBindingVulkan2KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use Vulkan',xrefs='xrCreateSession']
 --
-include::../../../../generated/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
 
 .Member Descriptions
 ****
@@ -336,7 +336,7 @@ include::../../../../generated/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
 * pname:device must: have been created using flink:xrCreateVulkanDeviceKHR
 ****
 
-include::../../../../generated/validity/structs/XrGraphicsBindingVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingVulkan2KHR.txt[]
 --
 
 Populating an slink:XrGraphicsBindingVulkan2KHR structure with a member that
@@ -381,7 +381,7 @@ These are defined as:
 
 [open,refpage='XrSwapchainImageVulkan2KHR',type='structs',desc='Vulkan-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
-include::../../../../generated/api/structs/XrSwapchainImageVulkan2KHR.txt[]
+include::{generated}/api/structs/XrSwapchainImageVulkan2KHR.txt[]
 
 .Member Descriptions
 ****
@@ -409,7 +409,7 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing down, near Z plane at 0, and far Z plane at 1.
 
-include::../../../../generated/validity/structs/XrSwapchainImageVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrSwapchainImageVulkan2KHR.txt[]
 --
 
 ===== Swapchain Image Layout

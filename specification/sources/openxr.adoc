@@ -19,7 +19,7 @@ Copyright (c) 2017-2022, The Khronos Group Inc.
 All rights reserved.
 
 // Include attributes for special symbols
-include::attribs.adoc[]
+include::{config}/attribs.adoc[]
 
 toc::[]
 
@@ -50,17 +50,17 @@ include::chapters/input.adoc[]
 // it back.
 // include::chapters/extensions/extension_process.adoc[]
 
-include::chapters/extensions/metadata/current_extensions_appendix.adoc[]
+include::{generated}/meta/current_extensions_appendix.adoc[]
 
-include::chapters/extensions/metadata/provisional_extensions_appendix.adoc[]
+include::{generated}/meta/provisional_extensions_appendix.adoc[]
 
-include::chapters/extensions/metadata/deprecated_extensions_appendix.adoc[]
+include::{generated}/meta/deprecated_extensions_appendix.adoc[]
 
 :numbered!:
 
 // In non-PDF, use our custom index.
 ifndef::backend-pdf[]
-include::../generated/index.adoc[]
+include::{generated}/index.adoc[]
 endif::backend-pdf[]
 
 include::chapters/appendix.adoc[]

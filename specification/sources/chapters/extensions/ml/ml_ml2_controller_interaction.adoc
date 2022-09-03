@@ -1,0 +1,70 @@
+// Copyright (c) 2022 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_ml2_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2022-07-22
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Rafael Wiltz, Magic Leap
+
+*Overview*
+
+This extension defines the interaction profile for the Magic Leap 2
+Controller.
+
+*Magic Leap 2 Controller interaction profile*
+
+This interaction profile represents the input sources and haptics on the
+Magic Leap 2 Controller.
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/ml/ml2_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths:
+
+* subpathname:/input/menu/click
+* subpathname:/input/home/click (may: not be available for application use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trackpad/y
+* subpathname:/input/trackpad/x
+* subpathname:/input/trackpad/click
+* subpathname:/input/trackpad/force
+* subpathname:/input/trackpad/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/input/shoulder/click
+* subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-07-22 (Ron Bessems)
+
+** Initial extension description

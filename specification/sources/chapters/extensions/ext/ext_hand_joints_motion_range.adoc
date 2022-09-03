@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_hand_joints_motion_range.adoc[]
+include::{generated}/meta/XR_EXT_hand_joints_motion_range.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2021-04-15
@@ -46,7 +45,7 @@ ename:XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT and
 ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT for each controller
 interaction profile that supports hand joint data.
 
-include::../../../../generated/api/enums/XrHandJointsMotionRangeEXT.txt[]
+include::{generated}/api/enums/XrHandJointsMotionRangeEXT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -89,7 +88,7 @@ Runtimes must: return the appropriate joint locations depending on the
 pname:handJointsMotionRange field and the currently active interaction
 profile.
 
-include::../../../../generated/api/structs/XrHandJointsMotionRangeInfoEXT.txt[]
+include::{generated}/api/structs/XrHandJointsMotionRangeInfoEXT.txt[]
 
 .Member Descriptions
 ****
@@ -101,7 +100,7 @@ include::../../../../generated/api/structs/XrHandJointsMotionRangeInfoEXT.txt[]
   defines the hand joint range of motion the application wants.
 ****
 
-include::../../../../generated/validity/structs/XrHandJointsMotionRangeInfoEXT.txt[]
+include::{generated}/validity/structs/XrHandJointsMotionRangeInfoEXT.txt[]
 --
 
 *New Functions*

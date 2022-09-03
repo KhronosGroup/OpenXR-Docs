@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_VARJO_foveated_rendering.adoc[]
+include::{generated}/meta/XR_VARJO_foveated_rendering.adoc[]
 
 *Last Modified Date*::
     2021-04-13
@@ -63,7 +63,7 @@ rendering by chaining an slink:XrSystemFoveatedRenderingPropertiesVARJO
 structure to the slink:XrSystemProperties structure when calling
 flink:xrGetSystemProperties.
 
-include::../../../../generated/api/structs/XrSystemFoveatedRenderingPropertiesVARJO.txt[]
+include::{generated}/api/structs/XrSystemFoveatedRenderingPropertiesVARJO.txt[]
 
 .Member Descriptions
 ****
@@ -80,7 +80,7 @@ when rendering gaze is available in the system.
 An application should: avoid using foveated rendering functionality when
 pname:supportsFoveatedRendering is ename:XR_FALSE.
 
-include::../../../../generated/validity/structs/XrSystemFoveatedRenderingPropertiesVARJO.txt[]
+include::{generated}/validity/structs/XrSystemFoveatedRenderingPropertiesVARJO.txt[]
 --
 
 ==== Determine foveated texture sizes
@@ -101,7 +101,7 @@ First and second views are non foveated views (covering whole field of view
 of HMD), third (left eye) and fourth (right eye) are foveated e.g. following
 gaze.
 
-include::../../../../generated/api/structs/XrFoveatedViewConfigurationViewVARJO.txt[]
+include::{generated}/api/structs/XrFoveatedViewConfigurationViewVARJO.txt[]
 
 .Member Descriptions
 ****
@@ -113,7 +113,7 @@ include::../../../../generated/api/structs/XrFoveatedViewConfigurationViewVARJO.
   runtime should return foveated view configuration view.
 ****
 
-include::../../../../generated/validity/structs/XrFoveatedViewConfigurationViewVARJO.txt[]
+include::{generated}/validity/structs/XrFoveatedViewConfigurationViewVARJO.txt[]
 
 For example:
 
@@ -211,7 +211,7 @@ foveated or non-foveated field of view.
 This is done by chaining slink:XrViewLocateFoveatedRenderingVARJO to
 slink:XrViewLocateInfo.
 
-include::../../../../generated/api/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
+include::{generated}/api/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
 
 .Member Descriptions
 ****
@@ -226,7 +226,7 @@ include::../../../../generated/api/structs/XrViewLocateFoveatedRenderingVARJO.tx
 The runtime must: return foveated field of view when
 pname:foveatedRenderingActive is ename:XR_TRUE.
 
-include::../../../../generated/validity/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
+include::{generated}/validity/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
 --
 
 [source,c++]

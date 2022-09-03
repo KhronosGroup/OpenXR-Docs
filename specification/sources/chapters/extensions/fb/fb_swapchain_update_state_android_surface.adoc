@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_swapchain_update_state_android_surface.adoc[]
+include::{generated}/meta/XR_FB_swapchain_update_state_android_surface.adoc[]
 
 *Contributors*::
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook +
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -48,7 +47,7 @@ elink:XrStructureType enumeration is extended with:
 The slink:XrSwapchainStateAndroidSurfaceDimensionsFB structure is defined
 as:
 
-include::../../../../generated/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
 
 .Member Descriptions
 ****
@@ -79,7 +78,7 @@ To use slink:XrSwapchainStateAndroidSurfaceDimensionsFB,
 dlink:XR_USE_PLATFORM_ANDROID must be defined before including
 `openxr_platform.h`.
 
-include::../../../../generated/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
 --
 
 *New Functions*

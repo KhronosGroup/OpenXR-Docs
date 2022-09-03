@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_opengl_enable.adoc[]
+include::{generated}/meta/XR_KHR_opengl_enable.adoc[]
 
 *Last Modified Date*::
     2019-07-02
@@ -114,7 +114,7 @@ These structures are only available when the corresponding
 --
 The slink:XrGraphicsBindingOpenGLWin32KHR structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsBindingOpenGLWin32KHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingOpenGLWin32KHR.txt[]
 
 .Member Descriptions
 ****
@@ -140,14 +140,14 @@ ename:XR_ERROR_GRAPHICS_DEVICE_INVALID.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_WIN32.
 
-include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLWin32KHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingOpenGLWin32KHR.txt[]
 --
 
 [open,refpage='XrGraphicsBindingOpenGLXlibKHR',type='structs',desc='The graphics binding structure to be passed at session creation to use OpenGL on X11 via Xlib',xrefs='xrCreateSession']
 --
 The slink:XrGraphicsBindingOpenGLXlibKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsBindingOpenGLXlibKHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingOpenGLXlibKHR.txt[]
 
 .Member Descriptions
 ****
@@ -170,7 +170,7 @@ chain of the slink:XrSessionCreateInfo.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_XLIB.
 
-include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLXlibKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingOpenGLXlibKHR.txt[]
 --
 
 
@@ -178,7 +178,7 @@ include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLXlibKHR.t
 --
 The slink:XrGraphicsBindingOpenGLXcbKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsBindingOpenGLXcbKHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingOpenGLXcbKHR.txt[]
 
 .Member Descriptions
 ****
@@ -203,14 +203,14 @@ chain of the slink:XrSessionCreateInfo.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_XCB.
 
-include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLXcbKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingOpenGLXcbKHR.txt[]
 --
 
 [open,refpage='XrGraphicsBindingOpenGLWaylandKHR',type='structs',desc='The graphics binding structure to be passed at session creation to use OpenGL on Wayland',xrefs='xrCreateSession']
 --
 The slink:XrGraphicsBindingOpenGLWaylandKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsBindingOpenGLWaylandKHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingOpenGLWaylandKHR.txt[]
 
 .Member Descriptions
 ****
@@ -229,14 +229,14 @@ provide a pointer to an slink:XrGraphicsBindingOpenGLWaylandKHR in the
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_WAYLAND.
 
-include::../../../../generated/validity/structs/XrGraphicsBindingOpenGLWaylandKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingOpenGLWaylandKHR.txt[]
 --
 
 [open,refpage='XrSwapchainImageOpenGLKHR',type='structs',desc='OpenGL-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
 The slink:XrSwapchainImageOpenGLKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrSwapchainImageOpenGLKHR.txt[]
+include::{generated}/api/structs/XrSwapchainImageOpenGLKHR.txt[]
 
 .Member Descriptions
 ****
@@ -265,14 +265,14 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing up, near Z plane at -1, and far Z plane at 1.
 
-include::../../../../generated/validity/structs/XrSwapchainImageOpenGLKHR.txt[]
+include::{generated}/validity/structs/XrSwapchainImageOpenGLKHR.txt[]
 --
 
 [open,refpage='XrGraphicsRequirementsOpenGLKHR',type='structs',desc='OpenGL API version requirements',xrefs='xrGetOpenGLGraphicsRequirementsKHR']
 --
 The slink:XrGraphicsRequirementsOpenGLKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsRequirementsOpenGLKHR.txt[]
+include::{generated}/api/structs/XrGraphicsRequirementsOpenGLKHR.txt[]
 
 .Member Descriptions
 ****
@@ -295,7 +295,7 @@ slink:XrGraphicsRequirementsOpenGLKHR is populated by
 flink:xrGetOpenGLGraphicsRequirementsKHR with the runtime's OpenGL API
 version requirements.
 
-include::../../../../generated/validity/structs/XrGraphicsRequirementsOpenGLKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLKHR.txt[]
 --
 
 *New Functions*
@@ -304,7 +304,7 @@ include::../../../../generated/validity/structs/XrGraphicsRequirementsOpenGLKHR.
 --
 To query OpenGL API version requirements for an instance and system, call:
 
-include::../../../../generated/api/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
+include::{generated}/api/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -325,7 +325,7 @@ on calls to flink:xrCreateSession if
 flink:xrGetOpenGLGraphicsRequirementsKHR has not been called for the same
 pname:instance and pname:systemId.
 
-include::../../../../generated/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
+include::{generated}/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
 --
 
 *Issues*

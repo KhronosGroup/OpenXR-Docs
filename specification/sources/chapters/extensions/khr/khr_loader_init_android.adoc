@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_loader_init_android.adoc[]
+include::{generated}/meta/XR_KHR_loader_init_android.adoc[]
 
 *Last Modified Date*::
     2020-05-07
@@ -43,7 +43,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrLoaderInitInfoAndroidKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
+include::{generated}/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
 
 .Member Descriptions
 ****
@@ -58,7 +58,7 @@ include::../../../../generated/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
   pointer.
 ****
 
-include::../../../../generated/validity/structs/XrLoaderInitInfoAndroidKHR.txt[]
+include::{generated}/validity/structs/XrLoaderInitInfoAndroidKHR.txt[]
 --
 
 *New Functions*

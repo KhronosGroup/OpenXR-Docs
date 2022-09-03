@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXTX_overlay.adoc[]
+include::{generated}/meta/XR_EXTX_overlay.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2021-01-13
@@ -215,22 +214,22 @@ None
 
 [open,refpage='XrOverlayMainSessionFlagsEXTX',type='flags',desc='XrOverlayMainSessionFlagsEXTX']
 --
-include::{INCS-VAR}/api/flags/XrOverlayMainSessionFlagsEXTX.txt[]
+include::{generated}/api/flags/XrOverlayMainSessionFlagsEXTX.txt[]
 --
 
 [open,refpage='XrOverlayMainSessionFlagBitsEXTX',type='enums',desc='XrOverlayMainSessionFlagBitsEXTX']
 --
-include::{INCS-VAR}/api/enums/XrOverlayMainSessionFlagBitsEXTX.txt[]
+include::{generated}/api/enums/XrOverlayMainSessionFlagBitsEXTX.txt[]
 --
 
 [open,refpage='XrOverlaySessionCreateFlagsEXTX',type='flags',desc='XrOverlaySessionCreateFlagsEXTX']
 --
-include::{INCS-VAR}/api/flags/XrOverlaySessionCreateFlagsEXTX.txt[]
+include::{generated}/api/flags/XrOverlaySessionCreateFlagsEXTX.txt[]
 --
 
 [open,refpage='XrOverlaySessionCreateFlagBitsEXTX',type='enums',desc='XrOverlaySessionCreateFlagBitsEXTX']
 --
-include::{INCS-VAR}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.txt[]
+include::{generated}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.txt[]
 --
 
 *New Enum Constants*
@@ -248,7 +247,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrSessionCreateInfoOverlayEXTX',type='structs',desc='Session creation extension struct providing overlay session parameters']
 --
-include::{INCS-VAR}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+include::{generated}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
 
 .Member Descriptions
 ****
@@ -263,13 +262,13 @@ include::{INCS-VAR}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
   of the session's composition layers in terms of other sessions.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+include::{generated}/validity/structs/XrSessionCreateInfoOverlayEXTX.txt[]
 --
 
 
 [open,refpage='XrEventDataMainSessionVisibilityChangedEXTX',type='structs',desc='Event representing main session visibility change']
 --
-include::{INCS-VAR}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+include::{generated}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
 
 Receiving the slink:XrEventDataMainSessionVisibilityChangedEXTX event
 structure indicates that the main session has gained or lost visibility.
@@ -296,7 +295,7 @@ which indicates if the main session has enabled the
   which indicates various state information for the main session.
 ****
 
-include::{INCS-VAR}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+include::{generated}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
 
 --
 

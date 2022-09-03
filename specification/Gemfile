@@ -1,0 +1,8 @@
+# Copyright (c) 2022, The Khronos Group Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+source 'https://rubygems.org'
+
+gem 'asciidoctor', '~>2.0.10'
+gem 'asciidoctor-pdf', '~> 1.5.0'

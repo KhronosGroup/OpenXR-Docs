@@ -2,13 +2,12 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_display_refresh_rate.adoc[]
+include::{generated}/meta/XR_FB_display_refresh_rate.adoc[]
 
 *Contributors*::
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -61,7 +60,7 @@ indicates that the display refresh rate has changed.
 
 The slink:XrEventDataDisplayRefreshRateChangedFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+include::{generated}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
 
 .Member Descriptions
 ****
@@ -73,7 +72,7 @@ include::{INCS-VAR}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
 * pname:toDisplayRefreshRate is the new display refresh rate.
 ****
 
-include::{INCS-VAR}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+include::{generated}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
 --
 
 *New Functions*
@@ -82,7 +81,7 @@ include::{INCS-VAR}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt[
 --
 The flink:xrEnumerateDisplayRefreshRatesFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+include::{generated}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -109,14 +108,14 @@ display refresh rates.
 Runtimes must: always return identical buffer contents from this enumeration
 for the lifetime of the session.
 
-include::../../../../generated/validity/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+include::{generated}/validity/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
 --
 
 [open,refpage='xrGetDisplayRefreshRateFB',desc='Get the current display refresh rate',type='protos',xrefs='xrRequestDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
 --
 The flink:xrGetDisplayRefreshRateFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrGetDisplayRefreshRateFB.txt[]
+include::{generated}/api/protos/xrGetDisplayRefreshRateFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -127,14 +126,14 @@ include::{INCS-VAR}/api/protos/xrGetDisplayRefreshRateFB.txt[]
 
 flink:xrGetDisplayRefreshRateFB retrieves the current display refresh rate.
 
-include::../../../../generated/validity/protos/xrGetDisplayRefreshRateFB.txt[]
+include::{generated}/validity/protos/xrGetDisplayRefreshRateFB.txt[]
 --
 
 [open,refpage='xrRequestDisplayRefreshRateFB',desc='Request a display refresh rate',type='protos',xrefs='xrGetDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
 --
 The flink:xrRequestDisplayRefreshRateFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrRequestDisplayRefreshRateFB.txt[]
+include::{generated}/api/protos/xrRequestDisplayRefreshRateFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -156,7 +155,7 @@ preference.
 Note that this is only a request and does not guarantee the system will
 switch to the requested display refresh rate.
 
-include::../../../../generated/validity/protos/xrRequestDisplayRefreshRateFB.txt[]
+include::{generated}/validity/protos/xrRequestDisplayRefreshRateFB.txt[]
 --
 
 *Issues*

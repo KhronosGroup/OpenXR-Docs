@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_MNDX_egl_enable.adoc[]
+include::{generated}/meta/XR_MNDX_egl_enable.adoc[]
 
 *Last Modified Date*::
     2020-05-21
@@ -38,7 +38,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrGraphicsBindingEGLMNDX structure is defined as:
 
-include::../../../../generated/api/structs/XrGraphicsBindingEGLMNDX.txt[]
+include::{generated}/api/structs/XrGraphicsBindingEGLMNDX.txt[]
 
 .Member Descriptions
 ****
@@ -60,7 +60,7 @@ chain of the slink:XrSessionCreateInfo.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_EGL.
 
-include::../../../../generated/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
 --
 
 *New Functions*

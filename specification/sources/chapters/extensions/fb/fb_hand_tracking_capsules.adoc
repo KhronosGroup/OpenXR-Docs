@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_hand_tracking_capsules.adoc[]
+include::{generated}/meta/XR_FB_hand_tracking_capsules.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
     James Hillery, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -49,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrHandCapsuleFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrHandCapsuleFB.txt[]
+include::{generated}/api/structs/XrHandCapsuleFB.txt[]
 
 It describes a collision capsule associated with a hand joint.
 
@@ -61,7 +60,7 @@ It describes a collision capsule associated with a hand joint.
   Multiple capsules can be attached to the same joint.
 ****
 
-include::{INCS-VAR}/validity/structs/XrHandCapsuleFB.txt[]
+include::{generated}/validity/structs/XrHandCapsuleFB.txt[]
 --
 
 [open,refpage='XrHandTrackingCapsulesStateFB',type='structs',desc='A list of capsules associated to hand joints',xrefs='']
@@ -73,7 +72,7 @@ request collision capsule information associated with this hand.
 
 The slink:XrHandTrackingCapsulesStateFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
+include::{generated}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
 
 .Member Descriptions
 ****
@@ -84,7 +83,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
 * pname:capsules is an array of capsules.
 ****
 
-include::{INCS-VAR}/validity/structs/XrHandTrackingCapsulesStateFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingCapsulesStateFB.txt[]
 --
 
 *New Functions*

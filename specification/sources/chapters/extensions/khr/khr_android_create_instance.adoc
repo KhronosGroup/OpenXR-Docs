@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_android_create_instance.adoc[]
+include::{generated}/meta/XR_KHR_android_create_instance.adoc[]
 
 *Last Modified Date*::
     2019-07-17
@@ -40,7 +40,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrInstanceCreateInfoAndroidKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+include::{generated}/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
 
 .Member Descriptions
 ****
@@ -66,7 +66,7 @@ pname:next chain of the slink:XrInstanceCreateInfo structure when calling
 flink:xrCreateInstance.
 
 
-include::../../../../generated/validity/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+include::{generated}/validity/structs/XrInstanceCreateInfoAndroidKHR.txt[]
 --
 
 *New Functions*

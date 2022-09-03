@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_loader_init.adoc[]
+include::{generated}/meta/XR_KHR_loader_init.adoc[]
 
 *Last Modified Date*::
     2020-05-07
@@ -37,7 +37,7 @@ using.
 --
 The slink:XrLoaderInitInfoBaseHeaderKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+include::{generated}/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
 
 .Member Descriptions
 ****
@@ -49,7 +49,7 @@ include::../../../../generated/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
 ****
 
 
-include::../../../../generated/validity/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+include::{generated}/validity/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
 --
 
 *New Functions*
@@ -58,7 +58,7 @@ include::../../../../generated/validity/structs/XrLoaderInitInfoBaseHeaderKHR.tx
 To initialize an OpenXR loader with platform or implementation-specific
 parameters, call:
 
-include::../../../../generated/api/protos/xrInitializeLoaderKHR.txt[]
+include::{generated}/api/protos/xrInitializeLoaderKHR.txt[]
 
 .Parameter Descriptions
 ****

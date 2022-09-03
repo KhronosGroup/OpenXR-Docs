@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_spatial_entity_container.adoc[]
+include::{generated}/meta/XR_FB_spatial_entity_container.adoc[]
 
 *Contributors*::
     John Schofield, Facebook +
     Andrew Kim, Facebook +
     Yuichi Taguchi, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -40,7 +39,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSpaceContainerFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSpaceContainerFB.txt[]
+include::{generated}/api/structs/XrSpaceContainerFB.txt[]
 
 .Member Descriptions
 ****
@@ -63,7 +62,7 @@ The slink:XrSpaceContainerFB structure can: be used by an application to
 perform the two calls required to obtain information about which spatial
 entities are contained by a specified spatial entity.
 
-include::{INCS-VAR}/validity/structs/XrSpaceContainerFB.txt[]
+include::{generated}/validity/structs/XrSpaceContainerFB.txt[]
 --
 
 *New Functions*
@@ -72,7 +71,7 @@ include::{INCS-VAR}/validity/structs/XrSpaceContainerFB.txt[]
 --
 The flink:xrGetSpaceContainerFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrGetSpaceContainerFB.txt[]
+include::{generated}/api/protos/xrGetSpaceContainerFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -91,7 +90,7 @@ The ename:XR_SPACE_COMPONENT_TYPE_SPACE_CONTAINER_FB component type must: be
 enabled, otherwise this function will return
 ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
 
-include::{INCS-VAR}/validity/protos/xrGetSpaceContainerFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceContainerFB.txt[]
 --
 
 *Issues*

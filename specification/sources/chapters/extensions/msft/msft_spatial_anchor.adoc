@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_MSFT_spatial_anchor.adoc[]
+include::{generated}/meta/XR_MSFT_spatial_anchor.adoc[]
 
 *Overview*
 
@@ -15,7 +15,7 @@ The runtime should: then adjust the position and orientation of that
 anchor's origin over time as needed, independently of all other spaces and
 anchors, to ensure that it maintains its original mapping to the real world.
 
-include::../../../../generated/api/handles/XrSpatialAnchorMSFT.txt[]
+include::{generated}/api/handles/XrSpatialAnchorMSFT.txt[]
 
 Spatial anchors are often used in combination with an `UNBOUNDED_MSFT`
 reference space.
@@ -35,7 +35,7 @@ in the environment.
 --
 The flink:xrCreateSpatialAnchorMSFT function is defined as:
 
-include::../../../../generated/api/protos/xrCreateSpatialAnchorMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -60,14 +60,14 @@ and orientation over time relative to other spaces so as to maintain maximum
 alignment to its original real-world location, even if that changes the
 anchor's relationship to the original pname:space used to initialize it.
 
-include::../../../../generated/validity/protos/xrCreateSpatialAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorMSFT.txt[]
 --
 
 [open,refpage='XrSpatialAnchorCreateInfoMSFT',desc='Information to create a spatial anchor',type='structs',xrefs='XrSpatialAnchorMSFT xrCreateSpatialAnchorMSFT']
 --
 The slink:XrSpatialAnchorCreateInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -83,14 +83,14 @@ include::../../../../generated/api/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
   within pname:space.
 ****
 
-include::../../../../generated/validity/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoMSFT.txt[]
 --
 
 [open,refpage='xrCreateSpatialAnchorSpaceMSFT',desc='Creates a space from a spatial anchor',type='protos',xrefs='XrSpatialAnchorMSFT XrSpatialAnchorSpaceCreateInfoMSFT XrSpace']
 --
 The flink:xrCreateSpatialAnchorSpaceMSFT function is defined as:
 
-include::../../../../generated/api/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -114,14 +114,14 @@ The slink:XrSpace handle must be eventually freed via the
 flink:xrDestroySpace function or by destroying the parent
 slink:XrSpatialAnchorMSFT handle.
 
-include::../../../../generated/validity/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorSpaceMSFT.txt[]
 --
 
 [open,refpage='XrSpatialAnchorSpaceCreateInfoMSFT',desc='Information to create a space from a spatial anchor',type='structs',xrefs='XrSpatialAnchorMSFT xrCreateSpatialAnchorSpaceMSFT XrSpace']
 --
 The slink:XrSpatialAnchorSpaceCreateInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSpatialAnchorSpaceCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialAnchorSpaceCreateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -136,14 +136,14 @@ include::../../../../generated/api/structs/XrSpatialAnchorSpaceCreateInfoMSFT.tx
   origin.
 ****
 
-include::../../../../generated/validity/structs/XrSpatialAnchorSpaceCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorSpaceCreateInfoMSFT.txt[]
 --
 
 [open,refpage='xrDestroySpatialAnchorMSFT',desc='Destroys a spatial anchor',type='protos',xrefs='XrSpatialAnchorMSFT xrCreateSpatialAnchorMSFT']
 --
 The flink:xrDestroySpatialAnchorMSFT function is defined as:
 
-include::../../../../generated/api/protos/xrDestroySpatialAnchorMSFT.txt[]
+include::{generated}/api/protos/xrDestroySpatialAnchorMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -156,7 +156,7 @@ flink:xrDestroySpatialAnchorMSFT.
 By destroying an anchor, the runtime can: stop spending resources used to
 maintain tracking for that anchor's origin.
 
-include::../../../../generated/validity/protos/xrDestroySpatialAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrDestroySpatialAnchorMSFT.txt[]
 --
 
 *New Object Types*

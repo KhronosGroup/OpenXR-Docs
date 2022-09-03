@@ -6,7 +6,7 @@
 
 [open,refpage='XrSession',desc='Opaque handle to a session object',type='handles',xrefs='xrCreateSession xrDestroySession xrBeginSession xrEndSession']
 --
-include::../../generated/api/handles/XrSession.txt[]
+include::{generated}/api/handles/XrSession.txt[]
 
 A session represents an application's intention to display XR content to the
 user.
@@ -186,7 +186,7 @@ details refer to the extension specification of the graphics API).
 --
 The flink:xrCreateSession function is defined as:
 
-include::../../generated/api/protos/xrCreateSession.txt[]
+include::{generated}/api/protos/xrCreateSession.txt[]
 
 .Parameter Descriptions
 ****
@@ -211,14 +211,14 @@ ftext:xrGet*GraphicsRequirements has not been called for the same
 pname:instance and slink:XrSessionCreateInfo::pname:systemId.
 (See graphics binding extensions for details.)
 
-include::../../generated/validity/protos/xrCreateSession.txt[]
+include::{generated}/validity/protos/xrCreateSession.txt[]
 --
 
 [open,refpage='XrSessionCreateInfo',desc='Creates a session',type='structs',xrefs='xrCreateSession XrSessionCreateFlags']
 --
 
 The slink:XrSessionCreateInfo structure is defined as:
-include::../../generated/api/structs/XrSessionCreateInfo.txt[]
+include::{generated}/api/structs/XrSessionCreateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -244,14 +244,14 @@ include::../../generated/api/structs/XrSessionCreateInfo.txt[]
   must: be returned.
 ****
 
-include::../../generated/validity/structs/XrSessionCreateInfo.txt[]
+include::{generated}/validity/structs/XrSessionCreateInfo.txt[]
 --
 
 [open,refpage='XrSessionCreateFlags',desc='Session Creation Flags',type='flags',xrefs='xrCreateSession XrSessionCreateInfo']
 --
 The elink:XrSessionCreateFlags include:
 
-include::../../generated/api/enums/XrSessionCreateFlagBits.txt[]
+include::{generated}/api/enums/XrSessionCreateFlagBits.txt[]
 
 There are currently no session creation flags.
 This is reserved for future use.
@@ -261,7 +261,7 @@ This is reserved for future use.
 [open,refpage='xrDestroySession',desc='Destroys an XrSession',type='protos',xrefs='xrCreateSession xrBeginSession xrEndSession']
 --
 The flink:xrDestroySession function is defined as.
-include::../../generated/api/protos/xrDestroySession.txt[]
+include::{generated}/api/protos/xrDestroySession.txt[]
 
 .Parameter Descriptions
 ****
@@ -278,7 +278,7 @@ pname:session in progress when the session is destroyed.
 flink:xrDestroySession can be called when the session is in any session
 state.
 
-include::../../generated/validity/protos/xrDestroySession.txt[]
+include::{generated}/validity/protos/xrDestroySession.txt[]
 --
 
 [[session-control]]
@@ -288,7 +288,7 @@ include::../../generated/validity/protos/xrDestroySession.txt[]
 --
 The flink:xrBeginSession function is defined as:
 
-include::../../generated/api/protos/xrBeginSession.txt[]
+include::{generated}/api/protos/xrBeginSession.txt[]
 
 .Parameter Descriptions
 ****
@@ -328,14 +328,14 @@ If pname:primaryViewConfigurationType in pname:beginInfo is not supported by
 the basetype:XrSystemId used to create the pname:session, the runtime must:
 return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
 
-include::../../generated/validity/protos/xrBeginSession.txt[]
+include::{generated}/validity/protos/xrBeginSession.txt[]
 --
 
 [open,refpage='XrSessionBeginInfo',desc='Struct containing session begin info',type='structs',xrefs='xrBeginSession']
 --
 
 The slink:XrSessionBeginInfo structure is defined as:
-include::../../generated/api/structs/XrSessionBeginInfo.txt[]
+include::{generated}/api/structs/XrSessionBeginInfo.txt[]
 
 .Member Descriptions
 ****
@@ -348,14 +348,14 @@ include::../../generated/api/structs/XrSessionBeginInfo.txt[]
   displays.
 ****
 
-include::../../generated/validity/structs/XrSessionBeginInfo.txt[]
+include::{generated}/validity/structs/XrSessionBeginInfo.txt[]
 --
 
 [open,refpage='xrEndSession',desc='Ends an XrSession',type='protos',xrefs='xrCreateSession xrDestroySession xrBeginSession']
 --
 The flink:xrEndSession function is defined as:
 
-include::../../generated/api/protos/xrEndSession.txt[]
+include::{generated}/api/protos/xrEndSession.txt[]
 
 .Parameter Descriptions
 ****
@@ -386,7 +386,7 @@ If the application wishes to exit a running session, the application can
 call flink:xrRequestExitSession so that the session transitions from
 ename:XR_SESSION_STATE_IDLE to ename:XR_SESSION_STATE_EXITING.
 
-include::../../generated/validity/protos/xrEndSession.txt[]
+include::{generated}/validity/protos/xrEndSession.txt[]
 --
 
 [open,refpage='xrRequestExitSession',desc='Request to exit a running session.',type='protos',xrefs='xrDestroySession xrEndSession']
@@ -408,7 +408,7 @@ lifecycle.
 
 The flink:xrRequestExitSession function is defined as:
 
-include::../../generated/api/protos/xrRequestExitSession.txt[]
+include::{generated}/api/protos/xrRequestExitSession.txt[]
 
 .Parameter Descriptions
 ****
@@ -419,7 +419,7 @@ If pname:session <<session_not_running, is not running>> when
 flink:xrRequestExitSession is called, ename:XR_ERROR_SESSION_NOT_RUNNING
 must: be returned.
 
-include::../../generated/validity/protos/xrRequestExitSession.txt[]
+include::{generated}/validity/protos/xrRequestExitSession.txt[]
 --
 
 [[session-states]]
@@ -436,7 +436,7 @@ These events are detailed below.
 --
 
 The slink:XrEventDataSessionStateChanged structure is defined as:
-include::../../generated/api/structs/XrEventDataSessionStateChanged.txt[]
+include::{generated}/api/structs/XrEventDataSessionStateChanged.txt[]
 
 .Member Descriptions
 ****
@@ -453,14 +453,14 @@ include::../../generated/api/structs/XrEventDataSessionStateChanged.txt[]
 Receiving the slink:XrEventDataSessionStateChanged event structure indicates
 that the application has changed lifecycle state.
 
-include::../../generated/validity/structs/XrEventDataSessionStateChanged.txt[]
+include::{generated}/validity/structs/XrEventDataSessionStateChanged.txt[]
 --
 
 [open,refpage='XrSessionState',desc='Session lifecycle state',type='enums',xrefs='xrPollEvent XrEventDataSessionStateChanged']
 --
 The elink:XrSessionState enumerates the possible session lifecycle states:
 
-include::../../generated/api/enums/XrSessionState.txt[]
+include::{generated}/api/enums/XrSessionState.txt[]
 
 .Enumerant Descriptions
 ****

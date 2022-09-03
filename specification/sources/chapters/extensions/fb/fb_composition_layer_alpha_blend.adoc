@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_composition_layer_alpha_blend.adoc[]
+include::{generated}/meta/XR_FB_composition_layer_alpha_blend.adoc[]
 
 *Contributors*::
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook +
     Johannes Schmid, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -49,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 The possible blend factors are specified by the elink:XrBlendFactorFB
 enumeration.
 
-include::../../../../generated/api/enums/XrBlendFactorFB.txt[]
+include::{generated}/api/enums/XrBlendFactorFB.txt[]
 --
 
 *New Structures*
@@ -58,7 +57,7 @@ include::../../../../generated/api/enums/XrBlendFactorFB.txt[]
 --
 The slink:XrCompositionLayerAlphaBlendFB structure is defined as:
 
-include::../../../../generated/api/structs/XrCompositionLayerAlphaBlendFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerAlphaBlendFB.txt[]
 
 .Member Descriptions
 ****
@@ -78,7 +77,7 @@ The slink:XrCompositionLayerAlphaBlendFB structure must: be provided in the
 pname:next chain of the slink:XrCompositionLayerBaseHeader structure.
 
 
-include::../../../../generated/validity/structs/XrCompositionLayerAlphaBlendFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.txt[]
 --
 
 *New Functions*

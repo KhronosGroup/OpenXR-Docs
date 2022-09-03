@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_ULTRALEAP_hand_tracking_forearm.adoc[]
+include::{generated}/meta/XR_ULTRALEAP_hand_tracking_forearm.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2022-04-19
@@ -35,7 +34,7 @@ ename:XR_HAND_FOREARM_JOINT_ELBOW_ULTRALEAP.
 
 [open,refpage='XrHandForearmJointULTRALEAP',type='enums',desc='The name of hand joints that can be tracked including the elbow',xrefs='XrHandJointEXT']
 --
-include::../../../../generated/api/enums/XrHandForearmJointULTRALEAP.txt[]
+include::{generated}/api/enums/XrHandForearmJointULTRALEAP.txt[]
 
 [NOTE]
 .Note
@@ -55,7 +54,7 @@ The X direction is perpendicular to Y and Z and follows the right hand rule.
 
 [open,refpage='XR_HAND_FOREARM_JOINT_COUNT_ULTRALEAP',type='defines',desc='The number of hand joint enums defined in XrHandForearmJointULTRALEAP',xrefs='XrHandForearmJointULTRALEAP']
 --
-include::../../../../generated/api/defines/XR_HAND_FOREARM_JOINT_COUNT_ULTRALEAP.txt[]
+include::{generated}/api/defines/XR_HAND_FOREARM_JOINT_COUNT_ULTRALEAP.txt[]
 
 dlink:XR_HAND_FOREARM_JOINT_COUNT_ULTRALEAP defines the number of hand joint
 enumerants defined in elink:XrHandForearmJointULTRALEAP.

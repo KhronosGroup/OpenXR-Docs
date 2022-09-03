@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_conformance_automation.adoc[]
+include::{generated}/meta/XR_EXT_conformance_automation.adoc[]
 
 *Last Modified Date*::
     2021-04-14
@@ -12,7 +12,6 @@ include::../metadata/XR_EXT_conformance_automation.adoc[]
     Lachlan Ford, Microsoft +
     Ryan Pavlik, Collabora +
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -72,7 +71,7 @@ or providing a non-stub implementation of it.
 
 [open,refpage='xrSetInputDeviceActiveEXT',type='protos',desc='Sets the active state of the input device']
 --
-include::{INCS-VAR}/api/protos/xrSetInputDeviceActiveEXT.txt[]
+include::{generated}/api/protos/xrSetInputDeviceActiveEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -86,7 +85,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceActiveEXT.txt[]
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
-include::../conformance_automation_warning.adoc[]
+include::{appendices}/conformance_automation_warning.adoc[]
 
 .Valid Usage
 ****
@@ -94,13 +93,13 @@ include::../conformance_automation_warning.adoc[]
 * pname:topLevelPath must: be a valid top level path.
 ****
 
-include::{INCS-VAR}/validity/protos/xrSetInputDeviceActiveEXT.txt[]
+include::{generated}/validity/protos/xrSetInputDeviceActiveEXT.txt[]
 
 --
 
 [open,refpage='xrSetInputDeviceStateBoolEXT',type='protos',desc='Sets the state of a boolean input source on the input device']
 --
-include::{INCS-VAR}/api/protos/xrSetInputDeviceStateBoolEXT.txt[]
+include::{generated}/api/protos/xrSetInputDeviceStateBoolEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -114,7 +113,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateBoolEXT.txt[]
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
-include::../conformance_automation_warning.adoc[]
+include::{appendices}/conformance_automation_warning.adoc[]
 
 .Valid Usage
 ****
@@ -123,13 +122,13 @@ include::../conformance_automation_warning.adoc[]
 * pname:inputSourcePath must: be a valid input source path.
 ****
 
-include::{INCS-VAR}/validity/protos/xrSetInputDeviceStateBoolEXT.txt[]
+include::{generated}/validity/protos/xrSetInputDeviceStateBoolEXT.txt[]
 
 --
 
 [open,refpage='xrSetInputDeviceStateFloatEXT',type='protos',desc='Sets the state of a float input source on the input device']
 --
-include::{INCS-VAR}/api/protos/xrSetInputDeviceStateFloatEXT.txt[]
+include::{generated}/api/protos/xrSetInputDeviceStateFloatEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -143,7 +142,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateFloatEXT.txt[]
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
-include::../conformance_automation_warning.adoc[]
+include::{appendices}/conformance_automation_warning.adoc[]
 
 .Valid Usage
 ****
@@ -152,13 +151,13 @@ include::../conformance_automation_warning.adoc[]
 * pname:inputSourcePath must: be a valid input source path.
 ****
 
-include::{INCS-VAR}/validity/protos/xrSetInputDeviceStateFloatEXT.txt[]
+include::{generated}/validity/protos/xrSetInputDeviceStateFloatEXT.txt[]
 
 --
 
 [open,refpage='xrSetInputDeviceStateVector2fEXT',type='protos',desc='Sets the state of a 2D vector input source on the input device']
 --
-include::{INCS-VAR}/api/protos/xrSetInputDeviceStateVector2fEXT.txt[]
+include::{generated}/api/protos/xrSetInputDeviceStateVector2fEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -172,7 +171,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceStateVector2fEXT.txt[]
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
-include::../conformance_automation_warning.adoc[]
+include::{appendices}/conformance_automation_warning.adoc[]
 
 .Valid Usage
 ****
@@ -181,13 +180,13 @@ include::../conformance_automation_warning.adoc[]
 * pname:inputSourcePath must: be a valid input source path.
 ****
 
-include::{INCS-VAR}/validity/protos/xrSetInputDeviceStateVector2fEXT.txt[]
+include::{generated}/validity/protos/xrSetInputDeviceStateVector2fEXT.txt[]
 
 --
 
 [open,refpage='xrSetInputDeviceLocationEXT',type='protos',desc='Sets the effective location of a pose input source on the input device']
 --
-include::{INCS-VAR}/api/protos/xrSetInputDeviceLocationEXT.txt[]
+include::{generated}/api/protos/xrSetInputDeviceLocationEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -200,7 +199,7 @@ include::{INCS-VAR}/api/protos/xrSetInputDeviceLocationEXT.txt[]
 ****
 
 // In ref pages, expands to a warning to not use this in normal apps.
-include::../conformance_automation_warning.adoc[]
+include::{appendices}/conformance_automation_warning.adoc[]
 
 .Valid Usage
 ****
@@ -209,7 +208,7 @@ include::../conformance_automation_warning.adoc[]
 * pname:inputSourcePath must: be a valid input source path.
 ****
 
-include::{INCS-VAR}/validity/protos/xrSetInputDeviceLocationEXT.txt[]
+include::{generated}/validity/protos/xrSetInputDeviceLocationEXT.txt[]
 
 --
 

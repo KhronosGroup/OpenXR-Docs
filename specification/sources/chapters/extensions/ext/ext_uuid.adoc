@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_uuid.adoc[]
+include::{generated}/meta/XR_EXT_uuid.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
     2021-10-27
@@ -28,7 +27,7 @@ link:https://www.rfc-editor.org/rfc/rfc4122.html[RFC 4122].
 The slink:XrUuidEXT structure is a 128-bit Universally Unique Identifier and
 is defined as:
 
-include::../../../../generated/api/structs/XrUuidEXT.txt[]
+include::{generated}/api/structs/XrUuidEXT.txt[]
 
 .Member Descriptions
 ****
@@ -40,7 +39,7 @@ fields defined in
 link:https://www.rfc-editor.org/rfc/rfc4122.html#section-4.1.2[RFC 4122
 section 4.1.2].
 
-include::../../../../generated/validity/structs/XrUuidEXT.txt[]
+include::{generated}/validity/structs/XrUuidEXT.txt[]
 --
 
 *New Object Types*

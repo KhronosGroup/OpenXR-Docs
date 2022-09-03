@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_dpad_binding.adoc[]
+include::{generated}/meta/XR_EXT_dpad_binding.adoc[]
 
 *Last Modified Date*::
     2022-04-20
@@ -223,7 +223,7 @@ transitions.
 --
 The slink:XrInteractionProfileDpadBindingEXT structure is defined as:
 
-include::../../../../generated/api/structs/XrInteractionProfileDpadBindingEXT.txt[]
+include::{generated}/api/structs/XrInteractionProfileDpadBindingEXT.txt[]
 
 .Member Descriptions
 ****
@@ -310,7 +310,7 @@ they can have different settings.
 If both action sets are active, the higher priority one trumps the lower
 priority one, and the lower priority one is suppressed.
 
-include::../../../../generated/validity/structs/XrInteractionProfileDpadBindingEXT.txt[]
+include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.txt[]
 --
 
 *New Functions*

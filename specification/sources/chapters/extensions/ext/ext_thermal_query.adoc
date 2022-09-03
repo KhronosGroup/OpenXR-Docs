@@ -1,4 +1,4 @@
-include::../metadata/XR_EXT_thermal_query.adoc[]
+include::{generated}/meta/XR_EXT_thermal_query.adoc[]
 
 *Last Modified Date*::
     2021-04-14
@@ -13,7 +13,6 @@ include::../metadata/XR_EXT_thermal_query.adoc[]
 // Khronos may elect to exercise its Copyright  license to incorporate this submission into
 // other works it controls as it desires."
 
-:INCS-VAR: ../../../../generated
 
 ==== Overview
 
@@ -35,11 +34,11 @@ The most critical temperature of the domain is the one which is currently
 most likely to be relevant for thermal throttling. +
 
 To query the status of a given domain:
-include::{INCS-VAR}/api/protos/xrThermalGetTemperatureTrendEXT.no-xref.txt[]
+include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.no-xref.txt[]
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
 
 For the definition of the notification levels, see
 <<performance-settings-notification-levels>>
@@ -51,7 +50,7 @@ For the definition of the notification levels, see
 
 [open,refpage='xrThermalGetTemperatureTrendEXT',type='protos',desc='xrThermalGetTemperatureTrendEXT',xrefs='']
 --
-include::{INCS-VAR}/api/protos/xrThermalGetTemperatureTrendEXT.txt[]
+include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.txt[]
 Allows to query the current temperature warning level of a domain, the
 remaining headroom and the trend.
 
@@ -67,12 +66,12 @@ remaining headroom and the trend.
   most critical temperature of the domain.
 ****
 
-include::{INCS-VAR}/validity/protos/xrThermalGetTemperatureTrendEXT.txt[]
+include::{generated}/validity/protos/xrThermalGetTemperatureTrendEXT.txt[]
 --
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
 
 *Version History*
 

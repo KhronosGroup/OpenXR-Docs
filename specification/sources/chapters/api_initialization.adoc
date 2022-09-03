@@ -37,7 +37,7 @@ flink:xrGetInstanceProcAddr.
 Function pointers for all OpenXR functions can: be obtained with the
 function flink:xrGetInstanceProcAddr.
 
-include::../../generated/api/protos/xrGetInstanceProcAddr.txt[]
+include::{generated}/api/protos/xrGetInstanceProcAddr.txt[]
 
 .Parameter Descriptions
 ****
@@ -119,13 +119,13 @@ pointer`") for each case.
     The returned function pointer must: only be called with a handle (the
     first parameter) that is pname:instance or a child of pname:instance.
 
-include::../../generated/validity/protos/xrGetInstanceProcAddr.txt[]
+include::{generated}/validity/protos/xrGetInstanceProcAddr.txt[]
 --
 
 [open,refpage='PFN_xrVoidFunction',desc='Generic function pointer type returned by queries',type='funcpointers',xrefs='xrGetInstanceProcAddr']
 --
 
-include::../../generated/api/funcpointers/PFN_xrVoidFunction.txt[]
+include::{generated}/api/funcpointers/PFN_xrVoidFunction.txt[]
 
 .Parameter Descriptions
 ****

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_binding_modification.adoc[]
+include::{generated}/meta/XR_KHR_binding_modification.adoc[]
 
 *Last Modified Date*::
     2020-07-29
@@ -41,7 +41,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrBindingModificationsKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrBindingModificationsKHR.txt[]
+include::{generated}/api/structs/XrBindingModificationsKHR.txt[]
 
 .Member Descriptions
 ****
@@ -56,7 +56,7 @@ include::../../../../generated/api/structs/XrBindingModificationsKHR.txt[]
   the specified interaction profile.
 ****
 
-include::../../../../generated/validity/structs/XrBindingModificationsKHR.txt[]
+include::{generated}/validity/structs/XrBindingModificationsKHR.txt[]
 --
 
 
@@ -64,7 +64,7 @@ include::../../../../generated/validity/structs/XrBindingModificationsKHR.txt[]
 --
 The slink:XrBindingModificationBaseHeaderKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrBindingModificationBaseHeaderKHR.txt[]
+include::{generated}/api/structs/XrBindingModificationBaseHeaderKHR.txt[]
 
 .Member Descriptions
 ****
@@ -78,7 +78,7 @@ include::../../../../generated/api/structs/XrBindingModificationBaseHeaderKHR.tx
 The slink:XrBindingModificationBaseHeaderKHR is a base structure is
 overridden by stext:XrBindingModification* child structures.
 
-include::../../../../generated/validity/structs/XrBindingModificationBaseHeaderKHR.txt[]
+include::{generated}/validity/structs/XrBindingModificationBaseHeaderKHR.txt[]
 
 --
 

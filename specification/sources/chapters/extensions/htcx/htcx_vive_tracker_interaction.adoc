@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_HTCX_vive_tracker_interaction.adoc[]
+include::{generated}/meta/XR_HTCX_vive_tracker_interaction.adoc[]
 
 *Last Modified Date*::
     2021-09-23
@@ -12,7 +12,6 @@ include::../metadata/XR_HTCX_vive_tracker_interaction.adoc[]
     Kyle Chen, HTC +
     Chris Kuo, HTC
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -133,7 +132,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrViveTrackerPathsHTCX structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrViveTrackerPathsHTCX.txt[]
+include::{generated}/api/structs/XrViveTrackerPathsHTCX.txt[]
 
 .Member Descriptions
 ****
@@ -150,7 +149,7 @@ include::{INCS-VAR}/api/structs/XrViveTrackerPathsHTCX.txt[]
 The slink:XrViveTrackerPathsHTCX structure contains two paths of VIVE
 tracker.
 
-include::{INCS-VAR}/validity/structs/XrViveTrackerPathsHTCX.txt[]
+include::{generated}/validity/structs/XrViveTrackerPathsHTCX.txt[]
 --
 
 [open,refpage='XrEventDataViveTrackerConnectedHTCX',type='structs',desc='Event representing a new VIVE tracker connected',xrefs='xrPollEvent']
@@ -158,7 +157,7 @@ include::{INCS-VAR}/validity/structs/XrViveTrackerPathsHTCX.txt[]
 
 The slink:XrEventDataViveTrackerConnectedHTCX structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+include::{generated}/api/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
 
 .Member Descriptions
 ****
@@ -173,7 +172,7 @@ Receiving the slink:XrEventDataViveTrackerConnectedHTCX event structure
 indicates that a new VIVE tracker was connected or its role changed.
 It is received via flink:xrPollEvent.
 
-include::{INCS-VAR}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+include::{generated}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
 --
 
 
@@ -184,7 +183,7 @@ include::{INCS-VAR}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
 
 The flink:xrEnumerateViveTrackerPathsHTCX function is defined as:
 
-include::{INCS-VAR}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
 
 .Parameter Descriptions
 ****
@@ -206,7 +205,7 @@ include::{INCS-VAR}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
 flink:xrEnumerateViveTrackerPathsHTCX enumerates all connected VIVE trackers
 to retrieve their paths under current instance.
 
-include::{INCS-VAR}/validity/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+include::{generated}/validity/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
 --
 
 *Examples*

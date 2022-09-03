@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_hand_tracking_mesh.adoc[]
+include::{generated}/meta/XR_FB_hand_tracking_mesh.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
     James Hillery, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -43,7 +42,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrVector4sFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrVector4sFB.txt[]
+include::{generated}/api/structs/XrVector4sFB.txt[]
 
 This is a short integer, four component vector type, used for per-vertex
 joint indexing for mesh skinning.
@@ -56,7 +55,7 @@ joint indexing for mesh skinning.
 * pname:w is the `w` component of the vector.
 ****
 
-include::{INCS-VAR}/validity/structs/XrVector4sFB.txt[]
+include::{generated}/validity/structs/XrVector4sFB.txt[]
 --
 
 [open,refpage='XrHandTrackingMeshFB',type='structs',desc='A container of mesh data',xrefs='']
@@ -68,7 +67,7 @@ and one with index data.
 
 The slink:XrHandTrackingMeshFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrHandTrackingMeshFB.txt[]
+include::{generated}/api/structs/XrHandTrackingMeshFB.txt[]
 
 .Member Descriptions
 ****
@@ -119,7 +118,7 @@ the lifetime of the corresponding slink:XrInstance, and is intended to be
 retrieved once then used in combination with data changing per-frame
 retrieved from flink:xrLocateHandJointsEXT.
 
-include::{INCS-VAR}/validity/structs/XrHandTrackingMeshFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingMeshFB.txt[]
 --
 
 
@@ -135,7 +134,7 @@ transforms.
 
 The slink:XrHandTrackingScaleFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrHandTrackingScaleFB.txt[]
+include::{generated}/api/structs/XrHandTrackingScaleFB.txt[]
 
 .Member Descriptions
 ****
@@ -157,7 +156,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingScaleFB.txt[]
   give the joints in mesh binding scale.
 ****
 
-include::{INCS-VAR}/validity/structs/XrHandTrackingScaleFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingScaleFB.txt[]
 --
 
 *New Functions*
@@ -166,7 +165,7 @@ include::{INCS-VAR}/validity/structs/XrHandTrackingScaleFB.txt[]
 --
 The flink:xrGetHandMeshFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrGetHandMeshFB.txt[]
+include::{generated}/api/protos/xrGetHandMeshFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -181,7 +180,7 @@ hand joints.
 As discussed in the specification for that structure, the data enumerated by
 this call is constant during the lifetime of an slink:XrInstance.
 
-include::{INCS-VAR}/validity/protos/xrGetHandMeshFB.txt[]
+include::{generated}/validity/protos/xrGetHandMeshFB.txt[]
 --
 
 *Issues*
@@ -193,4 +192,5 @@ include::{INCS-VAR}/validity/protos/xrGetHandMeshFB.txt[]
 * Revision 2, 2022-04-20 (John Kearney)
 ** Correct next chain parent for `XrHandTrackingScaleFB` to
    `XrHandJointLocationsEXT`
-
+* Revision 3, 2022-07-07 (Ryan Pavlik, Collabora)
+** Correct markup and thus generated valid usage for two-call idiom.

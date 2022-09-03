@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_VARJO_composition_layer_depth_test.adoc[]
+include::{generated}/meta/XR_VARJO_composition_layer_depth_test.adoc[]
 
 *Last Modified Date*::
     2021-07-15
@@ -95,7 +95,7 @@ depth testing functionality.
 
 The slink:XrCompositionLayerDepthTestVARJO structure is defined as:
 
-include::../../../../generated/api/structs/XrCompositionLayerDepthTestVARJO.txt[]
+include::{generated}/api/structs/XrCompositionLayerDepthTestVARJO.txt[]
 
 .Member Descriptions
 ****
@@ -115,7 +115,7 @@ include::../../../../generated/api/structs/XrCompositionLayerDepthTestVARJO.txt[
   bound.
 ****
 
-include::../../../../generated/validity/structs/XrCompositionLayerDepthTestVARJO.txt[]
+include::{generated}/validity/structs/XrCompositionLayerDepthTestVARJO.txt[]
 
 --
 

@@ -54,7 +54,7 @@ the application binary interface.
 
 [open,refpage='XrStructureType',type='enums',desc='Values for type members of structs']
 --
-include::../../generated/api/enums/XrStructureType.txt[]
+include::{generated}/api/enums/XrStructureType.txt[]
 
 Most structures containing pname:type members have a value of pname:type
 matching the type of the structure, as described more fully in
@@ -81,15 +81,15 @@ with corresponding bit flag types defining the valid bits for that flag, as
 described in Valid Usage for Flags.
 Flag types supported by the API include:
 
-include::../../generated/api/flags/XrCompositionLayerFlags.txt[]
-include::../../generated/api/flags/XrInputSourceLocalizedNameFlags.txt[]
-include::../../generated/api/flags/XrInstanceCreateFlags.txt[]
-include::../../generated/api/flags/XrSessionCreateFlags.txt[]
-include::../../generated/api/flags/XrSpaceLocationFlags.txt[]
-include::../../generated/api/flags/XrSpaceVelocityFlags.txt[]
-include::../../generated/api/flags/XrSwapchainCreateFlags.txt[]
-include::../../generated/api/flags/XrSwapchainUsageFlags.txt[]
-include::../../generated/api/flags/XrViewStateFlags.txt[]
+include::{generated}/api/flags/XrCompositionLayerFlags.txt[]
+include::{generated}/api/flags/XrInputSourceLocalizedNameFlags.txt[]
+include::{generated}/api/flags/XrInstanceCreateFlags.txt[]
+include::{generated}/api/flags/XrSessionCreateFlags.txt[]
+include::{generated}/api/flags/XrSpaceLocationFlags.txt[]
+include::{generated}/api/flags/XrSpaceVelocityFlags.txt[]
+include::{generated}/api/flags/XrSwapchainCreateFlags.txt[]
+include::{generated}/api/flags/XrSwapchainUsageFlags.txt[]
+include::{generated}/api/flags/XrViewStateFlags.txt[]
 
 
 [[general-macro-definitions]]
@@ -128,7 +128,7 @@ Macros>>.
 
 [open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION']
 --
-include::../../generated/api/defines/XR_CURRENT_API_VERSION.txt[]
+include::{generated}/api/defines/XR_CURRENT_API_VERSION.txt[]
 
 dlink:XR_CURRENT_API_VERSION is the current version of the OpenXR API.
 --
@@ -145,7 +145,7 @@ numbers.
 
 [open,refpage='XR_MAKE_VERSION',type='defines',desc='Packs a three-component version number into a packed version number integer',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_VERSION_PATCH XR_CURRENT_API_VERSION']
 --
-include::../../generated/api/defines/XR_MAKE_VERSION.txt[]
+include::{generated}/api/defines/XR_MAKE_VERSION.txt[]
 
 .Parameter Descriptions
 ****
@@ -169,7 +169,7 @@ flink:xrCreateInstance.
 
 [open,refpage='XR_VERSION_MAJOR',type='defines',desc='Extracts the major version number from a packed version number',xrefs='XR_VERSION_MINOR XR_VERSION_PATCH XR_MAKE_VERSION']
 --
-include::../../generated/api/defines/XR_VERSION_MAJOR.txt[]
+include::{generated}/api/defines/XR_VERSION_MAJOR.txt[]
 
 .Parameter Descriptions
 ****
@@ -184,7 +184,7 @@ version number.
 
 [open,refpage='XR_VERSION_MINOR',type='defines',desc='Extracts the minor version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_PATCH XR_CURRENT_API_VERSION XR_MAKE_VERSION']
 --
-include::../../generated/api/defines/XR_VERSION_MINOR.txt[]
+include::{generated}/api/defines/XR_VERSION_MINOR.txt[]
 
 .Parameter Descriptions
 ****
@@ -199,7 +199,7 @@ version number.
 
 [open,refpage='XR_VERSION_PATCH',type='defines',desc='Extracts the patch version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_CURRENT_API_VERSION XR_MAKE_VERSION']
 --
-include::../../generated/api/defines/XR_VERSION_PATCH.txt[]
+include::{generated}/api/defines/XR_VERSION_PATCH.txt[]
 
 .Parameter Descriptions
 ****
@@ -218,7 +218,7 @@ version number.
 
 [open,refpage='XR_DEFINE_HANDLE',desc='Macro to define a handle type',type='defines',xrefs='XR_NULL_HANDLE']
 --
-include::../../generated/api/defines/XR_DEFINE_HANDLE.txt[]
+include::{generated}/api/defines/XR_DEFINE_HANDLE.txt[]
 
 .Parameter Descriptions
 ****
@@ -234,7 +234,7 @@ For further details, see <<handles,Handles>>.
 
 [open,refpage='XR_NULL_HANDLE',desc='Invalid handle value',type='defines',xrefs='XR_DEFINE_HANDLE']
 --
-include::../../generated/api/defines/XR_NULL_HANDLE.txt[]
+include::{generated}/api/defines/XR_NULL_HANDLE.txt[]
 
 dlink:XR_NULL_HANDLE is a reserved value representing a non-valid object
 handle.
@@ -245,7 +245,7 @@ allowed.
 
 [open,refpage='XR_DEFINE_ATOM',desc='Macro to define a atom type',type='defines',xrefs='XrPath XR_NULL_PATH XrSystemId XR_NULL_SYSTEM_ID']
 --
-include::../../generated/api/defines/XR_DEFINE_ATOM.txt[]
+include::{generated}/api/defines/XR_DEFINE_ATOM.txt[]
 
 .Parameter Descriptions
 ****

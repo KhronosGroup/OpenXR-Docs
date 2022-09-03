@@ -1,4 +1,4 @@
-include::../metadata/XR_EXT_performance_settings.adoc[]
+include::{generated}/meta/XR_EXT_performance_settings.adoc[]
 
 *Last Modified Date*::
     2021-04-14
@@ -14,7 +14,6 @@ include::../metadata/XR_EXT_performance_settings.adoc[]
 // Khronos may elect to exercise its Copyright  license to incorporate this submission into
 // other works it controls as it desires."
 
-:INCS-VAR: ../../../../generated
 
 ==== Overview
 
@@ -47,12 +46,12 @@ domain):
 
 [open,refpage='XrPerfSettingsDomainEXT',type='enums',desc='XrPerfSettingsDomainEXT']
 --
-include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.txt[]
 --
 
 [open,refpage='XrPerfSettingsLevelEXT',type='enums',desc='XrPerfSettingsLevelEXT']
 --
-include::{INCS-VAR}/api/enums/XrPerfSettingsLevelEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsLevelEXT.txt[]
 --
 
 This extension defines platform-independent level hints:
@@ -96,7 +95,7 @@ as the default hint if the application does not provide any.
 The function to call for setting performance level hints is
 flink:xrPerfSettingsSetPerformanceLevelEXT.
 
-include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.txt[]]
+include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.txt[]]
 
 ===== Example of using the short-term boost level hint
 
@@ -194,9 +193,9 @@ their deadlines, or the thermal pname:subDomain to avoid or stop throttling.
 When improvement is observed, the application can potentially rollback some
 of its mitigations.
 
-include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.no-xref.txt[]
+include::{generated}/api/structs/XrEventDataPerfSettingsEXT.no-xref.txt[]
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsSubDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.no-xref.txt[]
 
 ===== Compositing Sub-Domain
 One of the major functions the runtime shall provide is the timely
@@ -239,7 +238,7 @@ allowing the application to take mitigation actions.
 
 The levels are defined as follows:
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT notifies that the sub-domain
   has reached a level where no further actions other than currently applied
   are necessary.
@@ -336,7 +335,7 @@ within thermal limits) have ended.​
 
 [open,refpage='xrPerfSettingsSetPerformanceLevelEXT',type='protos',desc='xrPerfSettingsSetPerformanceLevelEXT',xrefs='']
 --
-include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
+include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 
 .Parameter Descriptions
 ****
@@ -345,7 +344,7 @@ include::{INCS-VAR}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 * pname:level: the level hint to be applied
 ****
 
-include::{INCS-VAR}/validity/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
+include::{generated}/validity/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 --
 
 Refer to <<EXT_performance_settings-level-definition>> for the definition of
@@ -356,7 +355,7 @@ the level enumerations.
 
 [open,refpage='XrEventDataPerfSettingsEXT',type='structs',desc='XrEventDataPerfSettingsEXT',xrefs='']
 --
-include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.txt[]
+include::{generated}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 
 .Member Descriptions
 ****
@@ -370,19 +369,19 @@ include::{INCS-VAR}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 * pname:toLevel : enumerated notification level which has been entered
 ****
 
-include::{INCS-VAR}/validity/structs/XrEventDataPerfSettingsEXT.txt[]
+include::{generated}/validity/structs/XrEventDataPerfSettingsEXT.txt[]
 --
 
-include::{INCS-VAR}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
 
 [open,refpage='XrPerfSettingsSubDomainEXT',type='enums',desc='XrPerfSettingsSubDomainEXT',xrefs='']
 --
-include::{INCS-VAR}/api/enums/XrPerfSettingsSubDomainEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.txt[]
 --
 
 [open,refpage='XrPerfSettingsNotificationLevelEXT',type='enums',desc='XrPerfSettingsNotificationLevelEXT',xrefs='']
 --
-include::{INCS-VAR}/api/enums/XrPerfSettingsNotificationLevelEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.txt[]
 --
 
 *Version History*

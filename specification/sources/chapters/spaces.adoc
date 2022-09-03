@@ -13,7 +13,7 @@ real-world locations where they will be rendered.
 reference in which they choose to track the real world, and then determine
 how those frames of reference move relative to one another over time.
 
-include::../../generated/api/handles/XrSpace.txt[]
+include::{generated}/api/handles/XrSpace.txt[]
 
 Spaces are represented by slink:XrSpace handles, which the application
 creates and then uses in API calls.
@@ -81,7 +81,7 @@ space type.
 
 Runtimes implement well-known reference spaces from
 elink:XrReferenceSpaceType if they support tracking of that kind:
-include::../../generated/api/enums/XrReferenceSpaceType.txt[]
+include::{generated}/api/enums/XrReferenceSpaceType.txt[]
 
 Available reference space types are indicated by
 flink:xrEnumerateReferenceSpaces.
@@ -221,7 +221,7 @@ When a runtime will begin operating with updated space bounds, the runtime
 must: queue a corresponding slink:XrEventDataReferenceSpaceChangePending
 event.
 
-include::../../generated/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
+include::{generated}/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
 
 .Parameter Descriptions
 ****
@@ -233,7 +233,7 @@ include::../../generated/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
 * pname:bounds is the returned space extents.
 ****
 
-include::../../generated/validity/protos/xrGetReferenceSpaceBoundsRect.txt[]
+include::{generated}/validity/protos/xrGetReferenceSpaceBoundsRect.txt[]
 --
 
 [open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XrReferenceSpaceType']
@@ -262,7 +262,7 @@ If the runtime does not know the location of the space's new origin relative
 to its previous origin, pname:poseValid must: be false, and the position and
 orientation of pname:poseInPreviousSpace are undefined.
 
-include::../../generated/api/structs/XrEventDataReferenceSpaceChangePending.txt[]
+include::{generated}/api/structs/XrEventDataReferenceSpaceChangePending.txt[]
 
 .Member Descriptions
 ****
@@ -284,7 +284,7 @@ include::../../generated/api/structs/XrEventDataReferenceSpaceChangePending.txt[
  reference frame of its previous space.
 ****
 
-include::../../generated/validity/structs/XrEventDataReferenceSpaceChangePending.txt[]
+include::{generated}/validity/structs/XrEventDataReferenceSpaceChangePending.txt[]
 --
 
 === Action Spaces
@@ -340,7 +340,7 @@ reference spaces, action spaces, and their relative locations.
 --
 The flink:xrEnumerateReferenceSpaces function is defined as:
 
-include::../../generated/api/protos/xrEnumerateReferenceSpaces.txt[]
+include::{generated}/api/protos/xrEnumerateReferenceSpaces.txt[]
 
 .Parameter Descriptions
 ****
@@ -368,7 +368,7 @@ flink:xrCreateReferenceSpace must: succeed for that session, with any
 transient unavailability of poses expressed later during calls to
 flink:xrLocateSpace.
 
-include::../../generated/validity/protos/xrEnumerateReferenceSpaces.txt[]
+include::{generated}/validity/protos/xrEnumerateReferenceSpaces.txt[]
 --
 
 ==== xrCreateReferenceSpace
@@ -377,7 +377,7 @@ include::../../generated/validity/protos/xrEnumerateReferenceSpaces.txt[]
 --
 The flink:xrCreateReferenceSpace function is defined as:
 
-include::../../generated/api/protos/xrCreateReferenceSpace.txt[]
+include::{generated}/api/protos/xrCreateReferenceSpace.txt[]
 
 .Parameter Descriptions
 ****
@@ -401,14 +401,14 @@ flink:xrDestroySpace function.
 The runtime must: return ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED if the
 given reference space type is not supported by this pname:session.
 
-include::../../generated/validity/protos/xrCreateReferenceSpace.txt[]
+include::{generated}/validity/protos/xrCreateReferenceSpace.txt[]
 --
 
 [open,refpage='XrReferenceSpaceCreateInfo',desc='Creation info for a reference space',type='structs',xrefs='XrSpace xrCreateReferenceSpace']
 --
 The slink:XrReferenceSpaceCreateInfo structure is defined as:
 
-include::../../generated/api/structs/XrReferenceSpaceCreateInfo.txt[]
+include::{generated}/api/structs/XrReferenceSpaceCreateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -422,7 +422,7 @@ include::../../generated/api/structs/XrReferenceSpaceCreateInfo.txt[]
   of the reference space.
 ****
 
-include::../../generated/validity/structs/XrReferenceSpaceCreateInfo.txt[]
+include::{generated}/validity/structs/XrReferenceSpaceCreateInfo.txt[]
 --
 
 ==== xrCreateActionSpace
@@ -430,7 +430,7 @@ include::../../generated/validity/structs/XrReferenceSpaceCreateInfo.txt[]
 --
 The flink:xrCreateActionSpace function is defined as:
 
-include::../../generated/api/protos/xrCreateActionSpace.txt[]
+include::{generated}/api/protos/xrCreateActionSpace.txt[]
 
 .Parameter Descriptions
 ****
@@ -454,14 +454,14 @@ handle.
 The runtime must: return ename:XR_ERROR_ACTION_TYPE_MISMATCH if the action
 provided in pname:action is not of type ename:XR_ACTION_TYPE_POSE_INPUT.
 
-include::../../generated/validity/protos/xrCreateActionSpace.txt[]
+include::{generated}/validity/protos/xrCreateActionSpace.txt[]
 --
 
 [open,refpage='XrActionSpaceCreateInfo',desc='Creation info for an action space',type='structs',xrefs='XrSpace xrCreateActionSpace']
 --
 The slink:XrActionSpaceCreateInfo structure is defined as:
 
-include::../../generated/api/structs/XrActionSpaceCreateInfo.txt[]
+include::{generated}/api/structs/XrActionSpaceCreateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -482,7 +482,7 @@ include::../../generated/api/structs/XrActionSpaceCreateInfo.txt[]
   of the pose action.
 ****
 
-include::../../generated/validity/structs/XrActionSpaceCreateInfo.txt[]
+include::{generated}/validity/structs/XrActionSpaceCreateInfo.txt[]
 --
 
 ==== xrDestroySpace
@@ -491,7 +491,7 @@ include::../../generated/validity/structs/XrActionSpaceCreateInfo.txt[]
 --
 The flink:xrDestroySpace function is defined as:
 
-include::../../generated/api/protos/xrDestroySpace.txt[]
+include::{generated}/api/protos/xrDestroySpace.txt[]
 
 .Parameter Descriptions
 ****
@@ -503,7 +503,7 @@ slink:XrSpace handles are destroyed using flink:xrDestroySpace.
 The runtime may: still use this space if there are active dependencies (e.g,
 compositions in progress).
 
-include::../../generated/validity/protos/xrDestroySpace.txt[]
+include::{generated}/validity/protos/xrDestroySpace.txt[]
 --
 
 [[locating_spaces]]
@@ -527,7 +527,7 @@ of the components of the location.
 flink:xrLocateSpace provides the physical location of a space in a base
 space at a specified time, if currently known by the runtime.
 
-include::../../generated/api/protos/xrLocateSpace.txt[]
+include::{generated}/api/protos/xrLocateSpace.txt[]
 
 .Parameter Descriptions
 ****
@@ -584,13 +584,15 @@ currently untracked.
 The location in this case is the difference in the two spaces'
 application-specified transforms relative to that common entity.
 
-The runtime should: return a location with
-ename:XR_SPACE_LOCATION_POSITION_VALID_BIT set and
-ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT unset for spaces tracking two
-static entities in the world when their relative pose is known to the
+During tracking loss, the runtime should: return a location with
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set and
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT unset for spaces tracking
+two static entities in the world when their relative pose is known to the
 runtime.
-This enables applications to make use of the runtime's latest knowledge of
-the world, even during tracking loss.
+This enables applications to continue to make use of the runtime's latest
+knowledge of the world.
 
 If an slink:XrSpaceVelocity structure is chained to the pname:next pointer
 of slink:XrSpaceLocation and the velocity is observed or can be calculated
@@ -620,7 +622,7 @@ XrSpaceLocation location {XR_TYPE_SPACE_LOCATION, &velocity};
 xrLocateSpace(space, baseSpace, time, &location);
 ----
 
-include::../../generated/validity/protos/xrLocateSpace.txt[]
+include::{generated}/validity/protos/xrLocateSpace.txt[]
 --
 
 
@@ -628,7 +630,7 @@ include::../../generated/validity/protos/xrLocateSpace.txt[]
 --
 The slink:XrSpaceLocation structure is defined as:
 
-include::../../generated/api/structs/XrSpaceLocation.txt[]
+include::{generated}/api/structs/XrSpaceLocation.txt[]
 
 .Member Descriptions
 ****
@@ -645,7 +647,7 @@ include::../../generated/api/structs/XrSpaceLocation.txt[]
   of flink:xrLocateSpace::pname:baseSpace.
 ****
 
-include::../../generated/validity/structs/XrSpaceLocation.txt[]
+include::{generated}/validity/structs/XrSpaceLocation.txt[]
 --
 
 [open,refpage='XrSpaceLocationFlags',desc='Space location flags',type='flags',xrefs='XrSpaceLocation']
@@ -653,7 +655,7 @@ include::../../generated/validity/structs/XrSpaceLocation.txt[]
 The pname:locationFlags member is a bitwise-OR of zero or more of the
 following flags:
 
-include::../../generated/api/enums/XrSpaceLocationFlagBits.txt[]
+include::{generated}/api/enums/XrSpaceLocationFlagBits.txt[]
 
 where the flags have the following meaning:
 
@@ -700,7 +702,7 @@ where the flags have the following meaning:
 
 The slink:XrSpaceVelocity structure is defined as:
 
-include::../../generated/api/structs/XrSpaceVelocity.txt[]
+include::{generated}/api/structs/XrSpaceVelocity.txt[]
 
 .Member Descriptions
 ****
@@ -728,7 +730,7 @@ include::../../generated/api/structs/XrSpaceVelocity.txt[]
   The vector follows the right-hand rule for torque/rotation.
 ****
 
-include::../../generated/validity/structs/XrSpaceVelocity.txt[]
+include::{generated}/validity/structs/XrSpaceVelocity.txt[]
 --
 
 [open,refpage='XrSpaceVelocityFlags',desc='Space velocity flags',type='flags',xrefs='XrSpaceVelocity']
@@ -736,11 +738,11 @@ include::../../generated/validity/structs/XrSpaceVelocity.txt[]
 The pname:velocityFlags member is a bitwise-OR of zero or more of the
 following flags:
 
-include::../../generated/api/enums/XrSpaceVelocityFlagBits.txt[]
+include::{generated}/api/enums/XrSpaceVelocityFlagBits.txt[]
 
 where the flags have the following meaning:
 
-include::../../generated/api/enums/XrSpaceVelocityFlagBits.comments.txt[]
+include::{generated}/api/enums/XrSpaceVelocityFlagBits.comments.txt[]
 
 --
 

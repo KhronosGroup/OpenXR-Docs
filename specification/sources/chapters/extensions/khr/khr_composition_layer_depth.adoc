@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_composition_layer_depth.adoc[]
+include::{generated}/meta/XR_KHR_composition_layer_depth.adoc[]
 
 *Last Modified Date*::
     2019-01-24
@@ -47,7 +47,7 @@ slink:XrCompositionLayerProjectionView structures in the given layer.
 
 The slink:XrCompositionLayerDepthInfoKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
 
 .Member Descriptions
 ****
@@ -101,7 +101,7 @@ component with value 1.0.
 General homogeneous values are projected back to real space by dividing by
 the w component.
 
-include::../../../../generated/validity/structs/XrCompositionLayerDepthInfoKHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerDepthInfoKHR.txt[]
 --
 
 *New Functions*

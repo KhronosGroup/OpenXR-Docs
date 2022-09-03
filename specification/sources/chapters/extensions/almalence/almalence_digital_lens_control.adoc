@@ -2,9 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_ALMALENCE_digital_lens_control.adoc[]
+include::{generated}/meta/XR_ALMALENCE_digital_lens_control.adoc[]
 
-:INCS-VAR: ../../../../generated
 
 *Last Modified Date*::
    2021-11-08
@@ -57,14 +56,14 @@ calling flink:xrSetDigitalLensControlALMALENCE.
 
 [open,refpage='XrDigitalLensControlFlagsALMALENCE',type='flags',desc='XrDigitalLensControlFlagsALMALENCE']
 --
-include::{INCS-VAR}/api/flags/XrDigitalLensControlFlagsALMALENCE.txt[]
+include::{generated}/api/flags/XrDigitalLensControlFlagsALMALENCE.txt[]
 --
 
 [open,refpage='XrDigitalLensControlFlagBitsALMALENCE',type='enums',desc='XrDigitalLensControlFlagBitsALMALENCE']
 --
-include::{INCS-VAR}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.txt[]
+include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.txt[]
 
-include::{INCS-VAR}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.comments.txt[]
+include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.comments.txt[]
 --
 
 *New Enum Constants*
@@ -81,7 +80,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrDigitalLensControlALMALENCE structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrDigitalLensControlALMALENCE.txt[]
+include::{generated}/api/structs/XrDigitalLensControlALMALENCE.txt[]
 
 .Member Descriptions
 ****
@@ -92,7 +91,7 @@ include::{INCS-VAR}/api/structs/XrDigitalLensControlALMALENCE.txt[]
   indicating various characteristics desired for the Digital Lens.
 ****
 
-include::{INCS-VAR}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
+include::{generated}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
 --
 
 *New Functions*
@@ -101,7 +100,7 @@ include::{INCS-VAR}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
 --
 The flink:xrSetDigitalLensControlALMALENCE function is defined as:
 
-include::{INCS-VAR}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{generated}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 
 .Parameter Descriptions
 ****
@@ -113,7 +112,7 @@ include::{INCS-VAR}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 flink:xrSetDigitalLensControlALMALENCE handles state of Digital Lens API
 Layer
 
-include::{INCS-VAR}/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{generated}/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
 --
 
 *Issues*

@@ -2,12 +2,11 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_composition_layer_settings.adoc[]
+include::{generated}/meta/XR_FB_composition_layer_settings.adoc[]
 
 *Contributors*::
     Grant Yang, Meta Platforms
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -25,14 +24,14 @@ indicated in the <<extensions>> section.
 
 [open,refpage='XrCompositionLayerSettingsFlagsFB',type='flags',desc='XrCompositionLayerSettingsFlagsFB',xrefs='XrCompositionLayerSettingsFlagBitsFB']
 --
-include::{INCS-VAR}/api/flags/XrCompositionLayerSettingsFlagsFB.txt[]
+include::{generated}/api/flags/XrCompositionLayerSettingsFlagsFB.txt[]
 --
 
 [open,refpage='XrCompositionLayerSettingsFlagBitsFB',type='enums',desc='XrCompositionLayerSettingsFlagBitsFB',xrefs='XrCompositionLayerSettingsFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrCompositionLayerSettingsFlagBitsFB.txt[]
+include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.txt[]
 
-include::{INCS-VAR}/api/enums/XrCompositionLayerSettingsFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.comments.txt[]
 --
 
 *New Enum Constants*
@@ -54,7 +53,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerSettingsFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrCompositionLayerSettingsFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerSettingsFB.txt[]
 
 .Member Descriptions
 ****
@@ -82,7 +81,7 @@ To specify the additional flags, create an
 slink:XrCompositionLayerSettingsFB structure and pass it via the
 slink:XrCompositionLayerBaseHeader structure's pname:next parameter.
 
-include::{INCS-VAR}/validity/structs/XrCompositionLayerSettingsFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerSettingsFB.txt[]
 --
 
 *New Functions*

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_android_thread_settings.adoc[]
+include::{generated}/meta/XR_KHR_android_thread_settings.adoc[]
 
 *Last Modified Date*::
     2019-07-17
@@ -14,7 +14,6 @@ include::../metadata/XR_KHR_android_thread_settings.adoc[]
     Martin Renschler, Qualcomm +
     Krzysztof Kosiński, Google
 
-:INCS-VAR: ../../../../generated
 
 
 *Overview*
@@ -42,7 +41,7 @@ elink:XrResult enumeration is extended with:
 The possible thread types are specified by the elink:XrAndroidThreadTypeKHR
 enumeration:
 
-include::{INCS-VAR}/api/enums/XrAndroidThreadTypeKHR.txt[]
+include::{generated}/api/enums/XrAndroidThreadTypeKHR.txt[]
 
 .Enumerants
 ****
@@ -67,7 +66,7 @@ include::{INCS-VAR}/api/enums/XrAndroidThreadTypeKHR.txt[]
 To declare a thread to be of a certain elink:XrAndroidThreadTypeKHR type
 call:
 
-include::{INCS-VAR}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
+include::{generated}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -85,7 +84,7 @@ include::{INCS-VAR}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
 flink:xrSetAndroidApplicationThreadKHR allows to declare an XR-critical
 thread and to classify it.
 
-include::{INCS-VAR}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
+include::{generated}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
 --
 
 *Version History*

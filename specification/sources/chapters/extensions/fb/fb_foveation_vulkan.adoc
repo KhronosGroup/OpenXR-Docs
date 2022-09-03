@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_foveation_vulkan.adoc[]
+include::{generated}/meta/XR_FB_foveation_vulkan.adoc[]
 
 *Contributors*::
     Kevin Xiao, Facebook +
@@ -11,7 +11,6 @@ include::../metadata/XR_FB_foveation_vulkan.adoc[]
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -58,7 +57,7 @@ slink:XrSwapchainImageVulkanKHR.
 
 The slink:XrSwapchainImageFoveationVulkanFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+include::{generated}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
 
 .Member Descriptions
 ****
@@ -71,7 +70,7 @@ include::{INCS-VAR}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
 * pname:height is the vertical height in pixels of the image.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+include::{generated}/validity/structs/XrSwapchainImageFoveationVulkanFB.txt[]
 --
 
 *New Functions*

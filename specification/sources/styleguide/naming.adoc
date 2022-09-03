@@ -62,10 +62,10 @@ There are however a few exceptions:
   was.
 
 .Example: Macro
-include::../../generated/api/defines/XR_VERSION_MAJOR.no-xref.txt[]
+include::{generated}/api/defines/XR_VERSION_MAJOR.no-xref.txt[]
 
 .Example: Value
-include::../../generated/api/defines/XR_CURRENT_API_VERSION.no-xref.txt[]
+include::{generated}/api/defines/XR_CURRENT_API_VERSION.no-xref.txt[]
 
 
 == Type Names
@@ -81,10 +81,10 @@ function pointer types>>, including struct and union types, handles, base
 typedefs, and enumerant types.
 
 .Example: Handle
-include::../../generated/api/handles/XrInstance.no-xref.txt[]
+include::{generated}/api/handles/XrInstance.no-xref.txt[]
 
 .Example: Base Type
-include::../../generated/api/basetypes/XrFlags64.no-xref.txt[]
+include::{generated}/api/basetypes/XrFlags64.no-xref.txt[]
 
 // Note: This is manually inserted to be able to omit all enumerants.
 [source, c]
@@ -96,7 +96,7 @@ typedef enum XrStructureType {
 ----
 
 .Example: Structure
-include::../../generated/api/structs/XrInstanceCreateInfo.no-xref.txt[]
+include::{generated}/api/structs/XrInstanceCreateInfo.no-xref.txt[]
 
 [[naming-extension-structures]]
 === Extension Structure Names
@@ -156,8 +156,8 @@ typedef enum XrStructureType {
 ----
 
 .Example: Flag Types and Bit Values (rule exception)
-include::../../generated/api/flags/XrSwapchainCreateFlags.no-xref.txt[]
-include::../../generated/api/enums/XrSwapchainCreateFlagBits.no-xref.txt[]
+include::{generated}/api/flags/XrSwapchainCreateFlags.no-xref.txt[]
+include::{generated}/api/enums/XrSwapchainCreateFlagBits.no-xref.txt[]
 
 // Note: This is manually inserted to be able to limit it and not include all enumerants.
 [source, c]
@@ -174,7 +174,7 @@ typedef enum XrResult {
 ifdef::XR_KHR_android_thread_settings[]
 // In an ifdef to avoid breaking style guide if we didn't generate the extension includes.
 .Example: Enumeration and Enumerant in an Extension
-include::../../generated/api/enums/XrAndroidThreadTypeKHR.no-xref.txt[]
+include::{generated}/api/enums/XrAndroidThreadTypeKHR.no-xref.txt[]
 endif::XR_KHR_android_thread_settings[]
 
 == Function Names
@@ -239,24 +239,24 @@ extension structure should include an array length member with the same name
 as the length in the base structure.
 
 .Example: Function Parameters (including a single indirected pointer)
-include::../../generated/api/protos/xrGetInputSourceLocalizedName.no-xref.txt[]
+include::{generated}/api/protos/xrGetInputSourceLocalizedName.no-xref.txt[]
 
 .Example: Structure Members (including the type exception and a double indirected pointer)
-include::../../generated/api/structs/XrFrameEndInfo.no-xref.txt[]
+include::{generated}/api/structs/XrFrameEndInfo.no-xref.txt[]
 
 ifdef::XR_EXT_debug_utils[]
 .Example: Function Pointer Members
-include::../../generated/api/structs/XrDebugUtilsMessengerCreateInfoEXT.no-xref.txt[]
+include::{generated}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.no-xref.txt[]
 endif::XR_EXT_debug_utils[]
 
 .Example: Size Parameter
-include::../../generated/api/protos/xrPollEvent.no-xref.txt[]
+include::{generated}/api/protos/xrPollEvent.no-xref.txt[]
 
 .Example: Two-Call Idiom with `CapacityInput` and `CountOutput`
-include::../../generated/api/protos/xrEnumerateApiLayerProperties.no-xref.txt[]
+include::{generated}/api/protos/xrEnumerateApiLayerProperties.no-xref.txt[]
 
 .Example: Count Members
-include::../../generated/api/structs/XrCompositionLayerProjection.no-xref.txt[]
+include::{generated}/api/structs/XrCompositionLayerProjection.no-xref.txt[]
 
 [[naming-extension-identifiers]]
 == Extension Identifier Naming Conventions
@@ -280,7 +280,7 @@ type name.
 
 ifdef::XR_KHR_vulkan_enable[]
 .Example: Structure Name with `KHR` Appended
-include::../../generated/api/structs/XrGraphicsBindingVulkanKHR.no-xref.txt[]
+include::{generated}/api/structs/XrGraphicsBindingVulkanKHR.no-xref.txt[]
 endif::XR_KHR_vulkan_enable[]
 
 === Extension Enumerant Names
@@ -292,7 +292,7 @@ definitions by the generator scripts.
 
 ifdef::XR_EXT_debug_utils[]
 .Example: Enumerants with `_EXT` Appended
-include::../../generated/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.no-xref.txt[]
+include::{generated}/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.no-xref.txt[]
 endif::XR_EXT_debug_utils[]
 
 
@@ -304,7 +304,7 @@ author ID appended to the end of the name.
 
 ifdef::XR_KHR_vulkan_enable[]
 .Example: Function with `KHR` Appended
-include::../../generated/api/protos/xrGetVulkanGraphicsRequirementsKHR.no-xref.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsRequirementsKHR.no-xref.txt[]
 endif::XR_KHR_vulkan_enable[]
 
 // Note: This is manually inserted because no API includes are generated for this type.

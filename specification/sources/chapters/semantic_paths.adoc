@@ -64,7 +64,7 @@ to naturally reflect varying system configuration and hardware availability.
 
 [open,refpage='XrPath',desc='A semantic path',type='basetypes',xrefs='XR_NULL_PATH']
 --
-include::../../generated/api/basetypes/XrPath.txt[]
+include::{generated}/api/basetypes/XrPath.txt[]
 
 The basetype:XrPath is an atom that connects an application with a single
 path, within the context of a single instance.
@@ -140,7 +140,7 @@ no more can be created.
 
 [open,refpage='XR_NULL_PATH',desc='A NULL semantic path',type='defines',xrefs='XrPath']
 --
-include::../../generated/api/defines/XR_NULL_PATH.txt[]
+include::{generated}/api/defines/XR_NULL_PATH.txt[]
 
 The only basetype:XrPath value defined to be constant across all instances
 is the invalid path dlink:XR_NULL_PATH.
@@ -183,7 +183,7 @@ A well-formed path name string must: conform to the following rules:
 --
 The flink:xrStringToPath function is defined as:
 
-include::../../generated/api/protos/xrStringToPath.txt[]
+include::{generated}/api/protos/xrStringToPath.txt[]
 
 .Parameter Descriptions
 ****
@@ -222,13 +222,13 @@ retrieved basetype:XrPath maps to the given path string within and during
 the lifetime of the slink:XrInstance given.
 
 
-include::../../generated/validity/protos/xrStringToPath.txt[]
+include::{generated}/validity/protos/xrStringToPath.txt[]
 --
 ==== xrPathToString
 
 [open,refpage='xrPathToString',desc='Converts a semantic path to a string',type='protos',xrefs='XrPath xrStringToPath']
 --
-include::../../generated/api/protos/xrPathToString.txt[]
+include::{generated}/api/protos/xrPathToString.txt[]
 
 .Parameter Descriptions
 ****
@@ -262,7 +262,7 @@ For invalid paths, including dlink:XR_NULL_PATH, ename:XR_ERROR_PATH_INVALID
 must: be returned.
 
 
-include::../../generated/validity/protos/xrPathToString.txt[]
+include::{generated}/validity/protos/xrPathToString.txt[]
 --
 
 

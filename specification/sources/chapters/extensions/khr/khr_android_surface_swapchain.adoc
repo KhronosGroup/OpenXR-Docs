@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_android_surface_swapchain.adoc[]
+include::{generated}/meta/XR_KHR_android_surface_swapchain.adoc[]
 
 *Last Modified Date*::
     2019-05-30
@@ -38,7 +38,7 @@ This extension provides a special swapchain that uses an
 --
 To create an slink:XrSwapchain object and an Android Surface object call:
 
-include::../../../../generated/api/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
+include::{generated}/api/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -91,7 +91,7 @@ ename:XR_ERROR_FUNCTION_UNSUPPORTED in case the function is not supported.
   slink:XrSwapchainCreateInfo::pname:mipCount +
   members of the structure passed as the pname:info parameter must: be zero.
 ****
-include::../../../../generated/validity/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
+include::{generated}/validity/protos/xrCreateSwapchainAndroidSurfaceKHR.txt[]
 --
 *Issues*
 

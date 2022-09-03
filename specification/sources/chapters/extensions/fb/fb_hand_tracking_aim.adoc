@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_hand_tracking_aim.adoc[]
+include::{generated}/meta/XR_FB_hand_tracking_aim.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
     James Hillery, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -29,15 +28,15 @@ This extension allows:
 
 [open,refpage='XrHandTrackingAimFlagsFB',type='flags',desc='XrHandTrackingAimFlagsFB',xrefs='XrHandTrackingAimFlagBitsFB']
 --
-include::{INCS-VAR}/api/flags/XrHandTrackingAimFlagsFB.txt[]
+include::{generated}/api/flags/XrHandTrackingAimFlagsFB.txt[]
 --
 
 
 [open,refpage='XrHandTrackingAimFlagBitsFB',type='enums',desc='XrHandTrackingAimFlagBitsFB',xrefs='XrHandTrackingAimFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrHandTrackingAimFlagBitsFB.txt[]
+include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.txt[]
 
-include::{INCS-VAR}/api/enums/XrHandTrackingAimFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.comments.txt[]
 --
 
 *New Enum Constants*
@@ -59,7 +58,7 @@ request aiming gesture information associated with this hand.
 
 The slink:XrHandTrackingAimStateFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrHandTrackingAimStateFB.txt[]
+include::{generated}/api/structs/XrHandTrackingAimStateFB.txt[]
 
 .Member Descriptions
 ****
@@ -86,7 +85,7 @@ include::{INCS-VAR}/api/structs/XrHandTrackingAimStateFB.txt[]
   Range is 0.0 to 1.0, with 1.0 meaning little and thumb are fully touching.
 ****
 
-include::{INCS-VAR}/validity/structs/XrHandTrackingAimStateFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingAimStateFB.txt[]
 --
 
 *New Functions*

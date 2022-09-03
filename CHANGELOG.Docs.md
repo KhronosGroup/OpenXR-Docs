@@ -17,6 +17,107 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.25 (2022-09-02)
+
+This release contains a few specification clarifications and consistency improvements,
+as well as some new vendor extensions. The spec generation toolchain scripts have
+been synchronized with Vulkan, which adds some additional detail to the generated
+spec document. The loader design document has also been updated to correct an error
+and document the loader's API layer functionality now available on Android.
+
+- Registry
+  - Add new `XR_ML_ml2_controller_interaction` vendor extension.
+    ([internal MR 2344](https://gitlab.khronos.org/openxr/openxr/merge_requests/2344))
+  - Clarification: Note that all specialized swapchain image structures are
+    "returnedonly", which removes some unneeded generated implicit valid usage.
+    ([internal MR 2303](https://gitlab.khronos.org/openxr/openxr/merge_requests/2303))
+  - Clarification: Note that all event structs are "returnedonly", which removes
+    some unneeded generated implicit valid usage.
+    ([internal MR 2305](https://gitlab.khronos.org/openxr/openxr/merge_requests/2305))
+  - Register author ID for Oppo.
+    ([OpenXR-Docs PR 129](https://github.com/KhronosGroup/OpenXR-Docs/pull/129))
+  - Register author ID for Fred Emmott.
+    ([OpenXR-Docs PR 131](https://github.com/KhronosGroup/OpenXR-Docs/pull/131))
+  - Register author ID for Acer.
+    ([OpenXR-Docs PR 132](https://github.com/KhronosGroup/OpenXR-Docs/pull/132))
+  - Reserve extension numbers for anticipated cross-vendor and Khronos extensions.
+    ([internal MR 2337](https://gitlab.khronos.org/openxr/openxr/merge_requests/2337),
+    [internal MR 2338](https://gitlab.khronos.org/openxr/openxr/merge_requests/2338),
+    [internal MR 2389](https://gitlab.khronos.org/openxr/openxr/merge_requests/2389))
+  - Reserve a vendor extension for Huawei.
+    ([internal MR 2356](https://gitlab.khronos.org/openxr/openxr/merge_requests/2356))
+  - Reserve vendor extensions for MNDX.
+    ([OpenXR-Docs PR 133](https://github.com/KhronosGroup/OpenXR-Docs/pull/133))
+  - Update `XR_MSFT_scene_understanding` and
+    `XR_MSFT_scene_understanding_serialization` vendor extensions to list error
+    codes that may be returned by functions.
+    ([internal MR 2316](https://gitlab.khronos.org/openxr/openxr/merge_requests/2316))
+  - `XR_FB_color_space`: Mark `XrSystemColorSpacePropertiesFB` as "returned-only"
+    for consistency and to correct the implicit valid usage.
+    ([internal MR 2304](https://gitlab.khronos.org/openxr/openxr/merge_requests/2304))
+  - `XR_FB_display_refresh_rate`: Mark `XrEventDataDisplayRefreshRateChangedFB` as
+    "returned only" for consistency.
+    ([internal MR 2308](https://gitlab.khronos.org/openxr/openxr/merge_requests/2308))
+  - `XR_FB_hand_tracking_mesh`: Fix two-call-idiom markup for
+    `XrHandTrackingMeshFB`, affecting implicit valid usage, and increment the
+    revision.
+    ([internal MR 2311](https://gitlab.khronos.org/openxr/openxr/merge_requests/2311))
+  - `XR_FB_passthrough`: Add `XrSystemPassthroughProperties2FB` and
+    `XR_PASSTHROUGH_LAYER_DEPTH_BIT_FB`, update spec version to 3.
+    ([internal MR 2333](https://gitlab.khronos.org/openxr/openxr/merge_requests/2333))
+  - `XR_FB_render_model`: Mark `XrRenderModelCapabilitiesRequestFB` as "returned-
+    only" for consistency and to correct the implicit valid usage.
+    ([internal MR 2309](https://gitlab.khronos.org/openxr/openxr/merge_requests/2309))
+- Specification
+  - Clarify that orientation behaves the same as position when tracking loss occurs
+    for static spaces.
+    ([internal MR 2235](https://gitlab.khronos.org/openxr/openxr/merge_requests/2235))
+  - Clarify the interaction of `xrGetInputSourceLocalizedName` and
+    `xrEnumerateBoundSourcesForAction`, the paths they operate on, and details of a
+    "bound source" for an action.
+    ([internal MR 2251](https://gitlab.khronos.org/openxr/openxr/merge_requests/2251),
+    [internal issue 1671](https://gitlab.khronos.org/openxr/openxr/issues/1671))
+  - Clarify when pose actions with multiple bindings may change source
+    ([internal MR 2277](https://gitlab.khronos.org/openxr/openxr/merge_requests/2277))
+  - Clarify: Add language to OpenXR patch versions to clarify that it may be used
+    to gate runtime implementation changes
+    ([internal MR 2290](https://gitlab.khronos.org/openxr/openxr/merge_requests/2290),
+    [internal issue 1713](https://gitlab.khronos.org/openxr/openxr/issues/1713))
+  - Document new `XR_ML_ml2_controller_interaction` vendor extension with the Magic
+    Leap 2 controller interaction profile.
+    ([internal MR 2344](https://gitlab.khronos.org/openxr/openxr/merge_requests/2344))
+  - Loader design doc: Correct a wrong description of extension implementation
+    chosen by the loader when duplicates.
+    ([internal MR 2324](https://gitlab.khronos.org/openxr/openxr/merge_requests/2324),
+    [internal issue 1731](https://gitlab.khronos.org/openxr/openxr/issues/1731))
+  - Loader design doc: Add Android support for API Layers in the application APK.
+    ([internal MR 2350](https://gitlab.khronos.org/openxr/openxr/merge_requests/2350))
+  - `XR_FB_color_space`: Mark `XrSystemColorSpacePropertiesFB` as "returned-only"
+    for consistency and to correct the implicit valid usage, bumping the revision
+    number.
+    ([internal MR 2304](https://gitlab.khronos.org/openxr/openxr/merge_requests/2304))
+  - `XR_FB_hand_tracking_mesh`: Fix `XrHandTrackingMeshFB` two-call-idiom implicit
+    valid usage, and increment the revision.
+    ([internal MR 2311](https://gitlab.khronos.org/openxr/openxr/merge_requests/2311))
+  - `XR_FB_passthrough`: Add `XrSystemPassthroughProperties2FB` and
+    `XR_PASSTHROUGH_LAYER_DEPTH_BIT_FB`.
+    ([internal MR 2333](https://gitlab.khronos.org/openxr/openxr/merge_requests/2333),
+    [internal MR 2393](https://gitlab.khronos.org/openxr/openxr/merge_requests/2393))
+  - `XR_FB_render_model`: Mark `XrRenderModelCapabilitiesRequestFB`, as "returned-
+    only" for consistency and to correct the implicit valid usage, incrementing the
+    revision number.
+    ([internal MR 2309](https://gitlab.khronos.org/openxr/openxr/merge_requests/2309))
+  - `XR_MSFT_scene_understanding_serialization`: Update vendor extension to
+    document when `xrDeserializeSceneMSFT` must return
+    `XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT`.
+    ([internal MR 2316](https://gitlab.khronos.org/openxr/openxr/merge_requests/2316))
+  - scripts: Synchronize scripts with Vulkan, and move all generated files into a
+    single target directory.
+    ([internal MR 2335](https://gitlab.khronos.org/openxr/openxr/merge_requests/2335),
+    [internal issue 1693](https://gitlab.khronos.org/openxr/openxr/issues/1693),
+    [internal MR 2393](https://gitlab.khronos.org/openxr/openxr/merge_requests/2393),
+    [internal MR 2400](https://gitlab.khronos.org/openxr/openxr/merge_requests/2400))
+
 ## OpenXR Specification 1.0.24 (2022-06-23)
 
 - Registry

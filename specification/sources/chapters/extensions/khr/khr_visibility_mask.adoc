@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_visibility_mask.adoc[]
+include::{generated}/meta/XR_KHR_visibility_mask.adoc[]
 
 *Last Modified Date*::
     2018-07-05
@@ -44,7 +44,7 @@ specification that is supported.
 The application can: request a view mask in any of the formats identified by
 these types.
 
-include::../../../../generated/api/enums/XrVisibilityMaskTypeKHR.txt[]
+include::{generated}/api/enums/XrVisibilityMaskTypeKHR.txt[]
 
 .Enumerant Descriptions
 ****
@@ -86,7 +86,7 @@ include::../../../../generated/api/enums/XrVisibilityMaskTypeKHR.txt[]
 The slink:XrVisibilityMaskKHR structure is an input/output struct which
 specifies the view mask.
 
-include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
+include::{generated}/api/structs/XrVisibilityMaskKHR.txt[]
 
 .Member Descriptions
 ****
@@ -115,7 +115,7 @@ include::../../../../generated/api/structs/XrVisibilityMaskKHR.txt[]
   the indices of the mask geometry in the pname:vertices array.
 ****
 
-include::../../../../generated/validity/structs/XrVisibilityMaskKHR.txt[]
+include::{generated}/validity/structs/XrVisibilityMaskKHR.txt[]
 --
 
 [open,refpage='XrEventDataVisibilityMaskChangedKHR',desc='Visibility Mask',type='structs']
@@ -128,7 +128,7 @@ This event is per-view, so if the masks for multiple views in a
 configuration change then multiple instances of this event will be sent to
 the application, one per view.
 
-include::../../../../generated/api/structs/XrEventDataVisibilityMaskChangedKHR.txt[]
+include::{generated}/api/structs/XrEventDataVisibilityMaskChangedKHR.txt[]
 
 .Member Descriptions
 ****
@@ -143,7 +143,7 @@ include::../../../../generated/api/structs/XrEventDataVisibilityMaskChangedKHR.t
   which the change refers.
 ****
 
-include::../../../../generated/validity/structs/XrEventDataVisibilityMaskChangedKHR.txt[]
+include::{generated}/validity/structs/XrEventDataVisibilityMaskChangedKHR.txt[]
 --
 
 *New Functions*
@@ -152,7 +152,7 @@ include::../../../../generated/validity/structs/XrEventDataVisibilityMaskChanged
 --
 The flink:xrGetVisibilityMaskKHR function is defined as:
 
-include::../../../../generated/api/protos/xrGetVisibilityMaskKHR.txt[]
+include::{generated}/api/protos/xrGetVisibilityMaskKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -177,7 +177,7 @@ pname:vertexCountOutput or pname:indexCountOutput respectively.
 If a view mask for the specified view isn't available, the returned vertex
 and index counts must: be `0`.
 
-include::../../../../generated/validity/protos/xrGetVisibilityMaskKHR.txt[]
+include::{generated}/validity/protos/xrGetVisibilityMaskKHR.txt[]
 --
 
 *Issues*

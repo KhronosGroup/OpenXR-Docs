@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_MSFT_scene_understanding.adoc[]
+include::{generated}/meta/XR_MSFT_scene_understanding.adoc[]
 
 *Last Modified Date*::
     2021-05-03
@@ -66,7 +66,7 @@ is done with scene compute and scene component data to save system power
 consumption.
 ====
 
-include::../../../../generated/api/handles/XrSceneObserverMSFT.txt[]
+include::{generated}/api/handles/XrSceneObserverMSFT.txt[]
 --
 
 [open,refpage='xrCreateSceneObserverMSFT',type='protos',desc='Create a scene observer handle',xrefs='XrSceneObserverMSFT XrSceneObserverCreateInfoMSFT xrDestroySceneObserverMSFT']
@@ -74,7 +74,7 @@ include::../../../../generated/api/handles/XrSceneObserverMSFT.txt[]
 An slink:XrSceneObserverMSFT handle is created using
 flink:xrCreateSceneObserverMSFT.
 
-include::../../../../generated/api/protos/xrCreateSceneObserverMSFT.txt[]
+include::{generated}/api/protos/xrCreateSceneObserverMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -85,14 +85,14 @@ include::../../../../generated/api/protos/xrCreateSceneObserverMSFT.txt[]
 * pname:sceneObserver is the returned slink:XrSceneObserverMSFT handle.
 ****
 
-include::../../../../generated/validity/protos/xrCreateSceneObserverMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSceneObserverMSFT.txt[]
 --
 
 [open,refpage='XrSceneObserverCreateInfoMSFT',desc='The information to create a scene observer handle',type='structs',xrefs='xrCreateSceneObserverMSFT XrSceneObserverMSFT']
 --
 The slink:XrSceneObserverCreateInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneObserverCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneObserverCreateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -102,7 +102,7 @@ include::../../../../generated/api/structs/XrSceneObserverCreateInfoMSFT.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::../../../../generated/validity/structs/XrSceneObserverCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneObserverCreateInfoMSFT.txt[]
 --
 
 [open,refpage='xrDestroySceneObserverMSFT',type='protos',desc='Destroy a scene observer handle',xrefs='xrCreateSceneObserverMSFT XrSceneObserverMSFT']
@@ -110,7 +110,7 @@ include::../../../../generated/validity/structs/XrSceneObserverCreateInfoMSFT.tx
 The flink:xrDestroySceneObserverMSFT function releases the
 pname:sceneObserver and the underlying resources.
 
-include::../../../../generated/api/protos/xrDestroySceneObserverMSFT.txt[]
+include::{generated}/api/protos/xrDestroySceneObserverMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -118,7 +118,7 @@ include::../../../../generated/api/protos/xrDestroySceneObserverMSFT.txt[]
   flink:xrCreateSceneObserverMSFT.
 ****
 
-include::../../../../generated/validity/protos/xrDestroySceneObserverMSFT.txt[]
+include::{generated}/validity/protos/xrDestroySceneObserverMSFT.txt[]
 --
 
 *Compute a new scene and wait for completion*
@@ -163,7 +163,7 @@ slink:XrNewSceneComputeInfoMSFT::pname:requestedFeatures.
    ename:XR_SCENE_COMPONENT_TYPE_OBJECT_MSFT scene components from the
    resulting slink:XrSceneMSFT handle.
 
-include::../../../../generated/api/protos/xrComputeNewSceneMSFT.txt[]
+include::{generated}/api/protos/xrComputeNewSceneMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -224,7 +224,7 @@ non-occlusion mesh or planes.
    ename:XR_SCENE_COMPUTE_FEATURE_PLANE_MESH_MSFT, or
    ename:XR_SCENE_COMPUTE_FEATURE_SERIALIZE_SCENE_MSFT are also passed.
 
-include::../../../../generated/validity/protos/xrComputeNewSceneMSFT.txt[]
+include::{generated}/validity/protos/xrComputeNewSceneMSFT.txt[]
 --
 
 [open,refpage='XrSceneMSFT',type='handles',desc='Represents a scene',xrefs='xrCreateSceneMSFT xrDestroySceneMSFT']
@@ -232,14 +232,14 @@ include::../../../../generated/validity/protos/xrComputeNewSceneMSFT.txt[]
 An slink:XrSceneMSFT handle represents the collection of scene components
 that were detected during the scene computation.
 
-include::../../../../generated/api/handles/XrSceneMSFT.txt[]
+include::{generated}/api/handles/XrSceneMSFT.txt[]
 --
 
 [open,refpage='XrNewSceneComputeInfoMSFT',desc='The information to compute a new scene',type='structs',xrefs='xrComputeNewSceneMSFT']
 --
 The slink:XrNewSceneComputeInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrNewSceneComputeInfoMSFT.txt[]
+include::{generated}/api/structs/XrNewSceneComputeInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -256,7 +256,7 @@ include::../../../../generated/api/structs/XrNewSceneComputeInfoMSFT.txt[]
   Scene components entirely outside this volume should: culled.
 ****
 
-include::../../../../generated/validity/structs/XrNewSceneComputeInfoMSFT.txt[]
+include::{generated}/validity/structs/XrNewSceneComputeInfoMSFT.txt[]
 --
 
 [open,refpage='XrSceneComputeFeatureMSFT',desc='Scene compute feature',type='enums',xrefs='xrComputeNewSceneMSFT']
@@ -264,7 +264,7 @@ include::../../../../generated/validity/structs/XrNewSceneComputeInfoMSFT.txt[]
 The elink:XrSceneComputeFeatureMSFT enumeration identifies the different
 scene compute features that may be passed to flink:xrComputeNewSceneMSFT.
 
-include::../../../../generated/api/enums/XrSceneComputeFeatureMSFT.txt[]
+include::{generated}/api/enums/XrSceneComputeFeatureMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -306,7 +306,7 @@ The elink:XrSceneComputeConsistencyMSFT enumeration identifies the different
 scene compute consistencies that may be passed to
 flink:xrComputeNewSceneMSFT.
 
-include::../../../../generated/api/enums/XrSceneComputeConsistencyMSFT.txt[]
+include::{generated}/api/enums/XrSceneComputeConsistencyMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -342,7 +342,7 @@ be included, and all other scene components should: be excluded.
 If an application inputs no bounding volumes, then the runtime must: not
 associate any scene components with the resulting slink:XrSceneMSFT handle.
 
-include::../../../../generated/api/structs/XrSceneBoundsMSFT.txt[]
+include::{generated}/api/structs/XrSceneBoundsMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -358,7 +358,7 @@ include::../../../../generated/api/structs/XrSceneBoundsMSFT.txt[]
 * pname:frustums is an array of slink:XrSceneFrustumBoundMSFT.
 ****
 
-include::../../../../generated/validity/structs/XrSceneBoundsMSFT.txt[]
+include::{generated}/validity/structs/XrSceneBoundsMSFT.txt[]
 --
 
 [open,refpage='XrSceneSphereBoundMSFT',desc='Describe a scene sphere bounds',type='structs',xrefs='XrSceneBoundsMSFT']
@@ -366,7 +366,7 @@ include::../../../../generated/validity/structs/XrSceneBoundsMSFT.txt[]
 An slink:XrSceneSphereBoundMSFT structure describes the center and radius of
 a sphere bounds.
 
-include::../../../../generated/api/structs/XrSceneSphereBoundMSFT.txt[]
+include::{generated}/api/structs/XrSceneSphereBoundMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -379,7 +379,7 @@ include::../../../../generated/api/structs/XrSceneSphereBoundMSFT.txt[]
 The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if pname:radius
 is not a finite positive value.
 
-include::../../../../generated/validity/structs/XrSceneSphereBoundMSFT.txt[]
+include::{generated}/validity/structs/XrSceneSphereBoundMSFT.txt[]
 --
 
 [open,refpage='XrSceneOrientedBoxBoundMSFT',desc='Describe a scene oriented box bounds',type='structs',xrefs='XrSceneBoundsMSFT']
@@ -387,7 +387,7 @@ include::../../../../generated/validity/structs/XrSceneSphereBoundMSFT.txt[]
 An slink:XrSceneOrientedBoxBoundMSFT structure describes the pose and
 extents of an oriented box bounds.
 
-include::../../../../generated/api/structs/XrSceneOrientedBoxBoundMSFT.txt[]
+include::{generated}/api/structs/XrSceneOrientedBoxBoundMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -401,7 +401,7 @@ include::../../../../generated/api/structs/XrSceneOrientedBoxBoundMSFT.txt[]
 The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if any component
 of pname:extents is not finite or less than or equal to zero.
 
-include::../../../../generated/validity/structs/XrSceneOrientedBoxBoundMSFT.txt[]
+include::{generated}/validity/structs/XrSceneOrientedBoxBoundMSFT.txt[]
 --
 
 [open,refpage='XrSceneFrustumBoundMSFT',desc='Describe a scene frustum bounds',type='structs',xrefs='XrSceneBoundsMSFT']
@@ -409,7 +409,7 @@ include::../../../../generated/validity/structs/XrSceneOrientedBoxBoundMSFT.txt[
 An slink:XrSceneFrustumBoundMSFT structure describes the pose, field of
 view, and far distance of a frustum bounds.
 
-include::../../../../generated/api/structs/XrSceneFrustumBoundMSFT.txt[]
+include::{generated}/api/structs/XrSceneFrustumBoundMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -429,7 +429,7 @@ pname:farDistance is less than or equal to zero.
 The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the pname:fov
 angles are not between between [eq]#-{pi}/2# and [eq]#{pi}/2# exclusively.
 
-include::../../../../generated/validity/structs/XrSceneFrustumBoundMSFT.txt[]
+include::{generated}/validity/structs/XrSceneFrustumBoundMSFT.txt[]
 --
 
 [open,refpage='XrVisualMeshComputeLodInfoMSFT',desc='Visual mesh compute level of detail info',type='structs',xrefs='XrNewSceneComputeInfoMSFT xrComputeNewSceneMSFT']
@@ -444,7 +444,7 @@ level of detail.
 
 The slink:XrVisualMeshComputeLodInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
+include::{generated}/api/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -455,7 +455,7 @@ include::../../../../generated/api/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
   elink:XrMeshComputeLodMSFT.
 ****
 
-include::../../../../generated/validity/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
+include::{generated}/validity/structs/XrVisualMeshComputeLodInfoMSFT.txt[]
 --
 
 [open,refpage='XrMeshComputeLodMSFT',desc='Mesh compute level of detail enumeration',type='enums',xrefs='XrVisualMeshComputeLodInfoMSFT']
@@ -463,7 +463,7 @@ include::../../../../generated/validity/structs/XrVisualMeshComputeLodInfoMSFT.t
 The elink:XrMeshComputeLodMSFT enumeration identifies the level of detail of
 visual mesh compute.
 
-include::../../../../generated/api/enums/XrMeshComputeLodMSFT.txt[]
+include::{generated}/api/enums/XrMeshComputeLodMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -490,7 +490,7 @@ supported scene compute features of the given system.
 This function follows the <<buffer-size-parameters,two-call idiom>> for
 filling the pname:features array.
 
-include::../../../../generated/api/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
+include::{generated}/api/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -505,7 +505,7 @@ include::../../../../generated/api/protos/xrEnumerateSceneComputeFeaturesMSFT.tx
 * pname:features is an array of elink:XrSceneComputeFeatureMSFT.
 ****
 
-include::../../../../generated/validity/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
+include::{generated}/validity/protos/xrEnumerateSceneComputeFeaturesMSFT.txt[]
 --
 
 [open,refpage='xrGetSceneComputeStateMSFT',type='protos',desc='Get the scene compute state',xrefs='XrSceneComputeStateMSFT XrSceneObserverMSFT']
@@ -515,7 +515,7 @@ flink:xrGetSceneComputeStateMSFT.
 This function should: typically be called once per frame per
 slink:XrSceneObserverMSFT.
 
-include::../../../../generated/api/protos/xrGetSceneComputeStateMSFT.txt[]
+include::{generated}/api/protos/xrGetSceneComputeStateMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -523,7 +523,7 @@ include::../../../../generated/api/protos/xrGetSceneComputeStateMSFT.txt[]
 * pname:state is the returned elink:XrSceneComputeStateMSFT value.
 ****
 
-include::../../../../generated/validity/protos/xrGetSceneComputeStateMSFT.txt[]
+include::{generated}/validity/protos/xrGetSceneComputeStateMSFT.txt[]
 --
 
 [open,refpage='XrSceneComputeStateMSFT',desc='Scene compute state type',type='enums',xrefs='xrGetSceneComputeStateMSFT']
@@ -531,7 +531,7 @@ include::../../../../generated/validity/protos/xrGetSceneComputeStateMSFT.txt[]
 elink:XrSceneComputeStateMSFT identifies the different states of computing a
 new scene.
 
-include::../../../../generated/api/enums/XrSceneComputeStateMSFT.txt[]
+include::{generated}/api/enums/XrSceneComputeStateMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -593,7 +593,7 @@ called again to create the next scene.
 The runtime must: keep alive any component data and mesh buffers relating to
 this historical scene until its handle is destroyed.
 
-include::../../../../generated/api/protos/xrCreateSceneMSFT.txt[]
+include::{generated}/api/protos/xrCreateSceneMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -603,7 +603,7 @@ include::../../../../generated/api/protos/xrCreateSceneMSFT.txt[]
 * pname:scene is the returned slink:XrSceneMSFT handle.
 ****
 
-include::../../../../generated/validity/protos/xrCreateSceneMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSceneMSFT.txt[]
 
 Calling flink:xrCreateSceneMSFT when flink:xrGetSceneComputeStateMSFT
 returns ename:XR_SCENE_COMPUTE_STATE_NONE_MSFT or
@@ -615,7 +615,7 @@ ename:XR_ERROR_COMPUTE_NEW_SCENE_NOT_COMPLETED_MSFT.
 --
 The slink:XrSceneCreateInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneCreateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -625,7 +625,7 @@ include::../../../../generated/api/structs/XrSceneCreateInfoMSFT.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::../../../../generated/validity/structs/XrSceneCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneCreateInfoMSFT.txt[]
 --
 
 [open,refpage='xrDestroySceneMSFT',type='protos',desc='Destroy a scene handle',xrefs='xrCreateSceneMSFT']
@@ -633,7 +633,7 @@ include::../../../../generated/validity/structs/XrSceneCreateInfoMSFT.txt[]
 The flink:xrDestroySceneMSFT function releases the pname:scene and the
 underlying resources.
 
-include::../../../../generated/api/protos/xrDestroySceneMSFT.txt[]
+include::{generated}/api/protos/xrDestroySceneMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -641,7 +641,7 @@ include::../../../../generated/api/protos/xrDestroySceneMSFT.txt[]
   flink:xrCreateSceneMSFT.
 ****
 
-include::../../../../generated/validity/protos/xrDestroySceneMSFT.txt[]
+include::{generated}/validity/protos/xrDestroySceneMSFT.txt[]
 --
 
 *Scene component types and Universally Unique Identifiers*
@@ -689,14 +689,14 @@ link:https://www.rfc-editor.org/rfc/rfc4122.html#section-4.1.2[RFC 4122
 section 4.1.2].
 The slink:XrUuidMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrUuidMSFT.txt[]
+include::{generated}/api/structs/XrUuidMSFT.txt[]
 
 .Member Descriptions
 ****
 * pname:bytes is a 128-bit Variant-1 Universally Unique Identifier.
 ****
 
-include::../../../../generated/validity/structs/XrUuidMSFT.txt[]
+include::{generated}/validity/structs/XrUuidMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentTypeMSFT',desc='Scene component type',type='enums',xrefs='XrSceneComponentMSFT XrSceneComponentsGetInfoMSFT']
@@ -704,7 +704,7 @@ include::../../../../generated/validity/structs/XrUuidMSFT.txt[]
 The elink:XrSceneComponentTypeMSFT enumeration identifies the scene
 component type.
 
-include::../../../../generated/api/enums/XrSceneComponentTypeMSFT.txt[]
+include::{generated}/api/enums/XrSceneComponentTypeMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -759,7 +759,7 @@ runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
   flink:xrGetSceneComponentsMSFT, then slink:XrSceneMeshesMSFT may be
   included in the slink:XrSceneComponentsMSFT::pname:next chain.
 
-include::../../../../generated/api/protos/xrGetSceneComponentsMSFT.txt[]
+include::{generated}/api/protos/xrGetSceneComponentsMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -770,7 +770,7 @@ include::../../../../generated/api/protos/xrGetSceneComponentsMSFT.txt[]
 * pname:components is the slink:XrSceneComponentsMSFT output structure.
 ****
 
-include::../../../../generated/validity/protos/xrGetSceneComponentsMSFT.txt[]
+include::{generated}/validity/protos/xrGetSceneComponentsMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentsGetInfoMSFT',desc='The information to get the scene components',type='structs',xrefs='XrSceneComponentTypeMSFT xrGetSceneComponentsMSFT']
@@ -795,7 +795,7 @@ structs.
 
 The slink:XrSceneComponentsGetInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneComponentsGetInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentsGetInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -805,7 +805,7 @@ include::../../../../generated/api/structs/XrSceneComponentsGetInfoMSFT.txt[]
 * pname:componentType is the scene component type requested.
 ****
 
-include::../../../../generated/validity/structs/XrSceneComponentsGetInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentsGetInfoMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentsMSFT',desc='Scene components',type='structs',xrefs='XrSceneComponentMSFT xrGetSceneComponentsMSFT']
@@ -815,7 +815,7 @@ slink:XrSceneComponentMSFT returning the components that satisfy the
 conditions in flink:xrGetSceneComponentsMSFT::pname:getInfo.
 The slink:XrSceneComponentsMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneComponentsMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentsMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -832,14 +832,14 @@ include::../../../../generated/api/structs/XrSceneComponentsMSFT.txt[]
   detailed description of retrieving the required pname:components size.
 ****
 
-include::../../../../generated/validity/structs/XrSceneComponentsMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentsMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentMSFT',desc='Scene component',type='structs',xrefs='XrSceneComponentTypeMSFT XrSceneComponentsMSFT']
 --
 The slink:XrSceneComponentMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneComponentMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -870,7 +870,7 @@ Those child scene components would be alternative representations of the
 same wall.
 ====
 
-include::../../../../generated/validity/structs/XrSceneComponentMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentMSFT.txt[]
 --
 
 *Get scene components using filters*
@@ -884,7 +884,7 @@ The runtime must: combine multiple filters with a logical AND.
 --
 The slink:XrSceneComponentParentFilterInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -899,14 +899,14 @@ The runtime must: return only scene components with matching pname:parentId.
 If pname:parentId is zero then the runtime must: return only scene
 components that do not have a parent.
 
-include::../../../../generated/validity/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentParentFilterInfoMSFT.txt[]
 --
 
 [open,refpage='XrSceneObjectTypesFilterInfoMSFT',desc='Scene object types filter',type='structs',xrefs='XrSceneComponentsGetInfoMSFT']
 --
 The slink:XrSceneObjectTypesFilterInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -924,14 +924,14 @@ If a scene component does not have an elink:XrSceneObjectTypeMSFT then the
 parent's elink:XrSceneObjectTypeMSFT value will be used for the comparison
 if it exists.
 
-include::../../../../generated/validity/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneObjectTypesFilterInfoMSFT.txt[]
 --
 
 [open,refpage='XrScenePlaneAlignmentFilterInfoMSFT',desc='Plane alignment filter',type='structs',xrefs='XrSceneComponentsGetInfoMSFT']
 --
 The slink:XrScenePlaneAlignmentFilterInfoMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
+include::{generated}/api/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -947,7 +947,7 @@ include::../../../../generated/api/structs/XrScenePlaneAlignmentFilterInfoMSFT.t
 The runtime must: return only scene components that match one of the
 elink:XrScenePlaneAlignmentTypeMSFT values passed in pname:alignments.
 
-include::../../../../generated/validity/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
+include::{generated}/validity/structs/XrScenePlaneAlignmentFilterInfoMSFT.txt[]
 --
 
 *Get scene objects*
@@ -964,7 +964,7 @@ must: be returned.
 
 The slink:XrSceneObjectsMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneObjectsMSFT.txt[]
+include::{generated}/api/structs/XrSceneObjectsMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -987,7 +987,7 @@ of the following elink:XrSceneObjectTypeMSFT values:
 * ename:XR_SCENE_OBJECT_TYPE_PLATFORM_MSFT
 * ename:XR_SCENE_OBJECT_TYPE_INFERRED_MSFT
 
-include::../../../../generated/validity/structs/XrSceneObjectsMSFT.txt[]
+include::{generated}/validity/structs/XrSceneObjectsMSFT.txt[]
 --
 
 [open,refpage='XrSceneObjectMSFT',desc='Scene object',type='structs',xrefs='XrSceneObjectTypeMSFT XrSceneObjectsMSFT']
@@ -997,7 +997,7 @@ object.
 
 It is defined as:
 
-include::../../../../generated/api/structs/XrSceneObjectMSFT.txt[]
+include::{generated}/api/structs/XrSceneObjectMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1005,7 +1005,7 @@ include::../../../../generated/api/structs/XrSceneObjectMSFT.txt[]
   elink:XrSceneObjectTypeMSFT.
 ****
 
-include::../../../../generated/validity/structs/XrSceneObjectMSFT.txt[]
+include::{generated}/validity/structs/XrSceneObjectMSFT.txt[]
 --
 
 [open,refpage='XrSceneObjectTypeMSFT',desc='Scene object type',type='enums',xrefs='XrNewSceneComputeInfoMSFT XrSceneObjectMSFT XrSceneObjectTypesFilterInfoMSFT']
@@ -1013,7 +1013,7 @@ include::../../../../generated/validity/structs/XrSceneObjectMSFT.txt[]
 The elink:XrSceneObjectTypeMSFT enumeration identifies the different types
 of scene objects.
 
-include::../../../../generated/api/enums/XrSceneObjectTypeMSFT.txt[]
+include::{generated}/api/enums/XrSceneObjectTypeMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -1064,7 +1064,7 @@ must: be returned.
 
 The slink:XrScenePlanesMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrScenePlanesMSFT.txt[]
+include::{generated}/api/structs/XrScenePlanesMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1076,7 +1076,7 @@ include::../../../../generated/api/structs/XrScenePlanesMSFT.txt[]
 * pname:scenePlanes is an array of slink:XrScenePlaneMSFT.
 ****
 
-include::../../../../generated/validity/structs/XrScenePlanesMSFT.txt[]
+include::{generated}/validity/structs/XrScenePlanesMSFT.txt[]
 --
 
 [open,refpage='XrScenePlaneMSFT',desc='Scene plane',type='structs',xrefs='XrScenePlanesMSFT']
@@ -1085,7 +1085,7 @@ The slink:XrScenePlaneMSFT structure represents the state of a scene plane.
 
 It is defined as:
 
-include::../../../../generated/api/structs/XrScenePlaneMSFT.txt[]
+include::{generated}/api/structs/XrScenePlaneMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1124,7 +1124,7 @@ The X-Y plane can be converted to an X-Z plane by rotating [eq]#-{pi}/2#
 radians around the +X axis.
 ====
 
-include::../../../../generated/validity/structs/XrScenePlaneMSFT.txt[]
+include::{generated}/validity/structs/XrScenePlaneMSFT.txt[]
 --
 
 [open,refpage='XrScenePlaneAlignmentTypeMSFT',desc='Scene plane alignment type',type='enums',xrefs='XrScenePlaneMSFT XrScenePlaneAlignmentFilterInfoMSFT']
@@ -1132,7 +1132,7 @@ include::../../../../generated/validity/structs/XrScenePlaneMSFT.txt[]
 elink:XrScenePlaneAlignmentTypeMSFT identifies the different plane alignment
 types.
 
-include::../../../../generated/api/enums/XrScenePlaneAlignmentTypeMSFT.txt[]
+include::{generated}/api/enums/XrScenePlaneAlignmentTypeMSFT.txt[]
 
 .Enumerant Descriptions
 ****
@@ -1160,7 +1160,7 @@ must: be returned.
 
 The slink:XrSceneMeshesMSFT structure is defined as:
 
-include::../../../../generated/api/structs/XrSceneMeshesMSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshesMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1172,7 +1172,7 @@ include::../../../../generated/api/structs/XrSceneMeshesMSFT.txt[]
 * pname:sceneMeshes is an array of slink:XrSceneMeshMSFT.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshesMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshesMSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshMSFT',desc='Scene mesh',type='structs',xrefs='XrSceneMeshesMSFT']
@@ -1182,7 +1182,7 @@ component's mesh.
 
 It is defined as:
 
-include::../../../../generated/api/structs/XrSceneMeshMSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1195,7 +1195,7 @@ include::../../../../generated/api/structs/XrSceneMeshMSFT.txt[]
   16-bit unsigned indices.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshMSFT.txt[]
 --
 
 *Read scene mesh buffer*
@@ -1224,7 +1224,7 @@ struct.
 
 The flink:xrGetSceneMeshBuffersMSFT function is defined as:
 
-include::../../../../generated/api/protos/xrGetSceneMeshBuffersMSFT.txt[]
+include::{generated}/api/protos/xrGetSceneMeshBuffersMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -1273,7 +1273,7 @@ mesh buffer identifier and slink:XrSession.
 A runtime may: return zero vertices and indices if the underlying mesh data
 is no longer available.
 
-include::../../../../generated/validity/protos/xrGetSceneMeshBuffersMSFT.txt[]
+include::{generated}/validity/protos/xrGetSceneMeshBuffersMSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshBuffersGetInfoMSFT',desc='The information to get the scene mesh buffer data',type='structs',xrefs='xrGetSceneMeshBuffersMSFT']
@@ -1281,7 +1281,7 @@ include::../../../../generated/validity/protos/xrGetSceneMeshBuffersMSFT.txt[]
 slink:XrSceneMeshBuffersGetInfoMSFT is an input structure for the
 flink:xrGetSceneMeshBuffersMSFT function.
 
-include::../../../../generated/api/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1293,7 +1293,7 @@ include::../../../../generated/api/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
   scene mesh buffer to read.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshBuffersGetInfoMSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshBuffersMSFT',desc='Scene mesh buffers',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshVertexBufferMSFT XrSceneMeshIndicesUint32MSFT XrSceneMeshIndicesUint16MSFT']
@@ -1301,7 +1301,7 @@ include::../../../../generated/validity/structs/XrSceneMeshBuffersGetInfoMSFT.tx
 slink:XrSceneMeshBuffersMSFT is an input/output structure for reading scene
 mesh buffers.
 
-include::../../../../generated/api/structs/XrSceneMeshBuffersMSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshBuffersMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1310,7 +1310,7 @@ include::../../../../generated/api/structs/XrSceneMeshBuffersMSFT.txt[]
   chain.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshBuffersMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshBuffersMSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshVertexBufferMSFT',desc='Scene mesh vertex buffer',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
@@ -1318,7 +1318,7 @@ include::../../../../generated/validity/structs/XrSceneMeshBuffersMSFT.txt[]
 slink:XrSceneMeshVertexBufferMSFT is an input/output structure for reading
 scene mesh buffer vertices.
 
-include::../../../../generated/api/structs/XrSceneMeshVertexBufferMSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshVertexBufferMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1336,7 +1336,7 @@ include::../../../../generated/api/structs/XrSceneMeshVertexBufferMSFT.txt[]
   detailed description of retrieving the required pname:vertices size.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshVertexBufferMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshVertexBufferMSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshIndicesUint32MSFT',desc='Scene mesh 32-bit indices',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
@@ -1344,7 +1344,7 @@ include::../../../../generated/validity/structs/XrSceneMeshVertexBufferMSFT.txt[
 slink:XrSceneMeshIndicesUint32MSFT is an input/output structure for reading
 32-bit indices from a scene mesh buffer.
 
-include::../../../../generated/api/structs/XrSceneMeshIndicesUint32MSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshIndicesUint32MSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1364,7 +1364,7 @@ include::../../../../generated/api/structs/XrSceneMeshIndicesUint32MSFT.txt[]
   detailed description of retrieving the required pname:indices size.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshIndicesUint32MSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshIndicesUint32MSFT.txt[]
 --
 
 [open,refpage='XrSceneMeshIndicesUint16MSFT',desc='Scene mesh 16-bit indices',type='structs',xrefs='xrGetSceneMeshBuffersMSFT XrSceneMeshBuffersMSFT']
@@ -1372,7 +1372,7 @@ include::../../../../generated/validity/structs/XrSceneMeshIndicesUint32MSFT.txt
 slink:XrSceneMeshIndicesUint16MSFT is an input/output structure for reading
 16-bit indices from a scene mesh buffer.
 
-include::../../../../generated/api/structs/XrSceneMeshIndicesUint16MSFT.txt[]
+include::{generated}/api/structs/XrSceneMeshIndicesUint16MSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1392,7 +1392,7 @@ include::../../../../generated/api/structs/XrSceneMeshIndicesUint16MSFT.txt[]
   detailed description of retrieving the required pname:indices size.
 ****
 
-include::../../../../generated/validity/structs/XrSceneMeshIndicesUint16MSFT.txt[]
+include::{generated}/validity/structs/XrSceneMeshIndicesUint16MSFT.txt[]
 --
 
 *Locate scene objects*
@@ -1402,7 +1402,7 @@ include::../../../../generated/validity/structs/XrSceneMeshIndicesUint16MSFT.txt
 The flink:xrLocateSceneComponentsMSFT function locates an array of scene
 components to a base space at a given time.
 
-include::../../../../generated/api/protos/xrLocateSceneComponentsMSFT.txt[]
+include::{generated}/api/protos/xrLocateSceneComponentsMSFT.txt[]
 
 .Parameter Descriptions
 ****
@@ -1426,7 +1426,7 @@ by flink:xrLocateSceneComponentsMSFT in later frames may change over time as
 the target space or the scene components may refine their locations.
 ====
 
-include::../../../../generated/validity/protos/xrLocateSceneComponentsMSFT.txt[]
+include::{generated}/validity/protos/xrLocateSceneComponentsMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentsLocateInfoMSFT',desc='Describes the information to locate scene components',type='structs',xrefs='xrLocateSceneComponentsMSFT']
@@ -1434,7 +1434,7 @@ include::../../../../generated/validity/protos/xrLocateSceneComponentsMSFT.txt[]
 The slink:XrSceneComponentsLocateInfoMSFT structure describes the
 information to locate scene components.
 
-include::../../../../generated/api/structs/XrSceneComponentsLocateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentsLocateInfoMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1451,7 +1451,7 @@ include::../../../../generated/api/structs/XrSceneComponentsLocateInfoMSFT.txt[]
   scene components to location.
 ****
 
-include::../../../../generated/validity/structs/XrSceneComponentsLocateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentsLocateInfoMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentLocationsMSFT',desc='Returns the scene component locations',type='structs',xrefs='XrSceneComponentLocationMSFT xrLocateSceneComponentsMSFT']
@@ -1459,7 +1459,7 @@ include::../../../../generated/validity/structs/XrSceneComponentsLocateInfoMSFT.
 The slink:XrSceneComponentLocationsMSFT structure returns scene component
 locations.
 
-include::../../../../generated/api/structs/XrSceneComponentLocationsMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentLocationsMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1473,7 +1473,7 @@ include::../../../../generated/api/structs/XrSceneComponentLocationsMSFT.txt[]
   component locations.
 ****
 
-include::../../../../generated/validity/structs/XrSceneComponentLocationsMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentLocationsMSFT.txt[]
 --
 
 [open,refpage='XrSceneComponentLocationMSFT',desc='Describes the location of a scene component',type='structs',xrefs='XrSpaceLocationFlags XrSceneComponentLocationsMSFT']
@@ -1485,7 +1485,7 @@ slink:XrSceneComponentsLocateInfoMSFT::pname:time.
 If the scene component identified by slink:XrUuidMSFT is not found,
 pname:flags should be empty.
 
-include::../../../../generated/api/structs/XrSceneComponentLocationMSFT.txt[]
+include::{generated}/api/structs/XrSceneComponentLocationMSFT.txt[]
 
 .Member Descriptions
 ****
@@ -1497,7 +1497,7 @@ include::../../../../generated/api/structs/XrSceneComponentLocationMSFT.txt[]
   slink:XrSceneComponentsLocateInfoMSFT::pname:baseSpace.
 ****
 
-include::../../../../generated/validity/structs/XrSceneComponentLocationMSFT.txt[]
+include::{generated}/validity/structs/XrSceneComponentLocationMSFT.txt[]
 --
 
 *New Object Types*
@@ -1601,3 +1601,5 @@ elink:XrResult enumeration is extended with:
 
 * Revision 1, 2021-05-03 (Darryl Gough)
 ** Initial extension description
+* Revision 2, 2022-06-29 (Darryl Gough)
+** Fix missing error codes

@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_win32_convert_performance_counter_time.adoc[]
+include::{generated}/meta/XR_KHR_win32_convert_performance_counter_time.adoc[]
 
 *Last Modified Date*::
    2019-01-24
@@ -40,7 +40,7 @@ events between the local system and the OpenXR system.
 To convert from a Windows performance counter time stamp to basetype:XrTime,
 call:
 
-include::../../../../generated/api/protos/xrConvertWin32PerformanceCounterToTimeKHR.txt[]
+include::{generated}/api/protos/xrConvertWin32PerformanceCounterToTimeKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -60,7 +60,7 @@ If the output pname:time cannot represent the input
 pname:performanceCounter, the runtime must: return
 ename:XR_ERROR_TIME_INVALID.
 
-include::../../../../generated/validity/protos/xrConvertWin32PerformanceCounterToTimeKHR.txt[]
+include::{generated}/validity/protos/xrConvertWin32PerformanceCounterToTimeKHR.txt[]
 --
 
 [open,refpage='xrConvertTimeToWin32PerformanceCounterKHR',type='protos',desc='Convert XrTime to Win32 code:QueryPerformanceCounter time',xrefs='XrTime']
@@ -68,7 +68,7 @@ include::../../../../generated/validity/protos/xrConvertWin32PerformanceCounterT
 To convert from basetype:XrTime to a Windows performance counter time stamp,
 call:
 
-include::../../../../generated/api/protos/xrConvertTimeToWin32PerformanceCounterKHR.txt[]
+include::{generated}/api/protos/xrConvertTimeToWin32PerformanceCounterKHR.txt[]
 
 .Parameter Descriptions
 ****
@@ -86,7 +86,7 @@ Windows function.
 If the output pname:performanceCounter cannot represent the input
 pname:time, the runtime must: return ename:XR_ERROR_TIME_INVALID.
 
-include::../../../../generated/validity/protos/xrConvertTimeToWin32PerformanceCounterKHR.txt[]
+include::{generated}/validity/protos/xrConvertTimeToWin32PerformanceCounterKHR.txt[]
 --
 
 *Issues*

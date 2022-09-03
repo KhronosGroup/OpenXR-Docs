@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_foveation.adoc[]
+include::{generated}/meta/XR_FB_foveation.adoc[]
 
 *Contributors*::
     Kevin Xiao, Facebook +
@@ -11,7 +11,6 @@ include::../metadata/XR_FB_foveation.adoc[]
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -45,7 +44,7 @@ indicated in the <<extensions>> section.
 
 [open,refpage='XrFoveationProfileFB',type='handles',desc='Foveation profile']
 --
-include::{INCS-VAR}/api/handles/XrFoveationProfileFB.txt[]
+include::{generated}/api/handles/XrFoveationProfileFB.txt[]
 
 slink:XrFoveationProfileFB represents a set of properties and resources that
 define a foveation pattern for the runtime, which can: be applied to
@@ -56,25 +55,25 @@ individual swapchains.
 
 [open,refpage='XrSwapchainCreateFoveationFlagsFB',type='flags',desc='XrSwapchainCreateFoveationFlagsFB',xrefs='XrSwapchainCreateFoveationFlagBitsFB']
 --
-include::{INCS-VAR}/api/flags/XrSwapchainCreateFoveationFlagsFB.txt[]
+include::{generated}/api/flags/XrSwapchainCreateFoveationFlagsFB.txt[]
 --
 
 [open,refpage='XrSwapchainCreateFoveationFlagBitsFB',type='enums',desc='XrSwapchainCreateFoveationFlagBitsFB',xrefs='XrSwapchainCreateFoveationFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.txt[]
-include::{INCS-VAR}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.txt[]
+include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.comments.txt[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFlagsFB',type='flags',desc='XrSwapchainStateFoveationFlagsFB',xrefs='XrSwapchainStateFoveationFlagBitsFB']
 --
-include::{INCS-VAR}/api/flags/XrSwapchainStateFoveationFlagsFB.txt[]
+include::{generated}/api/flags/XrSwapchainStateFoveationFlagsFB.txt[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFlagBitsFB',type='enums',desc='XrSwapchainStateFoveationFlagBitsFB',xrefs='XrSwapchainStateFoveationFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrSwapchainStateFoveationFlagBitsFB.txt[]
+include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.txt[]
 
-// include::{INCS-VAR}/api/enums/XrSwapchainStateFoveationFlagBitsFB.comments.txt[]
+// include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.comments.txt[]
 There are currently no foveation swapchain state flags.
 This is reserved for future use.
 --
@@ -106,7 +105,7 @@ foveation profile that will apply no foveation to any area of the swapchain.
 
 The slink:XrFoveationProfileCreateInfoFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
+include::{generated}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
 
 .Member Descriptions
 ****
@@ -116,7 +115,7 @@ include::{INCS-VAR}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::{INCS-VAR}/validity/structs/XrFoveationProfileCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrFoveationProfileCreateInfoFB.txt[]
 --
 
 [open,refpage='XrSwapchainCreateInfoFoveationFB',type='structs',desc='The information to create a swapchain supporting foveation',xrefs='']
@@ -131,7 +130,7 @@ foveation-specific flags for swapchain creation.
 
 The slink:XrSwapchainCreateInfoFoveationFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+include::{generated}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
 
 .Member Descriptions
 ****
@@ -144,7 +143,7 @@ include::{INCS-VAR}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
   swapchain.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+include::{generated}/validity/structs/XrSwapchainCreateInfoFoveationFB.txt[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFB',type='structs',desc='Foveation swapchain state,xrefs='XrSwapchainStateFoveationFlagsFB']
@@ -158,7 +157,7 @@ profile and additional foveation specific flags for updating the swapchain.
 
 The slink:XrSwapchainStateFoveationFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSwapchainStateFoveationFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateFoveationFB.txt[]
 
 .Member Descriptions
 ****
@@ -173,7 +172,7 @@ include::{INCS-VAR}/api/structs/XrSwapchainStateFoveationFB.txt[]
   foveation properties to be applied to the swapchain.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSwapchainStateFoveationFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateFoveationFB.txt[]
 --
 
 *New Functions*
@@ -182,7 +181,7 @@ include::{INCS-VAR}/validity/structs/XrSwapchainStateFoveationFB.txt[]
 --
 The flink:xrCreateFoveationProfileFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrCreateFoveationProfileFB.txt[]
+include::{generated}/api/protos/xrCreateFoveationProfileFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -199,14 +198,14 @@ Creates an slink:XrFoveationProfileFB handle.
 The returned foveation profile handle may: be subsequently used in API
 calls.
 
-include::{INCS-VAR}/validity/protos/xrCreateFoveationProfileFB.txt[]
+include::{generated}/validity/protos/xrCreateFoveationProfileFB.txt[]
 --
 
 [open,refpage='xrDestroyFoveationProfileFB',desc='Destroy a foveation profile',type='protos',xrefs='']
 --
 The flink:xrDestroyFoveationProfileFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrDestroyFoveationProfileFB.txt[]
+include::{generated}/api/protos/xrDestroyFoveationProfileFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -221,7 +220,7 @@ foveation parameters of the swapchain.
 The application is responsible for ensuring that it has no calls using
 profile in progress when the foveation profile is destroyed.
 
-include::{INCS-VAR}/validity/protos/xrDestroyFoveationProfileFB.txt[]
+include::{generated}/validity/protos/xrDestroyFoveationProfileFB.txt[]
 --
 
 *Issues*

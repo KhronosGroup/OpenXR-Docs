@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_KHR_composition_layer_cube.adoc[]
+include::{generated}/meta/XR_KHR_composition_layer_cube.adoc[]
 
 *Last Modified Date*::
     2019-01-24
@@ -48,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerCubeKHR structure is defined as:
 
-include::../../../../generated/api/structs/XrCompositionLayerCubeKHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerCubeKHR.txt[]
 
 .Member Descriptions
 ****
@@ -72,7 +72,7 @@ cube map when calling flink:xrEndFrame.
 slink:XrCompositionLayerCubeKHR is an alias type for the base struct
 slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
 
-include::../../../../generated/validity/structs/XrCompositionLayerCubeKHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerCubeKHR.txt[]
 --
 
 *New Functions*

@@ -116,7 +116,7 @@ while (1)
 
 [open,refpage='XrActionSet',desc='Opaque handle to an action set',type='handles',xrefs='xrCreateActionSet xrDestroyActionSet']
 --
-include::../../generated/api/handles/XrActionSet.txt[]
+include::{generated}/api/handles/XrActionSet.txt[]
 
 Action sets are application-defined collections of actions.
 They are attached to a given slink:XrSession with a
@@ -138,7 +138,7 @@ Action sets are created by calling flink:xrCreateActionSet:
 --
 The flink:xrCreateActionSet function is defined as:
 
-include::../../generated/api/protos/xrCreateActionSet.txt[]
+include::{generated}/api/protos/xrCreateActionSet.txt[]
 
 .Parameter Descriptions
 ****
@@ -152,14 +152,14 @@ include::../../generated/api/protos/xrCreateActionSet.txt[]
 The flink:xrCreateActionSet function creates an action set and returns a
 handle to the created action set.
 
-include::../../generated/validity/protos/xrCreateActionSet.txt[]
+include::{generated}/validity/protos/xrCreateActionSet.txt[]
 --
 
 [open,refpage='XrActionSetCreateInfo',desc='XrActionSet creation info',type='structs',xrefs='XrActionSet xrCreateActionSet']
 --
 
 The slink:XrActionSetCreateInfo structure is defined as:
-include::../../generated/api/structs/XrActionSetCreateInfo.txt[]
+include::{generated}/api/structs/XrActionSetCreateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -213,14 +213,14 @@ If pname:actionSetName contains characters which are not allowed in a single
 level of a <<well-formed-path-strings, well-formed path string>>, the
 runtime must: return ename:XR_ERROR_PATH_FORMAT_INVALID.
 
-include::../../generated/validity/structs/XrActionSetCreateInfo.txt[]
+include::{generated}/validity/structs/XrActionSetCreateInfo.txt[]
 --
 
 [open,refpage='xrDestroyActionSet',desc='Destroys an XrActionSet',type='protos',xrefs='XrActionSet xrCreateActionSet']
 --
 The flink:xrDestroyActionSet function is defined as:
 
-include::../../generated/api/protos/xrDestroyActionSet.txt[]
+include::{generated}/api/protos/xrDestroyActionSet.txt[]
 
 .Parameter Descriptions
 ****
@@ -240,14 +240,14 @@ See <<spaces-action-spaces-lifetime, Action Spaces Lifetime>> for details.
 Resources for all action sets in an instance must: be freed when the
 instance containing those actions sets is destroyed.
 
-include::../../generated/validity/protos/xrDestroyActionSet.txt[]
+include::{generated}/validity/protos/xrDestroyActionSet.txt[]
 --
 
 === Creating Actions
 
 [open,refpage='XrAction',desc='Opaque handle to an action',type='handles',xrefs='xrCreateAction xrDestroyAction XrActionType']
 --
-include::../../generated/api/handles/XrAction.txt[]
+include::{generated}/api/handles/XrAction.txt[]
 
 Action handles are used to refer to individual actions when retrieving
 action data, creating action spaces, or sending haptic events.
@@ -258,7 +258,7 @@ action data, creating action spaces, or sending haptic events.
 --
 The flink:xrCreateAction function is defined as:
 
-include::../../generated/api/protos/xrCreateAction.txt[]
+include::{generated}/api/protos/xrCreateAction.txt[]
 
 .Parameter Descriptions
 ****
@@ -275,14 +275,14 @@ If pname:actionSet has been included in a call to
 flink:xrAttachSessionActionSets, the implementation must: return
 ename:XR_ERROR_ACTIONSETS_ALREADY_ATTACHED.
 
-include::../../generated/validity/protos/xrCreateAction.txt[]
+include::{generated}/validity/protos/xrCreateAction.txt[]
 --
 
 [open,refpage='XrActionCreateInfo',desc='XrAction creation info',type='structs',xrefs='XrAction xrCreateActionSet XrActionType xrCreateAction']
 --
 
 The slink:XrActionCreateInfo structure is defined as:
-include::../../generated/api/structs/XrActionCreateInfo.txt[]
+include::{generated}/api/structs/XrActionCreateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -364,14 +364,14 @@ If pname:actionName contains characters which are not allowed in a single
 level of a <<well-formed-path-strings, well-formed path string>>, the
 runtime must: return ename:XR_ERROR_PATH_FORMAT_INVALID.
 
-include::../../generated/validity/structs/XrActionCreateInfo.txt[]
+include::{generated}/validity/structs/XrActionCreateInfo.txt[]
 --
 
 [open,refpage='XrActionType',desc='XrAction type',type='enums',xrefs='XrAction xrCreateActionSet XrActionCreateInfo']
 --
 The elink:XrActionType parameter takes one of the following values:
 
-include::../../generated/api/enums/XrActionType.txt[]
+include::{generated}/api/enums/XrActionType.txt[]
 
 .Enumerant Descriptions
 ****
@@ -398,7 +398,7 @@ include::../../generated/api/enums/XrActionType.txt[]
 --
 The flink:xrDestroyAction function is defined as:
 
-include::../../generated/api/protos/xrDestroyAction.txt[]
+include::{generated}/api/protos/xrDestroyAction.txt[]
 
 .Parameter Descriptions
 ****
@@ -420,7 +420,7 @@ resources, but has no other change on actions.
 Resources for all actions in an instance must: be freed when the instance
 containing those actions sets is destroyed.
 
-include::../../generated/validity/protos/xrDestroyAction.txt[]
+include::{generated}/validity/protos/xrDestroyAction.txt[]
 --
 
 ==== Input Actions & Output Actions
@@ -521,7 +521,7 @@ action or it will be unbound.
 --
 
 The slink:XrEventDataInteractionProfileChanged structure is defined as:
-include::../../generated/api/structs/XrEventDataInteractionProfileChanged.txt[]
+include::{generated}/api/structs/XrEventDataInteractionProfileChanged.txt[]
 
 .Member Descriptions
 ****
@@ -543,14 +543,14 @@ This event must: only be sent for running sessions.
 The application can: call flink:xrGetCurrentInteractionProfile if it wants
 to change its own behavior based on the active hardware.
 
-include::../../generated/validity/structs/XrEventDataInteractionProfileChanged.txt[]
+include::{generated}/validity/structs/XrEventDataInteractionProfileChanged.txt[]
 --
 
 [open,refpage='xrSuggestInteractionProfileBindings',desc='Sets the application-suggested bindings for the interaction profile',type='protos',xrefs='XrInteractionProfileSuggestedBinding']
 --
 The flink:xrSuggestInteractionProfileBindings function is defined as:
 
-include::../../generated/api/protos/xrSuggestInteractionProfileBindings.txt[]
+include::{generated}/api/protos/xrSuggestInteractionProfileBindings.txt[]
 
 .Parameter Descriptions
 ****
@@ -588,14 +588,14 @@ If the action set for any action referenced in the pname:suggestedBindings
 parameter has been included in a call to flink:xrAttachSessionActionSets,
 the implementation must: return ename:XR_ERROR_ACTIONSETS_ALREADY_ATTACHED.
 
-include::../../generated/validity/protos/xrSuggestInteractionProfileBindings.txt[]
+include::{generated}/validity/protos/xrSuggestInteractionProfileBindings.txt[]
 --
 
 [open,refpage='XrInteractionProfileSuggestedBinding',desc='Suggested bindings for a interaction profile',type='structs',xrefs='xrSuggestInteractionProfileBindings XrActionSuggestedBinding']
 --
 
 The slink:XrInteractionProfileSuggestedBinding structure is defined as:
-include::../../generated/api/structs/XrInteractionProfileSuggestedBinding.txt[]
+include::{generated}/api/structs/XrInteractionProfileSuggestedBinding.txt[]
 
 .Member Descriptions
 ****
@@ -611,14 +611,14 @@ include::../../generated/api/structs/XrInteractionProfileSuggestedBinding.txt[]
   application's suggested bindings for the specified interaction profile.
 ****
 
-include::../../generated/validity/structs/XrInteractionProfileSuggestedBinding.txt[]
+include::{generated}/validity/structs/XrInteractionProfileSuggestedBinding.txt[]
 --
 
 [open,refpage='XrActionSuggestedBinding',desc='Suggested binding for a single action',type='structs',xrefs='xrSuggestInteractionProfileBindings XrInteractionProfileSuggestedBinding']
 --
 
 The slink:XrActionSuggestedBinding structure is defined as:
-include::../../generated/api/structs/XrActionSuggestedBinding.txt[]
+include::{generated}/api/structs/XrActionSuggestedBinding.txt[]
 
 .Member Descriptions
 ****
@@ -630,14 +630,14 @@ include::../../generated/api/structs/XrActionSuggestedBinding.txt[]
   See <<input-suggested-bindings, suggested bindings>> for more details.
 ****
 
-include::../../generated/validity/structs/XrActionSuggestedBinding.txt[]
+include::{generated}/validity/structs/XrActionSuggestedBinding.txt[]
 --
 
 [open,refpage='xrAttachSessionActionSets',desc='Attaches action sets to a given session',type='protos',xrefs='']
 --
 The flink:xrAttachSessionActionSets function is defined as:
 
-include::../../generated/api/protos/xrAttachSessionActionSets.txt[]
+include::{generated}/api/protos/xrAttachSessionActionSets.txt[]
 
 .Parameter Descriptions
 ****
@@ -664,14 +664,14 @@ The runtime must: return ename:XR_ERROR_ACTIONSETS_ALREADY_ATTACHED if
 flink:xrAttachSessionActionSets is called more than once for a given
 pname:session.
 
-include::../../generated/validity/protos/xrAttachSessionActionSets.txt[]
+include::{generated}/validity/protos/xrAttachSessionActionSets.txt[]
 --
 
 [open,refpage='XrSessionActionSetsAttachInfo',desc='Information to attach action sets to a session',type='structs',xrefs='xrAttachSessionActionSets']
 --
 
 The slink:XrSessionActionSetsAttachInfo structure is defined as:
-include::../../generated/api/structs/XrSessionActionSetsAttachInfo.txt[]
+include::{generated}/api/structs/XrSessionActionSetsAttachInfo.txt[]
 
 .Member Descriptions
 ****
@@ -685,14 +685,14 @@ include::../../generated/api/structs/XrSessionActionSetsAttachInfo.txt[]
   handles to be attached to the session.
 ****
 
-include::../../generated/validity/structs/XrSessionActionSetsAttachInfo.txt[]
+include::{generated}/validity/structs/XrSessionActionSetsAttachInfo.txt[]
 --
 
 [open,refpage='xrGetCurrentInteractionProfile',desc='Gets the current interaction profile for a top level user paths',type='protos',xrefs='']
 --
 The flink:xrGetCurrentInteractionProfile function is defined as:
 
-include::../../generated/api/protos/xrGetCurrentInteractionProfile.txt[]
+include::{generated}/api/protos/xrGetCurrentInteractionProfile.txt[]
 
 .Parameter Descriptions
 ****
@@ -725,14 +725,14 @@ If pname:topLevelUserPath is not one of the device input subpaths described
 in section <<semantic-path-user, /user paths>>, the runtime must: return
 ename:XR_ERROR_PATH_UNSUPPORTED.
 
-include::../../generated/validity/protos/xrGetCurrentInteractionProfile.txt[]
+include::{generated}/validity/protos/xrGetCurrentInteractionProfile.txt[]
 --
 
 [open,refpage='XrInteractionProfileState',desc='Receives active interaction profile for a top level path',type='structs',xrefs='xrSuggestInteractionProfileBindings XrActionSuggestedBinding']
 --
 
 The slink:XrInteractionProfileState structure is defined as:
-include::../../generated/api/structs/XrInteractionProfileState.txt[]
+include::{generated}/api/structs/XrInteractionProfileState.txt[]
 
 .Member Descriptions
 ****
@@ -756,7 +756,7 @@ If the runtime is unable to provide input because it cannot emulate any of
 the application-provided interaction profiles, it must: return
 dlink:XR_NULL_PATH.
 
-include::../../generated/validity/structs/XrInteractionProfileState.txt[]
+include::{generated}/validity/structs/XrInteractionProfileState.txt[]
 --
 === Reading Input Action State
 
@@ -827,10 +827,13 @@ The current state value is selected based on the type of the action:
   largest absolute value
 * Vector2 actions - The current state must: be the state of the input with
   the longest length
-* Pose actions - The runtime must: select a single pose source when the
-  action is created or bound and use that value consistently.
-  The runtime should: use subaction paths specified by the application to
-  make this choice where possible.
+* Pose actions - The current state must: be the state of a single pose
+  source.
+  The source of the pose must: only be changed during a call to
+  xrSyncAction.
+  The runtime should: only change the source in response to user actions,
+  such as picking up a new controller, or external events, such as a
+  controller running out of battery.
 * Haptic actions - The runtime must: send output events to all bound haptic
   devices
 
@@ -842,7 +845,7 @@ The current state value is selected based on the type of the action:
 The slink:XrActionStateGetInfo structure is used to provide action and
 subaction paths when calling ftext:xrGetActionState* function.
 It is defined as:
-include::../../generated/api/structs/XrActionStateGetInfo.txt[]
+include::{generated}/api/structs/XrActionStateGetInfo.txt[]
 
 .Member Descriptions
 ****
@@ -864,7 +867,7 @@ include::../../generated/api/structs/XrActionStateGetInfo.txt[]
 See slink:XrActionCreateInfo for a description of subaction paths, and the
 restrictions on their use.
 
-include::../../generated/validity/structs/XrActionStateGetInfo.txt[]
+include::{generated}/validity/structs/XrActionStateGetInfo.txt[]
 --
 
 [open,refpage='XrHapticActionInfo',desc='Information to output haptic feedback',type='structs',xrefs='xrApplyHapticFeedback xrStopHapticFeedback']
@@ -873,7 +876,7 @@ include::../../generated/validity/structs/XrActionStateGetInfo.txt[]
 The slink:XrHapticActionInfo structure is used to provide action and
 subaction paths when calling ftext:xr*HapticFeedback function.
 It is defined as:
-include::../../generated/api/structs/XrHapticActionInfo.txt[]
+include::{generated}/api/structs/XrHapticActionInfo.txt[]
 
 .Member Descriptions
 ****
@@ -897,7 +900,7 @@ include::../../generated/api/structs/XrHapticActionInfo.txt[]
 See slink:XrActionCreateInfo for a description of subaction paths, and the
 restrictions on their use.
 
-include::../../generated/validity/structs/XrHapticActionInfo.txt[]
+include::{generated}/validity/structs/XrHapticActionInfo.txt[]
 --
 
 ==== Boolean Actions
@@ -908,7 +911,7 @@ flink:xrGetActionStateBoolean retrieves the current state of a boolean
 action.
 It is defined as:
 
-include::../../generated/api/protos/xrGetActionStateBoolean.txt[]
+include::{generated}/api/protos/xrGetActionStateBoolean.txt[]
 
 .Parameter Descriptions
 ****
@@ -919,14 +922,14 @@ include::../../generated/api/protos/xrGetActionStateBoolean.txt[]
   the state will be placed.
 ****
 
-include::../../generated/validity/protos/xrGetActionStateBoolean.txt[]
+include::{generated}/validity/protos/xrGetActionStateBoolean.txt[]
 --
 
 [open,refpage='XrActionStateBoolean',desc='Boolean action state',type='structs',xrefs='xrGetActionStateBoolean']
 --
 
 The slink:XrActionStateBoolean structure is defined as:
-include::../../generated/api/structs/XrActionStateBoolean.txt[]
+include::{generated}/api/structs/XrActionStateBoolean.txt[]
 
 .Member Descriptions
 ****
@@ -953,7 +956,7 @@ When multiple input sources are bound to this action, the pname:currentState
 follows <<multiple_inputs,the previously defined rule to resolve
 ambiguity>>.
 
-include::../../generated/validity/structs/XrActionStateBoolean.txt[]
+include::{generated}/validity/structs/XrActionStateBoolean.txt[]
 --
 
 ==== Scalar and Vector Actions
@@ -964,7 +967,7 @@ flink:xrGetActionStateFloat retrieves the current state of a floating-point
 action.
 It is defined as:
 
-include::../../generated/api/protos/xrGetActionStateFloat.txt[]
+include::{generated}/api/protos/xrGetActionStateFloat.txt[]
 
 .Parameter Descriptions
 ****
@@ -975,7 +978,7 @@ include::../../generated/api/protos/xrGetActionStateFloat.txt[]
   the state will be placed.
 ****
 
-include::../../generated/validity/protos/xrGetActionStateFloat.txt[]
+include::{generated}/validity/protos/xrGetActionStateFloat.txt[]
 --
 
 
@@ -983,7 +986,7 @@ include::../../generated/validity/protos/xrGetActionStateFloat.txt[]
 --
 
 The slink:XrActionStateFloat structure is defined as:
-include::../../generated/api/structs/XrActionStateFloat.txt[]
+include::{generated}/api/structs/XrActionStateFloat.txt[]
 
 .Member Descriptions
 ****
@@ -1005,7 +1008,7 @@ When multiple input sources are bound to this action, the pname:currentState
 follows <<multiple_inputs,the previously defined rule to resolve
 ambiguity>>.
 
-include::../../generated/validity/structs/XrActionStateFloat.txt[]
+include::{generated}/validity/structs/XrActionStateFloat.txt[]
 --
 
 [open,refpage='xrGetActionStateVector2f',desc='Gets 2D float vector action state',type='protos',xrefs='XrActionStateVector2f xrCreateAction']
@@ -1014,7 +1017,7 @@ flink:xrGetActionStateVector2f retrieves the current state of a
 two-dimensional vector action.
 It is defined as:
 
-include::../../generated/api/protos/xrGetActionStateVector2f.txt[]
+include::{generated}/api/protos/xrGetActionStateVector2f.txt[]
 
 .Parameter Descriptions
 ****
@@ -1025,14 +1028,14 @@ include::../../generated/api/protos/xrGetActionStateVector2f.txt[]
   the state will be placed.
 ****
 
-include::../../generated/validity/protos/xrGetActionStateVector2f.txt[]
+include::{generated}/validity/protos/xrGetActionStateVector2f.txt[]
 --
 
 [open,refpage='XrActionStateVector2f',desc='2D float vector action state',type='structs',xrefs='xrGetActionStateVector2f']
 --
 
 The slink:XrActionStateVector2f structure is defined as:
-include::../../generated/api/structs/XrActionStateVector2f.txt[]
+include::{generated}/api/structs/XrActionStateVector2f.txt[]
 
 .Member Descriptions
 ****
@@ -1054,7 +1057,7 @@ When multiple input sources are bound to this action, the pname:currentState
 follows <<multiple_inputs,the previously defined rule to resolve
 ambiguity>>.
 
-include::../../generated/validity/structs/XrActionStateVector2f.txt[]
+include::{generated}/validity/structs/XrActionStateVector2f.txt[]
 --
 
 
@@ -1064,7 +1067,7 @@ include::../../generated/validity/structs/XrActionStateVector2f.txt[]
 --
 The flink:xrGetActionStatePose function is defined as:
 
-include::../../generated/api/protos/xrGetActionStatePose.txt[]
+include::{generated}/api/protos/xrGetActionStatePose.txt[]
 
 .Parameter Descriptions
 ****
@@ -1082,14 +1085,14 @@ application can: create an action space using flink:xrCreateActionSpace.
 Then, after each sync, the application can: locate the pose of this action
 space within a base space using flink:xrLocateSpace.
 
-include::../../generated/validity/protos/xrGetActionStatePose.txt[]
+include::{generated}/validity/protos/xrGetActionStatePose.txt[]
 --
 
 [open,refpage='XrActionStatePose',desc='Pose action metadata',type='structs',xrefs='xrGetActionStatePose']
 --
 
 The slink:XrActionStatePose structure is defined as:
-include::../../generated/api/structs/XrActionStatePose.txt[]
+include::{generated}/api/structs/XrActionStatePose.txt[]
 
 .Member Descriptions
 ****
@@ -1104,7 +1107,7 @@ include::../../generated/api/structs/XrActionStatePose.txt[]
 A pose action must: not be bound to multiple input sources, according to
 <<multiple_inputs,the previously defined rule>>.
 
-include::../../generated/validity/structs/XrActionStatePose.txt[]
+include::{generated}/validity/structs/XrActionStatePose.txt[]
 --
 
 
@@ -1141,7 +1144,7 @@ slink:XrHapticVibration.
 --
 The flink:xrApplyHapticFeedback function is defined as:
 
-include::../../generated/api/protos/xrApplyHapticFeedback.txt[]
+include::{generated}/api/protos/xrApplyHapticFeedback.txt[]
 
 .Parameter Descriptions
 ****
@@ -1167,14 +1170,14 @@ If another haptic event from this session is currently happening on the
 device bound to this action, the runtime must: interrupt that other event
 and replace it with the new one.
 
-include::../../generated/validity/protos/xrApplyHapticFeedback.txt[]
+include::{generated}/validity/protos/xrApplyHapticFeedback.txt[]
 --
 
 [open,refpage='XrHapticBaseHeader',desc='Base header for haptic feedback',type='structs',xrefs='xrApplyHapticFeedback XrHapticVibration']
 --
 
 The slink:XrHapticBaseHeader structure is defined as:
-include::../../generated/api/structs/XrHapticBaseHeader.txt[]
+include::{generated}/api/structs/XrHapticBaseHeader.txt[]
 
 .Member Descriptions
 ****
@@ -1185,14 +1188,14 @@ include::../../generated/api/structs/XrHapticBaseHeader.txt[]
   No such structures are defined in core OpenXR.
 ****
 
-include::../../generated/validity/structs/XrHapticBaseHeader.txt[]
+include::{generated}/validity/structs/XrHapticBaseHeader.txt[]
 --
 
 [open,refpage='XrHapticVibration',desc='Base header for haptic feedback',type='structs',xrefs='xrApplyHapticFeedback XrHapticBaseHeader']
 --
 
 The slink:XrHapticVibration structure is defined as:
-include::../../generated/api/structs/XrHapticVibration.txt[]
+include::{generated}/api/structs/XrHapticVibration.txt[]
 
 .Member Descriptions
 ****
@@ -1216,14 +1219,14 @@ that trigger actionname:vibration output actions.
 The pname:duration, and pname:frequency parameters may: be clamped to
 implementation-dependent ranges.
 
-include::../../generated/validity/structs/XrHapticVibration.txt[]
+include::{generated}/validity/structs/XrHapticVibration.txt[]
 --
 
 [open,refpage='XR_MIN_HAPTIC_DURATION',desc='Indicates the shortest valid duration for the device',type='defines',xrefs='xrApplyHapticFeedback']
 --
 dlink:XR_MIN_HAPTIC_DURATION is used to indicate to the runtime that a short
 haptic pulse of the minimal supported duration for the haptic device.
-include::../../generated/api/defines/XR_MIN_HAPTIC_DURATION.txt[]
+include::{generated}/api/defines/XR_MIN_HAPTIC_DURATION.txt[]
 --
 
 [open,refpage='XR_FREQUENCY_UNSPECIFIED',desc='Runtime should determine optimal frequency for haptic pulse',type='defines',xrefs='xrApplyHapticFeedback']
@@ -1231,14 +1234,14 @@ include::../../generated/api/defines/XR_MIN_HAPTIC_DURATION.txt[]
 dlink:XR_FREQUENCY_UNSPECIFIED is used to indicate that the application
 wants the runtime to decide what the optimal frequency is for the haptic
 pulse.
-include::../../generated/api/defines/XR_FREQUENCY_UNSPECIFIED.txt[]
+include::{generated}/api/defines/XR_FREQUENCY_UNSPECIFIED.txt[]
 --
 
 [open,refpage='xrStopHapticFeedback',desc='Stop haptic feedback',type='protos',xrefs='xrApplyHapticFeedback']
 --
 The flink:xrStopHapticFeedback function is defined as:
 
-include::../../generated/api/protos/xrStopHapticFeedback.txt[]
+include::{generated}/api/protos/xrStopHapticFeedback.txt[]
 
 .Parameter Descriptions
 ****
@@ -1253,7 +1256,7 @@ function is called the runtime must: stop that event.
 If pname:session is not focused, the runtime must: return
 ename:XR_SESSION_NOT_FOCUSED.
 
-include::../../generated/validity/protos/xrStopHapticFeedback.txt[]
+include::{generated}/validity/protos/xrStopHapticFeedback.txt[]
 --
 
 === Input Action State Synchronization
@@ -1262,7 +1265,7 @@ include::../../generated/validity/protos/xrStopHapticFeedback.txt[]
 --
 The flink:xrSyncActions function is defined as:
 
-include::../../generated/api/protos/xrSyncActions.txt[]
+include::{generated}/api/protos/xrSyncActions.txt[]
 
 .Parameter Descriptions
 ****
@@ -1287,14 +1290,14 @@ If pname:session is not focused, the runtime must: return
 ename:XR_SESSION_NOT_FOCUSED, and all action states in the session must: be
 inactive.
 
-include::../../generated/validity/protos/xrSyncActions.txt[]
+include::{generated}/validity/protos/xrSyncActions.txt[]
 --
 
 [open,refpage='XrActionsSyncInfo',desc='Information to sync actions',type='structs',xrefs='xrSyncActions']
 --
 
 The slink:XrActionsSyncInfo structure is defined as:
-include::../../generated/api/structs/XrActionsSyncInfo.txt[]
+include::{generated}/api/structs/XrActionsSyncInfo.txt[]
 
 .Member Descriptions
 ****
@@ -1308,14 +1311,14 @@ include::../../generated/api/structs/XrActionsSyncInfo.txt[]
   more slink:XrActiveActionSet structures that should be synchronized.
 ****
 
-include::../../generated/validity/structs/XrActionsSyncInfo.txt[]
+include::{generated}/validity/structs/XrActionsSyncInfo.txt[]
 --
 
 [open,refpage='XrActiveActionSet',desc='Describes an active action set',type='structs',xrefs='xrSyncActions']
 --
 
 The slink:XrActiveActionSet structure is defined as:
-include::../../generated/api/structs/XrActiveActionSet.txt[]
+include::{generated}/api/structs/XrActiveActionSet.txt[]
 
 .Member Descriptions
 ****
@@ -1337,31 +1340,30 @@ combination.
 Applications can: provide a list of these structures to the
 flink:xrSyncActions function.
 
-include::../../generated/validity/structs/XrActiveActionSet.txt[]
+include::{generated}/validity/structs/XrActiveActionSet.txt[]
 --
 
 
-=== Action Sources
+=== Bound Sources
 
 An application can: use the flink:xrEnumerateBoundSourcesForAction and
 flink:xrGetInputSourceLocalizedName calls to prompt the user which physical
 inputs to use in order to perform an action.
-A *source* is the physical control that the action is bound to within the
-current interaction profile as returned by
-flink:xrGetCurrentInteractionProfile.
+The bound pname:sources are basetype:XrPath semantic paths representing the
+physical controls that an action is bound to.
 An action may: be bound to multiple sources at one time, for example an
 action named actionname:hold could be bound to both the X and A buttons.
 
-Once the semantic paths for the action's source are obtained, the
-application can: gather additional information about the source.
+Once the bound sources for an action are obtained, the application can:
+gather additional information about it.
 flink:xrGetInputSourceLocalizedName returns a localized human-readable
-string describing the source, e.g. 'A Button'.
+string describing the bound physical control, e.g. 'A Button'.
 
 [open,refpage='xrEnumerateBoundSourcesForAction',desc='Queries the bound input sources for an action',type='protos',xrefs='XrAction']
 --
 The flink:xrEnumerateBoundSourcesForAction function is defined as:
 
-include::../../generated/api/protos/xrEnumerateBoundSourcesForAction.txt[]
+include::{generated}/api/protos/xrEnumerateBoundSourcesForAction.txt[]
 
 .Parameter Descriptions
 ****
@@ -1374,7 +1376,7 @@ include::../../generated/api/protos/xrEnumerateBoundSourcesForAction.txt[]
   to the required capacity in the case that pname:sourceCapacityInput is
   insufficient.
 * pname:sources is a pointer to an application-allocated array that will be
-  filled with the basetype:XrPath values for all sources.
+  filled with the basetype:XrPath values for all bound sources.
   It can: be code:NULL if pname:sourceCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:sources size.
@@ -1393,14 +1395,23 @@ flink:xrEnumerateBoundSourcesForAction must: enumerate the same set of bound
 sources, or absence of bound sources, for a given query (defined by the
 pname:enumerateInfo parameter) between any two calls to flink:xrSyncActions.
 
-include::../../generated/validity/protos/xrEnumerateBoundSourcesForAction.txt[]
+[NOTE]
+.Note
+====
+The basetype:XrPath bound sources returned by the runtime are opaque values
+and should: not be inspected or persisted.
+They are only intended for use in conjunction with
+flink:xrGetInputSourceLocalizedName.
+====
+
+include::{generated}/validity/protos/xrEnumerateBoundSourcesForAction.txt[]
 --
 
 [open,refpage='XrBoundSourcesForActionEnumerateInfo',desc='Information to query the bound input sources for an action',type='structs',xrefs='xrEnumerateBoundSourcesForAction']
 --
 
 The slink:XrBoundSourcesForActionEnumerateInfo structure is defined as:
-include::../../generated/api/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
+include::{generated}/api/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
 
 .Member Descriptions
 ****
@@ -1411,19 +1422,19 @@ include::../../generated/api/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
 * pname:action is the handle of the action to query.
 ****
 
-include::../../generated/validity/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
+include::{generated}/validity/structs/XrBoundSourcesForActionEnumerateInfo.txt[]
 --
 
 [open,refpage='xrGetInputSourceLocalizedName',desc='Gets a localized source name',type='protos',xrefs='XrAction']
 --
 The flink:xrGetInputSourceLocalizedName function is defined as:
 
-include::../../generated/api/protos/xrGetInputSourceLocalizedName.txt[]
+include::{generated}/api/protos/xrGetInputSourceLocalizedName.txt[]
 
 .Parameter Descriptions
 ****
 * pname:session is a handle to the slink:XrSession associated with the
-  action that reported this source.
+  action that reported this bound source.
 * pname:getInfo is an slink:XrInputSourceLocalizedNameGetInfo providing the
   query information.
 * pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate
@@ -1432,26 +1443,26 @@ include::../../generated/api/protos/xrGetInputSourceLocalizedName.txt[]
   written (including the terminating `\0`), or a pointer to the required
   capacity in the case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an application-allocated buffer that will be
-  filled with the source name.
+  filled with the bound source name.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:buffer size.
 ****
 
-flink:xrGetInputSourceLocalizedName returns a string for the input source in
+flink:xrGetInputSourceLocalizedName returns a string for the bound source in
 the current system locale.
 
 If flink:xrAttachSessionActionSets has not yet been called for the session,
 the runtime must: return ename:XR_ERROR_ACTIONSET_NOT_ATTACHED.
 
-include::../../generated/validity/protos/xrGetInputSourceLocalizedName.txt[]
+include::{generated}/validity/protos/xrGetInputSourceLocalizedName.txt[]
 --
 
 [open,refpage='XrInputSourceLocalizedNameGetInfo',desc='Information to query the bound input sources for an action',type='structs',xrefs='xrEnumerateBoundSourcesForAction']
 --
 
 The slink:XrInputSourceLocalizedNameGetInfo structure is defined as:
-include::../../generated/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
+include::{generated}/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 
 .Member Descriptions
 ****
@@ -1459,14 +1470,16 @@ include::../../generated/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR.
-* pname:source is an basetype:XrPath representing the source.
-  Typically this was returned by a call to
+* pname:source is an basetype:XrPath representing a bound source returned by
   flink:xrEnumerateBoundSourcesForAction.
 * pname:whichComponents is any set of flags from
   elink:XrInputSourceLocalizedNameFlagBits.
 ****
 
-include::../../generated/validity/structs/XrInputSourceLocalizedNameGetInfo.txt[]
+The result of passing an basetype:XrPath pname:source *not* retrieved from
+flink:xrEnumerateBoundSourcesForAction is not specified.
+
+include::{generated}/validity/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 --
 
 [open,refpage='XrInputSourceLocalizedNameFlags',desc='Input source localized name flags',type='flags',xrefs='xrGetInputSourceLocalizedName']
@@ -1474,7 +1487,7 @@ include::../../generated/validity/structs/XrInputSourceLocalizedNameGetInfo.txt[
 The flink:xrGetInputSourceLocalizedName::pname:whichComponents parameter
 takes bitwise-OR of any of the following values:
 
-include::../../generated/api/enums/XrInputSourceLocalizedNameFlagBits.txt[]
+include::{generated}/api/enums/XrInputSourceLocalizedNameFlagBits.txt[]
 
 .Flag Descriptions
 ****

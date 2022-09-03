@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_EXT_win32_appcontainer_compatible.adoc[]
+include::{generated}/meta/XR_EXT_win32_appcontainer_compatible.adoc[]
 
 :url-appcontainer-isolation: https://docs.microsoft.com/en-us/windows/win32/secauthz/appcontainer-isolation
 :url-appcontainer-impl: https://docs.microsoft.com/en-us/windows/win32/secauthz/implementing-an-appcontainer
@@ -16,7 +16,6 @@ include::../metadata/XR_EXT_win32_appcontainer_compatible.adoc[]
     Alex Turner, Microsoft +
     Lachlan Ford, Microsoft +
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 

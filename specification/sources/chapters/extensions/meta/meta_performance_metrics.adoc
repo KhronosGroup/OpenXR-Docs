@@ -2,12 +2,11 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_META_performance_metrics.adoc[]
+include::{generated}/meta/XR_META_performance_metrics.adoc[]
 
 *Contributors*::
     Xiang Wei, Meta Platforms +
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -58,13 +57,13 @@ indicated in the <<extensions>> section.
 
 [open,refpage='XrPerformanceMetricsCounterFlagsMETA',type='flags',desc='XrPerformanceMetricsCounterFlagsMETA',xrefs='XrPerformanceMetricsCounterFlagBitsMETA']
 --
-include::{INCS-VAR}/api/flags/XrPerformanceMetricsCounterFlagsMETA.txt[]
+include::{generated}/api/flags/XrPerformanceMetricsCounterFlagsMETA.txt[]
 --
 
 [open,refpage='XrPerformanceMetricsCounterFlagBitsMETA',type='enums',desc='XrPerformanceMetricsCounterFlagBitsMETA',xrefs='XrPerformanceMetricsCounterFlagsMETA']
 --
-include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.txt[]
-include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.comments.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.comments.txt[]
 --
 
 *New Enum Constants*
@@ -77,8 +76,8 @@ elink:XrStructureType enumeration is extended with:
 *New Enums*
 [open,refpage='XrPerformanceMetricsCounterUnitMETA',type='enums',desc='XrPerformanceMetricsCounterUnitMETA']
 --
-include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterUnitMETA.txt[]
-include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[]
 --
 
 *New Structures*
@@ -88,7 +87,7 @@ include::{INCS-VAR}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[]
 
 The slink:XrPerformanceMetricsStateMETA structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/structs/XrPerformanceMetricsStateMETA.txt[]
 
 .Member Descriptions
 ****
@@ -109,7 +108,7 @@ slink:XrPerformanceMetricsStateMETA is populated as an output parameter when
 calling flink:xrGetPerformanceMetricsStateMETA to query the enablement
 status of the performance metrics system.
 
-include::{INCS-VAR}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
 --
 
 [open,refpage='XrPerformanceMetricsCounterMETA',type='structs',desc='Performance metrics counter value',xrefs='xrQueryPerformanceMetricsCounterMETA']
@@ -117,7 +116,7 @@ include::{INCS-VAR}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
 
 The slink:XrPerformanceMetricsCounterMETA structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrPerformanceMetricsCounterMETA.txt[]
+include::{generated}/api/structs/XrPerformanceMetricsCounterMETA.txt[]
 
 .Member Descriptions
 ****
@@ -143,7 +142,7 @@ slink:XrPerformanceMetricsCounterMETA is populated by calling
 flink:xrQueryPerformanceMetricsCounterMETA to query real-time performance
 metrics counter information.
 
-include::{INCS-VAR}/validity/structs/XrPerformanceMetricsCounterMETA.txt[]
+include::{generated}/validity/structs/XrPerformanceMetricsCounterMETA.txt[]
 --
 
 *New Functions*
@@ -154,7 +153,7 @@ The flink:xrEnumeratePerformanceMetricsCounterPathsMETA function enumerate
 all performance metrics counter paths that supported by the runtime, it is
 defined as:
 
-include::{INCS-VAR}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+include::{generated}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
 
 .Parameter Descriptions
 ****
@@ -172,14 +171,14 @@ include::{INCS-VAR}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt
   detailed description of retrieving the required pname:counterPaths size.
 ****
 
-include::{INCS-VAR}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+include::{generated}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
 --
 
 [open,refpage='xrSetPerformanceMetricsStateMETA',desc='Enable/disable performance metrics',type='protos',xrefs='xrGetPerformanceMetricsStateMETA']
 --
 The flink:xrSetPerformanceMetricsStateMETA function is defined as:
 
-include::{INCS-VAR}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
 
 .Parameter Descriptions
 ****
@@ -192,14 +191,14 @@ include::{INCS-VAR}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
 The flink:xrSetPerformanceMetricsStateMETA function enables or disables the
 performance metrics system.
 
-include::{INCS-VAR}/validity/protos/xrSetPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/protos/xrSetPerformanceMetricsStateMETA.txt[]
 --
 
 [open,refpage='xrGetPerformanceMetricsStateMETA',desc='Get current state of performance metrics',type='protos',xrefs='xrSetPerformanceMetricsStateMETA']
 --
 The flink:xrGetPerformanceMetricsStateMETA function is defined as:
 
-include::{INCS-VAR}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
 
 .Parameter Descriptions
 ****
@@ -212,14 +211,14 @@ include::{INCS-VAR}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
 The flink:xrGetPerformanceMetricsStateMETA function gets the current state
 of the performance metrics system.
 
-include::{INCS-VAR}/validity/protos/xrGetPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/protos/xrGetPerformanceMetricsStateMETA.txt[]
 --
 
 [open,refpage='xrQueryPerformanceMetricsCounterMETA',desc='Query performance metrics counter',type='protos',xrefs='']
 --
 The flink:xrQueryPerformanceMetricsCounterMETA function is defined as:
 
-include::{INCS-VAR}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+include::{generated}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 
 .Parameter Descriptions
 ****
@@ -233,7 +232,7 @@ include::{INCS-VAR}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 The flink:xrQueryPerformanceMetricsCounterMETA function queries a
 performance metrics counter.
 
-include::{INCS-VAR}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 --
 
 *Issues*

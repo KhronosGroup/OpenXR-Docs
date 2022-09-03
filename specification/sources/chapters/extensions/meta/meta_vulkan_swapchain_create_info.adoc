@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_META_vulkan_swapchain_create_info.adoc[]
+include::{generated}/meta/XR_META_vulkan_swapchain_create_info.adoc[]
 
 *Last Modified Date*::
     2022-05-19
@@ -14,7 +14,6 @@ include::../metadata/XR_META_vulkan_swapchain_create_info.adoc[]
     Jakob Bornecrantz, Collabora +
     Ross Ning, Meta Platforms
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -53,7 +52,7 @@ Runtimes that implement this extension must: support the
 
 [open,refpage='XrVulkanSwapchainCreateInfoMETA',type='structs',desc='Debug utils object name info']
 --
-include::{INCS-VAR}/api/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+include::{generated}/api/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
 
 .Member Descriptions
 ****
@@ -71,7 +70,7 @@ The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if any bit of
 either pname:additionalCreateFlags or pname:additionalUsageFlags is not
 supported.
 
-include::{INCS-VAR}/validity/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+include::{generated}/validity/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
 --
 
 *New Functions*

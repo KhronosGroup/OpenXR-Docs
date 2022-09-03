@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_keyboard_tracking.adoc[]
+include::{generated}/meta/XR_FB_keyboard_tracking.adoc[]
 
 *Contributors*::
     Federico Schliemann, Facebook +
     Robert Memmot, Facebook +
     Cass Everitt, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -25,29 +24,29 @@ bounds and a human readable identifier.
 
 [open,refpage='XrKeyboardTrackingFlagsFB',type='flags',desc='XrKeyboardTrackingFlagsFB']
 --
-include::{INCS-VAR}/api/flags/XrKeyboardTrackingFlagsFB.txt[]
+include::{generated}/api/flags/XrKeyboardTrackingFlagsFB.txt[]
 --
 
 [open,refpage='XrKeyboardTrackingFlagBitsFB',type='enums',desc='XrKeyboardTrackingFlagBitsFB',xrefs='XrKeyboardTrackingFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrKeyboardTrackingFlagBitsFB.txt[]
+include::{generated}/api/enums/XrKeyboardTrackingFlagBitsFB.txt[]
 
 
-include::{INCS-VAR}/api/enums/XrKeyboardTrackingFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrKeyboardTrackingFlagBitsFB.comments.txt[]
 --
 
 
 [open,refpage='XrKeyboardTrackingQueryFlagsFB',type='flags',desc='XrKeyboardTrackingQueryFlagsFB']
 --
-include::{INCS-VAR}/api/flags/XrKeyboardTrackingQueryFlagsFB.txt[]
+include::{generated}/api/flags/XrKeyboardTrackingQueryFlagsFB.txt[]
 --
 
 [open,refpage='XrKeyboardTrackingQueryFlagBitsFB',type='enums',desc='XrKeyboardTrackingQueryFlagBitsFB',xrefs='XrKeyboardTrackingQueryFlagsFB']
 --
-include::{INCS-VAR}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.txt[]
+include::{generated}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.txt[]
 
 
-include::{INCS-VAR}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrKeyboardTrackingQueryFlagBitsFB.comments.txt[]
 --
 
 *New Enum Constants*
@@ -68,7 +67,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSystemKeyboardTrackingPropertiesFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
 
 .Member Descriptions
 ****
@@ -82,14 +81,14 @@ include::{INCS-VAR}/api/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
 slink:XrSystemKeyboardTrackingPropertiesFB is populated with information
 from the system about tracked keyboard support.
 
-include::{INCS-VAR}/validity/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemKeyboardTrackingPropertiesFB.txt[]
 --
 
 [open,refpage='XrKeyboardTrackingQueryFB',type='structs',desc='Input data needed to determine which type of tracked keyboard to query for.',xrefs='']
 --
 The slink:XrKeyboardTrackingQueryFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrKeyboardTrackingQueryFB.txt[]
+include::{generated}/api/structs/XrKeyboardTrackingQueryFB.txt[]
 
 .Member Descriptions
 ****
@@ -103,14 +102,14 @@ include::{INCS-VAR}/api/structs/XrKeyboardTrackingQueryFB.txt[]
 slink:XrKeyboardTrackingQueryFB specifies input data needed to determine
 which type of tracked keyboard to query for.
 
-include::{INCS-VAR}/validity/structs/XrKeyboardTrackingQueryFB.txt[]
+include::{generated}/validity/structs/XrKeyboardTrackingQueryFB.txt[]
 --
 
 [open,refpage='XrKeyboardTrackingDescriptionFB',type='structs',desc='Description of a trackable keyboard.',xrefs='']
 --
 The slink:XrKeyboardTrackingDescriptionFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrKeyboardTrackingDescriptionFB.txt[]
+include::{generated}/api/structs/XrKeyboardTrackingDescriptionFB.txt[]
 
 .Member Descriptions
 ****
@@ -126,14 +125,14 @@ include::{INCS-VAR}/api/structs/XrKeyboardTrackingDescriptionFB.txt[]
 slink:XrKeyboardTrackingDescriptionFB describes a trackable keyboard and its
 associated metadata.
 
-include::{INCS-VAR}/validity/structs/XrKeyboardTrackingDescriptionFB.txt[]
+include::{generated}/validity/structs/XrKeyboardTrackingDescriptionFB.txt[]
 --
 
 [open,refpage='XrKeyboardSpaceCreateInfoFB',type='structs',desc='Input data needed by the system to start tracking a keyboard.',xrefs='']
 --
 The slink:XrKeyboardSpaceCreateInfoFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrKeyboardSpaceCreateInfoFB.txt[]
+include::{generated}/api/structs/XrKeyboardSpaceCreateInfoFB.txt[]
 
 
 .Member Descriptions
@@ -145,7 +144,7 @@ include::{INCS-VAR}/api/structs/XrKeyboardSpaceCreateInfoFB.txt[]
 slink:XrKeyboardSpaceCreateInfoFB describes a request for the system needed
 to create a trackable slink:XrSpace associated with the keyboard.
 
-include::{INCS-VAR}/validity/structs/XrKeyboardSpaceCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrKeyboardSpaceCreateInfoFB.txt[]
 --
 
 *New Functions*
@@ -154,7 +153,7 @@ include::{INCS-VAR}/validity/structs/XrKeyboardSpaceCreateInfoFB.txt[]
 --
 The flink:xrQuerySystemTrackedKeyboardFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrQuerySystemTrackedKeyboardFB.txt[]
+include::{generated}/api/protos/xrQuerySystemTrackedKeyboardFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -172,14 +171,14 @@ The flink:xrQuerySystemTrackedKeyboardFB function populates an
 slink:XrKeyboardTrackingDescriptionFB structure with enough information to
 describe a keyboard that the system can locate.
 
-include::{INCS-VAR}/validity/protos/xrQuerySystemTrackedKeyboardFB.txt[]
+include::{generated}/validity/protos/xrQuerySystemTrackedKeyboardFB.txt[]
 --
 
 [open,refpage='xrCreateKeyboardSpaceFB',desc='Create a foveation profile',type='protos',xrefs='']
 --
 The flink:xrCreateKeyboardSpaceFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrCreateKeyboardSpaceFB.txt[]
+include::{generated}/api/protos/xrCreateKeyboardSpaceFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -196,7 +195,7 @@ The origin of the created slink:XrSpace is located in the center of the
 bounding box in the x and z axes, and at the top of the y axis (meaning the
 keyboard is located entirely in negative y).
 
-include::{INCS-VAR}/validity/protos/xrCreateKeyboardSpaceFB.txt[]
+include::{generated}/validity/protos/xrCreateKeyboardSpaceFB.txt[]
 --
 
 *Issues*

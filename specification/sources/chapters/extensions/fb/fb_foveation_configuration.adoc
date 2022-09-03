@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_foveation_configuration.adoc[]
+include::{generated}/meta/XR_FB_foveation_configuration.adoc[]
 
 *Contributors*::
     Kevin Xiao, Facebook +
@@ -11,7 +11,6 @@ include::../metadata/XR_FB_foveation_configuration.adoc[]
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -46,9 +45,9 @@ elink:XrStructureType enumeration is extended with:
 The possible foveation levels are specified by the elink:XrFoveationLevelFB
 enumeration:
 
-include::{INCS-VAR}/api/enums/XrFoveationLevelFB.txt[]
+include::{generated}/api/enums/XrFoveationLevelFB.txt[]
 
-include::{INCS-VAR}/api/enums/XrFoveationLevelFB.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationLevelFB.comments-box.txt[]
 
 --
 
@@ -57,9 +56,9 @@ include::{INCS-VAR}/api/enums/XrFoveationLevelFB.comments-box.txt[]
 The possible foveation levels are specified by the
 elink:XrFoveationDynamicFB enumeration:
 
-include::{INCS-VAR}/api/enums/XrFoveationDynamicFB.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFB.txt[]
 
-include::{INCS-VAR}/api/enums/XrFoveationDynamicFB.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFB.comments-box.txt[]
 
 --
 
@@ -79,7 +78,7 @@ slink:XrFoveationLevelProfileCreateInfoFB.
 
 The slink:XrFoveationLevelProfileCreateInfoFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
+include::{generated}/api/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
 
 .Member Descriptions
 ****
@@ -93,7 +92,7 @@ include::{INCS-VAR}/api/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
 * pname:dynamic is the desired dynamic foveation setting.
 ****
 
-include::{INCS-VAR}/validity/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
 --
 
 *New Functions*

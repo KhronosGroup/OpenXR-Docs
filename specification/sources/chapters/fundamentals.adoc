@@ -13,7 +13,7 @@
 --
 Multi-part version numbers are used in several places in the OpenXR API.
 
-include::../../generated/api/basetypes/XrVersion.txt[]
+include::{generated}/api/basetypes/XrVersion.txt[]
 
 In each such use, the API major version number, minor version number, and
 patch version number are packed into a 64-bit integer, referred to as
@@ -45,6 +45,11 @@ and may: have an impact on the behavior of existing functionality.
 Differences in the patch version number must: affect neither full
 compatibility nor backwards compatibility between two versions, nor may: it
 add additional interfaces to the API.
+Runtimes may: use patch version number to determine whether to enable
+implementation changes, such as bug fixes, that impact functionality.
+Runtimes should: document any changes that are tied to the patch version.
+Application developers should: retest their application on all runtimes they
+support after compiling with a new version.
 
 A difference in minor version numbers indicates that some amount of new
 functionality has been added.
@@ -180,9 +185,9 @@ barrier if needed.
 For all functions which destroy an object handle, the application must:
 externally synchronize the object handle parameter and any child handles.
 
-include::../../generated/hostsynctable/parameters.txt[]
-include::../../generated/hostsynctable/parameterlists.txt[]
-include::../../generated/hostsynctable/implicit.txt[]
+include::{generated}/hostsynctable/parameters.txt[]
+include::{generated}/hostsynctable/parameterlists.txt[]
+include::{generated}/hostsynctable/implicit.txt[]
 
 [[multiprocessing-behavior]]
 === Multiprocessing Behavior
@@ -383,7 +388,7 @@ described here.
 
 [open,refpage='XR_MAY_ALIAS',type='defines',desc='Convenience macro to annotate types and pointers affirmatively known to alias']
 --
-include::../../generated/api/defines/XR_MAY_ALIAS.txt[]
+include::{generated}/api/defines/XR_MAY_ALIAS.txt[]
 
 As a convenience, some types and pointers that are known at specification
 time to alias values of different types have been annotated with the
@@ -479,7 +484,7 @@ enumerated type in question.
 A collection of flags is represented by a bitmask using the type
 basetype:XrFlags64:
 
-include::../../generated/api/basetypes/XrFlags64.txt[]
+include::{generated}/api/basetypes/XrFlags64.txt[]
 
 Bitmasks are passed to many functions and structures to compactly represent
 options and are stored in memory defined by the basetype:XrFlags64 type.
@@ -575,7 +580,7 @@ structures:
 --
 
 The slink:XrBaseInStructure structure is defined as:
-include::../../generated/api/structs/XrBaseInStructure.txt[]
+include::{generated}/api/structs/XrBaseInStructure.txt[]
 
 .Member Descriptions
 ****
@@ -594,7 +599,7 @@ read-only structure pointer chain.
 --
 
 The slink:XrBaseOutStructure structure is defined as:
-include::../../generated/api/structs/XrBaseOutStructure.txt[]
+include::{generated}/api/structs/XrBaseOutStructure.txt[]
 
 .Member Descriptions
 ****
@@ -668,7 +673,7 @@ the two categories below.
 [open,refpage='XrResult',desc='Result codes',type='enums']
 --
 
-include::../../generated/api/enums/XrResult.txt[]
+include::{generated}/api/enums/XrResult.txt[]
 
 All return codes in the API are reported via elink:XrResult return values.
 
@@ -695,7 +700,7 @@ ifndef::doctype-manpage[]
 endif::doctype-manpage[]
 
 // Generated from comment attributes in XML
-include::../../generated/api/enums/XrResult.success.comments.txt[]
+include::{generated}/api/enums/XrResult.success.comments.txt[]
 
 // NOTE: this anchor referenced by name in generated validity statements.
 [[fundamentals-errorcodes]]
@@ -708,7 +713,7 @@ ifndef::doctype-manpage[]
 endif::doctype-manpage[]
 
 // Generated from comment attributes in XML
-include::../../generated/api/enums/XrResult.error.comments.txt[]
+include::{generated}/api/enums/XrResult.error.comments.txt[]
 
 --
 
@@ -716,21 +721,21 @@ include::../../generated/api/enums/XrResult.error.comments.txt[]
 
 [open,refpage='XR_SUCCEEDED',desc='Success convenience macro',type='defines',xrefs='XR_FAILED XR_UNQUALIFIED_SUCCESS']
 --
-include::../../generated/api/defines/XR_SUCCEEDED.txt[]
+include::{generated}/api/defines/XR_SUCCEEDED.txt[]
 A convenience macro that can be used to test if a function succeeded.
 This may be a qualified success such as ename:XR_FRAME_DISCARDED.
 --
 
 [open,refpage='XR_FAILED',desc='Failure convenience macro',type='defines',xrefs='XR_SUCCEEDED XR_UNQUALIFIED_SUCCESS']
 --
-include::../../generated/api/defines/XR_FAILED.txt[]
+include::{generated}/api/defines/XR_FAILED.txt[]
 A convenience macro that can be used to test if a function has failed in
 some way.
 --
 
 [open,refpage='XR_UNQUALIFIED_SUCCESS',desc='Unqualified success convenience macro',type='defines',xrefs='XR_FAILED XR_SUCCEEDED']
 --
-include::../../generated/api/defines/XR_UNQUALIFIED_SUCCESS.txt[]
+include::{generated}/api/defines/XR_UNQUALIFIED_SUCCESS.txt[]
 A convenience macro that can be used to test a function's failure.
 The dlink:XR_UNQUALIFIED_SUCCESS macro is a convenience macro which may: be
 used to compare an elink:XrResult to code:0 (ename:XR_SUCCESS) exclusively.
@@ -825,7 +830,7 @@ object handle type may: be provided to indicate its type.
 
 [open,refpage='XrObjectType',desc='Specify an enumeration to track object handle types',type='enums']
 --
-include::../../generated/api/enums/XrObjectType.txt[]
+include::{generated}/api/enums/XrObjectType.txt[]
 
 The elink:XrObjectType enumeration defines values, each of which corresponds
 to a specific OpenXR handle type.
@@ -951,7 +956,7 @@ clock changes, time zones, daylight savings, etc.
 
 [open,refpage='XrTime',desc='Basic type for time',type='basetypes',xrefs='XrDuration']
 --
-include::../../generated/api/basetypes/XrTime.txt[]
+include::{generated}/api/basetypes/XrTime.txt[]
 
 basetype:XrTime is a base value type that represents time as a signed 64-bit
 integer, representing the monotonically-increasing count of nanoseconds that
@@ -1012,7 +1017,7 @@ timepoint.
 
 [open,refpage='XrDuration',desc='Bounded range of time',type='basetypes',xrefs='XrTime']
 --
-include::../../generated/api/basetypes/XrDuration.txt[]
+include::{generated}/api/basetypes/XrDuration.txt[]
 
 The difference between two timepoints is a duration, and thus the difference
 between two basetype:XrTime values is an basetype:XrDuration value.
@@ -1023,7 +1028,7 @@ basetype:XrTime.
 
 [open,refpage='XR_NO_DURATION',desc='Constant for no duration/immediate timeout',type='defines',xrefs='XrDuration']
 --
-include::../../generated/api/defines/XR_NO_DURATION.txt[]
+include::{generated}/api/defines/XR_NO_DURATION.txt[]
 
 For the case of timeout durations, dlink:XR_NO_DURATION may: be used to
 indicate that the timeout is immediate.
@@ -1031,7 +1036,7 @@ indicate that the timeout is immediate.
 
 [open,refpage='XR_INFINITE_DURATION',desc='Constant for infinite duration/never times out',type='defines',xrefs='XrDuration']
 --
-include::../../generated/api/defines/XR_INFINITE_DURATION.txt[]
+include::{generated}/api/defines/XR_INFINITE_DURATION.txt[]
 
 dlink:XR_INFINITE_DURATION is a special value that may: be used to indicate
 that the timeout never occurs.
@@ -1069,7 +1074,7 @@ reduced or unspecified.
 --
 
 The slink:XrColor4f structure is defined as:
-include::../../generated/api/structs/XrColor4f.txt[]
+include::{generated}/api/structs/XrColor4f.txt[]
 
 .Member Descriptions
 ****
@@ -1106,7 +1111,7 @@ directions in a space.
 [open,refpage='XrVector2f',desc='Two-dimensional vector',type='structs',xrefs='XrVector3f XrVector4f XrQuaternionf XrPosef']
 --
 A two-dimensional vector is defined by the slink:XrVector2f structure:
-include::../../generated/api/structs/XrVector2f.txt[]
+include::{generated}/api/structs/XrVector2f.txt[]
 
 .Member Descriptions
 ****
@@ -1121,7 +1126,7 @@ direction) and not otherwise specified, values must: be in meters.
 [open,refpage='XrVector3f',desc='Three-dimensional vector',type='structs',xrefs='XrVector2f XrVector4f XrQuaternionf XrPosef']
 --
 A three-dimensional vector is defined by the slink:XrVector3f structure:
-include::../../generated/api/structs/XrVector3f.txt[]
+include::{generated}/api/structs/XrVector3f.txt[]
 
 .Member Descriptions
 ****
@@ -1139,7 +1144,7 @@ angular velocity) and not otherwise specified, values must: be in meters.
 
 A four-dimensional or homogeneous vector is defined by the slink:XrVector4f
 structure:
-include::../../generated/api/structs/XrVector4f.txt[]
+include::{generated}/api/structs/XrVector4f.txt[]
 
 .Member Descriptions
 ****
@@ -1158,7 +1163,7 @@ values must: be in meters.
 
 Rotation is represented by a unit quaternion defined by the
 slink:XrQuaternionf structure:
-include::../../generated/api/structs/XrQuaternionf.txt[]
+include::{generated}/api/structs/XrQuaternionf.txt[]
 
 .Member Descriptions
 ****
@@ -1174,7 +1179,7 @@ include::../../generated/api/structs/XrQuaternionf.txt[]
 --
 
 A pose is defined by the slink:XrPosef structure:
-include::../../generated/api/structs/XrPosef.txt[]
+include::{generated}/api/structs/XrPosef.txt[]
 
 .Member Descriptions
 ****
@@ -1207,7 +1212,7 @@ Offsets are used to describe the magnitude of an offset in two dimensions.
 --
 
 A floating-point offset is defined by the structure:
-include::../../generated/api/structs/XrOffset2Df.txt[]
+include::{generated}/api/structs/XrOffset2Df.txt[]
 
 .Member Descriptions
 ****
@@ -1224,7 +1229,7 @@ If used to represent physical distances, values must: be in meters.
 --
 
 An integer offset is defined by the structure:
-include::../../generated/api/structs/XrOffset2Di.txt[]
+include::{generated}/api/structs/XrOffset2Di.txt[]
 
 .Member Descriptions
 ****
@@ -1244,7 +1249,7 @@ dimensions.
 --
 
 A two-dimensional floating-point extent is defined by the structure:
-include::../../generated/api/structs/XrExtent2Df.txt[]
+include::{generated}/api/structs/XrExtent2Df.txt[]
 
 .Member Descriptions
 ****
@@ -1263,7 +1268,7 @@ The pname:width and pname:height value must: be non-negative.
 --
 
 A two-dimensional integer extent is defined by the structure:
-include::../../generated/api/structs/XrExtent2Di.txt[]
+include::{generated}/api/structs/XrExtent2Di.txt[]
 
 .Member Descriptions
 ****
@@ -1289,7 +1294,7 @@ in meters.
 --
 
 A rectangle with floating-point values is defined by the structure:
-include::../../generated/api/structs/XrRect2Df.txt[]
+include::{generated}/api/structs/XrRect2Df.txt[]
 
 .Member Descriptions
 ****
@@ -1305,7 +1310,7 @@ This structure is used for component values that may be fractional
 --
 
 A rectangle with integer values is defined by the structure:
-include::../../generated/api/structs/XrRect2Di.txt[]
+include::{generated}/api/structs/XrRect2Di.txt[]
 
 .Member Descriptions
 ****
@@ -1330,7 +1335,7 @@ and will be interpreted as an angle, the value is defined to be in radians.
 [open,refpage='XrFovf',desc='Field of view',type='structs']
 --
 Field of view (FoV) is defined by the structure:
-include::../../generated/api/structs/XrFovf.txt[]
+include::{generated}/api/structs/XrFovf.txt[]
 
 .Member Descriptions
 ****
@@ -1365,7 +1370,7 @@ flipped vertically.
 
 [open,refpage='XrBool32',desc='Boolean value',type='basetypes']
 --
-include::../../generated/api/basetypes/XrBool32.txt[]
+include::{generated}/api/basetypes/XrBool32.txt[]
 
 Boolean values used by OpenXR are of type basetype:XrBool32 and are 32-bits
 wide as suggested by the name.
@@ -1429,7 +1434,7 @@ if (result == XR_SUCCESS) {
 
 [open,refpage='xrPollEvent',desc='Polls for events',type='protos',xrefs='XrInstance XrEventDataBuffer']
 --
-include::../../generated/api/protos/xrPollEvent.txt[]
+include::{generated}/api/protos/xrPollEvent.txt[]
 
 flink:xrPollEvent polls for the next event and returns an event if one is
 available.
@@ -1450,7 +1455,7 @@ pname:eventData.
 * pname:eventData is a pointer to a valid slink:XrEventDataBuffer.
 ****
 
-include::../../generated/validity/protos/xrPollEvent.txt[]
+include::{generated}/validity/protos/xrPollEvent.txt[]
 
 The runtime must: discard queued events which contain destroyed or otherwise
 invalid handles.
@@ -1476,7 +1481,7 @@ invalid handles.
 [open,refpage='XrEventDataBaseHeader',desc='Base header for an event',type='structs',xrefs='xrPollEvent']
 --
 The slink:XrEventDataBaseHeader structure is defined as:
-include::../../generated/api/structs/XrEventDataBaseHeader.txt[]
+include::{generated}/api/structs/XrEventDataBaseHeader.txt[]
 
 .Parameter Descriptions
 ****
@@ -1493,7 +1498,7 @@ common event data elements.
 Upon receipt, the slink:XrEventDataBaseHeader pointer should be type-cast to
 a pointer of the appropriate event data based on the pname:type parameter.
 
-include::../../generated/validity/structs/XrEventDataBaseHeader.txt[]
+include::{generated}/validity/structs/XrEventDataBaseHeader.txt[]
 --
 
 [open,refpage='XrEventDataBuffer',desc='Event buffer',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
@@ -1509,7 +1514,7 @@ An slink:XrEventDataBuffer may be type-cast to an
 slink:XrEventDataBaseHeader pointer or a pointer to any other appropriate
 event data based on the pname:type parameter.
 
-include::../../generated/api/structs/XrEventDataBuffer.txt[]
+include::{generated}/api/structs/XrEventDataBuffer.txt[]
 
 .Parameter Descriptions
 ****
@@ -1521,7 +1526,7 @@ include::../../generated/api/structs/XrEventDataBuffer.txt[]
   data elements for all specified event data types.
 ****
 
-include::../../generated/validity/structs/XrEventDataBuffer.txt[]
+include::{generated}/validity/structs/XrEventDataBuffer.txt[]
 --
 
 [open,refpage='XR_MAX_EVENT_DATA_SIZE',desc='Maximum event data buffer size',type='defines',xrefs='XrEventDataBuffer']
@@ -1529,7 +1534,7 @@ include::../../generated/validity/structs/XrEventDataBuffer.txt[]
 dlink:XR_MAX_EVENT_DATA_SIZE is the maximum size of an
 slink:XrEventDataBuffer.
 
-include::../../generated/api/defines/XR_MAX_EVENT_DATA_SIZE.txt[]
+include::{generated}/api/defines/XR_MAX_EVENT_DATA_SIZE.txt[]
 --
 
 [[eventlost-description]]
@@ -1539,7 +1544,7 @@ include::../../generated/api/defines/XR_MAX_EVENT_DATA_SIZE.txt[]
 --
 
 The slink:XrEventDataEventsLost structure is defined as:
-include::../../generated/api/structs/XrEventDataEventsLost.txt[]
+include::{generated}/api/structs/XrEventDataEventsLost.txt[]
 
 .Member Descriptions
 ****
@@ -1555,7 +1560,7 @@ Receiving the slink:XrEventDataEventsLost event structure indicates that the
 event queue overflowed and some events were removed at the position within
 the queue at which this event was found.
 
-include::../../generated/validity/structs/XrEventDataEventsLost.txt[]
+include::{generated}/validity/structs/XrEventDataEventsLost.txt[]
 --
 
 Other event structures are defined in later chapters in the context where
@@ -1586,4 +1591,3 @@ The application should: not keep additional reference counts on any
 `ID3D*Texture2D` objects past the lifetime of the slink:XrSwapchain handle,
 or make extra reference count decrease after destroying the
 slink:XrSwapchain handle.
-

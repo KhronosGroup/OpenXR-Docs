@@ -316,8 +316,12 @@ grep_sources \
     "\ba basetype:X"
 
 grep_sources \
-    "The extension metadata files have moved to 'metadata' to fix a naming collision" \
-    "include::[.][.]/meta/"
+    "All generated files have moved and should now be referenced with attribute references like {generated}" \
+    "include::\.\./(meta/|\.\./\.\./\.\./generated/)"
+
+grep_sources \
+    "Replace {INCS-VAR} with {generated}" \
+    "include::\{INCS-VAR\}"
 
 #grep_sources \
 #    "test" \

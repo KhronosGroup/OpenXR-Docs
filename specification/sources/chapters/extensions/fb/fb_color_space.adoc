@@ -2,14 +2,13 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-include::../metadata/XR_FB_color_space.adoc[]
+include::{generated}/meta/XR_FB_color_space.adoc[]
 
 *Contributors*::
     Volga Aksoy, Facebook +
     Cass Everitt, Facebook +
     Gloria Kennickell, Facebook
 
-:INCS-VAR: ../../../../generated
 
 *Overview*
 
@@ -51,7 +50,7 @@ elink:XrResult enumeration is extended with:
 The possible color spaces are specified by the elink:XrColorSpaceFB
 enumeration.
 
-include::../../../../generated/api/enums/XrColorSpaceFB.txt[]
+include::{generated}/api/enums/XrColorSpaceFB.txt[]
 
 .Enumerant Descriptions
 ****
@@ -130,7 +129,7 @@ slink:XrSystemProperties when calling flink:xrGetSystemProperties.
 
 The slink:XrSystemColorSpacePropertiesFB structure is defined as:
 
-include::{INCS-VAR}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
 
 .Member Descriptions
 ****
@@ -141,7 +140,7 @@ include::{INCS-VAR}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
 * pname:colorSpace is the native color space of the XR device.
 ****
 
-include::{INCS-VAR}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
 --
 
 *New Functions*
@@ -150,7 +149,7 @@ include::{INCS-VAR}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
 --
 The flink:xrEnumerateColorSpacesFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrEnumerateColorSpacesFB.txt[]
+include::{generated}/api/protos/xrEnumerateColorSpacesFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -172,14 +171,14 @@ current session.
 Runtimes must: always return identical buffer contents from this enumeration
 for the lifetime of the session.
 
-include::../../../../generated/validity/protos/xrEnumerateColorSpacesFB.txt[]
+include::{generated}/validity/protos/xrEnumerateColorSpacesFB.txt[]
 --
 
 [open,refpage='xrSetColorSpaceFB',desc='Set a color space',type='protos',xrefs='xrEnumerateColorSpacesFB']
 --
 The flink:xrSetColorSpaceFB function is defined as:
 
-include::{INCS-VAR}/api/protos/xrSetColorSpaceFB.txt[]
+include::{generated}/api/protos/xrSetColorSpaceFB.txt[]
 
 .Parameter Descriptions
 ****
@@ -214,7 +213,7 @@ guide:
 link:https://developer.oculus.com/resources/color-management-guide/[Color
 Management in Oculus Headsets]
 
-include::../../../../generated/validity/protos/xrSetColorSpaceFB.txt[]
+include::{generated}/validity/protos/xrSetColorSpaceFB.txt[]
 --
 
 *Issues*
@@ -226,3 +225,6 @@ include::../../../../generated/validity/protos/xrSetColorSpaceFB.txt[]
 * Revision 2, 2021-09-28 (Ryan Pavlik, Collabora, Ltd.)
 ** Fix XML markup to indicate that `XrSystemColorSpacePropertiesFB` is
    chained to `XrSystemProperties`.
+* Revision 3, 2022-09-01 (Ryan Pavlik, Collabora, Ltd.)
+** Fix XML markup to indicate that `XrSystemColorSpacePropertiesFB` is
+   returned-only.

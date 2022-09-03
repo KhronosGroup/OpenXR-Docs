@@ -1,4 +1,8 @@
-include::../metadata/XR_VALVE_analog_threshold.adoc[]
+// Copyright (c) 2020 Valve Software
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_VALVE_analog_threshold.adoc[]
 
 *Last Modified Date*::
     2021-06-09
@@ -37,7 +41,7 @@ slink:XrBindingModificationsKHR structure (See
 `<<XR_KHR_binding_modification>>` extension).
 
 
-include::../../../../generated/api/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
+include::{generated}/api/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
 
 .Member Descriptions
 ****
@@ -96,7 +100,7 @@ If a suggested binding with pname:action and pname:binding is not in the
 binding list for this interaction profile, the runtime must: return
 ename:XR_ERROR_PATH_UNSUPPORTED.
 
-include::../../../../generated/validity/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
+include::{generated}/validity/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
 --
 
 *New Functions*
