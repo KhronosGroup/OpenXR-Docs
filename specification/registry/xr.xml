@@ -7988,6 +7988,41 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
+    <extension name="XR_DANWILLM_extension_385" number="385" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DANWILLM_extension_385_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_385&quot;" name="XR_DANWILLM_extension_385_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_386" number="386" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DANWILLM_extension_386_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_386&quot;" name="XR_DANWILLM_extension_386_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_387" number="387" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DANWILLM_extension_387_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_387&quot;" name="XR_DANWILLM_extension_387_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_388" number="388" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DANWILLM_extension_388_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_388&quot;" name="XR_DANWILLM_extension_388_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_389" number="389" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DANWILLM_extension_389_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_389&quot;" name="XR_DANWILLM_extension_389_EXTENSION_NAME"/>
+        </require>
+    </extension>
+        
     </extensions>
 
 </registry>
