@@ -2555,27 +2555,27 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <!-- XR_MNDX_force_feedback_curl -->
         <type name="XrForceFeedbackCurlLocationMNDX" category="enum"/>
 
-        <type category="struct" name="XrSystemForceFeedbackCurlPropertiesMNDX" structextends="XrSystemProperties">
+        <type category="struct" name="XrSystemForceFeedbackCurlPropertiesMNDX" structextends="XrSystemProperties" returnedonly="true">
             <member values="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"><type>XrStructureType</type> <name>type</name></member>
-            <member><type>void</type>* <name>next</name></member>
+            <member><type>void</type>*    <name>next</name></member>
             <member><type>XrBool32</type> <name>supportsForceFeedbackCurl</name></member>
         </type>
 
         <type category="struct" name="XrForceFeedbackCurlCreateInfoMNDX">
             <member values="XR_TYPE_FORCE_FEEDBACK_CURL_CREATE_INFO_MNDX"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>*                       <name>next</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
         </type>
 
         <type category="struct" name="XrApplyForceFeedbackCurlLocationsMNDX">
             <member values="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>*                       <name>next</name></member>
+            <member>const <type>void</type>*                           <name>next</name></member>
             <member><type>XrApplyForceFeedbackCurlLocationMNDX</type>* <name>locations</name></member>
-            <member><type>uint32_t</type> <name>locationCount</name></member>
+            <member><type>uint32_t</type>                              <name>locationCount</name></member>
         </type>
 
         <type category="struct" name="XrApplyForceFeedbackCurlLocationMNDX">
             <member><type>XrForceFeedbackCurlLocationMNDX</type> <name>location</name></member>
-            <member><type>float</type> <name>value</name></member>
+            <member><type>float</type>                           <name>value</name></member>
         </type>
 
     </types>
@@ -3300,11 +3300,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
     <!-- enums for XR_MNDX_force_feedback_curl -->
     <enums name="XrForceFeedbackCurlLocationMNDX" type="enum">
-        <enum value="0" name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX"   comment="force feedback for thumb curl" />
-        <enum value="1" name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX"   comment="force feedback for index finger curl" />
-        <enum value="2" name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX"  comment="force feedback for middle finger curl" />
-        <enum value="3" name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX"    comment="force feedback for ring finger curl" />
-        <enum value="4" name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX"  comment="force feedback for little finger curl" />
+        <enum value="0"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX"  comment="force feedback for thumb curl"/>
+        <enum value="1"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX"  comment="force feedback for index finger curl"/>
+        <enum value="2"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX" comment="force feedback for middle finger curl"/>
+        <enum value="3"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX"   comment="force feedback for ring finger curl"/>
+        <enum value="4"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX" comment="force feedback for little finger curl"/>
     </enums>
 
     <!-- SECTION: OpenXR command definitions -->
@@ -8128,7 +8128,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
     <extension name="XR_MNDX_force_feedback_curl" number="376" type="instance" supported="openxr">
         <require>
-            <enum value="1"                                name="XR_MNDX_force_feedback_curl_SPEC_VERSION"/>
+            <enum value="1"                                       name="XR_MNDX_force_feedback_curl_SPEC_VERSION"/>
             <enum value="&quot;XR_MNDX_force_feedback_curl&quot;" name="XR_MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME"/>
 
             <command name="xrApplyForceFeedbackCurlMNDX"/>
