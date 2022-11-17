@@ -10,25 +10,34 @@ include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
 
 *Overview*
 
-This extension provides APIs for force feedback devices capable of restricting physical movement linearly in a single direction.
+This extension provides APIs for force feedback devices capable of
+restricting physical movement linearly in a single direction.
 
-The intended use for this extension is to provide simple force feedback capabilities to restrict finger movement for VR Gloves.
+The intended use for this extension is to provide simple force feedback
+capabilities to restrict finger movement for VR Gloves.
 
-The application must: also enable the `<<XR_EXT_hand_tracking>>` extension in order to use this extension.
+The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
+in order to use this extension.
 
 [open,refpage='XrForceFeedbackLocationMNDX',type='enums',desc='Describes which location to apply force feedback',xrefs='']
 --
-The elink:XrForceFeedbackLocationMNDX describes which location to apply force feedback.
+The elink:XrForceFeedbackLocationMNDX describes which location to apply
+force feedback.
 
 include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.txt[]
 
 .Enumerant Descriptions
 ****
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX specifies that force feedback will be applied to the thumb curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX specifies that force feedback will be applied to the index finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX specifies that force feedback will be applied to the middle finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX specifies that force feedback will be applied to the ring finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX specifies that force feedback will be applied to the little finger curl
+* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX specifies
+  that force feedback will be applied to the thumb curl
+* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX specifies
+  that force feedback will be applied to the index finger curl
+* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX specifies
+  that force feedback will be applied to the middle finger curl
+* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX specifies that
+  force feedback will be applied to the ring finger curl
+* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX specifies
+  that force feedback will be applied to the little finger curl
 ****
 --
 
@@ -59,14 +68,21 @@ include::{generated}/api/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure chain.
-* pname:supportsForceFeedbackCurl is an basetype:XrBool32, indicating if the current system is capable of performing force feedback.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsForceFeedbackCurl is an basetype:XrBool32, indicating if the
+  current system is capable of performing force feedback.
 ****
 
-An application may: inspect whether the system is capable of force feedback by chaining an slink:XrSystemForceFeedbackCurlPropertiesMNDX structure to the slink:XrSystemProperties structure when calling flink:xrGetSystemProperties.
+An application may: inspect whether the system is capable of force feedback
+by chaining an slink:XrSystemForceFeedbackCurlPropertiesMNDX structure to
+the slink:XrSystemProperties structure when calling
+flink:xrGetSystemProperties.
 
-The runtime should: return ename:XR_TRUE for pname:supportsForceFeedback when force feedback is available in the system, otherwise ename:XR_FALSE.
-Force feedback calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if force feedback is not available in the system.
+The runtime should: return ename:XR_TRUE for pname:supportsForceFeedback
+when force feedback is available in the system, otherwise ename:XR_FALSE.
+Force feedback calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+force feedback is not available in the system.
 
 include::{generated}/validity/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
 --
@@ -80,13 +96,16 @@ include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationsMNDX.txt[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure chain.
-No such structures are defined in core OpenXR or this extension.
-* pname:locations is a pointer to an array of locations to apply force feedback.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:locations is a pointer to an array of locations to apply force
+  feedback.
 * pname:locationCount the number of locations in the locations array.
 ****
 
-Contains an array of slink:XrApplyForceFeedbackCurlLocationMNDX that contains information on locations to apply force feedback to.
+Contains an array of slink:XrApplyForceFeedbackCurlLocationMNDX that
+contains information on locations to apply force feedback to.
 
 include::{generated}/validity/structs/XrApplyForceFeedbackCurlLocationsMNDX.txt[]
 --
@@ -100,15 +119,23 @@ include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationMNDX.txt[]
 .Member Descriptions
 ****
 * pname:location represents the location to apply force feedback to.
-* pname:value is a value from 0-1 representing the amount of force feedback to apply.
-The range of the value should represent the entire range the location is capable of moving through, with 1 representing making the location incapable of movement, and 0 being fully flexible.
-For example, in the case of a finger curl, setting pname:value to 1 would prevent the finger from curling at all (fully extended), and 0 would allow the finger to have free range of movement, being able to curl fully.
+* pname:value is a value from 0-1 representing the amount of force feedback
+  to apply.
+  The range of the value should represent the entire range the location is
+  capable of moving through, with 1 representing making the location incapable
+  of movement, and 0 being fully flexible.
+  For example, in the case of a finger curl, setting pname:value to 1 would
+  prevent the finger from curling at all (fully extended), and 0 would allow
+  the finger to have free range of movement, being able to curl fully.
 ****
 
 [NOTE]
 .Note
 ====
-pname:value is specified as a limit in a single direction. For example, if the value specified is 0.5, a location must: have free movement from the point where it would be incapable of movement if pname:value was 1, to 0.5 of the range the location is capable of moving.
+pname:value is specified as a limit in a single direction.
+For example, if the value specified is 0.5, a location must: have free
+movement from the point where it would be incapable of movement if
+pname:value was 1, to 0.5 of the range the location is capable of moving.
 ====
 
 include::{generated}/validity/structs/XrApplyForceFeedbackCurlLocationMNDX.txt[]
@@ -124,15 +151,24 @@ include::{generated}/api/protos/xrApplyForceFeedbackCurlMNDX.txt[]
 
 .Parameter Descriptions
 ****
-* pname:handTracker is an slink:XrHandTrackerEXT handle previously created with flink:xrCreateHandTrackerEXT.
-* pname:locations is an slink:XrApplyForceFeedbackCurlLocationsMNDX containing a set of locations to apply force feedback to.
+* pname:handTracker is an slink:XrHandTrackerEXT handle previously created
+  with flink:xrCreateHandTrackerEXT.
+* pname:locations is an slink:XrApplyForceFeedbackCurlLocationsMNDX
+  containing a set of locations to apply force feedback to.
 ****
 
-The flink:xrApplyForceFeedbackCurlMNDX function applies force feedback to the set locations listed in slink:XrApplyForceFeedbackCurlLocationsMNDX.
+The flink:xrApplyForceFeedbackCurlMNDX function applies force feedback to
+the set locations listed in slink:XrApplyForceFeedbackCurlLocationsMNDX.
 
-flink:xrApplyForceFeedbackCurlMNDX should: be called every time an application wishes to update a set of force feedback locations.
+flink:xrApplyForceFeedbackCurlMNDX should: be called every time an
+application wishes to update a set of force feedback locations.
 
-A runtime may: relax force feedback when it sees appropriate when no application is active, for example on start-up, or if an application has crashed. However, the runtime must: keep the last set of location information the application has passed until the application calls the function again, or the application exits.
+A runtime may: relax force feedback when it sees appropriate when no
+application is active, for example on start-up, or if an application has
+crashed.
+However, the runtime must: keep the last set of location information the
+application has passed until the application calls the function again, or
+the application exits.
 
 
 include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.txt[]
