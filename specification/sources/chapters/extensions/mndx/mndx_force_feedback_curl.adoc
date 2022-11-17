@@ -19,26 +19,14 @@ capabilities to restrict finger movement for VR Gloves.
 The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
 in order to use this extension.
 
-[open,refpage='XrForceFeedbackLocationMNDX',type='enums',desc='Describes which location to apply force feedback',xrefs='']
+[open,refpage='XrForceFeedbackCurlLocationMNDX',type='enums',desc='Describes which location to apply force feedback',xrefs='']
 --
-The elink:XrForceFeedbackLocationMNDX describes which location to apply
+The elink:XrForceFeedbackCurlLocationMNDX describes which location to apply
 force feedback.
 
 include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.txt[]
 
-.Enumerant Descriptions
-****
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX specifies
-  that force feedback will be applied to the thumb curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX specifies
-  that force feedback will be applied to the index finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX specifies
-  that force feedback will be applied to the middle finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX specifies that
-  force feedback will be applied to the ring finger curl
-* ename:XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX specifies
-  that force feedback will be applied to the little finger curl
-****
+include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.comments-box.txt[]
 --
 
 *New Object Types*
