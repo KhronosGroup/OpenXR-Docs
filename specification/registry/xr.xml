@@ -8126,7 +8126,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_MNDX_force_feedback_curl" number="376" type="instance" supported="openxr">
+    <extension name="XR_MNDX_force_feedback_curl" number="376" type="instance" supported="openxr" requires="XR_EXT_hand_tracking" provisional="true">
         <require>
             <enum value="1"                                       name="XR_MNDX_force_feedback_curl_SPEC_VERSION"/>
             <enum value="&quot;XR_MNDX_force_feedback_curl&quot;" name="XR_MNDX_FORCE_FEEDBACK_CURL_EXTENSION_NAME"/>
