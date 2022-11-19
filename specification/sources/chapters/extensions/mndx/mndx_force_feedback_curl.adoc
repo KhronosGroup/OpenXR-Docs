@@ -1,11 +1,20 @@
+// Copyright (c) 2022, Daniel Willmott
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
 include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
 
 *Last Modified Date*::
-    2022-09-07
-// *IP Status*::
-//     No known IP claims.
+    2022-11-18
+
+*IP Status*::
+    No known IP claims.
+
 *Contributors*::
     Daniel Willmott +
+    Moses Turner +
+    Christoph Haagch +
+    Jakob Bornecrantz +
 
 
 *Overview*
@@ -110,8 +119,8 @@ include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationMNDX.txt[]
 * pname:value is a value from 0-1 representing the amount of force feedback
   to apply.
   The range of the value should represent the entire range the location is
-  capable of moving through, with 1 representing making the location incapable
-  of movement, and 0 being fully flexible.
+  capable of moving through, with 1 representing making the location
+  incapable of movement, and 0 being fully flexible.
   For example, in the case of a finger curl, setting pname:value to 1 would
   prevent the finger from curling at all (fully extended), and 0 would allow
   the finger to have free range of movement, being able to curl fully.

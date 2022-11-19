@@ -2561,19 +2561,14 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <member><type>XrBool32</type> <name>supportsForceFeedbackCurl</name></member>
         </type>
 
-        <type category="struct" name="XrForceFeedbackCurlCreateInfoMNDX">
-            <member values="XR_TYPE_FORCE_FEEDBACK_CURL_CREATE_INFO_MNDX"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>* <name>next</name></member>
-        </type>
-
-        <type category="struct" name="XrApplyForceFeedbackCurlLocationsMNDX">
+        <type category="struct" name="XrForceFeedbackCurlApplyLocationsMNDX">
             <member values="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>*                                               <name>next</name></member>
-            <member len="locationCount"><type>XrApplyForceFeedbackCurlLocationMNDX</type>* <name>locations</name></member>
+            <member len="locationCount"><type>XrForceFeedbackCurlApplyLocationMNDX</type>* <name>locations</name></member>
             <member><type>uint32_t</type>                                                  <name>locationCount</name></member>
         </type>
 
-        <type category="struct" name="XrApplyForceFeedbackCurlLocationMNDX">
+        <type category="struct" name="XrForceFeedbackCurlApplyLocationMNDX">
             <member><type>XrForceFeedbackCurlLocationMNDX</type> <name>location</name></member>
             <member><type>float</type>                           <name>value</name></member>
         </type>
@@ -3300,11 +3295,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
     <!-- enums for XR_MNDX_force_feedback_curl -->
     <enums name="XrForceFeedbackCurlLocationMNDX" type="enum">
-        <enum value="0"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_THUMB_CURL_MNDX"  comment="force feedback for thumb curl"/>
-        <enum value="1"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_INDEX_CURL_MNDX"  comment="force feedback for index finger curl"/>
-        <enum value="2"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_MIDDLE_CURL_MNDX" comment="force feedback for middle finger curl"/>
-        <enum value="3"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_RING_CURL_MNDX"   comment="force feedback for ring finger curl"/>
-        <enum value="4"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_FINGER_LITTLE_CURL_MNDX" comment="force feedback for little finger curl"/>
+        <enum value="0"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_THUMB_CURL_MNDX"  comment="force feedback for thumb curl"/>
+        <enum value="1"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_INDEX_CURL_MNDX"  comment="force feedback for index finger curl"/>
+        <enum value="2"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_MIDDLE_CURL_MNDX" comment="force feedback for middle finger curl"/>
+        <enum value="3"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_RING_CURL_MNDX"   comment="force feedback for ring finger curl"/>
+        <enum value="4"   name="XR_FORCE_FEEDBACK_CURL_LOCATION_LITTLE_CURL_MNDX" comment="force feedback for little finger curl"/>
     </enums>
 
     <!-- SECTION: OpenXR command definitions -->
@@ -4562,7 +4557,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST,XR_ERROR_HANDLE_INVALID">
             <proto><type>XrResult</type> <name>xrApplyForceFeedbackCurlMNDX</name></proto>
             <param><type>XrHandTrackerEXT</type> <name>handTracker</name></param>
-            <param>const <type>XrApplyForceFeedbackCurlLocationsMNDX</type>* <name>locations</name></param>
+            <param>const <type>XrForceFeedbackCurlApplyLocationsMNDX</type>* <name>locations</name></param>
         </command>
     </commands>
 
@@ -8135,11 +8130,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
             <type name="XrSystemForceFeedbackCurlPropertiesMNDX"/>
             <type name="XrForceFeedbackCurlLocationMNDX"/>
-            <type name="XrApplyForceFeedbackCurlLocationsMNDX"/>
-            <type name="XrApplyForceFeedbackCurlLocationMNDX"/>
+            <type name="XrForceFeedbackCurlApplyLocationsMNDX"/>
+            <type name="XrForceFeedbackCurlApplyLocationMNDX"/>
 
-            <enum offset="2" extends="XrStructureType" name="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"/>
-            <enum offset="3" extends="XrStructureType" name="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"/>
+            <enum offset="1" extends="XrStructureType" name="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"/>
+            <enum offset="2" extends="XrStructureType" name="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"/>
         </require>
     </extension>
 
