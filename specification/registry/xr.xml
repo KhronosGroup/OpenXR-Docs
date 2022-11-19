@@ -30,7 +30,9 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <tag name="ACER"       author="Acer"                        contact="OC Lin @aceroc"/>
         <tag name="ALMALENCE"  author="Almalence"                   contact="Ivan Chupakhin @ivan.chupakhin, Dmitry Shmunk @dmitry.shmunk"/>
         <tag name="ARM"        author="Arm Limited"                 contact="Andreas Loeve Selvik @selvik, Sam Martin @sammartin"/>
+		<tag name="BYTEDANCE"  author="Bytedance"                   contact="Will Fu @willfu, Bangsen Han @Hansenn"/>
         <tag name="COLLABORA"  author="Collabora"                   contact="Ryan Pavlik @rpavlik"/>
+        <tag name="DANWILLM"   author="Daniel Willmott"             contact="Daniel Willmott @danwillm"/>
         <tag name="EPIC"       author="Epic"                        contact="Nick Whiting @whitingn"/>
         <tag name="EXT"        author="Multivendor"                 contact="Ryan Pavlik @rpavlik"/>
         <tag name="EXTX"       author="Multivendor experimental"    contact="Brad Grantham @bradgrantham-lunarg"/>
@@ -7984,6 +7986,41 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <require>
             <enum value="1"                                 name="XR_MNDX_extension_384_SPEC_VERSION"/>
             <enum value="&quot;XR_MNDX_extension_384&quot;" name="XR_MNDX_extension_384_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_422" number="422" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_DANWILLM_extension_422_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_422&quot;" name="XR_DANWILLM_EXTENSION_422_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_423" number="423" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_DANWILLM_extension_423_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_423&quot;" name="XR_DANWILLM_EXTENSION_423_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_424" number="424" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_DANWILLM_extension_424_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_424&quot;" name="XR_DANWILLM_EXTENSION_424_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_425" number="425" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_DANWILLM_extension_425_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_425&quot;" name="XR_DANWILLM_EXTENSION_425_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DANWILLM_extension_426" number="426" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_DANWILLM_extension_426_SPEC_VERSION"/>
+            <enum value="&quot;XR_DANWILLM_extension_426&quot;" name="XR_DANWILLM_EXTENSION_426_EXTENSION_NAME"/>
         </require>
     </extension>
 
