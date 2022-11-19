@@ -19,8 +19,7 @@ include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
 
 *Overview*
 
-This extension provides APIs for force feedback devices capable of
-restricting physical movement linearly in a single direction.
+This extension provides APIs for force feedback devices capable of restricting physical movement in a single direction along a single dimension.
 
 The intended use for this extension is to provide simple force feedback
 capabilities to restrict finger movement for VR Gloves.
