@@ -15,6 +15,7 @@
 #ifdef __cplusplus
 #include <memory>
 #include <vector>
+#include <array>
 #else
 #include <stdbool.h>
 #endif

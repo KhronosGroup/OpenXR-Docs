@@ -1470,8 +1470,8 @@ include::{generated}/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR.
-* pname:source is an basetype:XrPath representing a bound source returned by
-  flink:xrEnumerateBoundSourcesForAction.
+* pname:sourcePath is an basetype:XrPath representing a bound source
+  returned by flink:xrEnumerateBoundSourcesForAction.
 * pname:whichComponents is any set of flags from
   elink:XrInputSourceLocalizedNameFlagBits.
 ****
@@ -1482,12 +1482,21 @@ flink:xrEnumerateBoundSourcesForAction is not specified.
 include::{generated}/validity/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 --
 
-[open,refpage='XrInputSourceLocalizedNameFlags',desc='Input source localized name flags',type='flags',xrefs='xrGetInputSourceLocalizedName']
+[open,refpage='XrInputSourceLocalizedNameFlags',desc='Input source localized name flags',type='flags',xrefs='XrInputSourceLocalizedNameFlagBits']
 --
-The flink:xrGetInputSourceLocalizedName::pname:whichComponents parameter
-takes bitwise-OR of any of the following values:
+The flink:xrGetInputSourceLocalizedName::pname:whichComponents parameter is
+of the following type, and contains a bitwise-OR of one or more of the bits
+defined in elink:XrInputSourceLocalizedNameFlagBits.
+
+include::{generated}/api/flags/XrInputSourceLocalizedNameFlags.txt[]
+--
+
+[open,refpage='XrInputSourceLocalizedNameFlagBits',desc='Input source localized name flags',type='enums',xrefs='xrGetInputSourceLocalizedName XrInputSourceLocalizedNameFlags']
+--
 
 include::{generated}/api/enums/XrInputSourceLocalizedNameFlagBits.txt[]
+
+The flag bits have the following meanings:
 
 .Flag Descriptions
 ****

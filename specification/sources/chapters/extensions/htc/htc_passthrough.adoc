@@ -1,0 +1,262 @@
+// Copyright (c) 2022 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_HTC_passthrough.adoc[]
+
+*Last Modified Date*::
+    2022-09-14
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Livi Lin, HTC +
+    Sacdar Hsu, HTC +
+    Bill Chang, HTC
+
+*Overview*
+
+This extension enables an application to show the passthrough image to see
+the surrounding environment from the VR headset.
+The application is allowed to configure the passthrough image with the
+different appearances according to the demand of the application.
+
+The passthrough configurations that runtime provides to applications
+contain:
+
+* Decide the passthrough layer shown over or under the frame submitted by
+  the application.
+* Specify the passthrough form with full of the entire screen or projection
+  onto the mesh specified by the application.
+* Set the alpha blending level for the composition of the passthrough layer.
+
+*Create a passthrough handle*
+
+[open,refpage='XrPassthroughHTC',type='handles',desc='Represents a passthrough.']
+--
+An application can: create an slink:XrPassthroughHTC handle by calling
+flink:xrCreatePassthroughHTC.
+The returned passthrough handle can: be subsequently used in API calls.
+
+include::{generated}/api/handles/XrPassthroughHTC.txt[]
+--
+
+[open,refpage='xrCreatePassthroughHTC',type='protos',desc='Create a passthrough handle.',xrefs='']
+--
+The flink:xrCreatePassthroughHTC function is defined as:
+
+include::{generated}/api/protos/xrCreatePassthroughHTC.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the passthrough will be
+  active.
+* pname:createInfo is a pointer to an slink:XrPassthroughCreateInfoHTC
+  structure containing information about how to create the passthrough.
+* pname:passthrough is a pointer to a handle in which the created
+  slink:XrPassthroughHTC is returned.
+****
+
+Creates an slink:XrPassthroughHTC handle.
+
+If the function successfully returned, the output pname:passthrough must: be
+a valid handle.
+
+include::{generated}/validity/protos/xrCreatePassthroughHTC.txt[]
+--
+
+[open,refpage='XrPassthroughCreateInfoHTC',type='structs',desc='Information to create a passthrough handle',xrefs='']
+--
+The slink:XrPassthroughCreateInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughCreateInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:form elink:XrPassthroughFormHTC that specifies the form of
+  passthrough.
+****
+
+include::{generated}/validity/structs/XrPassthroughCreateInfoHTC.txt[]
+--
+
+[open,refpage='XrPassthroughFormHTC',type='enums',desc='Describes the form of passthrough.',xrefs='']
+--
+The elink:XrPassthroughFormHTC enumeration identifies the form of the
+passthrough, presenting the passthrough fill the full screen or project onto
+a specified mesh.
+
+include::{generated}/api/enums/XrPassthroughFormHTC.txt[]
+
+include::{generated}/api/enums/XrPassthroughFormHTC.comments-box.txt[]
+--
+
+[open,refpage='xrDestroyPassthroughHTC',type='protos',desc='Destroy a passthrough handle',xrefs='']
+--
+
+The flink:xrDestroyPassthroughHTC function is defined as:
+
+include::{generated}/api/protos/xrDestroyPassthroughHTC.txt[]
+
+.Parameter Descriptions
+****
+* pname:passthrough is the slink:XrPassthroughHTC to be destroyed.
+****
+
+The flink:xrDestroyPassthroughHTC function releases the passthrough and the
+underlying resources.
+
+include::{generated}/validity/protos/xrDestroyPassthroughHTC.txt[]
+--
+
+*Composite the passthrough layer*
+
+[open,refpage='XrCompositionLayerPassthroughHTC',type='structs',desc='A composition layer for passthrough',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerPassthroughHTC structure is defined as:
+
+include::{generated}/api/structs/XrCompositionLayerPassthroughHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrPassthroughMeshTransformInfoHTC.
+* pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits
+  describing flags to apply to the layer.
+* pname:space is the slink:XrSpace that specifies the layer's space - must:
+  be dlink:XR_NULL_HANDLE.
+* pname:passthrough is the slink:XrPassthroughHTC previously created by
+  flink:xrCreatePassthroughHTC.
+* pname:color is the slink:XrPassthroughColorHTC describing the color
+  information with the alpha value of the passthrough layer.
+****
+
+The application can: create an slink:XrCompositionLayerPassthroughHTC
+structure with the created pname:passthrough and the corresponding
+information.
+A pointer to slink:XrCompositionLayerPassthroughHTC may: be submitted in
+flink:xrEndFrame as a pointer to the base structure
+slink:XrCompositionLayerBaseHeader, in the desired layer order, to request
+the runtime to composite a passthrough layer into the final frame output.
+
+If the passthrough form specified to flink:xrCreatePassthroughHTC is
+ename:XR_PASSTHROUGH_FORM_PROJECTED_HTC,
+slink:XrPassthroughMeshTransformInfoHTC must: appear in the pname:next
+chain.
+If they are absent, the runtime must: return error
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrCompositionLayerPassthroughHTC.txt[]
+--
+
+[open,refpage='XrPassthroughColorHTC',type='structs',desc='The alpha value of the passthrough']
+--
+
+The slink:XrPassthroughColorHTC structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:alpha is the alpha value of the passthrough in the range [0, 1].
+****
+
+The application can: specify the slink:XrPassthroughColorHTC to adjust the
+alpha value of the passthrough.
+The range is between 0.0f and 1.0f, 1.0f means opaque.
+
+include::{generated}/validity/structs/XrPassthroughColorHTC.txt[]
+--
+
+[open,refpage='XrPassthroughMeshTransformInfoHTC',type='structs',desc='The information of mesh and transformation of the passthrough']
+--
+The slink:XrPassthroughMeshTransformInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughMeshTransformInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:vertexCount is the count of vertices array in the mesh.
+* pname:vertices is an array of slink:XrVector3f.
+  The size of the array must: be equal to vertexCount.
+* pname:indexCount is the count of indices array in the mesh.
+* pname:indices is an array of triangle indices.
+  The size of the array must: be equal to indexCount.
+* pname:baseSpace is the slink:XrSpace that defines the projected
+  passthrough's base space for transformations.
+* pname:time is the basetype:XrTime that defines the time at which the
+  transform is applied.
+* pname:pose is the slink:XrPosef that defines the pose of the mesh
+* pname:scale is the slink:XrVector3f that defines the scale of the mesh
+****
+
+The slink:XrPassthroughMeshTransformInfoHTC structure describes the mesh and
+transformation.
+
+The application must: specify the slink:XrPassthroughMeshTransformInfoHTC in
+the pname:next chain of slink:XrCompositionLayerPassthroughHTC if the
+specified form of passthrough layer previously created by
+flink:xrCreatePassthroughHTC is ename:XR_PASSTHROUGH_FORM_PROJECTED_HTC.
+
+Passing slink:XrPassthroughMeshTransformInfoHTC updates the projected mesh
+information in the runtime for passthrough layer composition.
+
+If slink:XrPassthroughMeshTransformInfoHTC is not set correctly, runtime
+must: return error ename:XR_ERROR_VALIDATION_FAILURE when flink:xrEndFrame
+is called with composition layer slink:XrCompositionLayerPassthroughHTC.
+
+include::{generated}/validity/structs/XrPassthroughMeshTransformInfoHTC.txt[]
+--
+
+*New Object Types*
+
+* slink:XrPassthroughHTC
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_PASSTHROUGH_HTC
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_PASSTHROUGH_CREATE_INFO_HTC
+* ename:XR_TYPE_PASSTHROUGH_COLOR_HTC
+* ename:XR_TYPE_PASSTHROUGH_MESH_TRANSFORM_INFO_HTC
+* ename:XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_HTC
+
+*New Enums*
+
+* elink:XrPassthroughFormHTC
+
+*New Structures*
+
+* slink:XrPassthroughCreateInfoHTC
+* slink:XrPassthroughColorHTC
+* slink:XrPassthroughMeshTransformInfoHTC
+* slink:XrCompositionLayerPassthroughHTC
+
+*New Functions*
+
+* flink:xrCreatePassthroughHTC
+* flink:xrDestroyPassthroughHTC
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-09-14 (Sacdar Hsu)
+
+** Initial extension description

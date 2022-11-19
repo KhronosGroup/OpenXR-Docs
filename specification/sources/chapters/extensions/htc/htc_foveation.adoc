@@ -1,0 +1,266 @@
+// Copyright (c) 2022 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_HTC_foveation.adoc[]
+
+
+*Last Modified Date*::
+    2022-09-14
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Billy Chang, HTC +
+    Bill Chang, HTC
+
+*Overview*
+
+This extension enables an application to gain rendering performance
+improvement by reducing the pixel density of areas in the peripheral vision.
+The areas near the focal point still sustains the original pixel density
+than periphery.
+
+The application can: use this extension in the following steps:
+
+. Create an slink:XrFoveationApplyInfoHTC structure with the desired foveation
+  configurations.
+. Apply the foveation configuration by calling flink:xrApplyFoveationHTC with desired
+  slink:XrFoveationApplyInfoHTC.
+
+[NOTE]
+.Note
+====
+This extension is recommended for slink:XrSession whose
+elink:XrViewConfigurationType is
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO.
+====
+
+*Operate foveated rendering*
+
+The application can: operate foveated rendering by calling
+flink:xrApplyFoveationHTC with the corresponding foveation configuration and
+the specified slink:XrSwapchainSubImage.
+
+[open,refpage='xrApplyFoveationHTC',desc='Apply foveation config to system.',type='protos',xrefs='']
+--
+
+The flink:xrApplyFoveationHTC function is defined as:
+
+include::{generated}/api/protos/xrApplyFoveationHTC.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession in which the foveation
+  will apply to.
+* pname:applyInfo is a pointer to an slink:XrFoveationApplyInfoHTC structure
+  containing information about the foveation configuration and applied
+  slink:XrSwapchainSubImage.
+****
+
+The foveation configuration will be applied after this call, and the state
+will persist until the next call to flink:xrApplyFoveationHTC or the end of
+this slink:XrSession, whichever comes first.
+You should: not call flink:xrApplyFoveationHTC during rendering to target
+image layer slink:XrSwapchainSubImage in render loop.
+
+include::{generated}/validity/protos/xrApplyFoveationHTC.txt[]
+--
+
+[open,refpage='XrFoveationApplyInfoHTC',type='structs',desc='Information for foveation applying',xrefs='']
+--
+
+The slink:XrFoveationApplyInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrFoveationApplyInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:mode is an elink:XrFoveationModeHTC enum describing the foveation
+  mode.
+* pname:subImageCount is the count of pname:subImages in the pname:subImages
+  array.
+  This must: be equal to the number of view poses returned by
+  flink:xrLocateViews.
+* pname:subImages is an array of slink:XrSwapchainSubImage to apply foveated
+  rendering.
+****
+
+The application should: set the following configurations in
+slink:XrFoveationApplyInfoHTC:
+
+* The foveation mode to be applied.
+* The specified slink:XrSwapchainSubImage to the corresponding view.
+
+The pname:faceCount of slink:XrSwapchain in slink:XrSwapchainSubImage must:
+be 1 since this extension does not support cubemaps.
+
+If pname:mode is ename:XR_FOVEATION_MODE_DYNAMIC_HTC, the pname:next chain
+for this structure must: include slink:XrFoveationDynamicModeInfoHTC
+structure.
+
+If pname:mode is ename:XR_FOVEATION_MODE_CUSTOM_HTC, the pname:next chain
+for this structure must: include slink:XrFoveationCustomModeInfoHTC
+structure.
+
+The order of pname:subImages must: be the same order as in
+slink:XrCompositionLayerProjectionView when submitted in flink:xrEndFrame.
+
+include::{generated}/validity/structs/XrFoveationApplyInfoHTC.txt[]
+--
+
+[open,refpage='XrFoveationModeHTC',desc='Foveation mode',type='enums']
+--
+
+elink:XrFoveationModeHTC identifies the different foveation modes.
+
+include::{generated}/api/enums/XrFoveationModeHTC.txt[]
+include::{generated}/api/enums/XrFoveationModeHTC.comments-box.txt[]
+--
+
+*Dynamic foveation mode*
+
+The application allows runtime to configure the foveation settings
+dynamically according to the system metrics or other extensions.
+
+[open,refpage='XrFoveationDynamicModeInfoHTC',desc='Configuration for dynamic mode',type='structs',xrefs='']
+--
+
+The slink:XrFoveationDynamicModeInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrFoveationDynamicModeInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:dynamicFlags is a bitmask of elink:XrFoveationDynamicFlagBitsHTC
+  indicated which item may: be changed during dynamic mode.
+****
+
+The application must: chain an slink:XrFoveationDynamicModeInfoHTC structure
+to slink:XrFoveationApplyInfoHTC if dynamic mode is set.
+
+include::{generated}/validity/structs/XrFoveationDynamicModeInfoHTC.txt[]
+--
+
+
+[open,refpage='XrFoveationDynamicFlagsHTC',type='flags',desc='XrFoveationDynamicFlagsHTC',xrefs='XrFoveationDynamicFlagBitsHTC']
+--
+include::{generated}/api/flags/XrFoveationDynamicFlagsHTC.txt[]
+--
+
+[open,refpage='XrFoveationDynamicFlagBitsHTC',desc='Features allow to change in dynamic mode',type='enums']
+--
+include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.comments.txt[]
+--
+
+*Custom foveation mode*
+
+The application can: configure the foveation settings according to the
+preference of content.
+
+[open,refpage='XrFoveationCustomModeInfoHTC',desc='Configuration for custom mode',type='structs',xrefs='']
+--
+
+The slink:XrFoveationCustomModeInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrFoveationCustomModeInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:configCount is a code:uint32_t describing the count of elements in
+  the pname:configs array, which must: be the number of views.
+* pname:configs is an array of slink:XrFoveationConfigurationHTC structure
+  contains the custom foveation settings for the corresponding views.
+****
+
+The application must: chain an slink:XrFoveationCustomModeInfoHTC structure
+to slink:XrFoveationApplyInfoHTC to customize foveation if custom mode is
+set.
+
+include::{generated}/validity/structs/XrFoveationCustomModeInfoHTC.txt[]
+--
+
+[open,refpage='XrFoveationConfigurationHTC',desc='Configuration of foveation',type='structs',xrefs='']
+--
+
+The slink:XrFoveationConfigurationHTC structure is defined as:
+
+include::{generated}/api/structs/XrFoveationConfigurationHTC.txt[]
+
+.Member Descriptions
+****
+* pname:level is the pixel density drop level of periphery area specified by
+elink:XrFoveationLevelHTC .
+* pname:clearFovDegree is the value indicating the total horizontal and
+  vertical field angle with the original pixel density level.
+  pname:clearFovDegree must: be specified in degree, and must: be in the
+  range [0, 180].
+* pname:focalCenterOffset is the desired center offset of the field of view
+  in NDC(normalized device coordinates) space.
+  The x and y of pname:focalCenterOffset must: be in the range [-1, 1].
+****
+
+include::{generated}/validity/structs/XrFoveationConfigurationHTC.txt[]
+
+--
+
+
+[open,refpage='XrFoveationLevelHTC',desc='The pixel density drop level of periphery area',type='enums']
+--
+
+include::{generated}/api/enums/XrFoveationLevelHTC.txt[]
+include::{generated}/api/enums/XrFoveationLevelHTC.comments-box.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+elink:XrFoveationDynamicFlagsHTC
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_FOVEATION_APPLY_INFO_HTC
+* ename:XR_TYPE_FOVEATION_DYNAMIC_MODE_INFO_HTC
+* ename:XR_TYPE_FOVEATION_CUSTOM_MODE_INFO_HTC
+
+
+*New Enum Constants*
+
+*New Enums*
+
+elink:XrFoveationModeHTC
+
+elink:XrFoveationDynamicFlagBitsHTC
+
+elink:XrFoveationLevelHTC
+
+*New Structures*
+
+slink:XrFoveationApplyInfoHTC
+
+slink:XrFoveationDynamicModeInfoHTC
+
+slink:XrFoveationCustomModeInfoHTC
+
+*New Functions*
+
+flink:xrApplyFoveationHTC
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-09-14 (Billy Chang)
+** Initial extension description

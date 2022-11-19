@@ -650,14 +650,23 @@ include::{generated}/api/structs/XrSpaceLocation.txt[]
 include::{generated}/validity/structs/XrSpaceLocation.txt[]
 --
 
-[open,refpage='XrSpaceLocationFlags',desc='Space location flags',type='flags',xrefs='XrSpaceLocation']
+[open,refpage='XrSpaceLocationFlags',desc='Space location flags',type='flags',xrefs='xrLocateSpace XrSpaceLocation XrSpaceLocationFlagBits']
 --
-The pname:locationFlags member is a bitwise-OR of zero or more of the
-following flags:
+The slink:XrSpaceLocation::pname:locationFlags member is of the following
+type, and contains a bitwise-OR of zero or more of the bits defined in
+elink:XrSpaceLocationFlagBits.
+
+include::{generated}/api/flags/XrSpaceLocationFlags.txt[]
+--
+
+[open,refpage='XrSpaceLocationFlagBits',desc='Space location flags',type='enums',xrefs='xrLocateSpace XrSpaceLocation XrSpaceLocationFlags']
+--
+Valid bits for elink:XrSpaceLocationFlags are defined by
+elink:XrSpaceLocationFlagBits, which is specified as:
 
 include::{generated}/api/enums/XrSpaceLocationFlagBits.txt[]
 
-where the flags have the following meaning:
+The flag bits have the following meanings:
 
 .Flag Descriptions
 ****
@@ -697,6 +706,7 @@ where the flags have the following meaning:
 ****
 --
 
+
 [open,refpage='XrSpaceVelocity',desc='Contains info about a space's linear and angular velocity',type='structs',xrefs='XrSpaceLocation XrSpace xrLocateSpace XrSpaceVelocityFlags']
 --
 
@@ -733,16 +743,27 @@ include::{generated}/api/structs/XrSpaceVelocity.txt[]
 include::{generated}/validity/structs/XrSpaceVelocity.txt[]
 --
 
-[open,refpage='XrSpaceVelocityFlags',desc='Space velocity flags',type='flags',xrefs='XrSpaceVelocity']
+
+[open,refpage='XrSpaceVelocityFlags',desc='Space velocity flags',type='flags',xrefs='XrSpaceVelocity XrSpaceVelocityFlagBits']
 --
-The pname:velocityFlags member is a bitwise-OR of zero or more of the
-following flags:
+The slink:XrSpaceLocation::pname:velocityFlags member is of the following
+type, and contains a bitwise-OR of zero or more of the bits defined in
+elink:XrSpaceVelocityFlagBits.
+
+include::{generated}/api/flags/XrSpaceVelocityFlags.txt[]
+--
+
+[open,refpage='XrSpaceVelocityFlagBits',desc='Space velocity flags',type='enums',xrefs='XrSpaceVelocity XrSpaceVelocityFlags']
+--
+Valid bits for elink:XrSpaceVelocityFlags are defined by
+elink:XrSpaceVelocityFlagBits, which is specified as:
 
 include::{generated}/api/enums/XrSpaceVelocityFlagBits.txt[]
 
-where the flags have the following meaning:
+The flag bits have the following meanings:
 
 include::{generated}/api/enums/XrSpaceVelocityFlagBits.comments.txt[]
 
 --
+
 

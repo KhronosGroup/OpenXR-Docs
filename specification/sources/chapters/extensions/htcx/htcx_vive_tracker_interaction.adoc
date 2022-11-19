@@ -344,3 +344,5 @@ switch ( xrEvent.type )
 
 * Revision 1, 2021-09-23 (Kyle Chen)
 ** Initial extension description
+* Revision 2, 2022-09-08 (Ryan Pavlik, Collabora, Ltd.)
+** Mark event type as returned-only, updating the implicit valid usage.

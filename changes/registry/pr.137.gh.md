@@ -1,1 +1,0 @@
-Register Bytedance for author ID for OpenXR collaboration.

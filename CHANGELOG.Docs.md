@@ -17,6 +17,102 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.26 (2022-11-18)
+
+This release contains some spec clarifications, improvements to tooling, and a
+variety of new vendor and multi-vendor extensions.
+
+- Registry
+  - Add a warning to `XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT` saying
+    that it is not in use and planned for deprecation
+    ([internal MR 2378](https://gitlab.khronos.org/openxr/openxr/merge_requests/2378),
+    [internal issue 1751](https://gitlab.khronos.org/openxr/openxr/issues/1751))
+  - Add new `XR_EXT_active_action_set_priority` vendor extension.
+    ([internal MR 2288](https://gitlab.khronos.org/openxr/openxr/merge_requests/2288),
+    [internal issue 1699](https://gitlab.khronos.org/openxr/openxr/issues/1699))
+  - Add new `XR_HTC_passthrough` vendor extension.
+    ([internal MR 2349](https://gitlab.khronos.org/openxr/openxr/merge_requests/2349))
+  - Add new `XR_HTC_foveation` vendor extension.
+    ([internal MR 2377](https://gitlab.khronos.org/openxr/openxr/merge_requests/2377))
+  - Add new `XR_META_headset_id` vendor extension.
+    ([internal MR 2410](https://gitlab.khronos.org/openxr/openxr/merge_requests/2410))
+  - Improve Schematron rules for the registry XML and update the tool version used.
+    ([internal MR 2418](https://gitlab.khronos.org/openxr/openxr/merge_requests/2418),
+    [internal MR 2426](https://gitlab.khronos.org/openxr/openxr/merge_requests/2426),
+    [internal MR 2457](https://gitlab.khronos.org/openxr/openxr/merge_requests/2457),
+    [internal MR 2460](https://gitlab.khronos.org/openxr/openxr/merge_requests/2460),
+    [internal MR 2465](https://gitlab.khronos.org/openxr/openxr/merge_requests/2465))
+  - Register author ID and reserve vendor extensions for ByteDance.
+    ([internal MR 2482](https://gitlab.khronos.org/openxr/openxr/merge_requests/2482),
+    [OpenXR-Docs PR 137](https://github.com/KhronosGroup/OpenXR-Docs/pull/137))
+  - Register author ID for danwillm and reserve vendor extensions.
+    ([OpenXR-Docs PR 138](https://github.com/KhronosGroup/OpenXR-Docs/pull/138))
+  - Reserve vendor extensions for Microsoft.
+    ([internal MR 2478](https://gitlab.khronos.org/openxr/openxr/merge_requests/2478))
+  - `XR_EXTX_overlay`: Fix XML markup to correct generated valid usage for the
+    event structure.
+    ([internal MR 2307](https://gitlab.khronos.org/openxr/openxr/merge_requests/2307))
+  - `XR_EXT_performance_settings`: Fix XML markup to correct generated valid usage,
+    bump revision.
+    ([internal MR 2306](https://gitlab.khronos.org/openxr/openxr/merge_requests/2306))
+  - `XR_HTCX_vive_tracker_interaction`: Fix XML markup to correct generated valid
+    usage for the event structure.
+    ([internal MR 2310](https://gitlab.khronos.org/openxr/openxr/merge_requests/2310))
+  - `XR_HTC_facial_tracking`: Update vendor extension to version 2.
+    ([internal MR 2416](https://gitlab.khronos.org/openxr/openxr/merge_requests/2416))
+  - specification/scripts: Added new functionality in codegen scripts to support
+    creating single extension headers. Usage: `python3 scripts/genxr.py -registry
+    registry/xr.xml -standaloneExtension XR_FB_color_space standalone_header`
+    ([internal MR 2417](https://gitlab.khronos.org/openxr/openxr/merge_requests/2417))
+- Specification
+  - Clarify the valid swapchain face count values for layer types.
+    ([internal MR 2354](https://gitlab.khronos.org/openxr/openxr/merge_requests/2354),
+    [internal issue 1750](https://gitlab.khronos.org/openxr/openxr/issues/1750))
+  - Clarify error codes returned in vendor extension `XR_META_performance_metrics`.
+    ([internal MR 2422](https://gitlab.khronos.org/openxr/openxr/merge_requests/2422))
+  - Clarify function `xrEnumerateInstanceExtensionProperties` by removing
+    conflicting and redundant language about two-call idiom.
+    ([internal MR 2441](https://gitlab.khronos.org/openxr/openxr/merge_requests/2441))
+  - Clarify language around swapchain creation format matching usage.
+    ([internal MR 2446](https://gitlab.khronos.org/openxr/openxr/merge_requests/2446))
+  - Document new `XR_EXT_active_action_set_priority` vendor extension.
+    ([internal MR 2288](https://gitlab.khronos.org/openxr/openxr/merge_requests/2288),
+    [internal issue 1699](https://gitlab.khronos.org/openxr/openxr/issues/1699))
+  - Document new `XR_HTC_passthrough` vendor extension.
+    ([internal MR 2349](https://gitlab.khronos.org/openxr/openxr/merge_requests/2349))
+  - Document new `XR_HTC_foveation` vendor extension.
+    ([internal MR 2377](https://gitlab.khronos.org/openxr/openxr/merge_requests/2377))
+  - Document new `XR_META_headset_id` vendor extension.
+    ([internal MR 2410](https://gitlab.khronos.org/openxr/openxr/merge_requests/2410))
+  - Fix naming of member descriptions for `XrInputSourceLocalizedNameGetInfo`.
+    ([internal MR 2419](https://gitlab.khronos.org/openxr/openxr/merge_requests/2419),
+    [internal issue 1614](https://gitlab.khronos.org/openxr/openxr/issues/1614),
+    [OpenXR-Docs issue 106](https://github.com/KhronosGroup/OpenXR-Docs/issues/106))
+  - Loader spec: Update to note that the Android installable broker no longer checks for
+    permission. The permission, normally auto-granted, was removed due to causing
+    conflicts with installation order.
+    ([internal MR 2452](https://gitlab.khronos.org/openxr/openxr/merge_requests/2452),
+    [internal issue 1836](https://gitlab.khronos.org/openxr/openxr/issues/1836))
+  - Move the documentation of `XrSwapchainUsageFlags`/`XrSwapchainUsageFlagBits` to
+    its usage, next to `XrSwapchainCreateFlags`, and mark up normative language.
+    ([internal MR 2435](https://gitlab.khronos.org/openxr/openxr/merge_requests/2435))
+  - Move flag bit documentation to the `FlagBit` type ref pages, and move the
+    typedefs for the `Flags` types into new corresponding flag ref pages. This
+    resolves an unneeded inconsistency between core and extensions as well as
+    between core and other related specifications like Vulkan.
+    ([internal MR 2435](https://gitlab.khronos.org/openxr/openxr/merge_requests/2435))
+  - Optimize images included in the specification.
+    ([internal MR 2493](https://gitlab.khronos.org/openxr/openxr/merge_requests/2493))
+  - `XR_EXT_performance_settings`: Updated generated valid usage through XML
+    change, bump revision accordingly.
+    ([internal MR 2306](https://gitlab.khronos.org/openxr/openxr/merge_requests/2306))
+  - `XR_HTC_facial_tracking`: Update vendor extension to fix an error in the blink
+    blend shape ranges, increasing its revision to 2.
+    ([internal MR 2416](https://gitlab.khronos.org/openxr/openxr/merge_requests/2416))
+  - `XR_KHR_vulkan_enable2` - Add missing member documentation for `type`, `next`,
+    and `createFlags` in `XrVulkanInstanceCreateInfoKHR`
+    ([internal MR 2435](https://gitlab.khronos.org/openxr/openxr/merge_requests/2435))
+
 ## OpenXR Specification 1.0.25 (2022-09-02)
 
 This release contains a few specification clarifications and consistency improvements,

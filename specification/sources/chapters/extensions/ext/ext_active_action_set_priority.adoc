@@ -1,0 +1,114 @@
+// Copyright (c) 2017-2022, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_active_action_set_priority.adoc[]
+
+*Last Modified Date*::
+    2022-08-19
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Jules Blok, Epic Games +
+    Lachlan Ford, Microsoft
+
+*Overview*
+
+The properties of an slink:XrActionSet become immutable after it has been
+attached to a session.
+This currently includes the priority of the action set preventing the
+application from changing the priority number for the duration of the
+session.
+
+Given that most runtimes do not actually require this number to be immutable
+this extension adds the ability to provide a different priority number for
+every slink:XrActiveActionSet provided to flink:xrSyncActions.
+
+When updating the action state with flink:xrSyncActions, the application
+can: provide a pointer to an slink:XrActiveActionSetPrioritiesEXT structure
+in the pname:next chain of slink:XrActionsSyncInfo.
+This structure contains an array of slink:XrActiveActionSetPriorityEXT
+structures mapping active action sets to their priority numbers.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_ACTIVE_ACTION_SET_PRIORITIES_EXT
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrActiveActionSetPrioritiesEXT',desc='Active action set priority numbers',type='structs',xrefs='xrSyncActions XrActionsSyncInfo']
+--
+The slink:XrActiveActionSetPrioritiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrActiveActionSetPrioritiesEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:countActionSetPriorities is an integer specifying the number of
+  valid elements in the actionSetPriorities array.
+* pname:actionSetPriorities is a pointer to an array that maps action sets
+  to their active priority numbers.
+  If an action set is specified multiple times, the runtime may: return
+  ename:XR_ERROR_VALIDATION_FAILURE from flink:xrSyncActions.
+****
+
+include::{generated}/validity/structs/XrActiveActionSetPrioritiesEXT.txt[]
+
+The runtime must: ignore any priority numbers for action sets that were not
+specified as an active action set in the slink:XrActionsSyncInfo structure
+as this would have no effect.
+
+The priority numbers provided in slink:XrActiveActionSetPriorityEXT must:
+override the priority number of the active action set starting with the
+flink:xrSyncActions call it is provided to, until the first subsequent call
+to flink:xrSyncActions.
+
+When a subsequent call is made to flink:xrSyncActions where an active action
+set does not have a corresponding priority number specified in the
+slink:XrActiveActionSetPriorityEXT structure the priority number for that
+action set must: revert back to the priority number provided in
+slink:XrActionSetCreateInfo when that action set was created.
+--
+
+[open,refpage='XrActiveActionSetPriorityEXT',desc='Action set priority mapping',type='structs',xrefs='xrSyncActions XrActionsSyncInfo']
+--
+The slink:XrActiveActionSetPriorityEXT structure is defined as:
+
+include::{generated}/api/structs/XrActiveActionSetPriorityEXT.txt[]
+
+.Member Descriptions
+****
+* pname:actionSet is the handle of the slink:XrActionSet to set the priority
+  number for.
+* pname:priorityOverride is an integer specifying the priority of the action
+  set while it is active.
+****
+
+include::{generated}/validity/structs/XrActiveActionSetPriorityEXT.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+* Can the same action set have a different priority on each subaction path?
+** No.
+   To avoid additional complexity each action set can only be specified once
+   in the array of priorities which does not include the subaction path.
+
+*Version History*
+
+* Revision 1, 2022-08-19 (Jules Blok)
+** Initial proposal.

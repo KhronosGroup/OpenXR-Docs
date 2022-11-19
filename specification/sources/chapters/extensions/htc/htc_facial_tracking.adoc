@@ -307,7 +307,7 @@ goes higher, right eye approaches close.
 2+|ename:XR_EYE_EXPRESSION_LEFT_SQUEEZE_HTC
 ^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_SQUEEZE_HTC.png[width=210]| **Description** +
 The blend shape closes eye tightly and at that time
-ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 100.
+ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 1.
 |====
 
 [width="80%",options="header"]
@@ -315,7 +315,7 @@ ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 100.
 2+|ename:XR_EYE_EXPRESSION_RIGHT_SQUEEZE_HTC
 ^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_SQUEEZE_HTC.png[width=210]| **Description** +
 The blend shape closes eye tightly and at that time
-ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 100.
+ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 1.
 |====
 
 [width="80%",options="header"]
@@ -771,3 +771,6 @@ elink:XrStructureType enumeration is extended with:
 
 * Revision 1, 2021-12-16 (Kyle Chen)
 ** Initial extension description
+
+* Revision 2, 2022-09-22 (Andy Chen)
+** Correct the range of the blink blend shapes.

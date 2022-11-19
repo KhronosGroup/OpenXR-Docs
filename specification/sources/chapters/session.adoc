@@ -247,9 +247,19 @@ include::{generated}/api/structs/XrSessionCreateInfo.txt[]
 include::{generated}/validity/structs/XrSessionCreateInfo.txt[]
 --
 
-[open,refpage='XrSessionCreateFlags',desc='Session Creation Flags',type='flags',xrefs='xrCreateSession XrSessionCreateInfo']
+[open,refpage='XrSessionCreateFlags',desc='Session Creation Flags',type='flags',xrefs='XrSessionCreateFlagBits xrCreateSession XrSessionCreateInfo']
 --
-The elink:XrSessionCreateFlags include:
+The slink:XrSessionCreateInfo::pname:createFlags member is of the following
+type, and contains a bitwise-OR of zero or more of the bits defined in
+elink:XrSessionCreateFlagBits.
+
+include::{generated}/api/flags/XrSessionCreateFlags.txt[]
+--
+
+[open,refpage='XrSessionCreateFlagBits',desc='Session Creation Flags',type='enums',xrefs='XrSessionCreateFlags xrCreateSession XrSessionCreateInfo']
+--
+Valid bits for elink:XrSessionCreateFlags are defined by
+elink:XrSessionCreateFlagBits.
 
 include::{generated}/api/enums/XrSessionCreateFlagBits.txt[]
 

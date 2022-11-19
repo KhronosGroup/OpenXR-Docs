@@ -147,17 +147,23 @@ include::{generated}/api/protos/xrCreateVulkanInstanceKHR.txt[]
 include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.txt[]
 --
 
-The slink:XrVulkanInstanceCreateInfoKHR structure contains the input
-parameters to flink:xrCreateVulkanInstanceKHR.
 
 [open,refpage='XrVulkanInstanceCreateInfoKHR',type='structs',desc='Vulkan Instance Create Info',xrefs='xrCreateVulkanInstanceKHR']
 --
+The slink:XrVulkanInstanceCreateInfoKHR structure contains the input
+parameters to flink:xrCreateVulkanInstanceKHR.
+
 include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension
 * pname:systemId is an basetype:XrSystemId handle for the system which will
   be used to create a session.
+* pname:createFlags is a bitmask of elink:XrVulkanInstanceCreateFlagBitsKHR
 * pname:pfnGetInstanceProcAddr is a function pointer to
   fname:vkGetInstanceProcAddr or a compatible entry point.
 * pname:vulkanCreateInfo is the
@@ -171,9 +177,29 @@ include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 include::{generated}/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 --
 
-[open,refpage='XrVulkanInstanceCreateFlagsKHR',type='flags',desc='Vulkan Instance Create Info Flags',xrefs='XrVulkanInstanceCreateInfoKHR']
+[open,refpage='XrVulkanInstanceCreateFlagsKHR',desc='Vulkan Instance Create Info Flags',type='flags',xrefs='XrVulkanInstanceCreateInfoKHR XrVulkanInstanceCreateFlagBitsKHR']
 --
+The slink:XrVulkanInstanceCreateInfoKHR::pname:createFlags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrVulkanInstanceCreateFlagBitsKHR.
+
 include::{generated}/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
+--
+
+[open,refpage='XrVulkanInstanceCreateFlagBitsKHR',desc='Vulkan Instance Create Info Flags',type='enums',xrefs='XrVulkanInstanceCreateInfoKHR XrVulkanInstanceCreateFlagsKHR']
+--
+
+Valid bits for elink:XrVulkanInstanceCreateFlagsKHR are defined by
+elink:XrVulkanInstanceCreateFlagBitsKHR.
+
+include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.txt[]
+
+There are currently no Vulkan instance creation flag bits defined.
+This is reserved for future use.
+
+// The flag bits have the following meanings:
+//
+// include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.comments.txt[]
 --
 
 ===== Physical Device Selection
@@ -263,6 +289,7 @@ include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
 ****
 * pname:systemId is an basetype:XrSystemId handle for the system which will
   be used to create a session.
+* pname:createFlags is a bitmask of elink:XrVulkanDeviceCreateFlagBitsKHR
 * pname:pfnGetInstanceProcAddr is a function pointer to
   fname:vkGetInstanceProcAddr or a compatible entry point.
 * pname:vulkanPhysicalDevice must: match flink:xrGetVulkanGraphicsDeviceKHR.
@@ -274,17 +301,33 @@ include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
   as specified by Vulkan].
 ****
 
-include::{generated}/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
---
-
-[open,refpage='XrVulkanDeviceCreateFlagsKHR',type='flags',desc='Vulkan Device Create Info Flags',xrefs='XrVulkanDeviceCreateInfoKHR']
---
-include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
---
-
 If the pname:vulkanPhysicalDevice parameter does not match the output of
 flink:xrGetVulkanGraphicsDeviceKHR, then the runtime must: return
 ename:XR_ERROR_HANDLE_INVALID.
+
+include::{generated}/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+--
+
+[open,refpage='XrVulkanDeviceCreateFlagsKHR',type='flags',desc='Vulkan Device Create Info Flags',xrefs='XrVulkanDeviceCreateInfoKHR XrVulkanDeviceCreateFlagBitsKHR']
+--
+elink:XrVulkanDeviceCreateFlagsKHR specify details of device creation.
+The slink:XrVulkanDeviceCreateInfoKHR::pname:createFlags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrVulkanDeviceCreateFlagBitsKHR.
+
+include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
+--
+
+[open,refpage='XrVulkanDeviceCreateFlagBitsKHR',type='enums',desc='Vulkan Device Create Info Flag bits',xrefs='XrVulkanDeviceCreateInfoKHR XrVulkanDeviceCreateFlagsKHR']
+--
+Valid bits for elink:XrVulkanDeviceCreateFlagsKHR are defined by
+elink:XrVulkanDeviceCreateFlagBitsKHR.
+
+include::{generated}/api/enums/XrVulkanDeviceCreateFlagBitsKHR.txt[]
+
+There are currently no Vulkan device creation flag bits defined.
+This is reserved for future use.
+--
 
 ===== Queue Selection
 

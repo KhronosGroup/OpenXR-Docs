@@ -1,0 +1,109 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_headset_id.adoc[]
+
+*Last Modified Date*::
+    2022-08-11
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Wenlin Mao, Meta Platforms +
+    Andreas Loeve Selvik, Meta Platforms +
+    Rémi Palandri, Meta Platforms +
+    John Kearney, Meta Platforms +
+    Jonathan Wright, Meta Platforms +
+
+*Contacts*::
+    Wenlin Mao, Meta Platforms +
+
+[NOTE]
+.Note
+====
+Using the headset ID to alter application behavior is discouraged, as it
+interferes with compatibility with current and future headsets.
+The OpenXR specification is designed with the goal of avoiding the need for
+explicit per-device logic.
+If the use of this extension is required, it is encouraged to let the OpenXR
+working group know about the use case, through a communication channel like
+email or GitHub.
+While this usage is discouraged, applications that need this functionality
+are encouraged to use this extension instead of the pname:systemName field
+in slink:XrSystemProperties.
+Game engines and similar middleware should: not enable this extension by
+default.
+This extension will be deprecated and no longer exposed once the remaining
+use cases are resolved in a more portable way.
+====
+
+[open,refpage='XrSystemHeadsetIdPropertiesMETA',type='structs',desc='get headset model id from xrGetSystemProperties',xrefs='xrGetSystemProperties']
+--
+
+The slink:XrSystemHeadsetIdPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemHeadsetIdPropertiesMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:id is the slink:XrUuidEXT corresponding to the headset model.
+****
+
+An application can: get a corresponding headset UUID of the headset model by
+chaining an slink:XrSystemHeadsetIdPropertiesMETA structure to the
+slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+
+The UUID returned in the slink:XrSystemHeadsetIdPropertiesMETA struct is an
+opaque UUID that identifies a runtime / headset model combo.
+
+The runtime should: always return the same UUID for a given headset model
+for the entire lifetime of that product.
+
+The runtime may: report a different UUID to some applications for
+compatibility purposes.
+
+This is in contrast to the pname:systemName field in
+slink:XrSystemProperties which is not required to be consistent across
+product renames.
+
+This is intended to be a temporary feature that will be deprecated along
+with its extension as soon as motivating use cases are resolved in a better
+way.
+See the disclaimer at the start of the `<<XR_META_headset_id>>` extension
+documentation for more details.
+
+include::{generated}/validity/structs/XrSystemHeadsetIdPropertiesMETA.txt[]
+--
+
+*New Object Types*
+
+*New Atom*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_HEADSET_ID_PROPERTIES_META
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrSystemHeadsetIdPropertiesMETA
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-08-11 (Wenlin Mao)
+** Initial extension description

@@ -17,8 +17,8 @@ the XR application using the performance metrics counters being collected.
 The application should: not change its behavior based on the counter reads.
 
 The performance metrics counters are organized into predefined
-basetype:XrPath, under the root path pathname:/perfmetrics_meta.
-You can: query the available counters through
+basetype:XrPath values, under the root path pathname:/perfmetrics_meta.
+An application can: query the available counters through
 flink:xrEnumeratePerformanceMetricsCounterPathsMETA.
 Here is a list of the performance metrics counter paths that may: be
 provided on Meta devices:
@@ -36,12 +36,13 @@ provided on Meta devices:
 * pathname:/perfmetrics_meta/device/cpu0_utilization through
   pathname:/perfmetrics_meta/device/cpuX_utilization
 
-After a session is created, you can: use
+After a session is created, an application can: use
 flink:xrSetPerformanceMetricsStateMETA to enable the performance metrics
 system for that session.
-You can: use flink:xrQueryPerformanceMetricsCounterMETA to query performance
-metrics counter on a session that has performance metrics system enabled, or
-use flink:xrGetPerformanceMetricsStateMETA to get the enablement state.
+An application can: use flink:xrQueryPerformanceMetricsCounterMETA to query
+a performance metrics counter on a session that has the performance metrics
+system enabled, or use flink:xrGetPerformanceMetricsStateMETA to query if
+the performance metrics system is enabled.
 
 Note: the measurement intervals of individual performance metrics counters
 are defined by the OpenXR runtime.
@@ -74,6 +75,7 @@ elink:XrStructureType enumeration is extended with:
 * ename:XR_TYPE_PERFORMANCE_METRICS_COUNTER_META
 
 *New Enums*
+
 [open,refpage='XrPerformanceMetricsCounterUnitMETA',type='enums',desc='XrPerformanceMetricsCounterUnitMETA']
 --
 include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.txt[]
@@ -82,7 +84,7 @@ include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[
 
 *New Structures*
 
-[open,refpage='XrPerformanceMetricsStateMETA',type='structs',desc='Performance metrics enablement state',xrefs='']
+[open,refpage='XrPerformanceMetricsStateMETA',type='structs',desc='Performance metrics enable state',xrefs='']
 --
 
 The slink:XrPerformanceMetricsStateMETA structure is defined as:
@@ -105,8 +107,8 @@ slink:XrPerformanceMetricsStateMETA is provided as input when calling
 flink:xrSetPerformanceMetricsStateMETA to enable or disable the performance
 metrics system.
 slink:XrPerformanceMetricsStateMETA is populated as an output parameter when
-calling flink:xrGetPerformanceMetricsStateMETA to query the enablement
-status of the performance metrics system.
+calling flink:xrGetPerformanceMetricsStateMETA to query if the performance
+metrics system is enabled.
 
 include::{generated}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
 --
@@ -149,7 +151,7 @@ include::{generated}/validity/structs/XrPerformanceMetricsCounterMETA.txt[]
 
 [open,refpage='xrEnumeratePerformanceMetricsCounterPathsMETA',desc='Enumerate all performance metrics counter paths that supported by the runtime',type='protos',xrefs='']
 --
-The flink:xrEnumeratePerformanceMetricsCounterPathsMETA function enumerate
+The flink:xrEnumeratePerformanceMetricsCounterPathsMETA function enumerates
 all performance metrics counter paths that supported by the runtime, it is
 defined as:
 
@@ -232,6 +234,17 @@ include::{generated}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 The flink:xrQueryPerformanceMetricsCounterMETA function queries a
 performance metrics counter.
 
+The application should: enable the performance metrics system (by calling
+flink:xrSetPerformanceMetricsStateMETA) before querying metrics using
+flink:xrQueryPerformanceMetricsCounterMETA.
+If the performance metrics system has not been enabled before calling
+flink:xrQueryPerformanceMetricsCounterMETA, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If `counterPath` is not in the list returned by
+flink:xrEnumeratePerformanceMetricsCounterPathsMETA, the runtime must return
+ename:XR_ERROR_PATH_UNSUPPORTED.
+
 include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 --
 
@@ -241,3 +254,6 @@ include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
 
 * Revision 1, 2022-04-28 (Xiang Wei)
 ** Initial extension description
+
+* Revision 2, 2022-09-16 (John Kearney)
+** Clarification of error codes

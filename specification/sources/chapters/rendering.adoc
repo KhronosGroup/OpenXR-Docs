@@ -105,23 +105,6 @@ for the lifetime of the session.
 include::{generated}/validity/protos/xrEnumerateSwapchainFormats.txt[]
 --
 
-[open,refpage='XrSwapchainUsageFlags',desc='Swapchain usage flags',type='flags',xrefs='xrCreateSwapchain xrEnumerateSwapchainFormats']
---
-elink:XrSwapchainUsageFlags specify the intended usage of the swapchain
-images.
-When images are created, the runtime needs to know how the images are used
-in a way that requires more information than simply the image format.
-The slink:XrSwapchainCreateInfo passed to flink:xrCreateSwapchain should
-match the intended usage or else undefined behavior may result when the
-application works with the images.
-
-Flags include:
-
-include::{generated}/api/enums/XrSwapchainUsageFlagBits.txt[]
-
-include::{generated}/api/enums/XrSwapchainUsageFlagBits.comments.txt[]
---
-
 [open,refpage='xrCreateSwapchain',desc='Creates an XrSwapchain',type='protos',xrefs='xrEnumerateSwapchainFormats XrSwapchainCreateInfo xrEnumerateSwapchainImages xrAcquireSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
 --
 The flink:xrCreateSwapchain function is defined as:
@@ -197,11 +180,24 @@ include::{generated}/api/structs/XrSwapchainCreateInfo.txt[]
 include::{generated}/validity/structs/XrSwapchainCreateInfo.txt[]
 --
 
-[open,refpage='XrSwapchainCreateFlags',desc='Swapchain creation flags',type='flags',xrefs='xrCreateSwapchain XrSwapchainCreateInfo']
+[open,refpage='XrSwapchainCreateFlags',desc='Swapchain creation flags',type='flags',xrefs='XrSwapchainCreateFlagBits XrSwapchainCreateInfo']
 --
-The pname:createFlags are a combination of the following:
+The slink:XrSwapchainCreateInfo::pname:createFlags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrSwapchainCreateFlagBits.
+
+include::{generated}/api/flags/XrSwapchainCreateFlags.txt[]
+--
+
+[open,refpage='XrSwapchainCreateFlagBits',desc='Swapchain creation flags',type='enums',xrefs='XrSwapchainCreateFlags XrSwapchainCreateInfo']
+--
+
+Valid bits for elink:XrSwapchainCreateFlags are defined by
+elink:XrSwapchainCreateFlagBits, which is specified as:
 
 include::{generated}/api/enums/XrSwapchainCreateFlagBits.txt[]
+
+The flag bits have the following meanings:
 
 .Flag Descriptions
 ****
@@ -218,6 +214,32 @@ A runtime may: implement any of these, but is not required to.
 A runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateSwapchain if an elink:XrSwapchainCreateFlags bit is requested
 but not implemented.
+--
+
+[open,refpage='XrSwapchainUsageFlags',desc='Swapchain usage flags',type='flags',xrefs='XrSwapchainUsageFlagBits XrSwapchainCreateInfo']
+--
+elink:XrSwapchainUsageFlags specify the intended usage of the swapchain
+images.
+The slink:XrSwapchainCreateInfo::pname:usageFlags member is of this type,
+and contains a bitwise-OR of one or more of the bits defined in
+elink:XrSwapchainUsageFlagBits.
+
+include::{generated}/api/flags/XrSwapchainUsageFlags.txt[]
+--
+[open,refpage='XrSwapchainUsageFlagBits',desc='Swapchain usage flags',type='enums',xrefs='XrSwapchainUsageFlags xrCreateSwapchain XrSwapchainCreateInfo']
+--
+When images are created, the runtime needs to know how the images are used
+in a way that requires more information than simply the image format.
+The slink:XrSwapchainCreateInfo passed to flink:xrCreateSwapchain must:
+match the intended usage.
+
+Flags include:
+
+include::{generated}/api/enums/XrSwapchainUsageFlagBits.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrSwapchainUsageFlagBits.comments.txt[]
 --
 
 The number of images in each swapchain is implementation-defined except in
@@ -658,14 +680,25 @@ flink:xrLocateViews common to all views of the active view configuration.
 include::{generated}/validity/structs/XrViewState.txt[]
 --
 
-[open,refpage='XrViewStateFlags',desc='View state flags',type='flags',xrefs='xrLocateViews XrViewState XrView']
+[open,refpage='XrViewStateFlags',desc='View state flags',type='flags',xrefs='XrViewStateFlagBits XrViewState']
 --
 The elink:XrViewStateFlags specifies the validity and quality of the
 corresponding slink:XrView array returned by flink:xrLocateViews.
+The slink:XrViewState::pname:viewStateFlags member is of this type, and
+contains a bitwise-OR of zero or more of the bits defined in
+elink:XrViewStateFlagBits.
 
-Flags include:
+include::{generated}/api/flags/XrViewStateFlags.txt[]
+--
+
+[open,refpage='XrViewStateFlagBits',desc='View state flags',type='enums',xrefs='xrLocateViews XrViewState XrView XrViewStateFlags']
+--
+Valid bits for elink:XrViewStateFlags are defined by
+elink:XrViewStateFlagBits, which is specified as:
 
 include::{generated}/api/enums/XrViewStateFlagBits.txt[]
+
+The flag bits have the following meanings:
 
 .Flag Descriptions
 ****
@@ -1078,14 +1111,23 @@ layers are virtually closer to the viewer.
 [[composition-layer-flags]]
 ==== Composition Layer Flags
 
-[open,refpage='XrCompositionLayerFlags',desc='Composition layer flags',type='flags',xrefs='XrCompositionLayerProjection XrCompositionLayerQuad']
+[open,refpage='XrCompositionLayerFlags',desc='Composition layer flags',type='flags',xrefs='XrCompositionLayerFlagBits XrCompositionLayerProjection XrCompositionLayerQuad']
+--
+elink:XrCompositionLayerFlags specifies options for individual composition
+layers.
+
+include::{generated}/api/flags/XrCompositionLayerFlags.txt[]
 --
 
-The elink:XrCompositionLayerFlagBits bitfield is specified as:
+[open,refpage='XrCompositionLayerFlagBits',desc='Composition layer flags',type='enums',xrefs='XrCompositionLayerFlags XrCompositionLayerProjection XrCompositionLayerQuad']
+--
+
+Valid bits for elink:XrCompositionLayerFlags are defined by
+elink:XrCompositionLayerFlagBits, which is specified as:
+
 include::{generated}/api/enums/XrCompositionLayerFlagBits.txt[]
 
-elink:XrCompositionLayerFlags specify options for individual composition
-layers.
+The flag bits have the following meanings:
 
 include::{generated}/api/enums/XrCompositionLayerFlagBits.comments.txt[]
 --
@@ -1281,6 +1323,7 @@ include::{generated}/api/structs/XrCompositionLayerProjectionView.txt[]
   slink:XrCompositionLayerProjectionView.
 * pname:fov is the slink:XrFovf for this projection element.
 * pname:subImage is the image layer slink:XrSwapchainSubImage to use.
+  The swapchain must: have been created with a pname:faceCount of 1.
 ****
 
 The count and order of view poses submitted with
@@ -1321,6 +1364,7 @@ include::{generated}/api/structs/XrCompositionLayerQuad.txt[]
   is evaluated over time.
 * pname:eyeVisibility is the elink:XrEyeVisibility for this layer.
 * pname:subImage is the image layer slink:XrSwapchainSubImage to use.
+  The swapchain must: have been created with a pname:faceCount of 1.
 * pname:pose is an slink:XrPosef defining the position and orientation of
   the quad in the reference frame of the pname:space.
 * pname:size is the width and height of the quad in meters.

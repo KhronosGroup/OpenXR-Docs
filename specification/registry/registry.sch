@@ -84,6 +84,57 @@
         </sch:rule>
     </sch:pattern>
 
+    <sch:pattern abstract="true" id="defined_types_base">
+        <!-- Context is the function, etc  -->
+        <sch:rule context="$entityElement">
+            <sch:assert test="//types/type[@name = $queryType] or //types/type/name/text() = $queryType">
+                <sch:value-of select="$entityElement"/>: <sch:value-of select="$queryDesc"/> uses an unknown type: <sch:value-of select="$queryType"/>
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Function return types must exist -->
+    <sch:pattern is-a="defined_types_base">
+        <sch:param name="entityElement" value="commands/command[param]"/>
+        <sch:param name="queryType" value="current()/proto/type/text()"/>
+        <sch:param name="queryDesc" value="'Return value'"/>
+    </sch:pattern>
+
+    <!-- bitvalues types must exist -->
+    <sch:pattern is-a="defined_types_base">
+        <sch:param name="entityElement" value="types/type[@bitvalues]"/>
+        <sch:param name="queryType" value="current()/@bitvalues"/>
+        <sch:param name="queryDesc" value="'bitvalues attribute'"/>
+    </sch:pattern>
+
+
+    <!-- Member/parameter types must exist -->
+    <sch:pattern abstract="true" id="defined_types">
+        <!-- Context is the struct member or function parameter with a type -->
+        <sch:rule context="$contextElement">
+            <sch:let name="struct_name" value="current()/../@name"/>
+            <sch:let name="mp_name" value="current()/name/text()"/>
+            <sch:let name="mp_type" value="current()/type/text()"/>
+            <sch:assert test="//types/type[@name = $mp_type] or //types/type/name/text() = $mp_type">
+                <sch:value-of select="$struct_or_func_name"/>: Parameter/field '<sch:value-of select="$mp_name"/>' uses an unknown type: <sch:value-of select="$mp_type"/>
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Parameter types must exist -->
+    <sch:pattern is-a="defined_types">
+        <sch:param name="contextElement" value="commands/command/param"/>
+        <sch:param name="struct_or_func_name" value="current()/../proto/name/text()"/>
+    </sch:pattern>
+
+    <!-- Member types must exist -->
+    <sch:pattern is-a="defined_types">
+        <sch:param name="contextElement" value="types/type[@category = ('struct', 'union')]/member"/>
+        <sch:param name="struct_or_func_name" value="current()/@name"/>
+    </sch:pattern>
+
+
+
     <!-- look for structs with structextends -->
     <sch:pattern name="structextends">
         <sch:rule context="types/type[@structextends]">
@@ -115,14 +166,27 @@
             <sch:let name="parentstruct_name" value="current()/@parentstruct"/>
             <!-- the parent struct must exist -->
             <sch:assert test="/registry/types/type[@name=$parentstruct_name]">
-                <sch:value-of select="current()/@name"/> parent: names <sch:value-of select="$parentstruct_name"/> as parent struct but that type does not exist.
+                <sch:value-of select="current()/@name"/> parentstruct: names <sch:value-of select="$parentstruct_name"/> as parent struct but that type does not exist.  Did you specify the wrong parent type name?
             </sch:assert>
 
             <sch:assert test="contains($parentstruct_name, 'BaseHeader')">
-                <sch:value-of select="current()/@name"/> parent: names <sch:value-of select="$parentstruct_name"/> as parent struct but that type name does not include "BaseHeader".
+                <sch:value-of select="current()/@name"/> parentstruct: names <sch:value-of select="$parentstruct_name"/> as parent struct but that type name does not include "BaseHeader".  Did you specify the wrong parent type name?
             </sch:assert>
 
             <sch:let name="parentstruct" value="/registry/types/type[@name=$parentstruct_name]"/>
+
+            <!-- parentstruct must have type and next -->
+            <sch:assert test="$parentstruct/member/name[text()='type']">
+                <sch:value-of select="current()/@name"/> parentstruct: names <sch:value-of select="$parentstruct_name"/> as parent, but <sch:value-of select="$parentstruct_name"/> cannot be a parent struct type, as it has no type field. Did you specify the wrong parent type name?
+            </sch:assert>
+            <sch:assert test="$parentstruct/member/name[text()='next']">
+                <sch:value-of select="current()/@name"/> parentstruct: names <sch:value-of select="$parentstruct_name"/> as parent, but <sch:value-of select="$parentstruct_name"/> cannot be a parent struct type, as it has no next pointer. Did you specify the wrong parent type name?
+            </sch:assert>
+
+            <!-- parentstruct must not have a value for its type -->
+            <sch:assert test="count($parentstruct/member/name[text()='next']/@value) = 0">
+                <sch:value-of select="$parentstruct_name"/>: cannot be a parent struct type, as it has a value attribute for its type field. (indicated as the parent of <sch:value-of select="current()/@name"/>)
+            </sch:assert>
 
             <!-- you must agree on presence/absence of "returnedonly" with the parent struct -->
             <!-- TODO fix exceptions -->
@@ -133,20 +197,31 @@
                     but <sch:value-of select="$parentstruct_name"/> says <sch:value-of select="count($parentstruct/@returnedonly)"/>
                     Either both should have them, or neither should.
             </sch:assert>
+        </sch:rule>
+    </sch:pattern>
 
-            <!-- parentstruct must have type and next -->
-            <sch:assert test="$parentstruct/member/name[text()='type']">
-                Struct <sch:value-of select="$parentstruct_name"/> (indicated as the parent of <sch:value-of select="current()/@name"/>)
-                cannot be a parent struct type, as it has no type field.
-            </sch:assert>
-            <sch:assert test="$parentstruct/member/name[text()='next']">
-                Struct <sch:value-of select="$parentstruct_name"/> (indicated as the parent of <sch:value-of select="current()/@name"/>)
-                cannot be a parent struct type, as it has no next pointer.
+    <!-- Make sure structs with a parent struct share their initial members. -->
+    <sch:pattern>
+        <sch:rule context="types/type[@parentstruct]/member">
+
+            <sch:let name="struct_name" value="current()/ancestor::type/@name"/>
+            <sch:let name="parentstruct_name" value="current()/ancestor::type/@parentstruct"/>
+            <sch:let name="parentstruct" value="/registry/types/type[@name=$parentstruct_name]"/>
+            <sch:let name="parent_member_count" value="count($parentstruct/member)" />
+            <sch:let name="field_num" value="count(current()/preceding-sibling::member) + 1" />
+            <sch:let name="field_name" value="current()/name/text()"/>
+            <sch:let name="should_be_shared_with_parent" value="not($field_num > $parent_member_count)"/>
+            <sch:let name="matching_parent_field" value="$parentstruct/member[position() = $field_num]" />
+            <sch:let name="matching_parent_field_name" value="$matching_parent_field/name/text()" />
+
+            <sch:assert test="$field_name = $matching_parent_field_name or not($should_be_shared_with_parent)">
+                <sch:value-of select="$struct_name"/>: field <sch:value-of select="$field_name"/> (field number <sch:value-of select="$field_num"/>) should have matching name to the corresponding parent field, but does not: <sch:value-of select="$matching_parent_field_name"/>. Please make them match.
             </sch:assert>
 
-            <!-- parentstruct must not have a value for its type -->
-            <sch:assert test="count($parentstruct/member/name[text()='next']/@value) = 0">
-                <sch:value-of select="$parentstruct_name"/>: cannot be a parent struct type, as it has a value attribute for its type field. (indicated as the parent of <sch:value-of select="current()/@name"/>)
+            <sch:let name="field_text" value="normalize-space(string-join(current()/text(), ' '))"/>
+            <sch:let name="matching_parent_field_text" value="normalize-space(string-join($matching_parent_field/text(), ' '))" />
+            <sch:assert test="$field_text = $matching_parent_field_text or not($should_be_shared_with_parent)">
+                <sch:value-of select="$struct_name"/>: field <sch:value-of select="$field_name"/> (field number <sch:value-of select="$field_num"/>) should have matching text contents (type, modifiers, and name) to the corresponding parent field (<sch:value-of select="$matching_parent_field_name"/>) after normalizing spaces, but it does not: "<sch:value-of select="$field_text"/>" != "<sch:value-of select="$matching_parent_field_text"/>". Please make them match.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -181,6 +256,25 @@
         </sch:rule>
     </sch:pattern>
 
+    <!-- Naming of SystemProperties types-->
+    <sch:pattern>
+        <sch:rule context="types/type[@category = 'struct' and @structextends = 'XrSystemProperties']">
+            <sch:let name="is_exception" value="current()/@name = 'XrRenderModelCapabilitiesRequestFB'" />
+            <sch:assert test="starts-with(@name, 'XrSystem') or $is_exception">
+                <sch:value-of select="current()/@name"/>: Extends XrSystemProperties, but the name doesn't start with XrSystem. Should be named XrSystem...PropertiesAUTHOR.
+            </sch:assert>
+            <sch:assert test="contains(@name, 'Properties') or $is_exception">
+                <sch:value-of select="current()/@name"/>: Extends XrSystemProperties, but the name doesn't include Proprties. Should be named XrSystem...PropertiesAUTHOR.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="types/type[@category = 'struct' and starts-with(@name, 'XrSystem') and contains(@name, 'Properties')]">
+            <sch:assert test="current()/@structextends = 'XrSystemProperties' or current()/@name = ('XrSystemProperties', 'XrSystemGraphicsProperties', 'XrSystemTrackingProperties')">
+                <sch:value-of select="current()/@name"/>: Looks like XrSystem...PropertiesAUTHOR, but missing structextends=XrSystemProperties: Add that, or rename.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     <sch:pattern>
         <!-- Things with a parent struct -->
         <sch:rule context="types/type[@parentstruct]">
@@ -200,8 +294,40 @@
             </sch:assert>
         </sch:rule>
 
+        <!-- handle creation with parents -->
+        <sch:rule context="//commands/command[starts-with(proto/name/text(), 'xrCreate')][//types/type[@parent and @category = 'handle']/name/text() = ./param[last()]/type/text()]">
+
+            <!-- TODO fix these exceptions at least for more-standard versions of the functionality -->
+            <sch:let name="is_exception" value="current()/proto/name/text() = ('xrCreateHandMeshSpaceMSFT', 'xrCreateFacialTrackerHTC')" />
+            <sch:let name="handle_name" value="current()/param[last()]/type/text()"/>
+            <sch:let name="handle_type_node" value="//types/type[@parent and @category = 'handle'][name/text() = $handle_name]"/>
+            <sch:let name="parent_handle" value="$handle_type_node/@parent"/>
+            <sch:assert test="current()/param[1]/type/text() = $handle_type_node/@parent or $is_exception">
+                <sch:value-of select="proto/name/text()"/>: Creating handle type <sch:value-of select="$handle_name"/> which has parent type <sch:value-of select="$parent_handle"/> but that is not the first parameter type: <sch:value-of select="current()/param[1]/type/text()"/> is. If you need a second handle in addition to the parent to create your new handle, pass the second handle in <sch:value-of select="current()/param[2]/type/text()"/>.
+            </sch:assert>
+        </sch:rule>
+
+        <!-- xrCreate... commands -->
+        <sch:rule context="commands/command[starts-with(proto/name/text(), 'xrCreate')]">
+            <sch:let name="command_name" value="current()/proto/name/text()"/>
+            <sch:let name="is_exception" value="$command_name = ('xrCreateSwapchainAndroidSurfaceKHR', 'xrCreateVulkanInstanceKHR', 'xrCreateVulkanDeviceKHR')"/>
+            <sch:let name="param_count" value="count(current()/param)"/>
+            <sch:assert test="$param_count = 2 or $param_count = 3 or $is_exception">
+                <sch:value-of select="$command_name"/>: A "Create" function should have 2 (for XrInstance) or 3 parameters
+            </sch:assert>
+
+            <sch:let name="expected_handle_type" value="replace($command_name, 'xrCreate', 'Xr')"/>
+            <sch:let name="handle_type_name" value="current()/param[last()]/type/text()"/>
+            <!-- TODO finish this -->
+            <!--
+            <sch:assert test="$expected_handle_type = $handle_type_name or ($handle_type_name = 'XrSpace' and contains($expected_handle_type, 'Space')) or $is_exception">
+                <sch:value-of select="$command_name"/>: Based on the name, we expected it would create a handle of type <sch:value-of select="$expected_handle_type"/>, but instead it appears to create <sch:value-of select="$handle_type_name"/>
+            </sch:assert>
+            -->
+        </sch:rule>
+
         <!-- xrDestroy... commands -->
-        <sch:rule context="commands/command[proto/name/starts-with(text(), 'xrDestroy')]">
+        <sch:rule context="commands/command[starts-with(proto/name/text(), 'xrDestroy')]">
             <sch:let name="command_name" value="current()/proto/name/text()"/>
             <sch:assert test="count(current()/param) = 1">
                 <sch:value-of select="$command_name"/>: A "Destroy" function should not have more than one parameter
@@ -218,6 +344,87 @@
 
         </sch:rule>
     </sch:pattern>
+
+    <!-- Sizes -->
+    <sch:pattern abstract="true" id="len_member">
+        <!-- Context is the struct member whose name is size-related -->
+        <sch:rule context="$contextElement">
+            <sch:let name="struct_name" value="current()/../@name"/>
+            <sch:let name="member_name" value="current()/name/text()"/>
+
+            <sch:let name="not_size" value="$member_name = ('counterUnit', 'counterFlags')"/>
+            <sch:assert test="current()/type/text() = 'uint32_t' or $not_size">
+                <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
+            </sch:assert>
+
+            <!-- these are fine, just not actually array sizes -->
+            <sch:let name="not_array_size" value="$not_size
+                                                  or contains($member_name, 'max')
+                                                  or contains($member_name, 'recommended')
+                                                  or $struct_name = ('XrSwapchainCreateInfo', 'XrSpaceQueryInfoFB', 'XrEventDataEventsLost')"/>
+            <!-- TODO these are registry errors left in place for now, fix them-->
+            <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
+
+            <sch:let name="sized_members" value="current()/../member[some $len in tokenize(@len, ',') satisfies $len = $member_name]"/>
+            <sch:assert test="$sized_members or $not_array_size or $is_exception">
+                <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a count/size, but no other members mention it in their 'len' attribute. Make sure each array/pointer has a specified len, or consider including "max" or "recommended" in the member name if there is no array for this parameter.
+            </sch:assert>
+            <!-- TODO rpavlik This feels more consistent to me, but failure to follow this rule doesn't confuse the generation scripts.
+            <sch:assert test="if (current()/@optional) then
+                                every $sized_member in $sized_members satisfies ($sized_member/@optional or $is_exception)
+                              else
+                                true()">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This size member is optional, but at least one of the members it bounds is not optional: <sch:value-of select="$sized_members" />
+            </sch:assert>
+            -->
+            <sch:assert test="if (not(current()/@optional)) then
+                                every $sized_member in $sized_members satisfies (count($sized_member/@optional) = 0 or $is_exception)
+                              else
+                                true()">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This count member is not optional, but at least one of the members with length bound by it is marked as optional: <sch:value-of select="$sized_members" />
+            </sch:assert>
+
+            <!-- Count element comes before the array(s) it affects, with no other elements in between. -->
+            <sch:let name="len_member_pos" value="count(preceding-sibling::member)" />
+            <sch:let name="array_member_pos" value="count($sized_members/preceding-sibling::member)" />
+            <sch:assert test="(every $array_pos in $array_member_pos satisfies ($array_member_pos > $len_member_pos)) or not($sized_members)">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This count member is field <sch:value-of select="$len_member_pos"/>, but at least one of the members with length bound by it appears earlier in the structure: positions are <sch:value-of select="$array_member_pos" /> for members <sch:value-of select="$sized_members/name/text()" /> respectively. Make sure the count precedes its arrays.
+            </sch:assert>
+
+            <sch:let name="arrays_start_right_after_count" value="min($array_member_pos) = $len_member_pos + 1" />
+            <sch:assert test="$arrays_start_right_after_count or not($sized_members) or contains($member_name, 'CapacityInput')">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This count member is field <sch:value-of select="$len_member_pos"/>, but field <sch:value-of select="$len_member_pos + 1"/> is not an array bounded by it: All arrays bounded by <sch:value-of select="$member_name"/> should follow it immediately: <sch:value-of select="$sized_members/name/text()"/>. Either re-arrange fields to get the order right, or add the missing len attribute(s).
+            </sch:assert>
+            <!-- if the arrays don't start right after count, skip this check because it will be redundant. -->
+            <sch:assert test="($len_member_pos + count($array_member_pos) = max($array_member_pos)) or not($arrays_start_right_after_count) or not($sized_members) or contains($member_name, 'CapacityInput')">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This count member is field <sch:value-of select="$len_member_pos"/>, and it is referenced by <sch:value-of select="count($array_member_pos)"/> arrays, but the last such array is not <sch:value-of select="$len_member_pos + count($array_member_pos)"/>: All arrays bounded by <sch:value-of select="$member_name"/> should follow it immediately and contiguously: <sch:value-of select="$sized_members/name/text()"/>. Either re-arrange fields to get the order right, or add the missing len attribute(s).
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+    <sch:pattern is-a="len_member">
+        <sch:param name="contextElement" value="types/type/member[contains(name/text(), 'Size')]"/>
+    </sch:pattern>
+    <sch:pattern is-a="len_member">
+        <sch:param name="contextElement" value="types/type/member[contains(name/text(), 'Capacity')]"/>
+    </sch:pattern>
+    <sch:pattern is-a="len_member">
+        <sch:param name="contextElement" value="types/type/member[(contains(lower-case(name/text()), 'count')) and not(contains(name/text(), 'CountOutput'))]"/>
+    </sch:pattern>
+
+    <!-- The only thing using Size should be buffer, or things that aren't array field sizes, like a size input in a field -->
+    <sch:pattern>
+        <sch:rule context="types/type/member[contains(name/text(), 'Size')]">
+
+            <sch:let name="struct_name" value="current()/../@name"/>
+            <sch:let name="member_name" value="current()/name/text()"/>
+            <sch:let name="sized_members" value="current()/../member[some $len in tokenize(@len, ',') satisfies $len = $member_name]"/>
+            <sch:assert test="$sized_members/name/text() = 'buffer' or not($sized_members)">
+                <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This member includes the word "size", but bounds the size of a field not called buffer (<sch:value-of select="$sized_members/name/text()"/>). Either rename the length field to use Count instead of Size, or rename the array to buffer if it is a buffer of bytes/characters.
+            </sch:assert>
+        </sch:rule>
+
+    </sch:pattern>
+
 
     <!-- Handle rules -->
     <sch:pattern>

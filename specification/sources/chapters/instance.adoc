@@ -175,17 +175,6 @@ include::{generated}/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
   detailed description of retrieving the required pname:properties size.
 ****
 
-If pname:properties is code:NULL, then the number of extensions properties
-available is returned in pname:propertyCountOutput.
-Otherwise, pname:propertyCountInput must point to a variable set by the user
-to the number of elements in the pname:properties array.
-If pname:propertyCountInput is less than the number of extension properties
-available, the contents of pname:properties will be undefined.
-If pname:propertyCountInput is smaller than the number of extensions
-available, the runtime must: return the failure code
-ename:XR_ERROR_SIZE_INSUFFICIENT and the contents of pname:properties are
-undefined.
-
 Because the list of available layers may change externally between calls to
 flink:xrEnumerateInstanceExtensionProperties, two calls may: retrieve
 different results if a pname:layerName is available in one call but not in
@@ -296,13 +285,23 @@ include::{generated}/api/structs/XrInstanceCreateInfo.txt[]
 include::{generated}/validity/structs/XrInstanceCreateInfo.txt[]
 --
 
-[open,refpage='XrInstanceCreateFlags',desc='Instance Creation Flags',type='flags',xrefs='xrCreateInstance XrInstanceCreateInfo']
+[open,refpage='XrInstanceCreateFlags',desc='Instance Creation Flags',type='flags',xrefs='XrInstanceCreateFlagBits']
 --
-The elink:XrInstanceCreateFlags include:
+The slink:XrInstanceCreateInfo::pname:createFlags member is of the following
+type, and contains a bitwise-OR of zero or more of the bits defined in
+elink:XrInstanceCreateFlagBits.
+
+include::{generated}/api/flags/XrInstanceCreateFlags.txt[]
+--
+
+[open,refpage='XrInstanceCreateFlagBits',desc='Instance Creation Flags',type='enums',xrefs='xrCreateInstance XrInstanceCreateInfo XrInstanceCreateFlags']
+--
+Valid bits for elink:XrInstanceCreateFlags are defined by
+elink:XrInstanceCreateFlagBits.
 
 include::{generated}/api/enums/XrInstanceCreateFlagBits.txt[]
 
-There are currently no instance creation flags.
+There are currently no instance creation flag bits defined.
 This is reserved for future use.
 --
 

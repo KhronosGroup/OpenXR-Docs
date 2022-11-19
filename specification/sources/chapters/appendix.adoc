@@ -78,18 +78,17 @@ the final enum is computed by:
 
 Flag types are all bitmasks aliasing the base type basetype:XrFlags64 and
 with corresponding bit flag types defining the valid bits for that flag, as
-described in Valid Usage for Flags.
-Flag types supported by the API include:
+described in <<valid-usage-for-flags>>.
 
-include::{generated}/api/flags/XrCompositionLayerFlags.txt[]
-include::{generated}/api/flags/XrInputSourceLocalizedNameFlags.txt[]
-include::{generated}/api/flags/XrInstanceCreateFlags.txt[]
-include::{generated}/api/flags/XrSessionCreateFlags.txt[]
-include::{generated}/api/flags/XrSpaceLocationFlags.txt[]
-include::{generated}/api/flags/XrSpaceVelocityFlags.txt[]
-include::{generated}/api/flags/XrSwapchainCreateFlags.txt[]
-include::{generated}/api/flags/XrSwapchainUsageFlags.txt[]
-include::{generated}/api/flags/XrViewStateFlags.txt[]
+Flag types defined in the core specification were originally listed/defined
+here, but have been moved to be adjacent to their associated `FlagBits`
+type.
+ifdef::backend-html5[]
+See the <<index-flags-and-flag-bits,Index>> for a list.
+endif::backend-html5[]
+ifndef::backend-html5[]
+See the Index for a list.
+endif::backend-html5[]
 
 
 [[general-macro-definitions]]

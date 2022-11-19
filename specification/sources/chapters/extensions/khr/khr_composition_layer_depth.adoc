@@ -57,6 +57,7 @@ include::{generated}/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
   No such structures are defined in core OpenXR or this extension.
 * pname:subImage identifies the depth image slink:XrSwapchainSubImage to be
   associated with the color swapchain.
+  The swapchain must: have been created with a pname:faceCount of 1.
 * pname:minDepth and pname:maxDepth are the window space depths that
   correspond to the near and far frustum planes, respectively.
   pname:minDepth must be less than pname:maxDepth.

@@ -65,6 +65,7 @@ include::{generated}/api/structs/XrCompositionLayerEquirectKHR.txt[]
   layer is evaluated over time.
 * pname:eye is the eye represented by this layer.
 * pname:subImage identifies the image slink:XrSwapchainSubImage to use.
+  The swapchain must: have been created with a pname:faceCount of 1.
 * pname:pose is an slink:XrPosef defining the position and orientation of
 the center point of the sphere onto which the equirect image data is mapped,
 relative to the reference frame of the pname:space.

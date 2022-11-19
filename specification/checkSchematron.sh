@@ -22,9 +22,9 @@
 # Usage: checkSchematron.sh
 
 set -e
-SCHEMATRON_VERSION=1.9.1
-# from https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.9.1/cli-1.9.1.jar.sha1
-SCHEMATRON_SHA1SUM=de755ac742caad2e8e3a33262d0abb937e568243
+SCHEMATRON_VERSION=1.9.4
+# from https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.9.4/cli-1.9.4.jar.sha1
+SCHEMATRON_SHA1SUM=a94c5532487705fb42f09f11ae6d172caeaf7972
 URL=https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/$SCHEMATRON_VERSION/cli-$SCHEMATRON_VERSION.jar
 
 SCHXSLT_CLI=registry/$(basename "$URL")
