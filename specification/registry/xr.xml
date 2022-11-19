@@ -4554,7 +4554,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
 
         <!-- commands for XR_MNDX_force_feedback_curl -->
-        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST,XR_ERROR_HANDLE_INVALID">
+        <command successcodes="XR_SUCCESS,XR_SESSION_LOSS_PENDING" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_INSTANCE_LOST,XR_ERROR_SESSION_LOST,XR_ERROR_HANDLE_INVALID">
             <proto><type>XrResult</type> <name>xrApplyForceFeedbackCurlMNDX</name></proto>
             <param><type>XrHandTrackerEXT</type> <name>handTracker</name></param>
             <param>const <type>XrForceFeedbackCurlApplyLocationsMNDX</type>* <name>locations</name></param>
