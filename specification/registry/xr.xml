@@ -8133,8 +8133,8 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <type name="XrForceFeedbackCurlApplyLocationsMNDX"/>
             <type name="XrForceFeedbackCurlApplyLocationMNDX"/>
 
-            <enum offset="1" extends="XrStructureType" name="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"/>
-            <enum offset="2" extends="XrStructureType" name="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"/>
+            <enum offset="0" extends="XrStructureType" name="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"/>
+            <enum offset="1" extends="XrStructureType" name="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"/>
         </require>
     </extension>
 
