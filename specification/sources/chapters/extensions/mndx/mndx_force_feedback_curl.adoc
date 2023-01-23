@@ -12,9 +12,9 @@ include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
 
 *Contributors*::
     Daniel Willmott +
-    Moses Turner +
-    Christoph Haagch +
-    Jakob Bornecrantz +
+    Moses Turner (Collabora, Ltd.) +
+    Christoph Haagch (Collabora, Ltd.) +
+    Jakob Bornecrantz (Collabora, Ltd.) +
 
 
 *Overview*
@@ -166,8 +166,8 @@ ename:XR_SESSION_NOT_FOCUSED, and not apply force feedback.
 
 When an application submits force feedback for a set of locations, the runtime must: update the set of locations to that specified by the application. A runtime must: set any locations not specified by the application when submitting force feedback to 0.
 
-The runtime may: discontinue force feedback if the application that set it loses focus
-An application should: call the function again after regaining focus if force feedback is still desired
+The runtime may: discontinue force feedback if the application that set it loses focus.
+An application should: call the function again after regaining focus if force feedback is still desired.
 
 include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.txt[]
 --
