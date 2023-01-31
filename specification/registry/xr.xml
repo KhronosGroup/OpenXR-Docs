@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <?xml-model href="registry.rnc" type="application/relax-ng-compact-syntax"?>
 <?xml-model href="registry.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
@@ -8437,6 +8437,97 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <require>
             <enum value="1"                                     name="XR_DANWILLM_extension_426_SPEC_VERSION"/>
             <enum value="&quot;XR_DANWILLM_extension_426&quot;" name="XR_DANWILLM_EXTENSION_426_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_431" number="431" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_431_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_431&quot;" name="XR_ACER_EXTENSION_431_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_432" number="432" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_432_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_432&quot;" name="XR_ACER_EXTENSION_432_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_433" number="433" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_433_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_433&quot;" name="XR_ACER_EXTENSION_433_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_434" number="434" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_434_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_434&quot;" name="XR_ACER_EXTENSION_434_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_435" number="435" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_435_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_435&quot;" name="XR_ACER_EXTENSION_435_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_436" number="436" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_436_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_436&quot;" name="XR_ACER_EXTENSION_436_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_437" number="437" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_437_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_437&quot;" name="XR_ACER_EXTENSION_437_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_438" number="438" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_438_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_438&quot;" name="XR_ACER_EXTENSION_438_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_439" number="439" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_439_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_439&quot;" name="XR_ACER_EXTENSION_439_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_440" number="440" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_440_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_440&quot;" name="XR_ACER_EXTENSION_440_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_441" number="441" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_441_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_441&quot;" name="XR_ACER_EXTENSION_441_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_442" number="442" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_442_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_442&quot;" name="XR_ACER_EXTENSION_442_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_ACER_extension_443" number="443" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_ACER_extension_443_SPEC_VERSION"/>
+            <enum value="&quot;XR_ACER_extension_443&quot;" name="XR_ACER_EXTENSION_443_EXTENSION_NAME"/>
         </require>
     </extension>
 
