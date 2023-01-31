@@ -1,0 +1,1 @@
+Reserve vendor extensions for ACER.
