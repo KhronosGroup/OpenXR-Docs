@@ -2564,8 +2564,8 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type category="struct" name="XrForceFeedbackCurlApplyLocationsMNDX">
             <member values="XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX"><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>*                                               <name>next</name></member>
-            <member len="locationCount"><type>XrForceFeedbackCurlApplyLocationMNDX</type>* <name>locations</name></member>
             <member><type>uint32_t</type>                                                  <name>locationCount</name></member>
+            <member len="locationCount"><type>XrForceFeedbackCurlApplyLocationMNDX</type>* <name>locations</name></member>
         </type>
 
         <type category="struct" name="XrForceFeedbackCurlApplyLocationMNDX">
