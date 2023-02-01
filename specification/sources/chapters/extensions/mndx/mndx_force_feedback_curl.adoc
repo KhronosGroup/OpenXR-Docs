@@ -97,9 +97,10 @@ include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+* pname:locationCount is the number of elements in the pname:locations
+  array.
 * pname:locations is a pointer to an array of locations to apply force
   feedback.
-* pname:locationCount the number of locations in the locations array.
 ****
 
 Contains an array of slink:XrForceFeedbackCurlApplyLocationMNDX that
