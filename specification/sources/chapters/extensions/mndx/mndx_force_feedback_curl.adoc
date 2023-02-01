@@ -131,7 +131,6 @@ pname:value is specified as a limit in a single direction.
 For example, if the value specified is 0.5, a location must: have free
 movement from the point where it would be incapable of movement if
 pname:value was 1, to 0.5 of the range the location is capable of moving.
-====
 
 include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
 --
