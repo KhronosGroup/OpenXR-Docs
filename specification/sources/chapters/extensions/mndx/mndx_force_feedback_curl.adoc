@@ -19,7 +19,9 @@ include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
 
 *Overview*
 
-This extension provides APIs for force feedback devices capable of restricting physical movement in a single direction along a single dimension.
+This extension provides APIs for force feedback devices capable of
+restricting physical movement in a single direction along a single
+dimension.
 
 The intended use for this extension is to provide simple force feedback
 capabilities to restrict finger movement for VR Gloves.
@@ -159,15 +161,24 @@ the set locations listed in slink:XrApplyForceFeedbackCurlLocationsMNDX.
 flink:xrApplyForceFeedbackCurlMNDX should: be called every time an
 application wishes to update a set of force feedback locations.
 
-Submits a request for force feedback for a set of locations. The runtime should: deliver this request to the pname:handTracker device. If the pname:handTracker device is not available, the runtime may: ignore this request for force feedback.
+Submits a request for force feedback for a set of locations.
+The runtime should: deliver this request to the pname:handTracker device.
+If the pname:handTracker device is not available, the runtime may: ignore
+this request for force feedback.
 
-If the session associated with pname:handTracker is not focused, the runtime must: return
-ename:XR_SESSION_NOT_FOCUSED, and not apply force feedback.
+If the session associated with pname:handTracker is not focused, the runtime
+must: return ename:XR_SESSION_NOT_FOCUSED, and not apply force feedback.
 
-When an application submits force feedback for a set of locations, the runtime must: update the set of locations to that specified by the application. A runtime must: set any locations not specified by the application when submitting force feedback to 0.
+When an application submits force feedback for a set of locations, the
+runtime must: update the set of locations to that specified by the
+application.
+A runtime must: set any locations not specified by the application when
+submitting force feedback to 0.
 
-The runtime may: discontinue force feedback if the application that set it loses focus.
-An application should: call the function again after regaining focus if force feedback is still desired.
+The runtime may: discontinue force feedback if the application that set it
+loses focus.
+An application should: call the function again after regaining focus if
+force feedback is still desired.
 
 include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.txt[]
 --
