@@ -477,6 +477,8 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         <type name="XrFoveationDynamicFlagBitsHTC" category="enum"/>
         <type name="XrFoveationLevelHTC" category="enum"/>
 
+        <!-- XR_MNDX_force_feedback_curl -->
+        <type name="XrForceFeedbackCurlLocationMNDX" category="enum"/>
 
         <!-- Struct types -->
         <type category="struct" name="XrVector2f">
@@ -2553,8 +2555,6 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </type>
 
         <!-- XR_MNDX_force_feedback_curl -->
-        <type name="XrForceFeedbackCurlLocationMNDX" category="enum"/>
-
         <type category="struct" name="XrSystemForceFeedbackCurlPropertiesMNDX" structextends="XrSystemProperties" returnedonly="true">
             <member values="XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX"><type>XrStructureType</type> <name>type</name></member>
             <member><type>void</type>*    <name>next</name></member>
