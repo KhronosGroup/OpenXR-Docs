@@ -85,11 +85,11 @@ force feedback is not available in the system.
 include::{generated}/validity/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
 --
 
-[open,refpage='XrApplyForceFeedbackCurlLocationsMNDX',type='structs',desc='Structure representing an array of locations to apply force feedback to',xrefs='xrApplyForceFeedbackCurlMNDX']
+[open,refpage='XrForceFeedbackCurlApplyLocationsMNDX',type='structs',desc='Structure representing an array of locations to apply force feedback to',xrefs='xrApplyForceFeedbackCurlMNDX']
 --
-The slink:XrApplyForceFeedbackCurlLocationsMNDX structure is defined as:
+The slink:XrForceFeedbackCurlApplyLocationsMNDX structure is defined as:
 
-include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationsMNDX.txt[]
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
 
 .Member Descriptions
 ****
@@ -102,17 +102,17 @@ include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationsMNDX.txt[]
 * pname:locationCount the number of locations in the locations array.
 ****
 
-Contains an array of slink:XrApplyForceFeedbackCurlLocationMNDX that
+Contains an array of slink:XrForceFeedbackCurlApplyLocationMNDX that
 contains information on locations to apply force feedback to.
 
-include::{generated}/validity/structs/XrApplyForceFeedbackCurlLocationsMNDX.txt[]
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
 --
 
-[open,refpage='XrApplyForceFeedbackCurlLocationMNDX',type='structs',desc='Structure representing and containing information on how to apply force feedback to a single location.',xrefs='xrApplyForceFeedbackCurlMNDX']
+[open,refpage='XrForceFeedbackCurlApplyLocationMNDX',type='structs',desc='Structure representing and containing information on how to apply force feedback to a single location.',xrefs='xrApplyForceFeedbackCurlMNDX']
 --
-The slink:XrApplyForceFeedbackCurlLocationMNDX structure is defined as:
+The slink:XrForceFeedbackCurlApplyLocationMNDX structure is defined as:
 
-include::{generated}/api/structs/XrApplyForceFeedbackCurlLocationMNDX.txt[]
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
 
 .Member Descriptions
 ****
@@ -136,7 +136,7 @@ movement from the point where it would be incapable of movement if
 pname:value was 1, to 0.5 of the range the location is capable of moving.
 ====
 
-include::{generated}/validity/structs/XrApplyForceFeedbackCurlLocationMNDX.txt[]
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
 --
 
 *New Functions*
@@ -151,12 +151,12 @@ include::{generated}/api/protos/xrApplyForceFeedbackCurlMNDX.txt[]
 ****
 * pname:handTracker is an slink:XrHandTrackerEXT handle previously created
   with flink:xrCreateHandTrackerEXT.
-* pname:locations is an slink:XrApplyForceFeedbackCurlLocationsMNDX
+* pname:locations is an slink:XrForceFeedbackCurlApplyLocationsMNDX
   containing a set of locations to apply force feedback to.
 ****
 
 The flink:xrApplyForceFeedbackCurlMNDX function applies force feedback to
-the set locations listed in slink:XrApplyForceFeedbackCurlLocationsMNDX.
+the set locations listed in slink:XrForceFeedbackCurlApplyLocationsMNDX.
 
 flink:xrApplyForceFeedbackCurlMNDX should: be called every time an
 application wishes to update a set of force feedback locations.
