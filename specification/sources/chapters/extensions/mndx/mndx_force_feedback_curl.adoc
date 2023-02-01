@@ -127,9 +127,6 @@ include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
   the finger to have free range of movement, being able to curl fully.
 ****
 
-[NOTE]
-.Note
-====
 pname:value is specified as a limit in a single direction.
 For example, if the value specified is 0.5, a location must: have free
 movement from the point where it would be incapable of movement if
