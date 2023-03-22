@@ -1,0 +1,461 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_face_tracking.adoc[]
+
+*Last Modified Date*::
+    2022-07-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Jaebong Lee, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta
+
+==== Overview
+
+This extension enables applications to get weights of blend shapes.
+It also enables applications to render facial expressions in XR experiences.
+
+Face tracking data is sensitive personal information and is closely linked
+to personal privacy and integrity.
+It is strongly recommended that applications storing or transferring face
+tracking data always ask the user for active and specific acceptance to do
+so.
+
+If a runtime supports a permission system to control application access to
+the face tracker, then the runtime must: set the pname:isValid field to
+ename:XR_FALSE on the supplied slink:XrFaceExpressionStatusFB structure
+until the user allows the application to access the face tracker.
+When the application access has been allowed, the runtime may: set
+pname:isValid on the supplied slink:XrFaceExpressionStatusFB structure to
+ename:XR_TRUE.
+
+Some permission systems may control access to the eye tracking separately
+from access to the face tracking, even though the eyes are part of the face.
+In case the user denied tracking of the eyes, yet, allowed tracking of the
+face, then the runtime must: set the pname:isEyeFollowingBlendshapesValid
+field to ename:XR_FALSE on the supplied slink:XrFaceExpressionStatusFB for
+indicating that eye tracking data is not available, but at the same time
+may: set the pname:isValid field to ename:XR_TRUE on the supplied
+slink:XrFaceExpressionStatusFB for indicating that another part of the face
+is tracked properly.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemFaceTrackingPropertiesFB',type='structs',desc='System property for face tracking',xrefs='']
+--
+
+include::{generated}/api/structs/XrSystemFaceTrackingPropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsFaceTracking is an basetype:XrBool32, indicating if current
+  system is capable of receiving face tracking input.
+****
+
+An application can: inspect whether the system is capable of receiving face
+tracking input by extending the slink:XrSystemProperties with
+slink:XrSystemFaceTrackingPropertiesFB structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsFaceTracking, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateFaceTrackerFB.
+
+include::{generated}/validity/structs/XrSystemFaceTrackingPropertiesFB.txt[]
+
+--
+
+==== Create a face tracker handle
+
+[open,refpage='XrFaceTrackerFB',type='handles',desc='Represents a tracker for a face blend shapes.']
+--
+The slink:XrFaceTrackerFB handle represents the resources for face tracking.
+
+include::{generated}/api/handles/XrFaceTrackerFB.txt[]
+
+This handle is used to obtain blend shapes using the
+flink:xrGetFaceExpressionWeightsFB function.
+
+--
+
+[open,refpage='xrCreateFaceTrackerFB',type='protos',desc='Create a face tracking handle.',xrefs='']
+--
+The flink:xrCreateFaceTrackerFB function is defined as:
+
+include::{generated}/api/protos/xrCreateFaceTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the face tracker will be
+  active.
+* pname:createInfo is the slink:XrFaceTrackerCreateInfoFB used to specify
+  the face tracker.
+* pname:faceTracker is the returned slink:XrFaceTrackerFB handle.
+****
+
+An application can: create an slink:XrFaceTrackerFB handle using
+flink:xrCreateFaceTrackerFB function.
+
+If the system does not support face tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateFaceTrackerFB.
+In this case, the runtime must: return ename:XR_FALSE for
+pname:supportsFaceTracking in slink:XrSystemFaceTrackingPropertiesFB when
+the function flink:xrGetSystemProperties is called, so that the application
+can: avoid creating a face tracker.
+
+include::{generated}/validity/protos/xrCreateFaceTrackerFB.txt[]
+
+--
+
+[open,refpage='XrFaceTrackerCreateInfoFB',type='structs',desc='Information to create a facial expression handle',xrefs='']
+--
+The slink:XrFaceTrackerCreateInfoFB structure is described as follows:
+
+include::{generated}/api/structs/XrFaceTrackerCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:faceExpressionSet is an elink:XrFaceExpressionSetFB that describe
+  the set of blend shapes to retrieve.
+****
+
+The slink:XrFaceTrackerCreateInfoFB structure describes the information to
+create an slink:XrFaceTrackerFB handle.
+
+include::{generated}/validity/structs/XrFaceTrackerCreateInfoFB.txt[]
+--
+
+[open,refpage='XrFaceExpressionSetFB',type='enums',desc='The set of blend shapes of a facial expression to track.',xrefs='XrFaceTrackerCreateInfoFB']
+--
+The elink:XrFaceExpressionSetFB enum describes the set of blend shapes of a
+facial expression to track when creating an slink:XrFaceTrackerFB.
+
+include::{generated}/api/enums/XrFaceExpressionSetFB.txt[]
+
+include::{generated}/api/enums/XrFaceExpressionSetFB.comments-box.txt[]
+--
+
+[open,refpage='XR_FACE_EXPRESSSION_SET_DEFAULT_FB',type='defines',desc='Alias for XR_FACE_EXPRESSSION_SET_DEFAULT_FB',xrefs='XrFaceExpressionSetFB']
+--
+include::{generated}/api/defines/XR_FACE_EXPRESSSION_SET_DEFAULT_FB.txt[]
+
+The dlink:XR_FACE_EXPRESSSION_SET_DEFAULT_FB is an alias for
+ename:XR_FACE_EXPRESSION_SET_DEFAULT_FB for backward compatibility,
+deprecated and should: not be used.
+--
+
+==== Delete a face tracker handle
+
+[open,refpage='xrDestroyFaceTrackerFB',type='protos',desc='Destroy a facial expressions handle',xrefs='']
+--
+The flink:xrDestroyFaceTrackerFB function releases the pname:faceTracker and
+the underlying resources when face tracking experience is over.
+include::{generated}/api/protos/xrDestroyFaceTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:faceTracker is an slink:XrFaceTrackerFB previously created by
+  flink:xrCreateFaceTrackerFB.
+****
+
+include::{generated}/validity/protos/xrDestroyFaceTrackerFB.txt[]
+--
+
+==== Obtain facial expressions
+
+[open,refpage='xrGetFaceExpressionWeightsFB',type='protos',desc='Obtain blend shapes of facial expression',xrefs='']
+--
+The flink:xrGetFaceExpressionWeightsFB function return blend shapes of
+facial expression at a given time.
+
+include::{generated}/api/protos/xrGetFaceExpressionWeightsFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:faceTracker is an slink:XrFaceTrackerFB previously created by
+  flink:xrCreateFaceTrackerFB.
+* pname:expressionInfo is a pointer to slink:XrFaceExpressionInfoFB
+  describing information to obtain face expression.
+* pname:expressionWeights is a pointer to slink:XrFaceExpressionWeightsFB
+  receiving the returned facial expression weights.
+****
+
+include::{generated}/validity/protos/xrGetFaceExpressionWeightsFB.txt[]
+--
+
+[open,refpage='XrFaceExpressionInfoFB',type='structs',desc='Describes the information to obtain facial expression',xrefs='xrGetFaceExpressionWeightsFB']
+--
+The slink:XrFaceExpressionInfoFB structure describes the information to
+obtain facial expression.
+
+include::{generated}/api/structs/XrFaceExpressionInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:time is an basetype:XrTime at which the facial expression weights
+  are requested.
+****
+
+Callers should: request a time equal to the predicted display time for the
+rendered frame.
+The system will employ appropriate modeling to provide expressions for this
+time.
+
+include::{generated}/validity/structs/XrFaceExpressionInfoFB.txt[]
+--
+
+[open,refpage='XrFaceExpressionWeightsFB',type='structs',desc='Returns the facial expression',xrefs='xrGetFaceExpressionWeightsFB']
+--
+slink:XrFaceExpressionWeightsFB structure returns the facial expression.
+
+include::{generated}/api/structs/XrFaceExpressionWeightsFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:weightCount is a code:uint32_t describing the count of elements in
+  pname:weights array.
+* pname:weights is a pointer to an application-allocated array of code:float
+  that will be filled with weights of facial expression blend shapes.
+* pname:confidenceCount is a code:uint32_t describing the count of elements
+  in pname:confidences array.
+* pname:confidences is a pointer to an application-allocated array of
+  code:float that will be filled with confidence of tracking specific parts
+  of a face.
+* pname:status is the slink:XrFaceExpressionStatusFB of validity status of
+  the expression weights.
+* pname:time is an basetype:XrTime time at which the returned expression
+  weights are tracked or extrapolated to.
+  Equals the time at which the expression weights were requested if the
+  extrapolating at the time was successful.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:weightCount is not equal to the number of blend shapes defined by the
+elink:XrFaceExpressionSetFB used to create the slink:XrFaceTrackerFB.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:confidenceCount is not equal to the number of confidence areas defined
+by the elink:XrFaceExpressionSetFB used to create the slink:XrFaceTrackerFB.
+
+The runtime must: return pname:weights representing the weights of blend
+shapes of current facial expression.
+
+The runtime must: update the pname:weights array ordered so that the
+application can: index elements using the corresponding facial expression
+enum (e.g. elink:XrFaceExpressionFB) as described by
+elink:XrFaceExpressionSetFB when creating the slink:XrFaceTrackerFB.
+For example, when the slink:XrFaceTrackerFB is created with
+ename:XR_FACE_EXPRESSION_SET_DEFAULT_FB, the application sets the
+pname:weightCount to ename:XR_FACE_EXPRESSION_COUNT_FB, and the runtime
+must: fill the pname:weights array ordered so that it can: be indexed by the
+elink:XrFaceExpressionFB enum.
+
+The runtime must: update the pname:confidences array ordered so that the
+application can: index elements using the corresponding confidence area enum
+(e.g. elink:XrFaceConfidenceFB) as described by elink:XrFaceExpressionSetFB
+when creating the slink:XrFaceTrackerFB.
+For example, when the slink:XrFaceTrackerFB is created with
+ename:XR_FACE_EXPRESSION_SET_DEFAULT_FB, the application sets the
+pname:confidenceCount to ename:XR_FACE_CONFIDENCE_COUNT_FB, and the runtime
+must: fill the pname:confidences array ordered so that it can: be indexed by
+the elink:XrFaceConfidenceFB enum.
+
+include::{generated}/validity/structs/XrFaceExpressionWeightsFB.txt[]
+--
+
+[open,refpage='XrFaceExpressionStatusFB',type='structs',desc='Describes the status of facial expression weights',xrefs='XrFaceExpressionWeightsFB']
+--
+slink:XrFaceExpressionStatusFB structure describes the validity of facial
+expression weights.
+
+include::{generated}/api/structs/XrFaceExpressionStatusFB.txt[]
+
+.Member Descriptions
+****
+* pname:isValid is an basetype:XrBool32 which indicates that the tracked
+  expression weights are valid.
+* pname:isEyeFollowingBlendshapesValid is an basetype:XrBool32 which
+  indicates if the 8 expression weights with prefix
+  `XR_FACE_EXPRESSION_EYES_LOOK_*` are valid.
+****
+
+If the returned pname:isValid is ename:XR_FALSE, then it indicates that the
+face tracker failed to track or lost track of the face, or the application
+lost focus, or the consent for face tracking was denied.
+
+If the returned pname:isValid is ename:XR_TRUE, the runtime must: return all
+weights (or all weights except eyes related weights, see
+pname:isEyeFollowingBlendshapesValid).
+
+If the returned pname:isEyeFollowingBlendshapesValid is ename:XR_FALSE, then
+it indicates that the eye tracking driving blendshapes with prefix
+`XR_FACE_EXPRESSION_EYES_LOOK_*` lost track or the consent for eye tracking
+was denied.
+
+include::{generated}/validity/structs/XrFaceExpressionStatusFB.txt[]
+--
+
+==== Example code for obtaining facial expression
+
+The following example code demonstrates how to obtain all weights for facial
+expression blend shapes.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// Confirm face tracking system support.
+XrSystemFaceTrackingPropertiesFB faceTrackingSystemProperties{
+    XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_FB};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &faceTrackingSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!faceTrackingSystemProperties.supportsFaceTracking) {
+    // The system does not support face tracking
+    return;
+}
+
+// Get function pointer for xrCreateFaceTrackerFB.
+PFN_xrCreateFaceTrackerFB pfnCreateFaceTrackerFB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFaceTrackerFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateFaceTrackerFB)));
+
+// Create a face tracker for default set of facial expressions.
+XrFaceTrackerFB faceTracker = {};
+{
+    XrFaceTrackerCreateInfoFB createInfo{XR_TYPE_FACE_TRACKER_CREATE_INFO_FB};
+    createInfo.faceExpressionSet = XR_FACE_EXPRESSION_SET_DEFAULT_FB;
+    CHK_XR(pfnCreateFaceTrackerFB(session, &createInfo, &faceTracker));
+}
+
+// Allocate buffers to receive facial expression data before frame
+// loop starts.
+float weights[XR_FACE_EXPRESSION_COUNT_FB];
+float confidences[XR_FACE_CONFIDENCE_COUNT_FB];
+
+XrFaceExpressionWeightsFB expressionWeights{XR_TYPE_FACE_EXPRESSION_WEIGHTS_FB};
+expressionWeights.weightCount = XR_FACE_EXPRESSION_COUNT_FB;
+expressionWeights.weights = weights;
+expressionWeights.confidenceCount = XR_FACE_CONFIDENCE_COUNT_FB;
+expressionWeights.confidences = confidences;
+
+// Get function pointer for xrGetFaceExpressionWeightsFB.
+PFN_xrGetFaceExpressionWeightsFB pfnGetFaceExpressionWeights;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFaceExpressionWeightsFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnGetFaceExpressionWeights)));
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrFaceExpressionInfoFB expressionInfo{XR_TYPE_FACE_EXPRESSION_INFO_FB};
+    expressionInfo.time = time;
+
+    CHK_XR(pfnGetFaceExpressionWeights(faceTracker, &expressionInfo, &expressionWeights));
+
+    if (expressionWeights.status.isValid) {
+        for (uint32_t i = 0; i < XR_FACE_EXPRESSION_COUNT_FB; ++i) {
+            // weights[i] contains a weight of specific blend shape
+        }
+    }
+}
+----
+
+==== Conventions of blend shapes
+
+This extension defines 63 blend shapes for tracking facial expressions.
+
+[open,refpage='XrFaceExpressionFB',type='enums',desc='The name of blend shapes that can be tracked',xrefs='']
+--
+include::{generated}/api/enums/XrFaceExpressionFB.txt[]
+
+--
+
+==== Conventions of confidence areas
+
+This extension defines two separate areas of confidence.
+
+[open,refpage='XrFaceConfidenceFB',type='enums',desc='The name of face areas where confidence is known',xrefs='']
+--
+include::{generated}/api/enums/XrFaceConfidenceFB.txt[]
+
+The "upper face" area represents everything above the upper lip, including
+eye, eyebrows + cheek, and nose.
+The "lower face" area represents everything under eyes, including mouth,
+chin + cheek, and nose.
+Cheek and nose areas contribute to both "upper face" and "lower face" areas.
+
+--
+
+*New Object Types*
+
+* slink:XrFaceTrackerFB
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_FACE_TRACKER_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_FB
+* ename:XR_TYPE_FACE_TRACKER_CREATE_INFO_FB
+* ename:XR_TYPE_FACE_EXPRESSION_INFO_FB
+* ename:XR_TYPE_FACE_EXPRESSION_WEIGHTS_FB
+
+*New Enums*
+
+* elink:XrFaceExpressionFB
+* elink:XrFaceExpressionSetFB
+* elink:XrFaceConfidenceFB
+
+*New Structures*
+
+* slink:XrSystemFaceTrackingPropertiesFB
+* slink:XrFaceTrackerCreateInfoFB
+* slink:XrFaceExpressionInfoFB
+* slink:XrFaceExpressionStatusFB
+* slink:XrFaceExpressionWeightsFB
+
+*New Functions*
+
+* flink:xrCreateFaceTrackerFB
+* flink:xrDestroyFaceTrackerFB
+* flink:xrGetFaceExpressionWeightsFB
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-07-15 (Igor Tceglevskii)
+** Initial extension description

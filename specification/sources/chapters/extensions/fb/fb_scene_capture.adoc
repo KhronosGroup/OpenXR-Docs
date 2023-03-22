@@ -1,0 +1,118 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_scene_capture.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook +
+    Yuichi Taguchi, Facebook +
+    Cass Everitt, Facebook
+
+
+*Overview*
+
+This extension allows an application to request that the system begin
+capturing information about what is in the environment around the user.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SCENE_CAPTURE_REQUEST_INFO_FB
+* ename:XR_TYPE_EVENT_DATA_SCENE_CAPTURE_COMPLETE_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSceneCaptureRequestInfoFB',type='structs',desc='Describes how a scene capture should be conducted by the system',xrefs='']
+--
+The slink:XrSceneCaptureRequestInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrSceneCaptureRequestInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestByteCount is byte length of the pname:request parameter.
+* pname:request is a string which the application can: use to specify which
+  type of scene capture should be initiated by the runtime.
+  The contents of buffer pointed to by the pname:request parameter is
+  runtime-specific.
+****
+
+The slink:XrSceneCaptureRequestInfoFB structure is used by an application to
+instruct the system what to look for during a scene capture.
+If the pname:request parameter is code:NULL, then the runtime must: conduct
+a default scene capture.
+
+include::{generated}/validity/structs/XrSceneCaptureRequestInfoFB.txt[]
+--
+
+[open,refpage='XrEventDataSceneCaptureCompleteFB',type='structs',desc='Event which occurs after a scene capture operation completes',xrefs='']
+--
+The slink:XrEventDataSceneCaptureCompleteFB structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSceneCaptureCompleteFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the ID of the asynchronous query request.
+* pname:result is an elink:XrResult that indicates if the request succeeded
+  or if an error occurred.
+****
+
+The slink:XrEventDataSceneCaptureCompleteFB structure is used by an
+application to instruct the system what to look for during a scene capture.
+
+include::{generated}/validity/structs/XrEventDataSceneCaptureCompleteFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrRequestSceneCaptureFB',desc='Begins a scene capture using the specified parameters',type='protos',xrefs='']
+--
+The flink:xrRequestSceneCaptureFB function is defined as:
+
+include::{generated}/api/protos/xrRequestSceneCaptureFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info is an slink:XrSceneCaptureRequestInfoFB which specifies how the
+  scene capture should occur.
+* pname:requestId is the output parameter that points to the ID of this
+  asynchronous request.
+****
+
+The flink:xrRequestSceneCaptureFB function is used by an application to
+begin capturing the scene around the user.
+This is an asynchronous operation.
+
+include::{generated}/validity/protos/xrRequestSceneCaptureFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-03-09 (John Schofield)
+** Initial draft

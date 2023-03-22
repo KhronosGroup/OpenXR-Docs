@@ -1,0 +1,379 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_eye_tracking_social.adoc[]
+
+
+*Last Modified Date*::
+    2022-07-17
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Scott Ramsby, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta
+
+==== Overview
+
+This extension enables applications to obtain position and orientation of
+the user's eyes.
+It enables applications to render eyes in XR experiences.
+
+This extension is intended to drive animation of avatar eyes.
+So, for that purpose, the runtimes may: filter the poses in ways that are
+suitable for avatar eye interaction but detrimental to other use cases.
+This extension should: not be used for other eye tracking purposes.
+For interaction, <<XR_EXT_eye_gaze_interaction>> should: be used.
+
+Eye tracking data is sensitive personal information and is closely linked to
+personal privacy and integrity.
+It is strongly recommended that applications that store or transfer eye
+tracking data always ask the user for active and specific acceptance to do
+so.
+
+If a runtime supports a permission system to control application access to
+the eye tracker, then the runtime must: set the pname:isValid field to
+ename:XR_FALSE on the supplied slink:XrEyeGazeFB structure until the
+application has been allowed access to the eye tracker.
+When the application access has been allowed, the runtime may: set
+pname:isValid on the supplied slink:XrEyeGazeFB structure to ename:XR_TRUE.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemEyeTrackingPropertiesFB',type='structs',desc='System property for eye tracking',xrefs='']
+--
+
+The slink:XrSystemEyeTrackingPropertiesFB structure is defined as:
+
+include::{generated}/api/structs/XrSystemEyeTrackingPropertiesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsEyeTracking is an basetype:XrBool32, indicating if the
+  current system is capable of receiving eye tracking input.
+****
+
+An application can: inspect whether the system is capable of eye tracking
+input by extending the slink:XrSystemProperties with
+slink:XrSystemEyeTrackingPropertiesFB structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsEyeTracking, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateEyeTrackerFB.
+
+include::{generated}/validity/structs/XrSystemEyeTrackingPropertiesFB.txt[]
+
+--
+
+==== Create an eye tracker handle
+
+[open,refpage='XrEyeTrackerFB',type='handles',desc='Represents a tracker for eye gaze.']
+--
+The slink:XrEyeTrackerFB handle represents the resources for eye tracking.
+
+include::{generated}/api/handles/XrEyeTrackerFB.txt[]
+
+This handle is used for getting eye gaze using flink:xrGetEyeGazesFB
+function.
+
+An eye tracker provides eye gaze directions.
+--
+
+[open,refpage='xrCreateEyeTrackerFB',type='protos',desc='Create an eye gaze handle.',xrefs='']
+--
+An application creates an slink:XrEyeTrackerFB handle using
+flink:xrCreateEyeTrackerFB function.
+include::{generated}/api/protos/xrCreateEyeTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the eye tracker will be
+  active.
+* pname:createInfo is the slink:XrEyeTrackerCreateInfoFB used to specify the
+  eye tracker.
+* pname:eyeTracker is the returned slink:XrEyeTrackerFB handle.
+****
+
+If the system does not support eye tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateEyeTrackerFB.
+In this case, the runtime must: return ename:XR_FALSE for
+pname:supportsEyeTracking in slink:XrSystemEyeTrackingPropertiesFB when the
+function flink:xrGetSystemProperties is called, so that the application can:
+avoid creating an eye tracker.
+
+include::{generated}/validity/protos/xrCreateEyeTrackerFB.txt[]
+--
+
+[open,refpage='XrEyeTrackerCreateInfoFB',type='structs',desc='Information to create an eye gaze handle',xrefs='']
+--
+The slink:XrEyeTrackerCreateInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrEyeTrackerCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrEyeTrackerCreateInfoFB structure describes the information to
+create an slink:XrEyeTrackerFB handle.
+
+include::{generated}/validity/structs/XrEyeTrackerCreateInfoFB.txt[]
+--
+
+==== Destroy an eye tracker handle
+
+[open,refpage='xrDestroyEyeTrackerFB',type='protos',desc='Destroy an eye gaze handle',xrefs='']
+--
+flink:xrDestroyEyeTrackerFB function releases the pname:eyeTracker and the
+underlying resources when the eye tracking experience is over.
+
+include::{generated}/api/protos/xrDestroyEyeTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:eyeTracker is an slink:XrEyeTrackerFB previously created by
+  flink:xrCreateEyeTrackerFB.
+****
+
+include::{generated}/validity/protos/xrDestroyEyeTrackerFB.txt[]
+--
+
+==== Get eye gaze
+
+[open,refpage='xrGetEyeGazesFB',type='protos',desc='Locate eye gaze directions',xrefs='']
+--
+
+The flink:xrGetEyeGazesFB function is defined as:
+
+include::{generated}/api/protos/xrGetEyeGazesFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:eyeTracker is an slink:XrEyeTrackerFB previously created by
+  flink:xrCreateEyeTrackerFB.
+* pname:gazeInfo is the information to get eye gaze.
+* pname:eyeTracker is a pointer to slink:XrEyeGazesFB receiving the returned
+  eye poses and confidence.
+****
+
+The flink:xrGetEyeGazesFB function obtains pose for a user's eyes at a
+specific time and within a specific coordinate system.
+
+include::{generated}/validity/protos/xrGetEyeGazesFB.txt[]
+--
+
+[open,refpage='XrEyeGazesInfoFB',type='structs',desc='Describes the information to get eye gaze',xrefs='xrGetEyeGazesFB']
+--
+The slink:XrEyeGazesInfoFB structure describes the information to get eye
+gaze directions.
+
+include::{generated}/api/structs/XrEyeGazesInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is an slink:XrSpace within which the returned eye poses
+  will be represented.
+* pname:time is an basetype:XrTime at which the eye gaze information is
+  requested.
+****
+
+The application should: request a time equal to the predicted display time
+for the rendered frame.
+The system will employ appropriate modeling to provide eye gaze at this
+time.
+
+include::{generated}/validity/structs/XrEyeGazesInfoFB.txt[]
+--
+
+[open,refpage='XrEyeGazesFB',type='structs',desc='Returns the eye gaze directions',xrefs='xrGetEyeGazesFB']
+--
+slink:XrEyeGazesFB structure returns the state of the eye gaze directions.
+
+include::{generated}/api/structs/XrEyeGazesFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:gaze is an array of slink:XrEyeGazeFB receiving the returned eye
+  gaze directions.
+* pname:time is an basetype:XrTime time at which the returned eye gaze is
+  tracked or extrapolated to.
+  Equals the time for which the eye gaze was requested if the interpolation
+  at the time was successful.
+****
+
+include::{generated}/validity/structs/XrEyeGazesFB.txt[]
+--
+
+[open,refpage='XrEyeGazeFB',type='structs',desc='Describes the eye gaze direction',xrefs='XrEyeGazesFB']
+--
+slink:XrEyeGazeFB structure describes the validity, direction, and
+confidence of a social eye gaze observation.
+
+include::{generated}/api/structs/XrEyeGazeFB.txt[]
+
+.Member Descriptions
+****
+* pname:isValid is an basetype:XrBool32 indicating if the returned gazePose
+  is valid.
+  Callers should: check the validity of pose prior to use.
+* pname:gazePose is an slink:XrPosef describing the position and orientation
+  of the user's eye.
+  The pose is represented in the coordinate system provided by
+  slink:XrEyeGazesInfoFB::pname:baseSpace.
+* pname:gazeConfidence is a code:float value between 0 and 1 that represents
+  the confidence for eye pose.
+  A value of 0 represents no confidence in the pose returned, and a value of
+  1 means maximum confidence in the returned eye pose.
+****
+
+If the returned pname:isValid is true, the runtime must: return
+pname:gazePose and pname:gazeConfidence.
+
+If the returned pname:isValid is false, it indicates either the eye tracker
+did not detect the eye gaze or the application lost input focus.
+
+The eye gaze pose is natively oriented with +Y up, +X to the right, and -Z
+forward and not gravity-aligned, similar to the
+ename:XR_REFERENCE_SPACE_TYPE_VIEW.
+
+include::{generated}/validity/structs/XrEyeGazeFB.txt[]
+--
+
+[open,refpage='XrEyePositionFB',type='enums',desc='Enumerates eyes.',xrefs='XrEyeGazesFB']
+--
+The elink:XrEyePositionFB describes which eye in the specific position of
+the pname:gaze is in the slink:XrEyeGazesFB.
+
+include::{generated}/api/enums/XrEyePositionFB.txt[]
+
+include::{generated}/api/enums/XrEyePositionFB.comments-box.txt[]
+--
+
+==== Example code for locating eye gaze
+
+The following example code demonstrates how to locate eye gaze relative to a
+world space.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+XrSpace worldSpace;  // previously initialized, e.g. from
+                     // XR_REFERENCE_SPACE_TYPE_LOCAL
+
+XrSystemEyeTrackingPropertiesFB eyeTrackingSystemProperties{
+    XR_TYPE_SYSTEM_EYE_TRACKING_PROPERTIES_FB};
+XrSystemProperties systemProperties{
+    XR_TYPE_SYSTEM_PROPERTIES, &eyeTrackingSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!eyeTrackingSystemProperties.supportsEyeTracking) {
+    // The system does not support eye tracking.
+    return;
+}
+
+// Get function pointer for xrCreateEyeTrackerFB.
+PFN_xrCreateEyeTrackerFB pfnCreateEyeTrackerFB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateEyeTrackerFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateEyeTrackerFB)));
+
+// Create an eye tracker.
+XrEyeTrackerFB eyeTracker{};
+{
+    XrEyeTrackerCreateInfoFB createInfo{XR_TYPE_EYE_TRACKER_CREATE_INFO_FB};
+    CHK_XR(pfnCreateEyeTrackerFB(session, &createInfo, &eyeTracker));
+}
+
+// Allocate buffers to receive eyes pose and confidence data before frame
+// the loop starts.
+XrEyeGazesFB eyeGazes{XR_TYPE_EYE_GAZES_FB};
+eyeGazes.next = nullptr;
+
+// Get function pointer for xrGetEyeGazesFB.
+PFN_xrGetEyeGazesFB pfnGetEyeGazesFB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetEyeGazesFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnGetEyeGazesFB)));
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrEyeGazesInfoFB gazesInfo{XR_TYPE_EYE_GAZES_INFO_FB};
+    gazesInfo.baseSpace = worldSpace;
+    gazesInfo.time = time;
+
+    CHK_XR(pfnGetEyeGazesFB(eyeTracker, &gazesInfo, &eyeGazes));
+
+    if (eyeGazes.gaze[XR_EYE_POSITION_LEFT_FB].isValid) {
+        // ....
+    }
+}
+----
+
+*New Object Types*
+
+* slink:XrEyeTrackerFB
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_EYE_TRACKER_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_EYE_TRACKING_PROPERTIES_FB
+* ename:XR_TYPE_EYE_TRACKER_CREATE_INFO_FB
+* ename:XR_TYPE_EYE_GAZES_INFO_FB
+* ename:XR_TYPE_EYE_GAZES_FB
+
+*New Enums*
+
+* elink:XrEyePositionFB
+
+*New Structures*
+
+* slink:XrSystemEyeTrackingPropertiesFB
+* slink:XrEyeTrackerCreateInfoFB
+* slink:XrEyeGazesInfoFB
+* slink:XrEyeGazeFB
+* slink:XrEyeGazesFB
+
+*New Functions*
+
+* flink:xrCreateEyeTrackerFB
+* flink:xrDestroyEyeTrackerFB
+* flink:xrGetEyeGazesFB
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-07-17 (Igor Tceglevskii)
+** Initial extension description

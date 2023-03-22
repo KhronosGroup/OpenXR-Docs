@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2023, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type name="XrStructureType" category="enum"/>
+
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+
+        <type category="struct" name="XrSampleBaseHeader">
+            <member><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>*     <name>next</name></member>
+            <member><type>char</type>            <name>Value</name></member>
+        </type>
+    </types>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require>
+            <type name="XrSampleBaseHeader"/>
+        </require>
+    </feature>
+</registry>

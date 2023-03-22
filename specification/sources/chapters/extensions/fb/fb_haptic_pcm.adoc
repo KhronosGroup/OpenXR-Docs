@@ -1,0 +1,184 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_haptic_pcm.adoc[]
+
+
+*Last Modified Date*::
+    2022-06-27
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Aanchal Dalmia, Meta +
+    Adam Bengis, Meta
+
+==== Overview
+
+This extension enables applications to trigger haptic effects using Pulse
+Code Modulation (PCM) buffers.
+
+*Trigger haptics*
+
+An application can: trigger PCM haptic effect by creating a
+slink:XrHapticPcmVibrationFB structure and calling
+flink:xrApplyHapticFeedback.
+
+[open,refpage='XrHapticPcmVibrationFB',type='structs',desc='Haptic Effect Description',xrefs='']
+--
+The slink:XrHapticPcmVibrationFB structure is defined as:
+
+include::{generated}/api/structs/XrHapticPcmVibrationFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:bufferSize is the number of samples in the buffer.
+* pname:buffer is a pointer to a float array representing the PCM samples.
+  If you consider the haptic effect as a sampled analog audio, then this
+  buffer will contain the samples representing that effect.
+  The values in this buffer are expected to be in the range [-1.0, 1.0].
+* pname:sampleRate is the number of samples to be played per second, this is
+  used to determine the duration of the haptic effect.
+* pname:append if set to ename:XR_FALSE, any existing samples will be
+  cleared and a new haptic effect will begin, if ename:XR_TRUE, samples will
+  be appended to the currently playing effect
+* pname:samplesConsumed is a pointer to an unsigned integer; it is populated
+  by runtime, to tell the application about how many samples were consumed
+  from the input pname:buffer
+****
+
+This structure describes a PCM haptic effect.
+
+The runtime may: resample the provided samples in the pname:buffer, and
+maintain an internal buffer which should: be of
+dlink:XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB length.
+The resampling should: happen based on the pname:sampleRate and the device's
+sample rate.
+
+If pname:append is ename:XR_TRUE and a preceding
+slink:XrHapticPcmVibrationFB haptic effect on this action has not yet
+completed, then the runtime must: finish playing the preceding samples and
+then play the new haptic effect.
+If a preceding haptic event on this action has not yet completed, and either
+the preceding effect is not an slink:XrHapticPcmVibrationFB haptic effect or
+pname:append is ename:XR_FALSE, the runtime must: cancel the preceding
+incomplete effects on that action and start playing the new haptic effect,
+as usual for the core specification.
+
+When pname:append is true and a preceding slink:XrHapticPcmVibrationFB
+haptic effect on this action has not yet completed, then the application can
+provide a different pname:sampleRate in the new haptic effect.
+
+The runtime must: populate the pname:samplesConsumed with the count of the
+samples from pname:buffer which were consumed.
+The pname:samplesConsumed is populated before the
+flink:xrApplyHapticFeedback returns.
+
+include::{generated}/validity/structs/XrHapticPcmVibrationFB.txt[]
+--
+
+*Get the device sample rate*
+
+An application can: use the flink:xrGetDeviceSampleRateFB function to get
+the sample rate of the currently bound device on which the haptic action is
+triggered.
+If the application does not want any resampling to occur, then it can use
+this function to know the currently bound device sample rate, and pass that
+value in pname:sampleRate of slink:XrHapticPcmVibrationFB.
+
+[open,refpage='xrGetDeviceSampleRateFB',type='protos',desc='Get device sample rate',xrefs='XrDevicePcmSampleRateStateFB']
+--
+
+include::{generated}/api/protos/xrGetDeviceSampleRateFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:hapticActionInfo is the slink:XrHapticActionInfo used to provide
+  action and subaction paths
+* pname:deviceSampleRate is a pointer to slink:XrDevicePcmSampleRateStateFB
+  which is populated by the runtime.
+****
+
+The runtime must: use the pname:hapticActionInfo to get the sample rate of
+the currently bound device on which haptics is triggered and populate the
+pname:deviceSampleRate structure.
+The device is determined by the pname:action and pname:subaction of
+slink:XrHapticActionInfo.
+If the pname:hapticActionInfo is bound to more than one device, then runtime
+should: assume that the all these bound devices have the same
+pname:deviceSampleRate and the runtime should: return the sampleRate for any
+of those bound devices.
+If the device is invalid, the runtime must: populate the pname:sampleRate of
+slink:XrDevicePcmSampleRateStateFB as 0.
+A device can be invalid if the runtime does not find any device (which can
+play haptics) connected to the headset, or if the device does not support
+PCM haptic effect.
+
+include::{generated}/validity/protos/xrGetDeviceSampleRateFB.txt[]
+--
+
+[open,refpage='XrDevicePcmSampleRateStateFB',type='structs',desc='Information about the device sample rate',xrefs='xrGetDeviceSampleRateFB']
+--
+The slink:XrDevicePcmSampleRateStateFB structure is defined as:
+
+include::{generated}/api/structs/XrDevicePcmSampleRateStateFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:sampleRate is the sample rate of the currently bound device which
+  can play a haptic effect
+****
+
+include::{generated}/validity/structs/XrDevicePcmSampleRateStateFB.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_HAPTIC_PCM_VIBRATION_FB
+* ename:XR_TYPE_DEVICE_PCM_SAMPLE_RATE_STATE_FB
+
+*New Defines*
+
+[open,refpage='XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB',type='defines',desc='Maximum number of samples for PCM haptics',xrefs='']
+--
+include::{generated}/api/defines/XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB.txt[]
+
+dlink:XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB defines the maximum number of samples
+the runtime can store.
+--
+
+*New Enums*
+
+
+*New Structures*
+
+* slink:XrHapticPcmVibrationFB
+* slink:XrDevicePcmSampleRateStateFB
+
+
+*New Functions*
+
+* flink:xrGetDeviceSampleRateFB
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-06-27 (Aanchal Dalmia)
+** Initial extension description

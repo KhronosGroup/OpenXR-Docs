@@ -1,9 +1,10 @@
-// Copyright (c) 2017-2022, The Khronos Group Inc.
+// Copyright (c) 2017-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-= The OpenXR Specification
-Copyright (c) 2017-2022, The Khronos Group Inc.
+= The OpenXR(TM) Specification
+:regtitle: pass:q,r[^®^]
+The Khronos{regtitle} OpenXR Working Group
 :data-uri:
 :icons: font
 :toc2:
@@ -15,13 +16,21 @@ Copyright (c) 2017-2022, The Khronos Group Inc.
 :source-highlighter: prettify
 :docinfo: shared-footer
 
-Copyright (c) 2017-2022, The Khronos Group Inc.
-All rights reserved.
 
 // Include attributes for special symbols
 include::{config}/attribs.adoc[]
 
 toc::[]
+
+<<<<
+
+// Preamble "chapter"
+
+:numbered!:
+include::chapters/preamble.adoc[]
+
+:numbered:
+// Actual chapters
 
 include::chapters/introduction.adoc[]
 

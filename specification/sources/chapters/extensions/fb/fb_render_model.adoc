@@ -4,6 +4,9 @@
 
 include::{generated}/meta/XR_FB_render_model.adoc[]
 
+:uri-fb-gltf2: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html
+:uri-fb-gltf2-basisu: https://github.com/KhronosGroup/glTF/tree/main/extensions/2.0/Khronos/KHR_texture_basisu
+
 *Contributors*::
     Leonard Tsai, Meta +
     Xiang Wei, Meta +
@@ -355,11 +358,9 @@ flink:xrLoadRenderModelFB is used to load the GLTF model data using a valid
 pname:modelKey.
 flink:xrLoadRenderModelFB loads the model as a byte buffer containing the
 GLTF in the binary format (GLB).
-The GLB data must: conform to the glTF 2.0 format defined at
-https://github.com/KhronosGroup/glTF/tree/master/specification/2.0.
+The GLB data must: conform to the glTF 2.0 format defined at {uri-fb-gltf2}
 The GLB may: contain texture data in a format that requires the use of the
-`KHR_texture_basisu` GLTF extension defined at
-https://github.com/KhronosGroup/glTF/tree/master/extensions/2.0/Khronos/KHR_texture_basisu.
+`KHR_texture_basisu` GLTF extension defined at {uri-fb-gltf2-basisu}.
 Therefore, the application should: ensure it can handle this extension.
 
 If the device for the requested model is disconnected or does not match the

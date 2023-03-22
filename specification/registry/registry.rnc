@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2022, The Khronos Group Inc.
+# Copyright (c) 2013-2023, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -30,11 +30,12 @@ start =
          | Types*
          | Enums*
          | Commands*
+         | InteractionProfiles*
          | Feature*
          | Extensions*)*
     }
 
-# <vendorids> defines vendor IDs for vendors without PCI vendor IDs
+# <vendorids> defines vendor IDs for vendors without USB vendor IDs
 VendorIds = element vendorids { CommentAttr?, VendorId* }
 
 # <vendorid> defines a single vendor ID.
@@ -317,6 +318,40 @@ Command =
           }?
       }
 
+# <interaction_profiles> defines a group of interaction profiles
+InteractionProfiles =
+    element interaction_profiles { CommentAttr?, InteractionProfile* }
+
+# <interaction_profile> defines a single component path in an interaction profile
+InteractionProfileComponentElt =
+    element component {
+        attribute user_path { XrPathString_t }?,
+        attribute subpath { XrPathString_t },
+        attribute type { XrInteractionComponentType_t },
+        attribute system { "true" }?
+    }
+
+# <interaction_profile> defines a single interaction profile path
+InteractionProfile =
+    element interaction_profile {
+        # actually the path
+        attribute name { XrPathString_t },
+        attribute title { text },
+        CommentAttr?,
+
+        element user_path {
+            attribute path { XrPathString_t }
+        }*,
+
+        InteractionProfileComponentElt*
+    }
+
+ExtendInteractionProfileElt =
+    element extend {
+        attribute interaction_profile_path { XrPathString_t },
+        InteractionProfileComponentElt*
+    }
+
 # Each <feature> defines the interface of an API version.
 Feature =
     element feature {
@@ -341,7 +376,7 @@ Extensions = element extensions { CommentAttr?, Extension* }
 # tag, but with slightly different attributes.
 Extension =
     element extension {
-        NameAttr,
+        attribute name { XrExtName_t },
         attribute number { IntegerOrHex_t },
         ProtectAttr?,
         # attribute author { text }?,
@@ -360,13 +395,14 @@ Extension =
              attribute feature { text }?,
              ExtensionNameAttr?,
              CommentAttr?,
-             (InterfaceElement | CommentElt)*
+             (InterfaceElement | CommentElt | ExtendInteractionProfileElt)*
          }
          | element remove {
                attribute api { text }?,
                CommentAttr?,
                (InterfaceElement | CommentElt)*
-           })*
+           }
+           )*
     }
 # Contents of a <require> / <remove> tag, defining a group
 # of features to require or remove.
@@ -407,8 +443,8 @@ InterfaceElement =
              CommentAttr)
           | (# Extending another
              attribute name { XrUpperSnakeCase_t },
-             (attribute offset { xsd:integer } |
-             attribute alias { XrUpperSnakeCase_t }),
+             (attribute offset { xsd:integer }
+              | attribute alias { XrUpperSnakeCase_t }),
              attribute extends { XrTypeNameRef_t },
              attribute dir { "-" }?,
 
@@ -419,13 +455,17 @@ InterfaceElement =
              attribute extends { XrTypeNameRef_t },
              CommentAttr?)
       }
+    | element interaction_profile {
+          # actually the path
+          attribute name { XrPathString_t }
+      }
 
 # What is used in the name attribute of the platform defines include.
 PlatformDefinesName = "openxr_platform_defines"
 
 # Data types - all end in _t
 MemberOrParamName_t =
-    xsd:NCName { pattern = "[a-z]+([A-Z]+[a-z]*)*" }
+    xsd:NCName { pattern = "[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*" }
 VendorId_t = xsd:ID { pattern = "[A-Z]+" }
 VendorIdRef_t = xsd:IDREF { pattern = "[A-Z]+" }
 HexValue_t = xsd:token { pattern = "0[xX][0-9a-fA-F]+" }
@@ -445,9 +485,15 @@ XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 
 XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+XrExtNameList_t =
+    xsd:token {
+        pattern =
+            "XR_[A-Z]+(_[A-Za-z0-9]+)+(,XR_[A-Z]+(_[A-Za-z0-9]+)+)*"
+    }
 
-
-XrExtNameList_t = xsd:token { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+(,XR_[A-Z]+(_[A-Za-z0-9]+)+)*" }
+XrPathString_t = xsd:token { pattern = "/[a-z0-9_]+(/[a-z0-9_]+)*" }
+XrInteractionComponentType_t =
+    xsd:NCName { pattern = "XR_ACTION_TYPE_[A-Z0-9]+(_INPUT|_OUTPUT)" }
 
 ReturnCodes_t =
     xsd:token {
@@ -490,5 +536,5 @@ OptionalAttr = attribute optional { "true" }
 
 # Repeatedly used elements
 TypeRefElt = element type { xsd:NCName }
-ParamOrMemberNameElt = element name { xsd:NCName }
+ParamOrMemberNameElt = element name { MemberOrParamName_t }
 CommentElt = element comment { text }

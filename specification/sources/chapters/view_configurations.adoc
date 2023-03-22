@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[view_configurations]]
@@ -271,11 +271,13 @@ std::vector<XrViewConfigurationType> configurationTypes(configurationCount);
 CHK_XR(xrEnumerateViewConfigurations(instance, system, configurationCount, &configurationCount, configurationTypes.data()));
 
 bool configFound = false;
+XrViewConfigurationType viewConfig = XR_VIEW_CONFIGURATION_TYPE_MAX_ENUM;
 for(uint32_t i = 0; i < configurationCount; ++i)
 {
     if (configurationTypes[i] == XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO)
     {
         configFound = true;
+        viewConfig = configurationTypes[i];
         break;  // Pick the first supported, i.e. preferred, view configuration.
     }
 }
@@ -286,21 +288,21 @@ if (!configFound)
 // Get detailed information of each view element.
 uint32_t viewCount;
 CHK_XR(xrEnumerateViewConfigurationViews(instance, system,
-    XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
+    viewConfig,
     0,
     &viewCount,
     nullptr));
 
 std::vector<XrViewConfigurationView> configViews(viewCount, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
 CHK_XR(xrEnumerateViewConfigurationViews(instance, system,
-    XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
+    viewConfig,
     viewCount,
     &viewCount,
     configViews.data()));
 
 // Set the primary view configuration for the session.
 XrSessionBeginInfo beginInfo = {XR_TYPE_SESSION_BEGIN_INFO};
-beginInfo.primaryViewConfigurationType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
+beginInfo.primaryViewConfigurationType = viewConfig;
 CHK_XR(xrBeginSession(session, &beginInfo));
 
 // Allocate a buffer according to viewCount.
@@ -324,6 +326,7 @@ while (!quit)
 
     if (frameState.shouldRender) {
         XrViewLocateInfo viewLocateInfo{XR_TYPE_VIEW_LOCATE_INFO};
+        viewLocateInfo.viewConfigurationType = viewConfig;
         viewLocateInfo.displayTime = frameState.predictedDisplayTime;
         viewLocateInfo.space = sceneSpace;
 

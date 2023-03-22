@@ -1,0 +1,94 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_composition_layer_depth_test.adoc[]
+
+*Contributors*::
+
+    Guodong Rong, Meta +
+    Cass Everitt, Meta +
+    Jian Zhang, Meta
+
+*Overview*
+
+This extension enables depth-tested layer composition.
+The compositor will maintain a depth buffer in addition to a color buffer.
+The depth buffer is cleared to a depth corresponding to the infinitely far
+distance at the beginning of composition.
+
+When composing each layer, if depth testing is requested, the incoming layer
+depths are transformed into the compositor window space depth and compared
+to the depth stored in the frame buffer.
+After the transformation, incoming depths that are outside of the range of
+the compositor window space depth must: be clamped.
+If the depth test fails, the fragment is discarded.
+If the depth test passes the depth buffer is updated if depth writes are
+enabled, and color processing continues.
+
+Depth testing requires depth values for the layer.
+For projection layers, this can be supplied via the
+`<<XR_KHR_composition_layer_depth>>` extension.
+For geometric primitive layers, the runtime computes the depth of the sample
+directly from the layer parameters.
+An slink:XrCompositionLayerDepthTestFB chained to layers without depth must:
+be ignored.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_FB
+
+*New Enums*
+
+[open,refpage='XrCompareOpFB',desc='Compare Operation',type='enums']
+--
+The possible comparison operations are specified by the elink:XrCompareOpFB
+enumeration.
+
+include::{generated}/api/enums/XrCompareOpFB.txt[]
+
+include::{generated}/api/enums/XrCompareOpFB.comments-box.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrCompositionLayerDepthTestFB',desc='specifies depth test for composition layer',type='structs',xrefs='XrCompositionLayerBaseHeader']
+--
+The slink:XrCompositionLayerDepthTestFB structure is defined as:
+
+include::{generated}/api/structs/XrCompositionLayerDepthTestFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:depthMask is a boolean indicating whether writes to the composition
+  depth buffer are enabled.
+* pname:compareOp is an enum that indicates which compare operation is used
+  in the depth test.
+****
+
+To specify that a layer should be depth tested, a
+slink:XrCompositionLayerDepthTestFB structure must: be passed via the
+polymorphic slink:XrCompositionLayerBaseHeader structure's pname:next
+parameter chain.
+
+
+include::{generated}/validity/structs/XrCompositionLayerDepthTestFB.txt[]
+--
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-02-17 (Cass Everitt)
+** Initial draft

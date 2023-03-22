@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[spaces]]
@@ -346,11 +346,11 @@ include::{generated}/api/protos/xrEnumerateReferenceSpaces.txt[]
 ****
 * pname:session is a handle to an slink:XrSession previously created with
   flink:xrCreateSession.
-* pname:spaceCapacityInput is the capacity of the spaces array, or 0 to
-  indicate a request to retrieve the required capacity.
-* pname:spaceCountOutput is a pointer to the count of spaces written, or a
-  pointer to the required capacity in the case that pname:spaceCapacityInput
-  is insufficient.
+* pname:spaceCapacityInput is the capacity of the pname:spaces array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:spaceCountOutput is a pointer to the count of pname:spaces written,
+  or a pointer to the required capacity in the case that
+  pname:spaceCapacityInput is insufficient.
 * pname:spaces is a pointer to an application-allocated array that will be
   filled with the enumerant of each supported reference space.
   It can: be code:NULL if pname:spaceCapacityInput is 0.
@@ -487,7 +487,7 @@ include::{generated}/validity/structs/XrActionSpaceCreateInfo.txt[]
 
 ==== xrDestroySpace
 
-[open,refpage='xrDestroySpace',desc='Creates a space based on a pose action',type='protos',xrefs='XrSpace xrCreateReferenceSpace xrCreateActionSpace']
+[open,refpage='xrDestroySpace',desc='Destroys an XrSpace',type='protos',xrefs='XrSpace xrCreateReferenceSpace xrCreateActionSpace']
 --
 The flink:xrDestroySpace function is defined as:
 

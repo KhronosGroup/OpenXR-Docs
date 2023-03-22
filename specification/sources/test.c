@@ -3,7 +3,7 @@
  * If this code is actually run, it just prints out some enum
  * values and possibly complains about some type conversions.
  *
- * Copyright 2017-2020, The Khronos Group Inc.
+ * Copyright 2017-2023, The Khronos Group Inc.
  * SPDX-License-Identifier: Apache-2.0
  *
  */

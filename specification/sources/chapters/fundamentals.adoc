@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -206,10 +206,9 @@ one runtime can be active at any given time.
 [[extensions]]
 === Extensions
 
-OpenXR is an extensible API that can: grow through the addition of new
-features.
-Similar to other Khronos APIs, extensions can: be used to expose new OpenXR
-functions or modify the behavior of existing OpenXR functions.
+OpenXR is an extensible API that grows through the addition of new features.
+Similar to other Khronos APIs, extensions may: expose new OpenXR functions
+or modify the behavior of existing OpenXR functions.
 Extensions are optional and therefore must: be enabled by the application
 before the extended functionality is made available.
 Because extensions are optional, they may: be implemented only on a subset
@@ -912,19 +911,23 @@ size parameters:
   the function sets pname:elementCountOutput.
   pname:elementCountOutput must: be a valid pointer if the function uses
   parameter form.
-* Where the pname:elementCapacityInput is code:0, the function sets
-  pname:elementCountOutput to the required size in number of elements and
-  must: return ename:XR_SUCCESS.
-  pname:elements is ignored.
+* It is valid to pass code:0 for the pname:elementCapacityInput parameter
+  (i.e. capacity of 0 does not return ename:XR_ERROR_SIZE_INSUFFICIENT).
+  The function sets pname:elementCountOutput to the required size in number
+  of elements.
+* If code:0 is passed for the pname:elementCapacityInput parameter, the
+  pname:elements parameter is ignored (any value passed is considered valid
+  usage).
 * Where the pname:elementCapacityInput is non-zero but less than required,
   the function sets pname:elementCountOutput to the required capacity, and
   must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
-  The data in pname:elements is undefined.
-* Where the pname:elementCapacityInput is non-zero and the function returned
+  The data in the array pname:elements is undefined.
+* Where the pname:elementCapacityInput is non-zero and the function returns
   successfully, the function sets pname:elementCountOutput to the count of
   the elements that have been written to pname:elements.
 * Upon a failure for reasons unrelated to the element array capacity, the
-  contents of pname:elementCountOutput and pname:elements are undefined.
+  contents of the values pointed to by pname:elementCountOutput and
+  pname:elements are undefined.
 * In the case that the element array refers to a string (is of type
   code:char*), pname:elementCapacityInput and pname:elementCountOutput refer
   to the string code:strlen plus code:1 for a code:NULL terminator.
@@ -961,7 +964,7 @@ include::{generated}/api/basetypes/XrTime.txt[]
 basetype:XrTime is a base value type that represents time as a signed 64-bit
 integer, representing the monotonically-increasing count of nanoseconds that
 have elapsed since a runtime-chosen epoch.
-basetype:XrTime always represents the time elasped since that constant
+basetype:XrTime always represents the time elapsed since that constant
 epoch, rather than a duration or a time point relative to some moving epoch
 such as vsync time, etc.
 Durations are instead represented by basetype:XrDuration.
@@ -1368,7 +1371,7 @@ flipped vertically.
 
 === Boolean Values
 
-[open,refpage='XrBool32',desc='Boolean value',type='basetypes']
+[open,refpage='XrBool32',desc='Boolean value',type='basetypes',xrefs='XR_TRUE XR_FALSE']
 --
 include::{generated}/api/basetypes/XrBool32.txt[]
 
@@ -1382,6 +1385,16 @@ The only valid values are the following:
 * ename:XR_TRUE represents a true value.
 * ename:XR_FALSE represents a false value.
 ****
+--
+
+[open,refpage='XR_TRUE',desc='True enum/define',type='enums',xrefs='XrBool32 XR_FALSE']
+--
+include::{generated}/api/enums/XR_TRUE.txt[]
+--
+
+[open,refpage='XR_FALSE',desc='False enum/define',type='enums',xrefs='XrBool32 XR_TRUE']
+--
+include::{generated}/api/enums/XR_FALSE.txt[]
 --
 
 [[events]]
@@ -1406,10 +1419,7 @@ beginning with an slink:XrEventDataBaseHeader.
 XrInstance instance; // previously initialized
 
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event;
-// Only the header needs to be initialized.
-event.type = XR_TYPE_EVENT_DATA_BUFFER;
-event.next = nullptr;
+XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
     switch (event.type) {

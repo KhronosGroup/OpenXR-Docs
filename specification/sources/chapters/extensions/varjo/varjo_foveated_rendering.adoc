@@ -94,8 +94,8 @@ chain slink:XrFoveatedViewConfigurationViewVARJO to
 slink:XrViewConfigurationView and set pname:foveatedRenderingActive to
 ename:XR_TRUE.
 Since an application using foveated rendering with this extension has to
-render 4 views, `<<XR_VARJO_quad_views>>` must: be enabled along with this
-extension when slink:XrInstance is created.
+render four views, `<<XR_VARJO_quad_views>>` must: be enabled along with
+this extension when slink:XrInstance is created.
 
 First and second views are non foveated views (covering whole field of view
 of HMD), third (left eye) and fourth (right eye) are foveated e.g. following
@@ -147,8 +147,8 @@ if (foveatedRenderingProperties.supportsFoveatedRendering && viewConfigType == X
 
 .Note
 ====
-Applications using this extension are encouraged to create 2 sets of
-swapchains or one big enough set of swapchains and 2 sets of viewports.
+Applications using this extension are encouraged to create two sets of
+swapchains or one big enough set of swapchains and two sets of viewports.
 One set will be used when rendering gaze is not available and other one will
 be used when foveated rendering and rendering gaze is available.
 Using foveated textures may: not provide optimal visual quality when
@@ -238,6 +238,7 @@ include::{generated}/validity/structs/XrViewLocateFoveatedRenderingVARJO.txt[]
 XrSession session; // previously populated
 XrSpace appSpace; // previously populated
 XrFrameState frameState; // previously populated by xrWaitFrame
+XrViewConfigurationType viewConfigType; // previously populated
 std::vector<XrView> views; // previously populated/resized to the correct size
 bool foveationActive; // previously populated, as in the previous example
 
@@ -245,6 +246,7 @@ XrViewState viewState{XR_TYPE_VIEW_STATE};
 uint32_t viewCapacityInput = static_cast<uint32_t>(views.size());
 uint32_t viewCountOutput;
 XrViewLocateInfo viewLocateInfo{XR_TYPE_VIEW_LOCATE_INFO};
+viewLocateInfo.viewConfigurationType = viewConfigType;
 viewLocateInfo.displayTime = frameState.predictedDisplayTime;
 viewLocateInfo.space = appSpace;
 XrViewLocateFoveatedRenderingVARJO viewLocateFoveatedRendering{XR_TYPE_VIEW_LOCATE_FOVEATED_RENDERING_VARJO};
@@ -278,3 +280,5 @@ elink:XrReferenceSpaceType enumeration is extended with:
 ** Initial extension description
 * Revision 2, 2021-04-13 (Ryan Pavlik, Collabora, and Sergiy Dubovik)
 ** Update sample code so it is buildable
+* Revision 3, 2022-02-21 (Denny Rönngren)
+** Update sample code with a missing struct field initialization

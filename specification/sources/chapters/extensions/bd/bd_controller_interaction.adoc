@@ -1,0 +1,118 @@
+// Copyright (c) 2023 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2023-01-04
+
+IP Status*::
+    No known IP claims.
+
+*Contributors*::
+ Baolin Fu, Bytedance +
+ Oliver Xu, Bytedance +
+ Berton Jia, Bytedance
+
+*Overview*
+
+This extension defines the interaction profile for PICO Neo3 and PICO 4
+Controllers.
+
+*BD(Bytedance) Controller interaction profile*
+
+Interaction profile path for PICO Neo3:
+
+* pathname:/interaction_profiles/bytedance/pico_neo3_controller
+
+Interaction profile path for PICO 4:
+
+* pathname:/interaction_profiles/bytedance/pico4_controller
+
+Valid for user paths for both pico_neo3_controller and pico4_controller:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths for pico_neo3_controller:
+
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+* subpathname:/input/menu/click
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+Supported component paths for pico4_controller:
+
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+* subpathname:/input/system/click (may: not be available for application
+use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+Be careful with the following difference:
+
+* pico_neo3_controller supports /input/menu/click both on /user/hand/left
+  and /user/hand/right.
+* pico4_controller supports /input/menu/click only on /user/hand/left.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-01-04 (Baolin Fu)
+
+** Initial extension description

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2022, The Khronos Group Inc.
+// Copyright (c) 2015-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -440,13 +440,13 @@ table:
                      necessary>>.
 | tlink{cl}        | Generates a cross-reference or link to the definition
                      of the OpenXR type in the macro argument. Example:
-                     tlink{cl}PFN_xrCreateInstance ->
-                     tlink:PFN_xrCreateInstance. This is only used for
+                     tlink{cl}PFN_xrVoidFunction ->
+                     tlink:PFN_xrVoidFunction. This is only used for
                      function pointer types at present.
 | tname{cl}        | Formats the macro argument like tlink{cl}. Does not
                      generate a cross-reference. Example:
-                     tname{cl}PFN_xrCreateInstance ->
-                     tname:PFN_xrCreateInstance.
+                     tname{cl}PFN_xrVoidFunction ->
+                     tname:PFN_xrVoidFunction.
 
                      Only use this macro <<markup-macros-api-name, when
                      necessary>>.
@@ -461,10 +461,9 @@ table:
 
                      Only use this macro <<markup-macros-api-name, when
                      necessary>>.
-| basetype{cl}     | Formats the macro argument like a basic scalar type
-                     or API handle name. Not validated. Examples:
-                     basetype{cl}XrBool32 -> basetype:XrBool32,
-                     basetype{cl}XrSize -> basetype:XrSize.
+| basetype{cl}     | Formats the macro argument like a basic scalar type.
+                     Example:
+                     basetype{cl}XrBool32 -> basetype:XrBool32
 | code{cl}         | Formats the macro argument as a code sample. Primarily
                      used for SPIR-V keywords and builtin C types. Examples:
                      code{cl}uint32_t -> code:uint32_t,

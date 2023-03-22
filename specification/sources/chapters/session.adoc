@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[session]]
@@ -29,8 +29,8 @@ graphics API and passing them into flink:xrCreateSession.
 The newly created session is in the <<session_idle,
 ename:XR_SESSION_STATE_IDLE>> state.
 
-2. The application then monitors for session state changes via
-slink:XrEventDataSessionStateChanged events.
+2. The application can regularly call flink:xrPollEvent to monitor for
+session state changes via slink:XrEventDataSessionStateChanged events.
 
 3. When the runtime determines that the system is ready to start
 transitioning to this session's XR content, the application receives a

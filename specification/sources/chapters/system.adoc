@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 [[system]]
@@ -144,9 +144,7 @@ include::{generated}/validity/structs/XrSystemGetInfo.txt[]
 ----
 XrInstance instance; // previously initialized
 
-XrSystemGetInfo system_get_info;
-memset(&system_get_info, 0, sizeof(system_get_info));
-system_get_info.type = XR_TYPE_SYSTEM_GET_INFO;
+XrSystemGetInfo system_get_info = {XR_TYPE_SYSTEM_GET_INFO};
 system_get_info.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
 
 XrSystemId systemId;
@@ -215,6 +213,11 @@ include::{generated}/validity/structs/XrSystemProperties.txt[]
 
 [open,refpage='XrSystemGraphicsProperties',desc='Graphics-related properties of a particular system',type='structs',xrefs='XrSystemId xrGetSystem xrGetSystemProperties XrSystemProperties XrSystemTrackingProperties']
 --
+
+The runtime must: report a valid vendor ID for the system.
+The vendor ID must: be either the USB vendor ID defined for the physical
+device or a Khronos vendor ID.
+
 The slink:XrSystemGraphicsProperties structure is defined as:
 
 include::{generated}/api/structs/XrSystemGraphicsProperties.txt[]

@@ -324,8 +324,7 @@ if (result == XR_SUCCESS) {
             // If marker appeared for the first time then set some settings and
             // add it to collection
             if(0 == markerSpaces.count(id)) {
-                XrMarkerSpaceCreateInfoVARJO spaceInfo{0};
-                spaceInfo.type = XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO;
+                XrMarkerSpaceCreateInfoVARJO spaceInfo{XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO};
                 spaceInfo.markerId = id;
                 spaceInfo.poseInMarkerSpace = XrPosef{0};
                 spaceInfo.poseInMarkerSpace.orientation.w = 1.0f;

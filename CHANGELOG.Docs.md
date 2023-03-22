@@ -1,7 +1,7 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
 <!--
-Copyright (c) 2019-2022, The Khronos Group Inc.
+Copyright (c) 2019-2023, The Khronos Group Inc.
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -16,6 +16,237 @@ any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR Specification 1.0.27 (2023-03-21)
+
+This release contains a large list of improvements, including interaction
+profile definitions in machine-readable format in the XML, consistent tool-based
+formatting of the XML, several spec cleanups and clarifications, and a wide
+variety of new vendor and multi-vendor extensions.
+
+- Registry
+  - Add interaction profile definitions to `xr.xml`
+    ([internal MR 2485](https://gitlab.khronos.org/openxr/openxr/merge_requests/2485))
+  - Chore: Format the full XML API registry with
+    [PrettyRegistryXML](https://github.com/rpavlik/PrettyRegistryXml), making some
+    small changes by hand to clean up.
+    ([internal MR 2540](https://gitlab.khronos.org/openxr/openxr/merge_requests/2540),
+    [internal MR 2329](https://gitlab.khronos.org/openxr/openxr/merge_requests/2329),
+    [OpenXR-SDK-Source PR 373](https://github.com/KhronosGroup/OpenXR-SDK-Source/pull/373),
+    [OpenXR-Docs PR 14](https://github.com/KhronosGroup/OpenXR-Docs/pull/14),
+    [OpenXR-CTS PR 50](https://github.com/KhronosGroup/OpenXR-CTS/pull/50),
+    [OpenXR-SDK PR 12](https://github.com/KhronosGroup/OpenXR-SDK/pull/12))
+  - Document how to generate a standalone header file for an extension.
+    ([internal MR 2627](https://gitlab.khronos.org/openxr/openxr/merge_requests/2627))
+  - Extension reservation: Register author ID and reserve vendor extensions for
+    Logitech.
+    ([internal MR 2504](https://gitlab.khronos.org/openxr/openxr/merge_requests/2504))
+  - Extension reservation: Reserve an extension number for a multi-vendor
+    extension.
+    ([internal MR 2520](https://gitlab.khronos.org/openxr/openxr/merge_requests/2520))
+  - Extension reservation: Reserve an extension for `XR_EXT_hand_tracking_usage`
+    ([internal MR 2550](https://gitlab.khronos.org/openxr/openxr/merge_requests/2550))
+  - Extension reservation: Reserve extension id 430 for `XR_EXT_plane_detection`
+    ([internal MR 2565](https://gitlab.khronos.org/openxr/openxr/merge_requests/2565))
+  - Extension reservation: Reserve vendor extensions for Monado.
+    ([internal MR 2613](https://gitlab.khronos.org/openxr/openxr/merge_requests/2613))
+  - Extension reservation: Reserve vendor extensions for ACER.
+    ([OpenXR-Docs PR 142](https://github.com/KhronosGroup/OpenXR-Docs/pull/142))
+  - Extension reservation: Reserve a vendor extension for OPPO.
+    ([OpenXR-Docs PR 145](https://github.com/KhronosGroup/OpenXR-Docs/pull/145))
+  - New vendor extension: `XR_FB_composition_layer_depth_test`
+    ([internal MR 2208](https://gitlab.khronos.org/openxr/openxr/merge_requests/2208),
+    [internal issue 1657](https://gitlab.khronos.org/openxr/openxr/issues/1657))
+  - New vendor extension: `XR_META_foveation_eye_tracked`
+    ([internal MR 2239](https://gitlab.khronos.org/openxr/openxr/merge_requests/2239),
+    [internal MR 2273](https://gitlab.khronos.org/openxr/openxr/merge_requests/2273),
+    [internal MR 2332](https://gitlab.khronos.org/openxr/openxr/merge_requests/2332))
+  - New vendor extension: `XR_QCOM_tracking_optimization_settings`
+    ([internal MR 2261](https://gitlab.khronos.org/openxr/openxr/merge_requests/2261),
+    [internal issue 1703](https://gitlab.khronos.org/openxr/openxr/issues/1703))
+  - New vendor extension: `XR_META_local_dimming`
+    ([internal MR 2267](https://gitlab.khronos.org/openxr/openxr/merge_requests/2267),
+    [internal MR 2595](https://gitlab.khronos.org/openxr/openxr/merge_requests/2595))
+  - New vendor extension: `XR_FB_spatial_entity_sharing`
+    ([internal MR 2274](https://gitlab.khronos.org/openxr/openxr/merge_requests/2274))
+  - New vendor extension: `XR_FB_scene_capture`
+    ([internal MR 2286](https://gitlab.khronos.org/openxr/openxr/merge_requests/2286))
+  - New vendor extension: `XR_FB_spatial_entity_storage_batch`
+    ([internal MR 2312](https://gitlab.khronos.org/openxr/openxr/merge_requests/2312))
+  - New vendor extension: `XR_FB_haptic_amplitude_envelope`
+    ([internal MR 2326](https://gitlab.khronos.org/openxr/openxr/merge_requests/2326))
+  - New vendor extension: `XR_FB_touch_controller_pro`
+    ([internal MR 2327](https://gitlab.khronos.org/openxr/openxr/merge_requests/2327),
+    [internal issue 1916](https://gitlab.khronos.org/openxr/openxr/issues/1916))
+  - New vendor extension: `XR_FB_haptic_pcm`
+    ([internal MR 2329](https://gitlab.khronos.org/openxr/openxr/merge_requests/2329))
+  - New vendor extension: `FB_face_tracking`
+    ([internal MR 2334](https://gitlab.khronos.org/openxr/openxr/merge_requests/2334),
+    [internal MR 2539](https://gitlab.khronos.org/openxr/openxr/merge_requests/2539))
+  - New vendor extension: `XR_FB_eye_tracking_social`
+    ([internal MR 2336](https://gitlab.khronos.org/openxr/openxr/merge_requests/2336),
+    [internal MR 2576](https://gitlab.khronos.org/openxr/openxr/merge_requests/2576))
+  - New vendor extension: `XR_FB_body_tracking`
+    ([internal MR 2339](https://gitlab.khronos.org/openxr/openxr/merge_requests/2339),
+    [internal MR 2575](https://gitlab.khronos.org/openxr/openxr/merge_requests/2575))
+  - New vendor extension: `XR_OCULUS_external_camera`
+    ([internal MR 2397](https://gitlab.khronos.org/openxr/openxr/merge_requests/2397),
+    [internal MR 2344](https://gitlab.khronos.org/openxr/openxr/merge_requests/2344))
+  - New vendor extension: `XR_FB_spatial_entity_user`
+    ([internal MR 2407](https://gitlab.khronos.org/openxr/openxr/merge_requests/2407))
+  - New vendor extension: `XR_FB_touch_controller_proximity`
+    ([internal MR 2412](https://gitlab.khronos.org/openxr/openxr/merge_requests/2412))
+  - New vendor extension: `XR_ML_global_dimmer`
+    ([internal MR 2461](https://gitlab.khronos.org/openxr/openxr/merge_requests/2461))
+  - New vendor extension: `XR_ML_frame_end_info`
+    ([internal MR 2462](https://gitlab.khronos.org/openxr/openxr/merge_requests/2462),
+    [internal MR 2536](https://gitlab.khronos.org/openxr/openxr/merge_requests/2536))
+  - New vendor extension: `XR_ML_compat`
+    ([internal MR 2473](https://gitlab.khronos.org/openxr/openxr/merge_requests/2473))
+  - New vendor extension: `XR_EXT_local_floor`
+    ([internal MR 2503](https://gitlab.khronos.org/openxr/openxr/merge_requests/2503),
+    [internal issue 746](https://gitlab.khronos.org/openxr/openxr/issues/746),
+    [internal issue 1606](https://gitlab.khronos.org/openxr/openxr/issues/1606),
+    [OpenXR-Docs issue 103](https://github.com/KhronosGroup/OpenXR-Docs/issues/103))
+  - New vendor extension: `XR_BD_controller_interaction`
+    ([internal MR 2527](https://gitlab.khronos.org/openxr/openxr/merge_requests/2527))
+  - New vendor extension: `XR_MNDX_force_feedback_curl`
+    ([OpenXR-Docs PR 136](https://github.com/KhronosGroup/OpenXR-Docs/pull/136))
+  - Register author ID for Matthieu Bucchianeri.
+    ([OpenXR-Docs PR 143](https://github.com/KhronosGroup/OpenXR-Docs/pull/143))
+  - Rename tag name to a short one for ByteDance.
+    ([internal MR 2502](https://gitlab.khronos.org/openxr/openxr/merge_requests/2502))
+  - Schema: Add initial tests for Schematron rules.
+    ([internal MR 2512](https://gitlab.khronos.org/openxr/openxr/merge_requests/2512))
+  - Schema: Add author ID schematron checks and change duplicate name/number report
+    to an assert
+    ([internal MR 2514](https://gitlab.khronos.org/openxr/openxr/merge_requests/2514))
+  - Schema: Fix Relax-NG checks of naming convention, and add naming convention
+    checks to Schematron.
+    ([internal MR 2538](https://gitlab.khronos.org/openxr/openxr/merge_requests/2538))
+  - Schematron: Update extension naming rule to allow for vendor tags to be
+    followed by an X for experimental and a version number
+    ([internal MR 2518](https://gitlab.khronos.org/openxr/openxr/merge_requests/2518))
+  - scripts: Let `deprecated` override `provisional` when choosing extension table
+    of contents section.
+    ([internal MR 2547](https://gitlab.khronos.org/openxr/openxr/merge_requests/2547))
+  - scripts: Fix leftover exclusion of `extensions/meta` from `checkMarkup` now
+    that it no longer generated files.
+    ([internal MR 2560](https://gitlab.khronos.org/openxr/openxr/merge_requests/2560))
+- Specification
+  - Add missing "IP Status" data to `XR_FB_display_refresh_rate`.
+    ([internal MR 2439](https://gitlab.khronos.org/openxr/openxr/merge_requests/2439))
+  - Added the function call for `xrPollEvent` to the typical XR app sample.
+    ([internal MR 2605](https://gitlab.khronos.org/openxr/openxr/merge_requests/2605))
+  - Clarify that passing `0` for `elementCapacityInput` in two-call idiom functions
+    is explicitly valid usage, but there may be other reasons that an error is
+    returned.
+    ([internal MR 2492](https://gitlab.khronos.org/openxr/openxr/merge_requests/2492))
+  - Clarify that system vendor ids match USB vendor ids.
+    ([internal MR 2634](https://gitlab.khronos.org/openxr/openxr/merge_requests/2634))
+  - Clean up markup of various two-call idiom mentions in the core.
+    ([internal MR 2619](https://gitlab.khronos.org/openxr/openxr/merge_requests/2619))
+  - Fix use of normatives in paragraph introducing the concept of extensions.
+    ([internal MR 2466](https://gitlab.khronos.org/openxr/openxr/merge_requests/2466))
+  - Fix a language error in `xrDestroySpace` description language: it destroys a
+    space, not creates one.
+    ([internal MR 2516](https://gitlab.khronos.org/openxr/openxr/merge_requests/2516))
+  - Fix broken internal links in `XR_FB_triangle_mesh` specification.
+    ([internal MR 2593](https://gitlab.khronos.org/openxr/openxr/merge_requests/2593))
+  - Fix typo in description of function pointer naming in Appendix.
+    ([internal MR 2599](https://gitlab.khronos.org/openxr/openxr/merge_requests/2599))
+  - Fix typos in Fundamentals chapter
+    ([internal MR 2608](https://gitlab.khronos.org/openxr/openxr/merge_requests/2608))
+  - Fixed sample code which was missing specifying the view configuration type to
+    locate with `xrLocateViews`
+    ([internal MR 2624](https://gitlab.khronos.org/openxr/openxr/merge_requests/2624))
+  - Include documentation of `XR_TRUE` and `XR_FALSE` values in spec and reference
+    pages.
+    ([internal MR 2466](https://gitlab.khronos.org/openxr/openxr/merge_requests/2466))
+  - Make structure initialization in sample code more consistent.
+    ([internal MR 2557](https://gitlab.khronos.org/openxr/openxr/merge_requests/2557))
+  - New vendor extension specification: `XR_FB_composition_layer_depth_test`
+    ([internal MR 2208](https://gitlab.khronos.org/openxr/openxr/merge_requests/2208),
+    [internal issue 1657](https://gitlab.khronos.org/openxr/openxr/issues/1657))
+  - New vendor extension specification: `XR_META_foveation_eye_tracked`
+    ([internal MR 2239](https://gitlab.khronos.org/openxr/openxr/merge_requests/2239),
+    [internal MR 2273](https://gitlab.khronos.org/openxr/openxr/merge_requests/2273),
+    [internal MR 2332](https://gitlab.khronos.org/openxr/openxr/merge_requests/2332))
+  - New vendor extension specification: `XR_QCOM_tracking_optimization_settings`
+    ([internal MR 2261](https://gitlab.khronos.org/openxr/openxr/merge_requests/2261),
+    [internal issue 1703](https://gitlab.khronos.org/openxr/openxr/issues/1703))
+  - New vendor extension specification: `XR_META_local_dimming`
+    ([internal MR 2267](https://gitlab.khronos.org/openxr/openxr/merge_requests/2267))
+  - New vendor extension specification: `XR_FB_spatial_entity_sharing`
+    ([internal MR 2274](https://gitlab.khronos.org/openxr/openxr/merge_requests/2274))
+  - New vendor extension specification: `XR_FB_scene_capture`
+    ([internal MR 2286](https://gitlab.khronos.org/openxr/openxr/merge_requests/2286))
+  - New vendor extension specification: `XR_FB_spatial_entity_storage_batch`
+    ([internal MR 2312](https://gitlab.khronos.org/openxr/openxr/merge_requests/2312))
+  - New vendor extension specification: `XR_FB_haptic_amplitude_envelope`
+    ([internal MR 2326](https://gitlab.khronos.org/openxr/openxr/merge_requests/2326))
+  - New vendor extension specification: `XR_FB_touch_controller_pro`
+    ([internal MR 2327](https://gitlab.khronos.org/openxr/openxr/merge_requests/2327))
+  - New vendor extension specification: `XR_FB_haptic_pcm`
+    ([internal MR 2329](https://gitlab.khronos.org/openxr/openxr/merge_requests/2329))
+  - New vendor extension specification: `XR_FB_face_tracking`
+    ([internal MR 2334](https://gitlab.khronos.org/openxr/openxr/merge_requests/2334),
+    [internal MR 2608](https://gitlab.khronos.org/openxr/openxr/merge_requests/2608))
+  - New vendor extension specification: `XR_FB_eye_tracking_social`
+    ([internal MR 2336](https://gitlab.khronos.org/openxr/openxr/merge_requests/2336))
+  - New vendor extension specification: `XR_FB_body_tracking`
+    ([internal MR 2339](https://gitlab.khronos.org/openxr/openxr/merge_requests/2339))
+  - New vendor extension specification: `XR_OCULUS_external_camera`
+    ([internal MR 2397](https://gitlab.khronos.org/openxr/openxr/merge_requests/2397))
+  - New vendor extension specification: `XR_FB_spatial_entity_user`
+    ([internal MR 2407](https://gitlab.khronos.org/openxr/openxr/merge_requests/2407))
+  - New vendor extension specification: `XR_FB_touch_controller_proximity`
+    ([internal MR 2412](https://gitlab.khronos.org/openxr/openxr/merge_requests/2412))
+  - New vendor extension specification: `XR_ML_global_dimmer`
+    ([internal MR 2461](https://gitlab.khronos.org/openxr/openxr/merge_requests/2461))
+  - New vendor extension specification: `XR_ML_frame_end_info`
+    ([internal MR 2462](https://gitlab.khronos.org/openxr/openxr/merge_requests/2462),
+    [internal MR 2536](https://gitlab.khronos.org/openxr/openxr/merge_requests/2536),
+    [internal MR 2561](https://gitlab.khronos.org/openxr/openxr/merge_requests/2561))
+  - New vendor extension specification: `XR_ML_compat`
+    ([internal MR 2473](https://gitlab.khronos.org/openxr/openxr/merge_requests/2473))
+  - New vendor extension specification: `XR_EXT_local_floor`
+    ([internal MR 2503](https://gitlab.khronos.org/openxr/openxr/merge_requests/2503),
+    [internal issue 746](https://gitlab.khronos.org/openxr/openxr/issues/746),
+    [internal issue 1606](https://gitlab.khronos.org/openxr/openxr/issues/1606),
+    [OpenXR-Docs issue 103](https://github.com/KhronosGroup/OpenXR-Docs/issues/103))
+  - New vendor extension specification: `XR_BD_controller_interaction`
+    ([internal MR 2527](https://gitlab.khronos.org/openxr/openxr/merge_requests/2527))
+  - New vendor extension specification: `XR_MNDX_force_feedback_curl`
+    ([OpenXR-Docs PR 136](https://github.com/KhronosGroup/OpenXR-Docs/pull/136))
+  - Reserve Monado vendor ID
+    ([internal MR 2633](https://gitlab.khronos.org/openxr/openxr/merge_requests/2633))
+  - Style guide: Adjust examples to avoid broken links.
+    ([internal MR 2597](https://gitlab.khronos.org/openxr/openxr/merge_requests/2597))
+  - Style guide: Make vendor IDs start above 0x10000.
+    ([internal MR 2633](https://gitlab.khronos.org/openxr/openxr/merge_requests/2633))
+  - Update specification license to the most recent v10 "KhronosSpecCopyright",
+    with notice about vendor extensions conditionally included.
+    ([internal MR 2573](https://gitlab.khronos.org/openxr/openxr/merge_requests/2573),
+    [internal issue 1880](https://gitlab.khronos.org/openxr/openxr/issues/1880),
+    [internal MR 2612](https://gitlab.khronos.org/openxr/openxr/merge_requests/2612))
+  - Update spec PDF diff tool for PyPDF2 v3
+    ([internal MR 2608](https://gitlab.khronos.org/openxr/openxr/merge_requests/2608))
+  - Update `XR_VARJO_foveated_rendering` sample code with a missing initialization
+    ([internal MR 2636](https://gitlab.khronos.org/openxr/openxr/merge_requests/2636))
+  - Update URL for glTF 2.0 specification in vendor extensions.
+    ([internal MR 2648](https://gitlab.khronos.org/openxr/openxr/merge_requests/2648))
+  - Update URLs with branch names in scripts.
+    ([internal MR 2648](https://gitlab.khronos.org/openxr/openxr/merge_requests/2648))
+  - Updated session lifecycle diagram to clarify the exiting conditions when app is
+    running without non-XR experience.
+    ([internal MR 2594](https://gitlab.khronos.org/openxr/openxr/merge_requests/2594),
+    [internal issue 1729](https://gitlab.khronos.org/openxr/openxr/issues/1729))
+  - scripts: Fix generating wrong alias when having `enum` with `extends` in
+    `xr.xml` using `genxr.py`
+    ([internal MR 2509](https://gitlab.khronos.org/openxr/openxr/merge_requests/2509))
+  - scripts: Clean up makefile and update link to Vulkan spec.
+    ([internal MR 2596](https://gitlab.khronos.org/openxr/openxr/merge_requests/2596))
 
 ## OpenXR Specification 1.0.26 (2022-11-18)
 
@@ -1269,7 +1500,7 @@ This is still in progress but mostly complete.
     [internal issue 1326](https://gitlab.khronos.org/openxr/openxr/issues/1326))
 - Specification
   - Make `xrCreateSession`'s generation of an IDLE event explicit and indicate
-    `xrSuggestInteractionProfileBinding` must accept every whitelisted profile.
+    `xrSuggestInteractionProfileBinding` must accept every specified profile.
     ([internal MR 1729](https://gitlab.khronos.org/openxr/openxr/merge_requests/1729))
   - Clarify `KHR_D3D12_enable` spec, for reducing ambiguity, by changing the Vulkan
     term "memory layout" to D3D12 term "resource state".

@@ -1,0 +1,172 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_OCULUS_external_camera.adoc[]
+
+*Overview*
+
+This extension enables the querying of external camera information for a
+session.
+This extension is intended to enable mixed reality capture support for
+applications.
+
+This extension does not provide a mechanism for supplying external camera
+information to the runtime.
+If external camera information is not supplied to the runtime before using
+this extension, no camera information will be returned.
+
+This API supports returning camera intrinsics and extrinsics:
+
+* Camera intrinsics are the attributes of the camera: resolution, field of
+  view, etc.
+* Camera extrinsics are everything external to the camera: relative pose,
+  attached to, etc.
+* We do not expect the camera intrinsics to change frequently.
+  We expect the camera extrinsics to change frequently.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrExternalCameraStatusFlagsOCULUS',type='flags',desc='XrExternalCameraStatusFlagsOCULUS',xrefs='XrExternalCameraStatusFlagBitsOCULUS']
+--
+include::{generated}/api/flags/XrExternalCameraStatusFlagsOCULUS.txt[]
+--
+
+[open,refpage='XrExternalCameraStatusFlagBitsOCULUS',type='enums',desc='XrExternalCameraStatusFlagBitsOCULUS',xrefs='XrExternalCameraStatusFlagsOCULUS']
+--
+include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.txt[]
+include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.comments.txt[]
+--
+
+*New Enum Constants*
+
+[open,refpage='XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS',type='enums',desc='Size constant for external camera name',xrefs='XrExternalCameraOCULUS']
+--
+
+ename:XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS defines the length of the
+field slink:XrExternalCameraOCULUS::pname:name.
+
+include::{generated}/api/enums/XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS.txt[]
+
+--
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_EXTERNAL_CAMERA_OCULUS
+
+*New Enums*
+
+[open,refpage='XrExternalCameraAttachedToDeviceOCULUS',type='enums',desc='XrExternalCameraAttachedToDeviceOCULUS']
+--
+include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.txt[]
+include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.comments.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrExternalCameraIntrinsicsOCULUS',type='structs',desc='Camera intrintics state',xrefs='']
+--
+
+The slink:XrExternalCameraIntrinsicsOCULUS structure is defined as:
+
+include::{generated}/api/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
+
+.Member Descriptions
+****
+* pname:lastChangeTime is the basetype:XrTime when this camera's intrinsics
+  last changed.
+* pname:fov is the slink:XrFovf for this camera's viewport.
+* pname:virtualNearPlaneDistance is the near plane distance of the virtual
+  camera used to match the external camera
+* pname:virtualFarPlaneDistance is the far plane distance of the virtual
+  camera used to match the external camera
+* pname:imageSensorPixelResolution is the slink:XrExtent2Di specifying the
+  camera's resolution (in pixels).
+****
+
+include::{generated}/validity/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
+--
+
+[open,refpage='XrExternalCameraExtrinsicsOCULUS',type='structs',desc='Camera extrinsics state',xrefs='']
+--
+
+The slink:XrExternalCameraExtrinsicsOCULUS structure is defined as:
+
+include::{generated}/api/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
+
+.Member Descriptions
+****
+* pname:lastChangeTime is the basetype:XrTime when this camera's extrinsics
+  last changed.
+* pname:cameraStatusFlags is the elink:XrExternalCameraStatusFlagsOCULUS for
+  this camera's status.
+* pname:attachedToDevice is the elink:XrExternalCameraAttachedToDeviceOCULUS
+  for the device this camera is attached to
+* pname:relativePose is the slink:XrPosef for offset of the camera from the
+  device that the camera is attached to
+****
+
+include::{generated}/validity/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
+--
+
+[open,refpage='XrExternalCameraOCULUS',type='structs',desc='Camera intrintics state',xrefs='']
+--
+
+The slink:XrExternalCameraOCULUS structure is defined as:
+
+include::{generated}/api/structs/XrExternalCameraOCULUS.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:name is a null-terminated UTF-8 string containing a camera
+  identifier: VID (vendor ID), PID (product ID), and serial number
+* pname:intrinsics is the slink:XrExternalCameraIntrinsicsOCULUS for the
+  camera
+* pname:extrinsics is the slink:XrExternalCameraExtrinsicsOCULUS for the
+  camera
+****
+
+include::{generated}/validity/structs/XrExternalCameraOCULUS.txt[]
+--
+
+
+*New Functions*
+
+[open,refpage='xrEnumerateExternalCamerasOCULUS',type='protos',desc='Enumerates all the external cameras that are supported by the runtime',xrefs='']
+--
+The flink:xrEnumerateExternalCamerasOCULUS function enumerates all the
+external cameras that are supported by the runtime, it is defined as:
+
+include::{generated}/api/protos/xrEnumerateExternalCamerasOCULUS.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to query the external cameras in
+* pname:cameraCapacityInput is the capacity of the pname:cameras array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:cameraCountOutput is filled in by the runtime with the count of
+  pname:cameras written or the required capacity in the case that
+  pname:cameraCapacityInput is insufficient.
+* pname:cameras is an array of slink:XrExternalCameraOCULUS filled in by the
+  runtime which contains all the available external cameras, but can: be
+  code:NULL if pname:cameraCapacityInput is `0`.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:cameras size.
+****
+
+include::{generated}/validity/protos/xrEnumerateExternalCamerasOCULUS.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-08-31 (John Kearney)
+** Initial extension description
+

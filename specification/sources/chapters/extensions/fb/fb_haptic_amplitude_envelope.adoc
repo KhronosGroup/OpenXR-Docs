@@ -1,0 +1,91 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_haptic_amplitude_envelope.adoc[]
+
+:INCS-VAR: ../../../../generated
+
+*Last Modified Date*::
+    2022-06-27
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Aanchal Dalmia, Meta +
+    Federico Schliemann, Meta
+
+==== Overview
+
+This extension enables applications to trigger haptic effect using an
+Amplitude Envelope buffer.
+
+*Trigger haptics*
+
+[open,refpage='XrHapticAmplitudeEnvelopeVibrationFB',type='structs',desc='Haptic Effect Description',xrefs='']
+--
+An application can trigger an amplitude envelope haptic effect by creating a
+slink:XrHapticAmplitudeEnvelopeVibrationFB structure and calling
+flink:xrApplyHapticFeedback.
+
+The slink:XrHapticAmplitudeEnvelopeVibrationFB structure is defined as:
+
+include::{generated}/api/structs/XrHapticAmplitudeEnvelopeVibrationFB.txt[]
+
+This structure describes an amplitude envelope haptic effect.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:duration is the duration of the haptic effect in nanoseconds.
+  See <<duration>> for more details.
+* pname:amplitudeCount is the number of samples in the buffer.
+* pname:amplitudes is the pointer to a float array that contains the
+  samples.
+****
+
+The runtime should: resample the provided samples in the pname:amplitudes,
+and maintain an internal buffer which should: be of
+dlink:XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB length.
+The resampling should: happen based on the pname:duration,
+pname:amplitudeCount, and the device's sample rate.
+
+include::{generated}/validity/structs/XrHapticAmplitudeEnvelopeVibrationFB.txt[]
+--
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_TYPE_HAPTIC_AMPLITUDE_ENVELOPE_VIBRATION_FB
+
+*New Defines*
+
+[open,refpage='XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB',type='defines',desc='Maximum number of samples for Amplitude Envelope haptics',xrefs='']
+--
+include::{generated}/api/defines/XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB.txt[]
+
+dlink:XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB defines the maximum number
+of sample the runtime should: store in memory.
+--
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrHapticAmplitudeEnvelopeVibrationFB
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-06-27 (Aanchal Dalmia)
+** Initial extension description

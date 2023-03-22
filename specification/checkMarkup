@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2018-2022, The Khronos Group Inc.
+# Copyright (c) 2018-2023, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -25,8 +25,8 @@ set -e
 
 list_sources() {
     (
-        cd "$(dirname $0)"
-        find sources/chapters -name "*.adoc" | grep -v "extensions/meta/"
+        cd "$(dirname "$0")"
+        find sources/chapters -name "*.adoc"
     )
 }
 
@@ -118,7 +118,7 @@ check_markups() {
 (
 export FAILED=
 
-cd "$(dirname $0)"
+cd "$(dirname "$0")"
 # "f" markup: check function naming convention
 check_markups f "function names" "start with xr" "X[rR]" link name text
 

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2023, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <enums name="XrResult" type="enum" comment="Error and return codes">
+        <!-- Return codes for successful operation execution (positive values) -->
+        <enum value="0"     name="XR_SUCCESS"                                   comment="Function successfully completed."/>
+        <enum value="1"     name="XR_TIMEOUT_EXPIRED"                           comment="The specified timeout time occurred before the operation could complete."/>
+        <enum value="3"     name="XR_SESSION_LOSS_PENDING"                      comment="The session will be lost soon."/>
+        <enum value="4"     name="XR_EVENT_UNAVAILABLE"                         comment="No event was available."/>
+        <enum value="7"     name="XR_SPACE_BOUNDS_UNAVAILABLE"                  comment="The space's bounds are not known at the moment."/>
+        <enum value="8"     name="XR_SESSION_NOT_FOCUSED"                       comment="The session is not in the focused state."/>
+        <enum value="9"     name="XR_FRAME_DISCARDED"                           comment="A frame has been discarded from composition."/>
+        <!-- Error codes (negative values) -->
+        <enum value="-1"    name="XR_ERROR_VALIDATION_FAILURE"                  comment="The function usage was invalid in some way."/>
+        <enum value="-2"    name="XR_ERROR_RUNTIME_FAILURE"                     comment="The runtime failed to handle the function in an unexpected way that is not covered by another error result. "/>
+        <enum value="-3"    name="XR_ERROR_OUT_OF_MEMORY"                       comment="A memory allocation has failed."/>
+        <enum value="-4"    name="XR_ERROR_API_VERSION_UNSUPPORTED"             comment="The runtime does not support the requested API version."/>
+    </enums>
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type category="define">
+#if !defined(XR_MAY_ALIAS)
+#if defined(__clang__) || (defined(__GNUC__) &amp;&amp; (__GNUC__ &gt; 4))
+#define <name>XR_MAY_ALIAS</name> __attribute__((__may_alias__))
+#else
+#define XR_MAY_ALIAS
+#endif
+#endif</type>
+
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+        <type category="handle" parent="XrInstance"><type>XR_DEFINE_HANDLE</type>(<name>XrSession</name>)</type>
+
+        <type name="XrResult" category="enum"/>
+        <type name="XrStructureType" category="enum"/>
+
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+
+        <type category="funcpointer">typedef void (XRAPI_PTR *<name>PFN_xrVoidFunction</name>)(void);</type>
+
+        <type category="struct" name="XrLoaderInitInfoBaseHeaderKHR">
+            <member><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>*                <name>next</name></member>
+        </type>
+    </types>
+
+    <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"    name="XR_TYPE_API_LAYER_PROPERTIES"/>
+        <enum value="2"    name="XR_TYPE_EXTENSION_PROPERTIES"/>
+    </enums>
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE,XR_ERROR_RUNTIME_FAILURE,XR_ERROR_HANDLE_INVALID,XR_ERROR_INSTANCE_LOST,XR_ERROR_OUT_OF_MEMORY">
+            <proto><type>XrResult</type> <name>xrGetInstanceProcAddr</name></proto>
+            <param optional="true"><type>XrInstance</type> <name>instance</name></param>
+            <param len="null-terminated">const <type>char</type>* <name>name</name></param>
+            <param><type>PFN_xrVoidFunction</type>* <name>function</name></param>
+        </command>
+
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_FUNCTION_UNSUPPORTED,XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrInitializeLoaderKHR</name></proto>
+            <param>const <type>XrLoaderInitInfoBaseHeaderKHR</type>* <name>loaderInitInfo</name></param>
+        </command>
+    </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require comment="API macros">
+            <type name="XR_MAY_ALIAS"/>
+            <type name="XR_DEFINE_HANDLE"/>
+        </require>
+        <require comment="Instance">
+            <command name="xrGetInstanceProcAddr"/>
+        </require>
+    </feature>
+    <extensions>
+        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
+                <type name="XrLoaderInitInfoBaseHeaderKHR"/>
+                <command name="xrInitializeLoaderKHR"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

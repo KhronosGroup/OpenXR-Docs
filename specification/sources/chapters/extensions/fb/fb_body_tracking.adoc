@@ -1,0 +1,532 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_body_tracking.adoc[]
+
+
+*Last Modified Date*::
+    2022-07-18
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Giancarlo Di Biase, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta
+
+==== Overview
+
+This extension enables applications to locate the individual body joints
+that represent the estimated position of the user of the device.
+It enables applications to render the upper body in XR experiences.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemBodyTrackingPropertiesFB',type='structs',desc='System property for body tracking',xrefs='']
+--
+An application can: inspect whether the system is capable of body tracking
+by extending the slink:XrSystemProperties with
+slink:XrSystemBodyTrackingPropertiesFB structure when calling
+flink:xrGetSystemProperties.
+
+include::{generated}/api/structs/XrSystemBodyTrackingPropertiesFB.txt[]
+
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsBodyTracking is an basetype:XrBool32, indicating if current
+  system is capable of receiving body tracking input.
+****
+
+If a runtime returns ename:XR_FALSE for pname:supportsBodyTracking, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateBodyTrackerFB.
+
+include::{generated}/validity/structs/XrSystemBodyTrackingPropertiesFB.txt[]
+--
+
+==== Create a body tracker handle
+
+[open,refpage='XrBodyTrackerFB',type='handles',desc='Represents a tracker for a body joints.']
+--
+The slink:XrBodyTrackerFB handle represents the resources for body tracking.
+
+include::{generated}/api/handles/XrBodyTrackerFB.txt[]
+
+This handle can: be used to locate body joints using
+flink:xrLocateBodyJointsFB function.
+
+A body tracker provides joint locations with an unobstructed range of human
+body motion.
+
+It also provides the estimated scale of this body.
+--
+
+[open,refpage='xrCreateBodyTrackerFB',type='protos',desc='Create a body joints handle.',xrefs='']
+--
+An application can: create an slink:XrBodyTrackerFB handle using
+flink:xrCreateBodyTrackerFB function.
+
+include::{generated}/api/protos/xrCreateBodyTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the body tracker will be
+  active.
+* pname:createInfo is the slink:XrBodyTrackerCreateInfoFB used to specify
+  the body tracker.
+* pname:bodyTracker is the returned slink:XrBodyTrackerFB handle.
+****
+
+If the system does not support body tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateBodyTrackerFB.
+In this case, the runtime must: return ename:XR_FALSE for
+pname:supportsBodyTracking in slink:XrSystemBodyTrackingPropertiesFB when
+the function flink:xrGetSystemProperties is called, so that the application
+can: avoid creating a body tracker.
+
+include::{generated}/validity/protos/xrCreateBodyTrackerFB.txt[]
+--
+
+[open,refpage='XrBodyTrackerCreateInfoFB',type='structs',desc='Information to create a body joints handle',xrefs='']
+--
+The slink:XrBodyTrackerCreateInfoFB structure describes the information to
+create an slink:XrBodyTrackerFB handle.
+
+include::{generated}/api/structs/XrBodyTrackerCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:bodyJointSet is an elink:XrBodyJointSetFB that describes the set of
+  body joints to retrieve.
+****
+
+include::{generated}/validity/structs/XrBodyTrackerCreateInfoFB.txt[]
+--
+
+[open,refpage='XrBodyJointSetFB',type='enums',desc='The set of body joints to track.',xrefs='XrBodyTrackerCreateInfoFB']
+--
+The elink:XrBodyJointSetFB enum describes the set of body joints to track
+when creating an slink:XrBodyTrackerFB.
+
+include::{generated}/api/enums/XrBodyJointSetFB.txt[]
+
+include::{generated}/api/enums/XrBodyJointSetFB.comments-box.txt[]
+--
+
+[open,refpage='xrDestroyBodyTrackerFB',type='protos',desc='Destroy a body joints handle',xrefs='']
+--
+flink:xrDestroyBodyTrackerFB function releases the pname:bodyTracker and the
+underlying resources when the body tracking experience is over.
+
+include::{generated}/api/protos/xrDestroyBodyTrackerFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
+  flink:xrCreateBodyTrackerFB.
+****
+
+include::{generated}/validity/protos/xrDestroyBodyTrackerFB.txt[]
+--
+
+==== Locate body joints
+
+[open,refpage='xrLocateBodyJointsFB',type='protos',desc='Locate body joint locations',xrefs='']
+--
+The flink:xrLocateBodyJointsFB function locates an array of body joints to a
+base space at a given time.
+
+include::{generated}/api/protos/xrLocateBodyJointsFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
+  flink:xrCreateBodyTrackerFB.
+* pname:locateInfo is a pointer to slink:XrBodyJointsLocateInfoFB describing
+  information to locate body joints.
+* pname:locations is a pointer to slink:XrBodyJointLocationsFB receiving the
+  returned body joint locations.
+****
+
+include::{generated}/validity/protos/xrLocateBodyJointsFB.txt[]
+--
+
+[open,refpage='XrBodyJointsLocateInfoFB',type='structs',desc='Describes the information to locate body joints',xrefs='xrLocateBodyJointsFB']
+--
+The slink:XrBodyJointsLocateInfoFB structure describes the information to
+locate body joints.
+
+include::{generated}/api/structs/XrBodyJointsLocateInfoFB.txt[]
+
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is an slink:XrSpace within which the returned body joint
+  locations will be represented.
+* pname:time is an basetype:XrTime at which to locate the body joints.
+****
+
+Callers should: request a time equal to the predicted display time for the
+rendered frame.
+The system will employ appropriate modeling to support body tracking at this
+time.
+
+include::{generated}/validity/structs/XrBodyJointsLocateInfoFB.txt[]
+--
+
+[open,refpage='XrBodyJointLocationsFB',type='structs',desc='Returns the body joint locations',xrefs='xrLocateBodyJointsFB']
+--
+slink:XrBodyJointLocationsFB structure returns the state of the body joint
+locations.
+
+include::{generated}/api/structs/XrBodyJointLocationsFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:isActive is an basetype:XrBool32 indicating if the body tracker is
+  actively tracking.
+* pname:confidence is a code:float between 0 and 1 which represents the
+  confidence for the returned body pose.
+  A value of 0 means there is no confidence in the pose returned, and a
+  value of 1 means maximum confidence in the returned body pose.
+* pname:jointCount is a code:uint32_t describing the count of elements in
+  pname:jointLocations array.
+* pname:jointLocations is an application-allocated array of
+  slink:XrBodyJointLocationFB that will be filled with joint locations.
+* pname:skeletonChangedCount is an output code:uint32_t incremental counter
+  indicating that the skeleton scale proportions have changed.
+  flink:xrGetBodySkeletonFB can: be called when this counter increases to
+  get the latest body proportions/scale.
+* pname:time is an basetype:XrTime time at which the returned joints are
+  tracked.
+  Equals the time at which the joints were requested if the interpolation at
+  the time was successful.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:jointCount does not equal to the number of joints defined by the
+elink:XrBodyJointSetFB used to create the slink:XrBodyTrackerFB.
+
+The runtime must: return pname:jointLocations representing the range of
+human body motion, without any obstructions.
+Input systems that either obstruct the movement of the user's body (for
+example, a held controller preventing the user from making a fist) or input
+systems that have only limited ability to track finger positions must: use
+the information available to them to emulate an unobstructed range of
+motion.
+
+The runtime must: update the pname:jointLocations array ordered so that the
+application can index elements using the corresponding body joint enum (e.g.
+elink:XrBodyJointFB) as described by elink:XrBodyJointSetFB when creating
+the slink:XrBodyTrackerFB.
+For example, when the slink:XrBodyTrackerFB is created with
+ename:XR_BODY_JOINT_SET_DEFAULT_FB, the application must: set the
+pname:jointCount to ename:XR_BODY_JOINT_COUNT_FB, and the runtime must: fill
+the pname:jointLocations array ordered so that it is indexed by the
+elink:XrBodyJointFB enum.
+
+If the returned pname:isActive is true, the runtime must: return all joint
+locations with both ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
+However, in this case, some joint space locations may: be untracked (i.e.
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT or
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT is unset).
+
+If the returned pname:isActive is false, it indicates that the body tracker
+did not detect the body input, the application lost input focus, or the
+consent for body tracking was denied by the user.
+In this case, the runtime must: return all pname:jointLocations with neither
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT nor
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
+
+include::{generated}/validity/structs/XrBodyJointLocationsFB.txt[]
+--
+
+[open,refpage='XrBodyJointLocationFB',type='structs',desc='Describes the location and radius of a body joint',xrefs='XrBodyJointLocationsFB']
+--
+slink:XrBodyJointLocationFB structure describes the position, orientation,
+and radius of a body joint.
+
+include::{generated}/api/structs/XrBodyJointLocationFB.txt[]
+
+.Member Descriptions
+****
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits, to indicate which members contain valid
+  data.
+  If none of the bits are set, no other fields in this structure should: be
+  considered to be valid or meaningful.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the origin of a body joint within the reference frame of the corresponding
+  slink:XrBodyJointsLocateInfoFB::pname:baseSpace.
+****
+
+include::{generated}/validity/structs/XrBodyJointLocationFB.txt[]
+--
+
+==== Retrieve body skeleton
+
+[open,refpage='xrGetBodySkeletonFB',type='protos',desc='Retrieve body skeleton',xrefs='']
+--
+The flink:xrGetBodySkeletonFB function returns the body skeleton in T-pose.
+
+include::{generated}/api/protos/xrGetBodySkeletonFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
+  flink:xrCreateBodyTrackerFB.
+* pname:locateInfo is a pointer to slink:XrBodyJointsLocateInfoFB describing
+  information to locate body joints.
+* pname:skeleton is a pointer to slink:XrBodySkeletonFB receiving the
+  returned body skeleton hierarchy.
+****
+
+This function can: be used to query the skeleton scale and proportions in
+conjunction with slink:XrBodyJointLocationsFB::pname:skeletonChangedCount.
+slink:XrBodyJointLocationsFB::pname:skeletonChangedCount is incremented
+whenever the tracking auto-calibrates the user skeleton scale and
+proportions.
+
+include::{generated}/validity/protos/xrGetBodySkeletonFB.txt[]
+--
+
+[open,refpage='XrBodySkeletonFB',type='structs',desc='Returns the body skeleton hierarchy',xrefs='xrGetBodySkeletonFB']
+--
+The slink:XrBodySkeletonFB structure is a container to represent the body
+skeleton in T-pose including the joint hierarchy.
+
+include::{generated}/api/structs/XrBodySkeletonFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:jointCount is an code:uint32_t describing the count of elements in
+  pname:joints array.
+* pname:joints is an application-allocated array of
+  slink:XrBodySkeletonJointFB that will be filled with skeleton joint
+  elements.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:jointCount does not equal to the number of joints defined by the
+elink:XrBodyJointSetFB used to create the slink:XrBodyTrackerFB.
+
+The runtime must: return pname:joints representing the default pose of the
+current estimation regarding the user's skeleton.
+
+include::{generated}/validity/structs/XrBodySkeletonFB.txt[]
+--
+
+[open,refpage='XrBodySkeletonJointFB',type='structs',desc='Describes the location and position of a joint in the skeleton hierarchy',xrefs='XrBodySkeletonFB']
+--
+slink:XrBodySkeletonJointFB structure describes the position, orientation of
+the joint in space, and position of the joint in the skeleton hierarchy.
+
+include::{generated}/api/structs/XrBodySkeletonJointFB.txt[]
+
+.Member Descriptions
+****
+* pname:joint is an index of a joint using the corresponding body joint enum
+  (e.g. elink:XrBodyJointFB).
+* pname:parentJoint is an index of a parent joint of that joint, using the
+  corresponding body joint enum (e.g. elink:XrBodyJointFB).
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the origin of a body joint within the reference frame of the corresponding
+  slink:XrBodyJointsLocateInfoFB::pname:baseSpace.
+****
+
+include::{generated}/validity/structs/XrBodySkeletonJointFB.txt[]
+--
+
+==== Example code for locating body joints
+
+The following example code demonstrates how to locate all body joints
+relatively to a base space.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+XrSpace baseSpace;  // previously initialized, e.g. from
+                     // XR_REFERENCE_SPACE_TYPE_LOCAL
+
+// Inspect body tracking system properties
+XrSystemBodyTrackingPropertiesFB bodyTrackingSystemProperties{
+    XR_TYPE_SYSTEM_BODY_TRACKING_PROPERTIES_FB};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &bodyTrackingSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!bodyTrackingSystemProperties.supportsBodyTracking) {
+    // The system does not support body tracking
+    return;
+}
+
+// Get function pointer for xrCreateBodyTrackerFB
+PFN_xrCreateBodyTrackerFB pfnCreateBodyTrackerFB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateBodyTrackerFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateBodyTrackerFB)));
+
+// Create a body tracker that tracks default set of body joints.
+XrBodyTrackerFB bodyTracker = {};
+{
+    XrBodyTrackerCreateInfoFB createInfo{XR_TYPE_BODY_TRACKER_CREATE_INFO_FB};
+    createInfo.bodyJointSet = XR_BODY_JOINT_SET_DEFAULT_FB;
+    CHK_XR(pfnCreateBodyTrackerFB(session, &createInfo, &bodyTracker));
+}
+
+// Allocate buffers to receive joint location data before frame
+// loop starts.
+XrBodyJointLocationFB jointLocations[XR_BODY_JOINT_COUNT_FB];
+XrBodyJointLocationsFB locations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
+locations.jointCount = XR_BODY_JOINT_COUNT_FB;
+locations.jointLocations = jointLocations;
+
+// Get function pointer for xrLocateBodyJointsFB.
+PFN_xrLocateBodyJointsFB pfnLocateBodyJointsFB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateBodyJointsFB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnLocateBodyJointsFB)));
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
+    locateInfo.baseSpace = baseSpace;
+    locateInfo.time = time;
+
+    CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &locations));
+
+    if (locations.isActive) {
+        // The returned joint location array can be directly indexed with
+        // XrBodyJointFB enum.
+        const XrPosef &indexTip =
+            jointLocations[XR_BODY_JOINT_LEFT_HAND_INDEX_TIP_FB].pose;
+    }
+}
+----
+
+==== Conventions of body joints
+
+[open,refpage='XrBodyJointFB',type='enums',desc='The name of body joints that can be tracked',xrefs='']
+--
+This extension defines 70 joints for body tracking: 18 core body joints + 52
+hand joints.
+
+include::{generated}/api/enums/XrBodyJointFB.txt[]
+
+The backward (+Z) direction is parallel to the corresponding bone and points
+away from the finger tip.
+The up (+Y) direction is pointing out of the back of and perpendicular to
+the corresponding finger nail at the fully opened hand pose.
+The X direction is perpendicular to Y and Z and follows the right hand rule.
+
+The wrist joint is located at the pivot point of the wrist, which is
+location invariant when twisting the hand without moving the forearm.
+The backward (+Z) direction is parallel to the line from wrist joint to
+middle finger metacarpal joint, and points away from the finger tips.
+The up (+Y) direction points out towards back of the hand and perpendicular
+to the skin at wrist.
+The X direction is perpendicular to the Y and Z directions and follows the
+right hand rule.
+
+The palm joint is located at the center of the middle finger's metacarpal
+bone.
+The backward (+Z) direction is parallel to the middle finger's metacarpal
+bone, and points away from the finger tips.
+The up (+Y) direction is perpendicular to palm surface and pointing towards
+the back of the hand.
+The X direction is perpendicular to the Y and Z directions and follows the
+right hand rule.
+
+Body skeleton has the full set of body joints (e.g. defined by
+elink:XrBodyJointFB), organized in a hierarchy with a default T-shape body
+pose.
+
+The purpose of the skeleton is to provide data about the body size.
+Coordinates are relative to each other, so there is no any relation to any
+space.
+
+The calculation of the body size may: be updated during a session.
+Each time the calculation of the size is changed, pname:skeletonChangedCount
+of slink:XrBodyJointLocationsFB is changed to indicate that a new skeleton
+may: be retrieved.
+--
+
+*New Object Types*
+
+* slink:XrBodyTrackerFB
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_BODY_JOINT_COUNT_FB
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_BODY_TRACKER_FB
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_BODY_TRACKING_PROPERTIES_FB
+* ename:XR_TYPE_BODY_TRACKER_CREATE_INFO_FB
+* ename:XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB
+* ename:XR_TYPE_BODY_JOINT_LOCATIONS_FB
+* ename:XR_TYPE_BODY_SKELETON_FB
+
+*New Enums*
+
+* elink:XrBodyJointFB
+* elink:XrBodyJointSetFB
+
+*New Structures*
+
+* slink:XrSystemBodyTrackingPropertiesFB
+* slink:XrBodyTrackerCreateInfoFB
+* slink:XrBodyJointsLocateInfoFB
+* slink:XrBodyJointLocationFB
+* slink:XrBodyJointLocationsFB
+* slink:XrBodySkeletonJointFB
+* slink:XrBodySkeletonFB
+
+*New Functions*
+
+* flink:xrCreateBodyTrackerFB
+* flink:xrDestroyBodyTrackerFB
+* flink:xrLocateBodyJointsFB
+* flink:xrGetBodySkeletonFB
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-07-18 (Igor Tceglevskii)
+** Initial extension description

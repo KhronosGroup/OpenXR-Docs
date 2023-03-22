@@ -1,0 +1,192 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_foveation_eye_tracked.adoc[]
+
+*Contributors*::
+    Ross Ning, Facebook +
+    Kevin Xiao, Facebook +
+    Remi Palandri, Facebook +
+    Jian Zhang, Facebook +
+    Neel Bedekar, Facebook
+
+*Overview*
+
+Eye tracked foveated rendering renders lower pixel density in the periphery
+of the user's gaze, taking advantage of low peripheral acuity.
+
+This extension allows:
+
+* An application to query eye tracked foveation availability.
+* An application to request eye tracked foveation profile supported by the
+  runtime and apply them to foveation-supported swapchains.
+* An application to query foveation center position every frame.
+* An application to request a foveation pattern update from the runtime.
+  As a consequence, runtime knows how to adjust the eye tracking camera
+  exposure start time in order to optimize the total pipeline latency.
+
+In order to enable the functionality of this extension, the application
+must: pass the name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+[open,refpage='XrFoveationEyeTrackedProfileCreateFlagsMETA',type='flags',desc='XrFoveationEyeTrackedProfileCreateFlagsMETA',xrefs='XrFoveationEyeTrackedProfileCreateFlagBitsMETA']
+--
+include::{generated}/api/flags/XrFoveationEyeTrackedProfileCreateFlagsMETA.txt[]
+--
+
+[open,refpage='XrFoveationEyeTrackedProfileCreateFlagBitsMETA',type='enums',desc='XrFoveationEyeTrackedProfileCreateFlagBitsMETA',xrefs='XrFoveationEyeTrackedProfileCreateFlagsMETA']
+--
+include::{generated}/api/enums/XrFoveationEyeTrackedProfileCreateFlagBitsMETA.txt[]
+//include::{generated}/api/enums/XrFoveationEyeTrackedProfileCreateFlagBitsMETA.comments.txt[]
+There are currently no eye tracked profile create flags.
+This is reserved for future use.
+--
+
+[open,refpage='XrFoveationEyeTrackedStateFlagsMETA',type='flags',desc='XrFoveationEyeTrackedStateFlagsMETA',xrefs='XrFoveationEyeTrackedStateFlagBitsMETA']
+--
+include::{generated}/api/flags/XrFoveationEyeTrackedStateFlagsMETA.txt[]
+--
+
+[open,refpage='XrFoveationEyeTrackedStateFlagBitsMETA',type='enums',desc='XrFoveationEyeTrackedStateFlagBitsMETA',xrefs='XrFoveationEyeTrackedStateFlagsMETA']
+--
+include::{generated}/api/enums/XrFoveationEyeTrackedStateFlagBitsMETA.txt[]
+include::{generated}/api/enums/XrFoveationEyeTrackedStateFlagBitsMETA.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_FOVEATION_EYE_TRACKED_PROFILE_CREATE_INFO_META
+* ename:XR_TYPE_FOVEATION_EYE_TRACKED_STATE_META
+* ename:XR_TYPE_SYSTEM_FOVEATION_EYE_TRACKED_PROPERTIES_META
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrFoveationEyeTrackedProfileCreateInfoMETA',type='structs',desc='The information to create a eye tracked foveation profile']
+--
+
+The slink:XrFoveationEyeTrackedProfileCreateInfoMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrFoveationEyeTrackedProfileCreateInfoMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of
+  elink:XrFoveationEyeTrackedProfileCreateFlagBitsMETA which indicate
+  various characteristics for how eye tracked foveation is enabled on the
+  swapchain.
+****
+
+slink:XrFoveationEyeTrackedProfileCreateInfoMETA can: be added to the
+pname:next chain of slink:XrFoveationLevelProfileCreateInfoFB in order to
+enable eye tracked foveation.
+The runtime must: apply an eye tracked foveation pattern according to the
+parameters defined in the slink:XrFoveationLevelProfileCreateInfoFB.
+
+include::{generated}/validity/structs/XrFoveationEyeTrackedProfileCreateInfoMETA.txt[]
+--
+
+[open,refpage='XrFoveationEyeTrackedStateMETA',type='structs',desc='Foveation data returned from the runtime',xrefs='xrGetFoveationEyeTrackedStateMETA']
+--
+
+The slink:XrFoveationEyeTrackedStateMETA structure is defined as:
+
+include::{generated}/api/structs/XrFoveationEyeTrackedStateMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:foveationCenter is the center of the foveal region defined in NDC
+  space in the range of -1 to 1 for both eyes.
+* pname:flags is a bitmask of elink:XrFoveationEyeTrackedStateFlagBitsMETA
+  which indicates various characteristics for current foveation state.
+****
+
+slink:XrFoveationEyeTrackedStateMETA must: be provided when calling
+flink:xrGetFoveationEyeTrackedStateMETA.
+The runtime must: interpret slink:XrFoveationEyeTrackedStateMETA without any
+additional structs in its pname:next chain in order to query eye tracked
+foveation state, e.g. the center of the foveal region.
+
+include::{generated}/validity/structs/XrFoveationEyeTrackedStateMETA.txt[]
+--
+
+[open,refpage='XrSystemFoveationEyeTrackedPropertiesMETA',type='structs',desc='Information about the current system support for eye tracked foveation',xrefs='xrGetSystemProperties']
+--
+
+
+The slink:XrSystemFoveationEyeTrackedPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemFoveationEyeTrackedPropertiesMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsFoveationEyeTracked indicates if the current system is
+  capable of eye tracked foveation.
+****
+
+An application can: inspect whether the system is capable of eye tracked
+foveation by extending the slink:XrSystemProperties with
+slink:XrSystemFoveationEyeTrackedPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+include::{generated}/validity/structs/XrSystemFoveationEyeTrackedPropertiesMETA.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrGetFoveationEyeTrackedStateMETA',desc='Get the current eye tracked foveation state',type='protos']
+--
+The flink:xrGetFoveationEyeTrackedStateMETA function is defined as:
+
+include::{generated}/api/protos/xrGetFoveationEyeTrackedStateMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession in which the eye tracked foveation
+  profile is applied.
+* pname:foveationState is a pointer to an
+  slink:XrFoveationEyeTrackedStateMETA structure returning the current eye
+  tracked foveation state.
+****
+
+The flink:xrGetFoveationEyeTrackedStateMETA function returns the current eye
+tracked foveation state including the center of the foveal region, validity
+of the foveation data, etc.
+
+Note that flink:xrUpdateSwapchainFB should: be called right before the
+flink:xrGetFoveationEyeTrackedStateMETA function in order to (1) request a
+foveation pattern update by the runtime (2) optionally instruct the runtime
+to adjust the eye tracking camera capture start time in order to optimize
+for pipeline latency.
+
+include::{generated}/validity/protos/xrGetFoveationEyeTrackedStateMETA.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-04-08 (Ross Ning)
+** Initial extension description

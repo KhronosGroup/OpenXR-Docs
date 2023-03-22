@@ -1,0 +1,143 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_spatial_entity_storage_batch.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook
+
+*Overview*
+
+This extension enables multiple spatial entities at a time to be persisted
+across sessions.
+If the ename:XR_SPACE_COMPONENT_TYPE_STORABLE_FB component has been enabled
+on the spatial entity, application developers may: save and erase
+slink:XrSpace entities.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACE_LIST_SAVE_INFO_FB
+* ename:XR_TYPE_EVENT_DATA_SPACE_LIST_SAVE_COMPLETE_FB
+
+*New Enums*
+
+*New Structures*
+
+[open,refpage='XrSpaceListSaveInfoFB',type='structs',desc='Parameters for a list save operation',xrefs='']
+--
+The slink:XrSpaceListSaveInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrSpaceListSaveInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:spaceCount is the number of spatial entities to save.
+* pname:spaces is a list of slink:XrSpace handles for the entities to be
+  saved.
+* pname:location is the storage location.
+****
+
+The slink:XrSpaceListSaveInfoFB structure contains information used to save
+multiple spatial entities.
+
+include::{generated}/validity/structs/XrSpaceListSaveInfoFB.txt[]
+--
+
+[open,refpage='XrEventDataSpaceListSaveCompleteFB',type='structs',desc='Describes the completion of a save list operation',xrefs='']
+--
+The slink:XrEventDataSpaceListSaveCompleteFB structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpaceListSaveCompleteFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the ID of the asynchronous request to save an entity.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded or if an error occurred.
+****
+
+This completion event indicates that a request to save a list of
+slink:XrSpace objects has completed.
+The application can: use pname:result to check if the request was successful
+or if an error occurred.
+
+.Result Codes
+****
+ifndef::doctype-manpage[]
+<<fundamentals-successcodes,Success>>::
+endif::doctype-manpage[]
+ifdef::doctype-manpage[]
+On success, the value of this parameter is::
+endif::doctype-manpage[]
+* ename:XR_SUCCESS
+ifndef::doctype-manpage[]
+<<fundamentals-errorcodes,Failure>>::
+endif::doctype-manpage[]
+ifdef::doctype-manpage[]
+On failure, the value of this parameter is::
+endif::doctype-manpage[]
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_SPACE_MAPPING_INSUFFICIENT_FB
+* ename:XR_ERROR_SPACE_LOCALIZATION_FAILED_FB
+* ename:XR_ERROR_SPACE_NETWORK_TIMEOUT_FB
+* ename:XR_ERROR_SPACE_NETWORK_REQUEST_FAILED_FB
+* ename:XR_ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
+****
+
+include::{generated}/validity/structs/XrEventDataSpaceListSaveCompleteFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrSaveSpaceListFB',desc='Saves a list of spatial entities to persistent storage',type='protos',xrefs='']
+--
+The flink:xrSaveSpaceListFB function is defined as:
+
+include::{generated}/api/protos/xrSaveSpaceListFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the parameters for the save operation.
+* pname:requestId is an output parameter, and the variable it points to will
+  be populated with the ID of this asynchronous request.
+****
+
+The flink:xrSaveSpaceListFB function persists the specified spatial entities
+at the specified storage location.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrSpaceSaveInfoFB::pname:location is invalid.
+This operation is asynchronous and the runtime must: post an
+slink:XrEventDataSpaceListSaveCompleteFB event when the operation completes
+successfully or encounters an error.
+
+include::{generated}/validity/protos/xrSaveSpaceListFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-06-08 (John Schofield)
+** Initial draft

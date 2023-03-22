@@ -299,7 +299,7 @@ The application must: call this function before it makes any modifications
 to the buffers retrieved by flink:xrTriangleMeshGetVertexBufferFB and
 flink:xrTriangleMeshGetIndexBufferFB.
 If only the vertex buffer contents need to be updated, and the mesh is in
-state <<fb_triangle_mesh_ready>>,
+state <<fb_triangle_mesh_state_ready>>,
 flink:xrTriangleMeshBeginVertexBufferUpdateFB may: be used instead.
 To commit the modifications, the application must: call
 flink:xrTriangleMeshEndUpdateFB.
@@ -309,13 +309,15 @@ The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
 immutable.
 
 The triangle mesh pname:mesh must: be in state
-<<fb_triangle_mesh_topology_undefined>> or <<fb_triangle_mesh_ready>>.
+<<fb_triangle_mesh_state_undefined_topology>> or
+<<fb_triangle_mesh_state_ready>>.
 
-* If the triangle mesh is in state <<fb_triangle_mesh_topology_undefined>>
-  before this call, a successful call moves it to state
+* If the triangle mesh is in state
+  <<fb_triangle_mesh_state_undefined_topology>> before this call, a
+  successful call moves it to state
   <<fb_triangle_mesh_state_defining_topology>>.
-* If the triangle mesh is in state <<fb_triangle_mesh_ready>> before this
-  call, a successful call moves it to state
+* If the triangle mesh is in state <<fb_triangle_mesh_state_ready>> before
+  this call, a successful call moves it to state
   <<fb_triangle_mesh_state_updating_mesh>>.
 
 include::{generated}/validity/protos/xrTriangleMeshBeginUpdateFB.txt[]
@@ -351,7 +353,8 @@ The triangle mesh pname:mesh must: be in state
 <<fb_triangle_mesh_state_defining_topology>> or
 <<fb_triangle_mesh_state_updating_mesh>>.
 
-A successful call moves pname:mesh to state <<fb_triangle_mesh_ready>>.
+A successful call moves pname:mesh to state
+<<fb_triangle_mesh_state_ready>>.
 
 include::{generated}/validity/protos/xrTriangleMeshEndUpdateFB.txt[]
 --
@@ -375,13 +378,14 @@ The vertex count returned through pname:outVertexCount is defined by the
 last call to flink:xrTriangleMeshEndUpdateFB.
 Once the modification is done, call
 flink:xrTriangleMeshEndVertexBufferUpdateFB to commit the changes and move
-to state <<fb_triangle_mesh_ready>>.
+to state <<fb_triangle_mesh_state_ready>>.
 
 The triangle mesh pname:mesh must: be mutable.
 The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the mesh is
 immutable.
 
-The triangle mesh pname:mesh must: be in state <<fb_triangle_mesh_ready>>.
+The triangle mesh pname:mesh must: be in state
+<<fb_triangle_mesh_state_ready>>.
 
 A successful call moves pname:mesh to state
 <<fb_triangle_mesh_state_updating_vertices>>.
@@ -411,7 +415,8 @@ immutable.
 The triangle mesh pname:mesh must: be in state
 <<fb_triangle_mesh_state_updating_vertices>>.
 
-A successful call moves pname:mesh to state <<fb_triangle_mesh_ready>>.
+A successful call moves pname:mesh to state
+<<fb_triangle_mesh_state_ready>>.
 
 include::{generated}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
 --

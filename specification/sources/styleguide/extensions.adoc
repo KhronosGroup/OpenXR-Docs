@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2022, The Khronos Group Inc.
+// Copyright (c) 2015-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -252,7 +252,7 @@ faith.
 OpenXR implementers must report a valid vendor ID for their implementation
 when queried by fname:xrGetSystemProperties, as described in the
 <<openxr-spec,OpenXR API Specification>>.
-If there is no valid PCI vendor ID defined for the physical device,
+If there is no valid USB vendor ID defined for the physical device,
 implementations must obtain a Khronos vendor ID.
 
 Khronos vendor IDs are reserved in a similar fashion to

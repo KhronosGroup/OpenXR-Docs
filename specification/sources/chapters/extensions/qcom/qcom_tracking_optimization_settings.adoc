@@ -1,0 +1,131 @@
+// Copyright (c) 2021, Qualcomm
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_QCOM_tracking_optimization_settings.adoc[]
+
+
+*Last Modified Date*::
+    2022-06-02
+
+*Contributors*::
+    Daniel Guttenberg, Qualcomm +
+    Martin Renschler, Qualcomm +
+    Karthik Nagarajan, Qualcomm
+
+
+*Overview*
+
+This extension defines an API for the application to give optimization hints
+to the runtime for tracker domains.
+
+For example, an application might be interested in tracking targets that are
+at a far distance from the camera which may: increase tracking latency,
+while another application might be interested in minimizing power
+consumption at the cost of tracking accuracy.
+Targets are domains which are defined in
+elink:XrTrackingOptimizationSettingsDomainQCOM.
+
+This allows the application to tailor the tracking algorithms to specific
+use-cases and scene-scales in order to provide the best experience possible.
+
+Summary: provide domain hints to the run-time about which parameters to
+optimize tracking for.
+
+==== Setting Tracking Optimization Hints
+
+The tracking optimization hints are expressed as a hint
+elink:XrTrackingOptimizationSettingsHintQCOM.
+
+[open,refpage='XrTrackingOptimizationSettingsDomainQCOM',type='enums',desc='Domains to apply tracking optimization hints',xrefs='XrTrackingOptimizationSettingsHintQCOM xrSetTrackingOptimizationSettingsHintQCOM']
+--
+include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.txt[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.comments-box.txt[]
+--
+
+[open,refpage='XrTrackingOptimizationSettingsHintQCOM',type='enums',desc='Hints for prioritizing different tracking goals',xrefs='XrTrackingOptimizationSettingsDomainQCOM xrSetTrackingOptimizationSettingsHintQCOM']
+--
+include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.txt[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.comments-box.txt[]
+--
+
+
+[open,refpage='xrSetTrackingOptimizationSettingsHintQCOM',type='protos',desc='Submit a tracking optimization hint',xrefs='']
+--
+The flink:xrSetTrackingOptimizationSettingsHintQCOM function is defined as:
+
+include::{generated}/api/protos/xrSetTrackingOptimizationSettingsHintQCOM.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a valid slink:XrSession handle.
+* pname:domain is the tracking domain for which the hint is applied
+* pname:hint is the hint to be applied
+****
+
+The XR runtime behaves as if
+ename:XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_NONE_QCOM was submitted if the
+application does not provide a hint.
+
+The XR runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+application sets a domain or hint not part of
+elink:XrTrackingOptimizationSettingsDomainQCOM or
+elink:XrTrackingOptimizationSettingsHintQCOM.
+
+A hint is typically set before a domain handle is created.
+If hints are set more than once from one or concurrent sessions, the runtime
+may: accommodate the first hint it received and return
+ename:XR_ERROR_HINT_ALREADY_SET_QCOM for any subsequent calls made.
+
+If the application destroys the active domain handle associated with the
+hint, the runtime may: behave as if
+ename:XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_NONE_QCOM was set.
+In this scenario, the runtime should: accommodate new valid hints that may:
+be set for the same domain.
+
+include::{generated}/validity/protos/xrSetTrackingOptimizationSettingsHintQCOM.txt[]
+--
+
+
+==== Example of setting a tracking optimization hint
+
+[source,C]
+----
+XrInstance instance;  // previously initialized
+XrSession session;    // previously initialized
+
+// Get function pointer for xrSetTrackingOptimizationSettingsHintQCOM
+PFN_xrSetTrackingOptimizationSettingsHintQCOM pfnSetTrackingOptimizationSettingsHintQCOM;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrSetTrackingOptimizationSettingsHintQCOM",
+    (PFN_xrVoidFunction*)(&pfnSetTrackingOptimizationSettingsHintQCOM)));
+
+pfnSetTrackingOptimizationSettingsHintQCOM(session,
+    XR_TRACKING_OPTIMIZATION_SETTINGS_DOMAIN_ALL_QCOM,
+    XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_LONG_RANGE_PRIORIZATION_QCOM);
+
+// perform tracking while prioritizing long range tracking
+----
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+* elink:XrTrackingOptimizationSettingsHintQCOM
+* elink:XrTrackingOptimizationSettingsDomainQCOM
+
+*New Structures*
+
+*New Functions*
+
+* flink:xrSetTrackingOptimizationSettingsHintQCOM
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-06-02
+** Initial extension description

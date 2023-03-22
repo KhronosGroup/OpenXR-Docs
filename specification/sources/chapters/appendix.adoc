@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -300,7 +300,7 @@ XRAPI_ATTR <return_type> XRAPI_CALL <function_name>(<function_parameters>);
 Function pointer type declaration:
 [source,listing]
 ----
-typedef <return_type> (XRAPI_PTR *PFN_<function_name>(<function_parameters>);
+typedef <return_type> (XRAPI_PTR *PFN_<function_name>)(<function_parameters>);
 ----
 
 
@@ -326,12 +326,12 @@ needed.
 
 [cols=",",options="header",]
 |==========================================
-|Compile Time Symbol |Graphics API Name
-|[[XR_USE_GRAPHICS_API_OPENGL]] `XR_USE_GRAPHICS_API_OPENGL` |OpenGL
+|Compile Time Symbol                                               |Graphics API Name
+|[[XR_USE_GRAPHICS_API_OPENGL]]    `XR_USE_GRAPHICS_API_OPENGL`    |OpenGL
 |[[XR_USE_GRAPHICS_API_OPENGL_ES]] `XR_USE_GRAPHICS_API_OPENGL_ES` |OpenGL ES
-|[[XR_USE_GRAPHICS_API_VULKAN]] `XR_USE_GRAPHICS_API_VULKAN` |Vulkan
-|[[XR_USE_GRAPHICS_API_D3D11]] `XR_USE_GRAPHICS_API_D3D11` |Direct3D 11
-|[[XR_USE_GRAPHICS_API_D3D12]] `XR_USE_GRAPHICS_API_D3D12` |Direct3D 12
+|[[XR_USE_GRAPHICS_API_VULKAN]]    `XR_USE_GRAPHICS_API_VULKAN`    |Vulkan
+|[[XR_USE_GRAPHICS_API_D3D11]]     `XR_USE_GRAPHICS_API_D3D11`     |Direct3D 11
+|[[XR_USE_GRAPHICS_API_D3D12]]     `XR_USE_GRAPHICS_API_D3D12`     |Direct3D 12
 |==========================================
 
 
@@ -340,10 +340,10 @@ needed.
 
 [cols=",",options="header",]
 |============================================
-|Compile Time Symbol |Window System Name
-|[[XR_USE_PLATFORM_WIN32]] `XR_USE_PLATFORM_WIN32` |Microsoft Windows
-|[[XR_USE_PLATFORM_XLIB]] `XR_USE_PLATFORM_XLIB` |X Window System Xlib
-|[[XR_USE_PLATFORM_XCB]] `XR_USE_PLATFORM_XCB` |X Window System Xcb
+|Compile Time Symbol                                   |Window System Name
+|[[XR_USE_PLATFORM_WIN32]]   `XR_USE_PLATFORM_WIN32`   |Microsoft Windows
+|[[XR_USE_PLATFORM_XLIB]]    `XR_USE_PLATFORM_XLIB`    |X Window System Xlib
+|[[XR_USE_PLATFORM_XCB]]     `XR_USE_PLATFORM_XCB`     |X Window System XCB
 |[[XR_USE_PLATFORM_WAYLAND]] `XR_USE_PLATFORM_WAYLAND` |Wayland
 |[[XR_USE_PLATFORM_ANDROID]] `XR_USE_PLATFORM_ANDROID` |Android Native
 |============================================

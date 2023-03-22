@@ -1,0 +1,164 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_local_floor.adoc[]
+
+
+*Last Modified Date*::
+    2022-11-28
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    John Kearney, Meta +
+    Alex Turner, Microsoft +
+    Yin Li, Microsoft +
+    Cass Everitt, Meta +
+*Contacts*::
+    John Kearney, Meta +
+
+*Overview*
+
+The core OpenXR spec contains two world-locked reference space slink:XrSpace
+types in elink:XrReferenceSpaceType, ename:XR_REFERENCE_SPACE_TYPE_LOCAL and
+ename:XR_REFERENCE_SPACE_TYPE_STAGE with a design goal that `LOCAL` space
+gets the user positioned correctly in `XZ` space and `STAGE` gets the user
+positioned correctly in `Y` space.
+
+As defined in the core OpenXR spec, `LOCAL` space is useful when an
+application needs to render *seated-scale* content that is not positioned
+relative to the physical floor and `STAGE` space is useful when an
+application needs to render *standing-scale* content that is relative to the
+physical floor.
+
+The core OpenXR specification describes that *standing-scale* experiences
+are meant to use the `STAGE` reference space.
+However, using the `STAGE` forces the user to move to the stage space in
+order to operate their experience, rather than just standing locally where
+they are.
+
+*Definition of the space*
+
+Similar to `LOCAL` space, the `LOCAL_FLOOR` reference space
+(ename:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT) establishes a world-locked
+origin, gravity-aligned to exclude pitch and roll, with +Y up, +X to the
+right, and -Z forward.
+
+The location of the origin of the `LOCAL_FLOOR` space must: match the
+`LOCAL` space in the `X` and `Z` coordinates but not in the `Y` coordinate.
+
+The orientation of the `LOCAL_FLOOR` space must: match the `LOCAL` space.
+
+If the `STAGE` space is supported, then the floor level (`Y` coordinate) of
+the `LOCAL_FLOOR` space and the `STAGE` space must: match.
+
+If the `STAGE` space is not supported, then the runtime must: give a best
+estimate of the floor level.
+
+Note: The `LOCAL_FLOOR` space could be implemented by an application without
+support from the runtime by using the difference between in the `Y`
+coordinate of the pose of the `LOCAL` and `STAGE` reference spaces.
+
+When this extension is enabled, a runtime must: support
+`XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT` (in
+flink:xrEnumerateReferenceSpaces).
+
+When a user needs to recenter `LOCAL` space, the `LOCAL_FLOOR` space will
+also be recentered.
+
+When such a recentering occurs, the runtime must: queue the
+slink:XrEventDataReferenceSpaceChangePending event, with the recentered
+`LOCAL_FLOOR` space origin only taking effect for flink:xrLocateSpace or
+flink:xrLocateViews calls whose basetype:XrTime parameter is greater than or
+equal to the pname:changeTime provided in that event.
+Additionally, when the runtime changes the floor level (or the floor level
+estimate), the runtime must: queue this event.
+
+*New Object Types*
+
+
+*New Flag Types*
+
+
+*New Enum Constants*
+
+elink:XrReferenceSpaceType enumeration is extended with:
+
+* ename:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT
+
+*New Enums*
+
+
+*New Structures*
+
+
+*Examples*
+
+If a runtime does not support the local floor extension, an application can:
+construct an equivalent space using the `LOCAL` and `STAGE` spaces.
+
+[source,c++]
+----
+extern XrSession session;
+extern bool supportsStageSpace;
+extern bool supportsLocalFloorExtension;
+extern XrTime curtime; // previously initialized
+
+XrSpace localFloorSpace = XR_NULL_HANDLE;
+
+if (supportsLocalFloorExtension)
+{
+    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f}};
+    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT;
+    CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
+}
+else if (supportsStageSpace)
+{
+    XrSpace localSpace = XR_NULL_HANDLE;
+    XrSpace stageSpace = XR_NULL_HANDLE;
+
+    XrReferenceSpaceCreateInfo createInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+    createInfo.poseInReferenceSpace.orientation.w = 1.f;
+
+    createInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
+    CHK_XR(xrCreateReferenceSpace(session, &createInfo, &localSpace));
+
+    createInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
+    CHK_XR(xrCreateReferenceSpace(session, &createInfo, &stageSpace));
+
+    XrSpaceLocation stageLoc{XR_TYPE_SPACE_LOCATION};
+    CHK_XR(xrLocateSpace(stageSpace, localSpace, curtime, &stageLoc));
+
+    CHK_XR(xrDestroySpace(localSpace));
+    CHK_XR(xrDestroySpace(stageSpace));
+
+    float floorOffset = stageLoc.pose.position.y;
+
+    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
+    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}};
+    CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
+}
+else
+{
+    // We don't support local floor or stage - make an educated guess
+    float floorOffset = -1.5;
+
+    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
+    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}};
+    CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
+}
+
+----
+
+
+*Issues*
+
+None
+
+*Version History*
+
+* Revision 1, 2022-11-28 (John Kearney)
+** Initial draft

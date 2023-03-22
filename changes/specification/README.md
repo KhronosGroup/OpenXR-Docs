@@ -18,14 +18,14 @@ the following as templates.
 
 For adding/enabling a vendor/multi-vendor extension:
 
-> Document new `XR_MYVENDOR_myextension` vendor extension.
+> New vendor extension specification: `XR_MYVENDOR_myextension`
 
 - Add "provisional" before "vendor" if required.
 - If this is an EXT multi-vendor extension, change "vendor" to "multi-vendor".
 
 For adding/enabling a KHR or KHX extension:
 
-> Document new ratified `XR_KHR_myextension` Khronos extension.
+> New ratified Khronos extension specification: `XR_KHR_myextension`
 
 - Add "provisional" before "Khronos" if it is a KHX extension.
 - Note that these all require the review period and board ratification!

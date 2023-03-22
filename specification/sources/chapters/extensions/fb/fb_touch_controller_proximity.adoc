@@ -1,0 +1,169 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_touch_controller_proximity.adoc[]
+
+*Last Modified Date*::
+    2022-09-12
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Tony Targonski, Meta Platforms +
+    Aanchal Dalmia, Meta Platforms +
+    Andreas Loeve Selvik, Meta Platforms +
+    John Kearney, Meta Platforms +
+    James Hillery, Meta Platforms
+
+==== Overview
+
+This extension introduces a new component path, proximity_fb, and adds
+support for it for the pathname:oculus/touch_controller interaction profile.
+
+==== New Interaction Profile Component Paths
+
+* proximity_fb - The user is in physical proximity of input source.
+  This may: be present for any kind of input source representing a physical
+  component, such as a button, if the device includes the necessary sensor.
+  The state of a "proximity_fb" component must: be ename:XR_TRUE if the same
+  input source is returning ename:XR_TRUE for either a "touch" or any other
+  component that implies physical contact.
+  The runtime may: return ename:XR_TRUE for "proximity_fb" when "touch"
+  returns ename:XR_FALSE.
+  This indicate that the user is hovering just above, but not touching the
+  input source in question.
+  "proximity_fb" components are always boolean.
+
+==== Interaction Profile Changes
+
+Interaction profile: pathname:/interaction_profiles/oculus/touch_controller
+
+
+Additional supported component paths for the above profile enabled by this
+extension:
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+On both:
+
+* subpathname:/input/trigger/proximity_fb This represents whether the user
+is in proximity of the trigger button, usually with their index finger.
+
+* subpathname:/input/thumb_fb/proximity_fb This represents whether the user
+is in proximity of the input sources at the top of the controller, usually
+with their thumb.
+
+
+==== Example code
+
+The following example code demonstrates detecting when a user lifts their
+finger off the trigger button.
+
+[source,C++]
+----
+XrInstance instance;           // previously initialized
+XrSession session;             // previously initialized
+XrActionSet inGameActionSet;   // previously initialized
+
+XrAction indexProximityAction; // previously initialized
+XrAction indexTouchAction;     // previously initialized
+
+//  ----------
+//  Bind actions to trigger/proximity_fb and trigger/touch
+//  ----------
+
+XrPath indexProximityPath, indexTouchPath;
+// New component exposed by this extension:
+CHK_XR(xrStringToPath(instance, "/user/hand/right/input/trigger/proximity_fb", &indexProximityPath));
+// Existing component that is useful together with proximity_fb
+CHK_XR(xrStringToPath(instance, "/user/hand/right/input/trigger/touch", &indexTouchPath))
+
+XrPath interactionProfilePath;
+CHK_XR(xrStringToPath(instance, "/interaction_profiles/oculus/touch_controller", &interactionProfilePath));
+
+XrActionSuggestedBinding bindings[2];
+bindings[0].action = indexProximityAction;
+bindings[0].binding = indexProximityPath;
+bindings[1].action = indexTouchAction;
+bindings[1].binding = indexTouchPath;
+
+XrInteractionProfileSuggestedBinding suggestedBindings{XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
+suggestedBindings.interactionProfile = interactionProfilePath;
+suggestedBindings.suggestedBindings = bindings;
+suggestedBindings.countSuggestedBindings = 2;
+CHK_XR(xrSuggestInteractionProfileBindings(instance, &suggestedBindings));
+
+//  ----------
+//  Application main loop
+//  ----------
+
+while (1)
+{
+    // ...
+
+    //  ----------
+    //  Query input state
+    //  ----------
+
+    XrActionStateBoolean indexTouchState{XR_TYPE_ACTION_STATE_BOOLEAN};
+    XrActionStateBoolean indexProximityState{XR_TYPE_ACTION_STATE_BOOLEAN};
+    XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+
+    getInfo.action = indexTouchAction;
+    CHK_XR(xrGetActionStateBoolean(session, &getInfo, &indexTouchState));
+    getInfo.action = indexProximityAction;
+    CHK_XR(xrGetActionStateBoolean(session, &getInfo, &indexProximityState));
+
+    //  ----------
+    //  Proximity and touch logic
+    //  ----------
+
+    // There are only three valid combinations of the proximity and touch values
+    if (!indexProximityState.currentState)
+    {
+        // Index is not in proximity of the trigger button (they might be pointing!)
+        // Implies that TouchState.currentState == XR_FALSE
+    }
+    if (indexProximityState.currentState && !indexTouchState.currentState)
+    {
+        // Index finger of user is in proximity of, but not touching, the trigger button
+        // i.e. they are hovering above the button
+    }
+    if (indexTouchState.currentState)
+    {
+        // Index finger of user is touching the trigger button
+        // Implies that ProximityState.currentState == XR_TRUE
+    }
+}
+
+----
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*Version History*
+
+* Revision 1, 2022-09-12 (Andreas Loeve Selvik)
+** Initial extension proposal

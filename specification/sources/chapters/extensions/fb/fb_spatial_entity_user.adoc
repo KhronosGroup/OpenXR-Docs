@@ -1,0 +1,142 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_spatial_entity_user.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook +
+    Andreas Selvik, Facebook
+
+*Overview*
+
+This extension enables creation and management of user objects which can: be
+used by the application to reference a user other than the current user.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+[open,refpage='XrSpaceUserFB',type='handles',desc='Represents a user with which spaces can be shared']
+--
+include::{generated}/api/handles/XrSpaceUserFB.txt[]
+
+Represents a user with which the application can: interact using various
+extensions including <<XR_FB_spatial_entity_sharing>>.
+See flink:xrCreateSpaceUserFB for how to declare a user.
+--
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACE_USER_CREATE_INFO_FB
+
+*New Enums*
+
+*New Base Types*
+
+[open,refpage='XrSpaceUserIdFB',desc='User ID with which spaces can be shared',type='basetypes']
+--
+The basetype:XrSpaceUserIdFB type is defined as:
+
+include::{generated}/api/basetypes/XrSpaceUserIdFB.txt[]
+
+An implementation-defined ID of the underlying user.
+--
+
+*New Structures*
+
+[open,refpage='XrSpaceUserCreateInfoFB',type='structs',desc='Describes a user',xrefs='']
+--
+The slink:XrSpaceUserCreateInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrSpaceUserCreateInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:userId is the user ID with which the application can reference.
+****
+
+The slink:XrSpaceUserCreateInfoFB structure describes a user with which the
+application can: interact.
+
+include::{generated}/validity/structs/XrSpaceUserCreateInfoFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreateSpaceUserFB',desc='Creates a user other than the current user',type='protos',xrefs='']
+--
+The flink:xrCreateSpaceUserFB function is defined as:
+
+include::{generated}/api/protos/xrCreateSpaceUserFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info is a pointer to an slink:XrSpaceUserCreateInfoFB structure
+  containing information to create the user handle.
+* pname:user is the output parameter that points to the handle of the user
+  being created.
+****
+
+The application can: use this function to create a user handle with which it
+can: then interact, such as sharing slink:XrSpace objects.
+
+include::{generated}/validity/protos/xrCreateSpaceUserFB.txt[]
+--
+
+[open,refpage='xrGetSpaceUserIdFB',desc='Gets the user ID for a given user handle',type='protos',xrefs='']
+--
+The flink:xrGetSpaceUserIdFB function is defined as:
+
+include::{generated}/api/protos/xrGetSpaceUserIdFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:user is a handle to an slink:XrSpaceUserFB.
+* pname:userId is the output parameter that points to the user ID of the
+  user.
+****
+
+The application can: use this function to retrieve the user ID of a given
+user handle.
+
+include::{generated}/validity/protos/xrGetSpaceUserIdFB.txt[]
+--
+
+[open,refpage='xrDestroySpaceUserFB',desc='Destroys a user handle',type='protos',xrefs='']
+--
+The flink:xrDestroySpaceUserFB function is defined as:
+
+include::{generated}/api/protos/xrDestroySpaceUserFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:user is a handle to the user object to be destroyed.
+****
+
+The application should: use this function to release resources tied to a
+given slink:XrSpaceUserFB once the application no longer needs to reference
+the user.
+
+include::{generated}/validity/protos/xrDestroySpaceUserFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-07-28 (John Schofield)
+** Initial draft

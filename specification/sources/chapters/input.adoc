@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -1372,9 +1372,9 @@ include::{generated}/api/protos/xrEnumerateBoundSourcesForAction.txt[]
   providing the query information.
 * pname:sourceCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:sourceCountOutput is a pointer to the count of sources, or a pointer
-  to the required capacity in the case that pname:sourceCapacityInput is
-  insufficient.
+* pname:sourceCountOutput is a pointer to the count of pname:sources, or a
+  pointer to the required capacity in the case that
+  pname:sourceCapacityInput is insufficient.
 * pname:sources is a pointer to an application-allocated array that will be
   filled with the basetype:XrPath values for all bound sources.
   It can: be code:NULL if pname:sourceCapacityInput is 0.
@@ -1437,11 +1437,12 @@ include::{generated}/api/protos/xrGetInputSourceLocalizedName.txt[]
   action that reported this bound source.
 * pname:getInfo is an slink:XrInputSourceLocalizedNameGetInfo providing the
   query information.
-* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate
-  a request to retrieve the required capacity.
+* pname:bufferCapacityInput is the capacity of the pname:buffer, or 0 to
+  indicate a request to retrieve the required capacity.
 * pname:bufferCountOutput is a pointer to the count of name characters
-  written (including the terminating `\0`), or a pointer to the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+  written to pname:buffer (including the terminating `\0`), or a pointer to
+  the required capacity in the case that pname:bufferCapacityInput is
+  insufficient.
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the bound source name.
   It can: be code:NULL if pname:bufferCapacityInput is 0.

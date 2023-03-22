@@ -1,0 +1,155 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_spatial_entity_sharing.adoc[]
+
+*Contributors*::
+    John Schofield, Facebook +
+    Andrew Kim, Facebook
+
+*Overview*
+
+This extension enables spatial entities to be shared between users.
+If the ename:XR_SPACE_COMPONENT_TYPE_SHARABLE_FB component has been enabled
+on the spatial entity, application developers may: share slink:XrSpace
+entities between users.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACE_SHARE_INFO_FB
+* ename:XR_TYPE_EVENT_DATA_SPACE_SHARE_COMPLETE_FB
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_SPACE_MAPPING_INSUFFICIENT_FB
+* ename:XR_ERROR_SPACE_LOCALIZATION_FAILED_FB
+* ename:XR_ERROR_SPACE_NETWORK_TIMEOUT_FB
+* ename:XR_ERROR_SPACE_NETWORK_REQUEST_FAILED_FB
+* ename:XR_ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
+
+*New Enums*
+
+*New Base Types*
+
+*New Structures*
+
+[open,refpage='XrSpaceShareInfoFB',type='structs',desc='Describes a request to share some number of spatial entities',xrefs='']
+--
+The slink:XrSpaceShareInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrSpaceShareInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+  pname:spaceCount is the number of elements in the pname:spaces list.
+  pname:spaces is a list containing all spatial entities to be shared.
+  pname:userCount is the number of elements in the pname:users list.
+  pname:users is a list of the users with which the pname:spaces will: be
+  shared.
+****
+
+The slink:XrSpaceShareInfoFB structure describes a request to share one or
+more spatial entities with one or more users.
+
+include::{generated}/validity/structs/XrSpaceShareInfoFB.txt[]
+--
+
+[open,refpage='XrEventDataSpaceShareCompleteFB',type='structs',desc='Completion of request to share one or more spatial entities',xrefs='']
+--
+The slink:XrEventDataSpaceShareCompleteFB structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpaceShareCompleteFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the ID of the asynchronous request used to share the
+  spatial entities.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded or if an error occurred.
+****
+
+It indicates that the request to share one or more spatial entities has
+completed.
+The application can: use pname:result to check if the request was successful
+or if an error occurred.
+
+.Result Codes
+****
+ifndef::doctype-manpage[]
+<<fundamentals-successcodes,Success>>::
+endif::doctype-manpage[]
+ifdef::doctype-manpage[]
+On success, the value of this parameter is::
+endif::doctype-manpage[]
+* ename:XR_SUCCESS
+ifndef::doctype-manpage[]
+<<fundamentals-errorcodes,Failure>>::
+endif::doctype-manpage[]
+ifdef::doctype-manpage[]
+On failure, the value of this parameter is::
+endif::doctype-manpage[]
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_SPACE_MAPPING_INSUFFICIENT_FB
+* ename:XR_ERROR_SPACE_LOCALIZATION_FAILED_FB
+* ename:XR_ERROR_SPACE_NETWORK_TIMEOUT_FB
+* ename:XR_ERROR_SPACE_NETWORK_REQUEST_FAILED_FB
+* ename:XR_ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
+****
+
+include::{generated}/validity/structs/XrEventDataSpaceShareCompleteFB.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrShareSpacesFB',desc='Shares spatial entities with specified users',type='protos',xrefs='']
+--
+The flink:xrShareSpacesFB function is defined as:
+
+include::{generated}/api/protos/xrShareSpacesFB.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info is a pointer to an slink:XrSpaceShareInfoFB structure
+  containing information about which spatial entities to share with which
+  users.
+* pname:requestId is the output parameter that points to the ID of this
+  asynchronous request.
+****
+
+This operation is asynchronous and the runtime must: post an
+slink:XrEventDataSpaceShareCompleteFB event when the operation completes
+successfully or encounters an error.
+The pname:requestId can: be used to later refer to the request, such as
+identifying which request has completed when an
+slink:XrEventDataSpaceShareCompleteFB is posted to the event queue.
+
+include::{generated}/validity/protos/xrShareSpacesFB.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-06-08 (John Schofield)
+** Initial draft

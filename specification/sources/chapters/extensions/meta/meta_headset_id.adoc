@@ -59,8 +59,8 @@ An application can: get a corresponding headset UUID of the headset model by
 chaining an slink:XrSystemHeadsetIdPropertiesMETA structure to the
 slink:XrSystemProperties when calling flink:xrGetSystemProperties.
 
-The UUID returned in the slink:XrSystemHeadsetIdPropertiesMETA struct is an
-opaque UUID that identifies a runtime / headset model combo.
+The UUID returned in the slink:XrSystemHeadsetIdPropertiesMETA structure is
+an opaque UUID that identifies a runtime / headset model combo.
 
 The runtime should: always return the same UUID for a given headset model
 for the entire lifetime of that product.

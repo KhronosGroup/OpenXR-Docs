@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022, The Khronos Group Inc.
+// Copyright (c) 2016-2023, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -72,13 +72,13 @@ include::{generated}/api/protos/xrEnumerateApiLayerProperties.txt[]
 
 .Parameter Descriptions
 ****
-* pname:propertyCapacityInput is the capacity of the properties array, or 0
-  to indicate a request to retrieve the required capacity.
-* pname:propertyCountOutput is a pointer to the count of properties written,
-  or a pointer to the required capacity in the case that
-  propertyCapacityInput is insufficient.
+* pname:propertyCapacityInput is the capacity of the pname:properties array,
+  or 0 to indicate a request to retrieve the required capacity.
+* pname:propertyCountOutput is a pointer to the count of pname:properties
+  written, or a pointer to the required capacity in the case that
+  pname:propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrApiLayerProperties
-  structures, but can: be code:NULL if propertyCapacityInput is 0.
+  structures, but can: be code:NULL if pname:propertyCapacityInput is 0.
 * See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
   detailed description of retrieving the required pname:properties size.
 ****
@@ -164,10 +164,10 @@ include::{generated}/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
 * pname:layerName is either code:NULL or a pointer to a string naming the
   API layer to retrieve extensions from, as returned by
   flink:xrEnumerateApiLayerProperties.
-* pname:propertyCapacityInput is the capacity of the properties array, or
-  `0` to indicate a request to retrieve the required capacity.
-* pname:propertyCountOutput is a pointer to the count of properties written,
-  or a pointer to the required capacity in the case that
+* pname:propertyCapacityInput is the capacity of the pname:properties array,
+  or `0` to indicate a request to retrieve the required capacity.
+* pname:propertyCountOutput is a pointer to the count of pname:properties
+  written, or a pointer to the required capacity in the case that
   pname:propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrExtensionProperties
   structures, but can: be code:NULL if pname:propertyCapacityInput is `0`.

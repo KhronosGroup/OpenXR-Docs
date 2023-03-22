@@ -1,0 +1,86 @@
+// Copyright (c) 2022 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_global_dimmer.adoc[]
+
+*Last Modified Date*::
+    2022-10-25
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Michał Kulągowski, Magic Leap
+
+*Overview*
+
+This extension provides control over the global dimmer panel of the Magic
+Leap 2.
+The Global Dimming(TM) feature dims the entire display without dimming
+digital content to make text and images more solid and precise.
+
+Note that when using the ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND mode
+the alpha channel of the color swapchain image is combined with the global
+dimmer value.
+The global dimmer however is able to address the whole panel whereas the
+alpha channel covers the video addressable portion.
+
+*New Flag Types*
+
+[open,refpage='XrGlobalDimmerFrameEndInfoFlagsML',type='flags',desc='XrGlobalDimmerFrameEndInfoFlagsML',xrefs='xrEndFrame XrGlobalDimmerFrameEndInfoML XrGlobalDimmerFrameEndInfoFlagBitsML']
+--
+The slink:XrGlobalDimmerFrameEndInfoML::pname:flags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrFrameEndInfoFlagBitsML.
+
+include::{generated}/api/flags/XrGlobalDimmerFrameEndInfoFlagsML.txt[]
+--
+
+[open,refpage='XrGlobalDimmerFrameEndInfoFlagBitsML',type='enums',desc='XrGlobalDimmerFrameEndInfoFlagBitsML',xrefs='xrEndFrame XrGlobalDimmerFrameEndInfoML']
+--
+Valid bits for elink:XrGlobalDimmerFrameEndInfoFlagsML are defined by
+elink:XrGlobalDimmerFrameEndInfoFlagBitsML, which is specified as:
+
+include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_GLOBAL_DIMMER_FRAME_END_INFO_ML
+
+*New Structures*
+
+[open,refpage='XrGlobalDimmerFrameEndInfoML',type='structs',desc='Global Dimmer End Frame Information.',xrefs='']
+--
+
+The slink:XrGlobalDimmerFrameEndInfoML structure is defined as:
+
+include::{generated}/api/structs/XrGlobalDimmerFrameEndInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:dimmerValue is a value between 0.0 (transparent) and 1.0 (opaque).
+  The runtime may: adjust the dimmerValue used during composition at the
+  runtime's discretion.
+  This may: be done for user safety, display performance, or other reasons.
+  Values outside of the range are silently clamped.
+* pname:flags is a bitmask of elink:XrGlobalDimmerFrameEndInfoFlagsML
+****
+
+include::{generated}/validity/structs/XrGlobalDimmerFrameEndInfoML.txt[]
+
+--
+
+*Version History*
+
+* Revision 1, 2022-10-25 (Ron Bessems)
+
+** Initial extension description

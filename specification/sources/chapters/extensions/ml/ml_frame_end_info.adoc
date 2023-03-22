@@ -1,0 +1,77 @@
+// Copyright (c) 2022 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_frame_end_info.adoc[]
+
+*Last Modified Date*::
+    2022-10-26
+
+*Contributors*::
+    Ron Bessems, Magic Leap
+
+*Overview*
+
+This extension provides access to Magic Leap specific extensions to frame
+settings like focus distance, vignette, and protection.
+
+*New Flag Types*
+
+[open,refpage='XrFrameEndInfoFlagsML',type='flags',desc='XrFrameEndInfoFlagsML',xrefs='xrEndFrame XrFrameEndInfoML XrFrameEndInfoFlagBitsML']
+--
+The slink:XrFrameEndInfoML::pname:flags member is of the following type, and
+contains a bitwise-OR of zero or more of the bits defined in
+elink:XrFrameEndInfoFlagBitsML.
+
+include::{generated}/api/flags/XrFrameEndInfoFlagsML.txt[]
+--
+
+[open,refpage='XrFrameEndInfoFlagBitsML',type='enums',desc='XrFrameEndInfoFlagBitsML',xrefs='xrEndFrame XrFrameEndInfoML XrFrameEndInfoFlagsML']
+--
+Valid bits for elink:XrFrameEndInfoFlagsML are defined by
+elink:XrFrameEndInfoFlagBitsML, which is specified as:
+
+include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_FRAME_END_INFO_ML
+
+*New Structures*
+
+[open,refpage='XrFrameEndInfoML',type='structs',desc='Per frame configuration parameters.',xrefs='XrFrameEndInfoFlagBitsML']
+--
+
+The slink:XrFrameEndInfoML structure is defined as:
+
+include::{generated}/api/structs/XrFrameEndInfoML.txt[]
+
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:focusDistance is the distance, in meters, to defined focus point for
+  the client content.
+  The focus distance is interpreted as the positive distance to the
+  client-determined object of interest (relative to the forward vector of
+  the Lightwear).
+* pname:flags is a bitmask of elink:XrFrameEndInfoFlagsML
+****
+
+include::{generated}/validity/structs/XrFrameEndInfoML.txt[]
+--
+
+*Version History*
+
+* Revision 1, 2022-10-26 (Ron Bessems)
+
+** Initial extension description

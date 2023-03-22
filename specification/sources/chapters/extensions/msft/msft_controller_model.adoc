@@ -4,6 +4,8 @@
 
 include::{generated}/meta/XR_MSFT_controller_model.adoc[]
 
+:uri-msft-gltf2: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html
+
 *Contributors*::
     Bryce Hutchings, Microsoft +
     Darryl Gough, Microsoft +
@@ -107,7 +109,7 @@ The flink:xrLoadControllerModelMSFT function loads the controller model as a
 byte buffer containing a binary form of glTF (a.k.a GLB file format) for the
 controller.
 The binary glTF data must: conform to glTF 2.0 format defined at
-https://github.com/KhronosGroup/glTF/tree/master/specification/2.0.
+{uri-msft-gltf2}.
 
 include::{generated}/api/protos/xrLoadControllerModelMSFT.txt[]
 

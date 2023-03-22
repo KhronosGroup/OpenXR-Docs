@@ -2,25 +2,37 @@
             xmlns:sqf="http://www.schematron-quickfix.com/validator/process"
             queryBinding="xslt2">
     <!--
-         Copyright (c) 2021-2022, The Khronos Group Inc.
+         Copyright (c) 2021-2023, The Khronos Group Inc.
 
          SPDX-License-Identifier: Apache-2.0
     -->
     <sch:pattern name="Extension uniqueness and basic requirements">
+        <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#extensions -->
         <sch:rule context="extensions/extension">
             <sch:assert test="@name">
                 Extension <sch:value-of select="@number" /> must have a name
             </sch:assert>
 
+            <sch:assert test="starts-with(@name, 'XR_')">
+                Extension <sch:value-of select="@number" /> (<sch:value-of select="@name" />) must start with XR_
+            </sch:assert>
+
+            <sch:let name="vendor-tags" value="//tags/tag/@name"/>
+            <sch:let name="extension-vendor-tag" value="@name/tokenize(., '_')[2]"/>
+            <sch:let name="experimental-base-tag" value="replace($extension-vendor-tag, 'X[0-9]*$', '')"/>
+            <sch:assert test="($extension-vendor-tag = $vendor-tags) or ($experimental-base-tag = $vendor-tags)">
+                Extension <sch:value-of select="@number" /> (<sch:value-of select="@name" />) must start with XR_ and vendor tag (but we got '<sch:value-of select="$extension-vendor-tag" />').
+            </sch:assert>
+
             <sch:let name="extname" value="@name" />
-            <sch:report test="preceding-sibling::element()[@name = $extname]">
-                Extension <sch:value-of select="@number" />: duplicate name "<sch:value-of select="$extname"/>"
-            </sch:report>
+            <sch:assert test="not(preceding::extension[@name = $extname])">
+                Extension <sch:value-of select="@number" />: duplicate name "<sch:value-of select="$extname"/>" (count = <sch:value-of select="count(//extensions/extension[@name = $extname])"/>)
+            </sch:assert>
 
             <sch:let name="extnum" value="@number" />
-            <sch:report test="preceding-sibling::element()[@number = $extnum]">
-                <sch:value-of select="$extname"/> extension: duplicate number "<sch:value-of select="$extnum"/>"
-            </sch:report>
+            <sch:assert test="not(preceding::extension[@number = $extnum])">
+                <sch:value-of select="$extname"/> extension: duplicate number "<sch:value-of select="$extnum"/>" (count = <sch:value-of select="count(//extensions/extension[@number = $extnum])"/>)
+            </sch:assert>
 
             <sch:let name="specver_name" value="concat($extname, '_SPEC_VERSION')"/>
             <sch:assert test="descendant::enum[@name = $specver_name]">
@@ -34,6 +46,32 @@
             <sch:let name="extname_name" value="concat(upper-case($extname), '_EXTENSION_NAME')"/>
             <sch:assert test="descendant::enum[ $extname_name]" >
                 <sch:value-of select="$extname"/> extension: missing name enum with name "<sch:value-of select="$extname_name"/>".
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Use of vendor tag in naming">
+        <!-- An element can only match one rule per pattern (first matching rule is used) -->
+        <sch:rule id="exclusions" context="extensions/extension/require/command[@name='xrGetAudioOutputDeviceGuidOculus' or @name='xrGetAudioInputDeviceGuidOculus']"/>
+        <sch:rule context="extensions/extension/require/type[@name]">
+            <sch:let name="extension-vendor-tag" value="tokenize(../../@name, '_')[2]"/>
+            <sch:assert test="ends-with(@name, $extension-vendor-tag)">
+                Type name <sch:value-of select="@name"/> should end with the author ID (<sch:value-of select="$extension-vendor-tag"/> in the extension name).
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="extensions/extension/require/enum[position() &gt; 2 and @name]">
+            <sch:let name="extension-vendor-tag" value="tokenize(../../@name, '_')[2]"/>
+            <sch:let name="alias" value="./@alias"/>
+            <sch:assert test="ends-with(@name, $extension-vendor-tag) or ends-with($alias, $extension-vendor-tag)">
+                Enumerant name <sch:value-of select="@name"/> should end with the author ID (<sch:value-of select="$extension-vendor-tag"/> in the extension name).
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="extensions/extension/require/command[@name]">
+            <sch:let name="extension-vendor-tag" value="tokenize(../../@name, '_')[2]"/>
+            <sch:assert test="ends-with(@name, $extension-vendor-tag)">
+                Function name <sch:value-of select="@name"/> should end with the author ID (<sch:value-of select="$extension-vendor-tag"/> in the extension name).
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -132,8 +170,6 @@
         <sch:param name="contextElement" value="types/type[@category = ('struct', 'union')]/member"/>
         <sch:param name="struct_or_func_name" value="current()/@name"/>
     </sch:pattern>
-
-
 
     <!-- look for structs with structextends -->
     <sch:pattern name="structextends">
@@ -357,10 +393,11 @@
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
 
-            <!-- these are fine, just not actually array sizes -->
+            <!-- these are fine, just not actually array sizes (and thus sometimes poorly named) -->
             <sch:let name="not_array_size" value="$not_size
                                                   or contains($member_name, 'max')
                                                   or contains($member_name, 'recommended')
+                                                  or $member_name = 'skeletonChangedCount'
                                                   or $struct_name = ('XrSwapchainCreateInfo', 'XrSpaceQueryInfoFB', 'XrEventDataEventsLost')"/>
             <!-- TODO these are registry errors left in place for now, fix them-->
             <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
@@ -470,6 +507,29 @@
             <!-- All other commands should take a handle as their first argument. -->
             <sch:assert test="//types/type[@category = 'handle' and ./name[text() = $first_param_type]]">
                 <sch:value-of select="$command_name" />: takes a first parameter that is not a handle: it is a <sch:value-of select="$first_param_type" />
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Param/member naming conventions: camelCase -->
+    <sch:pattern>
+        <sch:rule context="types/type[@category = ('struct', 'union')]/member">
+            <sch:let name="type_name" value="current()/../@name" />
+            <sch:let name="member_name" value="current()/name/text()" />
+
+            <!-- TODO fix exceptions -->
+            <sch:let name="is_exception" value="$type_name = ('XrFrameEndInfoML')"/>
+            <sch:assert test="$is_exception or matches($member_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
+                <sch:value-of select="$type_name" /> member naming: The <sch:value-of select="$member_name" /> member does not match the camelCase convention.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="commands/command/param[name]">
+            <sch:let name="command_name" value="current()/ancestor::command/proto/name/text()" />
+            <sch:let name="param_name" value="current()/name/text()" />
+
+            <sch:assert test="matches($param_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
+                <sch:value-of select="$command_name" /> param naming: The <sch:value-of select="$param_name" /> parameter does not match the camelCase convention.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -646,36 +706,132 @@
         <sch:param name="action" value="'include'"/>
     </sch:pattern>
 
-    <sch:pattern abstract="true" id="requiredType">
+    <sch:pattern abstract="true" id="requiredRefNameAttrOrTag">
         <sch:rule context="$contextElement[@name]">
-            <sch:let name="attr_val" value="current()/@name"/>
-            <sch:assert test="/registry/types/type[@name=$attr_val] or /registry/types/type/name[text()=$attr_val]">
-                Cannot require type <sch:value-of select="$attr_val"/> which does not exist.
-                Error found in <sch:value-of select="current()/../../name()"/>: <sch:value-of select="current()/../../@name"/>: <sch:value-of select="current()/../@comment"/>.
+            <sch:let name="name_attr_val" value="current()/@name"/>
+            <sch:let name="context_name" value="if (current()/../@comment) then
+                                                concat(current()/../../name(), ' ', current()/../../@name, ' (', current()/../@comment, ')')
+                                                else
+                                                concat(current()/../../name(), ' ', current()/../../@name)"/>
+            <sch:assert test="$candidates[@name=$name_attr_val] or $candidates/descendant::name[text()=$name_attr_val]">
+                <sch:value-of select="$context_name"/>: Cannot require <sch:value-of select="$tag"/> item <sch:value-of select="$name_attr_val"/> which does not exist.
             </sch:assert>
         </sch:rule>
-    </sch:pattern>
-    <sch:pattern is-a="requiredType" name="Extensions require valid types">
-        <sch:param name="contextElement" value="extensions/extension/require/type"/>
-    </sch:pattern>
-    <sch:pattern is-a="requiredType" name="Core features require valid types">
-        <sch:param name="contextElement" value="feature/require/type"/>
     </sch:pattern>
 
-    <sch:pattern abstract="true" id="requiredCommand">
+    <sch:pattern is-a="requiredRefNameAttrOrTag" name="Require valid type">
+        <sch:param name="contextElement" value="//require/type"/>
+        <sch:param name="tag" value="'type'"/>
+        <sch:param name="candidates" value="/registry/types/type"/>
+    </sch:pattern>
+    <sch:pattern is-a="requiredRefNameAttrOrTag" name="Require valid command">
+        <sch:param name="contextElement" value="//require/command"/>
+        <sch:param name="tag" value="'type'"/>
+        <sch:param name="candidates" value="/registry/commands/command"/>
+    </sch:pattern>
+
+    <sch:pattern abstract="true" id="requiredRefNameAttr">
         <sch:rule context="$contextElement[@name]">
-            <sch:let name="attr_val" value="current()/@name"/>
-            <sch:assert test="/registry/commands/command[@name=$attr_val] or /registry/commands/command/proto/name[text()=$attr_val]">
-                Cannot require command <sch:value-of select="$attr_val"/> which does not exist.
-                Error found in <sch:value-of select="current()/../../name()"/>: <sch:value-of select="current()/../../@name"/>: <sch:value-of select="current()/../@comment"/>.
+            <sch:let name="name_attr_val" value="current()/@name"/>
+            <sch:let name="context_name" value="if (current()/../@comment) then
+                                                    concat(current()/../../name(), ' ', current()/../../@name, ' (', current()/../@comment, ')')
+                                                else
+                                                    concat(current()/../../name(), ' ', current()/../../@name)"/>
+            <sch:assert test="$candidates[@name=$name_attr_val]">
+                <sch:value-of select="$context_name"/>: Cannot require <sch:value-of select="$tag"/> item <sch:value-of select="$name_attr_val"/> which does not exist.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
-    <sch:pattern is-a="requiredCommand" name="Extensions require valid commands">
-        <sch:param name="contextElement" value="extensions/extension/require/command"/>
+
+    <!-- Interaction Profiles -->
+
+    <sch:pattern name="Interaction Profile naming">
+        <sch:rule context="interaction_profiles/interaction_profile">
+            <sch:assert test="starts-with(@name, '/interaction_profiles/')">
+                Interaction Profile <sch:value-of select="@name" /> (<sch:value-of select="@title" />): Name is a path that must start with /interaction_profiles/
+            </sch:assert>
+
+            <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#semantic-path-interaction-profiles -->
+            <!-- we seem to allow both tags and vendor authors here -->
+            <sch:let name="vendor-tags" value="//tags/tag/@name/lower-case(.)"/>
+            <sch:let name="vendor-authors" value="//tags/tag/@author/lower-case(.)"/>
+            <!-- TODO fix exceptions (samsung, hp are not vendor tags) -->
+            <sch:let name="is_exception" value="current()/@name = ('/interaction_profiles/samsung/odyssey_controller', '/interaction_profiles/hp/mixed_reality_controller')"/>
+
+            <sch:let name="extension-vendor-author" value="@name/tokenize(., '/')[3]"/>
+            <sch:assert test="$extension-vendor-author = $vendor-authors or $extension-vendor-author = $vendor-tags or $is_exception">
+                Interaction Profile '<sch:value-of select="@name" />' must include a vendor tag (but we got '<sch:value-of select="$extension-vendor-author" />')
+            </sch:assert>
+        </sch:rule>
     </sch:pattern>
-    <sch:pattern is-a="requiredCommand" name="Core features require valid commands">
-        <sch:param name="contextElement" value="feature/require/command"/>
+
+
+    <sch:pattern name="Interaction Profile Component naming">
+        <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#semantic-path-standard-identifiers -->
+        <!-- we also allow `palm` here -->
+        <sch:let name="standard-identifiers" value="'^(a|b|back|aim|dpad_down|dpad_up|dpad_left|dpad_right|grip|haptic|haptic_left|haptic_right|haptic_left_trigger|haptic_right_trigger|home|menu|mute_mic|palm|select|shoulder|shoulder_left|shoulder_right|squeeze|system|thumbrest|thumbstick|thumbstick_left|thumbstick_right|trackpad|trigger|trigger_left|trigger_right|view|volume_up|volume_down|x|y)$'"/>
+        <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#_standard_components -->
+        <!-- we also allow the dpad identifiers here too -->
+        <!-- we also allow `dpad_center` which is not listed in the spec -->
+        <sch:let name="standard-components" value="'^click|dpad_down|dpad_up|dpad_left|dpad_right|dpad_center|force|pose|touch|twist|value|x|y$'"/>
+
+        <sch:rule context="//interaction_profiles/interaction_profile/component">
+            <sch:assert test="starts-with(@subpath, '/input/') or starts-with(@subpath, '/output/')">
+                Interaction Profile component '<sch:value-of select="@subpath" />' must start with /input/ or /output/
+            </sch:assert>
+
+            <sch:let name="identifier-name" value="@subpath/tokenize(., '/')[3]"/>
+            <sch:let name="component-name" value="@subpath/tokenize(., '/')[4]"/>
+            <sch:let name="vendor-tags" value="//tags/tag/@name/lower-case(.)"/>
+            <sch:let name="identifier-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[3], '_')[last()]"/>
+            <sch:let name="component-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[4], '_')[last()]"/>
+
+            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags">
+                Interaction Profile subpath (<sch:value-of select="@subpath" />) must include a standard identifier (but we got '<sch:value-of select="$identifier-name" />') or the identifier must end in _VENDOR (got '<sch:value-of select="$identifier-name-vendor-tag" />')
+            </sch:assert>
+
+            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags">
+                Interaction Profile subpath (<sch:value-of select="@subpath" />) must include a standard component (but we got '<sch:value-of select="$component-name" />') or the component must end in _VENDOR (got '<sch:value-of select="$component-name-vendor-tag" />')
+            </sch:assert>
+
+            <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#_output_paths -->
+            <sch:assert test="not(contains($identifier-name, 'haptic')) or starts-with($identifier-name, 'haptic')">
+                Interaction Profile component (<sch:value-of select="$identifier-name" />) contains the word haptic but it is not at the start of the component.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="extensions/extension/require/extend[@interaction_profile_path]">
+            <sch:let name="existing-profiles" value="//interaction_profiles/interaction_profile/@name"/>
+            <sch:assert test="@interaction_profile_path = $existing-profiles">
+                Interaction Profile path wants to extend '<sch:value-of select="@interaction_profile_path" />' but the profile does not exist to extend.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="//extensions/extension/require/extend[@interaction_profile_path]/component">
+            <!-- TODO: This is duplication of the above check for component path names - can we remove the duplication? -->
+            <sch:assert test="starts-with(@subpath, '/input/') or starts-with(@subpath, '/output/')">
+                Interaction Profile component (<sch:value-of select="@subpath" />) must start with /input/ or /output/
+            </sch:assert>
+
+            <sch:let name="identifier-name" value="@subpath/tokenize(., '/')[3]"/>
+            <sch:let name="component-name" value="@subpath/tokenize(., '/')[4]"/>
+            <sch:let name="vendor-tags" value="//tags/tag/@name/lower-case(.)"/>
+            <sch:let name="identifier-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[3], '_')[last()]"/>
+            <sch:let name="component-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[4], '_')[last()]"/>
+
+            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags">
+                Interaction Profile subpath '<sch:value-of select="@subpath" />' must include a standard identifier (but we got '<sch:value-of select="$identifier-name" />'), or the identifier must end in _VENDOR (got '<sch:value-of select="$identifier-name-vendor-tag" />')
+            </sch:assert>
+
+            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags">
+                Interaction Profile subpath '<sch:value-of select="@subpath" />' must include a standard component (but we got '<sch:value-of select="$component-name" />'), or the component must end in _VENDOR (got '<sch:value-of select="$component-name-vendor-tag" />')
+            </sch:assert>
+
+            <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#_output_paths -->
+            <sch:assert test="not(contains($identifier-name, 'haptic')) or starts-with($identifier-name, 'haptic')">
+                Interaction Profile component (<sch:value-of select="$identifier-name" />) contains the word haptic but it is not at the start of the component.
+            </sch:assert>
+        </sch:rule>
     </sch:pattern>
 
 </sch:schema>

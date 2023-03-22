@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (c) 2019-2022, The Khronos Group Inc.
+# Copyright (c) 2019-2023, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #

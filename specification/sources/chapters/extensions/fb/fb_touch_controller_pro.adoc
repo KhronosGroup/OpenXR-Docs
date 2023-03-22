@@ -1,0 +1,128 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates.
+// All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_FB_touch_controller_pro.adoc[]
+
+*Last Modified Date*::
+    2022-06-29
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Aanchal Dalmia, Meta +
+    Adam Bengis, Meta +
+    Tony Targonski, Meta +
+    Federico Schliemann, Meta
+
+*Overview*
+
+This extension defines a new interaction profile for the Meta Quest Touch
+Pro Controller.
+
+Meta Quest Touch Pro Controller Profile Path:
+
+* pathname:/interaction_profiles/facebook/touch_controller_pro
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile provides inputs and outputs that are a superset of
+those available in the existing "Oculus Touch Controller" interaction
+profile:
+
+* pathname:/interaction_profiles/oculus/touch_controller
+
+Supported component paths (Note that the paths which are marked as 'new' are
+enabled by Meta Quest Touch Pro Controller profile exclusively):
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+
+* On both:
+** subpathname:/input/squeeze/value
+** subpathname:/input/trigger/value
+** subpathname:/input/trigger/touch
+** subpathname:/input/thumbstick
+** subpathname:/input/thumbstick/x
+** subpathname:/input/thumbstick/y
+** subpathname:/input/thumbstick/click
+** subpathname:/input/thumbstick/touch
+** subpathname:/input/thumbrest/touch
+** subpathname:/input/grip/pose
+** subpathname:/input/aim/pose
+** subpathname:/output/haptic
+
+** subpathname:/input/thumbrest/force (new)
+** subpathname:/input/stylus_fb/force (new)
+** subpathname:/input/trigger/curl_fb (new)
+** subpathname:/input/trigger/slide_fb (new)
+** subpathname:/input/trigger/proximity_fb (new)
+** subpathname:/input/thumb_fb/proximity_fb (new)
+** subpathname:/output/haptic_trigger_fb (new)
+** subpathname:/output/haptic_thumb_fb (new)
+
+*New Identifiers*
+****
+* *stylus_fb*: Meta Quest Touch Pro Controller adds an optional stylus tip
+  that can be interchanged with the lanyard.
+  This tip can detect various pressure levels and could be used for writing
+  or drawing.
+* *thumb_fb*: Meta Quest Touch Pro Controller adds a 1-dimensional analog
+  input value for the thumb.
+  This is similar to other triggers on the controller like the fore trigger
+  for the index finger and grip trigger for the middle finger.
+****
+
+*Input Path Descriptions*
+****
+* */input/thumbrest/force* : Allow developers to access the normalized 1D
+  force value associated with the thumb ranging from 0-6 Newtons: 0 = not
+  pressed, 1 = fully pressed
+* */input/stylus_fb/force* : Allow developers to access the normalized 1D
+  force value associated with the stylus ranging from ~0-2 Newtons: 0 = not
+  pressed, 1 = fully pressed
+* */input/trigger/curl_fb* : This represents how pointed or curled the
+  user's finger is on the trigger: 0 = fully pointed, 1 = finger flat on
+  surface
+* */input/trigger/slide_fb*: This represents how far the user is sliding
+  their index finger along the surface of the trigger: 0 = finger flat on
+  the surface, 1 = finger fully drawn back
+* */input/trigger/proximity_fb* : Bit indicating whether the user's index
+  finger is near the trigger
+* */input/thumb_fb/proximity_fb* : Bit indicating the user's thumb is near
+  the touchpad
+****
+
+*Output Path Descriptions*
+****
+In addition to the VCM motor, Meta Quest Touch Pro Controller has two
+localized LRA haptics elements located in the fore trigger and under the
+touchpad.
+
+* */output/haptic_trigger_fb* represents the path to the haptic element in
+  the trigger
+* */output/haptic_thumb_fb* represents the path to the haptic element under
+  the touchpad
+****
+
+*Version History*
+
+* Revision 1, 2022-06-29 (Aanchal Dalmia)
+** Initial extension proposal
