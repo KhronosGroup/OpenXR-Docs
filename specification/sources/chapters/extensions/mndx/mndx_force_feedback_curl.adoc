@@ -1,0 +1,188 @@
+// Copyright (c) 2022, Daniel Willmott
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
+
+*Last Modified Date*::
+    2022-11-18
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Daniel Willmott +
+    Moses Turner (Collabora, Ltd.) +
+    Christoph Haagch (Collabora, Ltd.) +
+    Jakob Bornecrantz (Collabora, Ltd.) +
+
+
+*Overview*
+
+This extension provides APIs for force feedback devices capable of
+restricting physical movement in a single direction along a single
+dimension.
+
+The intended use for this extension is to provide simple force feedback
+capabilities to restrict finger movement for VR Gloves.
+
+The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
+in order to use this extension.
+
+[open,refpage='XrForceFeedbackCurlLocationMNDX',type='enums',desc='Describes which location to apply force feedback',xrefs='']
+--
+The elink:XrForceFeedbackCurlLocationMNDX describes which location to apply
+force feedback.
+
+include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.txt[]
+
+include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.comments-box.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_FORCE_FEEDBACK_CURL_PROPERTIES_MNDX
+* ename:XR_TYPE_FORCE_FEEDBACK_CURL_APPLY_LOCATIONS_MNDX
+
+*New Enums*
+
+* elink:XrForceFeedbackCurlLocationMNDX
+
+*New Structures*
+
+[open,refpage='XrSystemForceFeedbackCurlPropertiesMNDX',type='structs',desc='System property for force feedback curl',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+
+The slink:XrSystemForceFeedbackCurlPropertiesMNDX structure is defined as:
+
+include::{generated}/api/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsForceFeedbackCurl is an basetype:XrBool32, indicating if the
+  current system is capable of performing force feedback.
+****
+
+An application may: inspect whether the system is capable of force feedback
+by chaining an slink:XrSystemForceFeedbackCurlPropertiesMNDX structure to
+the slink:XrSystemProperties structure when calling
+flink:xrGetSystemProperties.
+
+The runtime should: return ename:XR_TRUE for pname:supportsForceFeedback
+when force feedback is available in the system, otherwise ename:XR_FALSE.
+Force feedback calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+force feedback is not available in the system.
+
+include::{generated}/validity/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
+--
+
+[open,refpage='XrForceFeedbackCurlApplyLocationsMNDX',type='structs',desc='Structure representing an array of locations to apply force feedback to',xrefs='xrApplyForceFeedbackCurlMNDX']
+--
+The slink:XrForceFeedbackCurlApplyLocationsMNDX structure is defined as:
+
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:locationCount is the number of elements in the pname:locations
+  array.
+* pname:locations is a pointer to an array of locations to apply force
+  feedback.
+****
+
+Contains an array of slink:XrForceFeedbackCurlApplyLocationMNDX that
+contains information on locations to apply force feedback to.
+
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
+--
+
+[open,refpage='XrForceFeedbackCurlApplyLocationMNDX',type='structs',desc='Structure representing and containing information on how to apply force feedback to a single location.',xrefs='xrApplyForceFeedbackCurlMNDX']
+--
+The slink:XrForceFeedbackCurlApplyLocationMNDX structure is defined as:
+
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
+
+.Member Descriptions
+****
+* pname:location represents the location to apply force feedback to.
+* pname:value is a value from 0-1 representing the amount of force feedback
+  to apply.
+  The range of the value should represent the entire range the location is
+  capable of moving through, with 1 representing making the location
+  incapable of movement, and 0 being fully flexible.
+  For example, in the case of a finger curl, setting pname:value to 1 would
+  prevent the finger from curling at all (fully extended), and 0 would allow
+  the finger to have free range of movement, being able to curl fully.
+****
+
+pname:value is specified as a limit in a single direction.
+For example, if the value specified is 0.5, a location must: have free
+movement from the point where it would be incapable of movement if
+pname:value was 1, to 0.5 of the range the location is capable of moving.
+
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrApplyForceFeedbackCurlMNDX',desc='Applies force feedback to a set of locations',type='protos',xrefs='']
+--
+The flink:xrApplyForceFeedbackCurlMNDX function is defined as:
+
+include::{generated}/api/protos/xrApplyForceFeedbackCurlMNDX.txt[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT handle previously created
+  with flink:xrCreateHandTrackerEXT.
+* pname:locations is an slink:XrForceFeedbackCurlApplyLocationsMNDX
+  containing a set of locations to apply force feedback to.
+****
+
+The flink:xrApplyForceFeedbackCurlMNDX function applies force feedback to
+the set locations listed in slink:XrForceFeedbackCurlApplyLocationsMNDX.
+
+flink:xrApplyForceFeedbackCurlMNDX should: be called every time an
+application wishes to update a set of force feedback locations.
+
+Submits a request for force feedback for a set of locations.
+The runtime should: deliver this request to the pname:handTracker device.
+If the pname:handTracker device is not available, the runtime may: ignore
+this request for force feedback.
+
+If the session associated with pname:handTracker is not focused, the runtime
+must: return ename:XR_SESSION_NOT_FOCUSED, and not apply force feedback.
+
+When an application submits force feedback for a set of locations, the
+runtime must: update the set of locations to that specified by the
+application.
+A runtime must: set any locations not specified by the application when
+submitting force feedback to 0.
+
+The runtime may: discontinue force feedback if the application that set it
+loses focus.
+An application should: call the function again after regaining focus if
+force feedback is still desired.
+
+include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.txt[]
+--
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-09-07 (Daniel Willmott)
+** Initial version
