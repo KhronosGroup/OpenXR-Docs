@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <?xml-model href="registry.rnc" type="application/relax-ng-compact-syntax"?>
 <?xml-model href="registry.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
@@ -5748,6 +5748,35 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
             <component                                subpath="/output/haptic"            type="XR_ACTION_TYPE_VIBRATION_OUTPUT"/>
         </interaction_profile>
 
+        <!-- XR_OPPO_controller_interaction -->
+
+        <interaction_profile name="/interaction_profiles/oppo/mr_controller_oppo" title="OPPO MR Controller">
+            <user_path path="/user/hand/left"/>
+            <user_path path="/user/hand/right"/>
+            <component user_path="/user/hand/left"    subpath="/input/x/click"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/left"    subpath="/input/x/touch"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/left"    subpath="/input/y/click"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/left"    subpath="/input/menu/click"             type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/left"    subpath="/input/y/touch"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/left"    subpath="/input/heartrate_oppo/value"   type="XR_ACTION_TYPE_FLOAT_INPUT"/>
+            <component user_path="/user/hand/right"   subpath="/input/a/click"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/right"   subpath="/input/a/touch"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/right"   subpath="/input/b/click"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/right"   subpath="/input/b/touch"                type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component user_path="/user/hand/right"   subpath="/input/home/click"             type="XR_ACTION_TYPE_BOOLEAN_INPUT"    system="true"/>
+            <component                                subpath="/input/squeeze/value"          type="XR_ACTION_TYPE_FLOAT_INPUT"/>
+            <component                                subpath="/input/trigger/touch"          type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component                                subpath="/input/trigger/value"          type="XR_ACTION_TYPE_FLOAT_INPUT"/>
+            <component                                subpath="/input/thumbstick"             type="XR_ACTION_TYPE_VECTOR2F_INPUT"/>
+            <component                                subpath="/input/thumbstick/x"           type="XR_ACTION_TYPE_FLOAT_INPUT"/>
+            <component                                subpath="/input/thumbstick/y"           type="XR_ACTION_TYPE_FLOAT_INPUT"/>
+            <component                                subpath="/input/thumbstick/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component                                subpath="/input/thumbstick/touch"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component                                subpath="/input/grip/pose"              type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component                                subpath="/input/aim/pose"               type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component                                subpath="/output/haptic"                type="XR_ACTION_TYPE_VIBRATION_OUTPUT"/>
+        </interaction_profile>
+
 
     </interaction_profiles>
 
@@ -10289,10 +10318,11 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
         </require>
     </extension>
 
-    <extension name="XR_OPPO_extension_454" number="454" type="instance" supported="disabled">
+    <extension name="XR_OPPO_controller_interaction" number="454" type="instance" supported="openxr">
         <require>
-            <enum value="1"                                 name="XR_OPPO_extension_454_SPEC_VERSION"/>
-            <enum value="&quot;XR_OPPO_extension_454&quot;" name="XR_OPPO_EXTENSION_454_EXTENSION_NAME"/>
+            <enum value="1"                                          name="XR_OPPO_controller_interaction_SPEC_VERSION"/>
+            <enum value="&quot;XR_OPPO_controller_interaction&quot;" name="XR_OPPO_controller_interaction_EXTENSION_NAME"/>
+            <interaction_profile name="/interaction_profiles/oppo/mr_controller_oppo"/>
         </require>
     </extension>
 
