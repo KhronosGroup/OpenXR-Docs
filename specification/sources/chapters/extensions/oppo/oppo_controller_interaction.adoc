@@ -1,0 +1,74 @@
+// Copyright (c) 2023 OPPO
+//
+//
+
+
+include::../meta/XR_OPPO_controller_interaction.adoc[]
+
+*Contributors*::
+    Haomiao Jiang, OPPO +
+    Buyi Xu, OPPO +
+    Yebao Cai, OPPO +
+
+*Overview*
+
+This extension defines a new interaction profile for the OPPO Controller, including but not limited to OPPO MR Glasses Controller.
+
+*OPPO Controller interaction profile*
+
+Interaction profile path:
+* pathname:/interaction_profiles/oppo/mr_controller_oppo
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the OPPO Controller.
+
+Supported component paths:
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+** subpathname:/input/heartrate_oppo/value
+
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/home/click (may: not be available for application use)
+
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/value
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbstick
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/output/haptic
+
+*New Identifiers*
+****
+* *heartrate_oppo*: OPPO MR Controller adds an optional heart rate sensor to
+  monitor the heart beat rate of the user.
+****
+
+*Input Path Descriptions*
+****
+* */input/heartrate_oppo/value* : Allow developers to access the heart beat
+  per minute (BPM) of the user. The data would only be available with user's
+  active consent.
+****
+
+*Version History*
+
+* Revision 1
+
+** Initial extension description
