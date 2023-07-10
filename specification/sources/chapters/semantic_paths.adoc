@@ -434,8 +434,8 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
 ** For tracked hands: The ray that follows platform conventions for how the
    user aims at objects in the world with their entire hand, with +Y up, +X
    to the right, and -Z forward.
-   The ray chosen will be runtime-dependent, for example, a ray emerging
-   from the palm parallel to the forearm.
+   The ray chosen will be runtime-dependent, often a ray emerging from the
+   hand at a target pointed by moving the forearm.
 ** For handheld motion controllers: The ray that follows platform
    conventions for how the user targets objects in the world with the motion
    controller, with +Y up, +X to the right, and -Z forward.
@@ -455,15 +455,28 @@ ifdef::XR_EXT_palm_pose[]
 [NOTE]
 .Note
 ****
-When the `<<XR_EXT_palm_pose>>` extension is available and enabled, an
+When the apiext:XR_EXT_palm_pose extension is available and enabled, an
 additional "palm_ext" standard pose identifier is available, and a path is
 added to all interaction profiles valid for pathname:/user/hand/left or
 pathname:/user/hand/right.
 This includes interaction profiles defined in the core spec and in
 extensions.
-See the extension for details.
 ****
 endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+additional "pinch_ext" and "poke_ext" standard pose identifiers are
+available, and a path is added to all interaction profiles valid for
+pathname:/user/hand/left or pathname:/user/hand/right.
+This includes interaction profiles defined in the core spec and in
+extensions.
+****
+endif::XR_EXT_hand_interaction[]
+
 
 ===== Standard locations
 
@@ -583,7 +596,7 @@ ifdef::XR_EXT_palm_pose[]
 [NOTE]
 .Note
 ****
-When the `<<XR_EXT_palm_pose>>` extension is available and enabled, an
+When the apiext:XR_EXT_palm_pose extension is available and enabled, an
 additional input component path is added to all core interaction profiles
 valid for pathname:/user/hand/left or pathname:/user/hand/right.
 See the extension for more details.
@@ -613,6 +626,29 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
+
 ==== Google Daydream Controller Profile
 
 Path: pathname:/interaction_profiles/google/daydream_controller
@@ -635,6 +671,28 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
 
 ==== HTC Vive Controller Profile
 
@@ -663,6 +721,29 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
+
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
 
 ==== HTC Vive Pro Profile
 
@@ -710,6 +791,29 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
+
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
 
 ==== Microsoft Xbox Controller Profile
 
@@ -774,6 +878,28 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
 
 ==== Oculus Touch Controller Profile
 
@@ -814,6 +940,28 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
 
 ==== Valve Index Controller Profile
 
@@ -853,3 +1001,26 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
+
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]

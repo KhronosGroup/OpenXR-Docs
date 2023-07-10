@@ -12,15 +12,15 @@ include::{generated}/meta/XR_FB_hand_tracking_capsules.adoc[]
 
 *Overview*
 
-The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
-which include a collision sphere for each joint.
+The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
+poses which include a collision sphere for each joint.
 However some physics systems prefer to use capsules as a collision stand in
 for the hands.
 
 This extension allows:
 
 * An application to get a list of capsules that represent the volume of the
-  hand when using the <<XR_EXT_hand_tracking>> extension.
+  hand when using the apiext:XR_EXT_hand_tracking extension.
 
 *New Object Types*
 

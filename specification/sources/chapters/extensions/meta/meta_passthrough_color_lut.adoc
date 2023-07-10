@@ -1,0 +1,368 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_passthrough_color_lut.adoc[]
+
+*Last Modified Date*::
+    2022-11-28
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Andreas Loeve Selvik, Meta Platforms +
+    Johannes Schmid, Meta Platforms +
+    John Kearney, Meta Platforms +
+
+*Overview*
+
+This extension adds the capability to define and apply RGB to RGB(A) color
+look-up tables (LUTs) to passthrough layers created using
+apiext:XR_FB_passthrough.
+
+Color LUTs are 3-dimensional arrays which map each input color to a
+different output color.
+When applied to a Passthrough layer, the runtime must: transform Passthrough
+camera images according to this map before display.
+Color LUTs may: be used to achieve effects such as color grading, level
+control, color filtering, or chroma keying.
+
+Color LUTs must: be created using flink:xrCreatePassthroughColorLutMETA
+before they can: be applied to a Passthrough layer in a call to
+flink:xrPassthroughLayerSetStyleFB (as a part of
+slink:XrPassthroughColorMapLutMETA or
+slink:XrPassthroughColorMapInterpolatedLutMETA).
+A color LUT may: be applied to multiple Passthrough layers simultaneously.
+
+*New Object Types*
+
+[open,refpage='XrPassthroughColorLutMETA',type='handles',desc='Color LUT']
+--
+include::{generated}/api/handles/XrPassthroughColorLutMETA.txt[]
+
+slink:XrPassthroughColorLutMETA represents the definition and data for a
+color LUT which may: be applied to a passthrough layer using
+flink:xrPassthroughLayerSetStyleFB.
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_PASSTHROUGH_COLOR_LUT_PROPERTIES_META
+* ename:XR_TYPE_PASSTHROUGH_COLOR_LUT_CREATE_INFO_META
+* ename:XR_TYPE_PASSTHROUGH_COLOR_LUT_UPDATE_INFO_META
+* ename:XR_TYPE_PASSTHROUGH_COLOR_MAP_LUT_META
+* ename:XR_TYPE_PASSTHROUGH_COLOR_MAP_INTERPOLATED_LUT_META
+
+*New Enums*
+
+[open,refpage='XrPassthroughColorLutChannelsMETA',desc='Color channels',type='enums']
+--
+Specify the color channels contained in the color LUT.
+
+include::{generated}/api/enums/XrPassthroughColorLutChannelsMETA.txt[]
+--
+
+*New Structures*
+
+[open,refpage='XrSystemPassthroughColorLutPropertiesMETA',type='structs',desc='Passthrough color LUT system properties',xrefs='XrSystemProperties']
+--
+
+The slink:XrSystemPassthroughColorLutPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemPassthroughColorLutPropertiesMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:maxColorLutResolution Maximum value for
+  slink:XrPassthroughColorLutCreateInfoMETA::pname:resolution supported by
+  the system.
+  Runtimes implementing this extension must: support a value of at least 32
+  for this property.
+****
+
+When the apiext:XR_META_passthrough_color_lut extension is enabled, an
+application may: pass in an slink:XrSystemPassthroughColorLutPropertiesMETA
+structure in next chain structure when calling flink:xrGetSystemProperties
+to acquire information about the connected system.
+
+The runtime must: populate the
+slink:XrSystemPassthroughColorLutPropertiesMETA structure with the relevant
+information to the slink:XrSystemProperties returned by the
+flink:xrGetSystemProperties call.
+
+include::{generated}/validity/structs/XrSystemPassthroughColorLutPropertiesMETA.txt[]
+--
+
+[open,refpage='XrPassthroughColorLutDataMETA',type='structs',desc='Passthrough color LUT data',xrefs='']
+--
+The slink:XrPassthroughColorLutDataMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorLutDataMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:bufferSize is the number of bytes contained in the buffer data.
+* pname:buffer is a pointer to a memory block of pname:bufferSize bytes that
+  contains the LUT data.
+****
+
+slink:XrPassthroughColorLutDataMETA defines the LUT data for a color LUT.
+This structure is used when creating and updating color LUTs.
+
+include::{generated}/validity/structs/XrPassthroughColorLutDataMETA.txt[]
+--
+
+[open,refpage='XrPassthroughColorLutCreateInfoMETA',type='structs',desc='Passthrough color LUT creation info',xrefs='']
+--
+The slink:XrPassthroughColorLutCreateInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorLutCreateInfoMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:channels defines the color channels expected in one LUT element.
+  The number of bytes expected per LUT element is 3 for
+  ename:XR_PASSTHROUGH_COLOR_LUT_CHANNELS_RGB_META and 4 for
+  ename:XR_PASSTHROUGH_COLOR_LUT_CHANNELS_RGBA_META.
+* pname:resolution is the number of LUT elements per input channel.
+  The total number of elements in the LUT is [eq]#pname:resolution^3^#.
+* pname:data contains the data the LUT is initialized with.
+****
+
+pname:resolution must: be a power of 2, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+The runtime may: impose a limit on the maximum supported resolution, which
+is indicated in slink:XrSystemPassthroughColorLutPropertiesMETA.
+If pname:resolution exceeds that limit, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+pname:data contains a 3-dimensional array which defines an output color for
+each RGB input color.
+The input color is scaled to be in the range [eq]#[0, pname:resolution]#.
+For an RGBA LUT, the RGBA tuple of output colors for an input color
+[eq]#(R~in~, G~in~, B~in~)# is found in the four bytes starting at the
+offset [eq]#4 * (R~in~ + G~in~ * pname:resolution + B~in~ *
+pname:resolution^2^)#.
+For an RGB LUT, the RGB tuple of output colors for an input color
+[eq]#(R~in~, G~in~, B~in~)# is found in the three bytes starting at the
+offset [eq]#3 * (R~in~ + G~in~ * pname:resolution + B~in~ *
+pname:resolution^2^)#.
+
+Color LUT data must: be specified and interpreted in sRGB color space.
+
+Runtimes must: employ trilinear interpolation of neighboring color values if
+the resolution of the color LUT is smaller than the bit depth of the input
+colors.
+
+The value of pname:bufferSize in pname:data must: be equal to
+[eq]#pname:resolution^3^ * bytesPerElement#, where [eq]#bytesPerElement# is
+either 3 or 4 depending on pname:channels.
+Otherwise, the runtime must: return
+ename:XR_ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META.
+
+include::{generated}/validity/structs/XrPassthroughColorLutCreateInfoMETA.txt[]
+--
+
+[open,refpage='XrPassthroughColorLutUpdateInfoMETA',type='structs',desc='Passthrough color LUT update info',xrefs='']
+--
+The slink:XrPassthroughColorLutUpdateInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorLutUpdateInfoMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:data contains the updated LUT data.
+****
+
+The LUT data may: be updated for an existing color LUT, while channels and
+resolution remain constant after creation.
+Hence, the value of pname:bufferSize in pname:data must: be equal to the
+buffer size specified at creation.
+Otherwise, the runtime must: return
+ename:XR_ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META.
+
+include::{generated}/validity/structs/XrPassthroughColorLutUpdateInfoMETA.txt[]
+--
+
+[open,refpage='XrPassthroughColorMapLutMETA',type='structs',desc='A color map defined by a LUT',xrefs='']
+--
+The slink:XrPassthroughColorMapLutMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorMapLutMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:colorLut is an slink:XrPassthroughColorLutMETA.
+* pname:weight is a factor in the range [eq]#[0, 1]# which defines the
+  linear blend between the original and the mapped colors for the output
+  color.
+****
+
+slink:XrPassthroughColorMapLutMETA lets applications apply a color LUT to a
+passthrough layer.
+Other Passthrough style elements (such as edges) must: not be affected by
+color LUTs.
+
+Applications may: use pname:weight to efficiently blend between the original
+colors and the mapped colors.
+The blend is computed as [eq]#(1 - pname:weight) * C~in~ + pname:weight *
+pname:colorLut[C~in~]#.
+
+
+slink:XrPassthroughColorMapLutMETA is provided in the pname:next chain of
+slink:XrPassthroughStyleFB when calling flink:xrPassthroughLayerSetStyleFB.
+Subsequent calls to flink:xrPassthroughLayerSetStyleFB with
+slink:XrPassthroughColorMapLutMETA in the pname:next chain update the color
+LUT for that layer.
+Subsequent calls to flink:xrPassthroughLayerSetStyleFB without this
+slink:XrPassthroughColorMapLutMETA (or
+slink:XrPassthroughColorMapInterpolatedLutMETA) in the next chain disable
+color LUTs for that layer.
+
+include::{generated}/validity/structs/XrPassthroughColorMapLutMETA.txt[]
+--
+
+[open,refpage='XrPassthroughColorMapInterpolatedLutMETA',type='structs',desc='A color map defined by the interpolation between two LUTs',xrefs='']
+--
+The slink:XrPassthroughColorMapInterpolatedLutMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughColorMapInterpolatedLutMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:sourceColorLut is the initial slink:XrPassthroughColorLutMETA.
+* pname:targetColorLut is the final slink:XrPassthroughColorLutMETA.
+* pname:weight is a factor in the range [eq]#[0, 1]# which defines the
+  linear blend between the initial and the final color LUT.
+****
+
+slink:XrPassthroughColorMapInterpolatedLutMETA lets applications apply the
+interpolation between two color LUTs to a passthrough layer.
+Applications may: use this feature to smoothly transition between two color
+LUTs.
+Other Passthrough style elements (such as edges) must: not be affected by
+color LUTs.
+
+The blend between pname:sourceColorLut and pname:targetColorLut is computed
+as [eq]#(1 - pname:weight) * pname:sourceColorLut[C~in~] + pname:weight *
+pname:targetColorLut[C~in~]#.
+
+slink:XrPassthroughColorMapInterpolatedLutMETA is provided in the pname:next
+chain of slink:XrPassthroughStyleFB when calling
+flink:xrPassthroughLayerSetStyleFB.
+Subsequent calls to flink:xrPassthroughLayerSetStyleFB with
+slink:XrPassthroughColorMapInterpolatedLutMETA in the next chain update the
+color LUT for that layer.
+Subsequent calls to flink:xrPassthroughLayerSetStyleFB without this
+slink:XrPassthroughColorMapInterpolatedLutMETA (or
+slink:XrPassthroughColorMapLutMETA) in the next chain disable color LUTs for
+that layer.
+
+include::{generated}/validity/structs/XrPassthroughColorMapInterpolatedLutMETA.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrCreatePassthroughColorLutMETA',desc='Create a passthrough color LUT',type='protos',xrefs='']
+--
+The flink:xrCreatePassthroughColorLutMETA function is defined as:
+
+include::{generated}/api/protos/xrCreatePassthroughColorLutMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:passthrough is the slink:XrPassthroughFB this color LUT is created
+  for.
+* pname:createInfo is the slink:XrPassthroughColorLutCreateInfoMETA.
+* pname:colorLut is the resulting slink:XrPassthroughColorLutMETA.
+****
+
+Creates a passthrough color LUT.
+The resulting slink:XrPassthroughColorLutMETA may: be referenced in
+slink:XrPassthroughColorMapLutMETA and
+slink:XrPassthroughColorMapInterpolatedLutMETA in subsequent calls to
+flink:xrPassthroughLayerSetStyleFB.
+
+include::{generated}/validity/protos/xrCreatePassthroughColorLutMETA.txt[]
+--
+
+[open,refpage='xrDestroyPassthroughColorLutMETA',desc='Destroy a passthrough color LUT',type='protos',xrefs='']
+--
+The flink:xrDestroyPassthroughColorLutMETA function is defined as:
+
+include::{generated}/api/protos/xrDestroyPassthroughColorLutMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:colorLut is the slink:XrPassthroughColorLutMETA to be destroyed.
+****
+
+Destroys a passthrough color LUT.
+If the color LUT is still in use (i.e. if for at least one passthrough
+layer, flink:xrPassthroughLayerSetStyleFB has last been called with an
+instance of slink:XrPassthroughColorMapLutMETA or
+slink:XrPassthroughColorMapInterpolatedLutMETA in the next chain that
+references this color LUT), the runtime must: retain the color LUT data and
+continue applying it to the affected passthrough layer until a different
+style is applied.
+
+include::{generated}/validity/protos/xrDestroyPassthroughColorLutMETA.txt[]
+--
+
+[open,refpage='xrUpdatePassthroughColorLutMETA',desc='Update a passthrough color LUT',type='protos',xrefs='']
+--
+The flink:xrUpdatePassthroughColorLutMETA function is defined as:
+
+include::{generated}/api/protos/xrUpdatePassthroughColorLutMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:colorLut is the slink:XrPassthroughColorLutMETA to be updated.
+* pname:updateInfo is the slink:XrPassthroughColorLutUpdateInfoMETA.
+****
+
+Updates the LUT data of a passthrough color LUT.
+The data type of the color LUT (resolution and channels) is immutable.
+The provided data in this call must: therefore match the data type specified
+at creation time.
+Specifically, pname:bufferSize of the new data must: be equal to the
+pname:bufferSize specified during creation.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: reflect changes to color LUT data on all Passthrough
+layers the color LUT is currently applied to.
+
+include::{generated}/validity/protos/xrUpdatePassthroughColorLutMETA.txt[]
+--
+
+*Version History*
+
+* Revision 1, 2022-12-08 (Johannes Schmid)
+** Initial extension description

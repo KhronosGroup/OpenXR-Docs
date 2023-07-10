@@ -43,21 +43,25 @@ It should be noted that the _OpenXR Documentation_ has been branched from
 the Vulkan documentation.
 A deliberate decision was made to keep the API standards similar, although
 this may diverge over time as changes are made to either standard.
-The OpenXR version of this style guide is also influenced by _Etna_, the
-proposal that was adopted as a starting point for the OpenXR specification.
+The OpenXR version of this style guide is also influenced by the proposal
+that was adopted as a starting point for the OpenXR specification.
 
 The primary purpose is to achieve consistency across the API, as well as
 across all of our source and output documents.
 Consistency makes it easier for developers, editors, reviewers, and users of
 our documentation to understand and modify it.
 
-This document has been ratified by the OpenXR working group.
-
-This means that unless explicitly stated otherwise, the procedures and
-conventions must be followed when making changes or additions to the OpenXR
-specification.
+Unless explicitly stated otherwise, the procedures and conventions must be
+followed when making changes or additions to the OpenXR specification.
 If you have a strong desire to modify the procedures and conventions, such
 changes must be made through the normal OpenXR Working group process.
+
+Note that some conventions in naming and API design that would be relevant
+to a user of the standard are discussed in the "Fundamentals" and "Appendix"
+chapters of the specification itself.
+If a contradiction is found, the specification itself takes precedence, and
+normal working group procedures should be followed to correct this style
+guide.
 
 [[introduction-terminology]]
 == Terminology

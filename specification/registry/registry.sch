@@ -300,7 +300,7 @@
                 <sch:value-of select="current()/@name"/>: Extends XrSystemProperties, but the name doesn't start with XrSystem. Should be named XrSystem...PropertiesAUTHOR.
             </sch:assert>
             <sch:assert test="contains(@name, 'Properties') or $is_exception">
-                <sch:value-of select="current()/@name"/>: Extends XrSystemProperties, but the name doesn't include Proprties. Should be named XrSystem...PropertiesAUTHOR.
+                <sch:value-of select="current()/@name"/>: Extends XrSystemProperties, but the name doesn't include Properties. Should be named XrSystem...PropertiesAUTHOR.
             </sch:assert>
         </sch:rule>
 
@@ -393,12 +393,12 @@
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
 
-            <!-- these are fine, just not actually array sizes (and thus sometimes poorly named) -->
+            <!-- these are fine, just not actually array sizes. Prefer renaming if possible before extending this condition. -->
             <sch:let name="not_array_size" value="$not_size
                                                   or contains($member_name, 'max')
                                                   or contains($member_name, 'recommended')
                                                   or $member_name = 'skeletonChangedCount'
-                                                  or $struct_name = ('XrSwapchainCreateInfo', 'XrSpaceQueryInfoFB', 'XrEventDataEventsLost')"/>
+                                                  or $struct_name = ('XrSwapchainCreateInfo', 'XrSpaceQueryInfoFB', 'XrEventDataEventsLost', 'XrPlaneDetectorLocationEXT')"/>
             <!-- TODO these are registry errors left in place for now, fix them-->
             <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
 
@@ -832,6 +832,31 @@
                 Interaction Profile component (<sch:value-of select="$identifier-name" />) contains the word haptic but it is not at the start of the component.
             </sch:assert>
         </sch:rule>
+
+        <sch:rule context="extensions/extension/require/interaction_profile[@name]">
+            <sch:let name="vendor-tag" value="concat('_', lower-case(../../@name/tokenize(., '_')[2]))"/>
+            <sch:let name="is_exception" value="current()/@name = (
+                '/interaction_profiles/ext/eye_gaze_interaction',
+                '/interaction_profiles/huawei/controller',
+                '/interaction_profiles/microsoft/hand_interaction',
+                '/interaction_profiles/samsung/odyssey_controller',
+                '/interaction_profiles/hp/mixed_reality_controller',
+                '/interaction_profiles/htc/vive_cosmos_controller',
+                '/interaction_profiles/htc/vive_focus3_controller',
+                '/interaction_profiles/htc/hand_interaction',
+                '/interaction_profiles/htc/vive_wrist_tracker',
+                '/interaction_profiles/ml/ml2_controller',
+                '/interaction_profiles/bytedance/pico_neo3_controller',
+                '/interaction_profiles/bytedance/pico4_controller',
+                '/interaction_profiles/facebook/touch_controller_pro'
+                )"/>
+            <sch:assert test="ends-with(@name, $vendor-tag) or $is_exception">
+                Interaction Profile name must end with vendor tag _vendor ('<sch:value-of select="$vendor-tag" />'). '<sch:value-of select="@name" />' if it is introduced in an extension.
+            </sch:assert>
+        </sch:rule>
+
+
     </sch:pattern>
 
 </sch:schema>
+

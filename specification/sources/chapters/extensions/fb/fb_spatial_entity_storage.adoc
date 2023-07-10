@@ -192,6 +192,7 @@ slink:XrSpaceSaveInfoFB::pname:persistenceMode is invalid.
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpaceSaveCompleteFB event when the operation completes
 successfully or encounters an error.
+If this function returns a failure code, no event is posted.
 
 include::{generated}/validity/protos/xrSaveSpaceFB.txt[]
 --
@@ -222,6 +223,7 @@ slink:XrSpaceEraseInfoFB::pname:location is invalid.
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpaceEraseCompleteFB event when the operation completes
 successfully or encounters an error.
+If this function returns a failure code, no event is posted.
 
 include::{generated}/validity/protos/xrEraseSpaceFB.txt[]
 --

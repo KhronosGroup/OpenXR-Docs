@@ -131,6 +131,7 @@ slink:XrSpaceSaveInfoFB::pname:location is invalid.
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpaceListSaveCompleteFB event when the operation completes
 successfully or encounters an error.
+If this function returns a failure code, no event is posted.
 
 include::{generated}/validity/protos/xrSaveSpaceListFB.txt[]
 --

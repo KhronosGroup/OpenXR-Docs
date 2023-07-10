@@ -43,7 +43,7 @@ or application that include it.
 [NOTE]
 .Note
 ====
-This extension is intended as an alternative to `<<XR_KHR_vulkan_enable>>`,
+This extension is intended as an alternative to apiext:XR_KHR_vulkan_enable,
 and does not depend on it.
 ====
 
@@ -522,13 +522,13 @@ be used as if they were created with at least the specified
 
 ifdef::XR_KHR_swapchain_usage_input_attachment_bit[]
 | ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
-  (Added by `<<XR_KHR_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+  (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
 | `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
 endif::XR_KHR_swapchain_usage_input_attachment_bit[]
 
 ifdef::XR_MND_swapchain_usage_input_attachment_bit[]
 | ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
-  (Added by the now deprecated `<<XR_MND_swapchain_usage_input_attachment_bit>>` extension and only available when that extension is enabled)
+  (Added by the now deprecated apiext:XR_MND_swapchain_usage_input_attachment_bit extension and only available when that extension is enabled)
 | `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
 endif::XR_MND_swapchain_usage_input_attachment_bit[]
 

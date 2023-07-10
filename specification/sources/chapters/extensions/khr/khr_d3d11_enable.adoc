@@ -72,7 +72,7 @@ The runtime may: set additional bind flags but must: not restrict usage.
 | _ignored_
 
 | ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
-  (Added by `<<XR_KHR_swapchain_usage_input_attachment_bit>>` and only available when that extension is enabled)
+  (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
 | _ignored_
 
 |===

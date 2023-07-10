@@ -1,0 +1,480 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_hand_interaction.adoc[]
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Alex Turner, Microsoft +
+    Casey Meekhof, Microsoft +
+    Lachlan Ford, Microsoft +
+    Eric Provencher, Unity Technologies +
+    Bryan Dube, Unity Technologies +
+    Peter Kuhn, Unity Technologies +
+    Tanya Li, Unity Technologies +
+    Jakob Bornecrantz, Collabora +
+    Jonathan Wright, Meta Platforms +
+    Federico Schliemann, Meta Platforms +
+    Andreas Loeve Selvik, Meta Platforms +
+    Nathan Nuber, Valve +
+    Joe Ludwig, Valve +
+    Rune Berg, Valve +
+    Adam Harwood, Ultraleap +
+    Robert Blenkinsopp, Ultraleap +
+    Paulo Gomes, Samsung Electronics +
+    Ron Bessems, Magic Leap +
+    Bastiaan Olij, Godot Engine +
+
+==== Overview
+
+This extension defines four commonly used action poses for all user hand
+interaction profiles including both hand tracking devices and motion
+controller devices.
+
+This extension also introduces a new interaction profile specifically
+designed for hand tracking devices to input through the <<input, OpenXR
+action system>>.
+Though, for runtimes with controller inputs, the runtime should: also
+provide this interaction profile through action mappings from the controller
+inputs, so that an application whose suggested action bindings solely
+depending on this hand interaction profile is usable on such runtimes as
+well.
+
+[[ext_hand_interaction-the-four-action-poses]]
+==== Action poses for hand interactions
+
+The following four action poses (i.e. "pinch," "poke," "aim," and "grip")
+enable a hand and finger interaction model, whether the tracking inputs are
+provided by a hand tracking device or a motion controller device.
+
+The runtime must: support all of the following action subpaths on all
+<<semantic-path-interaction-profiles, interaction profiles>> that are valid
+for the user paths of pathname:/user/hand/left and
+pathname:/user/hand/right, including those interaction profiles enabled
+through extensions.
+
+* subpathname:/input/aim/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+
+===== Aim pose
+
+The subpathname:/input/aim/pose is designed for interacting with objects out
+of arm's reach.
+For example, using a virtual laser pointer to aim at a virtual button on the
+wall is an interaction suited to the "aim" pose.
+
+This is the same "aim" pose defined in
+<<semantic-path-standard-pose-identifiers>>.
+Every tracked controller profile already supports this pose.
+
+image::images/hand_aim_pose.svg[align="center", title="Example aim pose."]
+
+*Position*
+
+The position of an "aim" pose is typically in front of the user's hand and
+moves together with the corresponding hand, so that the user is able to
+easily see the aiming ray cast to the target in the world and adjust for
+aim.
+
+*Orientation*
+
+The orientation of an "aim" pose is typically stabilized so that it is
+suitable to render an aiming ray emerging from the user's hand pointing into
+the world.
+
+The -Z direction is the forward direction of the aiming gesture, that is,
+where the aiming ray is pointing at.
+
+The +Y direction is a runtime defined direction based on the hand tracking
+device or ergonomics of the controller in the user's hand.
+It is typically pointing up in the world when the user is performing the
+aiming gesture naturally forward with a hand or controller in front of the
+user body.
+
+The +X direction is orthogonal to +Y and +Z using the right-hand rule.
+
+When targeting an object out of arm's reach, the runtime may: optimize the
+"aim" pose stability for pointing at a target, therefore the rotation of the
+"aim" pose may: account for forearm or shoulder motion as well as hand
+rotation.
+Hence, the "aim" pose may: not always rigidly attach to the user's hand
+rotation.
+If the application desires to rotate the targeted remote object in place, it
+should: use the rotation of the "grip" pose instead of "aim" pose, as if the
+user is remotely holding the object and rotating it.
+
+===== Grip pose
+
+The subpathname:/input/grip/pose is designed for holding an object with a
+full hand grip gesture, for example, grasping and pushing a door's handle or
+holding and swinging a sword.
+
+This is the same "grip" pose defined in
+<<semantic-path-standard-pose-identifiers>>.
+Every tracked controller profile already supports this pose.
+
+The runtime should: optimize the "grip" pose orientation so that it
+stabilizes large virtual objects held in the user's hand.
+
+image::images/hand_grip_pose.svg[align="center", title="Example grip pose."]
+
+*Position*
+
+The position of the "grip" pose is at the centroid of the user's palm when
+the user makes a fist or holds a tube-like object in the hand.
+
+*Orientation*
+
+The orientation of the "grip" pose may: be used to render a virtual object
+held in the hand, for example, holding the grip of a virtual sword.
+
+The Z axis of the grip pose goes through the center of the user's curled
+fingers when the user makes a fist or holds a controller, and the -Z
+direction (forward) goes from the little finger to the index finger.
+
+When the user completely opens their hand to form a flat 5-finger pose and
+the palms face each other, the ray that is normal to the user's palms
+defines the X axis.
+The +X direction points away from the palm of the left hand and into the
+palm of the right hand.
+That is to say, in the described pose, the +X direction points to the user's
+right for both hands.
+To further illustrate: if the user is holding a stick by making a fist with
+each hand in front of the body and pointing the stick up, the +X direction
+points to the user's right for both hands.
+
+The +Y direction is orthogonal to +Z and +X using the right-hand rule.
+
+===== Pinch pose
+
+The subpathname:/input/pinch_ext/pose is designed for interacting with a
+small object within arm's reach using a finger and thumb with a "pinch"
+gesture.
+For example, turning a key to open a lock or moving the knob on a slider
+control are interactions suited to the "pinch" pose.
+
+The runtime should: stabilize the "pinch" pose while the user is performing
+the "pinch" gesture.
+
+image::images/hand_pinch_pose.svg[align="center", title="Example pinch pose."]
+
+*Position*
+
+When the input is provided by a hand tracking device, the position of the
+"pinch" pose is typically where the index and thumb fingertips will touch
+each other for a "pinch" gesture.
+
+The runtime may: provide the "pinch" pose using any finger based on the
+current user's preference for accessibility support.
+An application typically designs the "pinch" pose interaction assuming the
+"pinch" is performed using the index finger and thumb.
+
+When the input is provided by a motion controller device, the position of
+the "pinch" pose is typically based on a fixed offset from the grip pose in
+front of the controller, where the user can: naturally interact with a small
+object.
+The runtime should: avoid obstructing the "pinch" pose with the physical
+profile of the motion controller.
+
+*Orientation*
+
+The "pinch" pose orientation must: rotate together with the hand rotation.
+
+image::images/hand_pinch_orientation.svg[align="center", title="Example pinch orientation on right hand."]
+
+The "pinch" pose's orientation may: be used to render a virtual object being
+held by a "pinch" gesture, for example, holding a key as illustrated in
+picture above.
+
+If this virtual key is within a plane as illustrated in the above picture,
+the Y and Z axes of the "pinch" pose are within this plane.
+
+The +Z axis is the backward direction of the "pinch" pose, typically the
+direction from the "pinch" position pointing to the mid point of thumb and
+finger proximal joints.
+
+When the user puts both hands in front of the body at the same height, palms
+facing each other and fingers pointing forward, then performs a "pinch"
+gesture with both hands, the +Y direction for both hands should: be roughly
+pointing up.
+
+The X direction follows the right-hand rule using the Z and Y axes.
+
+If the input is provided by a motion controller device, the orientation of
+the "pinch" pose is typically based on a fixed-rotation offset from the
+"grip" pose orientation that roughly follows the above definition when the
+user is holding the controller naturally.
+
+===== Poke pose
+
+The subpathname:/input/poke_ext/pose is designed for interactions using a
+fingertip to touch and push a small object.
+For example, pressing a push button with a fingertip, swiping to scroll a
+browser view, or typing on a virtual keyboard are interactions suited to the
+"poke" pose.
+
+The application may: use the "poke" pose as a point to interact with virtual
+objects, and this pose is typically enough for simple interactions.
+
+The application may: also use a volumetric representation of a "poke"
+gesture using a sphere combined with the "poke" pose.
+The center of such a sphere is located the distance of one radius in the +Z
+direction of the "poke" pose, such that the "poke" pose falls on the surface
+of the sphere and the sphere models the shape of the fingertip.
+
+
+image::images/hand_poke_pose.svg[align="center", title="Example poke pose."]
+
+*Position*
+
+When input is provided by a hand tracking device, the position of the "poke"
+pose is at the surface of the extended index fingertip.
+The runtime may: provide the "poke" pose using other fingers for
+accessibility support.
+
+When input is provided by a motion controller, the position of the "poke"
+pose is typically based on a fixed offset from the "grip" pose in front of
+the controller, where touching and pushing a small object feels natural
+using the controller.
+The runtime should: avoid obstructing the "poke" pose with the physical
+profile of the motion controller.
+
+*Orientation*
+
+The +Y direction of the "poke" pose is the up direction in the world when
+the user is extending the index finger forward with palm facing down.
+When using a motion controller, +Y matches the up direction in the world
+when the user extends the index finger forward while holding the controller
+with palm facing down.
+
+The +Z direction points from the fingertip towards the knuckle and parallel
+to the index finger distal bone, i.e. backwards when the user is holding a
+controller naturally in front of the body and pointing index finger forward.
+
+The +X direction is orthogonal to +Y and +Z using the right-hand rule.
+
+The "poke" pose must: rotate together with the tip of the finger or the
+controller's "grip" pose.
+
+[[ext_hand_interaction_profile]]
+==== The interaction profile for hand tracking devices
+
+The hand interaction profile is designed for runtimes which provide hand
+inputs using hand tracking devices instead of controllers with triggers or
+buttons.
+This allows hand tracking devices to provide commonly used gestures and
+action poses to the <<input, OpenXR action system>>.
+
+In addition to hand tracking devices, runtimes with controller inputs
+should: also implement this interaction profile through action bindings, so
+that an application whose suggested action bindings solely depending on this
+hand interaction profile is usable on such runtimes as well.
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/ext/hand_interaction_ext
+
+Valid for top level user path:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths:
+
+* subpathname:/input/aim/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+* subpathname:/input/pinch_ext/value
+* subpathname:/input/pinch_ext/ready_ext
+* subpathname:/input/aim_activate_ext/value
+* subpathname:/input/aim_activate_ext/ready_ext
+* subpathname:/input/grasp_ext/value
+* subpathname:/input/grasp_ext/ready_ext
+
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+This interaction profile supports the above
+<<ext_hand_interaction-the-four-action-poses, four action poses>>, as well
+as the following three groups of action inputs.
+
+===== Pinch action
+
+This interaction profile supports subpathname:/input/pinch_ext/value and
+subpathname:/input/pinch_ext/ready_ext actions.
+
+The subpathname:/input/pinch_ext/value is a 1D analog input component
+indicating the extent which the user is bringing their finger and thumb
+together to perform a "pinch" gesture.
+
+The subpathname:/input/pinch_ext/value can: be used as either a boolean or
+float action type, where the value `XR_TRUE` or `1.0f` represents that the
+finger and thumb are touching each other.
+
+The subpathname:/input/pinch_ext/value must: be at value `0.0f` or
+`XR_FALSE` when the hand is in a natural and relaxed open state without the
+user making any extra effort.
+
+The subpathname:/input/pinch_ext/value should: be linear to the distance
+between the finger and thumb tips when they are in the range to change
+"pinch" value from 0 to 1.
+
+The subpathname:/input/pinch_ext/ready_ext is a boolean input, where the
+value `XR_TRUE` indicates that the fingers used to perform the "pinch"
+gesture are properly tracked by the hand tracking device and the hand shape
+is observed to be ready to perform or is performing a "pinch" gesture.
+
+The subpathname:/input/pinch_ext/value must: be `0.0f` or `XR_FALSE` when
+the subpathname:/input/pinch_ext/ready_ext is `XR_FALSE`.
+
+The runtime may: drive the input of the "pinch" gesture using any finger
+with the thumb to support accessibility.
+
+===== Aim activate action
+
+This interaction profile supports subpathname:/input/aim_activate_ext/value
+and subpathname:/input/aim_activate_ext/ready_ext actions.
+
+The subpathname:/input/aim_activate_ext/value is a 1D analog input component
+indicating that the user activated the action on the target that the user is
+pointing at with the aim pose.
+
+The "aim_activate" gesture is runtime defined, and it should: be chosen so
+that the "aim" pose tracking is stable and usable for pointing at a distant
+target while the gesture is being performed.
+
+The subpathname:/input/aim_activate_ext/value can: be used as either a
+boolean or float action type, where the value `XR_TRUE` or `1.0f` represents
+that the aimed-at target is being fully interacted with.
+
+The subpathname:/input/aim_activate_ext/ready_ext is a boolean input, where
+the value `XR_TRUE` indicates that the fingers to perform the "aim_activate"
+gesture are properly tracked by the hand tracking device and the hand shape
+is observed to be ready to perform or is performing an "aim_activate"
+gesture.
+
+The subpathname:/input/aim_activate_ext/value must: be `0.0f` or `XR_FALSE`
+when the subpathname:/input/aim_activate_ext/ready_ext is `XR_FALSE`.
+
+===== Grasp action
+
+This interaction profile supports subpathname:/input/grasp_ext/value action.
+
+The subpathname:/input/grasp_ext/value is a 1D analog input component
+indicating that the user is making a fist.
+
+The subpathname:/input/grasp_ext/value can: be used as either a boolean or
+float action type, where the value `XR_TRUE` or `1.0f` represents that the
+fist is tightly closed.
+
+The subpathname:/input/grasp_ext/value must: be at value `0.0f` or
+`XR_FALSE` when the hand is in a natural and relaxed open state without the
+user making any extra effort.
+
+The subpathname:/input/grasp_ext/ready_ext is a boolean input, where the
+value `XR_TRUE` indicates that the hand performing the grasp action is
+properly tracked by the hand tracking device and it is observed to be ready
+to perform or is performing the grasp action.
+
+The subpathname:/input/grasp_ext/value must: be `0.0f` or `XR_FALSE` when
+the subpathname:/input/grasp_ext/ready_ext is `XR_FALSE`.
+
+===== Hand interaction gestures overlap
+
+The values of the above "pinch", "grasp", and "aim_activate" input actions
+may: not be mutually exclusive when the input is provided by a hand tracking
+device.
+The application should: not assume these actions are distinctively activated
+as action inputs provided by buttons or triggers on a controller.
+The application should: suggest action bindings considering the intent of
+the action and their paired action pose.
+
+===== Using hand interaction profile with controllers
+
+The runtimes with controller inputs should: support the
+pathname:/interaction_profiles/ext/hand_interaction_ext profile using input
+mapping, so that applications can: solely rely on the
+pathname:/interaction_profiles/ext/hand_interaction_ext profile to build XR
+experiences.
+
+If the application desires to further customize the action poses with more
+flexible use of controller interaction profiles, the application can: also
+provide action binding suggestions of controller profile using specific
+buttons or triggers to work together with the
+<<ext_hand_interaction-the-four-action-poses, commonly used four action
+poses>>.
+
+[NOTE]
+====
+*Typical usages of action poses with hand or controller profiles*
+
+* The subpathname:/input/grip/pose is typically used for holding a large
+  object in the user's hand.
+  When using a hand interaction profile, it is typically paired with
+  subpathname:/input/grasp_ext/value for the user to directly manipulate an
+  object held in a hand.
+  When using a controller interaction profile, the "grip" pose is typically
+  paired with a "squeeze" button or trigger that gives the user the sense of
+  tightly holding an object.
+
+* The subpathname:/input/pinch_ext/pose is typically used for directly
+  manipulating a small object using the pinch gesture.
+  When using a hand interaction profile, it is typically paired with the
+  subpathname:/input/pinch_ext/value gesture.
+  When using a controller interaction profile, it is typically paired with a
+  trigger manipulated with the index finger, which typically requires
+  curling the index finger and applying pressure with the fingertip.
+
+* The subpathname:/input/poke_ext/pose is typically used for contact-based
+  interactions using the motion of the hand or fingertip.
+  It typically does not pair with other hand gestures or buttons on the
+  controller.
+  The application typically uses a sphere collider with the "poke" pose to
+  visualize the pose and detect touch with a virtual object.
+
+* The subpathname:/input/aim/pose is typically used for aiming at objects
+  out of arm's reach.
+  When using a hand interaction profile, it is typically paired with
+  subpathname:/input/aim_activate_ext/value to optimize aiming ray stability
+  while performing the gesture.
+  When using a controller interaction profile, the "aim" pose is typically
+  paired with a trigger or a button for aim and fire operations.
+
+* Because controllers are typically mapping buttons or triggers for the
+  above hand interaction values, they typically report ename:XR_TRUE for
+  their corresponding subpathname:/ready_ext action.
+  This is because the buttons and triggers are always prepared and capable
+  of receiving actions.
+
+====
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2021-08-06 (Yin Li)
+** Initial extension description

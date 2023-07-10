@@ -126,8 +126,8 @@ include::{generated}/api/handles/XrSpatialGraphNodeBindingMSFT.txt[]
 [open,refpage='xrTryCreateSpatialGraphStaticNodeBindingMSFT',type='protos',desc='Try create spatial graph static node binding',xrefs='XrSpatialGraphNodeBindingMSFT xrDestroySpatialGraphNodeBindingMSFT']
 --
 The flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT function tries to
-create a spatial graph static node binding nearest to the given location and
-returns an slink:XrSpatialGraphNodeBindingMSFT handle.
+create a binding to the best spatial graph static node relative to the given
+location and returns an slink:XrSpatialGraphNodeBindingMSFT handle.
 
 include::{generated}/api/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.txt[]
 
@@ -147,6 +147,10 @@ This may happen when the given slink:XrSpace cannot be properly tracked at
 the moment.
 The application can retry creating the slink:XrSpatialGraphNodeBindingMSFT
 handle again after a reasonable period of time when tracking is regained.
+
+The flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT function may: be a
+slow operation and therefore should: be invoked from a non-timing critical
+thread.
 
 include::{generated}/validity/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.txt[]
 --

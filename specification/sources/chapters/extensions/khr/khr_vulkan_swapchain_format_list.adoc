@@ -30,8 +30,8 @@ must create OpenXR swapchains with the
 ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT bit set.
 
 Runtimes implementing this extension must: support the
-`<<XR_KHR_vulkan_enable>>` or the `<<XR_KHR_vulkan_enable2>>` extension.
-When `<<XR_KHR_vulkan_enable>>` is used, the runtime must: add
+apiext:XR_KHR_vulkan_enable or the apiext:XR_KHR_vulkan_enable2 extension.
+When apiext:XR_KHR_vulkan_enable is used, the runtime must: add
 ename:VK_KHR_image_format_list to the list of extensions enabled in
 flink:xrCreateVulkanDeviceKHR.
 

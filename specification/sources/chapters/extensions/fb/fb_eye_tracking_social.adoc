@@ -26,7 +26,7 @@ This extension is intended to drive animation of avatar eyes.
 So, for that purpose, the runtimes may: filter the poses in ways that are
 suitable for avatar eye interaction but detrimental to other use cases.
 This extension should: not be used for other eye tracking purposes.
-For interaction, <<XR_EXT_eye_gaze_interaction>> should: be used.
+For interaction, apiext:XR_EXT_eye_gaze_interaction should: be used.
 
 Eye tracking data is sensitive personal information and is closely linked to
 personal privacy and integrity.

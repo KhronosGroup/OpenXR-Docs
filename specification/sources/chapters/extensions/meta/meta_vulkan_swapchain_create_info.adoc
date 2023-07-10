@@ -38,7 +38,7 @@ bit.
 Otherwise, it may: cause undefined behavior, including an application crash.
 
 Runtimes that implement this extension must: support the
-`<<XR_KHR_vulkan_enable>>` or the `<<XR_KHR_vulkan_enable2>>` extension.
+apiext:XR_KHR_vulkan_enable or the apiext:XR_KHR_vulkan_enable2 extension.
 
 *New Object Types*
 

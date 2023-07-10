@@ -27,22 +27,22 @@ If the application has to provide a single image per eye, that would cover
 the entire field of view, at the highest density it would be extremely
 resource intensive, and in fact impossible for the most powerful desktop
 GPUs to render in real time.
-So instead Varjo introduced the `<<XR_VARJO_quad_views>>` extension enabling
-the application to provide two separate images for the two screen areas,
-resulting in a significant reduction in processing, for pixels that could
-not even been seen.
+So instead Varjo introduced the apiext:XR_VARJO_quad_views extension
+enabling the application to provide two separate images for the two screen
+areas, resulting in a significant reduction in processing, for pixels that
+could not even been seen.
 
 This extension goes a step further by enabling the application to only
 generate the density that can be seen by the user, which is another big
 reduction compared to the density that can be displayed, using dedicated eye
 tracking.
 
-This extension requires `<<XR_VARJO_quad_views>>` extension to be enabled.
+This extension requires apiext:XR_VARJO_quad_views extension to be enabled.
 
 An application using this extension to enable foveated rendering will take
 the following steps to prepare:
 
-1. Enable `<<XR_VARJO_quad_views>>` and `<<XR_VARJO_foveated_rendering>>`
+1. Enable apiext:XR_VARJO_quad_views and apiext:XR_VARJO_foveated_rendering
    extensions.
 2. Query system properties in order to determine if system supports foveated
    rendering.
@@ -94,7 +94,7 @@ chain slink:XrFoveatedViewConfigurationViewVARJO to
 slink:XrViewConfigurationView and set pname:foveatedRenderingActive to
 ename:XR_TRUE.
 Since an application using foveated rendering with this extension has to
-render four views, `<<XR_VARJO_quad_views>>` must: be enabled along with
+render four views, apiext:XR_VARJO_quad_views must: be enabled along with
 this extension when slink:XrInstance is created.
 
 First and second views are non foveated views (covering whole field of view

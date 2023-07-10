@@ -17,12 +17,12 @@ include::{generated}/meta/XR_ULTRALEAP_hand_tracking_forearm.adoc[]
 
 *Overview*
 
-This extension augments the <<XR_EXT_hand_tracking>> extension to enable
+This extension augments the apiext:XR_EXT_hand_tracking extension to enable
 applications to request the default set of 26 hand joints, with the addition
 a joint representing the user's elbow.
 
-The application must: also enable the <<XR_EXT_hand_tracking>> extension in
-order to use this extension.
+The application must: also enable the apiext:XR_EXT_hand_tracking extension
+in order to use this extension.
 
 *New joint set*
 

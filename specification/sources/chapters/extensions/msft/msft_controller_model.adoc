@@ -77,7 +77,11 @@ yet available.
 The application should: keep calling flink:xrGetControllerModelKeyMSFT
 because the model may: become available at a later point.
 
-
+The returned pname:modelKey value depends on an active action binding to the
+corresponding subpathname:/grip/pose of the controller.
+Therefore, the application must: have provided a valid action set containing
+an action for subpathname:/grip/pose, and have successfully completed an
+flink:xrSyncActions call, in order to obtain a valid pname:modelKey.
 
 include::{generated}/validity/structs/XrControllerModelKeyStateMSFT.txt[]
 --

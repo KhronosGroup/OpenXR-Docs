@@ -136,8 +136,8 @@ include::{generated}/api/enums/XrReprojectionModeMSFT.txt[]
 When the application passes ename:XR_REPROJECTION_MODE_DEPTH_MSFT or
 ename:XR_REPROJECTION_MODE_PLANAR_FROM_DEPTH_MSFT mode, it should: also
 provide the depth buffer for the corresponding layer using
-slink:XrCompositionLayerDepthInfoKHR in <<XR_KHR_composition_layer_depth>>
-extension.
+slink:XrCompositionLayerDepthInfoKHR in
+apiext:XR_KHR_composition_layer_depth extension.
 However, if the application does not submit this depth buffer, the runtime
 must: apply a runtime defined fallback reprojection mode, and must: not fail
 the flink:xrEndFrame function because of this missing depth.
@@ -145,8 +145,8 @@ the flink:xrEndFrame function because of this missing depth.
 When the application passes ename:XR_REPROJECTION_MODE_PLANAR_MANUAL_MSFT or
 ename:XR_REPROJECTION_MODE_ORIENTATION_ONLY_MSFT mode, it should: avoid
 providing a depth buffer for the corresponding layer using
-slink:XrCompositionLayerDepthInfoKHR in <<XR_KHR_composition_layer_depth>>
-extension.
+slink:XrCompositionLayerDepthInfoKHR in
+apiext:XR_KHR_composition_layer_depth extension.
 However, if the application does submit this depth buffer, the runtime must:
 not fail the flink:xrEndFrame function because of this unused depth data.
 

@@ -100,14 +100,14 @@ additional flags which can be used to adjust overlay behavior.
 
 ifdef::XR_KHR_composition_layer_depth[]
 
-If <<XR_KHR_composition_layer_depth>> is enabled in the main session, then
-slink:XrEventDataMainSessionVisibilityChangedEXTX pname:flags should:
+If apiext:XR_KHR_composition_layer_depth is enabled in the main session,
+then slink:XrEventDataMainSessionVisibilityChangedEXTX pname:flags should:
 contain the value:
 ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX.
-If the overlay session also enables <<XR_KHR_composition_layer_depth>>, then
-when both sessions are visible, the runtime can integrate their projection
-layer content together using depth information as described in the
-extension.
+If the overlay session also enables apiext:XR_KHR_composition_layer_depth,
+then when both sessions are visible, the runtime can integrate their
+projection layer content together using depth information as described in
+the extension.
 However, if either the main session or the overlay do not enable the
 extension, then composition behavior will continue as if neither one enabled
 the extension.
@@ -167,12 +167,12 @@ composition layers is the same whether or not this extension is enabled.
 ifdef::XR_KHR_composition_layer_depth[]
 
 If the overlay session is created as part of an slink:XrInstance which has
-enabled the <<XR_KHR_composition_layer_depth>> extension, and a
+enabled the apiext:XR_KHR_composition_layer_depth extension, and a
 slink:XrCompositionLayerDepthInfoKHR structure has been provided to one or
 more composition layers, then it intends for those layers to be composited
 into the final image using that depth information.
-This composition occurs as defined in the <<XR_KHR_composition_layer_depth>>
-extension.
+This composition occurs as defined in the
+apiext:XR_KHR_composition_layer_depth extension.
 However, this is only possible if the main session has provided depth buffer
 information as part of its swapchain.
 In the event that a main session does not provide depth buffer information
@@ -281,7 +281,7 @@ pname:flags which indicate additional state information of the main session.
 Currently, the only flag value supplied is
 ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
 which indicates if the main session has enabled the
-<<XR_KHR_composition_layer_depth>> extension.
+apiext:XR_KHR_composition_layer_depth extension.
 
 .Member Descriptions
 ****

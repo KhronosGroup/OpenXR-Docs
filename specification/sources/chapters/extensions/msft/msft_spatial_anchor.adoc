@@ -51,6 +51,14 @@ that will track a fixed location in the physical world over time.
 That real-world location is specified by the position and orientation of the
 specified pname:pose within pname:space at pname:time.
 
+The runtime must: avoid long blocking operations such as networking or disk
+operations for flink:xrCreateSpatialAnchorMSFT function.
+The application may: safely use this function in UI thread.
+Though, the created anchor handle may: not be ready immediately for certain
+operations yet.
+For example, the corresponding anchor space may: not return valid location,
+or its location may: not be successfully saved in anchor store.
+
 If pname:space cannot be located relative to the environment at the moment
 of the call to flink:xrCreateSpatialAnchorMSFT, the runtime must: return
 ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT.

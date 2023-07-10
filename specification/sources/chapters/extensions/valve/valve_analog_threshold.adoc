@@ -19,7 +19,7 @@ This extension allows the application to control the threshold and haptic
 feedback applied to an analog to digital conversion.
 See slink:XrInteractionProfileAnalogThresholdVALVE for more information.
 
-Applications should: also enable the `<<XR_KHR_binding_modification>>`
+Applications should: also enable the apiext:XR_KHR_binding_modification
 extension to be able to define multiple thresholds.
 
 *New Object Types*
@@ -38,7 +38,7 @@ The slink:XrInteractionProfileAnalogThresholdVALVE structure is an input
 struct that defines thresholds and haptic feedback behavior for action
 bindings and should: be added to the pname:bindingModifications array of the
 slink:XrBindingModificationsKHR structure (See
-`<<XR_KHR_binding_modification>>` extension).
+apiext:XR_KHR_binding_modification extension).
 
 
 include::{generated}/api/structs/XrInteractionProfileAnalogThresholdVALVE.txt[]
@@ -115,5 +115,5 @@ include::{generated}/validity/structs/XrInteractionProfileAnalogThresholdVALVE.t
 ** Deprecate chaining of struct in
    slink:XrInteractionProfileSuggestedBinding, applications should use
    slink:XrBindingModificationsKHR defined in the
-   `<<XR_KHR_binding_modification>>` extension instead.
+   apiext:XR_KHR_binding_modification extension instead.
 

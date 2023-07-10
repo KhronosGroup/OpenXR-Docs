@@ -1327,9 +1327,8 @@ include::{generated}/api/structs/XrSceneMeshVertexBufferMSFT.txt[]
   chain.
 * pname:vertexCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:vertexCountOutput is a pointer to the count of vertices, or a
-  pointer to the required capacity in the case that
-  pname:vertexCapacityInput is insufficient.
+* pname:vertexCountOutput is the count of vertices, or the required capacity
+  in the case that pname:vertexCapacityInput is insufficient.
 * pname:vertices is an array of slink:XrVector3f filled in by the runtime
   returns the position of vertices in the mesh component's space.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
@@ -1353,9 +1352,8 @@ include::{generated}/api/structs/XrSceneMeshIndicesUint32MSFT.txt[]
   chain.
 * pname:indexCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:indexCountOutput is a pointer to the count of indices, or a pointer
-  to the required capacity in the case that pname:indexCapacityInput is
-  insufficient.
+* pname:indexCountOutput is the count of indices, or the required capacity
+  in the case that pname:indexCapacityInput is insufficient.
 * pname:indices is an array of triangle indices filled in by the runtime,
   specifying the indices of the scene mesh buffer in the vertices array.
   The triangle indices must: be returned in counter-clockwise order and

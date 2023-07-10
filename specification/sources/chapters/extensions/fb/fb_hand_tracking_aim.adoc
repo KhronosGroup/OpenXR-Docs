@@ -12,15 +12,15 @@ include::{generated}/meta/XR_FB_hand_tracking_aim.adoc[]
 
 *Overview*
 
-The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
-which represent the current configuration of the tracked hands.
+The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
+poses which represent the current configuration of the tracked hands.
 This extension adds a layer of gesture recognition that is used by the
 system.
 
 This extension allows:
 
 * An application to get a set of basic gesture states for the hand when
-  using the <<XR_EXT_hand_tracking>> extension.
+  using the apiext:XR_EXT_hand_tracking extension.
 
 *New Object Types*
 

@@ -24,7 +24,7 @@ mesh.
 It enables applications to render hands in XR experiences and interact with
 virtual objects using hand meshes.
 
-The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
+The application must: also enable the apiext:XR_EXT_hand_tracking extension
 in order to use this extension.
 
 *Inspect system capability*

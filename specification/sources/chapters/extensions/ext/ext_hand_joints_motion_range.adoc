@@ -19,12 +19,12 @@ include::{generated}/meta/XR_EXT_hand_joints_motion_range.adoc[]
 
 *Overview*
 
-This extension augments the `<<XR_EXT_hand_tracking>>` extension to enable
+This extension augments the apiext:XR_EXT_hand_tracking extension to enable
 applications to request that the slink:XrHandJointLocationsEXT returned by
 flink:xrLocateHandJointsEXT should return hand joint locations conforming to
 a range of motion specified by the application.
 
-The application must: enable the `<<XR_EXT_hand_tracking>>` extension in
+The application must: enable the apiext:XR_EXT_hand_tracking extension in
 order to use this extension.
 
 *New Object Types*

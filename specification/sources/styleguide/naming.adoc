@@ -53,7 +53,7 @@ There are however a few exceptions:
 * Three `XRAPI_*` definitions are defined by the platform header to alias
   certain platform-specific identifiers related to calling conventions.
 ** Examples: `XRAPI_ATTR`, `XRAPI_CALL` and `XRAPI_PTR`
-* Preprocessor may be used to create aliases between other OpenXR
+* The C preprocessor may be used to create aliases between other OpenXR
   identifiers, which could happen if a determination is made that something
   has been misnamed.
   In these cases, the fixed name is added to the API, and the old name is
@@ -71,8 +71,9 @@ include::{generated}/api/defines/XR_CURRENT_API_VERSION.no-xref.txt[]
 == Type Names
 
 Type names are declared with no separator between words.
-Each word starts with a capital letter, and every other character in each
-word is lower case.
+Each word starts with a capital letter, and other characters in each word
+are lower case.
+
 
 Each type name is prefixed with `Xr`.
 
@@ -92,7 +93,7 @@ include::{generated}/api/basetypes/XrFlags64.no-xref.txt[]
 ----
 typedef enum XrStructureType {
     ...
-};
+} XrStructureType;
 ----
 
 .Example: Structure
@@ -102,10 +103,15 @@ include::{generated}/api/structs/XrInstanceCreateInfo.no-xref.txt[]
 === Extension Structure Names
 
 Structures which extend other structures through the pname:next chain should
-reflect the name of the base structure they extend.
+reflect the name of the base structure they extend, or the role that they
+play.
+Examples of the "role" guideline include:
 
-New structures which add extended object creation parameters to a base
-structure should use this naming scheme:
+* `GraphicsBinding` structures in the `XrSessionCreateInfo` pname:next chain
+* `XrSpaceVelocity` in the `XrSpaceLocation` pname:next chain
+
+New non-`KHR` structures which add extended object creation parameters to a
+base structure should use this naming scheme:
 
 .Extended Object Information Structures
 [width="60%",options="header"]
@@ -136,13 +142,15 @@ This rule applies to all enumerants, with some exceptions.
 
 * The `XrStructureType` enumerants begin with `XR_TYPE` instead of
   `XR_STRUCTURE_TYPE`.
-* Flag types don't use FLAGS in the name (e.g. `XrSpaceLocationFlags` uses
+* Flag types don't use `FLAGS` in the name (e.g. `XrSpaceLocationFlags` uses
   `XR_SPACE_LOCATION_POSITION_VALID_BIT` instead of
   `XR_SPACE_LOCATION_FLAGS_POSITION_VALID_BIT`).
 * The `XrResult` enumerants are split into two sub types: error and success
   codes.
 ** Success codes are prefixed with `XR_`.
 ** Error codes are prefixed with `XR_ERROR_`.
+* Some graphics API names are exceptions to this rule, see
+  <<naming-exceptions, Naming Exceptions>>
 
 // Note: This is manually inserted to be able to limit it and not include all enumerants.
 [source, c]
@@ -231,12 +239,39 @@ idiom.
 The `size` rule overrides this rule, though it is possible to have multiple
 sizes (e.g. `sizeCount`).
 If the member is an array length, then the name of length should correspond
-to the name of the array member, usually `XYZCount` for an array named
-`XYZs`.
+to the name of the array member, usually `xyzCount` for an array named
+`xyzs`.
 If a member of a chained extension structure is an array whose length must
 match the length of an array of the base structure, then the chained
 extension structure should include an array length member with the same name
 as the length in the base structure.
+
+[[naming-two-call-idiom]]
+=== Two-call Idiom Parameter Names
+
+The two-call idiom for buffer size parameters uses names as follows.
+
+* For arrays of typed structures that are not strings or byte buffers,
+  naming is based on a noun describing a single item.
+  In this example, we will use `item` as that noun.
+** The first parameter should be the singular noun followed by
+   `CapacityInput`.
+   e.g. `itemCapacityInput`
+** The second parameter should be the singular noun followed by
+   `CountOutput`.
+   e.g. `itemCountOutput`
+** The third parameter (the array output) should be the item noun
+   pluralized.
+   e.g. `items`.
+* For byte buffers or strings (`char` arrays), the following parameter names
+  are used:
+** `bufferCapacityInput`
+** `bufferCountOutput`
+** `buffer`
+
+This naming is enforced by the `xml_consistency` script.
+If your item name is unusual to pluralize (e.g. "index" -> "indices") the
+script may need modification.
 
 .Example: Function Parameters (including a single indirected pointer)
 include::{generated}/api/protos/xrGetInputSourceLocalizedName.no-xref.txt[]
@@ -257,6 +292,19 @@ include::{generated}/api/protos/xrEnumerateApiLayerProperties.no-xref.txt[]
 
 .Example: Count Members
 include::{generated}/api/structs/XrCompositionLayerProjection.no-xref.txt[]
+
+[[naming-exceptions]]
+=== Naming exceptions
+
+There are a few graphics API-related names that have specific capitalization
+that are an exception to these rules:
+
+* Direct3D, usually shortened to D3D, followed by a version number with no
+  delimiter.
+  Left as-is in all names, e.g. `D3D11`
+* OpenGL
+* OpenGL ES - `OpenGLES` in function and type names, and `OPENGL_ES` in
+  enumerants.
 
 [[naming-extension-identifiers]]
 == Extension Identifier Naming Conventions
@@ -317,6 +365,26 @@ typedef XrResult (XRAPI_PTR *PFN_xrGetVulkanGraphicsRequirementsKHR)(
     XrGraphicsRequirementsVulkanKHR*            graphicsRequirements);
 ----
 
+
+=== Extension Interaction Profile Names
+
+Interaction Profile names defined by extensions have the author ID appended
+to the end of the name.
+
+// Note: This is manually inserted because no API includes are generated for this type
+[source, xml]
+.Example: Interaction Profile name with _khr appended.
+----
+    <extensions>
+        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
+                <interaction_profile name="/interaction_profiles/khr/flux_compensator_khr"/>
+            </require>
+        </extension>
+    </extensions>
+----
 
 [[naming-abbreviations]]
 == Common Abbreviations

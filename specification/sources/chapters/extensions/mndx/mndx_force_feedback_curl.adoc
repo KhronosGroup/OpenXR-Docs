@@ -26,7 +26,7 @@ dimension.
 The intended use for this extension is to provide simple force feedback
 capabilities to restrict finger movement for VR Gloves.
 
-The application must: also enable the `<<XR_EXT_hand_tracking>>` extension
+The application must: also enable the apiext:XR_EXT_hand_tracking extension
 in order to use this extension.
 
 [open,refpage='XrForceFeedbackCurlLocationMNDX',type='enums',desc='Describes which location to apply force feedback',xrefs='']

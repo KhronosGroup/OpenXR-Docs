@@ -47,8 +47,8 @@ include::{generated}/api/structs/XrSpaceContainerFB.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:uuidCapacityInput is an input parameter for the application to
-  specify a capacity for the output list
+* pname:uuidCapacityInput is the capacity of the pname:uuids array, or 0 to
+  indicate a request to retrieve the required capacity.
 * pname:uuidCountOutput is an output parameter which will hold the number of
   UUIDs included in the output list, or the required capacity in the case
   that pname:uuidCapacityInput is insufficient

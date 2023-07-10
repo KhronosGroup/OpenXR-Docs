@@ -12,15 +12,16 @@ include::{generated}/meta/XR_FB_hand_tracking_mesh.adoc[]
 
 *Overview*
 
-The <<XR_EXT_hand_tracking>> extension provides a list of hand joint poses
-but no mechanism to render a skinned hand mesh.
+The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
+poses but no mechanism to render a skinned hand mesh.
 
 This extension allows:
 
 * An application to get a skinned hand mesh and a bind pose skeleton that
   can be used to render a hand object driven by the joints from the
-  <<XR_EXT_hand_tracking>> extension.
-* Control the scale of the hand joints returned by <<XR_EXT_hand_tracking>>.
+  apiext:XR_EXT_hand_tracking extension.
+* Control the scale of the hand joints returned by
+  apiext:XR_EXT_hand_tracking.
 
 
 *New Object Types*

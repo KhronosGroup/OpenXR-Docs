@@ -26,6 +26,18 @@ indicated in the <<extensions>> section.
 
 *New Flag Types*
 
+[open,refpage='XrSemanticLabelsSupportFlagsFB',type='flags',desc='XrSemanticLabelsSupportFlagsFB',xrefs='XrSemanticLabelsSupportFlagBitsFB']
+--
+include::{generated}/api/flags/XrSemanticLabelsSupportFlagsFB.txt[]
+--
+
+[open,refpage='XrSemanticLabelsSupportFlagBitsFB',type='enums',desc='XrSemanticLabelsSupportFlagBitsFB',xrefs='XrSemanticLabelsSupportFlagsFB']
+--
+include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.txt[]
+
+include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.comments.txt[]
+--
+
 *New Enum Constants*
 
 elink:XrStructureType enumeration is extended with:
@@ -33,6 +45,7 @@ elink:XrStructureType enumeration is extended with:
 * ename:XR_TYPE_SEMANTIC_LABELS_FB
 * ename:XR_TYPE_ROOM_LAYOUT_FB
 * ename:XR_TYPE_BOUNDARY_2D_FB
+* ename:XR_TYPE_SEMANTIC_LABELS_SUPPORT_INFO_FB
 
 *New Enums*
 
@@ -94,6 +107,14 @@ include::{generated}/api/structs/XrRect3DfFB.txt[]
 This structure is used for component values that may be fractional
 (floating-point).
 
+The bounding box is defined by an pname:offset and pname:extent.
+The pname:offset refers to the coordinate of the minimum corner of the box
+in the local space of the slink:XrSpace; that is, the corner whose
+coordinate has the minimum value on each axis.
+The pname:extent refers to the dimensions of the box along each axis.
+The maximum corner can therefore be computed as [eq]#pname:offset +
+pname:extent#.
+
 include::{generated}/validity/structs/XrRect3DfFB.txt[]
 --
 
@@ -107,16 +128,15 @@ include::{generated}/api/structs/XrSemanticLabelsFB.txt[]
 ****
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR or this extension.
+  chain, such as slink:XrSemanticLabelsSupportInfoFB.
 * pname:bufferCapacityInput is the capacity of the pname:buffer array, in
   bytes, or 0 to indicate a request to retrieve the required capacity.
-* pname:bufferCountOutput is a pointer to the count of bytes written, or a
-  pointer to the required capacity in the case that
-  pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the count of bytes written, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
 * pname:buffer is a pointer to an array of bytes, but can be code:NULL if
   pname:bufferCapacityInput is 0.
-  Multiple labels represented by raw string, separated by comma (,).
+  Multiple labels represented by raw string, separated by a comma without
+  spaces.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:buffer size.
 ****
@@ -144,10 +164,11 @@ include::{generated}/api/structs/XrRoomLayoutFB.txt[]
 * pname:ceilingUuid is the UUID of the spatial entity representing the room
   ceiling
 * pname:wallUuidCapacityInput is the capacity of the pname:wallUuids array,
-  in bytes, or 0 to indicate a request to retrieve the required capacity.
-* pname:wallUuidCountOutput is a pointer to the count of slink:XrUuidEXT
-  handles written, or a pointer to the required capacity in the case that
-  pname:wallUuidCapacityInput is insufficient.
+  in number of UUIDs, or 0 to indicate a request to retrieve the required
+  capacity.
+* pname:wallUuidCountOutput is the count of slink:XrUuidEXT handles written,
+  or the required capacity in the case that pname:wallUuidCapacityInput is
+  insufficient.
 * pname:wallUuids is a pointer to an array of slink:XrUuidEXT handles, but
   can be code:NULL if pname:wallUuidCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
@@ -175,10 +196,11 @@ include::{generated}/api/structs/XrBoundary2DFB.txt[]
   chain.
   No such structures are defined in core OpenXR or this extension.
 * pname:vertexCapacityInput is the capacity of the pname:vertices array, in
-  bytes, or 0 to indicate a request to retrieve the required capacity.
-* pname:vertexCountOutput is a pointer to the count of slink:XrVector2f
-  written, or a pointer to the required capacity in the case that
-  pname:vertexCapacityInput is insufficient.
+  number of vertices, or 0 to indicate a request to retrieve the required
+  capacity.
+* pname:vertexCountOutput is the count of slink:XrVector2f written, or the
+  required capacity in the case that pname:vertexCapacityInput is
+  insufficient.
 * pname:vertices is a pointer to an array of slink:XrVector2f, but can: be
   code:NULL if pname:vertexCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
@@ -190,6 +212,45 @@ provide the application with the slink:XrVector2f vertices representing the
 a spatial entity with a boundary.
 
 include::{generated}/validity/structs/XrBoundary2DFB.txt[]
+--
+
+[open,refpage='XrSemanticLabelsSupportInfoFB',type='structs',desc='Specifies additional behaviors of the xrGetSpaceSemanticLabelsFB function',xrefs='']
+--
+The slink:XrSemanticLabelsSupportInfoFB structure is defined as:
+
+include::{generated}/api/structs/XrSemanticLabelsSupportInfoFB.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrSemanticLabelsSupportFlagBitsFB that
+  specifies additional behaviors.
+* pname:recognizedLabels is a code:NULL terminated string that indicates a
+  set of semantic labels recognized by the application.
+  Each semantic label must: be represented as a string and be separated by a
+  comma without spaces.
+  This field must: include at least "OTHER" and must: not be code:NULL.
+****
+
+The slink:XrSemanticLabelsSupportInfoFB structure may: be specified in the
+pname:next chain of slink:XrSemanticLabelsFB to specify additional behaviors
+of the flink:xrGetSpaceSemanticLabelsFB function.
+The runtime must: follow the behaviors specified in pname:flags according to
+the descriptions of elink:XrSemanticLabelsSupportFlagBitsFB.
+The runtime must: return any semantic label that is not included in
+pname:recognizedLabels as "OTHER" to the application.
+The runtime must: follow this direction only if the runtime reports the
+pname:extensionVersion as 2 or greater, otherwise the runtime must: ignore
+this as an unknown chained structure.
+
+If the slink:XrSemanticLabelsSupportInfoFB structure is not present in the
+pname:next chain of slink:XrSemanticLabelsFB, the runtime may: return any
+semantic labels to the application.
+
+include::{generated}/validity/structs/XrSemanticLabelsSupportInfoFB.txt[]
 --
 
 *New Functions*
@@ -210,6 +271,14 @@ include::{generated}/api/protos/xrGetSpaceBoundingBox2DFB.txt[]
 
 Gets the 2D bounding box for a spatial entity with the
 ename:XR_SPACE_COMPONENT_TYPE_BOUNDED_2D_FB component type enabled.
+
+The bounding box is defined by an pname:offset and pname:extent.
+The pname:offset refers to the coordinate of the minimum corner of the box
+in the x-y plane of the given slink:XrSpace's coordinate system; that is,
+the corner whose coordinate has the minimum value on each axis.
+The pname:extent refers to the dimensions of the box along each axis.
+The maximum corner can therefore be computed as [eq]#pname:offset +
+pname:extent#.
 
 include::{generated}/validity/protos/xrGetSpaceBoundingBox2DFB.txt[]
 --
@@ -292,6 +361,12 @@ Gets the room layout, specified by UUIDs for each surface, for a spatial
 entity with the ename:XR_SPACE_COMPONENT_TYPE_ROOM_LAYOUT_FB component type
 enabled.
 
+If the slink:XrRoomLayoutFB::pname:wallUuidCapacityInput field is zero
+(indicating a request to retrieve the required capacity for the
+slink:XrRoomLayoutFB::pname:wallUuids array), or if
+flink:xrGetSpaceRoomLayoutFB returns failure, then the values of `floorUuid`
+and `ceilingUuid` are unspecified and should not be used.
+
 include::{generated}/validity/protos/xrGetSpaceRoomLayoutFB.txt[]
 --
 
@@ -301,3 +376,8 @@ include::{generated}/validity/protos/xrGetSpaceRoomLayoutFB.txt[]
 
 * Revision 1, 2022-03-09 (John Schofield)
 ** Initial draft
+* Revision 2, 2023-04-03 (Yuichi Taguchi)
+** Introduce slink:XrSemanticLabelsSupportInfoFB.
+* Revision 3, 2023-04-03 (Yuichi Taguchi)
+** Introduce
+   ename:XR_SEMANTIC_LABELS_SUPPORT_ACCEPT_DESK_TO_TABLE_MIGRATION_BIT_FB.

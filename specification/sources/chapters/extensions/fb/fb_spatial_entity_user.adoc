@@ -26,7 +26,7 @@ indicated in the <<extensions>> section.
 include::{generated}/api/handles/XrSpaceUserFB.txt[]
 
 Represents a user with which the application can: interact using various
-extensions including <<XR_FB_spatial_entity_sharing>>.
+extensions including apiext:XR_FB_spatial_entity_sharing.
 See flink:xrCreateSpaceUserFB for how to declare a user.
 --
 

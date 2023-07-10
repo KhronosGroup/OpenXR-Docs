@@ -282,20 +282,20 @@ anchors corresponding to API names, such as flink:xrCreateCommandPool.
 ==== Extensions
 
 Extensions, like commands and structures, have an auto-generated anchor.
-The standardized way of referring to an extension by name is to wrap it in
-both backticks and angle-brackets: for example, `<<XR_KHR_vulkan_enable>>`.
+The standardized way of referring to an extension by name is to prepend
+`apiext{cl}`: for example, apiext:XR_KHR_vulkan_enable.
 When a link would be inappropriate (e.g. in the "`Name`" portion of the
-extension's spec itself), surrounding it with backticks only is acceptable:
+extension's spec itself), surrounding it with backticks is acceptable:
 `XR_KHR_vulkan_enable`.
 
 [source,asciidoc]
 .Example Markup
 ----
 Extensions, like commands and structures, have an auto-generated anchor.
-The standardized way of referring to an extension by name is to wrap it
-in both backticks and angle-brackets: for example, `<<XR_KHR_vulkan_enable>>`.
+The standardized way of referring to an extension by name is to prepend
+`apiext{cl}`: for example, apiext:XR_KHR_vulkan_enable.
 When a link would be inappropriate (e.g. in the "`Name`" portion of the
-extension's spec itself), surrounding it with backticks only is acceptable:
+extension's spec itself), surrounding it with backticks is acceptable:
 `XR_KHR_vulkan_enable`.
 ----
 
@@ -464,6 +464,8 @@ table:
 | basetype{cl}     | Formats the macro argument like a basic scalar type.
                      Example:
                      basetype{cl}XrBool32 -> basetype:XrBool32
+| apiext{cl}       | Generates a cross-reference or link to the target as an
+                     extension.
 | code{cl}         | Formats the macro argument as a code sample. Primarily
                      used for SPIR-V keywords and builtin C types. Examples:
                      code{cl}uint32_t -> code:uint32_t,

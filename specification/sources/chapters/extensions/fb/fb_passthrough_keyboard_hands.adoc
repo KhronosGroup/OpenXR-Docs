@@ -18,8 +18,8 @@ This extension enables applications to show passthrough hands when hands are
 placed over the tracked keyboard.
 It enables users to see their hands over the keyboard in a mixed reality
 application.
-This extension is dependent on <<XR_FB_passthrough>> extension which can be
-used to create a passthrough layer for hand presence use-case.
+This extension is dependent on apiext:XR_FB_passthrough extension which can
+be used to create a passthrough layer for hand presence use-case.
 
 The extension supports a single pair of hands (one left and one right hand),
 multiple pair of hands are not supported.

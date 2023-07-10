@@ -47,7 +47,6 @@ or as a label to avoid name clashes, and are explained here:
 This section describes additional definitions and conventions that define
 the application binary interface.
 
-
 [[structure-types]]
 ==== Structure Types
 
@@ -60,18 +59,33 @@ Most structures containing pname:type members have a value of pname:type
 matching the type of the structure, as described more fully in
 <<valid-usage-for-structure-types,Valid Usage for Structure Types>>.
 
-Note that all extension enums begin at the extension enum base of
-[eq]#1^10^# (base 10).
+Note that all extension enums begin at the extension enum base of [eq]#10^9#
+(base 10).
 Each extension is assigned a block of 1000 enums, starting at the enum base
-and arranged by the extension's index.
+and arranged by the extension's number.
+
 --
 
-For example, if an extension with index 5 wants to use an enum value of 3,
-the final enum is computed by:
+[open,refpage='XR_EXTENSION_ENUM_BASE',desc='Macro to define the enum base for extensions',type='defines']
+--
+include::{generated}/api/defines/XR_EXTENSION_ENUM_BASE.txt[]
+--
 
-[eq]#enum = enum_base + (enum_index - 1) * 1000 + enum_value#
+[open,refpage='XR_EXTENSION_ENUM_STRIDE',desc='Macro to define the maximum allowed count of enums for an extension',type='defines']
+--
+include::{generated}/api/defines/XR_EXTENSION_ENUM_STRIDE.txt[]
+--
+
+For example, if extension number 5 wants to use an enum value of 3, the
+final enum is computed by:
+
+[eq]#enum = dlink:XR_EXTENSION_ENUM_BASE + (extension_number - 1) *
+dlink:XR_EXTENSION_ENUM_STRIDE + enum_value#
+
 [eq]#1000004003 = 1000000000 + 4 * 1000 + 3#
 
+The maximum allowed enum value in an extension is 2,147,482,999, which
+belongs to extension number 2147483.
 
 [[flag-types]]
 ==== Flag Types

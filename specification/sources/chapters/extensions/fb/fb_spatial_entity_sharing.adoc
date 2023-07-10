@@ -140,6 +140,7 @@ include::{generated}/api/protos/xrShareSpacesFB.txt[]
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpaceShareCompleteFB event when the operation completes
 successfully or encounters an error.
+If this function returns a failure code, no event is posted.
 The pname:requestId can: be used to later refer to the request, such as
 identifying which request has completed when an
 slink:XrEventDataSpaceShareCompleteFB is posted to the event queue.

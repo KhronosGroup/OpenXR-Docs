@@ -94,11 +94,11 @@ extensions to add this path, or submit new extensions defining new
 interaction profiles using this pose identifier and component path.
 For consistency, it is recommended that the subpathname:/input/palm_ext/pose
 path in extension-defined interaction profiles be specified as only valid
-when this `<<XR_EXT_palm_pose>>` extension is also enabled.
+when this apiext:XR_EXT_palm_pose extension is also enabled.
 
 This extension does pose a challenge to API layer implementers attempting to
 provide interaction profile support through their layer.
-If a runtime implements `<<XR_EXT_palm_pose>>`, and an application enables
+If a runtime implements apiext:XR_EXT_palm_pose, and an application enables
 it, but such an API layer is unaware of it, the runtime may "accept" (not
 error) the additional suggested binding but the layer will not know to
 provide data or indicate an active binding.

@@ -35,6 +35,29 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/input/grip/pose
 
+ifdef::XR_EXT_palm_pose[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_palm_pose extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/palm_ext/pose
+****
+endif::XR_EXT_palm_pose[]
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+****
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+****
+endif::XR_EXT_hand_interaction[]
+
 The application should: use the subpathname:/select/value and
 subpathname:/aim/pose paths for far hand interactions, such as using a
 virtual laser pointer to target and click a button on the wall.

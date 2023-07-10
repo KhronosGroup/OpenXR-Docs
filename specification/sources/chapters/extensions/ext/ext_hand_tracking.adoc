@@ -78,7 +78,7 @@ of an empty human hand.
 [NOTE]
 .Note
 ====
-This behavior can be modified by the `<<XR_EXT_hand_joints_motion_range>>`
+This behavior can be modified by the apiext:XR_EXT_hand_joints_motion_range
 extension
 ====
 --
@@ -497,6 +497,7 @@ while (1) {
 }
 ----
 
+[[convention-of-hand-joints]]
 ==== Conventions of hand joints
 
 This extension defines 26 joints for hand tracking: 4 joints for the thumb

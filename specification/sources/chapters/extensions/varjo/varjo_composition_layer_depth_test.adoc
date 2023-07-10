@@ -28,7 +28,7 @@ However, an application may want to composite the final image against the
 other layers based on depth information for proper occlusion.
 Layers can now provide depth information that will be used to calculate
 occlusion between those layers, as well as with the environment depth
-estimator (`<<XR_VARJO_environment_depth_estimation>>`) when enabled.
+estimator (apiext:XR_VARJO_environment_depth_estimation) when enabled.
 
 This extension defines a new type, slink:XrCompositionLayerDepthTestVARJO,
 which can be chained to slink:XrCompositionLayerProjection in order to
@@ -66,7 +66,7 @@ Overall, composition should be performed in the following way:
 Mixed reality applications may want to show hands on top of the rendered VR
 content.
 For this purpose the application should enable environment depth estimation
-(see `<<XR_VARJO_environment_depth_estimation>>` extension) and depth
+(see apiext:XR_VARJO_environment_depth_estimation extension) and depth
 testing with range 0m to 1m.
 
 The following code illustrates how to enable depth testing:

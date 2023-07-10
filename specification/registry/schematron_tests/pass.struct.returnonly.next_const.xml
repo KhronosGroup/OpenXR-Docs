@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2023, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <types>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="void"/>
+
+        <type name="XrStructureType" category="enum"/>
+
+        <type category="struct" name="XrInputParamInfo">
+            <member values="XR_TYPE_INPUT_PARAM_INFO"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+        </type>
+
+        <type category="struct" name="XrOutputParam" returnedonly="true">
+            <member values="XR_TYPE_OUTPUT_PARAM"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+        </type>
+        <type category="struct" name="XrOutputParamState">
+            <member values="XR_TYPE_OUTPUT_PARAM_STATE"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+        </type>
+    </types>
+
+    <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"    name="XR_TYPE_INPUT_PARAM_INFO"/>
+        <enum value="2"    name="XR_TYPE_OUTPUT_PARAM"/>
+        <enum value="2"    name="XR_TYPE_OUTPUT_PARAM_STATE"/>
+    </enums>
+
+</registry>

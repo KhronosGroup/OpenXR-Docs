@@ -25,7 +25,7 @@ component paths to suggest bindings for.
 The behavior of this dpad-like mapping may be customized using
 slink:XrInteractionProfileDpadBindingEXT.
 
-Applications must: also enable the `<<XR_KHR_binding_modification>>`
+Applications must: also enable the apiext:XR_KHR_binding_modification
 extension that this builds on top of.
 
 *New Component Paths*
@@ -273,7 +273,7 @@ that defines how to use any two-axis input to provide dpad-like
 functionality to the application.
 The struct must: be added for each input that should be treated as a dpad to
 the pname:bindingModifications array of the slink:XrBindingModificationsKHR
-structure (See `<<XR_KHR_binding_modification>>` extension).
+structure (See apiext:XR_KHR_binding_modification extension).
 
 Runtimes are free to ignore any of the fields when not obeying the bindings,
 but may: use it for automatic rebindings of actions.

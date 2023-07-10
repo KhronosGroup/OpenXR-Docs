@@ -27,7 +27,7 @@ indicated in the <<extensions>> section.
 [NOTE]
 .Note
 ====
-This extension is independent of <<XR_KHR_composition_layer_depth>>, and
+This extension is independent of apiext:XR_KHR_composition_layer_depth, and
 both may be enabled and used at the same time, for different purposes.
 The slink:XrCompositionLayerSpaceWarpInfoFB::pname:depthSubImage depth data
 is dedicated for space warp, and its resolution is usually lower than

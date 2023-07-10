@@ -24,7 +24,7 @@ and localization across application sessions on a device.
 Spatial anchors persisted during an application session on a device will
 only be able to be retrieved during sessions of that same application on the
 same device.
-This extension requires <<XR_MSFT_spatial_anchor>> to also be enabled.
+This extension requires apiext:XR_MSFT_spatial_anchor to also be enabled.
 
 ==== Spatial Anchor Store Connection
 

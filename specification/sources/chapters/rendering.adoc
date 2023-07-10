@@ -607,6 +607,12 @@ The slink:XrViewState and slink:XrView member data may change on subsequent
 calls to flink:xrLocateViews, and so applications must: not assume it to be
 constant.
 
+If an application gives a pname:viewLocateInfo with a
+pname:viewConfigurationType that was not passed in the session's call to
+flink:xrBeginSession via the
+pname:beginInfo.pname:primaryViewConfigurationType, or enabled though an
+extension, then the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
 include::{generated}/validity/protos/xrLocateViews.txt[]
 --
 
@@ -1078,7 +1084,7 @@ All layers submitted to flink:xrEndFrame will be presented to the primary
 view configuration of the running session.
 
 [[frame-rate]]
-==== Frame Rate
+=== Frame Rate
 
 For every application-generated frame, the application may: call
 flink:xrEndFrame to submit the application-generated composition layers.
@@ -1091,7 +1097,7 @@ The earliest the runtime will return from flink:xrWaitFrame is when it
 determines that the application should: start drawing the next frame.
 
 [[compositing]]
-==== Compositing
+=== Compositing
 
 Composition layers are submitted by the application via the flink:xrEndFrame
 call.
@@ -1114,7 +1120,8 @@ layers are virtually closer to the viewer.
 [open,refpage='XrCompositionLayerFlags',desc='Composition layer flags',type='flags',xrefs='XrCompositionLayerFlagBits XrCompositionLayerProjection XrCompositionLayerQuad']
 --
 elink:XrCompositionLayerFlags specifies options for individual composition
-layers.
+layers, and contains a bitwise-OR of zero or more of the bits defined in
+elink:XrCompositionLayerFlagBits.
 
 include::{generated}/api/flags/XrCompositionLayerFlags.txt[]
 --

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-include::../meta/XR_OPPO_controller_interaction.adoc[]
+include::{generated}/meta/XR_OPPO_controller_interaction.adoc[]
 
 *Contributors*::
     Haomiao Jiang, OPPO +
@@ -12,7 +12,8 @@ include::../meta/XR_OPPO_controller_interaction.adoc[]
 
 *Overview*
 
-This extension defines a new interaction profile for the OPPO Controller, including but not limited to OPPO MR Glasses Controller.
+This extension defines a new interaction profile for the OPPO Controller,
+including but not limited to OPPO MR Glasses Controller.
 
 *OPPO Controller interaction profile*
 
@@ -24,7 +25,8 @@ Valid for user paths:
 * pathname:/user/hand/left
 * pathname:/user/hand/right
 
-This interaction profile represents the input sources and haptics on the OPPO Controller.
+This interaction profile represents the input sources and haptics on the
+OPPO Controller.
 
 Supported component paths:
 * On /user/hand/left only:
@@ -63,8 +65,8 @@ Supported component paths:
 *Input Path Descriptions*
 ****
 * */input/heartrate_oppo/value* : Allow developers to access the heart beat
-  per minute (BPM) of the user. The data would only be available with user's
-  active consent.
+  per minute (BPM) of the user.
+  The data would only be available with user's active consent.
 ****
 
 *Version History*

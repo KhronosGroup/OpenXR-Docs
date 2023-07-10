@@ -28,7 +28,7 @@ enabled, and color processing continues.
 
 Depth testing requires depth values for the layer.
 For projection layers, this can be supplied via the
-`<<XR_KHR_composition_layer_depth>>` extension.
+apiext:XR_KHR_composition_layer_depth extension.
 For geometric primitive layers, the runtime computes the depth of the sample
 directly from the layer parameters.
 An slink:XrCompositionLayerDepthTestFB chained to layers without depth must:

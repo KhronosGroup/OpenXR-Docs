@@ -1,0 +1,226 @@
+// Copyright (c) 2017-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_hand_tracking_data_source.adoc[]
+
+
+*Last Modified Date*::
+    2023-01-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Jakob Bornecrantz, Collabora +
+    John Kearney, Meta +
+    Robert Memmott, Meta +
+    Andreas Selvik, Meta +
+    Yin Li, Microsoft +
+    Robert Blenkinsopp, Ultraleap +
+    Nathan Nuber, Valve +
+*Contacts*::
+    John Kearney, Meta +
+
+*Overview*
+
+This extension augments the apiext:XR_EXT_hand_tracking extension.
+
+Runtimes may: support a variety of data sources for hand joint data for
+apiext:XR_EXT_hand_tracking, and some runtimes and devices may: use joint
+data from multiple sources.
+This extension allows an application and the runtime to communicate about
+and make use of those data sources in a cooperative manner.
+
+This extension allows the application to specify the data sources that it
+wants data from when creating a hand tracking handle, and allows the runtime
+to specify the currently active data source.
+
+The application must: enable the apiext:XR_EXT_hand_tracking extension in
+order to use this extension.
+
+[open,refpage='XrHandTrackingDataSourceEXT',type='enums',desc='Describes the hand tracking data source.',xrefs='xrLocateHandJointsEXT xrCreateHandTrackerEXT']
+--
+The elink:XrHandTrackingDataSourceEXT enum describes a hand tracking data
+source when creating an slink:XrHandTrackerEXT handle.
+
+include::{generated}/api/enums/XrHandTrackingDataSourceEXT.txt[]
+
+The application can: use elink:XrHandTrackingDataSourceEXT with
+slink:XrHandTrackingDataSourceInfoEXT when calling
+flink:xrCreateHandTrackerEXT to tell the runtime all supported data sources
+for the application for the hand tracking inputs.
+
+The application can: use it with slink:XrHandTrackingDataSourceStateEXT when
+calling flink:xrLocateHandJointsEXT to inspect what data source the runtime
+used for the returned hand joint locations.
+
+If the apiext:XR_EXT_hand_joints_motion_range extension is supported by the
+runtime and the data source is
+ename:XR_HAND_TRACKING_DATA_SOURCE_CONTROLLER_EXT, then it is expected that
+application will use that extension when retrieving hand joint poses.
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_EXT - This data source
+  value indicates that the hand tracking data source supports using
+  individual fingers and joints separately.
+  Examples of such sources include optical hand tracking, data gloves, or
+  motion capture devices.
+* ename:XR_HAND_TRACKING_DATA_SOURCE_CONTROLLER_EXT - This data source value
+  indicates that the hand tracking data source is a motion controller.
+  The runtime must: not supply this data source if the controller providing
+  the data is not actively held in the user's hand, but may: still provide
+  data if the runtime is unable to detect if the controller is not in the
+  user's hand, or a user selected policy changes this behavior.
+  Unless specified otherwise by another extension, data returned from
+  ename:XR_HAND_TRACKING_DATA_SOURCE_CONTROLLER_EXT must: behave as
+  ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT.
+****
+
+--
+
+
+[open,refpage='XrHandTrackingDataSourceInfoEXT',type='structs',desc='Specify the data source to create the hand tracker',xrefs='XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
+--
+The slink:XrHandTrackingDataSourceInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrHandTrackingDataSourceInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:requestedDataSourceCount is the number of elements in the
+  pname:requestedDataSources array.
+* pname:requestedDataSources is an array of
+  elink:XrHandTrackingDataSourceEXT that the application accepts.
+****
+
+The slink:XrHandTrackingDataSourceInfoEXT is a structure that an application
+can: chain to slink:XrHandTrackerCreateInfoEXT::pname:next to specify the
+hand tracking data sources that the application accepts.
+
+Because the hand tracking device may: change during a running session, the
+runtime may: return a valid slink:XrHandTrackerEXT handle even if there is
+no currently active hand tracking device or the active device does not
+safisty any or all data sources requested by the applications's call to
+flink:xrCreateHandTrackerEXT.
+The runtime may: instead return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateHandTrackerEXT, if for example the runtime believes it will
+never be able to satisfy the request.
+
+If any value in pname:requestedDataSources is duplicated, the runtime must:
+return ename:XR_ERROR_VALIDATION_FAILURE from the call to
+flink:xrCreateHandTrackerEXT.
+If pname:requestedDataSourceCount is `0`, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from the call to
+flink:xrCreateHandTrackerEXT.
+
+include::{generated}/validity/structs/XrHandTrackingDataSourceInfoEXT.txt[]
+--
+
+[open,refpage='XrHandTrackingDataSourceStateEXT',type='structs',desc='Chains to slink:XrHandJointLocationsEXT to get hand tracking data source state',xrefs='XrHandJointLocationsEXT xrLocateHandJointsEXT']
+--
+The slink:XrHandTrackingDataSourceStateEXT structure is defined as:
+
+include::{generated}/api/structs/XrHandTrackingDataSourceStateEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:isActive indicating there is an active data source
+* pname:dataSource indicating the data source that was used to generate the
+  hand tracking joints.
+****
+
+slink:XrHandTrackingDataSourceStateEXT is a structure that an application
+can: chain to slink:XrHandJointLocationsEXT::pname:next when calling
+flink:xrLocateHandJointsEXT to retrieve the data source of the currently
+active hand tracking device.
+
+When the returned pname:isActive is `XR_FALSE`, it indicates the currently
+active hand tracking device does not support any of the requested data
+sources.
+In these cases, the runtime must: also return no valid tracking locations
+for hand joints from this flink:xrLocateHandJointsEXT function.
+
+If the tracker was not created with slink:XrHandTrackingDataSourceInfoEXT
+chained to slink:XrHandTrackerCreateInfoEXT::pname:next, then the runtime
+must: return ename:XR_ERROR_VALIDATION_FAILURE, if
+slink:XrHandTrackingDataSourceStateEXT is passed in the call to
+flink:xrLocateHandJointsEXT.
+
+If there is an active hand tracking device that is one of the specified
+pname:requestedDataSources, the runtime must: set pname:isActive to
+ename:XR_TRUE.
+When the runtime sets pname:isActive to ename:XR_TRUE, the runtime must: set
+pname:dataSource indicate the active data source.
+The runtime must: return a pname:dataSource that is a subset of the
+pname:requestedDataSources when creating the corresponding hand tracker.
+
+include::{generated}/validity/structs/XrHandTrackingDataSourceStateEXT.txt[]
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+* ename:XR_TYPE_HAND_TRACKING_DATA_SOURCE_INFO_EXT
+* ename:XR_TYPE_HAND_TRACKING_DATA_SOURCE_STATE_EXT
+
+*New Enums*
+
+* elink:XrHandTrackingDataSourceEXT
+
+*New Structures*
+
+* slink:XrHandTrackingDataSourceInfoEXT
+* slink:XrHandTrackingDataSourceStateEXT
+
+*New Functions*
+
+*Issues*
+
+. Should this extension require
+  ename:XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT if the data
+  source is ename:XR_HAND_TRACKING_DATA_SOURCE_CONTROLLER_EXT and
+  apiext:XR_EXT_hand_joints_motion_range is not enabled?
++
+*RESOLVED*: Yes.
++
+It should not be required.
+We expect that a key use of the data from this extension will be replicating
+data hand tracking joint data for social purposes.
+For that use-case, the data returned in the style of
+ename:XR_HAND_JOINTS_MOTION_RANGE_UNOBSTRUCTED_EXT is more appropriate.
++
+This is consistent with `XR_EXT_hand_tracking` extension which requires that
+the `jointLocations` represent `the range of motion of a human hand, without
+any obstructions`.
+
+. Should slink:XrHandTrackingDataSourceInfoEXT include an pname:isActive member or can it use pname:isActive from slink:XrHandJointLocationsEXT?
++
+*RESOLVED*: Yes.
++
+Yes; slink:XrHandTrackingDataSourceInfoEXT needs to include the
+pname:isActive member and cannot use the pname:isActive from
+slink:XrHandJointLocationsEXT as the meaning of these members is different.
++
+The pname:isActive member of slink:XrHandTrackingDataSourceInfoEXT allows
+the runtime to describe if the tracking device is active.
+slink:XrHandTrackingDataSourceInfoEXT::pname:isActive describes if the
+tracking device is actively tracking.
+It is possible for a data source to be active but not actively tracking and
+we want to represent if the device is active in this extension.
+
+*Version History*
+
+* Revision 1, 2023-01-23 (John Kearney)
+** Initial extension description

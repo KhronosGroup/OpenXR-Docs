@@ -281,7 +281,7 @@ include::{generated}/api/structs/XrEventDataSpaceQueryResultsAvailableFB.txt[]
 It indicates a query request has produced some number of results.
 If a query yields results this event must: be delivered before the
 slink:XrEventDataSpaceQueryCompleteFB event is delivered.
-Call flink:xrQuerySpacesFB to retrieve those results.
+Call flink:xrRetrieveSpaceQueryResultsFB to retrieve those results.
 
 include::{generated}/validity/structs/XrEventDataSpaceQueryResultsAvailableFB.txt[]
 --
@@ -340,7 +340,8 @@ the request.
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpaceQueryCompleteFB event when the operation completes
 successfully or encounters an error.
-The runtime must: post an slink:XrEventDataSpaceQueryResultsAvailableFB if
+If this function returns a failure code, no event is posted.
+The runtime must: post an slink:XrEventDataSpaceQueryResultsAvailableFB
 before slink:XrEventDataSpaceQueryCompleteFB if any results are found.
 Once an slink:XrEventDataSpaceQueryResultsAvailableFB event has been posted,
 the application may: call flink:xrRetrieveSpaceQueryResultsFB to retrieve

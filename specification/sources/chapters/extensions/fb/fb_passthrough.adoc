@@ -186,7 +186,7 @@ include::{generated}/api/structs/XrSystemPassthroughProperties2FB.txt[]
 Applications can: pass this structure in a call to
 flink:xrGetSystemProperties to query passthrough system properties.
 Applications should: verify that the runtime implements
-<<XR_FB_passthrough>> spec version 3 or newer before doing so.
+apiext:XR_FB_passthrough spec version 3 or newer before doing so.
 In older versions, this structure is not supported and will be left
 unpopulated.
 Applications should: use slink:XrSystemPassthroughPropertiesFB in that case.
@@ -661,8 +661,8 @@ include::{generated}/api/protos/xrCreateGeometryInstanceFB.txt[]
 ****
 
 Creates an slink:XrGeometryInstanceFB handle.
-Geometry instance functionality requires <<XR_FB_triangle_mesh>> extension
-to be enabled.
+Geometry instance functionality requires apiext:XR_FB_triangle_mesh
+extension to be enabled.
 An slink:XrGeometryInstanceFB connects a layer, a mesh, and a
 transformation, with the semantics that a specific mesh will be instantiated
 in a specific layer with a specific transformation.

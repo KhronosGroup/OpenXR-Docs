@@ -1,0 +1,812 @@
+// Copyright (c) 2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_plane_detection.adoc[]
+
+
+*Last Modified Date*::
+    2023-06-26
+
+*Contributors*::
+    Aitor Font, Qualcomm +
+    Daniel Guttenberg, Qualcomm +
+    Maximilian Mayer, Qualcomm +
+    Martin Renschler, Qualcomm +
+    Karthik Nagarajan, Qualcomm +
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+
+==== Overview
+
+This extension enables applications to detect planes in the scene.
+
+
+==== Runtime support
+
+To determine if this runtime supports detecting planes
+flink:xrGetSystemProperties can: be used.
+
+[open,refpage='XrSystemPlaneDetectionPropertiesEXT',desc='System Properties of the Plane Detection extension',type='structs',xrefs='XrSystemProperties']
+--
+slink:XrSystemPlaneDetectionPropertiesEXT provides information on the
+features supported by the runtime.
+
+include::{generated}/api/structs/XrSystemPlaneDetectionPropertiesEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportedFeatures is a bitfield, with bit masks defined in
+  elink:XrPlaneDetectionCapabilityFlagBitsEXT.
+****
+
+include::{generated}/validity/structs/XrSystemPlaneDetectionPropertiesEXT.txt[]
+--
+
+
+[open,refpage='XrPlaneDetectionCapabilityFlagsEXT',desc='Supported Features',type='flags',xrefs='xrGetPlaneDetectionsEXT XrPlaneDetectionCapabilityFlagBitsEXT']
+--
+The slink:XrSystemPlaneDetectionPropertiesEXT::pname:supportedFeatures
+member is of the following type, and contains a bitwise-OR of zero or more
+of the bits defined in elink:XrPlaneDetectionCapabilityFlagBitsEXT.
+
+include::{generated}/api/flags/XrPlaneDetectionCapabilityFlagsEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectionCapabilityFlagBitsEXT',desc='Feature Flag Bits',type='enums',xrefs='XrPlaneDetectionCapabilityFlagsEXT']
+--
+Valid bits for elink:XrPlaneDetectionCapabilityFlagsEXT are defined by
+elink:XrPlaneDetectionCapabilityFlagBitsEXT, which is specified as:
+
+include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.comments.txt[]
+
+--
+
+
+==== Create a plane detection handle
+
+[open,refpage='XrPlaneDetectorEXT',type='handles',desc='Represents a plane detector for one or more planes.']
+--
+include::{generated}/api/handles/XrPlaneDetectorEXT.txt[]
+
+The slink:XrPlaneDetectorEXT handle represents the resources for detecting
+one or more planes.
+
+An application may: create separate slink:XrPlaneDetectorEXT handles for
+different sets of planes.
+This handle can: be used to detect planes using other functions in this
+extension.
+
+Plane detection provides locations of planes in the scene.
+--
+
+[open,refpage='xrCreatePlaneDetectorEXT',type='protos',desc='Create a plane detection handle.',xrefs='XrPlaneDetectorCreateInfoEXT XrPlaneDetectorEXT xrDestroyPlaneDetectorEXT xrBeginPlaneDetectionEXT']
+--
+The flink:xrCreatePlaneDetectorEXT function is defined as:
+
+include::{generated}/api/protos/xrCreatePlaneDetectorEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the plane detection will be
+  active.
+* pname:createInfo is the slink:XrPlaneDetectorCreateInfoEXT used to specify
+  the plane detection.
+* pname:planeDetector is the returned slink:XrPlaneDetectorEXT handle.
+****
+
+An application creates an slink:XrPlaneDetectorEXT handle using
+flink:xrCreatePlaneDetectorEXT function.
+
+If the system does not support plane detection, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreatePlaneDetectorEXT.
+
+include::{generated}/validity/protos/xrCreatePlaneDetectorEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorCreateInfoEXT',type='structs',desc='Information to create a plane detection handle',xrefs='xrCreatePlaneDetectorEXT']
+--
+The slink:XrPlaneDetectorCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrPlaneDetectorCreateInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags must: be a valid combination of elink:XrPlaneDetectorFlagsEXT
+  flags or zero.
+****
+
+The slink:XrPlaneDetectorCreateInfoEXT structure describes the information
+to create an slink:XrPlaneDetectorEXT handle.
+
+include::{generated}/validity/structs/XrPlaneDetectorCreateInfoEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorFlagsEXT',desc='Plane Detector flags',type='flags',xrefs='XrPlaneDetectorCreateInfoEXT XrPlaneDetectorFlagBitsEXT']
+--
+The slink:XrPlaneDetectorCreateInfoEXT::pname:flags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrPlaneDetectorFlagBitsEXT.
+
+include::{generated}/api/flags/XrPlaneDetectorFlagsEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorFlagBitsEXT',desc='Plane Detector flags',type='enums',xrefs='XrPlaneDetectorFlagsEXT']
+--
+Valid bits for elink:XrPlaneDetectorFlagsEXT are defined by
+elink:XrPlaneDetectorFlagBitsEXT, which is specified as:
+
+include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.comments.txt[]
+--
+
+
+[open,refpage='xrDestroyPlaneDetectorEXT',type='protos',desc='Destroy a plane detection handle',xrefs='xrCreatePlaneDetectorEXT XrPlaneDetectorEXT']
+--
+The flink:xrDestroyPlaneDetectorEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroyPlaneDetectorEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:planeDetector is an slink:XrPlaneDetectorEXT previously created by
+  flink:xrCreatePlaneDetectorEXT.
+****
+
+flink:xrDestroyPlaneDetectorEXT function releases the pname:planeDetector
+and the underlying resources when finished with plane detection experiences.
+
+include::{generated}/validity/protos/xrDestroyPlaneDetectorEXT.txt[]
+--
+
+==== Detecting planes
+
+[open,refpage='xrBeginPlaneDetectionEXT',type='protos',desc='Detect planes',xrefs='XrPlaneDetectorBeginInfoEXT XrPlaneDetectorGetInfoEXT xrGetPlaneDetectionsEXT']
+--
+The flink:xrBeginPlaneDetectionEXT function is defined as:
+
+include::{generated}/api/protos/xrBeginPlaneDetectionEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:planeDetector is an slink:XrPlaneDetectorEXT previously created by
+  flink:xrCreatePlaneDetectorEXT.
+* pname:beginInfo is a pointer to slink:XrPlaneDetectorBeginInfoEXT
+  containing plane detection parameters.
+****
+
+The flink:xrBeginPlaneDetectionEXT function begins the detection of planes
+in the scene.
+Detecting planes in a scene is an asynchronous operation.
+flink:xrGetPlaneDetectionStateEXT can: be used to determine if the query has
+finished.
+Once it has finished the results may: be retrieved via
+flink:xrGetPlaneDetectionsEXT.
+If a detection has already been started on a plane detector handle, calling
+flink:xrBeginPlaneDetectionEXT again on the same handle will cancel the
+operation in progress and start a new detection with the new filter
+parameters.
+
+The bounding volume is resolved and fixed relative to LOCAL space at the
+time of the call to flink:xrBeginPlaneDetectionEXT using
+slink:XrPlaneDetectorBeginInfoEXT::pname:baseSpace,
+slink:XrPlaneDetectorBeginInfoEXT::pname:time,
+slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxPose and
+slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxExtent.
+The runtime must: resolve the location defined by pname:baseSpace at the
+time of the call.
+The slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxPose is the pose of
+the center of the box defined by
+slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxExtent.
+
+The runtime must: return ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT if the
+pname:baseSpace is not locatable at the time of the call.
+
+include::{generated}/validity/protos/xrBeginPlaneDetectionEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorBeginInfoEXT',type='structs',desc='Describes the information to detect planes',xrefs='xrBeginPlaneDetectionEXT']
+--
+The slink:XrPlaneDetectorBeginInfoEXT structure describes the information to
+detect planes.
+
+include::{generated}/api/structs/XrPlaneDetectorBeginInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is the slink:XrSpace that the pname:boundingBox is defined
+  in.
+* pname:time is an basetype:XrTime at which to detect the planes.
+* pname:orientationCount the number of elements in the pname:orientations.
+* pname:orientations an array of elink:XrPlaneDetectorOrientationEXT.
+  If this field is null no orientation filtering is applied.
+  If any orientations are present only planes with any of the orientation
+  listed are returned.
+* pname:semanticTypeCount the number of elements in the pname:semanticTypes.
+* pname:semanticTypes an array of elink:XrPlaneDetectorSemanticTypeEXT.
+  If this field is null no semantic type filtering is applied.
+  If any semantic types are present only planes with matching semantic types
+  are returned.
+* pname:maxPlanes is the maximum number of planes the runtime may: return.
+  This number must: be larger than 0.
+  If the number is 0 the runtime must: return
+  ename:XR_ERROR_VALIDATION_FAILURE.
+* pname:minArea is the minimum area in square meters a plane must: have to
+  be returned.
+  A runtime may: have a lower limit under which planes are not detected
+  regardless of pname:minArea and silently drop planes lower than the
+  internal minimum.
+* pname:boundingBoxPose is the pose of the center of the bounding box of the
+  volume to use for detection in pname:baseSpace.
+* pname:boundingBoxExtent is the extent of the bounding box to use for
+  detection.
+  If any part of a plane falls within the bounding box it should: be
+  considered for inclusion subject to the other filters.
+  This means that planes may: extend beyond the bounding box.
+  A runtime may: have an upper limit on the detection range and silently
+  clip the results to that internally.
+****
+
+include::{generated}/validity/structs/XrPlaneDetectorBeginInfoEXT.txt[]
+--
+
+
+[open,refpage='xrGetPlaneDetectionStateEXT',type='protos',desc='Get the state of the plane detection pass',xrefs='xrBeginPlaneDetectionEXT']
+--
+The flink:xrGetPlaneDetectionStateEXT function is defined as:
+
+include::{generated}/api/protos/xrGetPlaneDetectionStateEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:planeDetector is an slink:XrPlaneDetectorEXT previously created by
+  flink:xrCreatePlaneDetectorEXT.
+* pname:state is a pointer to elink:XrPlaneDetectionStateEXT.
+****
+
+
+The flink:xrGetPlaneDetectionStateEXT function retrieves the state of the
+plane query and must: be called before calling
+flink:xrGetPlaneDetectionsEXT.
+
+If the plane detection has not yet finished pname:state must: be
+ename:XR_PLANE_DETECTION_STATE_PENDING_EXT.
+If the plane detection has finished pname:state must: be
+ename:XR_PLANE_DETECTION_STATE_DONE_EXT.
+If no plane detection was previously started
+ename:XR_PLANE_DETECTION_STATE_NONE_EXT must: be returned.
+For all three states the function must: return ename:XR_SUCCESS.
+
+When a query error occurs the function must: return ename:XR_SUCCESS and the
+appropriate error state value must: be set.
+
+include::{generated}/validity/protos/xrGetPlaneDetectionStateEXT.txt[]
+--
+
+[open,refpage='xrGetPlaneDetectionsEXT',type='protos',desc='Get the detected planes',xrefs='xrBeginPlaneDetectionEXT']
+--
+The flink:xrGetPlaneDetectionsEXT function is defined as:
+
+include::{generated}/api/protos/xrGetPlaneDetectionsEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:planeDetector is an slink:XrPlaneDetectorEXT previously created by
+  flink:xrCreatePlaneDetectorEXT.
+* pname:info is a pointer to slink:XrPlaneDetectorGetInfoEXT.
+* pname:locations is a pointer to slink:XrPlaneDetectorLocationsEXT
+  receiving the returned plane locations.
+****
+
+flink:xrGetPlaneDetectionsEXT must: return ename:XR_ERROR_CALL_ORDER_INVALID
+if the detector state reported by flink:xrGetPlaneDetectionStateEXT is not
+ename:XR_PLANE_DETECTION_STATE_DONE_EXT for the current query started by
+flink:xrBeginPlaneDetectionEXT.
+
+If the slink:XrPlaneDetectorGetInfoEXT::baseSpace is not locatable
+ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT must: be returned.
+
+Once flink:xrBeginPlaneDetectionEXT is called again, the previous results
+for that handle are no longer available.
+The application should: cache them before calling
+flink:xrBeginPlaneDetectionEXT again if it needs access to that data while
+waiting for updated detection results.
+
+Upon the completion of a detection cycle (flink:xrBeginPlaneDetectionEXT,
+flink:xrGetPlaneDetectionStateEXT to flink:xrGetPlaneDetectionsEXT) the
+runtime must: keep a snapshot of the plane data and no data may: be
+modified.
+Calling flink:xrGetPlaneDetectionsEXT multiple times with the same baseSpace
+and time must: return the same plane pose data.
+
+The current snapshot, if any, must: be discarded upon calling
+flink:xrBeginPlaneDetectionEXT.
+
+If the slink:XrEventDataReferenceSpaceChangePending is queued and the
+changeTime elapsed while the application is holding cached data the
+application may: use the event data to adjusted poses accordingly.
+
+include::{generated}/validity/protos/xrGetPlaneDetectionsEXT.txt[]
+--
+
+
+[open,refpage='XrPlaneDetectorGetInfoEXT',type='structs',desc='Contains the plane retrieval information',xrefs='xrGetPlaneDetectionsEXT']
+--
+slink:XrPlaneDetectorGetInfoEXT structure contains the information required
+to retrieve the detected planes.
+
+include::{generated}/api/structs/XrPlaneDetectorGetInfoEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace the plane pose will be relative to this slink:XrSpace at
+  pname:time.
+* pname:time is the basetype:XrTime at which to evaluate the coordinates
+  relative to the pname:baseSpace.
+****
+
+include::{generated}/validity/structs/XrPlaneDetectorGetInfoEXT.txt[]
+--
+
+
+[open,refpage='XrPlaneDetectorLocationsEXT',type='structs',desc='Contains the plane information',xrefs='xrGetPlaneDetectionsEXT']
+--
+slink:XrPlaneDetectorLocationsEXT structure contains information on the
+detected planes.
+
+include::{generated}/api/structs/XrPlaneDetectorLocationsEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:planeLocationCapacityInput is the capacity of the array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:planeLocationCountOutput is the number of planes, or the required
+  capacity in the case that pname:planeCapacityInput is insufficient.
+* pname:planeLocations is an array of slink:XrPlaneDetectorLocationEXT.
+  It can: be code:NULL if pname:planeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:planeLocations size.
+****
+
+include::{generated}/validity/structs/XrPlaneDetectorLocationsEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorLocationEXT',type='structs',desc='Describes the location of a plane',xrefs='xrGetPlaneDetectionsEXT']
+--
+slink:XrPlaneDetectorLocationEXT structure describes the position and
+orientation of a plane.
+
+include::{generated}/api/structs/XrPlaneDetectorLocationEXT.txt[]
+
+.Member Descriptions
+****
+* pname:planeId is a code:uint64_t unique identifier of the plane.
+  The planeId should: remain the same for the duration of the
+  slink:XrPlaneDetectorEXT handle for a physical plane.
+  A runtime on occasion may: assign a different id to the same physical
+  plane, for example when several planes merge into one plane.
+  pname:planeId must: remain valid until the next call to
+  flink:xrBeginPlaneDetectionEXT or flink:xrDestroyPlaneDetectorEXT.
+  This id is used by flink:xrGetPlanePolygonBufferEXT.
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits, to indicate which members contain valid
+  data.
+  If none of the bits are set, no other fields in this structure should: be
+  considered to be valid or meaningful.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the origin of a plane within the reference frame of the corresponding
+  slink:XrPlaneDetectorGetInfoEXT::pname:baseSpace.
+* pname:extent is the extent of the plane along the x-axis (width) and
+  z-axis (height) centered on the pname:pose.
+* pname:orientation is the detected orientation of the plane.
+* pname:semanticType elink:XrPlaneDetectorSemanticTypeEXT type of the plane.
+* pname:polygonBufferCount is the number of polygon buffers associated with
+  this plane.
+  If this is zero no polygon buffer was generated.
+  The first polygon buffer is always the outside contour.
+  If contours are requested with
+  ename:XR_PLANE_DETECTOR_ENABLE_CONTOUR_BIT_EXT this value must: always be
+  at least 1.
+****
+
+include::{generated}/validity/structs/XrPlaneDetectorLocationEXT.txt[]
+--
+
+[open,refpage='XrPlaneDetectorOrientationEXT',type='enums',desc='Orientation of the detected plane (upward, downward...)',xrefs='xrGetPlaneDetectionsEXT']
+--
+The elink:XrPlaneDetectorOrientationEXT enumeration identifies the different
+general categories of orientations of detected planes.
+
+include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.txt[]
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.comments.txt[]
+--
+
+[open,refpage='XrPlaneDetectorSemanticTypeEXT',type='enums',desc='Type of the detected plane (upward, downward...)',xrefs='xrGetPlaneDetectionsEXT']
+--
+The elink:XrPlaneDetectorSemanticTypeEXT enumeration identifies the
+different semantic types of detected planes.
+
+include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.txt[]
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.comments.txt[]
+--
+
+
+[open,refpage='XrPlaneDetectionStateEXT',type='enums',desc='Plane Detection State',xrefs='xrGetPlaneDetectionsEXT']
+--
+The elink:XrPlaneDetectionStateEXT enumeration identifies the possible
+states of the plane detector.
+
+include::{generated}/api/enums/XrPlaneDetectionStateEXT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_PLANE_DETECTION_STATE_NONE_EXT - The plane detector is not
+  actively looking for planes; call flink:xrBeginPlaneDetectionEXT to start
+  detection.
+* ename:XR_PLANE_DETECTION_STATE_PENDING_EXT - This plane detector is
+  currently looking for planes but not yet ready with results; call
+  flink:xrGetPlaneDetectionsEXT again, or call
+  flink:xrBeginPlaneDetectionEXT to restart with new filter parameters.
+* ename:XR_PLANE_DETECTION_STATE_DONE_EXT - This plane detector has finished
+  and results may: now be retrieved.
+  The results are valid until flink:xrBeginPlaneDetectionEXT or
+  flink:xrDestroyPlaneDetectorEXT are called.
+* ename:XR_PLANE_DETECTION_STATE_ERROR_EXT - An error occurred.
+  The query may: be tried again.
+* ename:XR_PLANE_DETECTION_STATE_FATAL_EXT - An error occurred.
+  The query must: not be tried again.
+****
+--
+
+
+==== Read plane polygon vertices
+
+[open,refpage='xrGetPlanePolygonBufferEXT',type='protos',desc='Gets the plane's polygon buffer',xrefs='xrGetPlaneDetectionsEXT']
+--
+The flink:xrGetPlanePolygonBufferEXT function is defined as:
+
+include::{generated}/api/protos/xrGetPlanePolygonBufferEXT.txt[]
+
+.Parameter Descriptions
+****
+* pname:planeDetector is an slink:XrPlaneDetectorEXT previously created by
+  flink:xrCreatePlaneDetectorEXT.
+* pname:planeId is the slink:XrPlaneDetectorLocationEXT::pname:planeId.
+* pname:polygonBufferIndex is the index of the polygon contour buffer to
+  retrieve.
+  This must: be a number from 0 to
+  slink:XrPlaneDetectorLocationEXT:polygonBufferCount -1.
+  Index 0 retrieves the outside contour, larger indexes retrieve holes in
+  the plane.
+* pname:polygonBuffer is a pointer to slink:XrPlaneDetectorPolygonBufferEXT
+  receiving the returned plane polygon buffer.
+****
+
+The flink:xrGetPlanePolygonBufferEXT function retrieves the plane's polygon
+buffer for the given pname:planeId and pname:polygonBufferIndex.
+Calling flink:xrGetPlanePolygonBufferEXT with pname:polygonBufferIndex equal
+to 0 must: return the outside contour, if available.
+Calls with non-zero indices less than
+slink:XrPlaneDetectorLocationEXT::pname:polygonBufferCount must: return
+polygons corresponding to holes in the plane.
+This feature may: not be supported by all runtimes, check the
+slink:XrSystemPlaneDetectionPropertiesEXT::pname:supportedFeatures for
+support.
+
+Outside contour polygon vertices must: be ordered in counter clockwise
+order.
+Vertices of holes must: be ordered in clockwise order.
+The right-hand rule is used to determine the direction of the normal of this
+plane.
+The polygon contour data is relative to the pose of the plane and coplanar
+with it.
+
+This function only retrieves polygons, which means that it needs to be
+converted to a regular mesh to be rendered.
+
+include::{generated}/validity/protos/xrGetPlanePolygonBufferEXT.txt[]
+--
+
+
+[open,refpage='XrPlaneDetectorPolygonBufferEXT',desc='Plane polygon vertex buffer',type='structs',xrefs='xrGetPlanePolygonBufferEXT']
+--
+slink:XrPlaneDetectorPolygonBufferEXT is an input/output structure for
+reading plane contour polygon vertices.
+
+include::{generated}/api/structs/XrPlaneDetectorPolygonBufferEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:vertexCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:vertexCountOutput is the count of pname:vertices written, or the
+  required capacity in the case that pname:vertexCapacityInput is
+  insufficient.
+* pname:vertices is an array of slink:XrVector2f that must: be filled by the
+  runtime with the positions of the polygon vertices relative to the plane's
+  pose.
+****
+
+include::{generated}/validity/structs/XrPlaneDetectorPolygonBufferEXT.txt[]
+--
+
+[open,refpage='XrExtent3DfEXT',desc='Extent in three dimensions',type='structs',xrefs='XrExtent2Df']
+--
+The slink:XrExtent3DfEXT structure is defined as:
+
+include::{generated}/api/structs/XrExtent3DfEXT.txt[]
+
+.Member Descriptions
+****
+* pname:width the floating-point width of the extent.
+* pname:height the floating-point height of the extent.
+* pname:depth the floating-point depth of the extent.
+****
+
+The slink:XrExtent3DfEXT structure describes a axis aligned
+three-dimensional floating-point extent: This structure is used for
+component values that may: be fractional (floating-point).
+If used to represent physical distances, values must: be in meters.
+
+The pname:width (X), pname:height (Y) and pname:depth (Z) values must: be
+non-negative.
+--
+
+==== Example code for locating planes
+
+The following example code demonstrates how to detect planes relative to a
+local space.
+
+[source,C++]
+----
+XrInstance instance;  // previously initialized
+XrSystemId systemId;  // previously initialized
+XrSession session;    // previously initialized
+XrSpace localSpace;   // previously initialized, e.g. from
+                      // XR_REFERENCE_SPACE_TYPE_LOCAL
+XrSpace viewSpace;    // previously initialized, e.g. from
+                      // XR_REFERENCE_SPACE_TYPE_VIEW
+
+// The function pointers are previously initialized using
+// xrGetInstanceProcAddr.
+PFN_xrCreatePlaneDetectorEXT xrCreatePlaneDetectorEXT; // previously initialized
+PFN_xrBeginPlaneDetectionEXT xrBeginPlaneDetectionEXT; // previously initialized
+PFN_xrGetPlaneDetectionStateEXT xrGetPlaneDetectionStateEXT; // previously initialized
+PFN_xrGetPlaneDetectionsEXT xrGetPlaneDetectionsEXT; // previously initialized
+PFN_xrGetPlanePolygonBufferEXT xrGetPlanePolygonBufferEXT; // previously initialized
+
+
+XrSystemProperties properties{XR_TYPE_SYSTEM_PROPERTIES};
+XrSystemPlaneDetectionPropertiesEXT planeDetectionProperties{XR_TYPE_SYSTEM_PLANE_DETECTION_PROPERTIES_EXT};
+properties.next = &planeDetectionProperties;
+
+CHK_XR(xrGetSystemProperties(instance, systemId, &properties));
+if (!(planeDetectionProperties.supportedFeatures & XR_PLANE_DETECTION_CAPABILITY_PLANE_DETECTION_BIT_EXT )) {
+  // plane detection is not supported.
+  return;
+}
+
+// Create a plane detection
+XrPlaneDetectorEXT planeDetector{};
+{
+    XrPlaneDetectorCreateInfoEXT createInfo{ XR_TYPE_PLANE_DETECTOR_CREATE_INFO_EXT };
+    createInfo.flags = XR_PLANE_DETECTOR_ENABLE_CONTOUR_BIT_EXT;
+    CHK_XR(xrCreatePlaneDetectorEXT(session, &createInfo, &planeDetector));
+}
+
+
+bool queryRunning = false;
+
+std::vector<XrPlaneDetectorOrientationEXT> orientations;
+orientations.push_back(XR_PLANE_DETECTOR_ORIENTATION_HORIZONTAL_UPWARD_EXT);
+orientations.push_back(XR_PLANE_DETECTOR_ORIENTATION_HORIZONTAL_DOWNWARD_EXT);
+
+std::vector<XrPlaneDetectorLocationEXT> cachedPlaneLocations;
+
+auto processPlanes = [&](const XrTime time) {
+
+    if (!queryRunning) {
+        XrPlaneDetectorBeginInfoEXT beginInfo{ XR_TYPE_PLANE_DETECTOR_BEGIN_INFO_EXT };
+        XrPosef pose{};
+        XrExtent3DfEXT extents = {10.0f, 10.0f, 10.0f};
+        pose.orientation.w = 1.0f;
+        beginInfo.baseSpace = viewSpace;
+        beginInfo.time = time;
+        beginInfo.boundingBoxPose = pose;
+        beginInfo.boundingBoxExtent = extents;
+        beginInfo.orientationCount = (uint32_t)orientations.size();
+        beginInfo.orientations = orientations.data();
+
+        CHK_XR(xrBeginPlaneDetectionEXT(planeDetector, &beginInfo));
+        queryRunning = true;
+        return;
+    } else {
+        XrPlaneDetectionStateEXT planeDetectionState;
+        if (xrGetPlaneDetectionStateEXT(planeDetector, &planeDetectionState)!=XR_SUCCESS) {
+          queryRunning = false;
+          return;
+        }
+
+        switch(planeDetectionState) {
+          case XR_PLANE_DETECTION_STATE_DONE_EXT:
+            // query has finished, process the results.
+            break;
+          case XR_PLANE_DETECTION_STATE_ERROR_EXT:
+            // something temporary went wrong, just
+            // retry
+            queryRunning = false;
+            return;
+          case XR_PLANE_DETECTION_STATE_FATAL_EXT:
+            // there was something wrong with the query
+            // don't retry.
+            // exit();
+            return;
+          case XR_PLANE_DETECTION_STATE_PENDING_EXT:
+            // query is still processing, come back on the next loop.
+            return;
+          default:
+            // restart the query.
+            queryRunning = false;
+            return;
+        }
+
+
+        XrPlaneDetectorGetInfoEXT planeGetInfo{};
+        planeGetInfo.type = XR_TYPE_PLANE_DETECTOR_GET_INFO_EXT;
+        planeGetInfo.time = time;
+        planeGetInfo.baseSpace = localSpace;
+
+        XrPlaneDetectorLocationsEXT planeLocations{};
+        planeLocations.type = XR_TYPE_PLANE_DETECTOR_LOCATIONS_EXT;
+        planeLocations.planeLocationCapacityInput = 0;
+        planeLocations.planeLocations = nullptr;
+
+        if (xrGetPlaneDetectionsEXT(planeDetector, &planeGetInfo, &planeLocations) != XR_SUCCESS ) {
+          queryRunning = false;
+          return;
+        }
+
+        if (planeLocations.planeLocationCountOutput > 0) {
+            queryRunning = false;
+            std::vector<XrPlaneDetectorLocationEXT>
+                locationsBuffer(planeLocations.planeLocationCountOutput,
+                { XR_TYPE_PLANE_DETECTOR_LOCATION_EXT });
+            planeLocations.planeLocationCapacityInput =
+                planeLocations.planeLocationCountOutput;
+            planeLocations.planeLocations = locationsBuffer.data();
+
+            CHK_XR(xrGetPlaneDetectionsEXT(planeDetector, &planeGetInfo, &planeLocations));
+
+            cachedPlaneLocations = locationsBuffer;
+
+            for (int i = 0; i < planeLocations.planeLocationCountOutput; ++i) {
+                const XrPosef& planeInLocalSpace = planeLocations.planeLocations[i].pose;
+                auto planeId =
+                    planeLocations.planeLocations[i].planeId;
+                auto polygonBufferCount =
+                    planeLocations.planeLocations[i].polygonBufferCount;
+
+                for (uint32_t polygonBufferIndex=0; polygonBufferIndex < polygonBufferCount; polygonBufferIndex++) {
+                    // polygonBufferIndex = 0 -> outside contour CCW
+                    // polygonBufferIndex > 0 -> holes CW
+                    XrPlaneDetectorPolygonBufferEXT polygonBuffer{};
+                    polygonBuffer.vertexCapacityInput = 0;
+
+                    CHK_XR(xrGetPlanePolygonBufferEXT(planeDetector,
+                        planeId, polygonBufferIndex, &polygonBuffer));
+
+                    // allocate space and use buffer
+                }
+                // plane planeInLocalSpace, planeType
+            }
+        }
+    }
+};
+
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+
+    XrFrameState frameState;  // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    processPlanes(time);
+
+    // Draw the planes as needed from cachedPlaneLocations.
+    // drawPlanes(cachedPlaneLocations);
+
+    // ...
+    // Finish frame loop
+    // ...
+}
+----
+
+*New Object Types*
+
+* slink:XrPlaneDetectorEXT
+
+*New Enum Constants*
+
+elink:XrObjectType enumeration is extended with:
+
+* ename:XR_OBJECT_TYPE_PLANE_DETECTOR_EXT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_PLANE_DETECTOR_CREATE_INFO_EXT
+* ename:XR_TYPE_PLANE_DETECTOR_BEGIN_INFO_EXT
+* ename:XR_TYPE_PLANE_DETECTOR_GET_INFO_EXT
+* ename:XR_TYPE_PLANE_DETECTOR_LOCATION_EXT
+* ename:XR_TYPE_PLANE_DETECTOR_POLYGON_BUFFER_EXT
+* ename:XR_TYPE_SYSTEM_PLANE_DETECTION_PROPERTIES_EXT
+
+the elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT
+* ename:XR_ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT
+
+*New Enums*
+
+* elink:XrPlaneDetectorOrientationEXT
+* elink:XrPlaneDetectorFlagsEXT
+* elink:XrPlaneDetectionStateEXT
+* elink:XrPlaneDetectionCapabilityFlagsEXT
+* elink:XrPlaneDetectorSemanticTypeEXT
+
+*New Structures*
+
+* slink:XrSystemPlaneDetectionPropertiesEXT
+* slink:XrPlaneDetectorCreateInfoEXT
+* slink:XrPlaneDetectorBeginInfoEXT
+* slink:XrPlaneDetectorGetInfoEXT
+* slink:XrPlaneDetectorLocationEXT
+* slink:XrPlaneDetectorPolygonBufferEXT
+* slink:XrExtent3DfEXT
+
+*New Functions*
+
+* flink:xrCreatePlaneDetectorEXT
+* flink:xrDestroyPlaneDetectorEXT
+* flink:xrBeginPlaneDetectionEXT
+* flink:xrGetPlaneDetectionStateEXT
+* flink:xrGetPlaneDetectionsEXT
+* flink:xrGetPlanePolygonBufferEXT
+
+*Version History*
+
+* Revision 1, 2023-06-26 (Ron Bessems)

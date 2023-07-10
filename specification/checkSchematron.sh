@@ -20,13 +20,31 @@
 # rules, using https://github.com/schxslt/schxslt/
 #
 # Usage: checkSchematron.sh
+#
+# With optional parameters:
+# checkSchematron.sh -i path/input.xml
 
 set -e
+
+REGISTRY_DIR="./registry"
+XML=$REGISTRY_DIR/xr.xml
+
+while getopts ":i:" option; do
+   case $option in
+      i) # Set input xml file
+         XML=${OPTARG}
+         echo "Setting XML=${OPTARG}"
+         ;;
+     \?) # Invalid option
+         echo "Error: Invalid option."
+         echo "Valid options are -i path/to/input.xml"
+         exit;;
+   esac
+done
 
 
 (
     cd "$(dirname $0)"
-    REGISTRY_DIR="./registry"
     export REGISTRY_DIR
     . $REGISTRY_DIR/schematron.sh
 
@@ -35,5 +53,5 @@ set -e
         exit 0
     fi
 
-    runSchematron $REGISTRY_DIR/xr.xml
+    runSchematron $XML
 )

@@ -274,6 +274,7 @@ flink:xrLocateSpace method.
 This operation is asynchronous and the runtime must: post an
 slink:XrEventDataSpatialAnchorCreateCompleteFB event when the operation
 completes successfully or encounters an error.
+If this function returns a failure code, no event is posted.
 The pname:requestId can: be used to later refer to the request, such as
 identifying which request has completed when an
 slink:XrEventDataSpatialAnchorCreateCompleteFB is posted to the event queue.
@@ -356,6 +357,7 @@ the value of pname:timeout.
 The pname:requestId can: be used to later refer to the request, such as
 identifying which request has completed when an
 slink:XrEventDataSpaceSetStatusCompleteFB is posted to the event queue.
+If this function returns a failure code, no event is posted.
 This function must: return ename:XR_ERROR_SPACE_COMPONENT_NOT_SUPPORTED_FB
 if the slink:XrSpace does not support the specified component type.
 

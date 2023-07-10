@@ -241,7 +241,7 @@ The names have the following format:
   The substrings are delimited with single underscores.
 ****
 
-For example: `<<XR_KHR_composition_layer_cube>>` is an OpenXR extension
+For example: apiext:XR_KHR_composition_layer_cube is an OpenXR extension
 created by the Khronos (KHR) OpenXR Working Group to support cube
 composition layers.
 
@@ -362,7 +362,7 @@ This will return the list of extensions implemented internally in that API
 layer.
 
 [[type-aliasing]]
-==== Type Aliasing
+=== Type Aliasing
 
 Type aliasing refers to the situation in which the actual type of a element
 does not match the declared type.
@@ -381,7 +381,14 @@ However, the array must: be of one of the specific layer types, such as
 slink:XrCompositionLayerQuad.
 Similarly, flink:xrEnumerateSwapchainImages accepts an array of
 slink:XrSwapchainImageBaseHeader, whereas the actual type passed must: be an
-array of a type such as slink:XrSwapchainImageVulkanKHR.
+array of a type such as
+ifdef::XR_KHR_vulkan_enable[]
+slink:XrSwapchainImageVulkanKHR.
+endif::XR_KHR_vulkan_enable[]
+ifndef::XR_KHR_vulkan_enable[]
+`XrSwapchainImageVulkanKHR`.
+endif::XR_KHR_vulkan_enable[]
+
 For OpenXR to work correctly, the compiler must: support the type aliasing
 described here.
 
@@ -409,7 +416,7 @@ endif::[]
 --
 
 [[valid-usage]]
-==== Valid Usage
+=== Valid Usage
 
 Valid usage defines a set of conditions which must: be met in order to
 achieve well-defined run-time behavior in an application.
@@ -438,7 +445,7 @@ These conditions are considered implicit.
 Implicit valid usage conditions are described in detail below.
 
 [[valid-usage-for-object-handles]]
-===== Valid Usage for Object Handles
+==== Valid Usage for Object Handles
 
 Any input parameter to a function that is an object handle must: be a valid
 object handle, unless otherwise specified.
@@ -447,7 +454,7 @@ An object handle is valid if and only if:
 .Object Handle Validity Conditions
 ****
 * it has been created or allocated by a previous, successful call to the
-API,
+  API,
 * it has not been destroyed by a previous call to the API, and
 * its parent handle is also valid.
 ****
@@ -458,7 +465,7 @@ In those cases, the API uses dlink:XR_NULL_HANDLE, which has the integer
 value code:0.
 
 [[valid-usage-for-pointers]]
-===== Valid Usage for Pointers
+==== Valid Usage for Pointers
 
 Any parameter that is a pointer must: be a valid pointer when the
 specification indicates that the runtime uses the pointer.
@@ -469,7 +476,7 @@ a structure) satisfy the alignment requirements of the host processor.
 
 
 [[valid-usage-for-enumerated-types]]
-===== Valid Usage for Enumerated Types
+==== Valid Usage for Enumerated Types
 
 Any parameter of an enumerated type must: be a valid enumerant for that
 type.
@@ -477,7 +484,7 @@ An enumerant is valid if and only if the enumerant is defined as part of the
 enumerated type in question.
 
 [[valid-usage-for-flags]]
-===== Valid Usage for Flags
+==== Valid Usage for Flags
 [open,refpage='XrFlags64',desc='OpenXR bitmasks',type='basetypes',xrefs='XrInstanceCreateFlags XrSessionCreateFlags XrSwapchainCreateFlags XrSwapchainUsageFlags XrViewStateFlags XrCompositionLayerFlags XrSpaceLocationFlags']
 --
 A collection of flags is represented by a bitmask using the type
@@ -511,7 +518,7 @@ A bit flag is valid if and only if:
 ****
 
 [[valid-usage-for-structure-types]]
-===== Valid Usage for Structure Types
+==== Valid Usage for Structure Types
 
 Any parameter that is a structure containing a pname:type member must: have
 a value of pname:type which is a valid elink:XrStructureType value matching
@@ -530,11 +537,10 @@ are converted in a way that produces a more readable value:
 * OpenGLES => _OPENGL_ES
 * EGL => _EGL
 * D3D => _D3D
-* VULKAN => _VULKAN
 ****
 
 [[valid-usage-for-structure-pointer-chains]]
-===== Valid Usage for Structure Pointer Chains
+==== Valid Usage for Structure Pointer Chains
 
 Any structure containing a code:void* pname:next member must: have a value
 of pname:next that is either code:NULL, or points to a valid structure that
@@ -569,7 +575,7 @@ modified by the runtime with the exception of the type and next fields.
 Upon return from any function, all type and next fields in the chain must:
 be unmodified.
 
-====== Useful Base Structures
+===== Useful Base Structures
 
 As a convenience to runtimes and layers needing to iterate through a
 structure pointer chain, the OpenXR API provides the following base
@@ -617,7 +623,7 @@ These structures allow for some type safety and can be used by OpenXR API
 functions that operate on generic inputs and outputs.
 
 [[next-chain-structure-uniqueness]]
-====== Next Chain Structure Uniqueness
+===== Next Chain Structure Uniqueness
 
 Applications should: ensure that they create and insert no more than one
 occurrence of each type of extension structure in a given pname:next chain.
@@ -642,7 +648,7 @@ This is to ensure that OpenXR behavior is consistent whether or not that
 particular OpenXR component is present and/or enabled on the system.
 
 [[valid-usage-for-nested-structures]]
-===== Valid Usage for Nested Structures
+==== Valid Usage for Nested Structures
 
 The above conditions also apply recursively to members of structures
 provided as input to a function, either as a direct argument to the
@@ -654,8 +660,9 @@ sections.
 [[return-codes]]
 === Return Codes
 
-While the core API is not designed to capture incorrect usage, some
-circumstances still require return codes.
+The core API is designed to capture most, but not all, instances of
+incorrect usage.
+As such, most functions provide return codes.
 Functions in the API return their status via return codes that are in one of
 the two categories below.
 
@@ -1006,8 +1013,9 @@ will maintain a constant relationship across frames and should: avoid
 storing such an offset, as this may cause time drift.
 Applications should: instead always use time interop functions to convert a
 relevant time point across the system's clock and the runtime's clock using
-extensions, for example, <<XR_KHR_win32_convert_performance_counter_time>>
-or <<XR_KHR_convert_timespec_time>>.
+extensions, for example,
+apiext:XR_KHR_win32_convert_performance_counter_time or
+apiext:XR_KHR_convert_timespec_time.
 --
 
 [[duration]]
