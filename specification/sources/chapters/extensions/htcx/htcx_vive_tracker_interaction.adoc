@@ -1,11 +1,11 @@
-// Copyright (c) 2021 HTC
+// Copyright (c) 2021-23 HTC
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
 include::{generated}/meta/XR_HTCX_vive_tracker_interaction.adoc[]
 
 *Last Modified Date*::
-    2021-09-23
+    2023-07-14
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -64,6 +64,10 @@ The paths of a VIVE tracker contains two paths below:
 ** `right_elbow`
 ** `left_knee`
 ** `right_knee`
+** `left_wrist` (rev: 3)
+** `right_wrist` (rev: 3)
+** `left_ankle` (rev: 3)
+** `right_ankle` (rev: 3)
 ** `waist`
 ** `chest`
 ** `camera`
@@ -343,6 +347,8 @@ switch ( xrEvent.type )
 *Version History*
 
 * Revision 1, 2021-09-23 (Kyle Chen)
-** Initial extension description
+** Initial extension description.
 * Revision 2, 2022-09-08 (Ryan Pavlik, Collabora, Ltd.)
 ** Mark event type as returned-only, updating the implicit valid usage.
+* Revision 3, 2022-05-19 (Rune Berg, Valve Corporation)
+** Add new wrist and ankle roles to match additional openvr roles.

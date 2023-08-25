@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_MNDX_egl_enable.adoc[]
 
 *Last Modified Date*::
-    2020-05-21
+    2022-11-03
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -64,6 +64,23 @@ include::{generated}/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
 --
 
 *New Functions*
+
+*New Function Pointers*
+
+[open,refpage='PFN_xrEglGetProcAddressMNDX',type='funcpointers',desc='typedef of eglGetProcAddress',xrefs='']
+--
+include::{generated}/api/funcpointers/PFN_xrEglGetProcAddressMNDX.txt[]
+
+.Parameter Descriptions
+****
+* pname:name specifies the name of the function to return.
+****
+
+eglGetProcAddress returns the address of the client API or EGL function
+named by procname.
+For details please see
+https://registry.khronos.org/EGL/sdk/docs/man/html/eglGetProcAddress.xhtml
+--
 
 *Issues*
 

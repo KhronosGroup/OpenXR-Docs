@@ -17,6 +17,65 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.29 (2023-08-25)
+
+This release contains several fixes to the specification, as well as
+enhancements to the loader documentation/specification to support architecture
+and ABI specific active runtime manifest names on Linux and Android.
+
+- Registry
+  - Change `PFNEGLGETPROCADDRESSPROC` (for `eglGetProcAddress`) to a locally
+    defined type to avoid compiler errors.
+    ([internal MR 2468](https://gitlab.khronos.org/openxr/openxr/merge_requests/2468))
+  - Extension reservation: Register author ID and reserve vendor extensions for
+    YVR.
+    ([internal MR 2832](https://gitlab.khronos.org/openxr/openxr/merge_requests/2832))
+  - New vendor extension: `XR_META_passthrough_preferences`
+    ([internal MR 2694](https://gitlab.khronos.org/openxr/openxr/merge_requests/2694))
+  - `XR_HTCX_vive_tracker_interaction`: Added new role paths for wrists and ankles.
+    ([internal MR 2728](https://gitlab.khronos.org/openxr/openxr/merge_requests/2728))
+- Specification
+  - Change `PFNEGLGETPROCADDRESSPROC` (for `eglGetProcAddress`) to a locally
+    defined type to avoid compiler errors.
+    ([internal MR 2468](https://gitlab.khronos.org/openxr/openxr/merge_requests/2468))
+  - Fix specification text mentions of `eyeVisibility` field in Khronos composition
+    layer extensions, to match the XML and headers.
+    ([internal MR 2878](https://gitlab.khronos.org/openxr/openxr/merge_requests/2878))
+  - Improvement: Add note to OpenXR styleguide to discourage use of callback
+    functions in OpenXR extensions.
+    ([internal MR 2734](https://gitlab.khronos.org/openxr/openxr/merge_requests/2734))
+  - Loader spec: Clarify and deduplicate the loader specification's listing of
+    android manifest search paths.
+    ([internal MR 2829](https://gitlab.khronos.org/openxr/openxr/merge_requests/2829),
+    [internal issue 2046](https://gitlab.khronos.org/openxr/openxr/issues/2046))
+  - Loader spec: Fix description of `<queries>` element contents: existing
+    description would fail to install.
+    ([internal MR 2840](https://gitlab.khronos.org/openxr/openxr/merge_requests/2840),
+    [internal issue 2053](https://gitlab.khronos.org/openxr/openxr/issues/2053))
+  - Makefile: Remove obsolete cygwin support in spec building target, no longer
+    needed and actually caused it to not work under MSYS2.
+    ([internal MR 2885](https://gitlab.khronos.org/openxr/openxr/merge_requests/2885))
+  - New vendor extension specification: `XR_META_passthrough_preferences`
+    ([internal MR 2694](https://gitlab.khronos.org/openxr/openxr/merge_requests/2694))
+  - Style guide: Document the XML schema of `xr.xml`
+    ([internal MR 2875](https://gitlab.khronos.org/openxr/openxr/merge_requests/2875))
+  - `XR_HTCX_vive_tracker_interaction`: Added new role paths for wrists and ankles.
+    ([internal MR 2728](https://gitlab.khronos.org/openxr/openxr/merge_requests/2728))
+  - `XR_OPPO_controller_interaction`: Fix formatting of path lists.
+    ([internal MR 2831](https://gitlab.khronos.org/openxr/openxr/merge_requests/2831),
+    [OpenXR-Docs issue 156](https://github.com/KhronosGroup/OpenXR-Docs/issues/156),
+    [internal issue 2047](https://gitlab.khronos.org/openxr/openxr/issues/2047))
+  - scripts: Provide better feedback on interface struct erroneously having a
+    values attribute.
+    ([internal MR 2856](https://gitlab.khronos.org/openxr/openxr/merge_requests/2856))
+  - scripts: Update regex in xrconventions to allow words in type naming that
+    succeed digits but start with a "D"
+    ([internal MR 2857](https://gitlab.khronos.org/openxr/openxr/merge_requests/2857))
+  - scripts: Fix formatting of "basetype" (generally typedef) names to once again
+    be monospace "code".
+    ([internal MR 2890](https://gitlab.khronos.org/openxr/openxr/merge_requests/2890),
+    [internal issue 2048](https://gitlab.khronos.org/openxr/openxr/issues/2048))
+
 ## OpenXR Specification 1.0.28 (2023-07-10)
 
 This release features a number of new extensions, including several multi-vendor

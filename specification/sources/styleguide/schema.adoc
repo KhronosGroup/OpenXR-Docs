@@ -1,0 +1,242 @@
+// Copyright (c) 2022-2023, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[schema]]
+= Registry XML Schema
+
+:uri-vulkan-schema: https://registry.khronos.org/vulkan/specs/1.3/registry.html
+
+The definitive record of the OpenXR API is in part an XML file named
+`xr.xml`.
+It contains a machine-readable description of the API, API release versions
+(major and minor), and extensions.
+The XML format and schema is based upon the format used by Vulkan and other
+Khronos standards, with modifications to suit the specific needs of OpenXR.
+It is used in the specification development process to generate headers,
+snippets included in the specification prose and output, and portions of the
+loader and conformance tests.
+It is also consumed by a variety of non-Khronos projects that have a need
+for a machine-readable definition of OpenXR.
+Maintaining compatibility with Vulkan, with whom we share substantial
+specification toolchain software, and with downstream consumers of the XML,
+is very important and guides its development.
+
+== Machine Readable Schema Definitions
+
+The schema is described in two ways within the specification source
+(`openxr` internal monorepo or `OpenXR-Docs` public GitHub repo):
+
+* A Relax-NG schema (compact notation) constraining basic structure:
+  `specification/registry/registry.rnc`
+** The `specification/checkXml.sh` script verifies the XML against the
+   Relax-NG schema.
+   It requires tools to be installed and available on the `PATH`: see the
+   script for details.
+** The same script performs verification that the Relax-NG schema itself is
+   valid, but no tests to verify that it rejects specific invalid XML
+   constructs are available.
+* A Schematron schema enforcing more detailed constraints and style rules:
+  `registry.sch`
+** Schematron allows us to check more complex requirements, as well as to
+   write our own "error messages".
+   Our use of the Schematron language is somewhere between a formal schema
+   and a business-logic rules enforcer.
+** The `specification/checkSchematron.sh` script verifies the XML against
+   the Schematron schema.
+   It requires that a JRE be available on the path and that a "schXslt"
+   `.jar` binary be present.
+   If it is not present, the script will attempt to download it from an
+   official release and check the hash.
+   See `specification/registry/schematron.sh` for details on the required
+   `.jar`.
+** Tests to verify that the Schematron document accepts valid constructs
+   (`pass.\*.xml` files) and rejects specific invalid constructs
+   (`fail.*.xml` files) are located in
+   `specification/registry/schematron_tests` and executed using
+   GNU-compatible Make in that directory.
+   Requirements, besides a GNU-compatible Make, are the same as for the
+   `checkSchematron.sh` script.
+** Additions of new rules/assertions to the Schematron schema should be
+   accompanied by minimal pass and fail test documents demonstrating that
+   the rules behave as intended.
+
+== XML Format Details
+
+To avoid unnecessary maintenance burden, the meaning of the XML tags and
+attributes is in general deferred to the {uri-vulkan-schema}[Vulkan schema
+documentation].
+It is incorporated here by reference, with the following changes.
+
+* Ignore section 5 and 6 ("Platform Name Blocks (`platforms` tag)" and
+  "Platform Names (`platform` tag)")
+** We do not use the `platforms` or `platform` tags.
+* Modify section 10 ("API Type (`type` tag)") describing `type` tags inside
+  `types` blocks, to add the following additional attribute
+** `parentstruct` - Indicates a polymorphic parent struct for this type,
+   usually ending in `BaseHeader`, such that this type begins with the same
+   members as the parent and may be used in place of the `parentstruct`
+   type.
+   Only available for structures, that is, where `category="struct"`.
+* Modify section 11 ("Enumerant Blocks - `enums` tag")
+** The default value for `bitwidth` in OpenXR is 64 (rather than 32 as in
+   Vulkan): All our bitmasks are 64 bit by default.
+* Modify section 12 ("Enumerants (`enum` tag)")
+** `enum` tags inside `enums` blocks may (and are encouraged to) have a
+   `comment=""` attribute, which is extracted for automatic use in the spec
+   and which may be used by other tools operating on the XML.
+* Modify section 19 ("Required and Removed Interfaces (`require` and
+  `remove` tags)")
+** OpenXR still uses the `extension` and `feature` attributes of `require`
+   tags, rather than the `depends` attribute that replaced them in Vulkan
+   1.3.241.
+** In "Contents of `require` and `remove` tags", add:
+   <<xml-require-interaction-profile,`interaction_profile` Tags>>
+** In "Contents of `require` and `remove` tags", add:
+   <<xml-require-extend-interaction-profile,`extend` Tags for interaction
+   profile paths>>
+* Ignore sections 20, 21, 22, and 23 ("Formats (`formats` tag)", "Image
+  Format (`format` tag)", "Format Components (`component` tag)", "Format
+  Planes (`plane` tag)")
+** We do not use `formats`, `format`, `component`, or `plane` tags as
+   described for Vulkan.
+* Ignore sections 24-29 (all those with "SPIR-V" in their title)
+** We do not use any tags related to SPIR-V.
+* Ignore sections 30-34 (which all mention "Sync" in their title)
+** We do not use `syncstage`, `syncaccess`, `syncpipeline`, `syncsupport`,
+   or `syncequivalent` tags.
+* Add the following sections defining new tags related to interaction
+  profiles:
+** <<xml-interaction-profiles>>
+** <<xml-interaction-profile>>
+** <<xml-interaction-profile-user-path>>
+** <<xml-interaction-profile-component>>
+
+OpenXR also defines interaction profile elements and adaptations of existing
+elements, which are currently not documented but which may be understood by
+looking at the existing usages and schemas.
+
+[[xml-interaction-profiles]]
+=== Interaction Profile Blocks (`interaction_profiles` tag)
+
+An `interaction_profiles` tag contains definitions of interaction profile
+paths and their associated valid component paths exposed through the API.
+
+==== Attributes of `interaction_profiles` tags
+
+None.
+
+==== Contents of `interaction_profiles`
+
+Zero or more `interaction_profile` tags, in arbitrary order.
+
+[[xml-interaction-profile]]
+=== Interaction Profiles (`interaction_profile` tag)
+
+An `interaction_profile` tag defines an interaction profile path, the user
+paths it is valid for, and the valid component subpaths and their action
+types.
+
+==== Attributes of `interaction_profile` tags
+
+* `name` - required.
+  Full interaction profile path (starting with
+  pathname:/interaction_profiles/)
+* `title` - required.
+  Human readable description of the physical controller/device this
+  interaction profile corresponds to, if applicable.
+
+==== Contents of `interaction_profiles` tags
+
+One or more `user_path` tags, and zero or more `component` tags, in
+arbitrary order.
+The `user_path` tag or tags are typically placed before all components.
+
+[[xml-interaction-profile-user-path]]
+=== Interaction Profile User Paths (`user_path` tag)
+
+A `user_path` tag denotes a top-level user path, also known as a sub-action
+path, for which the enclosing interaction profile is accepted.
+
+==== Attributes of `user_path` tags
+
+* `path` - required.
+  Full top-level user path (starting with pathname:/user/)
+
+==== Contents of `user_path` tags
+
+None.
+
+
+[[xml-interaction-profile-component]]
+=== Interaction Profile Component (`component` tag)
+
+A `component` tag denotes a component subpath for the enclosing interaction
+profile that is valid on at least one of its user paths.
+
+==== Attributes of `component` tags
+
+* `subpath` - required.
+  Subpath string to append to the end of the interaction profile path
+  (starts with either `/input/` or `/output`)
+* `type` - required.
+  An enumerant value from `XrActionType` describing the most specific use of
+  the component path.
+  (For example, an path corresponding to an analog axis would use
+  `XR_ACTION_TYPE_FLOAT_INPUT`, even though it may be used as a suggested
+  binding for an action of type `XR_ACTION_TYPE_BOOLEAN_INPUT`, according to
+  the conversion rules in the specification.)
+* `system` - optional.
+  If `"true"`, applications are advised that the given component path may
+  not be available for normal application use.
+* `user_path` - optional.
+  If present, must correspond to one of the paths in the
+  <<xml-interaction-profile-user-path,`user_path` tags>> for this
+  interaction profile.
+  Indicates that the component path is only available when suggesting
+  bindings for this particular user path, rather than all indicated user
+  paths as default.
+
+==== Contents of `user_path` tags
+
+None.
+
+[[xml-require-interaction-profile]]
+=== Contents of `require`: `interaction_profile` Tags
+
+Specifies a required interaction profile, by path, defined by an
+`interaction_profile` block within an `interaction_profiles` block.
+Valid only in `require` blocks.
+
+==== Attributes of `interaction_profile` tags in `require` blocks
+
+* `name` - required.
+  Full interaction profile path (starting with
+  pathname:/interaction_profiles/).
+  Must match the `name` attribute of an `interaction_profile` block within
+  an `interaction_profiles` block.
+
+==== Contents of `interaction_profile` tags in `require` blocks
+
+None.
+
+[[xml-require-extend-interaction-profile]]
+=== Contents of `require`: `extend` Tags for interaction profiles
+
+Specifies additional component paths to accept in an interaction profile
+previously included in the specification by a dependency of this block's
+parent.
+Valid only in `require` blocks.
+
+==== Attributes of interaction profile `extend` tags in `require` blocks
+
+* `interaction_profile_path` - required.
+  Full interaction profile path to extend (starting with
+  pathname:/interaction_profiles/).
+  Must match the `name` attribute of an `interaction_profile` block within
+  an `interaction_profiles` block.
+
+==== Contents of `interaction_profile` tags in `require` blocks
+
+One or more <<xml-interaction-profile-component,`component` tags>>, in the
+same schema used directly within an `interaction_profile` block.

@@ -54,6 +54,8 @@ Some general rules to simplify the specific rules below:
 ** However, API layers can expose their own extensions, which in turn are
    allowed to expose new commands and tokens.
 * All extensions must be registered with Khronos.
+* Callbacks supplied by the application are discouraged in extensions.
+  Prefer polling or event patterns.
 
 [[extensions-naming-conventions]]
 == Extension and API Layer Naming Conventions

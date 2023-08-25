@@ -72,21 +72,23 @@ The key words *must*, *required*, *should*, *recommend*, *may*, and
 [[introduction-structure]]
 == Document Structure
 
-The style guide is broken into four sections:
+The style guide is broken into five sections:
 
-* <<naming,API Naming Conventions>> - the required rules for choosing names
-  of OpenXR identifiers of all types.
+* <<naming>> - the required rules for choosing names of OpenXR identifiers
+  of all types.
 * <<extensions,Extensions and Layers>> - the required procedures for
   creating formal OpenXR extensions and layers.
-* <<markup,Markup Style>> - the required and recommended markup style for
-  writing asciidoc and XML source that follows consistent formatting and
-  layout guidelines, tags special terms and phrases for proper processing by
-  the spec generation tools, etc.
-* <<writing,Writing Style>> - the required and recommended writing style for
-  overall and fine-grained structure and conventions, normative language
-  use, API naming conventions, common words and phrases to use and to avoid,
-  linking and cross-referencing, etc.
-
+* <<markup>> - the required and recommended markup style for writing
+  asciidoc and XML source that follows consistent formatting and layout
+  guidelines, tags special terms and phrases for proper processing by the
+  spec generation tools, etc.
+* <<writing>> - the required and recommended writing style for overall and
+  fine-grained structure and conventions, normative language use, API naming
+  conventions, common words and phrases to use and to avoid, linking and
+  cross-referencing, etc.
+* <<schema>> - a brief description of the XML registry format as well as the
+  declarative schemas and tools available to assist in verification of
+  changes.
 
 [[introduction-asciidoc]]
 == Asciidoc Markup
@@ -135,10 +137,10 @@ include::markup.adoc[]
 
 include::writing.adoc[]
 
+include::schema.adoc[]
+
 = Still To Be Done
 
-* Image formats.
-* Include definitions.
 * Something about verb tenses in the writing chapter.
 * Something about the use of abbreviations and acronyms.
 
@@ -153,3 +155,18 @@ include::writing.adoc[]
 * 2017-07-07 - Changing more things to OpenXR examples.
   Adding OpenXR issues in most TODOs.
 * 2020-03-12 - Major revisions in preparation for release.
+* Other small changes aligning document with working group practice.
+* 2021-05-10 - Reference the extension process document on extending
+  bitmasks, remove obsolete references to old Vulkan development models.
+* 2022-08-26 - Update to reflect Vulkan script sync and moving all generated
+  files into a single directory whose path is accessed using the AsciiDoc
+  attribute `\{generated\}`
+* 2023-03-17 - Clarify that USB vendor ID, not PCI vendor ID, should be used
+  in OpenXR.
+* 2023-06-15 - Require vendor suffix in interaction profile paths introduced
+  by extensions.
+* 2023-07-13 - Document standing recommendation to discourage callbacks in
+  OpenXR API design, other small changes to align more closely with existing
+  working group practice.
+* 2023-08-02 - Document the XML schema and how it differs from the Vulkan
+  equivalent.

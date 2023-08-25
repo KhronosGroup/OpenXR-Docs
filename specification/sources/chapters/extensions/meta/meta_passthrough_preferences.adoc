@@ -1,0 +1,102 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_passthrough_preferences.adoc[]
+
+*Last Modified Date*::
+    2023-04-25
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Johannes Schmid, Meta Platforms +
+
+*Overview*
+
+This extension provides applications with access to system preferences
+concerning passthrough.
+For more information on how applications can control the display of
+passthrough, see `<<XR_FB_passthrough>>`.
+
+*New Flag Types*
+
+[open,refpage='XrPassthroughPreferenceFlagsMETA',type='flags',desc='XrPassthroughPreferenceFlagsMETA',xrefs='XrPassthroughPreferenceFlagBitsMETA']
+--
+include::{generated}/api/flags/XrPassthroughPreferenceFlagsMETA.txt[]
+--
+
+[open,refpage='XrPassthroughPreferenceFlagBitsMETA',type='enums',desc='XrPassthroughPreferenceFlagBitsMETA',xrefs='XrPassthroughPreferenceFlagsMETA']
+--
+include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.txt[]
+include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_PASSTHROUGH_PREFERENCES_META
+
+*New Structures*
+
+[open,refpage='XrPassthroughPreferencesMETA',type='structs',desc='Passthrough preferences',xrefs='']
+--
+
+The slink:XrPassthroughPreferencesMETA structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughPreferencesMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:flags is a bitmask of elink:XrPassthroughPreferenceFlagBitsMETA
+  describing boolean passthrough preferences.
+****
+
+The runtime must: populate the slink:XrPassthroughPreferencesMETA structure
+with the relevant information when the app calls
+flink:xrGetPassthroughPreferencesMETA.
+
+Presence of the bit flag
+ename:XR_PASSTHROUGH_PREFERENCE_DEFAULT_TO_ACTIVE_BIT_META does not indicate
+a guarantee that applications can: enable and use passthrough in practice.
+The runtime may: impose restrictions on passthrough usage (e.g. based on
+hardware availability or permission models) independently of the state of
+this flag bit.
+Apps should: test for this flag explicitly, as more flag bits may: be
+introduced in the future.
+
+include::{generated}/validity/structs/XrPassthroughPreferencesMETA.txt[]
+--
+
+*New Functions*
+
+[open,refpage='xrGetPassthroughPreferencesMETA',desc='Get passthrough preferences',type='protos',xrefs='']
+--
+The flink:xrGetPassthroughPreferencesMETA function is defined as:
+
+include::{generated}/api/protos/xrGetPassthroughPreferencesMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:preferences points to an instance of
+  slink:XrPassthroughPreferencesMETA structure, that will be filled with
+  returned information
+****
+
+An application can: call flink:xrGetPassthroughPreferencesMETA to retrieve
+passthrough-related preferences from the system.
+
+include::{generated}/validity/protos/xrGetPassthroughPreferencesMETA.txt[]
+--
+
+*Version History*
+
+* Revision 1, 2023-04-25 (Johannes Schmid)
+** Initial extension description

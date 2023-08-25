@@ -18,6 +18,7 @@ including but not limited to OPPO MR Glasses Controller.
 *OPPO Controller interaction profile*
 
 Interaction profile path:
+
 * pathname:/interaction_profiles/oppo/mr_controller_oppo
 
 Valid for user paths:
@@ -29,6 +30,7 @@ This interaction profile represents the input sources and haptics on the
 OPPO Controller.
 
 Supported component paths:
+
 * On /user/hand/left only:
 ** subpathname:/input/x/click
 ** subpathname:/input/x/touch
@@ -72,5 +74,4 @@ Supported component paths:
 *Version History*
 
 * Revision 1
-
 ** Initial extension description
