@@ -206,6 +206,8 @@ include::{appendices}/conformance_automation_warning.adoc[]
 * pname:session must: be a valid session handle.
 * pname:topLevelPath must: be a valid top level path.
 * pname:inputSourcePath must: be a valid input source path.
+* pname:space must: be a valid slink:XrSpace.
+* pname:pose must: be a valid slink:XrPosef.
 ****
 
 include::{generated}/validity/protos/xrSetInputDeviceLocationEXT.txt[]

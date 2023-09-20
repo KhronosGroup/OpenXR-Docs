@@ -137,6 +137,9 @@ include::{generated}/api/structs/XrKeyboardSpaceCreateInfoFB.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
 * pname:trackedKeyboardId abstract identifier describing the type of
   keyboard to track.
 ****

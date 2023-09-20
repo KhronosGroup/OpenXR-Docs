@@ -333,6 +333,8 @@ given frame to determine whether that frame will be visible to the user.
 Runtime session frame state must: start in a reset state when a session
 transitions to <<session_running, running>> so that no state is carried over
 from when the same session was previously running.
+Frame state in this context includes flink:xrWaitFrame, flink:xrBeginFrame,
+and flink:xrEndFrame call order enforcement.
 
 If pname:primaryViewConfigurationType in pname:beginInfo is not supported by
 the basetype:XrSystemId used to create the pname:session, the runtime must:

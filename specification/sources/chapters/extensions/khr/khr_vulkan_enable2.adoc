@@ -4,8 +4,6 @@
 
 include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
 
-:vkRefPageRoot: https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html
-
 *Last Modified Date*::
     2020-05-04
 *IP Status*::
@@ -20,6 +18,7 @@ include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
     Minmin Gong, Microsoft +
     Robert Menzel, NVIDIA +
     Paulo Gomes, Samsung Electronics +
+
 
 ==== Overview
 
@@ -118,10 +117,10 @@ include::{generated}/validity/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
 
 ===== Vulkan Instance Creation
 
+
 Second, a compatible sname:VkInstance must: be created.
 The flink:xrCreateVulkanInstanceKHR entry point is a wrapper around
-link:{vkRefPageRoot}/vkCreateInstance.html[vkCreateInstance] intended for
-this purpose.
+link:{uri-vkCreateInstance}[vkCreateInstance] intended for this purpose.
 When called, the runtime must: aggregate the requirements specified by the
 application with its own requirements and forward the sname:VkInstance
 creation request to the fname:vkCreateInstance function pointer returned by
@@ -167,11 +166,11 @@ include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
 * pname:pfnGetInstanceProcAddr is a function pointer to
   fname:vkGetInstanceProcAddr or a compatible entry point.
 * pname:vulkanCreateInfo is the
-  link:{vkRefPageRoot}/VkInstanceCreateInfo.html[sname:VkInstanceCreateInfo
-  as specified by Vulkan].
+  link:{uri-VkInstanceCreateInfo}[sname:VkInstanceCreateInfo as specified by
+  Vulkan].
 * pname:vulkanAllocator is the
-  link:{vkRefPageRoot}/VkAllocationCallbacks.html[sname:VkAllocationCallbacks
-  as specified by Vulkan].
+  link:{uri-VkAllocationCallbacks}[sname:VkAllocationCallbacks as specified
+  by Vulkan].
 ****
 
 include::{generated}/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
@@ -239,6 +238,9 @@ include::{generated}/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
 * pname:systemId is an basetype:XrSystemId handle for the system which will
   be used to create a session.
 * pname:vulkanInstance is a valid Vulkan sname:VkInstance.
@@ -251,8 +253,7 @@ include::{generated}/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
 
 Fourth, a compatible sname:VkDevice must: be created.
 The flink:xrCreateVulkanDeviceKHR entry point is a wrapper around
-link:{vkRefPageRoot}/vkCreateDevice.html[vkCreateDevice] intended for this
-purpose.
+link:{uri-vkCreateDevice}[vkCreateDevice] intended for this purpose.
 When called, the runtime must: aggregate the requirements specified by the
 application with its own requirements and forward the sname:VkDevice
 creation request to the fname:vkCreateDevice function pointer returned by
@@ -287,6 +288,9 @@ include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
 * pname:systemId is an basetype:XrSystemId handle for the system which will
   be used to create a session.
 * pname:createFlags is a bitmask of elink:XrVulkanDeviceCreateFlagBitsKHR
@@ -294,11 +298,11 @@ include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
   fname:vkGetInstanceProcAddr or a compatible entry point.
 * pname:vulkanPhysicalDevice must: match flink:xrGetVulkanGraphicsDeviceKHR.
 * pname:vulkanCreateInfo is the
-  link:{vkRefPageRoot}/VkDeviceCreateInfo.html[sname:VkDeviceCreateInfo as
-  specified by Vulkan].
+  link:{uri-VkDeviceCreateInfo}[sname:VkDeviceCreateInfo as specified by
+  Vulkan].
 * pname:vulkanAllocator is the
-  link:{vkRefPageRoot}/VkAllocationCallbacks.html[sname:VkAllocationCallbacks
-  as specified by Vulkan].
+  link:{uri-VkAllocationCallbacks}[sname:VkAllocationCallbacks as specified
+  by Vulkan].
 ****
 
 If the pname:vulkanPhysicalDevice parameter does not match the output of

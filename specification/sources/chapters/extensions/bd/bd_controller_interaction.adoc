@@ -5,20 +5,20 @@
 include::{generated}/meta/XR_BD_controller_interaction.adoc[]
 
 *Last Modified Date*::
-    2023-01-04
+    2023-08-10
 
 IP Status*::
     No known IP claims.
 
 *Contributors*::
  Baolin Fu, Bytedance +
- Oliver Xu, Bytedance +
- Berton Jia, Bytedance
+ Shanliang Xu, Bytedance +
+ Zhanrui Jia, Bytedance
 
 *Overview*
 
-This extension defines the interaction profile for PICO Neo3 and PICO 4
-Controllers.
+This extension defines the interaction profile for PICO Neo3, PICO 4, and
+PICO G3 Controllers.
 
 *BD(Bytedance) Controller interaction profile*
 
@@ -30,7 +30,12 @@ Interaction profile path for PICO 4:
 
 * pathname:/interaction_profiles/bytedance/pico4_controller
 
-Valid for user paths for both pico_neo3_controller and pico4_controller:
+Interaction profile path for PICO G3:
+
+* pathname:/interaction_profiles/bytedance/pico_g3_controller
+
+Valid for user paths for pico_neo3_controller, pico4_controller, and
+pico_g3_controller:
 
 * pathname:/user/hand/left
 * pathname:/user/hand/right
@@ -91,11 +96,28 @@ use)
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
+Supported component paths for pico_g3_controller:
+
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/menu/click
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/input/thumbstick
+* subpathname:/input/thumbstick/click
+
 Be careful with the following difference:
 
-* pico_neo3_controller supports /input/menu/click both on /user/hand/left
-  and /user/hand/right.
-* pico4_controller supports /input/menu/click only on /user/hand/left.
+* pico_neo3_controller supports subpathname:/input/menu/click both on
+  pathname:/user/hand/left and pathname:/user/hand/right.
+* pico4_controller supports subpathname:/input/menu/click only on
+  pathname:/user/hand/left.
+* pico_g3_controller has only one physical controller.
+  When designing suggested bindings for this interaction profile, you may:
+  suggest bindings for both pathname:/user/hand/left and
+  pathname:/user/hand/right.
+  However, only one of them will be active at a given time, so do not design
+  interactions that require simultaneous use of both hands.
 
 *New Object Types*
 
@@ -116,3 +138,7 @@ Be careful with the following difference:
 * Revision 1, 2023-01-04 (Baolin Fu)
 
 ** Initial extension description
+
+* Revision 2, 2023-08-10 (Shanliang Xu)
+
+** Add support for G3 devices

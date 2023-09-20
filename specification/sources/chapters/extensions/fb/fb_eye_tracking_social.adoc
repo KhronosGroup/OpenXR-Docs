@@ -164,7 +164,7 @@ include::{generated}/api/protos/xrGetEyeGazesFB.txt[]
 * pname:eyeTracker is an slink:XrEyeTrackerFB previously created by
   flink:xrCreateEyeTrackerFB.
 * pname:gazeInfo is the information to get eye gaze.
-* pname:eyeTracker is a pointer to slink:XrEyeGazesFB receiving the returned
+* pname:eyeGazes is a pointer to slink:XrEyeGazesFB receiving the returned
   eye poses and confidence.
 ****
 

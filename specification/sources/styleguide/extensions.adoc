@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
+:uri-extprocess: {uri-openxr-registry-root}/specs/1.0/extprocess.html
+
 [[extensions]]
 = API Layers & Extensions
 
@@ -11,9 +13,7 @@ It is concerned with mechanical processes and registration, while
 fine-grained naming conventions are included in the <<naming,API Naming
 Conventions chapter>>.
 The organizational processes behind extension creation are in a separate
-document, the
-https://www.khronos.org/registry/OpenXR/specs/1.0/extprocess.html[OpenXR
-Working Group Extension Processes].
+document, the {uri-extprocess}[OpenXR Working Group Extension Processes].
 
 == Introduction
 
@@ -204,7 +204,7 @@ section above.
 The canonical definition of the OpenXR APIs is kept in an XML file known as
 the *OpenXR registry*.
 The registry is kept in `specification/registry/xr.xml` of the
-<<openxr-docs,KhronosGroup/OpenXR-Docs>> project.
+link:{uri-github-openxr-docs}[KhronosGroup/OpenXR-Docs] project.
 
 The registry contains reserved author IDs, core and extension interface
 definitions, definitions of individual commands and structures, and other
@@ -230,7 +230,7 @@ provided.
 
 Extension authors will be able to create an account on GitHub and register
 an author ID with Khronos through the
-<<openxr-docs,KhronosGroup/OpenXR-Docs>> project.
+link:{uri-github-openxr-docs}[KhronosGroup/OpenXR-Docs] project.
 The author ID must be used for any extensions that author registers.
 The same mechanism will be used to request registration of extensions or API
 layers with Khronos, as described below.
@@ -253,7 +253,7 @@ faith.
 
 OpenXR implementers must report a valid vendor ID for their implementation
 when queried by fname:xrGetSystemProperties, as described in the
-<<openxr-spec,OpenXR API Specification>>.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 If there is no valid USB vendor ID defined for the physical device,
 implementations must obtain a Khronos vendor ID.
 
@@ -416,8 +416,9 @@ from the Vulkan 1.0 core Specification source.
 ====
 
 For example, the `XR_KHR_opengl_enable` extension is documented in the
-`main` branch of the GitHub `<<openxr-docs,KhronosGroup/OpenXR-Docs>>`
-project and internal GitLab.
+`main` branch of the GitHub
+link:{uri-github-openxr-docs}[KhronosGroup/OpenXR-Docs] project and internal
+GitLab.
 However, specifications generated from this branch will only include the
 extension when the Makefile is invoked appropriately.
 
@@ -813,7 +814,8 @@ extensions must define two additional tokens.
   specification, and differences in this version number maintain full
   compatibility, as defined in the
   link:html/xrspec.html#fundamentals-versionnum[API Version Numbers and
-  Semantics] section of the <<openxr-spec,OpenXR API Specification>>.
+  Semantics] section of the link:{uri-openxr-ratified-spec}[OpenXR API
+  Specification].
 
 [NOTE]
 .Note
@@ -894,8 +896,8 @@ interfaces appear in `openxr_platform.h` and are protected by `#ifdefs`.
 
 flink:xrGetInstanceProcAddr can be used in order to obtain function pointer
 addresses for core and extension commands (per the description in the
-"`Command Function Pointers`" section of the <<openxr-spec,OpenXR API
-Specification>>).
+"`Command Function Pointers`" section of the
+link:{uri-openxr-ratified-spec}[OpenXR API Specification]).
 Different OpenXR API loaders can choose to statically export functions for
 some or all of the core OpenXR API commands, and can statically export
 functions for some or all extension commands.
@@ -923,8 +925,8 @@ ways:
 Extensions modifying the behavior of existing commands should provide
 additional parameters by using the pname:next field of an existing
 structure, pointing to a new structure defined by the extension, as
-described in the "`Valid Usage`" section of the <<openxr-spec,OpenXR API
-Specification>>.
+described in the "`Valid Usage`" section of the
+link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 Extension structures defined by multiple extensions affecting the same
 structure can be chained together in this fashion.
 Any structure which can be chained in this fashion must begin with the
@@ -957,8 +959,7 @@ specification.
 
 Validation of such extended structure chains is automatically generated from
 the registry, as described in the description of attr:structextends in
-link:https://www.khronos.org/registry/vulkan/specs/1.2/registry.html[the
-registry schema document for Vulkan].
+link:{uri-schema-vulkan}[the registry schema document for Vulkan].
 
 Take the following XML structure example:
 

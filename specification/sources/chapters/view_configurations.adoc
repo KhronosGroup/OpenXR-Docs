@@ -88,12 +88,13 @@ include::{generated}/api/protos/xrEnumerateViewConfigurations.txt[]
 * pname:instance is the instance from which pname:systemId was retrieved.
 * pname:systemId is the basetype:XrSystemId whose view configurations will
   be enumerated.
-* pname:viewConfigurationsTypeCapacityInput is the capacity of the
-  pname:viewConfigurations array, or 0 to indicate a request to retrieve the
-  required capacity.
-* pname:viewConfigurationsTypeCountOutput is a pointer to the count of
-  pname:viewConfigurations written, or a pointer to the required capacity in
-  the case that pname:viewConfigurationsTypeCapacityInput is insufficient.
+* pname:viewConfigurationTypeCapacityInput is the capacity of the
+  pname:viewConfigurationTypes array, or 0 to indicate a request to retrieve
+  the required capacity.
+* pname:viewConfigurationTypeCountOutput is a pointer to the count of
+  pname:viewConfigurationTypes written, or a pointer to the required
+  capacity in the case that pname:viewConfigurationsTypeCapacityInput is
+  insufficient.
 * pname:viewConfigurationsTypes is a pointer to an array of
   elink:XrViewConfigurationType values, but can: be code:NULL if
   pname:viewConfigurationsTypeCapacityInput is 0.

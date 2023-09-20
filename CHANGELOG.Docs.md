@@ -17,6 +17,54 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.30 (2023-09-20)
+
+This release is primarily a quality improvement release, fixing a range of
+issues in the registry and specification, in addition to a new vendor extension
+and an updated vendor extension.
+
+- Registry
+  - Add missing enum tags for enum-sized array struct members.
+    ([internal MR 2731](https://gitlab.khronos.org/openxr/openxr/merge_requests/2731))
+  - Fix EGL "get proc addr" function pointer typedef.
+    ([internal MR 2939](https://gitlab.khronos.org/openxr/openxr/merge_requests/2939))
+  - New vendor extension: `XR_YVR_controller_interaction`
+    ([internal MR 2841](https://gitlab.khronos.org/openxr/openxr/merge_requests/2841))
+  - `XR_BD_controller_interaction`: Add support for G3 devices
+    ([internal MR 2872](https://gitlab.khronos.org/openxr/openxr/merge_requests/2872))
+  - Fix specification errors highlighted by fixed tooling.
+    ([internal MR 2923](https://gitlab.khronos.org/openxr/openxr/merge_requests/2923))
+- Specification
+  - Clarify how prior frame state is reset when a session starts running.
+    ([internal MR 2759](https://gitlab.khronos.org/openxr/openxr/merge_requests/2759),
+    [internal issue 2029](https://gitlab.khronos.org/openxr/openxr/issues/2029))
+  - Clean up normative language in FB vendor extensions.
+    ([internal MR 2563](https://gitlab.khronos.org/openxr/openxr/merge_requests/2563))
+  - Clean up normative language in the Rendering chapter.
+    ([internal MR 2801](https://gitlab.khronos.org/openxr/openxr/merge_requests/2801))
+  - Fix formatting and markup errors in the loader design document.
+    ([internal MR 2866](https://gitlab.khronos.org/openxr/openxr/merge_requests/2866))
+  - Fix generated broken links from valid usage in ref pages to the next chain
+    fundamentals.
+    ([internal MR 2931](https://gitlab.khronos.org/openxr/openxr/merge_requests/2931),
+    [internal issue 1369](https://gitlab.khronos.org/openxr/openxr/issues/1369))
+  - Fix broken links and update URLs in specification, extension process, style
+    guide, and loader doc.
+    ([internal MR 2935](https://gitlab.khronos.org/openxr/openxr/merge_requests/2935))
+  - New vendor extension specification: `XR_YVR_controller_interaction`
+    ([internal MR 2841](https://gitlab.khronos.org/openxr/openxr/merge_requests/2841))
+  - `XR_BD_controller_interaction`: Add support for G3 devices
+    ([internal MR 2872](https://gitlab.khronos.org/openxr/openxr/merge_requests/2872))
+  - `XR_EXT_debug_utils`: Fix XML to reflect that
+    `XrDebugUtilsMessengerCallbackDataEXT` parameters `messageId` and
+    `functionName` are optional.
+    ([internal MR 2864](https://gitlab.khronos.org/openxr/openxr/merge_requests/2864))
+  - scripts: Fix member name lookups in `entity_db`, enabling numerous spec
+    warnings that had been hidden.
+    ([internal MR 2923](https://gitlab.khronos.org/openxr/openxr/merge_requests/2923))
+  - Fix specification errors (core and extension) highlighted by fixed tooling.
+    ([internal MR 2923](https://gitlab.khronos.org/openxr/openxr/merge_requests/2923))
+
 ## OpenXR Specification 1.0.29 (2023-08-25)
 
 This release contains several fixes to the specification, as well as

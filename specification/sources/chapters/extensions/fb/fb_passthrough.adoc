@@ -239,6 +239,7 @@ It contains parameters used to specify a new passthrough layer.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+* pname:passthrough an slink:XrPassthroughFB handle.
 * pname:flags elink:XrPassthroughFlagsFB that specify additional behavior.
 * pname:purpose elink:XrPassthroughLayerPurposeFB that specifies the layer's
   purpose.
@@ -267,8 +268,8 @@ the actual passthrough contents.
   additional behavior.
 * pname:space is the slink:XrSpace that specifies the layer's space - must:
   be dlink:XR_NULL_HANDLE.
-* pname:layer is the slink:XrPassthroughLayerFB that defines this layer's
-  behavior.
+* pname:layerHandle is the slink:XrPassthroughLayerFB that defines this
+  layer's behavior.
 ****
 
 include::{generated}/validity/structs/XrCompositionLayerPassthroughFB.txt[]
@@ -680,7 +681,7 @@ include::{generated}/api/protos/xrDestroyGeometryInstanceFB.txt[]
 
 .Parameter Descriptions
 ****
-* pname:geometryInstance is the slink:XrGeometryInstanceFB to be destroyed.
+* pname:instance is the slink:XrGeometryInstanceFB to be destroyed.
 ****
 
 Destroys an slink:XrGeometryInstanceFB handle.
@@ -700,9 +701,8 @@ include::{generated}/api/protos/xrGeometryInstanceSetTransformFB.txt[]
 
 .Parameter Descriptions
 ****
-* pname:geometryInstance is the slink:XrGeometryInstanceFB to get the
-  transform.
-* pname:transform is the slink:XrGeometryInstanceTransformFB to be set.
+* pname:instance is the slink:XrGeometryInstanceFB to get the transform.
+* pname:transformation is the slink:XrGeometryInstanceTransformFB to be set.
 ****
 
 Sets an slink:XrGeometryInstanceTransformFB transform on an

@@ -234,6 +234,7 @@ include::{generated}/api/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
   No such structures are defined in core OpenXR or this extension.
 * pname:markerId unique identifier of the marker that has been updated.
 * pname:isActive the tracking state of the marker.
+* pname:isPredicted the prediction state of the marker.
 * pname:time the time of the marker update.
 ****
 

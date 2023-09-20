@@ -1,0 +1,83 @@
+// Copyright (c) 2023 YVR.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_YVR_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2023-07-12
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Pengpeng Zhang, YVR +
+    Xuanyu Chen, YVR
+
+*Overview*
+
+This extension defines a new interaction profile for the YVR Controller,
+including but not limited to YVR1 and YVR2 Controller.
+
+*YVR Controller interaction profile*
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/yvr/touch_controller_yvr
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the YVR
+Controller.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+
+* On both:
+** subpathname:/input/squeeze/click
+** subpathname:/input/trigger/value
+** subpathname:/input/trigger/touch
+** subpathname:/input/thumbstick/x
+** subpathname:/input/thumbstick/y
+** subpathname:/input/thumbstick/click
+** subpathname:/input/thumbstick/touch
+** subpathname:/input/grip/pose
+** subpathname:/input/aim/pose
+** subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-07-12 (Pengpeng Zhang)
+
+** Initial extension description

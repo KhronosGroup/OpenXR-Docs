@@ -57,7 +57,7 @@ It describes a collision capsule associated with a hand joint.
 * pname:points are the two points defining the capsule length.
 * pname:radius is the radius of the capsule.
 * pname:joint is the hand joint that drives this capsule's transform.
-  Multiple capsules can be attached to the same joint.
+  Multiple capsules may: be attached to the same joint.
 ****
 
 include::{generated}/validity/structs/XrHandCapsuleFB.txt[]

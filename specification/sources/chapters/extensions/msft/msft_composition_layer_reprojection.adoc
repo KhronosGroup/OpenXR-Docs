@@ -170,6 +170,11 @@ include::{generated}/api/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT
 
 .Parameter Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+
 * pname:position describes the position of the focus plane represented in
   the corresponding slink:XrCompositionLayerProjection::pname:space.
 

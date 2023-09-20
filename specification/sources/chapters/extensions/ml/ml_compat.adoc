@@ -73,9 +73,9 @@ include::{generated}/api/protos/xrCreateSpaceFromCoordinateFrameUIDML.txt[]
 The service that created the underlying
 slink:XrCoordinateSpaceCreateInfoML::pname:cfuid must: remain active for the
 lifetime of the slink:XrSpace.
-If flink:xrLocateSpace is called on a space created from a pname:cfuid from
-a no-longer-active service, the runtime may: set
-slink:XrSpaceLocation::pname:locationFlags to 0.
+If flink:xrLocateSpace is called on a space created from an
+slink:XrCoordinateSpaceCreateInfoML::pname:cfuid from a no-longer-active
+service, the runtime may: set slink:XrSpaceLocation::pname:locationFlags to 0.
 
 slink:XrSpace handles are destroyed using flink:xrDestroySpace.
 

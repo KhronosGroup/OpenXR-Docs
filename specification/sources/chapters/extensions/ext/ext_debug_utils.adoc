@@ -902,3 +902,6 @@ None
 * Revision 4, 2021-04-04 (Ryan Pavlik)
 ** Fix missing error code.
 ** Improve formatting.
+* Revision 5, 2023-07-25 (John Kearney, Meta)
+** XrDebugUtilsMessengerCallbackDataEXT parameters messageId and
+   functionName to be optional.

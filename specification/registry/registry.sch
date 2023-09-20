@@ -848,6 +848,7 @@
                 '/interaction_profiles/ml/ml2_controller',
                 '/interaction_profiles/bytedance/pico_neo3_controller',
                 '/interaction_profiles/bytedance/pico4_controller',
+                '/interaction_profiles/bytedance/pico_g3_controller',
                 '/interaction_profiles/facebook/touch_controller_pro'
                 )"/>
             <sch:assert test="ends-with(@name, $vendor-tag) or $is_exception">

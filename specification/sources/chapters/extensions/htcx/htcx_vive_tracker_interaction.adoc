@@ -192,18 +192,16 @@ include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
 .Parameter Descriptions
 ****
 * pname:instance is an instance previously created.
-* pname:pathsCapacityInput is the capacity of the pname:viveTrackerPaths, or
-  `0` to retrieve the required capacity.
-* pname:pathsCountOutput is a pointer to the count of
-  slink:XrViveTrackerPathsHTCX pname:viveTrackerPaths written, or a pointer
-  to the required capacity in the case that pname:pathsCapacityInput is
+* pname:pathCapacityInput is the capacity of the pname:paths, or `0` to
+  retrieve the required capacity.
+* pname:pathCountOutput is a pointer to the count of
+  slink:XrViveTrackerPathsHTCX pname:paths written, or a pointer to the
+  required capacity in the case that pname:pathsCapacityInput is
   insufficient.
-* pname:viveTrackerPaths is a pointer to an array of
-  slink:XrViveTrackerPathsHTCX VIVE tracker paths, but can: be code:NULL if
-  pname:pathsCapacityInput is `0`.
+* pname:paths is a pointer to an array of slink:XrViveTrackerPathsHTCX VIVE
+  tracker paths, but can: be code:NULL if pname:pathsCapacityInput is `0`.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:viveTrackerPaths
-  size.
+  detailed description of retrieving the required pname:paths size.
 ****
 
 flink:xrEnumerateViveTrackerPathsHTCX enumerates all connected VIVE trackers

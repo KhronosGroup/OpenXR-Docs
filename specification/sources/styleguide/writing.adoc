@@ -161,18 +161,20 @@ This list is not intended to be complete.
 [[writing-describing]]
 == Describing Commands and Parameters
 
-The <<openxr-spec,OpenXR Specification>> describes API commands followed by
-descriptions of their parameters, which are usually simple scalar types,
-handles or pointers to OpenXR objects or arrays of objects, enumerated types
-specifying values or bitmasks which affect the operation of a command; or
-structures containing combinations of scalar types and objects.
+The link:{uri-openxr-ratified-spec}[OpenXR API Specification] describes API
+commands followed by descriptions of their parameters, which are usually
+simple scalar types, handles or pointers to OpenXR objects or arrays of
+objects, enumerated types specifying values or bitmasks which affect the
+operation of a command; or structures containing combinations of scalar
+types and objects.
 The templates and examples shown and annotated here are based on the
-<<openxr-spec,OpenXR Specification>>.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 Do not vary from them without compelling need.
 
-Normative parts of the <<openxr-spec,OpenXR Specification>> should describe
-_what_ something does, rather than _how_ or _why_ an application would want
-to use it or _how_ or _why_ a runtime should implement it.
+Normative parts of the link:{uri-openxr-ratified-spec}[OpenXR API
+Specification] should describe _what_ something does, rather than _how_ or
+_why_ an application would want to use it or _how_ or _why_ a runtime should
+implement it.
 
 When explicitly allowed by the Specification, the reserved value code:NULL
 may: be used for pointer parameters and members, and the reserved value
@@ -199,7 +201,7 @@ fname:xrCreateInstance`".
 Explanations of _why_ and _how_ should largely be confined to reference
 documentation, sample code, tutorials, and other such documents.
 Occasional non-normative explanations can be included in the
-<<openxr-spec,OpenXR API Specification>> using
+link:{uri-openxr-ratified-spec}[OpenXR API Specification] using
 <<markup-informative-notes,informative notes>>.
 
 
@@ -314,8 +316,9 @@ error.
 == An Example Command Description
 
 The <<sample-command,next section>> is a sample based on the
-<<openxr-spec,OpenXR API Specification>>, and describes a command in enough
-detail to see the different usage patterns and layout / markup used.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification], and describes a
+command in enough detail to see the different usage patterns and layout /
+markup used.
 Informative notes discussing markup and guidelines are interspersed with the
 example description to explain how and why it looks as it does.
 

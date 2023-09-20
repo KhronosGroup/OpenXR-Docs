@@ -34,7 +34,7 @@ When the application access has been allowed, the runtime may: set
 pname:isValid on the supplied slink:XrFaceExpressionStatusFB structure to
 ename:XR_TRUE.
 
-Some permission systems may control access to the eye tracking separately
+Some permission systems may: control access to the eye tracking separately
 from access to the face tracking, even though the eyes are part of the face.
 In case the user denied tracking of the eyes, yet, allowed tracking of the
 face, then the runtime must: set the pname:isEyeFollowingBlendshapesValid
@@ -392,7 +392,7 @@ while (1) {
 
 This extension defines 63 blend shapes for tracking facial expressions.
 
-[open,refpage='XrFaceExpressionFB',type='enums',desc='The name of blend shapes that can be tracked',xrefs='']
+[open,refpage='XrFaceExpressionFB',type='enums',desc='The names of trackable blend shapes',xrefs='']
 --
 include::{generated}/api/enums/XrFaceExpressionFB.txt[]
 

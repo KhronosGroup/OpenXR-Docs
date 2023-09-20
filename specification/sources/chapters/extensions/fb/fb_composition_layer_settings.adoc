@@ -61,7 +61,8 @@ include::{generated}/api/structs/XrCompositionLayerSettingsFB.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:flags is a bitmask of elink:XrCompositionLayerSettingsFlagBitsFB.
+* pname:layerFlags is a bitmask of
+  elink:XrCompositionLayerSettingsFlagBitsFB.
 ****
 
 slink:XrCompositionLayerSettingsFB contains additional flags to indicate

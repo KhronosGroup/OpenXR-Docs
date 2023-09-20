@@ -234,8 +234,8 @@ systems that have only limited ability to track finger positions must: use
 the information available to them to emulate an unobstructed range of
 motion.
 
-The runtime must: update the pname:jointLocations array ordered so that the
-application can index elements using the corresponding body joint enum (e.g.
+The runtime must: update the pname:jointLocations array ordered so that it
+is indexed using the corresponding body joint enum (e.g.
 elink:XrBodyJointFB) as described by elink:XrBodyJointSetFB when creating
 the slink:XrBodyTrackerFB.
 For example, when the slink:XrBodyTrackerFB is created with
@@ -425,7 +425,7 @@ while (1) {
     CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &locations));
 
     if (locations.isActive) {
-        // The returned joint location array can be directly indexed with
+        // The returned joint location array is directly indexed with
         // XrBodyJointFB enum.
         const XrPosef &indexTip =
             jointLocations[XR_BODY_JOINT_LEFT_HAND_INDEX_TIP_FB].pose;
@@ -435,7 +435,7 @@ while (1) {
 
 ==== Conventions of body joints
 
-[open,refpage='XrBodyJointFB',type='enums',desc='The name of body joints that can be tracked',xrefs='']
+[open,refpage='XrBodyJointFB',type='enums',desc='Trackable body joints',xrefs='']
 --
 This extension defines 70 joints for body tracking: 18 core body joints + 52
 hand joints.

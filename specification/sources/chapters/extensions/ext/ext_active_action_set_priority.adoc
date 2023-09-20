@@ -56,8 +56,8 @@ include::{generated}/api/structs/XrActiveActionSetPrioritiesEXT.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:countActionSetPriorities is an integer specifying the number of
-  valid elements in the actionSetPriorities array.
+* pname:actionSetPriorityCount is an integer specifying the number of valid
+  elements in the actionSetPriorities array.
 * pname:actionSetPriorities is a pointer to an array that maps action sets
   to their active priority numbers.
   If an action set is specified multiple times, the runtime may: return

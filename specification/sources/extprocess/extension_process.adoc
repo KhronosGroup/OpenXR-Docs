@@ -13,6 +13,8 @@
 :imagewidth: 800
 :fullimagewidth: width="800"
 
+include::{config}/attribs.adoc[]
+
 Extensions are a method for runtimes or API layers to expose groups of
 functionality upon opt-in by the application.
 To help understand how OpenXR extensions are created and supported, this
@@ -182,8 +184,8 @@ manner as Khronos members.
 However, extensions must still be registered with Khronos.
 
 Extension authors/vendors should register an author ID with Khronos through
-submitting a merge request to the <<openxr-docs,KhronosGroup/OpenXR-Docs>>
-project on GitHub.
+submitting a merge request to the
+link:{uri-github-openxr-docs}[KhronosGroup/OpenXR-Docs] project on GitHub.
 The author ID must be used for any extensions that author registers.
 The same mechanism will be used to request registration of extensions or API
 layers with Khronos, as described below.
@@ -359,6 +361,8 @@ Unlike the `KHR` extension approval process:
 [[bitmasks]]
 ==== Extending Bitmasks
 
+:uri-styleguide-reserving: {uri-openxr-registry-root}/specs/1.0/styleguide.html#extensions-reserving-bitmask-values
+
 Vendor and multi-vendor extensions must: not add new bits directly to a core
 or KHR bit mask, due to the limited number of bits available to express
 functionality.
@@ -372,9 +376,8 @@ Similarly, vendor and multi-vendor `EXT` extensions must: not add to any
 other similarly-limited spaces in the spec.
 The `XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND` bit was added before this
 policy was established, and is left as a historical artifact.
-See also
-https://www.khronos.org/registry/OpenXR/specs/1.0/styleguide.html#extensions-reserving-bitmask-values[the
-Style Guide discussion of this].
+See also link:{uri-styleguide-reserving}[the Style Guide discussion of
+this].
 
 Regular enums are not subject to this restriction, as a dedicated range in
 each enum is assigned to each extension based on extension number.

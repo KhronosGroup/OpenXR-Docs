@@ -208,14 +208,15 @@ slink:XrPlaneDetectorBeginInfoEXT::pname:baseSpace,
 slink:XrPlaneDetectorBeginInfoEXT::pname:time,
 slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxPose and
 slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxExtent.
-The runtime must: resolve the location defined by pname:baseSpace at the
-time of the call.
+The runtime must: resolve the location defined by
+slink:XrPlaneDetectorBeginInfoEXT::pname:baseSpace at the time of the call.
 The slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxPose is the pose of
 the center of the box defined by
 slink:XrPlaneDetectorBeginInfoEXT::pname:boundingBoxExtent.
 
 The runtime must: return ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT if the
-pname:baseSpace is not locatable at the time of the call.
+slink:XrPlaneDetectorBeginInfoEXT::pname:baseSpace is not locatable at the
+time of the call.
 
 include::{generated}/validity/protos/xrBeginPlaneDetectionEXT.txt[]
 --
@@ -233,8 +234,8 @@ include::{generated}/api/structs/XrPlaneDetectorBeginInfoEXT.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:baseSpace is the slink:XrSpace that the pname:boundingBox is defined
-  in.
+* pname:baseSpace is the slink:XrSpace that the pname:boundingBoxPose is
+  defined in.
 * pname:time is an basetype:XrTime at which to detect the planes.
 * pname:orientationCount the number of elements in the pname:orientations.
 * pname:orientations an array of elink:XrPlaneDetectorOrientationEXT.
@@ -386,9 +387,10 @@ include::{generated}/api/structs/XrPlaneDetectorLocationsEXT.txt[]
 * pname:planeLocationCapacityInput is the capacity of the array, or 0 to
   indicate a request to retrieve the required capacity.
 * pname:planeLocationCountOutput is the number of planes, or the required
-  capacity in the case that pname:planeCapacityInput is insufficient.
+  capacity in the case that pname:planeLocationCapacityInput is
+  insufficient.
 * pname:planeLocations is an array of slink:XrPlaneDetectorLocationEXT.
-  It can: be code:NULL if pname:planeCapacityInput is 0.
+  It can: be code:NULL if pname:planeLocationCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:planeLocations size.
 ****
@@ -405,6 +407,9 @@ include::{generated}/api/structs/XrPlaneDetectorLocationEXT.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
 * pname:planeId is a code:uint64_t unique identifier of the plane.
   The planeId should: remain the same for the duration of the
   slink:XrPlaneDetectorEXT handle for a physical plane.
@@ -421,7 +426,7 @@ include::{generated}/api/structs/XrPlaneDetectorLocationEXT.txt[]
 * pname:pose is an slink:XrPosef defining the position and orientation of
   the origin of a plane within the reference frame of the corresponding
   slink:XrPlaneDetectorGetInfoEXT::pname:baseSpace.
-* pname:extent is the extent of the plane along the x-axis (width) and
+* pname:extents is the extent of the plane along the x-axis (width) and
   z-axis (height) centered on the pname:pose.
 * pname:orientation is the detected orientation of the plane.
 * pname:semanticType elink:XrPlaneDetectorSemanticTypeEXT type of the plane.

@@ -23,9 +23,9 @@ if possible.
 
 Swapchain images can: be 2D or 2D Array.
 
-Rendering operations involving composition of submitted layers should be
-assumed to be internally performed by the runtime in linear color space.
-Images submitted in sRGB color space must be created using an API-specific
+Rendering operations involving composition of submitted layers are assumed
+to be internally performed by the runtime in linear color space.
+Images submitted in sRGB color space must: be created using an API-specific
 sRGB format (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 ename:GL_SRGB8_ALPHA8, ename:VK_FORMAT_R8G8B8A8_SRGB) to apply automatic
 sRGB-to-linear conversion when read by the runtime.
@@ -34,8 +34,8 @@ All other formats will be treated as linear values.
 [NOTE]
 .Note
 ====
-OpenXR applications should avoid submitting linear encoded 8 bit color data
-(e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM) whenever possible as it may result
+OpenXR applications should: avoid submitting linear encoded 8 bit color data
+(e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM) whenever possible as it may: result
 in color banding.
 
 Gritz, L. and d'Eon, E. 2007.
@@ -95,7 +95,7 @@ endif::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
 ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 With a Direct3D-based graphics API, flink:xrEnumerateSwapchainFormats never
 returns typeless formats (e.g. ename:DXGI_FORMAT_R8G8B8A8_TYPELESS).
-Only concrete formats are returned, and only concrete formats may be
+Only concrete formats are returned, and only concrete formats may: be
 specified by applications for swapchain creation.
 endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
@@ -122,7 +122,7 @@ include::{generated}/api/protos/xrCreateSwapchain.txt[]
 
 Creates an slink:XrSwapchain handle.
 The returned swapchain handle may: be subsequently used in API calls.
-Multiple slink:XrSwapchain handles may exist simultaneously, up to some
+Multiple slink:XrSwapchain handles may: exist simultaneously, up to some
 limit imposed by the runtime.
 The slink:XrSwapchain handle must: be eventually freed via the
 flink:xrDestroySwapchain function.
@@ -168,7 +168,7 @@ include::{generated}/api/structs/XrSwapchainCreateInfo.txt[]
   the graphics API's maximum limit.
 * pname:height is the height of the image, must: not be `0` or greater than
   the graphics API's maximum limit.
-* pname:faceCount is the number of faces, which can be either `6` (for
+* pname:faceCount is the number of faces, which must: be either `6` (for
   cubemaps) or `1`.
 * pname:arraySize is the number of array layers in the image or `1` for a 2D
   image, must: not be `0` or greater than the graphics API's maximum limit.
@@ -259,15 +259,13 @@ endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
 Swapchains will be created with graphics API-specific flags appropriate to
 the type of underlying image and its usage.
-Extensions may exist to further assist the runtime in choosing how to create
-swapchains.
 
 Runtimes must: honor underlying graphics API limits when creating resources.
 
 ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 flink:xrEnumerateSwapchainFormats never returns typeless formats (e.g.
 code:DXGI_FORMAT_R8G8B8A8_TYPELESS).
-Only concrete formats are returned, and only concrete formats may be
+Only concrete formats are returned, and only concrete formats may: be
 specified by applications for swapchain creation.
 endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
 
@@ -294,7 +292,7 @@ Swapchain images are acquired, waited on, and released by index, but the
 number of images in a swapchain is implementation-defined.
 Additionally, rendering to images requires access to the underlying image
 primitive of the graphics API being used.
-Applications may query and cache the images at any time after swapchain
+Applications may: query and cache the images at any time after swapchain
 creation.
 
 [open,refpage='xrEnumerateSwapchainImages',desc='Gets images from an XrSwapchain',type='protos',xrefs='xrCreateSwapchain XrSwapchainImageBaseHeader']
@@ -339,7 +337,7 @@ ename:XR_ERROR_VALIDATION_FAILURE.
 [NOTE]
 .Note
 ====
-Under a typical memory model, a runtime must treat the supplied pointer as
+Under a typical memory model, a runtime must: treat the supplied pointer as
 an opaque blob beginning with slink:XrSwapchainImageBaseHeader, until after
 it has verified the pname:type.
 ====
@@ -363,22 +361,20 @@ include::{generated}/api/structs/XrSwapchainImageBaseHeader.txt[]
   No such structures are defined in core OpenXR.
 ****
 
-The slink:XrSwapchainImageBaseHeader is a base structure that can be
-overridden by a graphics API-specific stext:XrSwapchainImage* child
-structure.
+The slink:XrSwapchainImageBaseHeader is a base structure that is extended by
+graphics API-specific stext:XrSwapchainImage* child structures.
 
 include::{generated}/validity/structs/XrSwapchainImageBaseHeader.txt[]
 --
 
-Before an application can start building graphics API command buffers that
-refer to an image in a swapchain, it must acquire the image from the
-swapchain.
-The acquire operation determines the index of the next image that will be
-used in the swapchain.
+Before an application builds graphics API command buffers that refer to an
+image in a swapchain, it must: acquire the image from the swapchain.
+The acquire operation determines the index of the next image to be used in
+the swapchain.
 The order in which images are acquired is undefined.
 The runtime must: allow the application to acquire more than one image from
-a single swapchain at a time, for example if the application implements a
-multiple frame deep rendering pipeline.
+a single (non-static) swapchain at a time, for example if the application
+implements a multiple frame deep rendering pipeline.
 
 [open,refpage='xrAcquireSwapchainImage',desc='Acquire a swapchain image',type='protos',xrefs='xrCreateSwapchain xrEnumerateSwapchainImages xrWaitSwapchainImage xrReleaseSwapchainImage xrDestroySwapchain']
 --
@@ -407,6 +403,12 @@ The runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID if a
 pname:swapchain created with the ename:XR_SWAPCHAIN_CREATE_STATIC_IMAGE_BIT
 set in slink:XrSwapchainCreateInfo::pname:createFlags and this function has
 been successfully called previously for this swapchain.
+
+This function only provides the index of the swapchain image, for example
+for use in recording command buffers.
+It does not wait for the image to be usable by the application.
+The application must: call flink:xrWaitSwapchainImage for each "acquire"
+call before submitting graphics commands that write to the image.
 
 include::{generated}/validity/protos/xrAcquireSwapchainImage.txt[]
 --
@@ -447,15 +449,15 @@ include::{generated}/api/protos/xrWaitSwapchainImage.txt[]
   structure.
 ****
 
-Before an application can begin writing to a swapchain image, it must first
-wait on the image to avoid writing to it before the compositor has finished
+Before an application begins writing to a swapchain image, it must: first
+wait on the image, to avoid writing to it before the compositor has finished
 reading from it.
 flink:xrWaitSwapchainImage will implicitly wait on the oldest acquired
 swapchain image which has not yet been successfully waited on.
 Once a swapchain image has been successfully waited on without timeout, the
 app must: release before waiting on the next acquired swapchain image.
 
-This function may block for longer than the timeout specified in
+This function may: block for longer than the timeout specified in
 slink:XrSwapchainImageWaitInfo due to scheduling or contention.
 
 If the timeout expires without the image becoming available for writing,
@@ -490,7 +492,7 @@ include::{generated}/api/structs/XrSwapchainImageWaitInfo.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR.
-* pname:timeout indicates how many nanoseconds the call should block waiting
+* pname:timeout indicates how many nanoseconds the call may: block waiting
   for the image to become available for writing.
 ****
 
@@ -504,11 +506,11 @@ image which has been acquired.
 The swapchain image must: have been successfully waited on without timeout
 before it is released.
 flink:xrEndFrame will use the most recently released swapchain image.
-In each frame submitted to the compositor only one image index from each
+In each frame submitted to the compositor, only one image index from each
 swapchain will be used.
 Note that in case the swapchain contains 2D image arrays, one array is
-referenced per swapchain index and thus the whole image array can be used in
-one frame.
+referenced per swapchain index and thus the whole image array may: be used
+in one frame.
 
 [open,refpage='xrReleaseSwapchainImage',desc='Release a swapchain image',type='protos',xrefs='xrCreateSwapchain xrEnumerateSwapchainImages xrAcquireSwapchainImage xrWaitSwapchainImage xrDestroySwapchain']
 --
@@ -601,9 +603,9 @@ flink:xrLocateViews returns an array of slink:XrView elements, one for each
 view of the specified view configuration type, along with an
 slink:XrViewState containing additional state data shared across all views.
 The eye each view corresponds to is statically defined in
-<<view_configuration_type, elink:XrViewConfigurationType>> in case the
-application wants to apply eye-specific rendering traits.
-The slink:XrViewState and slink:XrView member data may change on subsequent
+elink:XrViewConfigurationType in case the application wants to apply
+eye-specific rendering traits.
+The slink:XrViewState and slink:XrView member data may: change on subsequent
 calls to flink:xrLocateViews, and so applications must: not assume it to be
 constant.
 
@@ -624,6 +626,9 @@ include::{generated}/api/structs/XrViewLocateInfo.txt[]
 
 .Member Descriptions
 ****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
 * pname:viewConfigurationType is elink:XrViewConfigurationType to query for.
 * pname:displayTime is the time for which the view poses are predicted.
 * pname:space is the slink:XrSpace in which the pname:pose in each
@@ -766,11 +771,12 @@ the runtime predicts a composited frame will be displayed.
 The runtime may: affect this computation by changing the return values and
 throttling of flink:xrWaitFrame in response to feedback from frame
 submission and completion times in flink:xrEndFrame.
-An application must: eventually match each flink:xrWaitFrame call with one
-call to flink:xrBeginFrame.
 A subsequent flink:xrWaitFrame call must: block until the previous frame has
 been begun with flink:xrBeginFrame and must: unblock independently of the
 corresponding call to flink:xrEndFrame.
+Refer to flink:xrBeginSession for details on how a transition to
+<<session_running, session running>> resets the frame function call order.
+
 When less than one frame interval has passed since the previous return from
 flink:xrWaitFrame, the runtime should: block until the beginning of the next
 frame interval.
@@ -804,13 +810,13 @@ pname:session <<session_not_running, is not running>>.
 .Note
 ====
 The engine simulation should: advance based on the display time.
-Every stage in the engine pipeline should use the exact same display time
+Every stage in the engine pipeline should: use the exact same display time
 for one particular application-generated frame.
 An accurate and consistent display time across all stages and threads in the
 engine pipeline is important to avoid object motion judder.
-If the application has multiple pipeline stages, the application should pass
-its computed display time through its pipeline, as flink:xrWaitFrame must be
-called only once per frame.
+If the application has multiple pipeline stages, the application should:
+pass its computed display time through its pipeline, as flink:xrWaitFrame
+must: be called only once per frame.
 ====
 
 include::{generated}/validity/protos/xrWaitFrame.txt[]
@@ -934,10 +940,11 @@ flink:xrWaitFrame.
 
 The runtime must: return the error code ename:XR_ERROR_CALL_ORDER_INVALID if
 there was no corresponding successful call to flink:xrWaitFrame.
-
 The runtime must: return the success code ename:XR_FRAME_DISCARDED if a
 prior flink:xrBeginFrame has been called without an intervening call to
 flink:xrEndFrame.
+Refer to flink:xrBeginSession for details on how a transition to
+<<session_running, session running>> resets the frame function call order.
 
 The runtime must: return ename:XR_ERROR_SESSION_NOT_RUNNING if the
 pname:session <<session_not_running, is not running>>.
@@ -992,7 +999,7 @@ synchronization guarantees.
 An accurate predicted display time is very important to avoid black pull-in
 by reprojection and to reduce motion judder in case the runtime does not
 implement a translational reprojection.
-Reprojection should never display images before the display refresh period
+Reprojection should: never display images before the display refresh period
 they were predicted for, even if they are completed early, because this will
 cause motion judder just the same.
 In other words, the better the predicted display time, the less latency
@@ -1003,6 +1010,8 @@ Every call to flink:xrEndFrame must: be preceded by a successful call to
 flink:xrBeginFrame.
 Failure to do so must: result in ename:XR_ERROR_CALL_ORDER_INVALID being
 returned by flink:xrEndFrame.
+Refer to flink:xrBeginSession for details on how a transition to
+<<session_running, session running>> resets the frame function call order.
 slink:XrFrameEndInfo may: reference swapchains into which the application
 has rendered for this frame.
 From each slink:XrSwapchain only one image index is implicitly referenced
@@ -1010,7 +1019,7 @@ per frame, the one corresponding to the last call to
 flink:xrReleaseSwapchainImage.
 However, a specific swapchain (and by extension a specific swapchain image
 index) may: be referenced in slink:XrFrameEndInfo multiple times.
-This can be used for example to render a side by side image into a single
+This can: be used for example to render a side by side image into a single
 swapchain image and referencing it twice with differing image rectangles in
 different layers.
 

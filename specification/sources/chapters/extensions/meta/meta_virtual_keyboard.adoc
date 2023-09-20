@@ -705,7 +705,7 @@ include::{generated}/api/protos/xrChangeVirtualKeyboardTextContextMETA.txt[]
 .Parameter Descriptions
 ****
 * pname:keyboard is the slink:XrVirtualKeyboardMETA handle.
-* pname:info is the slink:XrVirtualKeyboardTextContextChangeInfoMETA
+* pname:changeInfo is the slink:XrVirtualKeyboardTextContextChangeInfoMETA
   detailing prior input text context to the runtime.
 ****
 

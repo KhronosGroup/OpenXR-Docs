@@ -365,8 +365,8 @@ In the <<fig-anchorname,Figure caption>> diagram, the diagram represents
 
 This section discusses Asciidoc macros used in the document.
 In addition to the macros defined by asciidoc itself, additional macros are
-defined by the <<openxr-spec,OpenXR API Specification>> and Reference Page
-configuration files.
+defined by the link:{uri-openxr-ratified-spec}[OpenXR API Specification] and
+Reference Page configuration files.
 
 
 [[markup-macros-api]]
@@ -454,8 +454,8 @@ table:
                      the OpenXR C macro in the macro argument. Example:
                      dlink{cl}XR_NULL_HANDLE -> dlink:XR_NULL_HANDLE. There are
                      only a few macros in the OpenXR API, described in the
-                     "`e`" appendix of the <<openxr-spec,OpenXR
-                     API Specification>>
+                     "`e`" appendix of the link:{uri-openxr-ratified-spec}[OpenXR
+                     API Specification]
 | dname{cl}        | Formats the macro argument like dlink{cl}. Does not
                      generate a cross-reference.
 
@@ -543,7 +543,7 @@ code:NULL
 
 Glossary terms are currently marked up using underscore markup where they
 are defined in the documents, as well as being added to the formal Glossary
-appendix in the <<openxr-spec,OpenXR API Specification>>.
+appendix in the link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 However, we will probably change to using custom macros soon, to enable
 linkage between the glossary and definitions in the spec body.
 
@@ -557,14 +557,14 @@ _Glossary terms_
 === Normative Terminology
 
 Normative terminology is precisely defined in section 1.6 of the
-<<openxr-spec,OpenXR API Specification>>, and is used to visually tag terms
-which express mandatory and optional behavior of OpenXR implementations, and
-of applications using OpenXR.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification], and is used to
+visually tag terms which express mandatory and optional behavior of OpenXR
+implementations, and of applications using OpenXR.
 
-Whenever one of these terms appears in the <<openxr-spec,OpenXR API
-Specification>>, it must be tagged using the macros, to indicate that its
-use has been carefully considered and is consistent with the definitions in
-section 1.6.
+Whenever one of these terms appears in the
+link:{uri-openxr-ratified-spec}[OpenXR API Specification], it must be tagged
+using the macros, to indicate that its use has been carefully considered and
+is consistent with the definitions in section 1.6.
 This is extremely important for determining IP that is in and out of Scope
 during Ratification reviews.
 The normative terminology macros are defined in the following table:
@@ -614,7 +614,7 @@ not required:
 
 Implementations are not mandated to support functionality which is not
 required, but if they do, they must behave as described by the
-<<openxr-spec,OpenXR API Specification>>.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 The term _functionality_ includes API features, extensions, and layers.
 
 [[markup-informative]]
@@ -735,7 +735,7 @@ There are a variety of common terms that have several equivalent word
 choices.
 Always use the words in the first column instead of the alternate terms.
 This list may not be comprehensive; when in doubt, be guided by the existing
-<<openxr-spec,OpenXR API Specification>>.
+link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 
 .Word Choices
 [width="100%",options="header"]
