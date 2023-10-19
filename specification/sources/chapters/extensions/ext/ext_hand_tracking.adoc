@@ -103,9 +103,9 @@ include::{generated}/validity/protos/xrCreateHandTrackerEXT.txt[]
 If the system does not support hand tracking, runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateHandTrackerEXT.
 In this case, the runtime must: return ename:XR_FALSE for
-pname:supportsHandTracking in slink:XrSystemHandTrackingPropertiesEXT when
-the function flink:xrGetSystemProperties is called, so that the application
-can: avoid creating a hand tracker.
+slink:XrSystemHandTrackingPropertiesEXT::pname:supportsHandTracking when the
+function flink:xrGetSystemProperties is called, so that the application can:
+avoid creating a hand tracker.
 --
 
 [open,refpage='XrHandTrackerCreateInfoEXT',type='structs',desc='Information to create a hand joints handle',xrefs='']
@@ -366,13 +366,15 @@ slink:XrHandJointLocationsEXT::pname:next, the returned
 slink:XrHandJointLocationsEXT::pname:isActive is true, and the velocity is
 observed or can be calculated by the runtime, the runtime must: fill in the
 linear velocity of each hand joint within the reference frame of
-pname:baseSpace and set the ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
+slink:XrHandJointsLocateInfoEXT::pname:baseSpace and set the
+ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
 Similarly, if an slink:XrHandJointVelocitiesEXT structure is chained to
 slink:XrHandJointLocationsEXT::pname:next, the returned
 slink:XrHandJointLocationsEXT::pname:isActive is true, and the __angular
 velocity__ is observed or can be calculated by the runtime, the runtime
 must: fill in the angular velocity of each joint within the reference frame
-of pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
+of slink:XrHandJointsLocateInfoEXT::pname:baseSpace and set the
+ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
 
 include::{generated}/validity/structs/XrHandJointVelocitiesEXT.txt[]
 --

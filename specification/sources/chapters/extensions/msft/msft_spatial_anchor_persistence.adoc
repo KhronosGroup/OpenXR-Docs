@@ -173,17 +173,17 @@ include::{generated}/api/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.txt[]
 ****
 * pname:spatialAnchorStore is the slink:XrSpatialAnchorStoreConnectionMSFT
   anchor store to perform the enumeration operation on.
-* pname:spatialAnchorNamesCapacityInput is the capacity of the
+* pname:spatialAnchorNameCapacityInput is the capacity of the
   pname:spatialAnchorNames array, or `0` to indicate a request to retrieve
   the required capacity.
-* pname:spatialAnchorNamesCountOutput is filled in by the runtime with the
+* pname:spatialAnchorNameCountOutput is filled in by the runtime with the
   count of anchor names written or the required capacity in the case that
-  pname:spatialAnchorNamesCapacityInput is insufficient.
-* pname:persistedAnchorNames is a pointer to an array of
+  pname:spatialAnchorNameCapacityInput is insufficient.
+* pname:spatialAnchorNames is a pointer to an array of
   slink:XrSpatialAnchorPersistenceNameMSFT structures, but can: be code:NULL
   if propertyCapacityInput is `0`.
 * See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:persistedAnchorNames
+  detailed description of retrieving the required pname:spatialAnchorNames
   size.
 ****
 

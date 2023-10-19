@@ -142,8 +142,8 @@ This rule applies to all enumerants, with some exceptions.
 
 * The `XrStructureType` enumerants begin with `XR_TYPE` instead of
   `XR_STRUCTURE_TYPE`.
-* Flag types don't use `FLAGS` in the name (e.g. `XrSpaceLocationFlags` uses
-  `XR_SPACE_LOCATION_POSITION_VALID_BIT` instead of
+* Flag types do not use `FLAGS` in the name (e.g. `XrSpaceLocationFlags`
+  uses `XR_SPACE_LOCATION_POSITION_VALID_BIT` instead of
   `XR_SPACE_LOCATION_FLAGS_POSITION_VALID_BIT`).
 * The `XrResult` enumerants are split into two sub types: error and success
   codes.

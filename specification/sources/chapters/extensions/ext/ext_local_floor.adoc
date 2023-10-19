@@ -142,7 +142,7 @@ else if (supportsStageSpace)
 }
 else
 {
-    // We don't support local floor or stage - make an educated guess
+    // We do not support local floor or stage - make an educated guess
     float floorOffset = -1.5;
 
     XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};

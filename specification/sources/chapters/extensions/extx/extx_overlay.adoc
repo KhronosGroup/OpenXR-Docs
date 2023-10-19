@@ -289,8 +289,8 @@ apiext:XR_KHR_composition_layer_depth extension.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:visible is an basetype:XrBool32 which indicates if pname:session is
-  now visible or is not.
+* pname:visible is an basetype:XrBool32 which indicates if the main session
+  is now visible or is not.
 * pname:flags is 0 or one or more elink:XrOverlayMainSessionFlagBitsEXTX
   which indicates various state information for the main session.
 ****

@@ -41,6 +41,12 @@ for supported input source
 ** subpathname:/input/a/click
 * subpathname:/input/entity_htc/pose
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/htc/vive_wrist_tracker
+:properly-suffixed-path: /interaction_profiles/htc/vive_wrist_tracker_htc
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 The entity_htc pose allows the applications to recognize the origin of a
 tracked input device, especially for the wearable devices which are not held
 in the user's hand.

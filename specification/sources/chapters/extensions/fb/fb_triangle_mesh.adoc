@@ -187,8 +187,8 @@ This creates an slink:XrTriangleMeshFB handle.
 The returned triangle mesh handle may: be subsequently used in API calls.
 
 When the mesh is mutable (the ename:XR_TRIANGLE_MESH_MUTABLE_BIT_FB bit is
-set in pname:createInfo->pname:flags), the created triangle mesh starts in
-the <<fb_triangle_mesh_state_undefined_topology>> state.
+set in slink:XrTriangleMeshCreateInfoFB::pname:flags), the created triangle
+mesh starts in the <<fb_triangle_mesh_state_undefined_topology>> state.
 
 Immutable meshes have no state machine; they may be considered to be in
 state <<fb_triangle_mesh_state_ready>> with no valid edges leaving that
@@ -269,8 +269,8 @@ Retrieves a pointer to the index buffer that defines the topology of the
 triangle mesh.
 Each triplet of consecutive elements points to three vertices in the vertex
 buffer and thus form a triangle.
-The size of the buffer is slink:XrTriangleMeshCreateInfoFB::pname:indexCount
-elements.
+The size of the index buffer is [eq]#3 *
+slink:XrTriangleMeshCreateInfoFB::pname:triangleCount# elements.
 The buffer location is guaranteed to remain constant over the lifecycle of
 the mesh object.
 

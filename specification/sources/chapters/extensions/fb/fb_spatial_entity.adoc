@@ -353,7 +353,7 @@ include::{generated}/api/protos/xrSetSpaceComponentStatusFB.txt[]
 
 Enables or disables the specified component for the specified entity.
 This operation is asynchronous and always returns immediately, regardless of
-the value of pname:timeout.
+the value of slink:XrSpaceComponentStatusSetInfoFB::pname:timeout.
 The pname:requestId can: be used to later refer to the request, such as
 identifying which request has completed when an
 slink:XrEventDataSpaceSetStatusCompleteFB is posted to the event queue.

@@ -17,6 +17,86 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.31 (2023-10-18)
+
+This release features two new vendor extensions, some XML revisions to other
+vendor extensions, and a substantial amount of fixes to the prose of the core
+specification and some extensions. All specially-formatted mentions of a
+parameter or field name (that is, names marked up with the `pname` macro in the
+AsciiDoctor source) are now being checked by a script to be sure they are known.
+With the fixes in this release, nearly all such name mentions now either (1)
+match the function or structure in whose description they are mentioned, or (2)
+have been qualified with the function or structure to which they do belong.
+Misspellings, missing fields/parameters, and extraneous parameters have been
+fixed as well. (Some fixes of this type to vendor extensions are still pending
+and will be in an upcoming patch release.) While this has changed the prose, it
+has not resulted in substantive changes to the XML, and therefore the code
+snippets in the specification as well as the header files remain accurate and
+unaffected by these fixes.
+
+- Registry
+  - Extension reservation: Reserve extensions for NVIDIA.
+    ([internal MR 2952](https://gitlab.khronos.org/openxr/openxr/merge_requests/2952))
+  - Extension reservation: Reserve extensions for Meta.
+    ([internal MR 2959](https://gitlab.khronos.org/openxr/openxr/merge_requests/2959))
+  - Extension reservation: Reserve extensions for Android.
+    ([internal MR 2966](https://gitlab.khronos.org/openxr/openxr/merge_requests/2966))
+  - Extension reservation: Reserve an extension for `XR_KHR_egl_enable`.
+    ([internal MR 2982](https://gitlab.khronos.org/openxr/openxr/merge_requests/2982))
+  - New vendor extension: `XR_MSFT_scene_marker`
+    ([internal MR 2601](https://gitlab.khronos.org/openxr/openxr/merge_requests/2601))
+  - New vendor extension: `XR_ML_user_calibration`
+    ([internal MR 2849](https://gitlab.khronos.org/openxr/openxr/merge_requests/2849))
+  - Schematron: Allow chained structs that extend a two-call-idiom struct to carry
+    only a `*CapacityInput` member.
+    ([internal MR 2892](https://gitlab.khronos.org/openxr/openxr/merge_requests/2892),
+    [internal issue 2059](https://gitlab.khronos.org/openxr/openxr/issues/2059))
+  - `XR_FB_render_model`: Fix `structextends` attribute and remove `returnedonly`
+    attribute of `XrRenderModelCapabilitiesRequestFB`, to match the specification
+    prose.
+    ([internal MR 2765](https://gitlab.khronos.org/openxr/openxr/merge_requests/2765),
+    [OpenXR-Docs issue 153](https://github.com/KhronosGroup/OpenXR-Docs/issues/153),
+    [internal issue 2017](https://gitlab.khronos.org/openxr/openxr/issues/2017))
+  - xml: Fixed a few errors in MSFT extensions discovered by Schematron checks.
+    ([internal MR 2892](https://gitlab.khronos.org/openxr/openxr/merge_requests/2892))
+- Specification
+  - Add note about missing vendor suffix on interaction profile paths to all
+    extensions introducing interaction profiles that are missing the suffix. These
+    would not meet current style guide requirements.
+    ([internal MR 2921](https://gitlab.khronos.org/openxr/openxr/merge_requests/2921),
+    [internal issue 2074](https://gitlab.khronos.org/openxr/openxr/issues/2074))
+  - Clarify semantics of `XrRect2Df` and `XrRect2Di`.
+    ([internal MR 2760](https://gitlab.khronos.org/openxr/openxr/merge_requests/2760))
+  - Fix next chain wording on `XrSystemProperties`.
+    ([internal MR 2957](https://gitlab.khronos.org/openxr/openxr/merge_requests/2957))
+  - Fix "checkSpecLinks" warnings about member and parameter references in the
+    specification. This has changed the documentation of a number of structures and
+    functions across the spec, although the C prototypes/definitions in the spec as
+    well as the header file contents have stayed constant.
+    ([internal MR 2960](https://gitlab.khronos.org/openxr/openxr/merge_requests/2960),
+    [internal MR 2968](https://gitlab.khronos.org/openxr/openxr/merge_requests/2968),
+    [internal MR 2969](https://gitlab.khronos.org/openxr/openxr/merge_requests/2969),
+    [internal MR 3001](https://gitlab.khronos.org/openxr/openxr/merge_requests/3001))
+  - New vendor extension specification: `XR_MSFT_scene_marker`
+    ([internal MR 2601](https://gitlab.khronos.org/openxr/openxr/merge_requests/2601))
+  - New vendor extension specification: `XR_ML_user_calibration`
+    ([internal MR 2849](https://gitlab.khronos.org/openxr/openxr/merge_requests/2849))
+  - Remove unused MathJax script from the HTML spec.
+    ([internal MR 2125](https://gitlab.khronos.org/openxr/openxr/merge_requests/2125))
+  - Replace usages of contractions, and update `checkMarkup` to ensure they do not
+    return.
+    ([internal MR 2971](https://gitlab.khronos.org/openxr/openxr/merge_requests/2971))
+  - Update stylesheet for HTML spec to improve accessibility.
+    ([internal MR 2125](https://gitlab.khronos.org/openxr/openxr/merge_requests/2125))
+  - scripts: Adjust to be able to handle generating "freeform" ref pages for
+    Android permission names, linked using `reflink:`
+    ([internal MR 2947](https://gitlab.khronos.org/openxr/openxr/merge_requests/2947))
+  - scripts: Small fixes and cleanups
+    ([internal MR 2998](https://gitlab.khronos.org/openxr/openxr/merge_requests/2998),
+    [internal MR 2894](https://gitlab.khronos.org/openxr/openxr/merge_requests/2894))
+  - xml: Fixed a few errors in MSFT extensions discovered by Schematron checks.
+    ([internal MR 2892](https://gitlab.khronos.org/openxr/openxr/merge_requests/2892))
+
 ## OpenXR Specification 1.0.30 (2023-09-20)
 
 This release is primarily a quality improvement release, fixing a range of

@@ -68,9 +68,8 @@ for the entire lifetime of that product.
 The runtime may: report a different UUID to some applications for
 compatibility purposes.
 
-This is in contrast to the pname:systemName field in
-slink:XrSystemProperties which is not required to be consistent across
-product renames.
+This is in contrast to the slink:XrSystemProperties::pname:systemName field
+which is not required to be consistent across product renames.
 
 This is intended to be a temporary feature that will be deprecated along
 with its extension as soon as motivating use cases are resolved in a better

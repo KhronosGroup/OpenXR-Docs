@@ -243,8 +243,8 @@ the descriptions of elink:XrSemanticLabelsSupportFlagBitsFB.
 The runtime must: return any semantic label that is not included in
 pname:recognizedLabels as "OTHER" to the application.
 The runtime must: follow this direction only if the runtime reports the
-pname:extensionVersion as 2 or greater, otherwise the runtime must: ignore
-this as an unknown chained structure.
+slink:XrExtensionProperties::pname:extensionVersion as 2 or greater,
+otherwise the runtime must: ignore this as an unknown chained structure.
 
 If the slink:XrSemanticLabelsSupportInfoFB structure is not present in the
 pname:next chain of slink:XrSemanticLabelsFB, the runtime may: return any
@@ -272,13 +272,17 @@ include::{generated}/api/protos/xrGetSpaceBoundingBox2DFB.txt[]
 Gets the 2D bounding box for a spatial entity with the
 ename:XR_SPACE_COMPONENT_TYPE_BOUNDED_2D_FB component type enabled.
 
-The bounding box is defined by an pname:offset and pname:extent.
-The pname:offset refers to the coordinate of the minimum corner of the box
-in the x-y plane of the given slink:XrSpace's coordinate system; that is,
-the corner whose coordinate has the minimum value on each axis.
-The pname:extent refers to the dimensions of the box along each axis.
-The maximum corner can therefore be computed as [eq]#pname:offset +
-pname:extent#.
+The bounding box is defined by an slink:XrRect2Df::pname:offset and
+slink:XrRect2Df::pname:extent.
+The slink:XrRect2Df::pname:offset refers to the coordinate of the minimum
+corner of the box in the x-y plane of the given slink:XrSpace's coordinate
+system; that is, the corner whose coordinate has the minimum value on each
+axis.
+The slink:XrRect2Df::pname:extent refers to the dimensions of the box along
+each axis.
+The maximum corner can therefore be computed as
+[eq]#slink:XrRect2Df::pname:offset +
+slink:XrRect2Df::pname:extent#.
 
 include::{generated}/validity/protos/xrGetSpaceBoundingBox2DFB.txt[]
 --

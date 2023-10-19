@@ -26,13 +26,31 @@ Interaction profile path for PICO Neo3:
 
 * pathname:/interaction_profiles/bytedance/pico_neo3_controller
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/bytedance/pico_neo3_controller
+:properly-suffixed-path: /interaction_profiles/bytedance/pico_neo3_controller_bd
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Interaction profile path for PICO 4:
 
 * pathname:/interaction_profiles/bytedance/pico4_controller
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/bytedance/pico4_controller
+:properly-suffixed-path: /interaction_profiles/bytedance/pico4_controller_bd
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Interaction profile path for PICO G3:
 
 * pathname:/interaction_profiles/bytedance/pico_g3_controller
+
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/bytedance/pico_g3_controller
+:properly-suffixed-path: /interaction_profiles/bytedance/pico_g3_controller_bd
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
 
 Valid for user paths for pico_neo3_controller, pico4_controller, and
 pico_g3_controller:

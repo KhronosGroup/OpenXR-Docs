@@ -225,8 +225,8 @@ The struct is used for keyboard creation.
 Empty with the intention of future extension.
 
 The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
-pname:supportsVirtualKeyboard is ename:XR_FALSE when checking the device
-compatibility.
+slink:XrSystemVirtualKeyboardPropertiesMETA::pname:supportsVirtualKeyboard
+is ename:XR_FALSE when checking the device compatibility.
 
 include::{generated}/validity/structs/XrVirtualKeyboardCreateInfoMETA.txt[]
 --
@@ -496,7 +496,7 @@ include::{generated}/api/protos/xrGetVirtualKeyboardTextureDataMETA.txt[]
 ****
 
 This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:textureBytes array in the
+filling the pname:textureData array in the
 slink:XrVirtualKeyboardTextureDataMETA structure.
 Note that new texture data may be added after the runtime processes inputs
 from flink:xrSendVirtualKeyboardInputMETA.
@@ -561,7 +561,7 @@ include::{generated}/api/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.txt
 ****
 
 This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:states array in the
+filling the pname:animationStates array in the
 slink:XrVirtualKeyboardModelAnimationStatesMETA structure.
 Note that new animations may be added after the runtime processes inputs
 from flink:xrSendVirtualKeyboardInputMETA.
@@ -656,7 +656,7 @@ include::{generated}/api/protos/xrSendVirtualKeyboardInputMETA.txt[]
 ****
 
 The application can: use values like a pointer pose as the
-pname:inputPoseInSpace for
+pname:interactorRootPose for
 etext:XR_VIRTUAL_KEYBOARD_INPUT_SOURCE_CONTROLLER_RAY_* or
 etext:XR_VIRTUAL_KEYBOARD_INPUT_SOURCE_HAND_RAY_* input sources, a point on
 a controller model for

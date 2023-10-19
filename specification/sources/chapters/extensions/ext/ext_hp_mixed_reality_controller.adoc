@@ -24,6 +24,12 @@ Controllers:
 
 * pathname:/interaction_profiles/hp/mixed_reality_controller
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/hp/mixed_reality_controller
+:properly-suffixed-path: /interaction_profiles/hp/mixed_reality_controller_hp
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Valid for the user paths
 
 * pathname:/user/hand/left

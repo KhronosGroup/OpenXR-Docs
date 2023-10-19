@@ -481,8 +481,8 @@ not executed in parallel with any OpenXR function that is also called with
 pname:instance or child of pname:instance.
 
 When an event of interest occurs a debug messenger calls its
-pname:createInfo\->pname:userCallback with a debug message from the producer
-of the event.
+slink:XrDebugUtilsMessengerCreateInfoEXT::pname:userCallback with a debug
+message from the producer of the event.
 Additionally, the debug messenger must: filter out any debug messages that
 the application's callback is not interested in based on
 slink:XrDebugUtilsMessengerCreateInfoEXT flags, as described below.
@@ -505,7 +505,7 @@ include::{generated}/validity/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
 
 The application must: ensure that flink:xrDestroyDebugUtilsMessengerEXT is
 not executed in parallel with any OpenXR function that is also called with
-the pname:instance or child of pname:instance that it was created with.
+the `instance` or child of `instance` that it was created with.
 --
 
 [open,refpage='xrSubmitDebugUtilsMessageEXT',type='protos',desc='Submits debug utils message',xrefs='']
@@ -526,8 +526,9 @@ include::{generated}/api/protos/xrSubmitDebugUtilsMessageEXT.txt[]
 
 .Valid Usage
 ****
-* For each structure in pname:objects found in pname:callbackData, the value
-  of slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType must: not be
+* For each structure in
+  slink:XrDebugUtilsMessengerCallbackDataEXT::pname:objects, the value of
+  slink:XrDebugUtilsObjectNameInfoEXT::pname:objectType must: not be
   ename:XR_OBJECT_TYPE_UNKNOWN
 ****
 
@@ -903,5 +904,5 @@ None
 ** Fix missing error code.
 ** Improve formatting.
 * Revision 5, 2023-07-25 (John Kearney, Meta)
-** XrDebugUtilsMessengerCallbackDataEXT parameters messageId and
+** `XrDebugUtilsMessengerCallbackDataEXT` parameters messageId and
    functionName to be optional.

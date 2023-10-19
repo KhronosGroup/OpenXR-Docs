@@ -323,6 +323,9 @@ grep_sources \
     "Replace {INCS-VAR} with {generated}" \
     "include::\{INCS-VAR\}"
 
+grep_sources \
+    "Do not use contractions" \
+    "\b([Dd]on't|[Cc]an't|[Ww]on't|[Ss]houldn't|[Dd]oesn't|[Aa]ren't|[Hh]aven't|[Hh]asn't|[Dd]idn't)\b"
 #grep_sources \
 #    "test" \
 #    "basetype:"

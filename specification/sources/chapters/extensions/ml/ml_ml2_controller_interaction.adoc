@@ -28,6 +28,12 @@ Interaction profile path:
 
 * pathname:/interaction_profiles/ml/ml2_controller
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/ml/ml2_controller
+:properly-suffixed-path: /interaction_profiles/ml/ml2_controller_ml
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Valid for user paths:
 
 * pathname:/user/hand/left

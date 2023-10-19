@@ -20,6 +20,12 @@ Interaction profile path:
 
 * pathname:/interaction_profiles/microsoft/hand_interaction
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/microsoft/hand_interaction
+:properly-suffixed-path: /interaction_profiles/microsoft/hand_interaction_msft
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Valid for top level user path:
 
 * pathname:/user/hand/left

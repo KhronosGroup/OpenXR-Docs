@@ -140,7 +140,7 @@ include::{generated}/api/protos/xrCreateVulkanInstanceKHR.txt[]
   the new Vulkan instance.
 * pname:vulkanResult points to a sname:VkResult to populate with the result
   of the fname:vkCreateInstance operation as returned by
-  pname:pfnGetInstanceProcAddr.
+  slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 ****
 
 include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.txt[]
@@ -257,7 +257,7 @@ link:{uri-vkCreateDevice}[vkCreateDevice] intended for this purpose.
 When called, the runtime must: aggregate the requirements specified by the
 application with its own requirements and forward the sname:VkDevice
 creation request to the fname:vkCreateDevice function pointer returned by
-pname:pfnGetInstanceProcAddr.
+slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 
 [open,refpage='xrCreateVulkanDeviceKHR',type='protos',desc='Create an OpenXR compatible VkDevice',xrefs='xrCreateVulkanInstanceKHR']
 --
@@ -273,7 +273,7 @@ include::{generated}/api/protos/xrCreateVulkanDeviceKHR.txt[]
   new Vulkan device.
 * pname:vulkanResult points to a sname:VkResult to populate with the result
   of the fname:vkCreateDevice operation as returned by
-  pname:pfnGetInstanceProcAddr.
+  slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 ****
 
 include::{generated}/validity/protos/xrCreateVulkanDeviceKHR.txt[]

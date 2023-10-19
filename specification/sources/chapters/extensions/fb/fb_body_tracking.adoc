@@ -87,9 +87,9 @@ include::{generated}/api/protos/xrCreateBodyTrackerFB.txt[]
 If the system does not support body tracking, the runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateBodyTrackerFB.
 In this case, the runtime must: return ename:XR_FALSE for
-pname:supportsBodyTracking in slink:XrSystemBodyTrackingPropertiesFB when
-the function flink:xrGetSystemProperties is called, so that the application
-can: avoid creating a body tracker.
+slink:XrSystemBodyTrackingPropertiesFB::pname:supportsBodyTracking when the
+function flink:xrGetSystemProperties is called, so that the application can:
+avoid creating a body tracker.
 
 include::{generated}/validity/protos/xrCreateBodyTrackerFB.txt[]
 --
@@ -295,8 +295,6 @@ include::{generated}/api/protos/xrGetBodySkeletonFB.txt[]
 ****
 * pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
   flink:xrCreateBodyTrackerFB.
-* pname:locateInfo is a pointer to slink:XrBodyJointsLocateInfoFB describing
-  information to locate body joints.
 * pname:skeleton is a pointer to slink:XrBodySkeletonFB receiving the
   returned body skeleton hierarchy.
 ****

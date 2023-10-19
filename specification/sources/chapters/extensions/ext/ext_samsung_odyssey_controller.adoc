@@ -33,7 +33,13 @@ The action bindings of this interaction profile work exactly the same as the
 pathname:/interaction_profiles/microsoft/motion_controller>> in terms of
 valid user paths and supported input and output component paths.
 
-If the application doesn't do its own custom rendering for specific motion
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/samsung/odyssey_controller
+:properly-suffixed-path: /interaction_profiles/samsung/odyssey_controller_samsung
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
+If the application does not do its own custom rendering for specific motion
 controllers, it should: avoid using this extension and instead just use
 subpathname:/microsoft/motion_controller, as runtimes should: treat both
 controllers equally when applications declare action bindings only for that

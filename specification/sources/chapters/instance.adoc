@@ -123,9 +123,9 @@ include::{generated}/api/structs/XrApiLayerProperties.txt[]
 include::{generated}/validity/structs/XrApiLayerProperties.txt[]
 --
 
-To enable a layer, the name of the layer should: be added to the
-pname:enabledApiLayerNames member of slink:XrInstanceCreateInfo when
-creating an slink:XrInstance.
+To enable a layer, the name of the layer should: be added to
+slink:XrInstanceCreateInfo::pname:enabledApiLayerNames when creating an
+slink:XrInstance.
 
 Loader implementations may: provide mechanisms outside this API for enabling
 specific API layers.

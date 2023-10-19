@@ -1,0 +1,444 @@
+// Copyright (c) 2019-2023 Microsoft Corporation
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_MSFT_scene_marker.adoc[]
+
+*Contributors*::
+    Alain Zanchetta, Microsoft +
+    Yin Li, Microsoft +
+    Alex Turner, Microsoft
+
+:uri-iso-iec-18004-2015: https://www.iso.org/standard/62021.html
+
+==== Overview
+
+This extension enables the application to observe the tracked markers, such
+as the QR Code markers in {uri-iso-iec-18004-2015}[ISO/IEC 18004:2015].
+This extension also enables future extensions to easily add new types of
+marker tracking.
+
+The application must: enable both apiext:XR_MSFT_scene_marker and
+apiext:XR_MSFT_scene_understanding in order to use this extension.
+
+[NOTE]
+.Note
+====
+A typical use of this extension is:
+
+1. Verify if marker detection is supported by calling
+   flink:xrEnumerateSceneComputeFeaturesMSFT and validate that the returned
+   supported features include ename:XR_SCENE_COMPUTE_FEATURE_MARKER_MSFT.
+
+2. If supported, create an slink:XrSceneObserverMSFT handle.
+
+3. Pass in ename:XR_SCENE_COMPUTE_FEATURE_MARKER_MSFT as requested feature
+   when starting the scene compute by calling flink:xrComputeNewSceneMSFT
+   function.
+
+4. Inspect the completion of computation by polling
+   flink:xrGetSceneComputeStateMSFT.
+
+5. Once compute is successfully completed, create an slink:XrSceneMSFT
+   handle to the result by calling flink:xrCreateSceneMSFT.
+
+6. Get the list of detected markers using flink:xrGetSceneComponentsMSFT:
+
+** optionally: filter the type of the returned markers using
+   slink:XrSceneMarkerTypeFilterMSFT.
+
+** optionally: retrieve additional marker properties by chaining
+   slink:XrSceneMarkersMSFT and/or slink:XrSceneMarkerQRCodesMSFT to the
+   next pointer of slink:XrSceneComponentsMSFT.
+
+7. Get the data encoded in a marker using
+   flink:xrGetSceneMarkerDecodedStringMSFT or
+   flink:xrGetSceneMarkerRawDataMSFT.
+
+8. Locate markers using flink:xrLocateSceneComponentsMSFT.
+====
+
+==== Retrieve marker properties
+
+[open,refpage='XrSceneMarkersMSFT',desc='Provide an array to retrieve scene marker properties',type='structs',xrefs='xrGetSceneComponentsMSFT']
+--
+The slink:XrSceneMarkersMSFT structure is defined as:
+
+include::{generated}/api/structs/XrSceneMarkersMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  See also: slink:XrSceneComponentsMSFT, slink:XrSceneMarkerQRCodesMSFT
+* pname:sceneMarkerCapacityInput is a code:uint32_t indicating the capacity
+  of elements in the code:sceneMarkers array.
+* pname:sceneMarkers is an array of slink:XrSceneMarkerMSFT to fill with the
+  properties of the markers.
+****
+
+Once the application creates an slink:XrSceneMSFT after a successful scene
+compute, it can: retrieve the scene markers' properties by chaining
+slink:XrSceneMarkersMSFT structure to the next pointer of
+slink:XrSceneComponentsGetInfoMSFT when calling
+flink:xrGetSceneComponentsMSFT.
+
+flink:xrGetSceneComponentsMSFT follows the <<buffer-size-parameters,two-call
+idiom>> for filling the slink:XrSceneComponentsMSFT structure to which an
+slink:XrSceneMarkersMSFT structure can: be chained.
+
+The input pname:sceneMarkerCapacityInput must: be equal to or greater than
+the corresponding slink:XrSceneComponentsMSFT::componentCapacityInput,
+otherwise the runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
+
+The actual count of elements returned in the array pname:sceneMarkers is
+consistent with the extended slink:XrSceneComponentsMSFT structure and
+returned in slink:XrSceneComponentsMSFT::pname:componentCountOutput.
+
+include::{generated}/validity/structs/XrSceneMarkersMSFT.txt[]
+
+--
+
+[open,refpage='XrSceneMarkerMSFT',desc='The properties of a scene marker.',type='structs',xrefs='XrSceneMarkersMSFT']
+--
+
+The slink:XrSceneMarkerMSFT structure is defined as:
+
+include::{generated}/api/structs/XrSceneMarkerMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:markerType is an elink:XrSceneMarkerTypeMSFT indicating the type of
+  the marker.
+* pname:lastSeenTime is an basetype:XrTime indicating when the marker was
+  seen last.
+* pname:center is an slink:XrOffset2Df structure representing the location
+  of the center of the axis-aligned bounding box of the marker in the XY
+  plane of the marker's coordinate system.
+* pname:size is an slink:XrExtent2Df structure representing the width and
+  height of the axis-aligned bounding box of the marker in the XY plane of
+  the marker's coordinate system.
+****
+
+The slink:XrSceneMarkerMSFT structure is an element in the array of
+pname:sceneMarkers in slink:XrSceneMarkersMSFT.
+
+Refer to the <<qr_code_convention, QR code convention>> for an example of
+marker's center and size in the context of a QR code.
+
+When the runtime updates the location or properties of an observed marker,
+the runtime must: set the slink:XrSceneMarkerMSFT::pname:lastSeenTime to the
+new timestamp of the update.
+
+When the runtime cannot observe a previously observed
+slink:XrSceneMarkerMSFT, the runtime must: keep the previous
+pname:lastSeenTime for the marker.
+Hence, the application can: use the pname:lastSeenTime to know how fresh the
+tracking information is for a given marker.
+
+The pname:center and pname:size are measured in meters, relative to the
+slink:XrPosef of the marker for the visual bound of the marker in XY plane,
+regardless of the marker type.
+
+include::{generated}/validity/structs/XrSceneMarkerMSFT.txt[]
+--
+
+[open,refpage='XrSceneMarkerTypeFilterMSFT',desc='The information to filter marker query results',type='structs',xrefs='xrGetSceneComponentsMSFT']
+--
+The slink:XrSceneMarkerTypeFilterMSFT structure is defined as:
+
+include::{generated}/api/structs/XrSceneMarkerTypeFilterMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:markerTypeCount is a code:uint32_t indicating the count of elements
+  in the code:markerTypes array.
+* pname:markerTypes is an array of elink:XrSceneMarkerTypeMSFT indicating
+  the types of markers to return.
+****
+
+The application can: filter the returned scene components to specific marker
+types by chaining slink:XrSceneMarkerTypeFilterMSFT to the pname:next
+pointer of slink:XrSceneComponentsGetInfoMSFT when calling
+flink:xrGetSceneComponentsMSFT.
+
+When slink:XrSceneMarkerTypeFilterMSFT is provided to
+flink:xrGetSceneComponentsMSFT, the runtime must: only return scene
+components that match the requested types.
+
+The application must: provide a non-empty array of unique pname:markerTypes,
+i.e. the pname:markerTypeCount must: be positive and the elements in the
+pname:markerTypes array must: not have duplicated values.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE for
+flink:xrGetSceneComponentsMSFT function.
+
+include::{generated}/validity/structs/XrSceneMarkerTypeFilterMSFT.txt[]
+
+--
+
+[open,refpage='XrSceneMarkerTypeMSFT',desc='Marker type',type='enums']
+--
+The elink:XrSceneMarkerTypeMSFT identifies the type of a scene marker.
+
+include::{generated}/api/enums/XrSceneMarkerTypeMSFT.txt[]
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_MARKER_TYPE_QR_CODE_MSFT represents a marker that follows
+  the ISO standard for QR code in {uri-iso-iec-18004-2015}[ISO/IEC
+  18004:2015].
+****
+
+--
+
+==== Locate markers
+
+Applications can: use flink:xrLocateSceneComponentsMSFT to locate an
+slink:XrSceneMarkerMSFT.
+
+The scene marker's locations are snapshots of the slink:XrSceneMSFT, that do
+not change for the lifecycle of the result.
+To get updated tracking, the application can: issue another
+flink:xrComputeNewSceneMSFT and obtain a new slink:XrSceneMSFT.
+The application can: use the slink:XrSceneComponentMSFT::pname:id to
+correlate the same marker across multiple scene computes.
+
+The pose and geometry of scene markers returned from this extension follows
+these general conventions:
+
+* The marker image reside in the plane of X and Y axes.
+
+* Z axis is perpendicular to the X and Y axes and follows the right hand
+  rule.
+  +Z is pointing into the marker image.
+
+* The origin of the marker is runtime defined for the specific
+  elink:XrSceneMarkerTypeMSFT, and it typically represents the most stable
+  and accurate point for tracking the marker.
+  This allows the application to use the marker as a tracked point.
+
+* In cases where the origin does not necessarily coincide with the center of
+  the marker geometry, applications can obtain additional geometry
+  information from the slink:XrSceneMarkerMSFT structure.
+  This information includes the center and size of the marker image in the X
+  and Y plane.
+
+The exact origin and geometry properties relative to the tracked marker
+image in physical world must: be well defined and consistent for each
+elink:XrSceneMarkerTypeMSFT, including the new marker types defined in
+future extensions.
+
+[[qr_code_convention]]
+==== The convention of QRCode marker location
+
+For a marker with ename:XR_SCENE_MARKER_TYPE_QR_CODE_MSFT, the origin is at
+the top left corner of the QR code image, where the orientation of the QR
+code image in the XY plane follows the convention in
+{uri-iso-iec-18004-2015}[ISO/IEC 18004:2015].
+The X axis of QR code pose points to the right of the marker image, and the
+Z axis points inward to the marker image, as illustrated in following image.
+
+image::images/marker_pose.png[align="center", title="The pose convention of a QR code marker."]
+
+The QR Code marker's center and size are defined in the XY plane, as
+illustrated in following pictures.
+
+image::images/marker_size.png[align="center", title="The center and size of QR Code marker."]
+
+==== Retrieving QRCode marker properties
+
+[open,refpage='XrSceneMarkerQRCodesMSFT',desc='Properties for QRCode marker',type='structs',xrefs='xrGetSceneComponentsMSFT']
+--
+The slink:XrSceneMarkerQRCodesMSFT structure is defined as:
+
+include::{generated}/api/structs/XrSceneMarkerQRCodesMSFT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  See also: slink:XrSceneComponentsMSFT, slink:XrSceneMarkersMSFT
+* pname:qrCodeCapacityInput is a code:uint32_t indicating the count of
+  elements in the code:qrCodes array.
+* pname:qrCodes is an array of slink:XrSceneMarkerQRCodeMSFT for the runtime
+  to fill with the properties of the QR Codes.
+****
+
+An slink:XrSceneMarkerQRCodesMSFT structure can be chained to the pname:next
+pointer of slink:XrSceneComponentsMSFT when calling
+flink:xrGetSceneComponentsMSFT function to retrieve the QR Code specific
+properties through an array of slink:XrSceneMarkerQRCodeMSFT structures.
+
+flink:xrGetSceneComponentsMSFT follows the <<buffer-size-parameters,two-call
+idiom>> for filling the slink:XrSceneComponentsMSFT structure to which an
+slink:XrSceneMarkerQRCodesMSFT structure can: be chained.
+
+The pname:qrCodeCapacityInput must: be equal to or greater than the
+corresponding slink:XrSceneComponentsMSFT::componentCapacityInput, otherwise
+the runtime must: return the success code ename:XR_ERROR_SIZE_INSUFFICIENT
+from flink:xrGetSceneComponentsMSFT.
+
+The actual count of elements returned in the array pname:qrCodes is
+consistent to the extended slink:XrSceneComponentsMSFT structure and
+returned in slink:XrSceneComponentsMSFT::componentCountOutput.
+
+include::{generated}/validity/structs/XrSceneMarkerQRCodesMSFT.txt[]
+--
+
+[open,refpage='XrSceneMarkerQRCodeMSFT',desc='Properties specific to QR Codes',type='structs',xrefs='xrGetSceneComponentsMSFT']
+--
+The slink:XrSceneMarkerQRCodeMSFT structure is defined as:
+
+include::{generated}/api/structs/XrSceneMarkerQRCodeMSFT.txt[]
+.Member Descriptions
+****
+* pname:symbolType is an elink:XrSceneMarkerQRCodeSymbolTypeMSFT indicating
+  the symbol type of the QR Code.
+* pname:version is a code:uint8_t indicating the version of the QR Code
+****
+The slink:XrSceneMarkerQRCodeMSFT structure contains the detailed QR Code
+symbol type and version according to {uri-iso-iec-18004-2015}[ISO/IEC
+18004:2015].
+The pname:version must: be in the range 1 to 40 inclusively for a QR Code
+and 1 to 4 inclusively for a Micro QR Code.
+
+include::{generated}/validity/structs/XrSceneMarkerQRCodeMSFT.txt[]
+--
+
+[open,refpage='XrSceneMarkerQRCodeSymbolTypeMSFT',desc='QR Code Symbol type',type='enums'']
+--
+include::{generated}/api/enums/XrSceneMarkerQRCodeSymbolTypeMSFT.txt[]
+
+The elink:XrSceneMarkerQRCodeSymbolTypeMSFT identifies the symbol type of
+the QR Code.
+
+.Enumerant Descriptions
+****
+* ename:XR_SCENE_MARKER_QR_CODE_SYMBOL_TYPE_QR_CODE_MSFT if the marker is a
+  QR Code.
+* ename:XR_SCENE_MARKER_QR_CODE_SYMBOL_TYPE_MICRO_QR_CODE_MSFT if the marker
+  is a Micro QR Code.
+****
+--
+
+[open,refpage='xrGetSceneMarkerDecodedStringMSFT',type='protos',desc='Get the string encoded in the scene marker.']
+--
+The flink:xrGetSceneMarkerDecodedStringMSFT function is defined as:
+
+include::{generated}/api/protos/xrGetSceneMarkerDecodedStringMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is an slink:XrSceneMSFT previously created by
+  flink:xrCreateSceneMSFT.
+* pname:markerId is an slink:XrUuidMSFT identifying the marker, returned
+  previously from slink:XrSceneComponentMSFT::pname:id when calling
+  flink:xrGetSceneComponentsMSFT.
+* pname:bufferCapacityInput is the capacity of the string buffer, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:bufferCountOutput is a pointer to the count of characters written
+  (including the terminating '\0'), or a pointer to the required capacity in
+  the case that bufferCapacityInput is insufficient.
+* pname:buffer is a pointer to an application-allocated buffer that will be
+  filled with the string stored in the QR Code.
+  It can be NULL if bufferCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+The flink:xrGetSceneMarkerDecodedStringMSFT function retrieves the string
+stored in the scene marker as an UTF-8 string, including the terminating
+'\0'.
+This function follows the <<buffer-size-parameters,two-call idiom>> for
+filling the pname:buffer array.
+
+If the stored data in the marker is not an encoded string, the runtime must:
+return the success code ename:XR_SCENE_MARKER_DATA_NOT_STRING_MSFT, set
+pname:bufferCountOutput to 1, and make pname:buffer an empty string.
+
+include::{generated}/validity/protos/xrGetSceneMarkerDecodedStringMSFT.txt[]
+--
+
+[open,refpage='xrGetSceneMarkerRawDataMSFT',type='protos',desc='Get the data stored in the scene marker']
+--
+The flink:xrGetSceneMarkerRawDataMSFT function is defined as:
+
+include::{generated}/api/protos/xrGetSceneMarkerRawDataMSFT.txt[]
+
+.Parameter Descriptions
+****
+* pname:scene is an slink:XrSceneMSFT previously created by
+  flink:xrCreateSceneMSFT.
+* pname:markerId is an slink:XrUuidMSFT identifying the marker, and it is
+  returned previous from slink:XrSceneComponentMSFT when calling
+  flink:xrGetSceneComponentsMSFT.
+* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:bufferCountOutput is a pointer to the count of bytes written, or a
+  pointer to the required capacity in the case that bufferCapacityInput is
+  insufficient.
+* pname:buffer is a pointer to an application-allocated buffer that will be
+  filled with the data stored in the QR Code.
+  It can be NULL if bufferCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+The flink:xrGetSceneMarkerRawDataMSFT function retrieves the data stored in
+the scene marker.
+
+include::{generated}/validity/protos/xrGetSceneMarkerRawDataMSFT.txt[]
+
+--
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrSceneComputeFeatureMSFT enumeration is extended with:
+
+* ename:XR_SCENE_COMPUTE_FEATURE_MARKER_MSFT
+
+elink:XrSceneComponentTypeMSFT enumeration is extended with:
+
+* ename:XR_SCENE_COMPONENT_TYPE_MARKER_MSFT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SCENE_MARKERS_MSFT
+* ename:XR_TYPE_SCENE_MARKER_TYPE_FILTER_MSFT
+* ename:XR_TYPE_SCENE_MARKER_QR_CODES_MSFT
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_SCENE_MARKER_DATA_NOT_STRING_MSFT
+
+*New Enums*
+
+* elink:XrSceneMarkerTypeMSFT
+* elink:XrSceneMarkerQRCodeSymbolTypeMSFT
+
+*New Structures*
+
+* slink:XrSceneMarkerMSFT
+* slink:XrSceneMarkersMSFT
+* slink:XrSceneMarkerTypeFilterMSFT
+* slink:XrSceneMarkerQRCodeMSFT
+* slink:XrSceneMarkerQRCodesMSFT
+
+*New Functions*
+
+* flink:xrGetSceneMarkerRawDataMSFT
+* flink:xrGetSceneMarkerDecodedStringMSFT
+
+*Version History*
+
+* Revision 1, 2023-01-11 (Alain Zanchetta)
+** Initial extension description

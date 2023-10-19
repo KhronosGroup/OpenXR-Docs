@@ -540,10 +540,7 @@
             <sch:let name="command_name" value="current()/ancestor::command/proto/name/text()" />
             <sch:let name="param_name" value="current()/name/text()" />
 
-            <!-- TODO fix and remove exception -->
-            <sch:let name="is_exception" value="$command_name = 'xrEnumeratePersistedSpatialAnchorNamesMSFT'" />
-
-            <sch:assert test="not(@optional) or $is_exception">
+            <sch:assert test="not(@optional)">
                 <sch:value-of select="$command_name" /> two call idiom: The <sch:value-of select="$param_name" /> param must not have the attribute "optional".
             </sch:assert>
 
@@ -595,8 +592,7 @@
                         else
                         concat($basename, 's')
                         " />
-            <!-- TODO fix and remove exception -->
-            <sch:assert test="current()/ancestor::command/param/name[text() = $array_name] or $command_name = 'xrEnumeratePersistedSpatialAnchorNamesMSFT'" role="warning">
+            <sch:assert test="current()/ancestor::command/param/name[text() = $array_name]" role="warning">
                 <sch:value-of select="$command_name" /> two call idiom: Has a parameter named <sch:value-of select="$param_name" /> but no array param named <sch:value-of select="$array_name" /> as expected by the style guide for two call idiom. Your array parameter may be named incorrectly.
             </sch:assert>
 
@@ -616,10 +612,7 @@
             <sch:let name="type_name" value="current()/../@name" />
             <sch:let name="member_name" value="current()/name/text()" />
 
-            <!-- TODO fix exceptions -->
-            <sch:let name="is_exception" value="$type_name = ('XrSceneMeshIndicesUint32MSFT', 'XrSceneMeshIndicesUint16MSFT', 'XrSceneMeshVertexBufferMSFT', 'XrHandMeshIndexBufferMSFT', 'XrHandMeshVertexBufferMSFT', 'XrSceneComponentsMSFT')"/>
-
-            <sch:assert test="@optional or $is_exception">
+            <sch:assert test="@optional">
                 <sch:value-of select="$type_name" /> two call idiom struct: The <sch:value-of select="$member_name" /> member must have the attribute optional="true"
             </sch:assert>
             <sch:assert test="type/text() = 'uint32_t'">
@@ -641,10 +634,7 @@
             <sch:let name="type_name" value="current()/../@name" />
             <sch:let name="member_name" value="current()/name/text()" />
 
-            <!-- TODO fix exceptions -->
-            <sch:let name="is_exception" value="$type_name = ('XrSceneMeshIndicesUint32MSFT', 'XrSceneMeshIndicesUint16MSFT', 'XrHandMeshIndexBufferMSFT', 'XrHandMeshVertexBufferMSFT')"/>
-
-            <sch:assert test="@optional or $is_exception">
+            <sch:assert test="@optional">
                 <sch:value-of select="$type_name" /> two call idiom struct: The <sch:value-of select="$member_name" /> member must have the attribute optional="true"
             </sch:assert>
             <sch:assert test="type/text() = 'uint32_t'">
@@ -654,9 +644,14 @@
                 <sch:value-of select="$type_name" /> two call idiom struct: The <sch:value-of select="$member_name" /> member must not be a pointer
             </sch:assert>
 
+            <!-- Relax the rule if this struct is extending another struct. -->
+            <sch:let name="structextends_names" value="current()/../@structextends"/>
+            <sch:let name="structextends_count" value="count(tokenize($structextends_names,','))"/>
+            <!-- TODO validate one of the extended structs in the next chain has an "output" parameter  -->
+
             <sch:let name="basename" value="replace($member_name, 'CapacityInput', '')" />
             <sch:let name="other_param" value="concat($basename, 'CountOutput')" />
-            <sch:assert test="current()/../member/name[text() = $other_param]">
+            <sch:assert test="current()/../member/name[text() = $other_param] or $structextends_count > 0">
                 <sch:value-of select="$type_name" /> two call idiom struct: Has a member named <sch:value-of select="$member_name" /> but none named <sch:value-of select="$other_param" /> as expected by the style guide for two call idiom.
             </sch:assert>
 
@@ -683,7 +678,7 @@
             <sch:assert test="$array/@len = $member_name">
                 <sch:value-of select="$type_name" /> two call idiom struct: Array member(s) <sch:value-of select="$array_names" separator=", " /> must have len="<sch:value-of select="$member_name" />"
             </sch:assert>
-            <sch:assert test="$array/@optional = 'true' or $is_exception">
+            <sch:assert test="$array/@optional = 'true'">
                 <sch:value-of select="$type_name" /> two call idiom struct: Array member(s) <sch:value-of select="$array_names" separator=", " /> must have the attribute optional="true"
             </sch:assert>
 
@@ -860,4 +855,3 @@
     </sch:pattern>
 
 </sch:schema>
-

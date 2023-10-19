@@ -214,8 +214,8 @@ offsets specified by the application during calls to
 flink:xrCreateReferenceSpace.
 
 The runtime must: return ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED if the
-elink:XrReferenceSpaceType passed in pname:createInfo is not supported by
-this pname:session.
+elink:XrReferenceSpaceType passed in pname:referenceSpaceType is not
+supported by this pname:session.
 
 When a runtime will begin operating with updated space bounds, the runtime
 must: queue a corresponding slink:XrEventDataReferenceSpaceChangePending
@@ -225,7 +225,6 @@ include::{generated}/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
 
 .Parameter Descriptions
 ****
-* pname:type is the elink:XrStructureType of this structure.
 * pname:session is a handle to an slink:XrSession previously created with
   flink:xrCreateSession.
 * pname:referenceSpaceType is the reference space type whose bounds should
@@ -252,12 +251,14 @@ Runtimes should: provide a pname:changeTime to applications that allows for
 a deep render pipeline to present frames that are already in flight using
 the previous definition of the space.
 Runtimes should: choose a pname:changeTime that is midway between the
-pname:displayTime of future frames to avoid threshold issues with
-applications that calculate future frame times using pname:displayPeriod.
+slink:XrFrameState::pname:predictedDisplayTime of future frames to avoid
+threshold issues with applications that calculate future frame times using
+slink:XrFrameState::pname:predictedDisplayPeriod.
 
-The pname:pose provided here must: only describe the change in the natural
-origin of the reference space and must: not incorporate any origin offsets
-specified by the application during calls to flink:xrCreateReferenceSpace.
+The pname:poseInPreviousSpace provided here must: only describe the change
+in the natural origin of the reference space and must: not incorporate any
+origin offsets specified by the application during calls to
+flink:xrCreateReferenceSpace.
 If the runtime does not know the location of the space's new origin relative
 to its previous origin, pname:poseValid must: be false, and the position and
 orientation of pname:poseInPreviousSpace are undefined.
@@ -277,8 +278,9 @@ include::{generated}/api/structs/XrEventDataReferenceSpaceChangePending.txt[]
 * pname:changeTime is the target basetype:XrTime after which
   flink:xrLocateSpace or flink:xrLocateViews will return values that respect
   this change.
-* pname:poseValid is true if the runtime can determine the pname:pose of the
-  new space in the previous space before the change.
+* pname:poseValid is true if the runtime can determine the
+  pname:poseInPreviousSpace of the new space in the previous space before
+  the change.
 * pname:poseInPreviousSpace is an slink:XrPosef defining the position and
  orientation of the new reference space's natural origin within the natural
  reference frame of its previous space.
@@ -452,7 +454,8 @@ flink:xrDestroySpace function or by destroying the parent slink:XrAction
 handle.
 
 The runtime must: return ename:XR_ERROR_ACTION_TYPE_MISMATCH if the action
-provided in pname:action is not of type ename:XR_ACTION_TYPE_POSE_INPUT.
+provided in slink:XrActionSpaceCreateInfo::pname:action is not of type
+ename:XR_ACTION_TYPE_POSE_INPUT.
 
 include::{generated}/validity/protos/xrCreateActionSpace.txt[]
 --
@@ -558,8 +561,8 @@ pname:baseSpace and pname:time may: change over time, even for spaces that
 track static objects, as one or both spaces adjust their origins.
 
 During tracking loss of pname:space relative to pname:baseSpace, runtimes
-should: continue to provide inferred or last-known pname:position and
-pname:orientation values.
+should: continue to provide inferred or last-known
+slink:XrPosef::pname:position and slink:XrPosef::pname:orientation values.
 These inferred poses can, for example, be based on neck model updates,
 inertial dead reckoning, or a last-known position, so long as it is still
 reasonable for the application to use that pose.
@@ -594,13 +597,13 @@ runtime.
 This enables applications to continue to make use of the runtime's latest
 knowledge of the world.
 
-If an slink:XrSpaceVelocity structure is chained to the pname:next pointer
-of slink:XrSpaceLocation and the velocity is observed or can be calculated
-by the runtime, the runtime must: fill in the linear velocity of the origin
-of space within the reference frame of pname:baseSpace and set the
-ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
+If an slink:XrSpaceVelocity structure is chained to the
+slink:XrSpaceLocation::pname:next pointer, and the velocity is observed or
+can be calculated by the runtime, the runtime must: fill in the linear
+velocity of the origin of space within the reference frame of
+pname:baseSpace and set the ename:XR_SPACE_VELOCITY_LINEAR_VALID_BIT.
 Similarly, if an slink:XrSpaceVelocity structure is chained to the
-pname:next pointer of slink:XrSpaceLocation and the angular velocity is
+slink:XrSpaceLocation::pname:next pointer, and the angular velocity is
 observed or can be calculated by the runtime, the runtime must: fill in the
 angular velocity of the origin of space within the reference frame of
 pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
@@ -609,7 +612,7 @@ pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
 The following example code shows how an application can get both the
 location and velocity of a space within a base space using the
 flink:xrLocateSpace function by chaining an slink:XrSpaceVelocity to the
-next pointer of slink:XrSpaceLocation and calling flink:xrLocateSpace.
+`next` pointer of slink:XrSpaceLocation and calling flink:xrLocateSpace.
 
 [source,C++]
 ----
@@ -746,7 +749,7 @@ include::{generated}/validity/structs/XrSpaceVelocity.txt[]
 
 [open,refpage='XrSpaceVelocityFlags',desc='Space velocity flags',type='flags',xrefs='XrSpaceVelocity XrSpaceVelocityFlagBits']
 --
-The slink:XrSpaceLocation::pname:velocityFlags member is of the following
+The slink:XrSpaceVelocity::pname:velocityFlags member is of the following
 type, and contains a bitwise-OR of zero or more of the bits defined in
 elink:XrSpaceVelocityFlagBits.
 

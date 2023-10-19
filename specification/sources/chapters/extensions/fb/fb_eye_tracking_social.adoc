@@ -105,7 +105,7 @@ include::{generated}/api/protos/xrCreateEyeTrackerFB.txt[]
 If the system does not support eye tracking, the runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateEyeTrackerFB.
 In this case, the runtime must: return ename:XR_FALSE for
-pname:supportsEyeTracking in slink:XrSystemEyeTrackingPropertiesFB when the
+slink:XrSystemEyeTrackingPropertiesFB::pname:supportsEyeTracking when the
 function flink:xrGetSystemProperties is called, so that the application can:
 avoid creating an eye tracker.
 

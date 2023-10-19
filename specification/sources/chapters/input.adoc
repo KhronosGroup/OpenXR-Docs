@@ -194,7 +194,7 @@ segments, even if they have different component segments.
 
 When runtimes are ignoring bindings because of priority, they must: treat
 the binding to that input source as though they do not exist.
-That means the pname:isActive field must: be ename:XR_FALSE when retrieving
+That means the `isActive` field must: be ename:XR_FALSE when retrieving
 action data, and that the runtime must: not provide any visual, haptic, or
 other feedback related to the binding of that action to that input source.
 Other actions in the same action set which are bound to input sources that
@@ -647,7 +647,7 @@ include::{generated}/api/protos/xrAttachSessionActionSets.txt[]
 ****
 
 flink:xrAttachSessionActionSets attaches the slink:XrActionSet handles in
-pname:attachInfo.actionSets to the pname:session.
+slink:XrSessionActionSetsAttachInfo::pname:actionSets to the pname:session.
 Action sets must: be attached in order to be synchronized with
 flink:xrSyncActions.
 
@@ -741,9 +741,9 @@ include::{generated}/api/structs/XrInteractionProfileState.txt[]
   chain.
   No such structures are defined in core OpenXR.
 * pname:interactionProfile is the basetype:XrPath of the interaction profile
-  path for the pname:topLevelUserPath used to retrieve this state, or
-  dlink:XR_NULL_PATH if there is no active interaction profile at that top
-  level user path.
+  path for the flink:xrGetCurrentInteractionProfile::pname:topLevelUserPath
+  used to retrieve this state, or dlink:XR_NULL_PATH if there is no active
+  interaction profile at that top level user path.
 ****
 
 The runtime must: only include interaction profiles that the application has
@@ -1279,8 +1279,8 @@ flink:xrSyncActions updates the current state of input actions.
 Repeated input action state queries between subsequent synchronization calls
 must: return the same values.
 The slink:XrActionSet structures referenced in the
-pname:syncInfo.activeActionSets must: have been previously attached to the
-session via flink:xrAttachSessionActionSets.
+slink:XrActionsSyncInfo::pname:activeActionSets must: have been previously
+attached to the session via flink:xrAttachSessionActionSets.
 If any action sets not attached to this session are passed to
 flink:xrSyncActions it must: return ename:XR_ERROR_ACTIONSET_NOT_ATTACHED.
 Subsets of the bound action sets can: be synchronized in order to control
@@ -1477,17 +1477,17 @@ include::{generated}/api/structs/XrInputSourceLocalizedNameGetInfo.txt[]
   elink:XrInputSourceLocalizedNameFlagBits.
 ****
 
-The result of passing an basetype:XrPath pname:source *not* retrieved from
-flink:xrEnumerateBoundSourcesForAction is not specified.
+The result of passing an basetype:XrPath pname:sourcePath *not* retrieved
+from flink:xrEnumerateBoundSourcesForAction is not specified.
 
 include::{generated}/validity/structs/XrInputSourceLocalizedNameGetInfo.txt[]
 --
 
 [open,refpage='XrInputSourceLocalizedNameFlags',desc='Input source localized name flags',type='flags',xrefs='XrInputSourceLocalizedNameFlagBits']
 --
-The flink:xrGetInputSourceLocalizedName::pname:whichComponents parameter is
-of the following type, and contains a bitwise-OR of one or more of the bits
-defined in elink:XrInputSourceLocalizedNameFlagBits.
+The slink:XrInputSourceLocalizedNameGetInfo::pname:whichComponents parameter
+is of the following type, and contains a bitwise-OR of one or more of the
+bits defined in elink:XrInputSourceLocalizedNameFlagBits.
 
 include::{generated}/api/flags/XrInputSourceLocalizedNameFlags.txt[]
 --

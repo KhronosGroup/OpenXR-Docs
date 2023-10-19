@@ -114,6 +114,12 @@ for supported input source
 
 * subpathname:/input/gaze_ext/pose
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/ext/eye_gaze_interaction
+:properly-suffixed-path: /interaction_profiles/ext/eye_gaze_interaction_ext
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 The eye gaze pose is natively oriented with +Y up, +X to the right, and -Z
 forward and not gravity-aligned, similar to the
 ename:XR_REFERENCE_SPACE_TYPE_VIEW.

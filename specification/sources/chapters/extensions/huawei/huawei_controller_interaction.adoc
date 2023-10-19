@@ -26,6 +26,14 @@ Interaction profile path:
 
 * pathname:/interaction_profiles/huawei/controller
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+// Additionally the WG now strongly recommends that a less-generic final
+// path element name be used for an interaction profile.
+:legacy-path: /interaction_profiles/huawei/controller
+:properly-suffixed-path: /interaction_profiles/huawei/controller_huawei
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Valid for user paths:
 
 * pathname:/user/hand/left

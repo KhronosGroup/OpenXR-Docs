@@ -103,8 +103,8 @@ include::{generated}/api/structs/XrCompositionLayerSpaceWarpInfoFB.txt[]
   to be associated with motionVectorSubImage.
   The swapchain should be created with ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
   | ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT.
-* pname:minDepth and pname:maxDepth are the range of depth values the
-  pname:depthSwapchain could have, in the range of [eq]#[0.0,1.0]#.
+* pname:minDepth and pname:maxDepth are the range of depth values the depth
+  swapchain could have, in the range of [eq]#[0.0,1.0]#.
   This is akin to min and max values of OpenGL's fname:glDepthRange, but
   with the requirement here that [eq]#maxDepth {geq} minDepth#.
 * pname:nearZ is the positive distance in meters of the pname:minDepth value

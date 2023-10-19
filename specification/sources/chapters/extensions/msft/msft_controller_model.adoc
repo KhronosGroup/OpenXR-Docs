@@ -252,7 +252,7 @@ the first matching node using depth-first traversal in the glTF scene
 should: be animated and the rest should: be ignored.
 
 The runtime must: not return any pname:nodeName or pname:parentName that
-doesn't match any gltTF nodes in the corresponding controller model.
+does not match any gltTF nodes in the corresponding controller model.
 
 include::{generated}/validity/structs/XrControllerModelNodePropertiesMSFT.txt[]
 --

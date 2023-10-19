@@ -80,33 +80,33 @@ version numbers:
 |=======================================================================
 | __**Reason**__ | __**Major Version**__ | __**Minor Version**__ | __**Patch Version**__
 | __Extensions Added/Removed* __        {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
 | __Spec-Optional Behavior Changed* __  {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
 | __Spec Required Behavior Changed* __  {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
-    | must: not{set:cellbgcolor:red}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
+    | must: not{set:cellbgcolor:lightcoral}
 | __Core Interfaces Added* __           {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
-    | must: not{set:cellbgcolor:red}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
+    | must: not{set:cellbgcolor:lightcoral}
 | __Weak Deprecation* __                {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | may: {set:cellbgcolor:lime}
-    | must: not{set:cellbgcolor:red}
+    | may: {set:cellbgcolor:lawngreen}
+    | may: {set:cellbgcolor:lawngreen}
+    | must: not{set:cellbgcolor:lightcoral}
 | __Strong Deprecation* __              {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | must: not{set:cellbgcolor:red}
-    | must: not{set:cellbgcolor:red}
+    | may: {set:cellbgcolor:lawngreen}
+    | must: not{set:cellbgcolor:lightcoral}
+    | must: not{set:cellbgcolor:lightcoral}
 | __Core Interfaces Changed/Removed* __ {set:cellbgcolor:white}
-    | may: {set:cellbgcolor:lime}
-    | must: not{set:cellbgcolor:red}
-    | must: not{set:cellbgcolor:red}
+    | may: {set:cellbgcolor:lawngreen}
+    | must: not{set:cellbgcolor:lightcoral}
+    | must: not{set:cellbgcolor:lightcoral}
 |=======================================================================
 
 In the above table, the following identify the various cases in detail:
@@ -701,7 +701,7 @@ ifdef::doctype-manpage[]
 === Success Codes
 endif::doctype-manpage[]
 ifndef::doctype-manpage[]
-// Can't have a section title in a delimited block
+// Cannot have a section title in a delimited block
 **Success Codes**
 endif::doctype-manpage[]
 
@@ -714,7 +714,7 @@ ifdef::doctype-manpage[]
 === Error Codes
 endif::doctype-manpage[]
 ifndef::doctype-manpage[]
-// Can't have a section title in a delimited block
+// Cannot have a section title in a delimited block
 **Error Codes**
 endif::doctype-manpage[]
 
@@ -1301,10 +1301,11 @@ units.
 For instance, if a rectangle is in meters, both offset and extent must: be
 in meters.
 
-[open,refpage='XrRect2Df',desc='Rect in two dimensions',type='structs',xrefs='XrOffset2Df XrExtent2Df']
+[open,refpage='XrRect2Df',desc='Rect in two dimensions, floating-point values',type='structs',xrefs='XrRect2Di XrOffset2Df XrExtent2Df']
 --
 
 A rectangle with floating-point values is defined by the structure:
+
 include::{generated}/api/structs/XrRect2Df.txt[]
 
 .Member Descriptions
@@ -1315,12 +1316,19 @@ include::{generated}/api/structs/XrRect2Df.txt[]
 
 This structure is used for component values that may be fractional
 (floating-point).
+
+The pname:offset is the position of the rectangle corner with minimum value
+coordinates.
+The other three corners are computed by adding the
+slink:XrExtent2Di::pname:width to the `x` offset,
+slink:XrExtent2Di::pname:height to the `y` offset, or both.
 --
 
-[open,refpage='XrRect2Di',desc='Rect in two dimensions',type='structs',xrefs='XrOffset2Di XrExtent2Di']
+[open,refpage='XrRect2Di',desc='Rect in two dimensions, integer values',type='structs',xrefs='XrRect2Df XrOffset2Di XrExtent2Di']
 --
 
 A rectangle with integer values is defined by the structure:
+
 include::{generated}/api/structs/XrRect2Di.txt[]
 
 .Member Descriptions
@@ -1334,6 +1342,12 @@ include::{generated}/api/structs/XrRect2Di.txt[]
 This variant is for representing discrete values such as texels.
 For representing physical distances, the floating-point variant must: be
 used instead.
+
+The pname:offset is the position of the rectangle corner with minimum value
+coordinates.
+The other three corners are computed by adding the
+slink:XrExtent2Di::pname:width to the `x` offset,
+slink:XrExtent2Di::pname:height to the `y` offset, or both.
 --
 
 [[angles]]

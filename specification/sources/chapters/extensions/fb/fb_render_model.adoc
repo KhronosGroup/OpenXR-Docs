@@ -330,7 +330,8 @@ The runtime must: return ename:XR_ERROR_PATH_INVALID if a path not given by
 flink:xrEnumerateRenderModelPathsFB is used.
 
 If flink:xrGetRenderModelPropertiesFB returns a success code of
-ename:XR_RENDER_MODEL_UNAVAILABLE_FB and has a pname:modelKey of
+ename:XR_RENDER_MODEL_UNAVAILABLE_FB and has a
+slink:XrRenderModelPropertiesFB::pname:modelKey of
 dlink:XR_NULL_RENDER_MODEL_KEY_FB, this indicates that the model for the
 device is unavailable.
 The application may: keep calling flink:xrGetRenderModelPropertiesFB because
@@ -354,7 +355,7 @@ include::{generated}/api/protos/xrLoadRenderModelFB.txt[]
 ****
 
 flink:xrLoadRenderModelFB is used to load the GLTF model data using a valid
-pname:modelKey.
+slink:XrRenderModelLoadInfoFB::pname:modelKey.
 flink:xrLoadRenderModelFB loads the model as a byte buffer containing the
 GLTF in the binary format (GLB).
 The GLB data must: conform to the glTF 2.0 format defined at {uri-gltf2}.
@@ -363,9 +364,10 @@ The GLB may: contain texture data in a format that requires the use of the
 Therefore, the application should: ensure it can handle this extension.
 
 If the device for the requested model is disconnected or does not match the
-pname:modelKey provided, flink:xrLoadRenderModelFB must: return
-ename:XR_RENDER_MODEL_UNAVAILABLE_FB as well as a pname:bufferCountOutput
-value of 0 indicating that the model was not available.
+slink:XrRenderModelLoadInfoFB::pname:modelKey provided,
+flink:xrLoadRenderModelFB must: return ename:XR_RENDER_MODEL_UNAVAILABLE_FB
+as well as an slink:XrRenderModelBufferFB::pname:bufferCountOutput value of
+0 indicating that the model was not available.
 
 The flink:xrLoadRenderModelFB function may: be slow, therefore applications
 should: call it from a non-time sensitive thread.

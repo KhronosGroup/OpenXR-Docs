@@ -155,12 +155,13 @@ slink:XrHandTrackingDataSourceStateEXT is passed in the call to
 flink:xrLocateHandJointsEXT.
 
 If there is an active hand tracking device that is one of the specified
-pname:requestedDataSources, the runtime must: set pname:isActive to
-ename:XR_TRUE.
+slink:XrHandTrackingDataSourceInfoEXT::pname:requestedDataSources, the
+runtime must: set pname:isActive to ename:XR_TRUE.
 When the runtime sets pname:isActive to ename:XR_TRUE, the runtime must: set
 pname:dataSource indicate the active data source.
 The runtime must: return a pname:dataSource that is a subset of the
-pname:requestedDataSources when creating the corresponding hand tracker.
+slink:XrHandTrackingDataSourceInfoEXT::pname:requestedDataSources when
+creating the corresponding hand tracker.
 
 include::{generated}/validity/structs/XrHandTrackingDataSourceStateEXT.txt[]
 --
@@ -213,9 +214,9 @@ Yes; slink:XrHandTrackingDataSourceInfoEXT needs to include the
 pname:isActive member and cannot use the pname:isActive from
 slink:XrHandJointLocationsEXT as the meaning of these members is different.
 +
-The pname:isActive member of slink:XrHandTrackingDataSourceInfoEXT allows
-the runtime to describe if the tracking device is active.
-slink:XrHandTrackingDataSourceInfoEXT::pname:isActive describes if the
+The `isActive` member of slink:XrHandTrackingDataSourceStateEXT allows the
+runtime to describe if the tracking device is active.
+slink:XrHandTrackingDataSourceStateEXT::pname:isActive describes if the
 tracking device is actively tracking.
 It is possible for a data source to be active but not actively tracking and
 we want to represent if the device is active in this extension.

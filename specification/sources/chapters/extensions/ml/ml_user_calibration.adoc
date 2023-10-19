@@ -1,0 +1,151 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_user_calibration.adoc[]
+
+*Last Modified Date*::
+    2023-08-21
+
+*Contributors*::
+    Karthik Kadappan, Magic Leap +
+    Ron Bessems, Magic Leap
+
+
+==== Overview
+
+This extension can: be used to determine how well the device is calibrated
+for the current user of the device.
+The extension provides two events for this purpose:
+
+1. Headset Fit: Provides the quality of the fit of the headset on the user.
+2. Eye Calibration: Provides the quality of the user's eye calibration.
+
+==== Enabling user calibration events
+
+User calibration events are requested by calling
+flink:xrEnableUserCalibrationEventsML.
+When this function is called, each of the user calibration events must: be
+posted to the event queue once, regardless of whether there were any changes
+to the event data.
+This allows the application to synchronize with the current state.
+
+[open,refpage='xrEnableUserCalibrationEventsML',desc='Enable/disable user calibration events.',type='protos']
+--
+The flink:xrEnableUserCalibrationEventsML function is defined as:
+
+include::{generated}/api/protos/xrEnableUserCalibrationEventsML.txt[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance previously created with
+  flink:xrCreateInstance.
+* pname:enableInfo is the slink:XrUserCalibrationEnableEventsInfoML that
+  enables or disables user calibration events.
+****
+
+include::{generated}/validity/protos/xrEnableUserCalibrationEventsML.txt[]
+--
+
+[open,refpage='XrUserCalibrationEnableEventsInfoML',type='structs',desc='Information to enable headset fit events',xrefs='xrEnableUserCalibrationEventsML']
+--
+
+The slink:XrUserCalibrationEnableEventsInfoML structure is defined as:
+
+include::{generated}/api/structs/XrUserCalibrationEnableEventsInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:enabled is the flag to enable/disable user calibration events.
+****
+
+include::{generated}/validity/structs/XrUserCalibrationEnableEventsInfoML.txt[]
+--
+
+==== Headset Fit Events
+
+Receiving an slink:XrEventDataHeadsetFitChangedML event from
+flink:xrPollEvent notifies the application of headset fit changes.
+To enable these events call flink:xrEnableUserCalibrationEventsML and set
+slink:XrUserCalibrationEnableEventsInfoML::pname:enabled to true.
+Headset fit is evaluated continuously and the runtime must: post events
+anytime it detects a change in the headset fit state.
+
+[open,refpage='XrEventDataHeadsetFitChangedML',type='structs',desc='Event containing the latest headset fit state.',xrefs='xrEnableUserCalibrationEventsML']
+--
+
+The slink:XrEventDataHeadsetFitChangedML structure is defined as:
+
+include::{generated}/api/structs/XrEventDataHeadsetFitChangedML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:status is the elink:XrHeadsetFitStatusML headset fit status.
+* pname:time is the basetype:XrTime at which the pname:status was captured.
+****
+
+include::{generated}/validity/structs/XrEventDataHeadsetFitChangedML.txt[]
+
+--
+
+[open,refpage='XrHeadsetFitStatusML',type='enums',desc='Headset fit status']
+--
+include::{generated}/api/enums/XrHeadsetFitStatusML.txt[]
+include::{generated}/api/enums/XrHeadsetFitStatusML.comments.txt[]
+--
+
+==== Eye Calibration Events
+
+Receiving an slink:XrEventDataEyeCalibrationChangedML event from
+flink:xrPollEvent notifies the application of eye calibration changes.
+To enable these events call flink:xrEnableUserCalibrationEventsML and set
+slink:XrUserCalibrationEnableEventsInfoML::pname:enabled to true.
+Runtime must: post events anytime it detects a change in the eye
+calibration.
+The user needs to calibrate the eyes using the system app provided for this.
+There is no support for in-app eye calibration in this extension.
+
+[open,refpage='XrEventDataEyeCalibrationChangedML',type='structs',desc='Event containing the latest eye calibration state.',xrefs='xrEnableUserCalibrationEventsML']
+--
+
+The slink:XrEventDataEyeCalibrationChangedML structure is defined as:
+
+include::{generated}/api/structs/XrEventDataEyeCalibrationChangedML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:status is the elink:XrEyeCalibrationStatusML eye calibration status.
+****
+
+include::{generated}/validity/structs/XrEventDataEyeCalibrationChangedML.txt[]
+--
+
+[open,refpage='XrEyeCalibrationStatusML',type='enums',desc='Headset fit status']
+--
+include::{generated}/api/enums/XrEyeCalibrationStatusML.txt[]
+include::{generated}/api/enums/XrEyeCalibrationStatusML.comments.txt[]
+--
+
+
+==== New Enum Constants
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_EVENT_DATA_HEADSET_FIT_CHANGED_ML
+* ename:XR_TYPE_EVENT_DATA_EYE_CALIBRATION_CHANGED_ML
+* ename:XR_TYPE_USER_CALIBRATION_ENABLE_EVENTS_INFO_ML
+
+*Version History*
+
+* Revision 1, 2023-06-20 (Karthik Kadappan)
+
+** Initial extension description

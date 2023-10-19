@@ -93,14 +93,14 @@ include::{generated}/api/protos/xrEnumerateViewConfigurations.txt[]
   the required capacity.
 * pname:viewConfigurationTypeCountOutput is a pointer to the count of
   pname:viewConfigurationTypes written, or a pointer to the required
-  capacity in the case that pname:viewConfigurationsTypeCapacityInput is
+  capacity in the case that pname:viewConfigurationTypeCapacityInput is
   insufficient.
-* pname:viewConfigurationsTypes is a pointer to an array of
+* pname:viewConfigurationTypes is a pointer to an array of
   elink:XrViewConfigurationType values, but can: be code:NULL if
-  pname:viewConfigurationsTypeCapacityInput is 0.
+  pname:viewConfigurationTypeCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:viewConfigurations
-  size.
+  detailed description of retrieving the required
+  pname:viewConfigurationTypes size.
 ****
 
 flink:xrEnumerateViewConfigurations enumerates the view configuration types
@@ -225,14 +225,18 @@ include::{generated}/api/structs/XrViewConfigurationView.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR.
-* pname:recommendedImageRectWidth is the optimal width of pname:imageRect to
-  use when rendering this view into a swapchain.
-* pname:maxImageRectWidth is the maximum width of pname:imageRect supported
-  when rendering this view into a swapchain.
-* pname:recommendedImageRectHeight is the optimal height of pname:imageRect
-  to use when rendering this view into a swapchain.
-* pname:maxImageRectHeight is the maximum height of pname:imageRect
-  supported when rendering this view into a swapchain.
+* pname:recommendedImageRectWidth is the optimal width of
+  slink:XrSwapchainSubImage::pname:imageRect to use when rendering this view
+  into a swapchain.
+* pname:maxImageRectWidth is the maximum width of
+  slink:XrSwapchainSubImage::pname:imageRect supported when rendering this
+  view into a swapchain.
+* pname:recommendedImageRectHeight is the optimal height of
+  slink:XrSwapchainSubImage::pname:imageRect to use when rendering this view
+  into a swapchain.
+* pname:maxImageRectHeight is the maximum height of
+  slink:XrSwapchainSubImage::pname:imageRect supported when rendering this
+  view into a swapchain.
 * pname:recommendedSwapchainSampleCount is the recommended number of
   sub-data element samples to create for each swapchain image that will be
   rendered into for this view.
@@ -241,14 +245,15 @@ include::{generated}/api/structs/XrViewConfigurationView.txt[]
   view.
 ****
 
-See slink:XrSwapchainSubImage for more information about pname:imageRect
-values, and slink:XrSwapchainCreateInfo for more information about creating
-swapchains appropriately sized to support those pname:imageRect values.
+See slink:XrSwapchainSubImage for more information about
+slink:XrSwapchainSubImage::pname:imageRect values, and
+slink:XrSwapchainCreateInfo for more information about creating swapchains
+appropriately sized to support those
+slink:XrSwapchainSubImage::pname:imageRect values.
 
 The array of slink:XrViewConfigurationView returned by the runtime must:
-adhere to the rules defined in <<view_configuration_type,
-elink:XrViewConfigurationType>>, such as the count and association to the
-left and right eyes.
+adhere to the rules defined in elink:XrViewConfigurationType, such as the
+count and association to the left and right eyes.
 
 include::{generated}/validity/structs/XrViewConfigurationView.txt[]
 --

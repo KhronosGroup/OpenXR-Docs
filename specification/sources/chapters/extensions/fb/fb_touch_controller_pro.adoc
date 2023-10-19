@@ -26,6 +26,12 @@ Meta Quest Touch Pro Controller Profile Path:
 
 * pathname:/interaction_profiles/facebook/touch_controller_pro
 
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/facebook/touch_controller_pro
+:properly-suffixed-path: /interaction_profiles/facebook/touch_controller_pro_fb
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
+
 Valid for user paths:
 
 * pathname:/user/hand/left

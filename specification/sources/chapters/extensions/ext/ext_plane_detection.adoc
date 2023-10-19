@@ -677,7 +677,7 @@ auto processPlanes = [&](const XrTime time) {
             return;
           case XR_PLANE_DETECTION_STATE_FATAL_EXT:
             // there was something wrong with the query
-            // don't retry.
+            // do not retry.
             // exit();
             return;
           case XR_PLANE_DETECTION_STATE_PENDING_EXT:

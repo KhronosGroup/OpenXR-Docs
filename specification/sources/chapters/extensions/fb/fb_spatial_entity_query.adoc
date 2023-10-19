@@ -228,8 +228,8 @@ include::{generated}/api/structs/XrSpaceQueryResultFB.txt[]
 ****
 
 The slink:XrSpaceQueryResultFB structure is a query result returned in the
-pname:results output parameter of the flink:xrRetrieveSpaceQueryResultsFB
-function.
+flink:xrRetrieveSpaceQueryResultsFB::pname:results output parameter of the
+flink:xrRetrieveSpaceQueryResultsFB function.
 
 include::{generated}/validity/structs/XrSpaceQueryResultFB.txt[]
 --

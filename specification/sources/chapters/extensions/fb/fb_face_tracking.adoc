@@ -108,9 +108,9 @@ flink:xrCreateFaceTrackerFB function.
 If the system does not support face tracking, the runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateFaceTrackerFB.
 In this case, the runtime must: return ename:XR_FALSE for
-pname:supportsFaceTracking in slink:XrSystemFaceTrackingPropertiesFB when
-the function flink:xrGetSystemProperties is called, so that the application
-can: avoid creating a face tracker.
+slink:XrSystemFaceTrackingPropertiesFB::pname:supportsFaceTracking when the
+function flink:xrGetSystemProperties is called, so that the application can:
+avoid creating a face tracker.
 
 include::{generated}/validity/protos/xrCreateFaceTrackerFB.txt[]
 

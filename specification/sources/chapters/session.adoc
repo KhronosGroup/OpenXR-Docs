@@ -190,7 +190,8 @@ include::{generated}/api/protos/xrCreateSession.txt[]
 
 .Parameter Descriptions
 ****
-* pname:instance is the instance from which pname:systemId was retrieved.
+* pname:instance is the instance from which
+  slink:XrSessionCreateInfo::pname:systemId was retrieved.
 * pname:createInfo is a pointer to an slink:XrSessionCreateInfo structure
   containing information about how to create the session.
 * pname:session is a pointer to a handle in which the created
@@ -326,9 +327,9 @@ ename:XR_ERROR_SESSION_NOT_READY.
 Note that a runtime may: decide not to show the user any given frame from a
 session at any time, for example if the user has switched to a different
 application's running session.
-The application should check whether flink:xrWaitFrame returns an
-slink:XrFrameState with pname:shouldRender set to true before rendering a
-given frame to determine whether that frame will be visible to the user.
+The application should check whether flink:xrWaitFrame returns
+slink:XrFrameState::pname:shouldRender set to true before rendering a given
+frame to determine whether that frame will be visible to the user.
 
 Runtime session frame state must: start in a reset state when a session
 transitions to <<session_running, running>> so that no state is carried over
@@ -336,9 +337,10 @@ from when the same session was previously running.
 Frame state in this context includes flink:xrWaitFrame, flink:xrBeginFrame,
 and flink:xrEndFrame call order enforcement.
 
-If pname:primaryViewConfigurationType in pname:beginInfo is not supported by
-the basetype:XrSystemId used to create the pname:session, the runtime must:
-return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
+If slink:XrSessionBeginInfo::pname:primaryViewConfigurationType in
+pname:beginInfo is not supported by the basetype:XrSystemId used to create
+the pname:session, the runtime must: return
+ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
 
 include::{generated}/validity/protos/xrBeginSession.txt[]
 --

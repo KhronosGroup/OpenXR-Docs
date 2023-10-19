@@ -330,7 +330,7 @@ API-specific type, not an array of structure pointers.
 The pointer submitted as pname:images will be treated as an array of the
 expected graphics API-specific type based on the graphics API used at
 session creation time.
-If the pname:type member of any array element accessed in this way does not
+If the `type` member of any array element accessed in this way does not
 match the expected value, the runtime must: return
 ename:XR_ERROR_VALIDATION_FAILURE.
 
@@ -339,7 +339,7 @@ ename:XR_ERROR_VALIDATION_FAILURE.
 ====
 Under a typical memory model, a runtime must: treat the supplied pointer as
 an opaque blob beginning with slink:XrSwapchainImageBaseHeader, until after
-it has verified the pname:type.
+it has verified the slink:XrSwapchainImageBaseHeader::pname:type.
 ====
 
 include::{generated}/validity/protos/xrEnumerateSwapchainImages.txt[]
@@ -430,8 +430,8 @@ include::{generated}/api/structs/XrSwapchainImageAcquireInfo.txt[]
 
 Because this structure only exists to support extension-specific structures,
 flink:xrAcquireSwapchainImage will accept a code:NULL argument for
-pname:acquireInfo for applications that are not using any relevant
-extensions.
+flink:xrAcquireSwapchainImage::pname:acquireInfo for applications that are
+not using any relevant extensions.
 
 include::{generated}/validity/structs/XrSwapchainImageAcquireInfo.txt[]
 --
@@ -552,8 +552,8 @@ include::{generated}/api/structs/XrSwapchainImageReleaseInfo.txt[]
 
 Because this structure only exists to support extension-specific structures,
 flink:xrReleaseSwapchainImage will accept a code:NULL argument for
-pname:releaseInfo for applications that are not using any relevant
-extensions.
+flink:xrReleaseSwapchainImage::pname:releaseInfo for applications that are
+not using any relevant extensions.
 
 include::{generated}/validity/structs/XrSwapchainImageReleaseInfo.txt[]
 --
@@ -610,10 +610,11 @@ calls to flink:xrLocateViews, and so applications must: not assume it to be
 constant.
 
 If an application gives a pname:viewLocateInfo with a
-pname:viewConfigurationType that was not passed in the session's call to
-flink:xrBeginSession via the
-pname:beginInfo.pname:primaryViewConfigurationType, or enabled though an
-extension, then the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+slink:XrViewLocateInfo::pname:viewConfigurationType that was not passed in
+the session's call to flink:xrBeginSession via the
+slink:XrSessionBeginInfo::pname:primaryViewConfigurationType, or enabled
+though an extension, then the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
 
 include::{generated}/validity/protos/xrLocateViews.txt[]
 --
@@ -631,8 +632,8 @@ include::{generated}/api/structs/XrViewLocateInfo.txt[]
   chain.
 * pname:viewConfigurationType is elink:XrViewConfigurationType to query for.
 * pname:displayTime is the time for which the view poses are predicted.
-* pname:space is the slink:XrSpace in which the pname:pose in each
-  slink:XrView is expressed.
+* pname:space is the slink:XrSpace in which the `pose` in each slink:XrView
+  is expressed.
 ****
 
 The slink:XrViewLocateInfo structure contains the display time and space
@@ -659,7 +660,7 @@ include::{generated}/api/structs/XrView.txt[]
   chain.
   No such structures are defined in core OpenXR.
 * pname:pose is an slink:XrPosef defining the location and orientation of
-  the view in the pname:space specified by the flink:xrLocateViews function.
+  the view in the `space` specified by the flink:xrLocateViews function.
 * pname:fov is the slink:XrFovf for the four sides of the projection.
 ****
 
@@ -837,8 +838,9 @@ include::{generated}/api/structs/XrFrameWaitInfo.txt[]
 ****
 
 Because this structure only exists to support extension-specific structures,
-flink:xrWaitFrame must: accept a code:NULL argument for pname:frameWaitInfo
-for applications that are not using any relevant extensions.
+flink:xrWaitFrame must: accept a code:NULL argument for
+flink:xrWaitFrame::pname:frameWaitInfo for applications that are not using
+any relevant extensions.
 
 include::{generated}/validity/structs/XrFrameWaitInfo.txt[]
 --
@@ -967,8 +969,9 @@ include::{generated}/api/structs/XrFrameBeginInfo.txt[]
 ****
 
 Because this structure only exists to support extension-specific structures,
-flink:xrBeginFrame will accept a code:NULL argument for pname:frameBeginInfo
-for applications that are not using any relevant extensions.
+flink:xrBeginFrame will accept a code:NULL argument for
+flink:xrBeginFrame::pname:frameBeginInfo for applications that are not using
+any relevant extensions.
 
 include::{generated}/validity/structs/XrFrameBeginInfo.txt[]
 --
@@ -1294,7 +1297,7 @@ include::{generated}/api/structs/XrCompositionLayerProjection.txt[]
   No such structures are defined in core OpenXR.
 * pname:layerFlags is a bitmask of elink:XrCompositionLayerFlagBits
   describing flags to apply to the layer.
-* pname:space is the slink:XrSpace in which the pname:pose of each
+* pname:space is the slink:XrSpace in which the `pose` of each
   slink:XrCompositionLayerProjectionView is evaluated over time by the
   compositor.
 * pname:viewCount is the count of views in the pname:views array.
@@ -1335,11 +1338,12 @@ include::{generated}/api/structs/XrCompositionLayerProjectionView.txt[]
   chain.
   No such structures are defined in core OpenXR.
 * pname:pose is an slink:XrPosef defining the location and orientation of
-  this projection element in the pname:space of the corresponding
+  this projection element in the `space` of the corresponding
   slink:XrCompositionLayerProjectionView.
 * pname:fov is the slink:XrFovf for this projection element.
 * pname:subImage is the image layer slink:XrSwapchainSubImage to use.
-  The swapchain must: have been created with a pname:faceCount of 1.
+  The swapchain must: have been created with a
+  slink:XrSwapchainCreateInfo::pname:faceCount of 1.
 ****
 
 The count and order of view poses submitted with
@@ -1380,7 +1384,8 @@ include::{generated}/api/structs/XrCompositionLayerQuad.txt[]
   is evaluated over time.
 * pname:eyeVisibility is the elink:XrEyeVisibility for this layer.
 * pname:subImage is the image layer slink:XrSwapchainSubImage to use.
-  The swapchain must: have been created with a pname:faceCount of 1.
+  The swapchain must: have been created with a
+  slink:XrSwapchainCreateInfo::pname:faceCount of 1.
 * pname:pose is an slink:XrPosef defining the position and orientation of
   the quad in the reference frame of the pname:space.
 * pname:size is the width and height of the quad in meters.

@@ -74,8 +74,8 @@ include::{generated}/api/structs/XrSpaceSaveInfoFB.txt[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:space is the slink:XrSpace handle to the reference space that
-  defines the pname:poseInSpace of the entity to be saved.
+* pname:space is the slink:XrSpace handle to the space of the entity to be
+  saved.
 * pname:location is the storage location.
 * pname:persistenceMode is the persistence mode.
 ****

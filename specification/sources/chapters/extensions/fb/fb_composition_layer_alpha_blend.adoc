@@ -29,7 +29,7 @@ indicated in the <<extensions>> section.
 
 These blend factors are specified by attaching a
 slink:XrCompositionLayerAlphaBlendFB structure to the pname:next chain of a
-slink:XrCompositionLayerBaseHeader-derived layer structure.
+layer structure derived from slink:XrCompositionLayerBaseHeader.
 
 *New Object Types*
 
