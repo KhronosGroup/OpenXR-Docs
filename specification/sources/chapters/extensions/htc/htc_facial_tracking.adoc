@@ -96,10 +96,10 @@ If the system does not support eye tracking or lip tracking, runtime must:
 return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateFacialTrackerHTC according to the corresponding case.
 In this case, the runtime must: return ename:XR_FALSE for
-pname:supportEyeFacialTracking or pname:supportLipFacialTracking in
-slink:XrSystemFacialTrackingPropertiesHTC when the function
-flink:xrGetSystemProperties is called, so that the application may: avoid
-creating a facial tracker.
+slink:XrSystemFacialTrackingPropertiesHTC::pname:supportEyeFacialTracking or
+slink:XrSystemFacialTrackingPropertiesHTC::pname:supportLipFacialTracking
+when the function flink:xrGetSystemProperties is called, so that the
+application may: avoid creating a facial tracker.
 
 include::{generated}/validity/protos/xrCreateFacialTrackerHTC.txt[]
 
@@ -219,7 +219,7 @@ tracker enum (e.g. elink:XrEyeExpressionHTC or elink:XrLipExpressionHTC) as
 described by elink:XrFacialTrackingTypeHTC when creating the
 slink:XrFacialTrackerHTC.
 For example, when the slink:XrFacialTrackerHTC is created with
-pname:facialTrackingType set to
+slink:XrFacialTrackerHTC::pname:facialTrackingType set to
 ename:XR_FACIAL_TRACKING_TYPE_EYE_DEFAULT_HTC, the application must: set the
 pname:expressionCount to dlink:XR_FACIAL_EXPRESSION_EYE_COUNT_HTC, and the
 runtime must: fill the pname:expressionWeightings array ordered with eye

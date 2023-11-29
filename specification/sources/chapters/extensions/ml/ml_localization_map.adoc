@@ -1,0 +1,556 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_localization_map.adoc[]
+
+*Last Modified Date*::
+    2023-09-14
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+==== Overview
+
+A Magic Leap localization map is a container that holds metadata about the
+scanned environment.
+It is a digital copy of a physical place.
+A localization map holds spatial anchors, dense mesh, planes, feature
+points, and positional data.
+
+* Spatial anchors - Used for persistent placement of content.
+* Dense mesh - 3D triangulated geometry representing Magic Leap device
+  understanding of the real-world geometry of an area.
+* Planes - Large, flat surfaces derived from dense mesh data.
+
+Localization maps can: be created on device or in the Magic Leap AR Cloud.
+There are two types - "On Device" and "Cloud".
+
+* "On Device" for OpenXR (local space for MagicLeap) - are for a single
+  device and can: be shared via the export/import mechanism.
+* "Cloud" for OpenXR (shared space for MagicLeap) - can: be shared across
+  multiple MagicLeap devices in the AR Cloud.
+
+
+[NOTE]
+.Note
+====
+Localization Maps are called Spaces in the Magic Leap C-API.
+====
+
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the com.magicleap.permission.SPACE_MANAGER
+permission listed in their manifest to use these functions:
+
+* flink:xrQueryLocalizationMapsML
+* flink:xrRequestMapLocalizationML
+
+(protection level: normal)
+
+Android applications must: have the
+com.magicleap.permission.SPACE_IMPORT_EXPORT permission listed in their
+manifest and granted to use these functions:
+
+* flink:xrImportLocalizationMapML
+* flink:xrCreateExportedLocalizationMapML
+
+(protection level: dangerous)
+====
+
+==== Current Localization Map Information
+
+Applications can: receive notifications when the current localization map
+changes by calling flink:xrPollEvent and handling the
+slink:XrEventDataLocalizationChangedML type.
+To enable these events call flink:xrEnableLocalizationEventsML.
+
+[open,refpage='XrEventDataLocalizationChangedML',type='structs',desc='Event containing the current localization map state.',xrefs='xrEnableLocalizationEventsML']
+--
+
+The slink:XrEventDataLocalizationChangedML structure is defined as:
+
+include::{generated}/api/structs/XrEventDataLocalizationChangedML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:session is the session to which this change event applies.
+* pname:state is the current elink:XrLocalizationMapStateML of the map.
+* pname:map is the slink:XrLocalizationMapML of the current map.
+* pname:confidence is the elink:XrLocalizationMapConfidenceML of the current
+  map.
+* pname:errorFlags is a a bitwise-OR of zero or more of the bits defined in
+  elink:XrLocalizationMapErrorFlagBitsML in the case that the localization
+  map has low confidence.
+****
+
+By default the runtime does not send these events but calling
+flink:xrEnableLocalizationEventsML function enables the events.
+When this function is called the slink:XrEventDataLocalizationChangedML
+event will always be posted to the event queue, regardless of whether the
+map localization state has changed.
+This allows the application to synchronize with the current state.
+
+[NOTE]
+.Note
+====
+The arrival of the event is asynchronous to this call.
+====
+
+include::{generated}/validity/structs/XrEventDataLocalizationChangedML.txt[]
+--
+
+[open,refpage='XrLocalizationMapErrorFlagsML',type='flags',desc='XrLocalizationMapErrorFlagsML',xrefs='XrLocalizationMapErrorFlagBitsML']
+--
+
+
+The bitmask type elink:XrLocalizationMapErrorFlagsML is defined as:
+
+include::{generated}/api/flags/XrLocalizationMapErrorFlagsML.txt[]
+
+As used in slink:XrEventDataLocalizationChangedML::pname:errorFlags field,
+elink:XrLocalizationMapErrorFlagsML contains a bitwise-OR of zero or more of
+the bits defined in elink:XrLocalizationMapErrorFlagBitsML.
+--
+
+[open,refpage='XrLocalizationMapErrorFlagBitsML',type='enums',desc='The world meshing detector flags.'xrefs='XrLocalizationMapErrorFlagsML']
+--
+include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.txt[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.comments.txt[]
+--
+
+
+
+[open,refpage='xrEnableLocalizationEventsML',desc='Retrieve the current localization status.',type='protos',xrefs='XrEventDataLocalizationChangedML']
+--
+The flink:xrEnableLocalizationEventsML function is defined as:
+
+include::{generated}/api/protos/xrEnableLocalizationEventsML.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:info is a pointer to an slink:XrLocalizationEnableEventsInfoML
+  structure.
+****
+
+include::{generated}/validity/protos/xrEnableLocalizationEventsML.txt[]
+--
+
+[open,refpage='XrLocalizationEnableEventsInfoML',type='structs',desc='Information to enable localization map events',xrefs='xrEnableLocalizationEventsML']
+--
+
+The slink:XrLocalizationEnableEventsInfoML structure is defined as:
+
+include::{generated}/api/structs/XrLocalizationEnableEventsInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:enabled is the flag to enable/disable localization status events.
+****
+
+include::{generated}/validity/structs/XrLocalizationEnableEventsInfoML.txt[]
+--
+
+
+[open,refpage='XrLocalizationMapML',type='structs',desc='Information on the localization map',xrefs='xrEnableLocalizationEventsML xrQueryLocalizationMapsML']
+--
+
+The slink:XrLocalizationMapML structure is defined as:
+
+include::{generated}/api/structs/XrLocalizationMapML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:name is a human readable name of the localization map, as a null
+  terminated UTF-8 string.
+  This name is set outside of this extension.
+* pname:mapUuid is the slink:XrUuidEXT of the localization map.
+* pname:mapType is the elink:XrLocalizationMapTypeML of the map.
+****
+
+include::{generated}/validity/structs/XrLocalizationMapML.txt[]
+--
+
+==== Listing Localization Maps
+
+Localization maps available to the application can: be queried using
+flink:xrQueryLocalizationMapsML.
+
+[open,refpage='xrQueryLocalizationMapsML',desc='Query the available localization maps.',type='protos',xrefs='XrLocalizationMapQueryInfoBaseHeaderML']
+--
+The flink:xrQueryLocalizationMapsML function is defined as:
+
+include::{generated}/api/protos/xrQueryLocalizationMapsML.txt[]
+
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:queryInfo is an optional: enumeration filter based on
+  slink:XrLocalizationMapQueryInfoBaseHeaderML to use.
+* pname:mapCapacityInput is the capacity of the maps array, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:mapCountOutput is filled in by the runtime with the count of
+  pname:maps written or the required capacity in the case that
+  pname:mapCapacityInput is insufficient.
+* pname:maps is an array of slink:XrLocalizationMapML filled in by the
+  runtime, but can: be code:NULL if pname:mapCapacityInput is `0`.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:maps size.
+****
+
+The list of localization maps returned will depend on the current device
+mapping mode.
+Only the localization maps associated with the current mapping mode will be
+returned by this call.
+Device mapping mode (e.g. ename:XR_LOCALIZATION_MAP_TYPE_ON_DEVICE_ML or
+ename:XR_LOCALIZATION_MAP_TYPE_CLOUD_ML) can: only be changed via the system
+application(s).
+
+The list of maps known to the runtime may: change between the two calls to
+flink:xrQueryLocalizationMapsML.
+This is however a rare occurrence and the application may: retry the call
+again if it receives ename:XR_ERROR_SIZE_INSUFFICIENT.
+
+
+include::{generated}/validity/protos/xrQueryLocalizationMapsML.txt[]
+--
+
+[open,refpage='XrLocalizationMapQueryInfoBaseHeaderML',type='structs',desc='Enumeration filter for the available localization maps',xrefs='xrQueryLocalizationMapsML']
+--
+
+The slink:XrLocalizationMapQueryInfoBaseHeaderML structure is defined as:
+
+include::{generated}/api/structs/XrLocalizationMapQueryInfoBaseHeaderML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+Currently no filters are available.
+
+include::{generated}/validity/structs/XrLocalizationMapQueryInfoBaseHeaderML.txt[]
+--
+
+==== Request Localization Map
+
+Applications can: change the current map by calling
+flink:xrRequestMapLocalizationML.
+
+[open,refpage='xrRequestMapLocalizationML',desc='Requests a localization map.',type='protos',xrefs='XrMapLocalizationRequestInfoML']
+--
+The flink:xrRequestMapLocalizationML function is defined as:
+
+include::{generated}/api/protos/xrRequestMapLocalizationML.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:requestInfo contains slink:XrMapLocalizationRequestInfoML on the
+  localization map to request.
+****
+
+This is an asynchronous request.
+Listen for slink:XrEventDataLocalizationChangedML events to get the results
+of the localization.
+A new request for localization will override all the past requests for
+localization that are yet to be completed.
+
+The runtime must: return ename:XR_ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML if
+the requested is not a map known to the runtime.
+
+
+include::{generated}/validity/protos/xrRequestMapLocalizationML.txt[]
+--
+
+[open,refpage='XrMapLocalizationRequestInfoML',type='structs',desc='Information required to request a localization map.',xrefs='xrRequestMapLocalizationML']
+--
+
+The slink:XrMapLocalizationRequestInfoML structure is defined as:
+
+include::{generated}/api/structs/XrMapLocalizationRequestInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:mapUuid is the slink:XrUuidEXT of the localization map to request.
+  This mapUuid can: be obtained via flink:xrQueryLocalizationMapsML.
+****
+
+include::{generated}/validity/structs/XrMapLocalizationRequestInfoML.txt[]
+--
+
+
+==== Import and Exporting
+
+This API supports exporting and importing of device localization maps.
+The runtime must: not export AR Cloud maps and must: return
+ename:XR_ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML if the
+application attempts to do so.
+
+The format of the exported localization map data can: change with OS version
+updates.
+
+* Backwards compatibility: exports using OS version n should: work on OS
+  versions up to and including OS version n-4.
+* Forwards compatibility: exports using OS version n is not guaranteed to
+  work on OS versions > n.
+
+Developers are strongly encouraged to encrypt the exported localization
+maps.
+
+[open,refpage='xrImportLocalizationMapML',desc='Imports a localization map.',type='protos',xrefs='XrLocalizationMapImportInfoML']
+--
+The flink:xrImportLocalizationMapML function is defined as:
+
+include::{generated}/api/protos/xrImportLocalizationMapML.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:importInfo contains slink:XrLocalizationMapImportInfoML on the
+  localization map to import.
+* pname:mapUuid is the slink:XrUuidEXT of the newly imported localization
+  map filled in by the runtime.
+****
+
+The runtime must: return ename:XR_ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML
+if the map that is being imported already exists.
+The runtime must: return ename:XR_ERROR_LOCALIZATION_MAP_INCOMPATIBLE_ML if
+the map being imported is not compatible.
+
+flink:xrImportLocalizationMapML may: take a long time to complete; as such
+applications should: not call this from the frame loop.
+
+include::{generated}/validity/protos/xrImportLocalizationMapML.txt[]
+--
+
+[open,refpage='XrLocalizationMapImportInfoML',type='structs',desc='Data of a previously exported localization map.',xrefs='xrImportLocalizationMapML']
+--
+
+The slink:XrLocalizationMapImportInfoML structure is defined as:
+
+include::{generated}/api/structs/XrLocalizationMapImportInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:size is the size in bytes of the data member.
+* pname:data is the byte data of the previously exported localization map.
+****
+
+include::{generated}/validity/structs/XrLocalizationMapImportInfoML.txt[]
+--
+
+*Exporting*
+
+[open,refpage='xrCreateExportedLocalizationMapML',desc='Creates an exported localization map handle.',type='protos',xrefs='xrGetExportedLocalizationMapDataML']
+--
+The flink:xrCreateExportedLocalizationMapML function is defined as:
+
+include::{generated}/api/protos/xrCreateExportedLocalizationMapML.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:mapUuid is a pointer to the uuid of the map to export.
+* pname:map is a pointer to a map handle filled in by the runtime.
+****
+
+flink:xrCreateExportedLocalizationMapML creates a frozen copy of the
+pname:mapUuid localization map that can: be exported using
+flink:xrGetExportedLocalizationMapDataML.
+Applications should: call flink:xrDestroyExportedLocalizationMapML once they
+are done with the data.
+
+include::{generated}/validity/protos/xrCreateExportedLocalizationMapML.txt[]
+--
+
+[open,refpage='xrDestroyExportedLocalizationMapML',desc='Destroys an exported localization map.',type='protos',xrefs='xrCreateExportedLocalizationMapML']
+--
+The flink:xrDestroyExportedLocalizationMapML function is defined as:
+
+include::{generated}/api/protos/xrDestroyExportedLocalizationMapML.txt[]
+
+.Parameter Descriptions
+****
+* pname:map is the map to destroy.
+****
+
+include::{generated}/validity/protos/xrDestroyExportedLocalizationMapML.txt[]
+--
+
+
+[open,refpage='xrGetExportedLocalizationMapDataML',desc='Returns the exported localization map data.',type='protos',xrefs='xrCreateExportedLocalizationMapML']
+--
+The flink:xrGetExportedLocalizationMapDataML function is defined as:
+
+include::{generated}/api/protos/xrGetExportedLocalizationMapDataML.txt[]
+
+.Parameter Descriptions
+****
+* pname:map is the map to export.
+* pname:bufferCapacityInput is the capacity of the buffer array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:bufferCountOutput is filled in by the runtime with the count of
+  bytes written or the required capacity in the case that
+  bufferCapacityInput is insufficient.
+* pname:buffer is an array of bytes filled in by the runtime.
+****
+
+flink:xrGetExportedLocalizationMapDataML may: take a long time to complete;
+as such applications should: not call this from the frame loop.
+
+include::{generated}/validity/protos/xrGetExportedLocalizationMapDataML.txt[]
+--
+
+==== Reference Space
+
+Applications localized into the same localization map can: use this
+reference space to place virtual content in the same physical location.
+
+ename:XR_REFERENCE_SPACE_TYPE_LOCALIZATION_MAP_ML is the reference space of
+the current localization map.
+Creating a space is done via flink:xrCreateReferenceSpace.
+
+The runtime must: emit the slink:XrEventDataReferenceSpaceChangePending
+event if the reference space is changing due to a localization map change.
+
+The runtime may: move the physical location of the origin of this space as
+it updates its understanding of the physical space to maintain consistency
+without sending the slink:XrEventDataReferenceSpaceChangePending event.
+
+For a given slink:XrUuidEXT the runtime must: keep the position and
+orientation of this space identical across more than one slink:XrInstance,
+including for different users and different hardware.
+
+The runtime must: create this reference space as gravity-aligned to exclude
+pitch and roll, with +Y up.
+
+==== Example code
+
+The following code shows how to list the currently available localization
+maps.
+
+[source,C++]
+----
+uint32_t mapCount = 0;
+CHK_XR(xrQueryLocalizationMapsML(session, nullptr, 0, &mapCount, nullptr));
+
+std::vector<XrLocalizationMapML> maps(mapCount, {XR_TYPE_LOCALIZATION_MAP_ML});
+
+CHK_XR(xrQueryLocalizationMapsML(session, nullptr, static_cast<uint32_t>(maps.size()), &mapCount, maps.data()));
+----
+
+This code shows how to poll for localization events.
+
+[source,C++]
+----
+XrEventDataBuffer event{XR_TYPE_EVENT_DATA_BUFFER};
+XrResult result = xrPollEvent(instance, &event);
+if (result == XR_SUCCESS) {
+    switch (event.type) {
+        case XR_TYPE_EVENT_DATA_LOCALIZATION_CHANGED_ML: {
+            const auto& localization_event =
+              *reinterpret_cast<XrEventDataLocalizationChangedML*>(&event);
+            // Use the data in localization_event.
+            break;
+        }
+        // Handle other events as well as usual.
+    }
+}
+----
+
+==== Constants
+
+*New Object Types*
+
+[open,refpage='XrExportedLocalizationMapML',type='handles',desc='Exported Localization Map']
+--
+include::{generated}/api/handles/XrExportedLocalizationMapML.txt[]
+
+slink:XrExportedLocalizationMapML represents a frozen exported localization
+map.
+--
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_LOCALIZATION_MAP_ML
+* ename:XR_TYPE_EVENT_DATA_LOCALIZATION_CHANGED_ML
+* ename:XR_TYPE_MAP_LOCALIZATION_REQUEST_INFO_ML
+* ename:XR_TYPE_LOCALIZATION_MAP_IMPORT_INFO_ML
+* ename:XR_TYPE_LOCALIZATION_ENABLE_EVENTS_INFO_ML
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_LOCALIZATION_MAP_INCOMPATIBLE_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_IMPORT_EXPORT_PERMISSION_DENIED_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_PERMISSION_DENIED_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_ALREADY_EXISTS_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_CANNOT_EXPORT_CLOUD_MAP_ML
+* ename:XR_ERROR_LOCALIZATION_MAP_FAIL_ML
+
+*New Enums*
+
+[open,refpage='XrLocalizationMapStateML',type='enums',desc='Localization Map State']
+--
+include::{generated}/api/enums/XrLocalizationMapStateML.txt[]
+include::{generated}/api/enums/XrLocalizationMapStateML.comments.txt[]
+--
+
+[open,refpage='XrLocalizationMapConfidenceML',type='enums',desc='Localization Confidence']
+--
+include::{generated}/api/enums/XrLocalizationMapConfidenceML.txt[]
+include::{generated}/api/enums/XrLocalizationMapConfidenceML.comments.txt[]
+--
+
+[open,refpage='XrLocalizationMapTypeML',type='enums',desc='Localization Map Type']
+--
+include::{generated}/api/enums/XrLocalizationMapTypeML.txt[]
+include::{generated}/api/enums/XrLocalizationMapTypeML.comments.txt[]
+--
+
+*New Enum Constants*
+
+elink:XrReferenceSpaceType enumeration is extended with:
+
+* ename:XR_REFERENCE_SPACE_TYPE_LOCALIZATION_MAP_ML
+
+*New Defines*
+
+*Version History*
+
+* Revision 1, 2023-06-23 (Ron Bessems)
+
+** Initial extension description

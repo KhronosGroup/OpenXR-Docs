@@ -1,0 +1,175 @@
+// Copyright (c) 2023 HTC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_HTC_anchor.adoc[]
+
+*Last Modified Date*::
+    2023-09-14
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    CheHsuan Shu, HTC +
+    Bill Chang, HTC
+
+*Overview*
+
+This extension allows an application to create a spatial anchor to track a
+point in the physical environment.
+The runtime adjusts the pose of the anchor over time to align it with the
+real world.
+
+
+*Inspect system capability*
+
+[open,refpage='XrSystemAnchorPropertiesHTC',type='structs',desc='System property for anchor',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemAnchorPropertiesHTC structure is defined as:
+
+include::{generated}/api/structs/XrSystemAnchorPropertiesHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsAnchor indicates if current system is capable of anchor
+  functionality.
+****
+
+An application can: inspect whether the system is capable of anchor
+functionality by chaining an slink:XrSystemAnchorPropertiesHTC structure to
+the slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+slink:XrSystemAnchorPropertiesHTC::pname:supportsAnchor was ename:XR_FALSE.
+
+include::{generated}/validity/structs/XrSystemAnchorPropertiesHTC.txt[]
+--
+
+[open,refpage='xrCreateSpatialAnchorHTC',desc='Creates a spatial anchor',type='protos']
+--
+The flink:xrCreateSpatialAnchorHTC function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorHTC.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to create the anchor in.
+* pname:createInfo is the slink:XrSpatialAnchorCreateInfoHTC used to specify
+  the anchor.
+* pname:anchor is the returned slink:XrSpace handle.
+****
+
+The flink:xrCreateSpatialAnchorHTC function creates a spatial anchor with
+specified base space and pose in the space.
+The anchor is represented by an slink:XrSpace and its pose can be tracked
+via flink:xrLocateSpace.
+Once the anchor is no longer needed, call flink:xrDestroySpace to erase the
+anchor.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorHTC.txt[]
+--
+
+[open,refpage='XrSpatialAnchorCreateInfoHTC',desc='Information to create a spatial anchor',type='structs']
+--
+The slink:XrSpatialAnchorCreateInfoHTC structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoHTC.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:space is the slink:XrSpace in which pname:poseInSpace is specified.
+* pname:poseInSpace is the slink:XrPosef specifying the point in the real
+  world within pname:space.
+* pname:name is the slink:XrSpatialAnchorNameHTC containing the name of the
+  anchor.
+****
+
+The pname:poseInSpace is transformed into world space to specify the point
+in the real world.
+The anchor tracks changes of the reality and may: not be affected by the
+changes of pname:space.
+
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoHTC.txt[]
+--
+
+
+[open,refpage='XrSpatialAnchorNameHTC',desc='The name of a spatial anchor',type='structs']
+--
+The slink:XrSpatialAnchorNameHTC structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorNameHTC.txt[]
+
+.Member Descriptions
+****
+* pname:name is a null-terminated UTF-8 string whose length is less than or
+  equal to ename:XR_MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorNameHTC.txt[]
+--
+
+
+[open,refpage='xrGetSpatialAnchorNameHTC',desc='Get name of a spatial anchor',type='protos']
+--
+The flink:xrGetSpatialAnchorNameHTC function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialAnchorNameHTC.txt[]
+
+.Parameter Descriptions
+****
+* pname:anchor is the slink:XrSpace created by
+  flink:xrCreateSpatialAnchorHTC.
+* pname:name is a pointer to output slink:XrSpatialAnchorNameHTC.
+****
+
+The flink:xrGetSpatialAnchorNameHTC function gets the name of an anchor.
+If the provided pname:space is a valid space handle but was *not* created
+with flink:xrCreateSpatialAnchorHTC, the runtime must: return
+ename:XR_ERROR_NOT_AN_ANCHOR_HTC.
+
+include::{generated}/validity/protos/xrGetSpatialAnchorNameHTC.txt[]
+--
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+* ename:XR_MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_ANCHOR_PROPERTIES_HTC
+* ename:XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_HTC
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_NOT_AN_ANCHOR_HTC
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrSystemAnchorPropertiesHTC
+* slink:XrSpatialAnchorCreateInfoHTC
+* slink:XrSpatialAnchorNameHTC
+
+*New Functions*
+
+* flink:xrCreateSpatialAnchorHTC
+* flink:xrGetSpatialAnchorNameHTC
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-09-14 (CheHsuan Shu)
+** Initial extension description

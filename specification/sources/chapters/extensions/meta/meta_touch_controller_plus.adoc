@@ -1,0 +1,105 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_touch_controller_plus.adoc[]
+
+*Last Modified Date*::
+    2023-04-10
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Aanchal Dalmia, Meta Platforms +
+    Adam Bengis, Meta Platforms +
+
+*Overview*
+
+This extension defines a new interaction profile for the Meta Quest Touch
+Plus Controller.
+
+Meta Quest Touch Plus Controller interaction profile path:
+
+* pathname:/interaction_profiles/meta/touch_controller_plus
+
+// NOTE: This path does not meet the latest style guide requirements,
+// as the interaction profile path is not suffixed by the vendor tag.
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile provides inputs and outputs that are a superset of
+those available in the existing "Oculus Touch Controller" interaction
+profile, pathname:/interaction_profiles/oculus/touch_controller
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+
+* On both:
+** subpathname:/input/squeeze/value
+** subpathname:/input/trigger/value
+** subpathname:/input/trigger/touch
+** subpathname:/input/thumbstick
+** subpathname:/input/thumbstick/x
+** subpathname:/input/thumbstick/y
+** subpathname:/input/thumbstick/click
+** subpathname:/input/thumbstick/touch
+** subpathname:/input/thumbrest/touch
+** subpathname:/input/grip/pose
+** subpathname:/input/aim/pose
+** subpathname:/output/haptic
+
+** subpathname:/input/thumb_meta/proximity_meta
+** subpathname:/input/trigger/proximity_meta
+** subpathname:/input/trigger/curl_meta
+** subpathname:/input/trigger/slide_meta
+** subpathname:/input/trigger/force
+
+*New Identifiers*
+
+****
+* *thumb_meta*: Meta Quest Touch Plus Controller adds an input identifier
+  for the user's thumb on the same hand currently holding the controller.
+  Thumb input is not explicitly bound to any location on the controller.
+****
+
+*Input Path Descriptions*
+
+****
+* */input/thumb_meta/proximity_meta* : Boolean indicating the user's thumb
+  is near the inputs on the top face of the controller.
+* */input/trigger/proximity_meta* : Boolean indicating whether the user's
+  index finger is near the trigger.
+* */input/trigger/curl_meta* : Float representing how pointed or curled the
+  user's index finger is on the trigger: 0.0 = fully pointed, 1.0 = finger
+  flat on the surface
+* */input/trigger/slide_meta* : Float representing how far the user is
+  sliding the tip of their index finger along the surface of the trigger:
+  0.0 = finger flat on the surface, 1.0 = finger fully drawn back.
+* */input/trigger/force* : Float representing the amount of force being
+  applied by the user to the trigger after it reaches the end of the range
+  of travel: 0.0 = no additional pressure applied, 1.0 = maximum detectable
+  pressure applied.
+****
+
+*Version History*
+
+* Revision 1, 2023-04-10 (Adam Bengis)
+** Initial extension proposal

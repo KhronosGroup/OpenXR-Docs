@@ -251,8 +251,8 @@ If there are multiple nodes in the glTF file matches the condition above,
 the first matching node using depth-first traversal in the glTF scene
 should: be animated and the rest should: be ignored.
 
-The runtime must: not return any pname:nodeName or pname:parentName that
-does not match any gltTF nodes in the corresponding controller model.
+The runtime must: not return any pname:nodeName or pname:parentNodeName that
+does not match any glTF nodes in the corresponding controller model.
 
 include::{generated}/validity/structs/XrControllerModelNodePropertiesMSFT.txt[]
 --
@@ -307,7 +307,7 @@ include::{generated}/api/structs/XrControllerModelStateMSFT.txt[]
   that pname:nodeCapacityInput is insufficient.
 * pname:nodeStates is a pointer to an application-allocated array that will
   be filled with the slink:XrControllerModelNodeStateMSFT values.
-  It can: be code:NULL if pname:sourceCapacityInput is 0.
+  It can: be code:NULL if pname:nodeCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:nodeStates size.
 ****
@@ -330,9 +330,12 @@ include::{generated}/api/structs/XrControllerModelNodeStateMSFT.txt[]
 * pname:nodePose is an slink:XrPosef of the node in its parent node space.
 ****
 
-The state is corresponding to the glTF node identified by the pname:nodeName
-and pname:nodeParentName of the node property at the same array index in the
-pname:nodeProperties in slink:XrControllerModelPropertiesMSFT.
+The state is corresponding to the glTF node identified by the
+slink:XrControllerModelNodePropertiesMSFT::pname:nodeName and
+slink:XrControllerModelNodePropertiesMSFT::pname:parentNodeName of the node
+property at the same array index in the
+slink:XrControllerModelPropertiesMSFT::pname:nodeProperties in
+slink:XrControllerModelPropertiesMSFT.
 
 The pname:nodePose is based on the user's interaction on the controller at
 the latest flink:xrSyncActions, represented as the slink:XrPosef of the node

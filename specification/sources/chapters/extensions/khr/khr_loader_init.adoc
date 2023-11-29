@@ -5,24 +5,37 @@
 include::{generated}/meta/XR_KHR_loader_init.adoc[]
 
 *Last Modified Date*::
-    2020-05-07
+    2023-05-08
 *IP Status*::
     No known IP claims.
 *Contributors*::
-    Cass Everitt, Facebook
+    Cass Everitt, Facebook +
+    Robert Blenkinsopp, Ultraleap
 
 *Overview*
 
 On some platforms, before loading can occur the loader must be initialized
 with platform-specific parameters.
+
 Unlike other extensions, the presence of this extension is signaled by a
 successful call to flink:xrGetInstanceProcAddr to retrieve the function
-pointer for flink:xrInitializeLoaderKHR using a null instance handle.
-If this extension is supported, its use may be required on some platforms
-and the use of the flink:xrInitializeLoaderKHR function must precede other
+pointer for flink:xrInitializeLoaderKHR using dlink:XR_NULL_HANDLE as the
+pname:instance parameter.
+
+If this extension is supported, its use may: be required on some platforms
+and the use of the flink:xrInitializeLoaderKHR function must: precede other
 OpenXR calls except flink:xrGetInstanceProcAddr.
+
 This function exists as part of the loader library that the application is
-using.
+using and the loader must: pass calls to flink:xrInitializeLoaderKHR to the
+active runtime, and all enabled API layers that expose a
+flink:xrInitializeLoaderKHR function exposed either through their manifest,
+or through their implementation of flink:xrGetInstanceProcAddr.
+
+If the flink:xrInitializeLoaderKHR function is discovered through the
+manifest, flink:xrInitializeLoaderKHR will be called before
+`xrNegotiateLoaderRuntimeInterface` or `xrNegotiateLoaderApiLayerInterface`
+has been called on the runtime or layer respectively.
 
 *New Object Types*
 
@@ -71,5 +84,8 @@ include::{generated}/api/protos/xrInitializeLoaderKHR.txt[]
 
 *Version History*
 
+* Revision 2, 2023-05-08 (Robert Blenkinsoppp)
+** Explicitly state that the call to flink:xrInitializeLoaderKHR should be
+   passed to the runtime and enabled API layers.
 * Revision 1, 2020-05-07 (Cass Everitt)
 ** Initial draft

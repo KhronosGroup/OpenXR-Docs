@@ -49,7 +49,9 @@ include::{generated}/api/protos/xrCreateSpatialAnchorMSFT.txt[]
 Creates an slink:XrSpatialAnchorMSFT handle representing a spatial anchor
 that will track a fixed location in the physical world over time.
 That real-world location is specified by the position and orientation of the
-specified pname:pose within pname:space at pname:time.
+specified slink:XrSpatialAnchorCreateInfoMSFT::pname:pose within
+slink:XrSpatialAnchorCreateInfoMSFT::pname:space at
+slink:XrSpatialAnchorCreateInfoMSFT::pname:time.
 
 The runtime must: avoid long blocking operations such as networking or disk
 operations for flink:xrCreateSpatialAnchorMSFT function.
@@ -59,14 +61,16 @@ operations yet.
 For example, the corresponding anchor space may: not return valid location,
 or its location may: not be successfully saved in anchor store.
 
-If pname:space cannot be located relative to the environment at the moment
-of the call to flink:xrCreateSpatialAnchorMSFT, the runtime must: return
+If slink:XrSpatialAnchorCreateInfoMSFT::pname:space cannot be located
+relative to the environment at the moment of the call to
+flink:xrCreateSpatialAnchorMSFT, the runtime must: return
 ename:XR_ERROR_CREATE_SPATIAL_ANCHOR_FAILED_MSFT.
 
 After the anchor is created, the runtime should: then adjust its position
 and orientation over time relative to other spaces so as to maintain maximum
 alignment to its original real-world location, even if that changes the
-anchor's relationship to the original pname:space used to initialize it.
+anchor's relationship to the original
+slink:XrSpatialAnchorCreateInfoMSFT::pname:space used to initialize it.
 
 include::{generated}/validity/protos/xrCreateSpatialAnchorMSFT.txt[]
 --

@@ -1,0 +1,977 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_marker_understanding.adoc[]
+
+*Last Modified Date*::
+    2023-05-18
+
+*Contributors*::
+    Robbie Bridgewater, Magic Leap +
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+
+
+==== Overview
+
+This extension can: be used to track and query fiducial markers like QR
+codes, AprilTag markers, and ArUco markers, and detect, but not locate, 1D
+barcodes like Code 128, UPC-A.
+
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+`com.magicleap.permission.MARKER_TRACKING` permission listed in their
+manifest to use this extension.
+(protection level: normal)
+====
+
+
+==== Creating a Marker Detector
+
+[open,refpage='XrMarkerDetectorML',type='handles',desc='Represents a marker detector for one or more markers.']
+--
+include::{generated}/api/handles/XrMarkerDetectorML.txt[]
+
+The slink:XrMarkerDetectorML handle represents the resources for detecting
+one or more markers.
+
+A marker detector handle detects a single type of marker, specified by a
+value of elink:XrMarkerTypeML.
+To detect more than one marker type, a runtime may: support creating
+multiple marker detector handles.
+
+This handle can: be used to detect markers using other functions in this
+extension.
+--
+
+[open,refpage='xrCreateMarkerDetectorML',type='protos',desc='Create a marker detection handle.',xrefs='XrMarkerDetectorCreateInfoML XrMarkerDetectorML xrDestroyMarkerDetectorML xrSnapshotMarkerDetectorML xrGetMarkerDetectorStateML xrGetMarkersML']
+--
+The flink:xrCreateMarkerDetectorML function is defined as:
+
+include::{generated}/api/protos/xrCreateMarkerDetectorML.txt[]
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the marker detection will be
+  active.
+* pname:createInfo is the slink:XrMarkerDetectorCreateInfoML used to specify
+  the marker detection.
+* pname:markerDetector is the returned slink:XrMarkerDetectorML handle.
+****
+
+An application creates an slink:XrMarkerDetectorML handle using the
+flink:xrCreateMarkerDetectorML function.
+If pname:createInfo contains mutually exclusive contents, the runtime must:
+return ename:XR_ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML.
+
+If a runtime is unable to create a marker detector due to some internal
+limit, the runtime must: return ename:XR_ERROR_LIMIT_REACHED.
+
+include::{generated}/validity/protos/xrCreateMarkerDetectorML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorCreateInfoML',type='structs',desc='Information to create a marker detection handle',xrefs='xrCreateMarkerDetectorML']
+--
+
+The slink:XrMarkerDetectorCreateInfoML structure is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorCreateInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:profile is the marker tracker profile to be used.
+* pname:markerType is the detector type that this tracker enables.
+****
+
+include::{generated}/validity/structs/XrMarkerDetectorCreateInfoML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorProfileML',desc='The possible premade profiles for an slink:XrMarkerDetectorML',type='enums',xrefs='XrMarkerDetectorCreateInfoML']
+--
+The possible premade profiles for an slink:XrMarkerDetectorML are specified
+by the elink:XrMarkerDetectorProfileML enumeration:
+
+include::{generated}/api/enums/XrMarkerDetectorProfileML.txt[]
+
+include::{generated}/api/enums/XrMarkerDetectorProfileML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerTypeML',desc='The type of marker to be tracked by an slink:XrMarkerDetectorML',type='enums']
+--
+The type of marker to be tracked is specified via slink:XrMarkerDetectorML:
+
+include::{generated}/api/enums/XrMarkerTypeML.txt[]
+
+include::{generated}/api/enums/XrMarkerTypeML.comments-box.txt[]
+--
+
+An application specifies details of the type of marker to be tracked by
+chaining an stext:XrMarkerDetector*InfoML structure to
+slink:XrMarkerDetectorCreateInfoML.
+Some of these structure types must: be included to enable detection or
+locating, depending on the marker type.
+
+The following structures are used by the ArUco, AprilTag, and QR code
+detectors:
+
+[cols="1,1"]
+|===
+| Marker Type | Structures
+
+| https://www.researchgate.net/publication/260251570_Automatic_generation_and_detection_of_highly_reliable_fiducial_markers_under_occlusion[ArUco]
+| slink:XrMarkerDetectorArucoInfoML slink:XrMarkerDetectorSizeInfoML
+
+| https://april.eecs.umich.edu/media/pdfs/olson2011tags.pdf[AprilTag]
+| slink:XrMarkerDetectorAprilTagInfoML slink:XrMarkerDetectorSizeInfoML
+
+| https://www.iso.org/standard/62021.html[QR Code]
+| slink:XrMarkerDetectorSizeInfoML
+|===
+
+The slink:XrMarkerDetectorSizeInfoML may: be optional depending on runtime
+support for estimating marker size.
+A higher localization accuracy may: be obtained by specifying the marker
+size.
+If the runtime does not support estimating marker size it must: return
+ename:XR_ERROR_VALIDATION_FAILURE if slink:XrMarkerDetectorSizeInfoML is
+omitted.
+
+[open,refpage='XrMarkerDetectorArucoInfoML',type='structs',desc='Information to create a marker detection handle for Aruco markers',xrefs='xrCreateMarkerDetectorML XrMarkerDetectorCreateInfoML']
+--
+
+The slink:XrMarkerDetectorArucoInfoML structure extends
+slink:XrMarkerDetectorCreateInfoML and is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorArucoInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:arucoDict is the ArUco dictionary name from which markers will be
+  detected.
+****
+
+This structure is required by the ename:XR_MARKER_TYPE_ARUCO_ML detector.
+
+include::{generated}/validity/structs/XrMarkerDetectorArucoInfoML.txt[]
+--
+
+[open,refpage='XrMarkerArucoDictML',desc='ArUco dictionaries',type='enums']
+--
+The elink:XrMarkerArucoDictML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerArucoDictML.txt[]
+
+Supported predefined ArUco dictionary:
+
+include::{generated}/api/enums/XrMarkerArucoDictML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorAprilTagInfoML',type='structs',desc='Information to create a marker detection handle for AprilTag markers',xrefs=xrefs='xrCreateMarkerDetectorML XrMarkerDetectorCreateInfoML']
+--
+
+The slink:XrMarkerDetectorAprilTagInfoML structure extends
+slink:XrMarkerDetectorCreateInfoML and is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorAprilTagInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:aprilTagDict AprilTag Dictionary name from which markers will be
+  detected.
+****
+
+This structure is required by the ename:XR_MARKER_TYPE_APRIL_TAG_ML
+detector.
+
+include::{generated}/validity/structs/XrMarkerDetectorAprilTagInfoML.txt[]
+--
+
+[open,refpage='XrMarkerAprilTagDictML',desc='AprilTag dictionaries',type='enums']
+--
+The elink:XrMarkerAprilTagDictML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerAprilTagDictML.txt[]
+
+Supported predefined AprilTag dictionary:
+
+include::{generated}/api/enums/XrMarkerAprilTagDictML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorSizeInfoML',type='structs',desc='Information to create a marker detection handle for QR markers',xrefs='xrCreateMarkerDetectorML XrMarkerDetectorCreateInfoML']
+--
+
+The slink:XrMarkerDetectorSizeInfoML structure extends
+slink:XrMarkerDetectorCreateInfoML and is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorSizeInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:markerLength is the physical length of one side of a marker.
+****
+
+Pose estimation accuracy depends on the accuracy of the specified
+pname:markerLength.
+
+This structure is used by ename:XR_MARKER_TYPE_ARUCO_ML,
+ename:XR_MARKER_TYPE_APRIL_TAG_ML, and ename:XR_MARKER_TYPE_QR_ML detectors.
+
+include::{generated}/validity/structs/XrMarkerDetectorSizeInfoML.txt[]
+--
+
+[open,refpage='xrDestroyMarkerDetectorML',desc='Destroy a marker detection handle',type='protos',xrefs='xrCreateMarkerDetectorML XrMarkerDetectorML']
+--
+The flink:xrDestroyMarkerDetectorML function is defined as:
+
+include::{generated}/api/protos/xrDestroyMarkerDetectorML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector object to destroy.
+****
+
+Destroy a marker detection handle.
+
+include::{generated}/validity/protos/xrDestroyMarkerDetectorML.txt[]
+--
+
+*Using a custom profile*
+[open,refpage='XrMarkerDetectorCustomProfileInfoML',type='structs',desc='A custom marker tracking profile',xrefs='XrMarkerDetectorProfileML XrMarkerDetectorFpsML XrMarkerDetectorResolutionML XrMarkerDetectorCameraML XrMarkerDetectorFullAnalysisIntervalML']
+--
+
+The slink:XrMarkerDetectorCustomProfileInfoML structure extends
+slink:XrMarkerDetectorCreateInfoML and is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorCustomProfileInfoML.txt[]
+
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:fpsHint is a suggestion of the category of frame rate for the
+  detector to use.
+* pname:resolutionHint is a suggestion of the category of camera resolution
+  for the detector to use.
+* pname:cameraHint is a suggestion of the camera set for the detector to use
+* pname:cornerRefineMethod selects a method for corner refinement for
+  ArUco/AprilTag detectors.
+  This member is ignored for detectors of other marker types.
+* pname:useEdgeRefinement specifies whether to run a refinement step that
+  uses marker edges to generate even more accurate corners, but slow down
+  tracking rate overall by consuming more compute.
+  It affects ArUco/AprilTag markers only: this member is ignored for
+  detectors of other marker types.
+* pname:fullAnalysisIntervalHint is the suggested interval between fully
+  analyzed frames that introduce new detected markers, in addition to
+  updating the state of already detected markers.
+****
+
+All marker detectors share some underlying hardware and resources, and thus
+not all combinations of profiles between multiple detectors are possible.
+If a profile (preset or custom) specified during marker detector creation is
+different from those used by existing marker detectors the runtime will
+attempt to honor the highest frame rate and fps requested.
+
+CPU load due to marker tracking is a function of the chosen
+elink:XrMarkerTypeML, elink:XrMarkerDetectorFpsML, and
+elink:XrMarkerDetectorResolutionML.
+
+include::{generated}/validity/structs/XrMarkerDetectorCustomProfileInfoML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorFpsML',desc='Framerate hint used with a custom profile',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
+--
+The elink:XrMarkerDetectorFpsML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerDetectorFpsML.txt[]
+
+Used to hint to the back-end the max frames per second that should: be
+analyzed.
+
+include::{generated}/api/enums/XrMarkerDetectorFpsML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorResolutionML',desc='Resolution hint used with a custom profile',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
+--
+The elink:XrMarkerDetectorResolutionML enumeration is defined as:
+include::{generated}/api/enums/XrMarkerDetectorResolutionML.txt[]
+
+Used to hint to the back-end the resolution that should: be used.
+CPU load is a combination of chosen elink:XrMarkerTypeML,
+elink:XrMarkerDetectorFpsML, and elink:XrMarkerDetectorResolutionML.
+
+include::{generated}/api/enums/XrMarkerDetectorResolutionML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorCameraML',desc='Camera hint',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
+--
+The elink:XrMarkerDetectorCameraML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerDetectorCameraML.txt[]
+
+The elink:XrMarkerDetectorCameraML enum values are used to hint to the
+camera that should: be used.
+This is set in the slink:XrMarkerDetectorCustomProfileInfoML.
+
+The RGB camera has a higher resolution than world cameras and is better
+suited for use cases where the target to be tracked is small or needs to be
+detected from far away.
+
+ename:XR_MARKER_DETECTOR_CAMERA_WORLD_CAMERAS_ML make use of multiple
+cameras to improve accuracy and increase the FoV for detection.
+
+include::{generated}/api/enums/XrMarkerDetectorCameraML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorCornerRefineMethodML',desc='Corner Refinement Method.',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
+--
+The elink:XrMarkerDetectorCornerRefineMethodML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.txt[]
+
+The ArUco/AprilTag detector comes with several corner refinement methods.
+Choosing the right corner refinement method has an impact on the accuracy
+and speed trade-off that comes with each detection pipeline.
+
+include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.comments-box.txt[]
+--
+
+[open,refpage='XrMarkerDetectorFullAnalysisIntervalML',desc='Full Frame Analysis Time Interval.',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
+--
+The elink:XrMarkerDetectorFullAnalysisIntervalML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.txt[]
+
+In order to improve performance, the detectors do not always run on the full
+frame.
+Full frame analysis is however necessary to detect new markers that were not
+detected before.
+Use this option to control how often the detector should: detect new markers
+and its impact on tracking performance.
+
+include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.comments-box.txt[]
+--
+
+==== Scanning for markers
+[open,refpage='xrSnapshotMarkerDetectorML',desc='Request a snapshot from the marker detector',type='protos',xrefs= XrMarkerDetectorSnapshotInfoML xrGetMarkerDetectorStateML]
+--
+The flink:xrSnapshotMarkerDetectorML function is defined as:
+
+include::{generated}/api/protos/xrSnapshotMarkerDetectorML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector object to issue a snapshot request to.
+* pname:snapshotInfo is a pointer to slink:XrMarkerDetectorSnapshotInfoML
+  containing marker snapshot parameters.
+****
+
+Collects the latest marker detector state and makes it ready for inspection.
+This function only snapshots the non-pose state of markers.
+Once called, and if a new snapshot is not yet available a runtime must: set
+the state of the marker detector to
+ename:XR_MARKER_DETECTOR_STATUS_PENDING_ML.
+If a new state is available the runtime must: set the state to
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+If an error occurred the runtime must: set the state to
+ename:XR_MARKER_DETECTOR_STATUS_ERROR_ML.
+The application may: attempt the snapshot again.
+
+Once the application has inspected the state it is interested in it can:
+call this function again and the state is set to
+ename:XR_MARKER_DETECTOR_STATUS_PENDING_ML until a new state has been
+snapshotted.
+After each snapshot, only the currently detected markers are available for
+inspection, though the same marker may: repeatedly be detected across
+snapshots.
+
+include::{generated}/validity/protos/xrSnapshotMarkerDetectorML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorSnapshotInfoML',type='structs',desc='Marker snapshot parameters.',xrefs='xrSnapshotMarkerDetectorML']
+--
+
+The slink:XrMarkerDetectorSnapshotInfoML structure is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorSnapshotInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::{generated}/validity/structs/XrMarkerDetectorSnapshotInfoML.txt[]
+--
+
+
+[open,refpage='xrGetMarkerDetectorStateML',desc='Get the current state of the marker detector',type='protos',xrefs='XrMarkerDetectorStateML XrMarkerDetectorStatusML']
+--
+The flink:xrGetMarkerDetectorStateML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkerDetectorStateML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector object to retrieve state information from.
+* pname:state points to an slink:XrMarkerDetectorStateML in which the
+  current state of the marker detector is returned.
+****
+
+flink:xrGetMarkerDetectorStateML is used after calling
+flink:xrSnapshotMarkerDetectorML to check the current status of the snapshot
+in progress.
+When slink:XrMarkerDetectorStateML::pname:state ==
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML, the detector is ready to be
+queried, while ename:XR_MARKER_DETECTOR_STATUS_PENDING_ML indicates the
+snapshot is still in progress.
+ename:XR_MARKER_DETECTOR_STATUS_ERROR_ML indicates that the runtime has
+encountered an error getting a snapshot for the requested detector, which
+may: require user intervention to solve.
+
+If flink:xrSnapshotMarkerDetectorML has not yet been called for the
+pname:markerDetector, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+include::{generated}/validity/protos/xrGetMarkerDetectorStateML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorStateML',type='structs',desc='Marker state query parameters',xrefs='xrGetMarkerDetectorStateML XrMarkerDetectorStatusML']
+--
+
+The slink:XrMarkerDetectorStateML structure is defined as:
+
+include::{generated}/api/structs/XrMarkerDetectorStateML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:state is the current state of the marker detector.
+****
+
+include::{generated}/validity/structs/XrMarkerDetectorStateML.txt[]
+--
+
+[open,refpage='XrMarkerDetectorStatusML',desc='Detector states',type='enums'xrefs='xrGetMarkerDetectorStateML XrMarkerDetectorStateML']
+--
+The elink:XrMarkerDetectorStatusML enumeration is defined as:
+
+include::{generated}/api/enums/XrMarkerDetectorStatusML.txt[]
+
+The elink:XrMarkerDetectorStatusML enumeration describes the current state
+of the marker detector.
+It is queried via flink:xrGetMarkerDetectorStateML to determine if the
+marker tracker is currently available for inspection.
+
+include::{generated}/api/enums/XrMarkerDetectorStatusML.comments-box.txt[]
+--
+
+==== Getting Marker Results
+[open,refpage='xrGetMarkersML',desc='Examine marker detection snapshot',type='protos',,xrefs='xrGetMarkerNumberML xrGetMarkerStringML xrGetMarkerReprojectionErrorML xrCreateMarkerSpaceML XrMarkerML']
+--
+The flink:xrGetMarkersML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkersML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:markerCapacityInput is the capacity of the pname:markers array or
+  `0` to indicate a request to retrieve the required capacity.
+* pname:markerCountOutput is filled in by the runtime with the count of
+  marker atoms written or the required capacity in the case that
+  pname:markerCapacityInput is insufficient.
+* pname:markers is a pointer to an array of basetype:XrMarkerML atoms, but
+  can: be code:NULL if propertyCapacityInput is `0`.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:markers size.
+****
+
+Get the list of current snapshotted marker atoms, must: only be called when
+the state of the detector is ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+The returned atoms are only valid while in the
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML state.
+The runtime must: return the same atom value for the same uniquely
+identifiable marker across successive snapshots.
+It is unspecified what happens if the detector is observing two markers with
+the same identification patterns.
+
+Assuming the same set of markers are in view across several snapshots, the
+runtime should: return the same set of atoms.
+An application can: use the list of atoms as a simple test for if a
+particular marker has gone in or out of view.
+
+Note that basetype:XrMarkerML atoms are only usable with the
+slink:XrMarkerDetectorML that returned them.
+
+This function follows the <<buffer-size-parameters,two-call idiom>> for
+filling the pname:markers.
+
+include::{generated}/validity/protos/xrGetMarkersML.txt[]
+--
+
+[open,refpage='XrMarkerML',desc='Marker atom',type='basetypes',xrefs='xrGetMarkersML xrGetMarkerNumberML xrGetMarkerStringML xrGetMarkerReprojectionErrorML XrMarkerSpaceCreateInfoML']
+--
+include::{generated}/api/basetypes/XrMarkerML.txt[]
+
+The unique marker key used to retrieve the data about detected markers.
+For an slink:XrMarkerDetectorML a runtime must: use the same value of
+basetype:XrMarkerML each time a marker is detected in a snapshot, but an
+application cannot: use a cached atom if it was not present in the most
+recent snapshot.
+--
+
+[open,refpage='xrGetMarkerNumberML',desc='Get the number of a marker, such as the ArUco ID.',type='protos',xrefs='xrGetMarkersML XrMarkerML']
+--
+The flink:xrGetMarkerNumberML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkerNumberML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:marker is the marker atom to be examined.
+* pname:number points to a code:float in which the numerical value
+  associated with the marker is returned.
+****
+
+Get the numerical value of a marker, such as the ArUco ID.
+flink:xrGetMarkerNumberML must: only be called when the state of the
+detector is ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+If the marker does not have an associated numerical value, the runtime must:
+return ename:XR_ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML.
+
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
+is invalid.
+
+include::{generated}/validity/protos/xrGetMarkerNumberML.txt[]
+--
+
+[open,refpage='xrGetMarkerStringML',desc='Get string information from detected marker',type='protos',xrefs='xrGetMarkersML XrMarkerML']
+--
+The flink:xrGetMarkerStringML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkerStringML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:marker is the marker atom to be examined.
+* pname:bufferCapacityInput is the capacity of the buffer, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:bufferCountOutput is a pointer to the count of characters written to
+  buffer (including the terminating '\0'), or a pointer to the required
+  capacity in the case that bufferCapacityInput is insufficient.
+* pname:buffer is a pointer to an application-allocated buffer that should:
+  be filled with the QR code's contents.
+  It can: be NULL if bufferCapacityInput is 0.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+Get the string value of a marker, such as the QR encoded string.
+flink:xrCreateMarkerSpaceML must: only be called when the state of the
+detector is ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+
+If the marker does not have an associated string value, the runtime must:
+return ename:XR_ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML.
+
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+This function follows the <<buffer-size-parameters,two-call idiom>> for
+filling the pname:buffer.
+
+The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
+is invalid.
+
+include::{generated}/validity/protos/xrGetMarkerStringML.txt[]
+--
+
+[open,refpage='xrGetMarkerReprojectionErrorML',desc='Get the reprojection error of a marker.',type='protos',xrefs='xrGetMarkersML XrMarkerML']
+--
+The flink:xrGetMarkerReprojectionErrorML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkerReprojectionErrorML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:marker is the marker atom to be examined.
+* pname:reprojectionErrorMeters points to a code:float in which the
+  estimated reprojection error in meters is returned.
+****
+
+Get the reprojection error of a marker, only available for certain types of
+markers.
+must: only be called when the state of the detector is
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+A high reprojection error means that the estimated pose of the marker does
+not match well with the 2D detection on the processed video frame and thus
+the pose may: be inaccurate.
+The error is given in meters, representing the displacement between real
+marker and its estimated pose.
+This means this is a normalized number, independent of marker distance or
+length.
+
+The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
+is invalid.
+
+include::{generated}/validity/protos/xrGetMarkerReprojectionErrorML.txt[]
+--
+
+[open,refpage='xrGetMarkerLengthML',desc='Query for the length of a marker',type='protos']
+--
+The flink:xrGetMarkerLengthML function is defined as:
+
+include::{generated}/api/protos/xrGetMarkerLengthML.txt[]
+
+.Parameter Descriptions
+****
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:marker is the marker atom to be examined.
+* pname:meters points to a code:float in which the size per side of the
+  queried marker is returned.
+****
+
+Get the size of the marker, defined as the length in meters per side.
+If the application created the detector while passing in a
+slink:XrMarkerDetectorSizeInfoML, this query may: be redundant.
+flink:xrGetMarkerLengthML is primarily intended to query for a runtime
+estimated size when an application did not indicate the expected size via
+slink:XrMarkerDetectorSizeInfoML.
+
+flink:xrGetMarkerLengthML must: only be called when the state of the
+detector is ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
+is invalid.
+
+include::{generated}/validity/protos/xrGetMarkerLengthML.txt[]
+--
+
+==== Getting an XrSpace from Marker Results
+
+[open,refpage='xrCreateMarkerSpaceML',desc='Create an XrSpace to track a marker spatially',type='protos',xrefs='xrGetMarkersML XrMarkerSpaceCreateInfoML']
+--
+The flink:xrCreateMarkerSpaceML function is defined as:
+
+include::{generated}/api/protos/xrCreateMarkerSpaceML.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that will own the created space.
+* pname:createInfo is a pointer to the slink:XrMarkerSpaceCreateInfoML used
+  to specify the space creation parameters.
+* pname:space points to an slink:XrSpace handle in which the resulting space
+  is returned.
+****
+
+Creates an slink:XrSpace from a currently snapshotted marker.
+The space may: still be used even if the marker is later not in the FOV, or
+even if the marker detector has been destroyed.
+In such a scenario, the ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT must: be false, but
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT may: be set as appropriate to
+the last known location.
+
+Once an application has created a space, it may: stop calling
+flink:xrSnapshotMarkerDetectorML, and the position of the marker must: still
+be updated by the runtime whenever it is aware of a more up to date
+location.
+
+If a runtime is unable to spatially locate a snapshotted marker, it may:
+return ename:XR_ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML.
+This is most likely to happen if significant time has passed since the
+snapshot of markers was acquired, and the marker in question is no longer in
+the user's FOV.
+Thus, an application should: call flink:xrCreateMarkerSpaceML immediately
+after examining a snapshot, but should: also be prepared to try again if
+needed.
+
+must: only be called when the state of the detector is
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML.
+
+If flink:xrGetMarkerDetectorStateML has not been called and returned
+ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
+flink:xrSnapshotMarkerDetectorML, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+pname:session must be the same session that created the
+slink:XrMarkerSpaceCreateInfoML::pname:markerDetector, else the runtime
+must: return ename:XR_ERROR_HANDLE_INVALID.
+
+The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
+is invalid.
+
+The slink:XrSpace origin must: be located at the marker's center.
+The X-Y plane of the slink:XrSpace must: be aligned with the plane of the
+marker with the positive Z axis coming out of the marker face.
+
+image::images/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
+
+include::{generated}/validity/protos/xrCreateMarkerSpaceML.txt[]
+--
+
+[open,refpage='XrMarkerSpaceCreateInfoML',type='structs',desc='Specify marker space creation parameters',xrefs='xrCreateMarkerSpaceML XrMarkerML']
+--
+
+The slink:XrMarkerSpaceCreateInfoML structure is defined as:
+
+include::{generated}/api/structs/XrMarkerSpaceCreateInfoML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:markerDetector is the detector object to retrieve marker information
+  from.
+* pname:marker is the marker atom to be examined.
+* pname:poseInMarkerSpace is the offset from the marker's origin of the new
+  slink:XrSpace.
+  The origin of each marker is located at its center.
+****
+
+include::{generated}/validity/structs/XrMarkerSpaceCreateInfoML.txt[]
+--
+
+==== Example code for locating a marker
+
+The following example code demonstrates how to detect a marker relative to a
+local space, and query the contents.
+
+[source,c++]
+----
+XrInstance instance;  // previously initialized
+XrSystemId systemId;  // previously initialized
+XrSession session;    // previously initialized
+XrSpace localSpace;   // previously initialized, e.g. from
+                      // XR_REFERENCE_SPACE_TYPE_LOCAL
+XrSpace viewSpace;    // previously initialized, e.g. from
+                      // XR_REFERENCE_SPACE_TYPE_VIEW
+
+// The function pointers are previously initialized using
+// xrGetInstanceProcAddr.
+PFN_xrCreateMarkerDetectorML xrCreateMarkerDetectorML; // previously initialized
+PFN_xrDestroyMarkerDetectorML xrDestroyMarkerDetectorML; // previously initialized
+PFN_xrSnapshotMarkerDetectorML xrSnapshotMarkerDetectorML; // previously initialized
+PFN_xrGetMarkerDetectorStateML xrGetMarkerDetectorStateML; // previously initialized
+PFN_xrGetMarkersML xrGetMarkersML; // previously initialized
+PFN_xrGetMarkerReprojectionErrorML xrGetMarkerReprojectionErrorML; // previously initialized
+PFN_xrGetMarkerLengthML xrGetMarkerLengthML; // previously initialized
+PFN_xrGetMarkerNumberML xrGetMarkerNumberML; // previously initialized
+PFN_xrGetMarkerStringML xrGetMarkerStringML; // previously initialized
+PFN_xrCreateMarkerSpaceML xrCreateMarkerSpaceML; // previously initialized
+
+
+// Initialize marker detector handle
+XrMarkerDetectorML markerDetector = XR_NULL_HANDLE;
+
+XrMarkerDetectorCreateInfoML createInfo{ XR_TYPE_MARKER_DETECTOR_CREATE_INFO_ML };
+createInfo.profile = XR_MARKER_DETECTOR_PROFILE_CUSTOM_ML;
+createInfo.markerType = XR_MARKER_TYPE_ARUCO_ML;
+
+// Passing a non-custom profile allows you to leave next == nullptr
+XrMarkerDetectorCustomProfileInfoML customProfile{ XR_TYPE_MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML };
+customProfile.fpsHint = XR_MARKER_DETECTOR_FPS_LOW_ML;
+customProfile.resolutionHint = XR_MARKER_DETECTOR_RESOLUTION_HIGH_ML;
+customProfile.cameraHint = XR_MARKER_DETECTOR_CAMERA_RGB_CAMERA_ML;
+customProfile.cornerRefineMethod = XR_MARKER_DETECTOR_CORNER_REFINE_METHOD_CONTOUR_ML;
+customProfile.useEdgeRefinement = true;
+customProfile.fullAnalysisIntervalHint = XR_MARKER_DETECTOR_FULL_ANALYSIS_INTERVAL_SLOW_ML;
+
+createInfo.next = &customProfile;
+
+// Elect to use ArUco marker tracking, providing required dictionary
+XrMarkerDetectorArucoInfoML arucoCreateInfo{ XR_TYPE_MARKER_DETECTOR_ARUCO_INFO_ML };
+arucoCreateInfo.arucoDict = XR_MARKER_ARUCO_DICT_6X6_100_ML;
+
+customProfile.next = &arucoCreateInfo;
+
+// Specify the size of the marker to improve tracking quality
+XrMarkerDetectorSizeInfoML sizeCreateInfo{ XR_TYPE_MARKER_DETECTOR_SIZE_INFO_ML };
+sizeCreateInfo.markerLength = 0.2f;
+
+arucoCreateInfo.next = &sizeCreateInfo;
+
+CHK_XR(xrCreateMarkerDetectorML(session, &createInfo, &markerDetector));
+
+bool queryRunning = false;
+
+std::unordered_map <uint64_t, XrSpace> markerSpaceMap;
+
+auto processMarkers = [&]() {
+    // 2 call idiom to get the markers from runtime
+    uint32_t markerCount;
+    CHK_XR(xrGetMarkersML(markerDetector, 0, &markerCount, nullptr));
+    std::vector<XrMarkerML> markers(markerCount);
+    CHK_XR(xrGetMarkersML(markerDetector, markerCount, &markerCount, markers.data()));
+
+    for(uint32_t i = 0; i < markerCount; ++i)
+    {
+        uint64_t number;
+        CHK_XR(xrGetMarkerNumberML(markerDetector, markers[i], &number));
+        // Track every marker we find.
+        if(markerSpaceMap.find(number) == markerSpaceMap.end())
+        {
+            // New entry
+            XrSpace space;
+            XrMarkerSpaceCreateInfoML spaceCreateInfo{ XR_TYPE_MARKER_SPACE_CREATE_INFO_ML };
+            spaceCreateInfo.markerDetector = markerDetector;
+            spaceCreateInfo.marker = markers[i];
+            spaceCreateInfo.poseInMarkerSpace = { {0, 0, 0, 1}, {0, 0, 0} };
+
+            CHK_XR(xrCreateMarkerSpaceML(session, &spaceCreateInfo, &space));
+            markerSpaceMap[number] = space;
+        }
+
+        // This will not work in this example with ArUco markers, but had we configured
+        // a marker with string content such as QR or Code 128, this is how to use it.
+        // uint32_t stringSize;
+        // CHK_XR(xrGetMarkerStringML(markerDetector, markers[i], 0, &stringSize, nullptr));
+        // std::string markerString(stringSize, ' ');
+        // CHK_XR(xrGetMarkerStringML(markerDetector, markers[i], stringSize, &stringSize, markerString.data()));
+    }
+};
+
+// Must be initialized to true, otherwise in the loop below, there will
+// be an XR_ERROR_CALL_ORDER_INVALID due to xrSnapshotMarkerDetectorML
+// not being called first
+bool isReadyForSnapshot = true;
+
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+
+    // We have this if/else block set up so that xrSnapshotMarkerDetectorML
+    // is not captured per frame since the marker detector snapshot
+    // might still be in the midst of being processed by the runtime
+    if (isReadyForSnapshot) {
+      // Call the first snapshot
+      XrMarkerDetectorSnapshotInfoML detectorInfo{ XR_TYPE_MARKER_DETECTOR_SNAPSHOT_INFO_ML };
+      CHK_XR(xrSnapshotMarkerDetectorML(markerDetector, &detectorInfo));
+      isReadyForSnapshot = false;
+    } else {
+      XrMarkerDetectorStateML state{ XR_TYPE_MARKER_DETECTOR_STATE_ML };
+      CHK_XR(xrGetMarkerDetectorStateML(markerDetector, &state));
+      // For simplicity, this example will assume that the marker detector will not
+      // be in an erroneous state
+      if (state.state == XR_MARKER_DETECTOR_STATUS_READY_ML) {
+        processMarkers();
+        isReadyForSnapshot = true;
+      }
+    }
+
+
+    // Draw the markers as needed from markerSpaceMap.
+    // drawMarkers(markerSpaceMap);
+
+    // ...
+    // ...
+}
+// Cleanup
+CHK_XR(xrDestroyMarkerDetectorML(markerDetector));
+----
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SYSTEM_MARKER_UNDERSTANDING_PROPERTIES_ML
+* ename:XR_TYPE_MARKER_DETECTOR_CREATE_INFO_ML
+* ename:XR_TYPE_MARKER_DETECTOR_ARUCO_INFO_ML
+* ename:XR_TYPE_MARKER_DETECTOR_APRIL_TAG_INFO_ML
+* ename:XR_TYPE_MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML
+* ename:XR_TYPE_MARKER_DETECTOR_SNAPSHOT_INFO_ML
+* ename:XR_TYPE_MARKER_DETECTOR_STATE_ML
+* ename:XR_TYPE_MARKER_SPACE_CREATE_INFO_ML
+
+the elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_MARKER_DETECTOR_PERMISSION_DENIED_ML
+* ename:XR_ERROR_MARKER_DETECTOR_LOCATE_FAILED_ML
+* ename:XR_ERROR_MARKER_DETECTOR_INVALID_DATA_QUERY_ML
+* ename:XR_ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML
+* ename:XR_ERROR_MARKER_INVALID_ML
+
+*New Structures*
+
+[open,refpage='XrSystemMarkerUnderstandingPropertiesML',type='structs',desc='System Property for Marker Understanding support.',xrefs='']
+--
+
+The slink:XrSystemMarkerUnderstandingPropertiesML structure is defined as:
+
+include::{generated}/api/structs/XrSystemMarkerUnderstandingPropertiesML.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsMarkerUnderstanding indicates whether marker detection and
+  tracking is supported by this system.
+****
+
+include::{generated}/validity/structs/XrSystemMarkerUnderstandingPropertiesML.txt[]
+--
+
+*Version History*
+
+* Revision 1, 2023-05-18 (Robbie Bridgewater)
+
+** Initial extension skeleton

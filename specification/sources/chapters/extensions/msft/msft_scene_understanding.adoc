@@ -417,9 +417,10 @@ include::{generated}/api/structs/XrSceneFrustumBoundMSFT.txt[]
   the tip of the frustum bound within the reference frame of the
   corresponding slink:XrSceneBoundsMSFT::pname:space.
 * pname:fov is an slink:XrFovf for the four sides of the frustum bound where
-  pname:angleLeft and pname:angleRight are along the X axis and
-  pname:angleUp and pname:angleDown are along the Y axis of the frustum
-  bound space.
+  slink:XrFovf::pname:angleLeft and slink:XrFovf::pname:angleRight are along
+  the X axis and slink:XrFovf::pname:angleUp and
+  slink:XrFovf::pname:angleDown are along the Y axis of the frustum bound
+  space.
 * pname:farDistance is the positive distance of the far plane of the frustum
   bound along the -Z direction of the frustum bound space.
 ****
@@ -1092,8 +1093,9 @@ include::{generated}/api/structs/XrScenePlaneMSFT.txt[]
 * pname:alignment is the alignment type of the plane specified by
   elink:XrScenePlaneAlignmentTypeMSFT.
 * pname:size is the 2D size of the plane's extent, where
-  pname:size::pname:width is the width of the plane along the X axis, and
-  pname:size::pname:height is the height of the plane along the Y axis.
+  slink:XrExtent2Df::pname:width is the width of the plane along the X axis,
+  and slink:XrExtent2Df::pname:height is the height of the plane along the Y
+  axis.
 * pname:meshBufferId is the code:uint64_t identifier that specifies the
   scene mesh buffer of this plane's triangle mesh.
   If pname:meshBufferId is zero then this plane does not have a mesh.

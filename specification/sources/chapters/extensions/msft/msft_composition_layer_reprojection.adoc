@@ -49,7 +49,7 @@ include::{generated}/api/protos/xrEnumerateReprojectionModesMSFT.txt[]
   the runtime.
   It can: be code:NULL if pname:modeCapacityInput is 0.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:mode size.
+  detailed description of retrieving the required pname:modes size.
 ****
 
 include::{generated}/validity/protos/xrEnumerateReprojectionModesMSFT.txt[]
@@ -82,9 +82,10 @@ include::{generated}/api/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
 include::{generated}/validity/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
 
 When the application chained this structure when calling flink:xrEndFrame,
-the pname:mode must: be one of the supported elink:XrReprojectionModeMSFT
-returned by flink:xrEnumerateReprojectionModesMSFT function for the
-corresponding elink:XrViewConfigurationType.
+the pname:reprojectionMode must: be one of the supported
+elink:XrReprojectionModeMSFT returned by
+flink:xrEnumerateReprojectionModesMSFT function for the corresponding
+elink:XrViewConfigurationType.
 Otherwise, the runtime must: return error
 ename:XR_ERROR_REPROJECTION_MODE_UNSUPPORTED_MSFT on the flink:xrEndFrame
 function.

@@ -74,7 +74,7 @@ The paths of a VIVE tracker contains two paths below:
 ** `keyboard`
 * Either the persistent path or the role path can be be passed as a
   subaction path to indicate a specific tracker.
-  For example, slink:XrActionCreateInfo::pname:subactionPath into function
+  For example, slink:XrActionCreateInfo::pname:subactionPaths into function
   flink:xrCreateAction or slink:XrActionSpaceCreateInfo::pname:subactionPath
   into function flink:xrCreateActionSpace.
   Please see Example 1 below.
@@ -196,10 +196,10 @@ include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
   retrieve the required capacity.
 * pname:pathCountOutput is a pointer to the count of
   slink:XrViveTrackerPathsHTCX pname:paths written, or a pointer to the
-  required capacity in the case that pname:pathsCapacityInput is
+  required capacity in the case that pname:pathCapacityInput is
   insufficient.
 * pname:paths is a pointer to an array of slink:XrViveTrackerPathsHTCX VIVE
-  tracker paths, but can: be code:NULL if pname:pathsCapacityInput is `0`.
+  tracker paths, but can: be code:NULL if pname:pathCapacityInput is `0`.
 * See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
   detailed description of retrieving the required pname:paths size.
 ****

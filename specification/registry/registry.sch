@@ -844,7 +844,8 @@
                 '/interaction_profiles/bytedance/pico_neo3_controller',
                 '/interaction_profiles/bytedance/pico4_controller',
                 '/interaction_profiles/bytedance/pico_g3_controller',
-                '/interaction_profiles/facebook/touch_controller_pro'
+                '/interaction_profiles/facebook/touch_controller_pro',
+                '/interaction_profiles/meta/touch_controller_plus'
                 )"/>
             <sch:assert test="ends-with(@name, $vendor-tag) or $is_exception">
                 Interaction Profile name must end with vendor tag _vendor ('<sch:value-of select="$vendor-tag" />'). '<sch:value-of select="@name" />' if it is introduced in an extension.

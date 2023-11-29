@@ -375,11 +375,12 @@ extra elink:XrViewConfigurationType field to specify the view configuration
 for which the submitted layers will be rendered.
 
 The application should: render its content for both the primary and
-secondary view configurations using the same pname:predictedDisplayTime
-reported by flink:xrWaitFrame.
+secondary view configurations using the same
+slink:XrFrameState::pname:predictedDisplayTime reported by
+flink:xrWaitFrame.
 The runtime must: treat both the primary views and secondary views as being
-submitted for the same pname:displayTime specified in the call to
-flink:xrEndFrame.
+submitted for the same slink:XrViewLocateInfo::pname:displayTime specified
+in the call to flink:xrEndFrame.
 
 For layers such as quad layers whose content is identical across view
 configurations, the application can: submit the same

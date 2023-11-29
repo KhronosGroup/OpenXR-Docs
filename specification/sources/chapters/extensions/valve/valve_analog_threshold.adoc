@@ -36,7 +36,8 @@ extension to be able to define multiple thresholds.
 --
 The slink:XrInteractionProfileAnalogThresholdVALVE structure is an input
 struct that defines thresholds and haptic feedback behavior for action
-bindings and should: be added to the pname:bindingModifications array of the
+bindings and should: be added to the
+slink:XrBindingModificationsKHR::pname:bindingModifications array of the
 slink:XrBindingModificationsKHR structure (See
 apiext:XR_KHR_binding_modification extension).
 

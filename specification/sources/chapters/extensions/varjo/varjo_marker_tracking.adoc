@@ -185,7 +185,7 @@ include::{generated}/api/protos/xrCreateMarkerSpaceVARJO.txt[]
 The flink:xrCreateMarkerSpaceVARJO function creates marker slink:XrSpace for
 pose relative to the marker specified in slink:XrMarkerSpaceCreateInfoVARJO.
 The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
-supplied pname:markerId is invalid.
+supplied slink:XrMarkerSpaceCreateInfoVARJO::pname:markerId is invalid.
 
 include::{generated}/validity/protos/xrCreateMarkerSpaceVARJO.txt[]
 --

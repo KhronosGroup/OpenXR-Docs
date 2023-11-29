@@ -77,7 +77,7 @@ by chaining an slink:XrSystemForceFeedbackCurlPropertiesMNDX structure to
 the slink:XrSystemProperties structure when calling
 flink:xrGetSystemProperties.
 
-The runtime should: return ename:XR_TRUE for pname:supportsForceFeedback
+The runtime should: return ename:XR_TRUE for pname:supportsForceFeedbackCurl
 when force feedback is available in the system, otherwise ename:XR_FALSE.
 Force feedback calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
 force feedback is not available in the system.

@@ -87,9 +87,11 @@ include::{generated}/validity/protos/xrDestroySpatialAnchorStoreConnectionMSFT.t
 --
 The application can: use the flink:xrPersistSpatialAnchorMSFT function to
 persist a spatial anchor in the spatial anchor store for this application.
-The given pname:spatialAnchorName will be the string to retrieve the spatial
-anchor from the Spatial Anchor store or subsequently remove the record of
-this spatial anchor from the store.
+The given
+slink:XrSpatialAnchorPersistenceInfoMSFT::pname:spatialAnchorPersistenceName
+will be the string to retrieve the spatial anchor from the Spatial Anchor
+store or subsequently remove the record of this spatial anchor from the
+store.
 This name will uniquely identify the spatial anchor for the current
 application.
 If there is already a spatial anchor of the same name persisted in the
@@ -101,7 +103,8 @@ include::{generated}/api/protos/xrPersistSpatialAnchorMSFT.txt[]
 .Parameter Descriptions
 ****
 * pname:spatialAnchorStore is the slink:XrSpatialAnchorStoreConnectionMSFT
-  with which to persist the pname:spatialAnchor.
+  with which to persist the
+  slink:XrSpatialAnchorPersistenceInfoMSFT::pname:spatialAnchor.
 * pname:spatialAnchorPersistenceInfo is a pointer to
   slink:XrSpatialAnchorPersistenceInfoMSFT structure to specify the anchor
   and its name to persist.
@@ -115,8 +118,8 @@ include::{generated}/validity/protos/xrPersistSpatialAnchorMSFT.txt[]
 
 The slink:XrSpatialAnchorPersistenceNameMSFT structure is the name
 associated with the slink:XrSpatialAnchorMSFT in the spatial anchor store.
-It is used to perform persist and unpersist on an pname:spatialAnchor in the
-spatial anchor store.
+It is used to perform persist and unpersist on an pname:name in the spatial
+anchor store.
 
 The slink:XrSpatialAnchorPersistenceNameMSFT structure is defined as:
 
@@ -195,8 +198,10 @@ include::{generated}/validity/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.
 The application can: use the
 flink:xrCreateSpatialAnchorFromPersistedNameMSFT function to create a
 slink:XrSpatialAnchorMSFT from the spatial anchor store.
-If the pname:spatialAnchorName provided does not correspond to a currently
-stored anchor (i.e. the list of spatial anchor names returned from
+If the
+slink:XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT::pname:spatialAnchorPersistenceName
+provided does not correspond to a currently stored anchor (i.e. the list of
+spatial anchor names returned from
 flink:xrEnumeratePersistedSpatialAnchorNamesMSFT), the function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT.
 
@@ -238,12 +243,13 @@ include::{generated}/api/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSF
   spatial anchor persisted in the spatial anchor store.
 ****
 
-The pname:name is a character array of maximum size
+The pname:spatialAnchorPersistenceName is a character array of maximum size
 ename:XR_MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT, which must: include a null
 terminator and must: not be empty (i.e. the first element is the null
 terminator).
-If an empty pname:name value is passed to any function as a parameter, that
-function must: return ename:XR_ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT.
+If an empty pname:spatialAnchorPersistenceName value is passed to any
+function as a parameter, that function must: return
+ename:XR_ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT.
 
 include::{generated}/validity/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT.txt[]
 --
@@ -254,8 +260,8 @@ The application can: use the flink:xrUnpersistSpatialAnchorMSFT function to
 remove the record of the anchor in the spatial anchor store.
 This operation will not affect any slink:XrSpatialAnchorMSFT handles
 previously created.
-If the pname:spatialAnchorName provided does not correspond to a currently
-stored anchor, the function must: return
+If the pname:spatialAnchorPersistenceName provided does not correspond to a
+currently stored anchor, the function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT.
 
 include::{generated}/api/protos/xrUnpersistSpatialAnchorMSFT.txt[]

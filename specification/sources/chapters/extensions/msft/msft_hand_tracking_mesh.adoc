@@ -128,7 +128,8 @@ must: return space location with ename:XR_SPACE_LOCATION_POSITION_VALID_BIT
 and ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT unset.
 
 The application may: create a mesh space for the reference hand by setting
-pname:handPoseType to ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT.
+slink:XrHandPoseTypeInfoMSFT::pname:handPoseType to
+ename:XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT.
 Hand mesh spaces for the reference hand must: only be locatable in reference
 to mesh spaces or joint spaces of the reference hand.
 
@@ -181,17 +182,20 @@ include::{generated}/api/protos/xrUpdateHandMeshMSFT.txt[]
 ****
 
 The application should: preallocate the index buffer and vertex buffer in
-slink:XrHandMeshMSFT using the pname:maxHandMeshIndexCount and
-pname:maxHandMeshVertexCount from the
-slink:XrSystemHandTrackingMeshPropertiesMSFT returned from the
+slink:XrHandMeshMSFT using the
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshIndexCount
+and
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshVertexCount
+from the slink:XrSystemHandTrackingMeshPropertiesMSFT returned from the
 flink:xrGetSystemProperties function.
 
 The application should: preallocate the slink:XrHandMeshMSFT structure and
 reuse it for each frame so as to reduce the copies of data when underlying
 tracking data is not changed.
-The application should use pname:indexBufferChanged and
-pname:vertexBufferChanged in slink:XrHandMeshMSFT to detect changes and
-avoid unnecessary data processing when there is no changes.
+The application should use slink:XrHandMeshMSFT::pname:indexBufferChanged
+and slink:XrHandMeshMSFT::pname:vertexBufferChanged in slink:XrHandMeshMSFT
+to detect changes and avoid unnecessary data processing when there is no
+changes.
 
 include::{generated}/validity/protos/xrUpdateHandMeshMSFT.txt[]
 --
@@ -220,10 +224,10 @@ A runtime may: not maintain a full history of hand mesh data, therefore the
 returned slink:XrHandMeshMSFT might return data that's not exactly
 corresponding to the pname:time input.
 If the runtime cannot return any tracking data for the given pname:time at
-all, it must: set pname:isActive to ename:XR_FALSE for the call to
-flink:xrUpdateHandMeshMSFT.
-Otherwise, if the runtime returns pname:isActive as ename:XR_TRUE, the data
-in slink:XrHandMeshMSFT must be valid to use.
+all, it must: set slink:XrHandMeshMSFT::pname:isActive to ename:XR_FALSE for
+the call to flink:xrUpdateHandMeshMSFT.
+Otherwise, if the runtime returns slink:XrHandMeshMSFT::pname:isActive as
+ename:XR_TRUE, the data in slink:XrHandMeshMSFT must be valid to use.
 
 An application can choose different pname:handPoseType values to query the
 hand mesh data.
@@ -269,8 +273,8 @@ and must: not change the content in pname:indexBuffer or pname:vertexBuffer,
 
 When the returned pname:isActive value is ename:XR_TRUE, the hand tracking
 mesh represented in pname:indexBuffer and pname:vertexBuffer are updated to
-the latest data of the pname:time given to the flink:xrUpdateHandMeshMSFT
-function.
+the latest data of the slink:XrHandMeshUpdateInfoMSFT::pname:time given to
+the flink:xrUpdateHandMeshMSFT function.
 The runtime must: set pname:indexBufferChanged and pname:vertexBufferChanged
 to reflect whether the index or vertex buffer's content are changed during
 the update.
@@ -308,7 +312,7 @@ include::{generated}/api/structs/XrHandMeshIndexBufferMSFT.txt[]
 ****
 
 An application should: preallocate the indices array using the
-pname:maxHandMeshIndexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshIndexCount
 returned from flink:xrGetSystemProperties.
 In this way, the application can avoid possible insufficient buffer sizees
 for each query, and therefore avoid reallocating memory each frame.
@@ -325,7 +329,7 @@ pname:indexBufferKey and pname:indices, and return 0 for
 pname:indexCountOutput.
 
 If the input pname:indexCapacityInput is equal to or larger than the
-pname:maxHandMeshIndexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshIndexCount
 returned from flink:xrGetSystemProperties, the runtime must: not return
 ename:XR_ERROR_SIZE_INSUFFICIENT error on flink:xrUpdateHandMeshMSFT because
 of insufficient index buffer size.
@@ -337,10 +341,11 @@ pname:indices.
 
 If the input pname:indexBufferKey is not 0, the runtime can: either return
 without changing pname:indexCountOutput or content in pname:indices, and
-return ename:XR_FALSE for pname:indexBufferChanged indicating the indices
-are not changed; or return a new non-zero pname:indexBufferKey and fill in
-latest data in pname:indexCountOutput and pname:indices, and return
-ename:XR_TRUE for pname:indexBufferChanged indicating the indices are
+return ename:XR_FALSE for slink:XrHandMeshMSFT::pname:indexBufferChanged
+indicating the indices are not changed; or return a new non-zero
+pname:indexBufferKey and fill in latest data in pname:indexCountOutput and
+pname:indices, and return ename:XR_TRUE for
+slink:XrHandMeshMSFT::pname:indexBufferChanged indicating the indices are
 updated to a newer version.
 
 An application can: keep the slink:XrHandMeshIndexBufferMSFT structure for
@@ -386,7 +391,7 @@ include::{generated}/api/structs/XrHandMeshVertexBufferMSFT.txt[]
 ****
 
 An application should: preallocate the vertices array using the
-pname:maxHandMeshVertexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshVertexCount
 returned from flink:xrGetSystemProperties.
 In this way, the application can avoid possible insufficient buffer sizes
 for each query, and therefore avoid reallocating memory each frame.
@@ -403,7 +408,7 @@ pname:vertexUpdateTime and pname:vertices, and return 0 for
 pname:vertexCountOutput.
 
 If the input pname:vertexCapacityInput is equal to or larger than the
-pname:maxHandMeshVertexCount in slink:XrSystemHandTrackingMeshPropertiesMSFT
+slink:XrSystemHandTrackingMeshPropertiesMSFT::pname:maxHandMeshVertexCount
 returned from flink:xrGetSystemProperties, the runtime must: not return
 ename:XR_ERROR_SIZE_INSUFFICIENT on calls to the flink:xrUpdateHandMeshMSFT
 because of insufficient vertex buffer size.
@@ -415,11 +420,12 @@ pname:vertexCountOutput and pname:vertices fields.
 
 If the input pname:vertexUpdateTime is not 0, the runtime can: either return
 without changing pname:vertexCountOutput or the content in pname:vertices,
-and return ename:XR_FALSE for pname:vertexBufferChanged indicating the
-vertices are not changed; or return a new non-zero pname:vertexUpdateTime
-and fill in latest data in pname:vertexCountOutput and pname:vertices and
-return ename:XR_TRUE for pname:vertexBufferChanged indicating the vertices
-are updated to a newer version.
+and return ename:XR_FALSE for
+slink:XrHandMeshMSFT::pname:vertexBufferChanged indicating the vertices are
+not changed; or return a new non-zero pname:vertexUpdateTime and fill in
+latest data in pname:vertexCountOutput and pname:vertices and return
+ename:XR_TRUE for slink:XrHandMeshMSFT::pname:vertexBufferChanged indicating
+the vertices are updated to a newer version.
 
 An application can: keep the slink:XrHandMeshVertexBufferMSFT structure for
 each frame in frame loop and use the returned pname:vertexUpdateTime to

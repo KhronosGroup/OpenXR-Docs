@@ -17,6 +17,55 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.32 (2023-11-29)
+
+This release contains a number of vendor extensions, plus a new ratified
+revision to the `XR_KHR_loader_init` extension that specifies forwarding the
+init calls to API layers. **Vendors of API layers**, primarily on Android, must
+verify they can handle being passed `XR_NULL_HANDLE` for the instance parameter
+of `xrGetInstanceProcAddr`, to avoid bugs when using the updated loader. This
+release also features the remaining "checkSpecLinks" consistency warning fixes
+in the manually-written specification text in extensions.
+
+- Registry
+  - `XR_KHR_loader_init`: New Khronos ratified revision, adds support for
+    forwarding loader init calls to API layers
+    ([internal MR 2703](https://gitlab.khronos.org/openxr/openxr/merge_requests/2703))
+  - Extension reservation: Reserve extension id for `XR_KHR_maintenance1`
+    ([internal MR 3010](https://gitlab.khronos.org/openxr/openxr/merge_requests/3010))
+  - Extension reservation: Reserve extension id for `XR_KHR_game_controller`
+    ([internal MR 3019](https://gitlab.khronos.org/openxr/openxr/merge_requests/3019))
+  - New vendor extension: `XR_HTC_anchor`
+    ([internal MR 2667](https://gitlab.khronos.org/openxr/openxr/merge_requests/2667))
+  - New vendor extension: `XR_META_touch_controller_plus`
+    ([internal MR 2702](https://gitlab.khronos.org/openxr/openxr/merge_requests/2702))
+  - New vendor extension: `XR_ML_marker_understanding`
+    ([internal MR 2750](https://gitlab.khronos.org/openxr/openxr/merge_requests/2750))
+  - New vendor extension: `XR_ML_localization_map`
+    ([internal MR 2802](https://gitlab.khronos.org/openxr/openxr/merge_requests/2802),
+    [internal MR 3045](https://gitlab.khronos.org/openxr/openxr/merge_requests/3045),
+    [internal MR 3047](https://gitlab.khronos.org/openxr/openxr/merge_requests/3047))
+- Specification
+  - `XR_KHR_loader_init`: New Khronos ratified revision, now additionally specifies
+    forwarding loader init calls to API layers
+    ([internal MR 2703](https://gitlab.khronos.org/openxr/openxr/merge_requests/2703))
+  - Fix "checkSpecLinks" warnings about member and parameter references in
+    extensions to the specification. This has changed the documentation of a number
+    of structures and functions across several extensions, although the C
+    prototypes/definitions in the spec as well as the header file contents have
+    stayed constant.
+    ([internal MR 2970](https://gitlab.khronos.org/openxr/openxr/merge_requests/2970))
+  - New vendor extension specification: `XR_HTC_anchor`
+    ([internal MR 2667](https://gitlab.khronos.org/openxr/openxr/merge_requests/2667))
+  - New vendor extension specification: `XR_META_touch_controller_plus`
+    ([internal MR 2702](https://gitlab.khronos.org/openxr/openxr/merge_requests/2702))
+  - New vendor extension specification: `XR_ML_marker_understanding`
+    ([internal MR 2750](https://gitlab.khronos.org/openxr/openxr/merge_requests/2750))
+  - New vendor extension specification: `XR_ML_localization_map`
+    ([internal MR 2802](https://gitlab.khronos.org/openxr/openxr/merge_requests/2802),
+    [internal MR 3045](https://gitlab.khronos.org/openxr/openxr/merge_requests/3045),
+    [internal MR 3047](https://gitlab.khronos.org/openxr/openxr/merge_requests/3047))
+
 ## OpenXR Specification 1.0.31 (2023-10-18)
 
 This release features two new vendor extensions, some XML revisions to other

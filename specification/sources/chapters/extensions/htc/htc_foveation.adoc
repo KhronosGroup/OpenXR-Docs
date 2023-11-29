@@ -94,8 +94,9 @@ slink:XrFoveationApplyInfoHTC:
 * The foveation mode to be applied.
 * The specified slink:XrSwapchainSubImage to the corresponding view.
 
-The pname:faceCount of slink:XrSwapchain in slink:XrSwapchainSubImage must:
-be 1 since this extension does not support cubemaps.
+The slink:XrSwapchain::pname:faceCount of the swapchain in
+slink:XrSwapchainSubImage must: be 1 since this extension does not support
+cubemaps.
 
 If pname:mode is ename:XR_FOVEATION_MODE_DYNAMIC_HTC, the pname:next chain
 for this structure must: include slink:XrFoveationDynamicModeInfoHTC

@@ -122,7 +122,7 @@ include::{generated}/api/structs/XrSceneMarkerMSFT.txt[]
 ****
 
 The slink:XrSceneMarkerMSFT structure is an element in the array of
-pname:sceneMarkers in slink:XrSceneMarkersMSFT.
+slink:XrSceneMarkersMSFT::pname:sceneMarkers.
 
 Refer to the <<qr_code_convention, QR code convention>> for an example of
 marker's center and size in the context of a QR code.
