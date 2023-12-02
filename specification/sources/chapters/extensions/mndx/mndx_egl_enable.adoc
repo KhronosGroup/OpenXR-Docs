@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_MNDX_egl_enable.adoc[]
 
 *Last Modified Date*::
-    2022-11-03
+    2023-12-02
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -88,3 +88,8 @@ https://registry.khronos.org/EGL/sdk/docs/man/html/eglGetProcAddress.xhtml
 
 * Revision 1, 2020-05-20 (Jakob Bornecrantz)
 ** Initial draft
+
+* Revision 2, 2023-12-02
+** Use `PFN_xrEglGetProcAddressMNDX` to replace `PFNEGLGETPROCADDRESSPROC`
+   (for `eglGetProcAddress`).
+   Note this does change function pointer attributes on some platforms.
