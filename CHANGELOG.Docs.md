@@ -1,7 +1,7 @@
 # Changelog for OpenXR-Docs and OpenXR-Registry Repos
 
 <!--
-Copyright (c) 2019-2023, The Khronos Group Inc.
+Copyright (c) 2019-2024, The Khronos Group Inc.
 
 SPDX-License-Identifier: CC-BY-4.0
 -->
@@ -16,6 +16,67 @@ any public pull requests that have been accepted.
 
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
+
+## OpenXR Specification 1.0.33 (2024-01-03)
+
+This release primarily adds new ratified functionality to the specification
+describing the loader interaction with runtimes and API layers. This
+functionality was previously described in non-normative text in the loader
+design document, but was universally adopted for compatibility. It is now part
+of the normative, ratified core specification. This change only affects vendors
+of runtimes and API layers as well as contributors to the OpenXR loader:
+applications do not directly use this API, the loader uses it on their behalf. A
+number of other small fixes are also included.
+
+- Registry
+  - Extension reservation: Update author ID and reserve extensions for Varjo.
+    ([internal MR 3083](https://gitlab.khronos.org/openxr/openxr/merge_requests/3083))
+  - Extension reservation: Reserve 10 extension ids each for `ANDROIDX` &
+    `ANDROIDSYS`.
+    ([internal MR 3086](https://gitlab.khronos.org/openxr/openxr/merge_requests/3086))
+  - Khronos ratified addition: Specify the existing loader negotiation functions
+    (without modification) in the XML, moving from `loader_interfaces.h` to a new
+    generated header `openxr_loader_negotiation.h`.
+    ([internal MR 2807](https://gitlab.khronos.org/openxr/openxr/merge_requests/2807),
+    [internal issue 1953](https://gitlab.khronos.org/openxr/openxr/issues/1953))
+  - `XR_KHR_android_thread_settings`: Fix the description of
+    `XrAndroidThreadTypeKHR` enum values - they were swapped relative to their
+    implicit meaning from their name.
+    ([internal MR 3077](https://gitlab.khronos.org/openxr/openxr/merge_requests/3077))
+  - `XR_MNDX_egl_enable`: Update version to 2 to reflect function pointer type
+    change released in 1.0.29.
+    ([OpenXR-Docs PR 159](https://github.com/KhronosGroup/OpenXR-Docs/pull/159))
+- Specification
+  - Khronos ratified specification addition: move loader negotiation functions into
+    the specification proper (from the loader design doc), moving corresponding
+    functions from `loader_interfaces.h` to `openxr_loader_negotiation.h`. (The
+    exact ratified core specification text is 1.0.29 with these changes added,
+    available internally. Non-substantive core specification updates/fixes have
+    occurred since then.)
+    ([internal MR 2807](https://gitlab.khronos.org/openxr/openxr/merge_requests/2807),
+    [internal issue 1953](https://gitlab.khronos.org/openxr/openxr/issues/1953),
+    [internal MR 3101](https://gitlab.khronos.org/openxr/openxr/merge_requests/3101))
+  - Scripts: Adjust Makefile so we now error on any checkSpecLinks warning when
+    running that target.
+    ([internal MR 3072](https://gitlab.khronos.org/openxr/openxr/merge_requests/3072))
+  - `XR_HTC_anchor`: Fix parameter name error in prose description.
+    ([internal MR 3072](https://gitlab.khronos.org/openxr/openxr/merge_requests/3072))
+  - `XR_KHR_android_thread_settings`: Fix the description of
+    `XrAndroidThreadTypeKHR` enum values - they were swapped relative to their
+    implicit meaning from their name.
+    ([internal MR 3077](https://gitlab.khronos.org/openxr/openxr/merge_requests/3077))
+  - `XR_MNDX_egl_enable`: Update revision info and version to 2 to reflect function
+    pointer type change released in 1.0.29.
+    ([OpenXR-Docs PR 159](https://github.com/KhronosGroup/OpenXR-Docs/pull/159))
+  - loader design doc: Fix minor typos.
+    ([internal MR 3065](https://gitlab.khronos.org/openxr/openxr/merge_requests/3065),
+    [internal MR 3103](https://gitlab.khronos.org/openxr/openxr/merge_requests/3103))
+- Misc
+  - Update/correct names.
+  - Ship a `.mailmap` file in the public repositories, maintained separately
+    from the larger one used in the private monorepo, to correct names/emails
+    and unify contributor identities.
+  - Update Khronos Group copyright dates.
 
 ## OpenXR Specification 1.0.32 (2023-11-29)
 

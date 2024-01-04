@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The Khronos Group Inc.
+// Copyright (c) 2017-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -344,7 +344,7 @@ include::{generated}/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.txt[]
 ** Description updated
 * Revision 6, 2019-07-02 (Robert Menzel)
 ** Minor fixes
-* Revision 7, 2019-07-08 (Ryan Pavlk)
+* Revision 7, 2019-07-08 (Rylie Pavlik)
 ** Adjusted member name in XCB struct
 * Revision 8, 2019-11-28 (Jakob Bornecrantz)
 ** Added note about context not allowed to be current in a different thread.

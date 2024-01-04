@@ -129,7 +129,7 @@ include::{generated}/api/protos/xrGetSpatialAnchorNameHTC.txt[]
 ****
 
 The flink:xrGetSpatialAnchorNameHTC function gets the name of an anchor.
-If the provided pname:space is a valid space handle but was *not* created
+If the provided pname:anchor is a valid space handle but was *not* created
 with flink:xrCreateSpatialAnchorHTC, the runtime must: return
 ename:XR_ERROR_NOT_AN_ANCHOR_HTC.
 

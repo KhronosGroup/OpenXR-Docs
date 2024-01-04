@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (c) 2019-2023, The Khronos Group Inc.
+# Copyright (c) 2019-2024, The Khronos Group Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -71,7 +71,7 @@ if $HAVE_TRANG; then
     echo "Converting $RNG back into $REGEN_RNC (formatted, but with some missing blank lines)"
     trang -o indent=4 $RNG $REGEN_RNC
     # Remove trailing whitespace from regenerated RNC
-    sed -i 's/ *$//' $REGEN_RNC
+    sed -i.backup 's/ *$//' $REGEN_RNC
 else
     echo "Recommend installing 'trang' for schema syntax checking and rnc <-> rng conversions."
 fi

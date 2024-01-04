@@ -1,18 +1,19 @@
-// Copyright (c) 2017-2023, The Khronos Group Inc.
+// Copyright (c) 2017-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
 include::{generated}/meta/XR_KHR_android_thread_settings.adoc[]
 
 *Last Modified Date*::
-    2019-07-17
+    2023-12-04
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Cass Everitt, Oculus +
     Johannes van Waveren, Oculus +
     Martin Renschler, Qualcomm +
-    Krzysztof Kosiński, Google
+    Krzysztof Kosiński, Google +
+    Xiang Wei, Meta
 
 
 
@@ -46,15 +47,15 @@ include::{generated}/api/enums/XrAndroidThreadTypeKHR.txt[]
 .Enumerants
 ****
 * ename:XR_ANDROID_THREAD_TYPE_APPLICATION_MAIN_KHR +
-  hints the XR runtime that the thread is doing background CPU tasks
-* ename:XR_ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR +
   hints the XR runtime that the thread is doing time critical CPU tasks
+* ename:XR_ANDROID_THREAD_TYPE_APPLICATION_WORKER_KHR +
+  hints the XR runtime that the thread is doing background CPU tasks
 * ename:XR_ANDROID_THREAD_TYPE_RENDERER_MAIN_KHR +
-  hints the XR runtime that the thread is doing background graphics device
-  tasks
-* ename:XR_ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR +
   hints the XR runtime that the thread is doing time critical graphics
   device tasks
+* ename:XR_ANDROID_THREAD_TYPE_RENDERER_WORKER_KHR +
+  hints the XR runtime that the thread is doing background graphics device
+  tasks
 ****
 --
 
@@ -100,3 +101,5 @@ include::{generated}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
 ** Added enum specification, reformatting
 * Revision 5, 2019-07-17 (Krzysztof Kosiński)
 ** Clarify the type of thread identifier used by the extension.
+* Revision 6, 2023-12-04 (Xiang Wei)
+** Revise/fix the hints of enum specification

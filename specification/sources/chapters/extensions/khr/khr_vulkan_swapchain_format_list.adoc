@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The Khronos Group Inc.
+// Copyright (c) 2017-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -83,5 +83,5 @@ include::{generated}/validity/structs/XrVulkanSwapchainFormatListCreateInfoKHR.t
    `XR_KHR_vulkan_enable`
 * Revision 3, 2020-01-01 (Andres Rodriguez)
 ** Update for `XR_KHR_vulkan_enable2`
-* Revision 4, 2021-01-21 (Ryan Pavlik)
+* Revision 4, 2021-01-21 (Rylie Pavlik, Collabora, Ltd.)
 ** Fix reference to the mutable-format bit in Vulkan.

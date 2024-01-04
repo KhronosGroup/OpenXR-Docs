@@ -9,7 +9,7 @@ include::{generated}/meta/XR_MND_headless.adoc[]
 *IP Status*::
     No known IP claims.
 *Contributors*::
-    Ryan Pavlik, Collabora
+    Rylie Pavlik, Collabora
 
 // REUSE-IgnoreStart
 
@@ -78,8 +78,8 @@ resources in a busy-wait loop.
 
 *Version History*
 
-* Revision 1, 2019-07-25 (Ryan Pavlik)
+* Revision 1, 2019-07-25 (Rylie Pavlik, Collabora, Ltd.)
 ** Initial version reflecting Monado prototype.
-* Revision 2, 2019-10-22 (Ryan Pavlik)
+* Revision 2, 2019-10-22 (Rylie Pavlik, Collabora, Ltd.)
 ** Clarify that `xrWaitFrame` is permitted and should set `shouldRender` to
    false.

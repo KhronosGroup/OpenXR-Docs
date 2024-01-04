@@ -222,9 +222,9 @@ include::{generated}/validity/protos/xrSetColorSpaceFB.txt[]
 
 * Revision 1, 2020-11-09 (Gloria Kennickell)
 ** Initial extension description
-* Revision 2, 2021-09-28 (Ryan Pavlik, Collabora, Ltd.)
+* Revision 2, 2021-09-28 (Rylie Pavlik, Collabora, Ltd.)
 ** Fix XML markup to indicate that `XrSystemColorSpacePropertiesFB` is
    chained to `XrSystemProperties`.
-* Revision 3, 2022-09-01 (Ryan Pavlik, Collabora, Ltd.)
+* Revision 3, 2022-09-01 (Rylie Pavlik, Collabora, Ltd.)
 ** Fix XML markup to indicate that `XrSystemColorSpacePropertiesFB` is
    returned-only.

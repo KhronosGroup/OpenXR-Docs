@@ -2,7 +2,7 @@
             xmlns:sqf="http://www.schematron-quickfix.com/validator/process"
             queryBinding="xslt2">
     <!--
-         Copyright (c) 2021-2023, The Khronos Group Inc.
+         Copyright (c) 2021-2024, The Khronos Group Inc.
 
          SPDX-License-Identifier: Apache-2.0
     -->
@@ -271,7 +271,7 @@
             </sch:assert>
 
             <!-- TODO fix the exceptions we can -->
-            <sch:let name="is_exception" value="current()/@name = ('XrFoveationProfileCreateInfoFB', 'XrSwapchainCreateInfoFoveationFB', 'XrFoveationLevelProfileCreateInfoFB', 'XrRenderModelPathInfoFB','XrRenderModelLoadInfoFB','XrKeyboardSpaceCreateInfoFB')"/>
+            <sch:let name="is_exception" value="current()/@name = ('XrApiLayerNextInfo', 'XrFoveationProfileCreateInfoFB', 'XrSwapchainCreateInfoFoveationFB', 'XrFoveationLevelProfileCreateInfoFB', 'XrRenderModelPathInfoFB','XrRenderModelLoadInfoFB','XrKeyboardSpaceCreateInfoFB')"/>
             <sch:assert test="current()/member[name/text() = 'next']/text() = 'const ' or $is_exception">
                 <sch:value-of select="current()/@name"/>: All Xr...Info are input structs, so next must be pointer to const. (If you do not want this to be an input struct, try using Xr...State for outputs that change during runtime, or Xr...Properties for outputs that do not)
             </sch:assert>
@@ -388,7 +388,7 @@
             <sch:let name="struct_name" value="current()/../@name"/>
             <sch:let name="member_name" value="current()/name/text()"/>
 
-            <sch:let name="not_size" value="$member_name = ('counterUnit', 'counterFlags')"/>
+            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags')"/>
             <sch:assert test="current()/type/text() = 'uint32_t' or $not_size">
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
@@ -498,7 +498,7 @@
 
     <sch:pattern>
         <!-- these commands are allowed to not take a handle as their first parameter: match them first so they skip the other rule. -->
-        <sch:rule context="commands/command[proto/name/text() = ('xrEnumerateApiLayerProperties', 'xrEnumerateInstanceExtensionProperties', 'xrCreateInstance', 'xrInitializeLoaderKHR')]">
+        <sch:rule context="commands/command[proto/name/text() = ('xrEnumerateApiLayerProperties', 'xrEnumerateInstanceExtensionProperties', 'xrCreateInstance', 'xrInitializeLoaderKHR', 'xrNegotiateLoaderRuntimeInterface', 'xrNegotiateLoaderApiLayerInterface', 'xrCreateApiLayerInstance')]">
         </sch:rule>
         <sch:rule context="commands/command[proto/name]">
             <sch:let name="command_name" value="current()/proto/name/text()" />
@@ -518,9 +518,9 @@
             <sch:let name="member_name" value="current()/name/text()" />
 
             <!-- TODO fix exceptions -->
-            <sch:let name="is_exception" value="$type_name = ('XrFrameEndInfoML')"/>
+            <sch:let name="is_exception" value="$type_name = ('XrFrameEndInfoML', 'XrApiLayerCreateInfo')"/>
             <sch:assert test="$is_exception or matches($member_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
-                <sch:value-of select="$type_name" /> member naming: The <sch:value-of select="$member_name" /> member does not match the camelCase convention.
+                <sch:value-of select="$type_name" /> member naming: The <sch:value-of select="$member_name" /> member does not match the struct camelCase convention.
             </sch:assert>
         </sch:rule>
 
@@ -529,7 +529,7 @@
             <sch:let name="param_name" value="current()/name/text()" />
 
             <sch:assert test="matches($param_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
-                <sch:value-of select="$command_name" /> param naming: The <sch:value-of select="$param_name" /> parameter does not match the camelCase convention.
+                <sch:value-of select="$command_name" /> param naming: The <sch:value-of select="$param_name" /> parameter does not match the param camelCase convention.
             </sch:assert>
         </sch:rule>
     </sch:pattern>

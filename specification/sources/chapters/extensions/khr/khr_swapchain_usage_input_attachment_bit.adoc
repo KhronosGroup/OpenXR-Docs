@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2023, The Khronos Group Inc.
+// Copyright (c) 2020-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -10,7 +10,7 @@ include::{generated}/meta/XR_KHR_swapchain_usage_input_attachment_bit.adoc[]
     No known IP claims.
 *Contributors*::
     Jakob Bornecrantz, Collabora +
-    Ryan Pavlik, Collabora +
+    Rylie Pavlik, Collabora +
 
 *Overview*
 
@@ -44,5 +44,5 @@ elink:XrSwapchainUsageFlagBits enumeration is extended with:
 * Revision 2, 2020-07-24 (Jakob Bornecrantz)
 ** Added note about only affecting Vulkan
 ** Changed from MNDX to MND
-* Revision 3, 2021-05-11 (Ryan Pavlik)
+* Revision 3, 2021-05-11 (Rylie Pavlik, Collabora, Ltd.)
 ** Updated for promotion from MND to KHR

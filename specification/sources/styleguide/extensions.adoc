@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2023, The Khronos Group Inc.
+// Copyright (c) 2015-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -369,7 +369,7 @@ requesting an extension number reservation should look like:
           </require>
       </extension>
 +     <extension name="XR_KHR_extension_10" number="10"
-+                contact="Ryan Pavlik @rpavlik" supported="disabled">
++                contact="Rylie Pavlik @rpavlik" supported="disabled">
 +        <require>
 +           <enum value="1" name="XR_KHR_extension_10_SPEC_VERSION"/>
 +           <enum value="&quot;XR_KHR_extension_10&quot;"
@@ -535,11 +535,11 @@ elink:XrStructureType enumeration is extended with:
 ----
 *Version History*
 
-* Revision 1, 2019-07-12 (Ryan Pavlik)
+* Revision 1, 2019-07-12 (Rylie Pavlik, Collabora, Ltd.)
 ** A brief revision description goes here.
    Mark up entity names with back-ticks instead of the normal macros
    in the version history to prevent errors in case future revisions rename things.
-* Revision 2, 2019-07-12 (Ryan Pavlik)
+* Revision 2, 2019-07-12 (Rylie Pavlik, Collabora, Ltd.)
 ** ... etc. ...
 ----
 --

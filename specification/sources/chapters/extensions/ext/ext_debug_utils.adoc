@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2023, The Khronos Group Inc.
+// Copyright (c) 2017-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
@@ -12,7 +12,7 @@ include::{generated}/meta/XR_EXT_debug_utils.adoc[]
 *Contributors*::
     Mark Young, LunarG +
     Karl Schultz, LunarG +
-    Ryan Pavlik, Collabora +
+    Rylie Pavlik, Collabora +
 
 *Overview*
 
@@ -897,10 +897,10 @@ None
 ** Clean up some language based on changes going into the Vulkan
    +VK_EXT_debug_utils+ extension by Peter Kraus (aka @krOoze).
 ** Added session labels
-* Revision 3, 2019-07-19 (Ryan Pavlik)
+* Revision 3, 2019-07-19 (Rylie Pavlik)
 ** Update examples.
 ** Improve formatting.
-* Revision 4, 2021-04-04 (Ryan Pavlik)
+* Revision 4, 2021-04-04 (Rylie Pavlik)
 ** Fix missing error code.
 ** Improve formatting.
 * Revision 5, 2023-07-25 (John Kearney, Meta)
