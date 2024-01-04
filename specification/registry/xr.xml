@@ -7492,7 +7492,7 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
 
     <extension name="XR_MNDX_egl_enable" number="49" type="instance" provisional="true" protect="XR_USE_PLATFORM_EGL" supported="openxr">
         <require>
-            <enum value="1"                              name="XR_MNDX_egl_enable_SPEC_VERSION"/>
+            <enum value="2"                              name="XR_MNDX_egl_enable_SPEC_VERSION"/>
             <enum value="&quot;XR_MNDX_egl_enable&quot;" name="XR_MNDX_EGL_ENABLE_EXTENSION_NAME"/>
             <enum offset="4" extends="XrStructureType"   name="XR_TYPE_GRAPHICS_BINDING_EGL_MNDX"/>
             <type name="XrGraphicsBindingEGLMNDX"/>
