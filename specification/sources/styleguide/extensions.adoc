@@ -750,8 +750,8 @@ The information needed to add new values to the XML are as follows:
 * The **offset**, which is an integer between 0 and 999 relative to the base
   being used for the extension.
 * The **direction** may be specified to indicate a negative value
-  (`dir="-"`) when needed for negative etext:VkResult values indicating
-  errors, like etext:VK_ERROR_SURFACE_LOST_KHR.
+  (`dir="-"`) when needed for negative etext:XrResult values indicating
+  errors, like etext:XR_ERROR_ANDROID_THREAD_SETTINGS_FAILURE_KHR.
   The default direction is positive, if not specified.
 
 Implicit is the registered number of an extension, which is used to create a
@@ -764,7 +764,7 @@ Values are calculated as follows:
 * [eq]#enum_offset(_extension_number_, _offset_) = _base_value_ {plus}
   (_extension_number_ - 1) {times} _range_size_ + _offset_#
 * Positive values: [eq]#enum_offset(_extension_number_, _offset_})#
-* Negative values: [eq]#enum_offset(_extension_number_, _offset_})#
+* Negative values: [eq]#-enum_offset(_extension_number_, _offset_})#
 
 The exact syntax for specifying extension enumerant values is defined in the
 `readme.pdf` specifying the format of `xr.xml`, and extension authors can

@@ -741,18 +741,15 @@ link:{uri-openxr-ratified-spec}[OpenXR API Specification].
 [width="100%",options="header"]
 |====
 | Use This      | Instead Of     | Comments
-| allocate      | create
-                | When describing objects or memory resulting from
-                  ftext:vkAllocate* commands.
 | application   | client         |
 | bitmask       | bit field
-                | Technically correct. Vulkan bitmasks are just integers and
+                | Technically correct. OpenXR bitmasks are just integers and
                   are not logically addressable at the bit level.
 | command       | function
                 | Except when talking about function pointers returned by
-                  ftext:vkGet*ProcAddr commands.
+                  ftext:xrGet*ProcAddr commands.
 | create        | allocate
-                | When describing objects resulting from ftext:vkCreate*
+                | When describing objects resulting from ftext:xrCreate*
                   commands.
 | depth/stencil | packed (interleaved, combined, _other prefix_)
                   depth/stencil, depth-stencil, DepthStencil, etc.
@@ -776,8 +773,8 @@ link:{uri-openxr-ratified-spec}[OpenXR API Specification].
                 | the value of pname:parameter is
                 | In rare cases, _the value of_ is appropriate. See the
                   existing specification language for examples.
-| begins / begun      | starts / started | For ftext:vkBegin* - also see "`finish`"
-| finishes / finished | ends / ended     | For ftext:vkEnd* - also see "`begins`"
+| begins / begun      | starts / started | For ftext:xrBegin* - also see "`finish`"
+| finishes / finished | ends / ended     | For ftext:xrEnd* - also see "`begins`"
 | used          | referenced     | When describing attachments specified in a
                                    subpass description.
 | statically used | referenced   | When describing resources or push constants

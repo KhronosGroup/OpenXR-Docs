@@ -1,0 +1,47 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_automatic_layer_filter.adoc[]
+
+*Contributors*::
+    Rohit Rao Padebettu, Meta +
+    Grant Yang, Meta +
+
+*Overview*
+
+This extension defines a new flag in
+elink:XrCompositionLayerSettingsFlagBitsFB that allows applications to
+provide a hint to the runtime to automatically toggle a layer filtering
+mechanism.
+The layer filtering helps alleviate visual quality artifacts such as blur
+and flicker.
+
+Note: The runtime may: use any factors it wishes to apply a filter to the
+layer.
+These may: include not only fixed factors such as screen resolution, HMD
+type, and swapchain resolution, but also dynamic ones such as layer pose and
+system-wide GPU utilization.
+
+*Automatic Layer Filtering*
+
+elink:XrCompositionLayerSettingsFlagBitsFB is extended with
+ename:XR_COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META
+
+To enable automatic selection of layer filtering method,
+ename:XR_COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META is passed to
+the runtime in slink:XrCompositionLayerSettingsFB::pname:layerFlags.
+
+A candidate pool of preferred layer filtering methods from
+elink:XrCompositionLayerSettingsFlagBitsFB must: be passed along with
+ename:XR_COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META.
+The runtime may: apply the appropriate filter when rendering the layer.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrEndFrame when an slink:XrCompositionLayerSettingsFB structure is
+submitted with one or more of the layers if no other flag bits are supplied
+with ename:XR_COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META.
+
+*Version History*
+
+* Revision 1, 2023-04-21 (Rohit Rao Padebettu)
+** Initial extension description

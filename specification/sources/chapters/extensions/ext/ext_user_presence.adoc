@@ -1,0 +1,224 @@
+// Copyright (c) 2020-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_user_presence.adoc[]
+
+*Last Modified Date*::
+    2023-04-22
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    John Kearney, Meta Platforms +
+    Andreas Loeve Selvik, Meta Platforms +
+    Peter Kuhn, Unity Technologies +
+    Jakob Bornecrantz, Collabora +
+
+==== Overview
+
+This extension introduces a new event to notify when the system detected the
+change of user presence, such as when the user has taken off or put on an XR
+headset.
+
+This event is typically used by an XR applications with non-XR experiences
+outside of the XR headset.
+For instance, some applications pause the game logic or video playback until
+the user puts on the headset, displaying an instructional message to the
+user in the mirror window on the desktop PC monitor.
+As another example, the application might use this event to disable a
+head-tracking driven avatar in an online meeting when the user has taken off
+the headset.
+
+The user presence is fundamentally decoupled from the session lifecycle.
+Although the core spec for elink:XrSessionState hinted potential correlation
+between the session state and user presence, in practice, such a connection
+may: not consistently hold across various runtimes.
+Application should: avoid relying on assumptions regarding these
+relationships between session state and user presence, instead, they should
+utilize this extension to reliably obtain user presence information.
+
+==== System Supports User Presence
+
+[open,refpage='XrSystemUserPresencePropertiesEXT',type='structs',desc='Returns the system capability whether it supports user presence.',xrefs='xrGetSystemProperties']
+--
+
+The slink:XrSystemUserPresencePropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrSystemUserPresencePropertiesEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsUserPresence is an basetype:XrBool32 value that indicates
+  whether the system supports user presence sensing.
+****
+
+The application can: use the slink:XrSystemUserPresencePropertiesEXT event
+in flink:xrGetSystemProperties to detect if the given system supports the
+sensing of user presence.
+
+If the system does not support user presence sensing, the runtime must:
+return ename:XR_FALSE for pname:supportsUserPresence and must: not queue the
+slink:XrEventDataUserPresenceChangedEXT event for any session on this
+system.
+
+In this case, an application typically assumes that the user is always
+present, as the runtime is unable to detect changes in user presence.
+
+include::{generated}/validity/structs/XrSystemUserPresencePropertiesEXT.txt[]
+--
+
+==== User Presence Changed Event
+
+[open,refpage='XrEventDataUserPresenceChangedEXT',type='structs',desc='Event notifying the change of user presence.',xrefs='']
+--
+
+The slink:XrEventDataUserPresenceChangedEXT structure is defined as:
+
+include::{generated}/api/structs/XrEventDataUserPresenceChangedEXT.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:session is the slink:XrSession that is receiving the notification.
+* pname:isUserPresent is an basetype:XrBool32 value for new state of user
+  presence after the change.
+****
+
+The slink:XrEventDataUserPresenceChangedEXT event is queued for retrieval
+using flink:xrPollEvent when the user presence is changed, as well as when a
+session starts running.
+
+Receiving slink:XrEventDataUserPresenceChangedEXT with the
+pname:isUserPresent is ename:XR_TRUE indicates that the system has detected
+the presence of a user in the XR experience.
+For example, this may indicate that the user has put on the headset, or has
+entered the tracking area of a non-head-worn XR system.
+
+Receiving slink:XrEventDataUserPresenceChangedEXT with the
+pname:isUserPresent is ename:XR_FALSE indicates that the system has detected
+the absence of a user in the XR experience.
+For example, this may indicate that the user has removed the headset or has
+stepped away from the tracking area of a non-head-worn XR system.
+
+The runtime must: queue this event upon a successful call to the
+flink:xrBeginSession function, regardless of the value of
+pname:isUserPresent, so that the application can be in sync on the state
+when a session begins running.
+
+The runtime must: return a valid slink:XrSession handle for
+<<session_running, a running session>>.
+
+After the application calls flink:xrEndSession, a <<session_running, running
+session>> is ended and the runtime must: not enqueue any more user presence
+events.
+Therefore, the application will no longer observe any changes of the
+pname:isUserPresent until another <<session_running, running session>>.
+
+[NOTE]
+.Note
+****
+This extension does not require any specific correlation between user
+presence state and session state except that the
+slink:XrEventDataUserPresenceChangedEXT event can not be observed without a
+running session.
+A runtime may choose to correlate the two states or keep them independent.
+****
+
+include::{generated}/validity/structs/XrEventDataUserPresenceChangedEXT.txt[]
+--
+
+[example]
+.Proper Method for Receiving OpenXR Event Data
+====
+
+[source,c++]
+----
+XrInstance instance;  // previously initialized
+XrSystemId systemId;  // previously initialized
+XrSession session;  // previously initialized
+
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES};
+XrSystemUserPresencePropertiesEXT userPresenceProperties{XR_TYPE_SYSTEM_USER_PRESENCE_PROPERTIES_EXT};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+bool supportsUserPresence = userPresenceProperties.supportsUserPresence;
+
+// When either the extension is not supported or the system does not support the sensor,
+// the application typically assumes user always present, and initialize the isUserPresent
+// to true before xrBeginSession and reset it to false after xrEndSession.
+bool isUserPresent = true;
+
+// Initialize an event buffer to hold the output.
+XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrResult result = xrPollEvent(instance, &event);
+if (result == XR_SUCCESS) {
+    switch (event.type) {
+        case XR_TYPE_EVENT_DATA_SESSION_STATE_CHANGED: {
+            const XrEventDataSessionStateChanged& eventdata =
+                *reinterpret_cast<XrEventDataSessionStateChanged*>(&event);
+            XrSessionState sessionState = eventdata.state;
+            switch(sessionState)
+            {
+              case XR_SESSION_STATE_READY: {
+                  isUserPresent = true;
+                  XrSessionBeginInfo beginInfo{XR_TYPE_SESSION_BEGIN_INFO};
+                  CHK_XR(xrBeginSession(session, &beginInfo));
+                  break;
+              }
+              case XR_SESSION_STATE_STOPPING:{
+                  CHK_XR(xrEndSession(session));
+                  isUserPresent = false;
+                  break;
+              }
+            }
+            break;
+        }
+        case XR_TYPE_EVENT_DATA_USER_PRESENCE_CHANGED_EXT: {
+            const XrEventDataUserPresenceChangedEXT& eventdata =
+                *reinterpret_cast<XrEventDataUserPresenceChangedEXT*>(&event);
+            isUserPresent = eventdata.isUserPresent;
+            // do_something(isUserPresent);
+            break;
+        }
+    }
+}
+----
+====
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_EVENT_DATA_USER_PRESENCE_CHANGED_EXT
+* ename:XR_TYPE_SYSTEM_USER_PRESENCE_PROPERTIES_EXT
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrSystemUserPresencePropertiesEXT
+* slink:XrEventDataUserPresenceChangedEXT
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-04-22 (Yin Li)
+** Initial extension description

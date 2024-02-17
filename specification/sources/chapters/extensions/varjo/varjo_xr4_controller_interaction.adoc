@@ -1,0 +1,77 @@
+// Copyright (c) 2023 Varjo Technologies
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_VARJO_xr4_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2023-12-06
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Denny Rönngren, Varjo Technologies +
+    Szymon Policht, Varjo Technologies +
+    Roman Golovanov, Varjo Technologies +
+    Jussi Karhu, Varjo Technologies
+
+*Overview*
+
+This extension adds a new interaction profile for the Varjo Controllers
+compatible with the Varjo XR-4 headset.
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/varjo/xr-4_controller
+
+Valid for the user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths for pathname:/user/hand/left only:
+
+* subpathname:/input/menu/click
+
+Supported component paths for pathname:/user/hand/right only:
+
+* subpathname:/input/system/click (may: not be available for application
+  use)
+
+Supported component paths on both pathnames:
+
+* subpathname:/input/a/click
+* subpathname:/input/a/touch
+* subpathname:/input/b/click
+* subpathname:/input/b/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/touch
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+*New Enums*
+
+*New Structures*
+
+*New Functions*
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-12-06 (Denny Rönngren)
+** Initial extension description

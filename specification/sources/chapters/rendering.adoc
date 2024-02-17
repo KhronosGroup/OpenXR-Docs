@@ -129,7 +129,7 @@ flink:xrDestroySwapchain function.
 The runtime must: return ename:XR_ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED if the
 image format specified in the slink:XrSwapchainCreateInfo is unsupported.
 The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if any bit of
-the create flags specified in the slink:XrSwapchainCreateInfo is
+the create or usage flags specified in the slink:XrSwapchainCreateInfo is
 unsupported.
 
 include::{generated}/validity/protos/xrCreateSwapchain.txt[]

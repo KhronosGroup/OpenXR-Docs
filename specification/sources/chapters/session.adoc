@@ -533,9 +533,9 @@ ename:XR_SESSION_STATE_SYNCHRONIZED state to the
 ename:XR_SESSION_STATE_STOPPING state, to request that the application end
 this session.
 If the system supports a user engagement sensor and runtime is in
-ename:XR_SESSION_STATE_IDLE state, the runtime should: not transition to the
-ename:XR_SESSION_STATE_READY state until the user starts engaging with the
-device.
+ename:XR_SESSION_STATE_IDLE state, the runtime may: wait until the user
+starts engaging with the device before transitioning to the
+ename:XR_SESSION_STATE_READY state.
 
 [[session_synchronized]]
 Receiving the ename:XR_SESSION_STATE_SYNCHRONIZED state indicates that the
@@ -593,7 +593,7 @@ when in this state.
 A possible reason for this would be to minimize contention between multiple
 applications.
 If the system supports a user engagement sensor and the session is running,
-the runtime should: transition to the ename:XR_SESSION_STATE_STOPPING state
+the runtime may: transition to the ename:XR_SESSION_STATE_STOPPING state
 when the user stops engaging with the device.
 
 [[session_exiting]]

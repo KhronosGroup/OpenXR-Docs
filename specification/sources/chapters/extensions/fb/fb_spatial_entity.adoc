@@ -393,3 +393,5 @@ include::{generated}/validity/protos/xrGetSpaceComponentStatusFB.txt[]
 ** Initial draft
 * Revision 2, 2023-01-18 (Andrew Kim)
 ** Added a new component enum value
+* Revision 3, 2023-01-30 (Wenlin Mao)
+** Drop requirement for `XR_EXT_uuid` must be enabled

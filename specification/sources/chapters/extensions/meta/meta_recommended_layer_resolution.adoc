@@ -1,0 +1,162 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_recommended_layer_resolution.adoc[]
+
+*Contributors*::
+  Rohit Rao Padebettu, Meta +
+  Remi Palandri, Meta +
+  Ben Cumings, Meta +
+
+*Overview*
+
+The extension allows an application to request a recommended swapchain
+resolution from the runtime, in order to either allocate a swapchain of a
+more appropriate size, or to render into a smaller image rect according to
+the recommendation.
+For layers with multiple views such as slink:XrCompositionLayerProjection,
+the application may: scale the individual views to match the scaled
+swapchain resolution.
+
+The runtime may: use any factors to drive the recommendation it wishes to
+return to the application.
+Those include static properties such as screen resolution and HMD type, but
+also dynamic ones such as layer positioning and system-wide GPU utilization.
+
+Application may: also use this extension to allocate the swapchain by
+passing in a layer with a swapchain handle dlink:XR_NULL_HANDLE.
+
+*New Structures*
+
+[open,refpage='XrRecommendedLayerResolutionMETA',type='structs',desc='The structure returned by the runtime, containing resolution and whether the recommendation is valid.',xrefs='xrGetRecommendedLayerResolutionMETA']
+--
+
+The slink:XrRecommendedLayerResolutionMETA structure is defined as:
+
+include::{generated}/api/structs/XrRecommendedLayerResolutionMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:recommendedImageDimensions is the slink:XrExtent2Di recommended
+  image dimensions of the layer.
+* pname:isValid is the basetype:XrBool32 boolean returned by the runtime
+  which indicates whether the runtime returned a valid recommendation or
+  does not have any recommendations to make.
+****
+
+If the runtime does not wish to make a recommendation, pname:isValid must:
+be ename:XR_FALSE and pname:recommendedImageDimensions must: be {0,0}.
+
+
+include::{generated}/validity/structs/XrRecommendedLayerResolutionMETA.txt[]
+
+--
+
+
+[open,refpage='XrRecommendedLayerResolutionGetInfoMETA',type='structs',desc='The structure provided by the application to the runtime, describing the information required for a recommendation to be made',xrefs='xrGetRecommendedLayerResolutionMETA']
+--
+
+The slink:XrRecommendedLayerResolutionGetInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrRecommendedLayerResolutionGetInfoMETA.txt[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:layer is a pointer to a structure based on
+  slink:XrCompositionLayerBaseHeader, describing the layer for which the
+  application wants a runtime-recommended swapchain resolution.
+  Layers with multiple views may: scale the views to match the scaled
+  swapchain resolution.
+* pname:predictedDisplayTime is the basetype:XrTime that the application
+  intends to submit the layer for.
+****
+
+If pname:predictedDisplayTime is older than the predicted display time
+returned from most recent flink:xrWaitFrame then, the runtime must: return
+ename:XR_ERROR_TIME_INVALID.
+
+
+include::{generated}/validity/structs/XrRecommendedLayerResolutionGetInfoMETA.txt[]
+--
+
+*New Functions*
+
+
+[open,refpage='xrGetRecommendedLayerResolutionMETA',desc='Get the recommended layer resolution for a layer from the runtime',type='protos']
+--
+The flink:xrGetRecommendedLayerResolutionMETA function is defined as:
+
+include::{generated}/api/protos/xrGetRecommendedLayerResolutionMETA.txt[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession in which the recommendation is made.
+* pname:info is a pointer to an
+  slink:XrRecommendedLayerResolutionGetInfoMETA structure containing the
+  details of the layer for which the application is requesting a
+  recommendation.
+* pname:resolution is a pointer to an slink:XrRecommendedLayerResolutionMETA
+  that the runtime will populate.
+****
+
+The flink:xrGetRecommendedLayerResolutionMETA function returns the
+recommendation that the runtime wishes to make to the application for the
+layer provided in the slink:XrRecommendedLayerResolutionGetInfoMETA
+structure.
+Application may: choose to reallocate their swapchain or scale view
+resolution accordingly.
+Applications rendering multiple views into the swapchain may: scale
+individual views to match the recommended swapchain resolution.
+
+The runtime may: not wish to make any recommendation, in which case it must:
+return an slink:XrRecommendedLayerResolutionMETA::pname:isValid value of
+ename:XR_FALSE.
+
+If the slink:XrRecommendedLayerResolutionGetInfoMETA::pname:layer attribute
+of the pname:info argument of the function contains valid swapchain handles
+in all fields where required, the runtime must: return a resolution
+recommendation which is less than or equal to the size of that swapchain, so
+that the application may: render into an existing swapchain or swapchains
+without reallocation.
+As an exception to valid usage, an otherwise-valid structure passed as
+slink:XrRecommendedLayerResolutionGetInfoMETA::pname:layer may: contain
+dlink:XR_NULL_HANDLE in place of valid slink:XrSwapchain handle(s) for this
+function only, to obtain a recommended resolution resolution for the purpose
+of allocating a swapchain.
+If at least one otherwise-required slink:XrSwapchain handle within
+slink:XrRecommendedLayerResolutionGetInfoMETA::pname:layer is
+dlink:XR_NULL_HANDLE, the runtime must: interpret this as a request for
+recommended resolution without limitation to the allocated size of any
+existing swapchain.
+
+If the runtime makes a recommendation, it should: make a recommendation that
+is directly usable by the application to render its frames without creating
+adverse visual effects for the user.
+--
+
+*Issues*
+
+. Should this extension be leveraging events instead of being queried potentially every frame?
++
+*RESOLVED*: Yes.
++
+We want to provide the runtime the flexibility to smoothly transition the
+application from one resolution to another in a dynamic resolution usecase
+without any reallocation.
+To do so with an event system would send an event every frame which we
+preferred to avoid.
+
+
+*Version History*
+
+* Revision 1, 2023-12-10 (Remi Palandri)
+** Initial extension description

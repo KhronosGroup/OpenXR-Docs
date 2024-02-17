@@ -17,6 +17,75 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.0.34 (2024-02-16)
+
+This release features clarifications to the specification, as well as a number
+of new multi-vendor and vendor extensions, and additional functionality in the
+reflection header.
+
+- Registry
+  - Extension reservation: Register author ID and reserve extensions for Leia.
+    ([internal MR 3203](https://gitlab.khronos.org/openxr/openxr/merge_requests/3203))
+  - Fix: Remove erroneous interaction profile component additions from extensions.
+    ([internal MR 3223](https://gitlab.khronos.org/openxr/openxr/merge_requests/3223))
+  - New multi-vendor extension: `XR_EXT_user_presence`
+    ([internal MR 2706](https://gitlab.khronos.org/openxr/openxr/merge_requests/2706),
+    [internal issue 1585](https://gitlab.khronos.org/openxr/openxr/issues/1585))
+  - New vendor extension: `XR_META_recommended_layer_resolution`
+    ([internal MR 2570](https://gitlab.khronos.org/openxr/openxr/merge_requests/2570))
+  - New vendor extension: `XR_META_automatic_layer_filter`
+    ([internal MR 2696](https://gitlab.khronos.org/openxr/openxr/merge_requests/2696))
+  - New vendor extension: `XR_META_spatial_entity_mesh`
+    ([internal MR 2773](https://gitlab.khronos.org/openxr/openxr/merge_requests/2773))
+  - New vendor extension: `XR_FB_face_tracking2`
+    ([internal MR 2811](https://gitlab.khronos.org/openxr/openxr/merge_requests/2811))
+  - New vendor extension: `XR_VARJO_xr4_controller_interaction`
+    ([internal MR 3078](https://gitlab.khronos.org/openxr/openxr/merge_requests/3078))
+  - `XR_FB_scene`: Update to spec version 4.
+    ([internal MR 2774](https://gitlab.khronos.org/openxr/openxr/merge_requests/2774))
+  - `XR_META_headset_id` and `XR_FB_spatial_entity`: Drop `XR_EXT_uuid` dependency,
+    they use the data structure but do not require any runtime support specific to
+    `XR_EXT_uuid`
+    ([internal MR 2577](https://gitlab.khronos.org/openxr/openxr/merge_requests/2577))
+- Specification
+  - Clarification: Change normative "should" statements to "may" for the
+    interaction of user engagement sensors and the session lifecycle, in order to
+    represent the intended and actual optionality of that behavior. Specifically,
+    it is valid but completely optional for runtimes to use the user engagement
+    sensor (if it exists) to move to `XR_SESSION_STATE_STOPPING`.
+    ([internal MR 3022](https://gitlab.khronos.org/openxr/openxr/merge_requests/3022))
+  - Clarification: Swapchain usage flags errors should return
+    `XR_ERROR_FEATURE_UNSUPPORTED` as well.
+    ([internal MR 3194](https://gitlab.khronos.org/openxr/openxr/merge_requests/3194))
+  - New multi-vendor extension specification: `XR_EXT_user_presence`
+    ([internal MR 2706](https://gitlab.khronos.org/openxr/openxr/merge_requests/2706),
+    [internal issue 1585](https://gitlab.khronos.org/openxr/openxr/issues/1585))
+  - New vendor extension specification: `XR_META_recommended_layer_resolution`
+    ([internal MR 2570](https://gitlab.khronos.org/openxr/openxr/merge_requests/2570))
+  - New vendor extension specification: `XR_META_automatic_layer_filter`
+    ([internal MR 2696](https://gitlab.khronos.org/openxr/openxr/merge_requests/2696))
+  - New vendor extension specification: `XR_META_spatial_entity_mesh`
+    ([internal MR 2773](https://gitlab.khronos.org/openxr/openxr/merge_requests/2773))
+  - New vendor extension specification: `XR_FB_face_tracking2`
+    ([internal MR 2811](https://gitlab.khronos.org/openxr/openxr/merge_requests/2811))
+  - New vendor extension specification: `XR_VARJO_xr4_controller_interaction`
+    ([internal MR 3078](https://gitlab.khronos.org/openxr/openxr/merge_requests/3078))
+  - Spec: Move originals of images to separate folder.
+    ([internal MR 3218](https://gitlab.khronos.org/openxr/openxr/merge_requests/3218))
+  - Spec: Fix issue where some comments before defines were missing a newline.
+    ([internal MR 3227](https://gitlab.khronos.org/openxr/openxr/merge_requests/3227))
+  - Style guide: Fix several leftover references to `Vk`/`Vulkan`.
+    ([internal MR 2967](https://gitlab.khronos.org/openxr/openxr/merge_requests/2967))
+  - `XR_FB_scene`: Update to spec version 4.
+    ([internal MR 2774](https://gitlab.khronos.org/openxr/openxr/merge_requests/2774))
+  - `XR_META_headset_id` and `XR_FB_spatial_entity`: Bump spec versions to drop
+    `XR_EXT_uuid` dependency from spec.
+    ([internal MR 2577](https://gitlab.khronos.org/openxr/openxr/merge_requests/2577))
+  - external: Update Jinja2 Python module shipped with repository (for spec/header
+    generation) to 2.11.3.
+    ([internal MR 3221](https://gitlab.khronos.org/openxr/openxr/merge_requests/3221),
+    [internal MR 3237](https://gitlab.khronos.org/openxr/openxr/merge_requests/3237))
+
 ## OpenXR Specification 1.0.33 (2024-01-03)
 
 This release primarily adds new ratified functionality to the specification

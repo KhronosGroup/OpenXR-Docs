@@ -632,7 +632,7 @@ Attributes which can be set on the block are:
   * *xrefs* - list of whitespace-separated names of other reference pages
     which should be added to the `See Also` section of this page.
     Most cross-references are automatically generated based on the immediate
-    dependency information in `vk.xml`, but in some cases, such as referring
+    dependency information in `xr.xml`, but in some cases, such as referring
     between `*FlagBits` and `*Flags` types, this additional tagging is
     useful.
     This attribute is optional.
