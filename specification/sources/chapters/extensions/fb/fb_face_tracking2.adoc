@@ -61,7 +61,7 @@ face is tracked properly.
 [open,refpage='XrSystemFaceTrackingProperties2FB',type='structs',desc='System property for face tracking',xrefs='']
 --
 
-include::{generated}/api/structs/XrSystemFaceTrackingProperties2FB.txt[]
+include::{generated}/api/structs/XrSystemFaceTrackingProperties2FB.adoc[]
 
 .Member Descriptions
 ****
@@ -93,7 +93,7 @@ runtime returns ename:XR_FALSE for pname:supportsAudioFaceTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateFaceTracker2FB.
 
-include::{generated}/validity/structs/XrSystemFaceTrackingProperties2FB.txt[]
+include::{generated}/validity/structs/XrSystemFaceTrackingProperties2FB.adoc[]
 
 --
 
@@ -104,7 +104,7 @@ include::{generated}/validity/structs/XrSystemFaceTrackingProperties2FB.txt[]
 The slink:XrFaceTracker2FB handle represents the resources for face
 tracking.
 
-include::{generated}/api/handles/XrFaceTracker2FB.txt[]
+include::{generated}/api/handles/XrFaceTracker2FB.adoc[]
 
 This handle is used to obtain blend shapes using the
 flink:xrGetFaceExpressionWeights2FB function.
@@ -115,7 +115,7 @@ flink:xrGetFaceExpressionWeights2FB function.
 --
 The flink:xrCreateFaceTracker2FB function is defined as:
 
-include::{generated}/api/protos/xrCreateFaceTracker2FB.txt[]
+include::{generated}/api/protos/xrCreateFaceTracker2FB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -137,7 +137,7 @@ and slink:XrSystemFaceTrackingProperties2FB::pname:supportsAudioFaceTracking
 when the function flink:xrGetSystemProperties is called, so that the
 application can: avoid creating a face tracker.
 
-include::{generated}/validity/protos/xrCreateFaceTracker2FB.txt[]
+include::{generated}/validity/protos/xrCreateFaceTracker2FB.adoc[]
 
 --
 
@@ -145,7 +145,7 @@ include::{generated}/validity/protos/xrCreateFaceTracker2FB.txt[]
 --
 The slink:XrFaceTrackerCreateInfo2FB structure is described as follows:
 
-include::{generated}/api/structs/XrFaceTrackerCreateInfo2FB.txt[]
+include::{generated}/api/structs/XrFaceTrackerCreateInfo2FB.adoc[]
 
 .Member Descriptions
 ****
@@ -187,7 +187,7 @@ If any value in pname:requestedDataSources is duplicated the runtime must:
 return ename:XR_ERROR_VALIDATION_FAILURE from the call to
 flink:xrCreateFaceTracker2FB.
 
-include::{generated}/validity/structs/XrFaceTrackerCreateInfo2FB.txt[]
+include::{generated}/validity/structs/XrFaceTrackerCreateInfo2FB.adoc[]
 --
 
 
@@ -196,16 +196,16 @@ include::{generated}/validity/structs/XrFaceTrackerCreateInfo2FB.txt[]
 The elink:XrFaceExpressionSet2FB enum describes the set of blend shapes of a
 facial expression to track when creating an slink:XrFaceTracker2FB.
 
-include::{generated}/api/enums/XrFaceExpressionSet2FB.txt[]
+include::{generated}/api/enums/XrFaceExpressionSet2FB.adoc[]
 
-include::{generated}/api/enums/XrFaceExpressionSet2FB.comments-box.txt[]
+include::{generated}/api/enums/XrFaceExpressionSet2FB.comments-box.adoc[]
 --
 
 [open,refpage='XrFaceTrackingDataSource2FB',type='enums',desc='Data source that is used to estimate facial expression.',xrefs='XrFaceTrackerCreateInfo2FB']
 --
 The elink:XrFaceTrackingDataSource2FB enumeration is defined as:
 
-include::{generated}/api/enums/XrFaceTrackingDataSource2FB.txt[]
+include::{generated}/api/enums/XrFaceTrackingDataSource2FB.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -228,7 +228,7 @@ include::{generated}/api/enums/XrFaceTrackingDataSource2FB.txt[]
 --
 The flink:xrDestroyFaceTracker2FB function is defined as:
 
-include::{generated}/api/protos/xrDestroyFaceTracker2FB.txt[]
+include::{generated}/api/protos/xrDestroyFaceTracker2FB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -239,7 +239,7 @@ include::{generated}/api/protos/xrDestroyFaceTracker2FB.txt[]
 The flink:xrDestroyFaceTracker2FB function releases the pname:faceTracker
 and the underlying resources when face tracking experience is over.
 
-include::{generated}/validity/protos/xrDestroyFaceTracker2FB.txt[]
+include::{generated}/validity/protos/xrDestroyFaceTracker2FB.adoc[]
 --
 
 ==== Obtain facial expressions
@@ -248,7 +248,7 @@ include::{generated}/validity/protos/xrDestroyFaceTracker2FB.txt[]
 --
 The flink:xrGetFaceExpressionWeights2FB function is defined as:
 
-include::{generated}/api/protos/xrGetFaceExpressionWeights2FB.txt[]
+include::{generated}/api/protos/xrGetFaceExpressionWeights2FB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -263,14 +263,14 @@ include::{generated}/api/protos/xrGetFaceExpressionWeights2FB.txt[]
 The flink:xrGetFaceExpressionWeights2FB function return blend shapes of
 facial expression at a given time.
 
-include::{generated}/validity/protos/xrGetFaceExpressionWeights2FB.txt[]
+include::{generated}/validity/protos/xrGetFaceExpressionWeights2FB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionInfo2FB',type='structs',desc='Describes the information to obtain facial expression',xrefs='xrGetFaceExpressionWeights2FB']
 --
 The slink:XrFaceExpressionInfo2FB structure is defined as:
 
-include::{generated}/api/structs/XrFaceExpressionInfo2FB.txt[]
+include::{generated}/api/structs/XrFaceExpressionInfo2FB.adoc[]
 
 .Member Descriptions
 ****
@@ -289,14 +289,14 @@ the rendered frame.
 The system must: employ appropriate modeling to provide expressions for this
 time.
 
-include::{generated}/validity/structs/XrFaceExpressionInfo2FB.txt[]
+include::{generated}/validity/structs/XrFaceExpressionInfo2FB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionWeights2FB',type='structs',desc='Returns the facial expression',xrefs='xrGetFaceExpressionWeights2FB']
 --
 The slink:XrFaceExpressionWeights2FB structure is defined as:
 
-include::{generated}/api/structs/XrFaceExpressionWeights2FB.txt[]
+include::{generated}/api/structs/XrFaceExpressionWeights2FB.adoc[]
 
 .Member Descriptions
 ****
@@ -381,7 +381,7 @@ and it must: also set 8 expression weights with prefix
   `XR_FACE_EXPRESSION2_EYES_LOOK_*` lost track
 * the consent for eye tracking was denied
 
-include::{generated}/validity/structs/XrFaceExpressionWeights2FB.txt[]
+include::{generated}/validity/structs/XrFaceExpressionWeights2FB.adoc[]
 --
 
 ==== Example code for obtaining facial expression
@@ -473,11 +473,11 @@ while (1) {
 
 ==== Conventions of blend shapes
 
-This extension defines 63 blend shapes for tracking facial expressions.
+This extension defines 70 blend shapes for tracking facial expressions.
 
 [open,refpage='XrFaceExpression2FB',type='enums',desc='The name of blend shapes that are trackable',xrefs='']
 --
-include::{generated}/api/enums/XrFaceExpression2FB.txt[]
+include::{generated}/api/enums/XrFaceExpression2FB.adoc[]
 
 --
 
@@ -906,7 +906,7 @@ This extension defines two separate areas of confidence.
 
 [open,refpage='XrFaceConfidence2FB',type='enums',desc='The name of face areas where confidence is known',xrefs='']
 --
-include::{generated}/api/enums/XrFaceConfidence2FB.txt[]
+include::{generated}/api/enums/XrFaceConfidence2FB.adoc[]
 
 The "upper face" area represents everything above the upper lip, including
 the eyes and eyebrows.

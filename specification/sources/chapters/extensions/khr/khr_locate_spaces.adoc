@@ -1,0 +1,333 @@
+// Copyright (c) 2020-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_KHR_locate_spaces.adoc[]
+
+*Last Modified Date*::
+    2024-01-19
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Andreas Loeve Selvik, Meta Platforms +
+    John Kearney, Meta Platforms +
+    Robert Blenkinsopp, Ultraleap +
+    Rylie Pavlik, Collabora +
+    Ron Bessems, Magic Leap +
+    Jakob Bornecrantz, NVIDIA +
+
+==== Overview
+
+This extension introduces the flink:xrLocateSpacesKHR function, which
+enables applications to locate an array of spaces in a single function call.
+Runtimes may: provide performance benefits for applications that use many
+spaces.
+
+Compared to the flink:xrLocateSpace function, the new
+flink:xrLocateSpacesKHR function also provides extensible input parameters
+for future extensions to extend using additional chained structures.
+
+==== Locate spaces
+
+[open,refpage='xrLocateSpacesKHR',type='protos',desc='Locate an array of spaces',xrefs='XrSpacesLocateInfoKHR XrSpaceLocationsKHR']
+--
+Applications can: use flink:xrLocateSpacesKHR function to locate an array of
+spaces.
+
+The flink:xrLocateSpacesKHR function is defined as:
+
+include::{generated}/api/protos/xrLocateSpacesKHR.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:locateInfo is a pointer to an slink:XrSpacesLocateInfoKHR that
+  provides the input information to locate spaces.
+* pname:spaceLocations is a pointer to an slink:XrSpaceLocationsKHR for the
+  runtime to return the locations of the specified spaces in the base space.
+****
+
+flink:xrLocateSpacesKHR provides the physical location of one or more spaces
+in a base space at a specified time, if currently known by the runtime.
+
+The slink:XrSpacesLocateInfoKHR::pname:time, the
+slink:XrSpacesLocateInfoKHR::pname:baseSpace, and each space in
+slink:XrSpacesLocateInfoKHR::pname:spaces, in the pname:locateInfo
+parameter, all follow the same specifics as the corresponding inputs to the
+flink:xrLocateSpace function.
+
+include::{generated}/validity/protos/xrLocateSpacesKHR.adoc[]
+--
+
+[open,refpage='XrSpacesLocateInfoKHR',type='structs',desc='Inputs the information to locate spaces.',xrefs='xrLocateSpacesKHR']
+--
+The slink:XrSpacesLocateInfoKHR structure is defined as:
+
+include::{generated}/api/structs/XrSpacesLocateInfoKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace identifies the underlying space in which to locate
+  pname:spaces.
+* pname:time is the time for which the location is requested.
+* pname:spaceCount is a code:uint32_t specifying the count of elements in
+  the pname:spaces array.
+* pname:spaces is an array of valid slink:XrSpace handles to be located.
+****
+
+The pname:time, the pname:baseSpace, and each space in pname:spaces all
+follow the same specifics as the corresponding inputs to the
+flink:xrLocateSpace function.
+
+The pname:baseSpace and all of the slink:XrSpace handles in the pname:spaces
+array must: be valid and share the same parent slink:XrSession.
+
+If the pname:time is invalid, the flink:xrLocateSpacesKHR must: return
+ename:XR_ERROR_TIME_INVALID.
+
+The pname:spaceCount must: be a positive number, i.e. the array pname:spaces
+must: not be empty.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpacesLocateInfoKHR.adoc[]
+--
+
+[open,refpage='XrSpaceLocationsKHR',type='structs',desc='Returns an array of space locations',xrefs='xrLocateSpacesKHR']
+--
+The slink:XrSpaceLocationsKHR structure is defined as:
+
+include::{generated}/api/structs/XrSpaceLocationsKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrSpaceVelocitiesKHR.
+* pname:locationCount is a code:uint32_t specifying the count of elements in
+  the pname:locations array.
+* pname:locations is an array of slink:XrSpaceLocationsKHR for the runtime
+  to populate with the locations of the specified spaces in the
+  slink:XrSpacesLocateInfoKHR::pname:baseSpace at the specified
+  slink:XrSpacesLocateInfoKHR::pname:time.
+****
+
+The slink:XrSpaceLocationsKHR structure contains an array of space locations
+in the member pname:locations, to be used as output for
+flink:xrLocateSpacesKHR.
+The application must: allocate this array to be populated with the function
+output.
+The pname:locationCount value must: be the same as
+slink:XrSpacesLocateInfoKHR::pname:spaceCount, otherwise, the
+flink:xrLocateSpacesKHR function must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpaceLocationsKHR.adoc[]
+--
+
+[open,refpage='XrSpaceLocationDataKHR',type='structs',desc='Returns the data of a space's location',xrefs='XrSpaceLocationsKHR']
+--
+The slink:XrSpaceLocationDataKHR structure is defined as:
+
+include::{generated}/api/structs/XrSpaceLocationDataKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits.
+  It behaves the same as slink:XrSpaceLocation::pname:locationFlags.
+* pname:pose is an slink:XrPosef that behaves the same as
+  slink:XrSpaceLocation::pname:pose.
+****
+
+This is a single element of the array in
+slink:XrSpaceLocationsKHR::pname:locations, and is used to return the pose
+and location flags for a single space with respect to the specified base
+space from a call to flink:xrLocateSpacesKHR.
+It does not accept chained structures to allow for easier use in dynamically
+allocated container datatypes.
+Chained structures are possible with the slink:XrSpaceLocationsKHR that
+describes an array of these elements.
+
+include::{generated}/validity/structs/XrSpaceLocationDataKHR.adoc[]
+--
+
+==== Locate space velocities
+
+[open,refpage='XrSpaceVelocitiesKHR',type='structs',desc='Returns an array of space velocities',xrefs='xrLocateSpacesKHR XrSpaceLocationsKHR']
+--
+Applications can: request the velocities of spaces by chaining the
+slink:XrSpaceVelocitiesKHR structure to the next pointer of
+slink:XrSpaceLocationsKHR when calling flink:xrLocateSpacesKHR.
+
+The slink:XrSpaceVelocitiesKHR structure is defined as:
+
+include::{generated}/api/structs/XrSpaceVelocitiesKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:velocityCount is a code:uint32_t specifying the count of elements in
+  the pname:velocities array.
+* pname:velocities is an array of slink:XrSpaceVelocityDataKHR for the
+  runtime to populate with the velocities of the specified spaces in the
+  slink:XrSpacesLocateInfoKHR::pname:baseSpace at the specified
+  slink:XrSpacesLocateInfoKHR::pname:time.
+****
+
+The pname:velocities member contains an array of space velocities in the
+member pname:velocities, to be used as output for flink:xrLocateSpacesKHR.
+The application must: allocate this array to be populated with the function
+output.
+The pname:velocityCount value must: be the same as
+slink:XrSpacesLocateInfoKHR::pname:spaceCount, otherwise, the
+flink:xrLocateSpacesKHR function must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpaceVelocitiesKHR.adoc[]
+--
+
+[open,refpage='XrSpaceVelocityDataKHR',type='structs',desc='Returns the data of a space's velocity',xrefs='XrSpaceVelocitiesKHR']
+--
+The slink:XrSpaceVelocityDataKHR structure is defined as:
+
+include::{generated}/api/structs/XrSpaceVelocityDataKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:velocityFlags is a bitfield, with bit values defined in
+  elink:XrSpaceVelocityFlagBits.
+  It behaves the same as slink:XrSpaceVelocity::pname:velocityFlags.
+* pname:linearVelocity is an slink:XrVector3f.
+  It behaves the same as slink:XrSpaceVelocity::pname:linearVelocity.
+* pname:angularVelocity is an slink:XrVector3f.
+  It behaves the same as slink:XrSpaceVelocity::pname:angularVelocity.
+****
+
+This is a single element of the array in
+slink:XrSpaceVelocitiesKHR::pname:velocities, and is used to return the
+linear and angular velocity and velocity flags for a single space with
+respect to the specified base space from a call to flink:xrLocateSpacesKHR.
+It does not accept chained structures to allow for easier use in dynamically
+allocated container datatypes.
+
+include::{generated}/validity/structs/XrSpaceVelocityDataKHR.adoc[]
+--
+
+==== Example code for flink:xrLocateSpacesKHR
+
+The following example code shows how an application retrieves both the
+location and velocity of one or more spaces in a base space at a given time
+using the flink:xrLocateSpacesKHR function.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+XrSpace baseSpace; // previously initialized
+std::vector<XrSpace> spacesToLocate;  // previously initialized
+
+// Prepare output buffers to receive data and get reused in frame loop.
+std::vector<XrSpaceLocationDataKHR> locationBuffer(spacesToLocate.size());
+std::vector<XrSpaceVelocityDataKHR> velocityBuffer(spacesToLocate.size());
+
+// Get function pointer for xrLocateSpacesKHR.
+PFN_xrLocateSpacesKHR xrLocateSpacesKHR;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateSpacesKHR",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrLocateSpacesKHR)));
+
+// application frame loop
+while (1) {
+    // Typically the time is the predicted display time returned from xrWaitFrame.
+    XrTime displayTime; // previously initialized.
+
+    XrSpacesLocateInfoKHR locateInfo{XR_TYPE_SPACES_LOCATE_INFO_KHR};
+    locateInfo.baseSpace = baseSpace;
+    locateInfo.time = displayTime;
+    locateInfo.spaceCount = (uint32_t)spacesToLocate.size();
+    locateInfo.spaces = spacesToLocate.data();
+
+    XrSpaceLocationsKHR locations{XR_TYPE_SPACES_LOCATE_INFO_KHR};
+    locations.locationCount = (uint32_t)locationBuffer.size();
+    locations.locations = locationBuffer.data();
+
+    XrSpaceVelocitiesKHR velocities{XR_TYPE_SPACE_VELOCITIES_KHR};
+    velocities.velocityCount = (uint32_t)velocityBuffer.size();
+    velocities.velocities = velocityBuffer.data();
+
+    locations.next = &velocities;
+    CHK_XR(xrLocateSpacesKHR(session, &locateInfo, &locations));
+
+    for (uint32_t i = 0; i < spacesToLocate.size(); i++) {
+        const auto positionAndOrientationTracked =
+          XR_SPACE_LOCATION_POSITION_TRACKED_BIT | XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT;
+        const auto orientationOnlyTracked = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT;
+
+        if ((locationBuffer[i].locationFlags & positionAndOrientationTracked) == positionAndOrientationTracked) {
+            // if the location is 6dof tracked
+            do_something(locationBuffer[i].pose.position);
+            do_something(locationBuffer[i].pose.orientation);
+
+            const auto velocityValidBits =
+              XR_SPACE_VELOCITY_LINEAR_VALID_BIT | XR_SPACE_VELOCITY_ANGULAR_VALID_BIT;
+            if ((velocityBuffer[i].velocityFlags & velocityValidBits) == velocityValidBits) {
+                do_something(velocityBuffer[i].linearVelocity);
+                do_something(velocityBuffer[i].angularVelocity);
+            }
+        }
+        else if ((locationBuffer[i].locationFlags & orientationOnlyTracked) == orientationOnlyTracked) {
+            // if the location is 3dof tracked
+            do_something(locationBuffer[i].pose.orientation);
+
+            if ((velocityBuffer[i].velocityFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) == XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) {
+                do_something(velocityBuffer[i].angularVelocity);
+            }
+        }
+    }
+}
+----
+
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_SPACES_LOCATE_INFO_KHR
+* ename:XR_TYPE_SPACE_LOCATIONS_KHR
+* ename:XR_TYPE_SPACE_VELOCITIES_KHR
+
+*New Enums*
+
+*New Structures*
+
+* slink:XrSpacesLocateInfoKHR
+* slink:XrSpaceLocationsKHR
+* slink:XrSpaceLocationDataKHR
+* slink:XrSpaceVelocitiesKHR
+* slink:XrSpaceVelocityDataKHR
+
+*New Functions*
+
+* flink:xrLocateSpacesKHR
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-04-22 (Yin LI)
+** Initial extension description

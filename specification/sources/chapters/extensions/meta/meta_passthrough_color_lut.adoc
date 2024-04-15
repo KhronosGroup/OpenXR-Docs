@@ -39,7 +39,7 @@ A color LUT may: be applied to multiple Passthrough layers simultaneously.
 
 [open,refpage='XrPassthroughColorLutMETA',type='handles',desc='Color LUT']
 --
-include::{generated}/api/handles/XrPassthroughColorLutMETA.txt[]
+include::{generated}/api/handles/XrPassthroughColorLutMETA.adoc[]
 
 slink:XrPassthroughColorLutMETA represents the definition and data for a
 color LUT which may: be applied to a passthrough layer using
@@ -62,7 +62,7 @@ elink:XrStructureType enumeration is extended with:
 --
 Specify the color channels contained in the color LUT.
 
-include::{generated}/api/enums/XrPassthroughColorLutChannelsMETA.txt[]
+include::{generated}/api/enums/XrPassthroughColorLutChannelsMETA.adoc[]
 --
 
 *New Structures*
@@ -72,7 +72,7 @@ include::{generated}/api/enums/XrPassthroughColorLutChannelsMETA.txt[]
 
 The slink:XrSystemPassthroughColorLutPropertiesMETA structure is defined as:
 
-include::{generated}/api/structs/XrSystemPassthroughColorLutPropertiesMETA.txt[]
+include::{generated}/api/structs/XrSystemPassthroughColorLutPropertiesMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -97,14 +97,14 @@ slink:XrSystemPassthroughColorLutPropertiesMETA structure with the relevant
 information to the slink:XrSystemProperties returned by the
 flink:xrGetSystemProperties call.
 
-include::{generated}/validity/structs/XrSystemPassthroughColorLutPropertiesMETA.txt[]
+include::{generated}/validity/structs/XrSystemPassthroughColorLutPropertiesMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughColorLutDataMETA',type='structs',desc='Passthrough color LUT data',xrefs='']
 --
 The slink:XrPassthroughColorLutDataMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorLutDataMETA.txt[]
+include::{generated}/api/structs/XrPassthroughColorLutDataMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -116,14 +116,14 @@ include::{generated}/api/structs/XrPassthroughColorLutDataMETA.txt[]
 slink:XrPassthroughColorLutDataMETA defines the LUT data for a color LUT.
 This structure is used when creating and updating color LUTs.
 
-include::{generated}/validity/structs/XrPassthroughColorLutDataMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughColorLutDataMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughColorLutCreateInfoMETA',type='structs',desc='Passthrough color LUT creation info',xrefs='']
 --
 The slink:XrPassthroughColorLutCreateInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorLutCreateInfoMETA.txt[]
+include::{generated}/api/structs/XrPassthroughColorLutCreateInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -171,14 +171,14 @@ where [eq]#bytesPerElement# is either 3 or 4 depending on pname:channels.
 Otherwise, the runtime must: return
 ename:XR_ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META.
 
-include::{generated}/validity/structs/XrPassthroughColorLutCreateInfoMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughColorLutCreateInfoMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughColorLutUpdateInfoMETA',type='structs',desc='Passthrough color LUT update info',xrefs='']
 --
 The slink:XrPassthroughColorLutUpdateInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorLutUpdateInfoMETA.txt[]
+include::{generated}/api/structs/XrPassthroughColorLutUpdateInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -196,14 +196,14 @@ pname:data must: be equal to the buffer size specified at creation.
 Otherwise, the runtime must: return
 ename:XR_ERROR_PASSTHROUGH_COLOR_LUT_BUFFER_SIZE_MISMATCH_META.
 
-include::{generated}/validity/structs/XrPassthroughColorLutUpdateInfoMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughColorLutUpdateInfoMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughColorMapLutMETA',type='structs',desc='A color map defined by a LUT',xrefs='']
 --
 The slink:XrPassthroughColorMapLutMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorMapLutMETA.txt[]
+include::{generated}/api/structs/XrPassthroughColorMapLutMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -238,14 +238,14 @@ slink:XrPassthroughColorMapLutMETA (or
 slink:XrPassthroughColorMapInterpolatedLutMETA) in the next chain disable
 color LUTs for that layer.
 
-include::{generated}/validity/structs/XrPassthroughColorMapLutMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughColorMapLutMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughColorMapInterpolatedLutMETA',type='structs',desc='A color map defined by the interpolation between two LUTs',xrefs='']
 --
 The slink:XrPassthroughColorMapInterpolatedLutMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorMapInterpolatedLutMETA.txt[]
+include::{generated}/api/structs/XrPassthroughColorMapInterpolatedLutMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -281,7 +281,7 @@ slink:XrPassthroughColorMapInterpolatedLutMETA (or
 slink:XrPassthroughColorMapLutMETA) in the next chain disable color LUTs for
 that layer.
 
-include::{generated}/validity/structs/XrPassthroughColorMapInterpolatedLutMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughColorMapInterpolatedLutMETA.adoc[]
 --
 
 *New Functions*
@@ -290,7 +290,7 @@ include::{generated}/validity/structs/XrPassthroughColorMapInterpolatedLutMETA.t
 --
 The flink:xrCreatePassthroughColorLutMETA function is defined as:
 
-include::{generated}/api/protos/xrCreatePassthroughColorLutMETA.txt[]
+include::{generated}/api/protos/xrCreatePassthroughColorLutMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -306,14 +306,14 @@ slink:XrPassthroughColorMapLutMETA and
 slink:XrPassthroughColorMapInterpolatedLutMETA in subsequent calls to
 flink:xrPassthroughLayerSetStyleFB.
 
-include::{generated}/validity/protos/xrCreatePassthroughColorLutMETA.txt[]
+include::{generated}/validity/protos/xrCreatePassthroughColorLutMETA.adoc[]
 --
 
 [open,refpage='xrDestroyPassthroughColorLutMETA',desc='Destroy a passthrough color LUT',type='protos',xrefs='']
 --
 The flink:xrDestroyPassthroughColorLutMETA function is defined as:
 
-include::{generated}/api/protos/xrDestroyPassthroughColorLutMETA.txt[]
+include::{generated}/api/protos/xrDestroyPassthroughColorLutMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -329,14 +329,14 @@ references this color LUT), the runtime must: retain the color LUT data and
 continue applying it to the affected passthrough layer until a different
 style is applied.
 
-include::{generated}/validity/protos/xrDestroyPassthroughColorLutMETA.txt[]
+include::{generated}/validity/protos/xrDestroyPassthroughColorLutMETA.adoc[]
 --
 
 [open,refpage='xrUpdatePassthroughColorLutMETA',desc='Update a passthrough color LUT',type='protos',xrefs='']
 --
 The flink:xrUpdatePassthroughColorLutMETA function is defined as:
 
-include::{generated}/api/protos/xrUpdatePassthroughColorLutMETA.txt[]
+include::{generated}/api/protos/xrUpdatePassthroughColorLutMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -357,7 +357,7 @@ Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
 The runtime must: reflect changes to color LUT data on all Passthrough
 layers the color LUT is currently applied to.
 
-include::{generated}/validity/protos/xrUpdatePassthroughColorLutMETA.txt[]
+include::{generated}/validity/protos/xrUpdatePassthroughColorLutMETA.adoc[]
 --
 
 *Version History*

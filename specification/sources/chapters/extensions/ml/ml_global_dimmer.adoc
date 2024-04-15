@@ -32,7 +32,7 @@ The slink:XrGlobalDimmerFrameEndInfoML::pname:flags member is of the
 following type, and contains a bitwise-OR of zero or more of the bits
 defined in elink:XrFrameEndInfoFlagBitsML.
 
-include::{generated}/api/flags/XrGlobalDimmerFrameEndInfoFlagsML.txt[]
+include::{generated}/api/flags/XrGlobalDimmerFrameEndInfoFlagsML.adoc[]
 --
 
 [open,refpage='XrGlobalDimmerFrameEndInfoFlagBitsML',type='enums',desc='XrGlobalDimmerFrameEndInfoFlagBitsML',xrefs='xrEndFrame XrGlobalDimmerFrameEndInfoML']
@@ -40,11 +40,11 @@ include::{generated}/api/flags/XrGlobalDimmerFrameEndInfoFlagsML.txt[]
 Valid bits for elink:XrGlobalDimmerFrameEndInfoFlagsML are defined by
 elink:XrGlobalDimmerFrameEndInfoFlagBitsML, which is specified as:
 
-include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.txt[]
+include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.comments.txt[]
+include::{generated}/api/enums/XrGlobalDimmerFrameEndInfoFlagBitsML.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -60,7 +60,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrGlobalDimmerFrameEndInfoML structure is defined as:
 
-include::{generated}/api/structs/XrGlobalDimmerFrameEndInfoML.txt[]
+include::{generated}/api/structs/XrGlobalDimmerFrameEndInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -75,7 +75,7 @@ include::{generated}/api/structs/XrGlobalDimmerFrameEndInfoML.txt[]
 * pname:flags is a bitmask of elink:XrGlobalDimmerFrameEndInfoFlagsML
 ****
 
-include::{generated}/validity/structs/XrGlobalDimmerFrameEndInfoML.txt[]
+include::{generated}/validity/structs/XrGlobalDimmerFrameEndInfoML.adoc[]
 
 --
 

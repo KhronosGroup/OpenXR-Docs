@@ -19,7 +19,7 @@ hierarchy.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -39,7 +39,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSpaceContainerFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceContainerFB.txt[]
+include::{generated}/api/structs/XrSpaceContainerFB.adoc[]
 
 .Member Descriptions
 ****
@@ -54,15 +54,15 @@ include::{generated}/api/structs/XrSpaceContainerFB.txt[]
   that pname:uuidCapacityInput is insufficient
 * pname:uuids is an output parameter which will hold a list of space UUIDs
   contained by the space to which the component is attached.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:uuids size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:uuids size.
 ****
 
 The slink:XrSpaceContainerFB structure can: be used by an application to
 perform the two calls required to obtain information about which spatial
 entities are contained by a specified spatial entity.
 
-include::{generated}/validity/structs/XrSpaceContainerFB.txt[]
+include::{generated}/validity/structs/XrSpaceContainerFB.adoc[]
 --
 
 *New Functions*
@@ -71,7 +71,7 @@ include::{generated}/validity/structs/XrSpaceContainerFB.txt[]
 --
 The flink:xrGetSpaceContainerFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceContainerFB.txt[]
+include::{generated}/api/protos/xrGetSpaceContainerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -90,7 +90,7 @@ The ename:XR_SPACE_COMPONENT_TYPE_SPACE_CONTAINER_FB component type must: be
 enabled, otherwise this function will return
 ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
 
-include::{generated}/validity/protos/xrGetSpaceContainerFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceContainerFB.adoc[]
 --
 
 *Issues*

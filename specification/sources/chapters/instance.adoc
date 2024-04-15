@@ -6,7 +6,7 @@
 == Instance
 [open,refpage='XrInstance',desc='Opaque handle to an instance object',type='handles',xrefs='xrCreateInstance xrGetInstanceProperties XrInstanceCreateInfo XrInstanceProperties']
 --
-include::{generated}/api/handles/XrInstance.txt[]
+include::{generated}/api/handles/XrInstance.adoc[]
 
 An OpenXR instance is an object that allows an OpenXR application to
 communicate with an OpenXR runtime.
@@ -47,7 +47,7 @@ function to the runtime associated with that instance.
 This tracking of OpenXR objects eliminates the need to specify an
 slink:XrInstance in every OpenXR function.
 
-[[api-layers-and-extensions]]
+[[instance-api-layers-and-extensions]]
 === API Layers and Extensions
 
 Additional functionality may: be provided by API layers or extensions.
@@ -68,7 +68,7 @@ Example API layers may: include (but are not limited to):
 To determine what set of API layers are available, OpenXR provides the
 flink:xrEnumerateApiLayerProperties function:
 
-include::{generated}/api/protos/xrEnumerateApiLayerProperties.txt[]
+include::{generated}/api/protos/xrEnumerateApiLayerProperties.adoc[]
 
 .Parameter Descriptions
 ****
@@ -79,8 +79,8 @@ include::{generated}/api/protos/xrEnumerateApiLayerProperties.txt[]
   pname:propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrApiLayerProperties
   structures, but can: be code:NULL if pname:propertyCapacityInput is 0.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:properties size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:properties size.
 ****
 
 The list of available layers may change at any time due to actions outside
@@ -92,14 +92,14 @@ Once an instance has been created, the layers enabled for that instance will
 continue to be enabled and valid for the lifetime of that instance, even if
 some of them become unavailable for future instances.
 
-include::{generated}/validity/protos/xrEnumerateApiLayerProperties.txt[]
+include::{generated}/validity/protos/xrEnumerateApiLayerProperties.adoc[]
 --
 
 [open,refpage='XrApiLayerProperties',desc='Structure specifying layer properties',type='structs',xrefs='xrEnumerateApiLayerProperties']
 --
 The slink:XrApiLayerProperties structure is defined as:
 
-include::{generated}/api/structs/XrApiLayerProperties.txt[]
+include::{generated}/api/structs/XrApiLayerProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -112,15 +112,15 @@ include::{generated}/api/structs/XrApiLayerProperties.txt[]
   slink:XrInstanceCreateInfo::pname:enabledApiLayerNames array to enable
   this API layer for an instance.
 * pname:specVersion is the API version the API layer was written to, encoded
-  as described in the <<api-version-numbers-and-semantics,API Version
-  Numbers and Semantics>> section.
+  as described in the <<fundamentals-api-version-numbers-and-semantics>>
+  section.
 * pname:layerVersion is the version of this API layer.
   It is an integer, increasing with backward compatible changes.
 * pname:description is a string providing additional details that can: be
   used by the application to identify the API layer.
 ****
 
-include::{generated}/validity/structs/XrApiLayerProperties.txt[]
+include::{generated}/validity/structs/XrApiLayerProperties.adoc[]
 --
 
 To enable a layer, the name of the layer should: be added to
@@ -140,8 +140,8 @@ additional effect.
 
 Instance extensions are able to affect the operation of the instance and any
 of its child objects.
-As stated <<extensions, earlier>>, extensions can expand the OpenXR API and
-provide new functions or augment behavior.
+As stated <<fundamentals-extensions, earlier>>, extensions can expand the
+OpenXR API and provide new functions or augment behavior.
 
 Examples of extensions may: be (but are not limited to):
 
@@ -157,7 +157,7 @@ Examples of extensions may: be (but are not limited to):
 The application can determine the available instance extensions by calling
 flink:xrEnumerateInstanceExtensionProperties:
 
-include::{generated}/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
+include::{generated}/api/protos/xrEnumerateInstanceExtensionProperties.adoc[]
 
 .Parameter Descriptions
 ****
@@ -171,8 +171,8 @@ include::{generated}/api/protos/xrEnumerateInstanceExtensionProperties.txt[]
   pname:propertyCapacityInput is insufficient.
 * pname:properties is a pointer to an array of slink:XrExtensionProperties
   structures, but can: be code:NULL if pname:propertyCapacityInput is `0`.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:properties size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:properties size.
 ****
 
 Because the list of available layers may change externally between calls to
@@ -183,14 +183,14 @@ The extensions supported by a layer may also change between two calls, e.g.
 if the layer implementation is replaced by a different version between those
 calls.
 
-include::{generated}/validity/protos/xrEnumerateInstanceExtensionProperties.txt[]
+include::{generated}/validity/protos/xrEnumerateInstanceExtensionProperties.adoc[]
 --
 
 [open,refpage='XrExtensionProperties',desc='Returns properties of available instance extensions',type='structs']
 --
 The slink:XrExtensionProperties structure is defined as:
 
-include::{generated}/api/structs/XrExtensionProperties.txt[]
+include::{generated}/api/structs/XrExtensionProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -204,7 +204,7 @@ include::{generated}/api/structs/XrExtensionProperties.txt[]
   It is an integer, incremented with backward compatible changes.
 ****
 
-include::{generated}/validity/structs/XrExtensionProperties.txt[]
+include::{generated}/validity/structs/XrExtensionProperties.adoc[]
 --
 
 [[instance-initialization]]
@@ -213,7 +213,7 @@ include::{generated}/validity/structs/XrExtensionProperties.txt[]
 --
 The flink:xrCreateInstance function is defined as:
 
-include::{generated}/api/protos/xrCreateInstance.txt[]
+include::{generated}/api/protos/xrCreateInstance.adoc[]
 
 .Parameter Descriptions
 ****
@@ -249,14 +249,14 @@ platform but no matching extension struct is provided in
 slink:XrInstanceCreateInfo the runtime must: return
 ename:XR_ERROR_INITIALIZATION_FAILED.
 
-include::{generated}/validity/protos/xrCreateInstance.txt[]
+include::{generated}/validity/protos/xrCreateInstance.adoc[]
 --
 
 [open,refpage='XrInstanceCreateInfo',desc='Structure specifying params of a newly created instance',type='structs',xrefs='xrCreateInstance XrInstanceCreateFlags']
 --
 The slink:XrInstanceCreateInfo structure is defined as:
 
-include::{generated}/api/structs/XrInstanceCreateInfo.txt[]
+include::{generated}/api/structs/XrInstanceCreateInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -274,15 +274,15 @@ include::{generated}/api/structs/XrInstanceCreateInfo.txt[]
 * pname:enabledApiLayerNames is a pointer to an array of
   pname:enabledApiLayerCount strings containing the names of API layers to
   enable for the created instance.
-  See the <<api-layers-and-extensions,API Layers And Extensions>> section
-  for further details.
+  See the <<instance-api-layers-and-extensions>> section for further
+  details.
 * pname:enabledExtensionCount is the number of global extensions to enable.
 * pname:enabledExtensionNames is a pointer to an array of
   pname:enabledExtensionCount strings containing the names of extensions to
   enable.
 ****
 
-include::{generated}/validity/structs/XrInstanceCreateInfo.txt[]
+include::{generated}/validity/structs/XrInstanceCreateInfo.adoc[]
 --
 
 [open,refpage='XrInstanceCreateFlags',desc='Instance Creation Flags',type='flags',xrefs='XrInstanceCreateFlagBits']
@@ -291,7 +291,7 @@ The slink:XrInstanceCreateInfo::pname:createFlags member is of the following
 type, and contains a bitwise-OR of zero or more of the bits defined in
 elink:XrInstanceCreateFlagBits.
 
-include::{generated}/api/flags/XrInstanceCreateFlags.txt[]
+include::{generated}/api/flags/XrInstanceCreateFlags.adoc[]
 --
 
 [open,refpage='XrInstanceCreateFlagBits',desc='Instance Creation Flags',type='enums',xrefs='xrCreateInstance XrInstanceCreateInfo XrInstanceCreateFlags']
@@ -299,7 +299,7 @@ include::{generated}/api/flags/XrInstanceCreateFlags.txt[]
 Valid bits for elink:XrInstanceCreateFlags are defined by
 elink:XrInstanceCreateFlagBits.
 
-include::{generated}/api/enums/XrInstanceCreateFlagBits.txt[]
+include::{generated}/api/enums/XrInstanceCreateFlagBits.adoc[]
 
 There are currently no instance creation flag bits defined.
 This is reserved for future use.
@@ -310,7 +310,7 @@ This is reserved for future use.
 --
 The slink:XrApplicationInfo structure is defined as:
 
-include::{generated}/api/structs/XrApplicationInfo.txt[]
+include::{generated}/api/structs/XrApplicationInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -327,13 +327,12 @@ developer-supplied version number of the application.
   May be zero to indicate no specified engine.
 * pname:apiVersion is the version of this API against which the application
   will run, encoded as described in the
-  <<api-version-numbers-and-semantics,API Version Numbers and Semantics>>
-  section.
+  <<fundamentals-api-version-numbers-and-semantics>> section.
   If the runtime does not support the requested pname:apiVersion it must:
   return ename:XR_ERROR_API_VERSION_UNSUPPORTED.
 ****
 
-include::{generated}/validity/structs/XrApplicationInfo.txt[]
+include::{generated}/validity/structs/XrApplicationInfo.adoc[]
 
 [NOTE]
 .Note
@@ -362,7 +361,7 @@ representation of the application's version.
 --
 The flink:xrDestroyInstance function is defined as:
 
-include::{generated}/api/protos/xrDestroyInstance.txt[]
+include::{generated}/api/protos/xrDestroyInstance.adoc[]
 
 The flink:xrDestroyInstance function is used to destroy an slink:XrInstance.
 
@@ -375,7 +374,7 @@ slink:XrInstance handles are destroyed using flink:xrDestroyInstance.
 When an slink:XrInstance is destroyed, all handles that are children of that
 slink:XrInstance are also destroyed.
 
-include::{generated}/validity/protos/xrDestroyInstance.txt[]
+include::{generated}/validity/protos/xrDestroyInstance.adoc[]
 --
 
 [[instance-information]]
@@ -386,7 +385,7 @@ include::{generated}/validity/protos/xrDestroyInstance.txt[]
 The flink:xrGetInstanceProperties function provides information about the
 instance and the associated runtime.
 
-include::{generated}/api/protos/xrGetInstanceProperties.txt[]
+include::{generated}/api/protos/xrGetInstanceProperties.adoc[]
 
 .Parameter Descriptions
 ****
@@ -400,14 +399,14 @@ The pname:instanceProperties parameter must: be filled out by the runtime in
 response to this call, with information as defined in
 slink:XrInstanceProperties.
 
-include::{generated}/validity/protos/xrGetInstanceProperties.txt[]
+include::{generated}/validity/protos/xrGetInstanceProperties.adoc[]
 --
 
 [open,refpage='XrInstanceProperties',desc='Contains information about the instance',type='structs']
 --
 The slink:XrInstanceProperties structure is defined as:
 
-include::{generated}/api/structs/XrInstanceProperties.txt[]
+include::{generated}/api/structs/XrInstanceProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -420,10 +419,10 @@ include::{generated}/api/structs/XrInstanceProperties.txt[]
 * pname:runtimeName is the name of the runtime.
 ****
 
-include::{generated}/validity/structs/XrInstanceProperties.txt[]
+include::{generated}/validity/structs/XrInstanceProperties.adoc[]
 --
 
-[[platform-specific-instance-creation]]
+[[instance-platform-specific-creation]]
 === Platform-Specific Instance Creation
 
 Some amount of data required for instance creation is exposed through
@@ -448,7 +447,7 @@ The specific list of structures that may be used for extending
 slink:XrInstanceCreateInfo::pname:next can be found in the "Valid Usage
 (Implicit)" block immediately following the definition of the structure.
 
-[[instance_lost]]
+[[instance-lost]]
 ==== The Instance Lost Error
 
 The ename:XR_ERROR_INSTANCE_LOST error indicates that the slink:XrInstance
@@ -466,12 +465,11 @@ objects, starting with a new slink:XrInstance.
 A runtime may: generate an slink:XrEventDataInstanceLossPending event when
 instance loss is detected.
 
-[[instancelosspending-description]]
 ==== XrEventDataInstanceLossPending
 
 [open,refpage='XrEventDataInstanceLossPending',desc='Event indicating instance loss will occur',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
 --
-include::{generated}/api/structs/XrEventDataInstanceLossPending.txt[]
+include::{generated}/api/structs/XrEventDataInstanceLossPending.adoc[]
 
 Receiving the slink:XrEventDataInstanceLossPending event structure indicates
 that the application is about to lose the indicated slink:XrInstance at the
@@ -501,7 +499,7 @@ passed in.
   be considered lost and become unusable.
 ****
 
-include::{generated}/validity/structs/XrEventDataInstanceLossPending.txt[]
+include::{generated}/validity/structs/XrEventDataInstanceLossPending.adoc[]
 --
 
 [[instance-enum-helpers]]
@@ -515,7 +513,7 @@ use in applications.
 
 [open,refpage='xrResultToString',desc='Converts an XrResult to a UTF-8 string',type='protos',xrefs='xrStructureTypeToString']
 --
-include::{generated}/api/protos/xrResultToString.txt[]
+include::{generated}/api/protos/xrResultToString.adoc[]
 
 .Parameter Descriptions
 ****
@@ -540,14 +538,14 @@ In all cases the returned string must: be one of:
   expressed as a decimal number.
 ****
 
-include::{generated}/validity/protos/xrResultToString.txt[]
+include::{generated}/validity/protos/xrResultToString.adoc[]
 --
 
 [open,refpage='xrStructureTypeToString',desc='Converts an XrStructureType to a UTF-8 string',type='protos',xrefs='xrResultToString']
 --
 The flink:xrStructureTypeToString function is defined as:
 
-include::{generated}/api/protos/xrStructureTypeToString.txt[]
+include::{generated}/api/protos/xrStructureTypeToString.adoc[]
 
 .Parameter Descriptions
 ****
@@ -571,5 +569,5 @@ In all cases the returned string must: be one of:
   expressed as a decimal number.
 ****
 
-include::{generated}/validity/protos/xrStructureTypeToString.txt[]
+include::{generated}/validity/protos/xrStructureTypeToString.adoc[]
 --

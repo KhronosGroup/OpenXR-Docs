@@ -33,7 +33,7 @@ This model key may: later be used to retrieve the model data.
 
 The flink:xrGetControllerModelKeyMSFT function is defined as:
 
-include::{generated}/api/protos/xrGetControllerModelKeyMSFT.txt[]
+include::{generated}/api/protos/xrGetControllerModelKeyMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -45,7 +45,7 @@ include::{generated}/api/protos/xrGetControllerModelKeyMSFT.txt[]
   slink:XrControllerModelKeyStateMSFT to write the model key state to.
 ****
 
-include::{generated}/validity/protos/xrGetControllerModelKeyMSFT.txt[]
+include::{generated}/validity/protos/xrGetControllerModelKeyMSFT.adoc[]
 --
 
 [open,refpage='XrControllerModelKeyStateMSFT',desc='The model key state for a controller',type='structs']
@@ -53,7 +53,7 @@ include::{generated}/validity/protos/xrGetControllerModelKeyMSFT.txt[]
 
 The slink:XrControllerModelKeyStateMSFT structure is defined as:
 
-include::{generated}/api/structs/XrControllerModelKeyStateMSFT.txt[]
+include::{generated}/api/structs/XrControllerModelKeyStateMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -81,19 +81,19 @@ Therefore, the application must: have provided a valid action set containing
 an action for subpathname:/grip/pose, and have successfully completed an
 flink:xrSyncActions call, in order to obtain a valid pname:modelKey.
 
-include::{generated}/validity/structs/XrControllerModelKeyStateMSFT.txt[]
+include::{generated}/validity/structs/XrControllerModelKeyStateMSFT.adoc[]
 --
 
 [open,refpage='XR_NULL_CONTROLLER_MODEL_KEY_MSFT',type='defines',desc='The value representing an invalid model key',xrefs='XrControllerModelKeyMSFT']
 --
-include::{generated}/api/defines/XR_NULL_CONTROLLER_MODEL_KEY_MSFT.txt[]
+include::{generated}/api/defines/XR_NULL_CONTROLLER_MODEL_KEY_MSFT.adoc[]
 
 dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT defines an invalid model key value.
 --
 
 [open,refpage='XrControllerModelKeyMSFT',desc='Controller renderable model key',type='basetypes',xrefs='XR_NULL_CONTROLLER_MODEL_KEY_MSFT']
 --
-include::{generated}/api/basetypes/XrControllerModelKeyMSFT.txt[]
+include::{generated}/api/basetypes/XrControllerModelKeyMSFT.adoc[]
 
 The controller model key used to retrieve the data for the renderable
 controller model and associated properties and state.
@@ -114,7 +114,7 @@ controller.
 The binary glTF data must: conform to glTF 2.0 format defined at
 {uri-gltf2}.
 
-include::{generated}/api/protos/xrLoadControllerModelMSFT.txt[]
+include::{generated}/api/protos/xrLoadControllerModelMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -130,8 +130,8 @@ include::{generated}/api/protos/xrLoadControllerModelMSFT.txt[]
   for the device that will be filled with the code:uint8_t values by the
   runtime.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 The flink:xrLoadControllerModelMSFT function may: be a slow operation and
@@ -142,7 +142,7 @@ dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
 slink:XrControllerModelKeyStateMSFT, the runtime must: return
 ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
 
-include::{generated}/validity/protos/xrLoadControllerModelMSFT.txt[]
+include::{generated}/validity/protos/xrLoadControllerModelMSFT.adoc[]
 --
 
 *Animate controller parts*
@@ -168,7 +168,7 @@ the corresponding node in the glTF model using application's glTF renderer.
 The flink:xrGetControllerModelPropertiesMSFT function returns the controller
 model properties for a given pname:modelKey.
 
-include::{generated}/api/protos/xrGetControllerModelPropertiesMSFT.txt[]
+include::{generated}/api/protos/xrGetControllerModelPropertiesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -190,7 +190,7 @@ dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
 slink:XrControllerModelKeyStateMSFT, the runtime must: return
 ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
 
-include::{generated}/validity/protos/xrGetControllerModelPropertiesMSFT.txt[]
+include::{generated}/validity/protos/xrGetControllerModelPropertiesMSFT.adoc[]
 --
 
 [open,refpage='XrControllerModelPropertiesMSFT',desc='Describes the properties of a controller model',type='structs',xrefs='xrGetControllerModelPropertiesMSFT XrControllerModelNodePropertiesMSFT xrLoadControllerModelMSFT']
@@ -199,7 +199,7 @@ The slink:XrControllerModelPropertiesMSFT structure describes the properties
 of a controller model including an array of
 slink:XrControllerModelNodePropertiesMSFT.
 
-include::{generated}/api/structs/XrControllerModelPropertiesMSFT.txt[]
+include::{generated}/api/structs/XrControllerModelPropertiesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -214,11 +214,11 @@ include::{generated}/api/structs/XrControllerModelPropertiesMSFT.txt[]
 * pname:nodeProperties is a pointer to an application-allocated array that
   will be filled with the slink:XrControllerModelNodePropertiesMSFT values.
   It can: be code:NULL if pname:nodeCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:nodeProperties size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:nodeProperties size.
 ****
 
-include::{generated}/validity/structs/XrControllerModelPropertiesMSFT.txt[]
+include::{generated}/validity/structs/XrControllerModelPropertiesMSFT.adoc[]
 --
 
 [open,refpage='XrControllerModelNodePropertiesMSFT',desc='Describes the controller model node properties',type='structs',xrefs='xrGetControllerModelPropertiesMSFT XrControllerModelPropertiesMSFT xrLoadControllerModelMSFT']
@@ -228,7 +228,7 @@ of animatable nodes, including the node name and parent node name to locate
 a glTF node in the controller model that can: be animated based on user's
 interactions on the controller.
 
-include::{generated}/api/structs/XrControllerModelNodePropertiesMSFT.txt[]
+include::{generated}/api/structs/XrControllerModelNodePropertiesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -254,7 +254,7 @@ should: be animated and the rest should: be ignored.
 The runtime must: not return any pname:nodeName or pname:parentNodeName that
 does not match any glTF nodes in the corresponding controller model.
 
-include::{generated}/validity/structs/XrControllerModelNodePropertiesMSFT.txt[]
+include::{generated}/validity/structs/XrControllerModelNodePropertiesMSFT.adoc[]
 --
 
 [open,refpage='xrGetControllerModelStateMSFT',desc='Get controller model state',type='protos']
@@ -264,7 +264,7 @@ The flink:xrGetControllerModelStateMSFT function returns the current state
 of the controller model representing user's interaction to the controller,
 such as pressing a button or pulling a trigger.
 
-include::{generated}/api/protos/xrGetControllerModelStateMSFT.txt[]
+include::{generated}/api/protos/xrGetControllerModelStateMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -284,7 +284,7 @@ dlink:XR_NULL_CONTROLLER_MODEL_KEY_MSFT or not a key returned from
 slink:XrControllerModelKeyStateMSFT, the runtime must: return
 ename:XR_ERROR_CONTROLLER_MODEL_KEY_INVALID_MSFT.
 
-include::{generated}/validity/protos/xrGetControllerModelStateMSFT.txt[]
+include::{generated}/validity/protos/xrGetControllerModelStateMSFT.adoc[]
 --
 
 [open,refpage='XrControllerModelStateMSFT',desc='Describes the state of a controller model',type='structs',xrefs='xrGetControllerModelStateMSFT XrControllerModelNodeStateMSFT']
@@ -293,7 +293,7 @@ The slink:XrControllerModelStateMSFT structure describes the state of a
 controller model, including an array of
 slink:XrControllerModelNodeStateMSFT.
 
-include::{generated}/api/structs/XrControllerModelStateMSFT.txt[]
+include::{generated}/api/structs/XrControllerModelStateMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -308,11 +308,11 @@ include::{generated}/api/structs/XrControllerModelStateMSFT.txt[]
 * pname:nodeStates is a pointer to an application-allocated array that will
   be filled with the slink:XrControllerModelNodeStateMSFT values.
   It can: be code:NULL if pname:nodeCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:nodeStates size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:nodeStates size.
 ****
 
-include::{generated}/validity/structs/XrControllerModelStateMSFT.txt[]
+include::{generated}/validity/structs/XrControllerModelStateMSFT.adoc[]
 --
 
 [open,refpage='XrControllerModelNodeStateMSFT',desc='Describes the state of a node in a controller model',type='structs',xrefs='xrGetControllerModelStateMSFT XrControllerModelStateMSFT']
@@ -320,7 +320,7 @@ include::{generated}/validity/structs/XrControllerModelStateMSFT.txt[]
 The slink:XrControllerModelNodeStateMSFT structure describes the state of a
 node in a controller model.
 
-include::{generated}/api/structs/XrControllerModelNodeStateMSFT.txt[]
+include::{generated}/api/structs/XrControllerModelNodeStateMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -341,7 +341,7 @@ The pname:nodePose is based on the user's interaction on the controller at
 the latest flink:xrSyncActions, represented as the slink:XrPosef of the node
 in it's parent node space.
 
-include::{generated}/validity/structs/XrControllerModelNodeStateMSFT.txt[]
+include::{generated}/validity/structs/XrControllerModelNodeStateMSFT.adoc[]
 --
 
 *New Object Types*

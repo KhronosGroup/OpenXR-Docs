@@ -50,7 +50,7 @@ has been called on the runtime or layer respectively.
 --
 The slink:XrLoaderInitInfoBaseHeaderKHR structure is defined as:
 
-include::{generated}/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+include::{generated}/api/structs/XrLoaderInitInfoBaseHeaderKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -62,7 +62,7 @@ include::{generated}/api/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
 ****
 
 
-include::{generated}/validity/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
+include::{generated}/validity/structs/XrLoaderInitInfoBaseHeaderKHR.adoc[]
 --
 
 *New Functions*
@@ -71,7 +71,7 @@ include::{generated}/validity/structs/XrLoaderInitInfoBaseHeaderKHR.txt[]
 To initialize an OpenXR loader with platform or implementation-specific
 parameters, call:
 
-include::{generated}/api/protos/xrInitializeLoaderKHR.txt[]
+include::{generated}/api/protos/xrInitializeLoaderKHR.adoc[]
 
 .Parameter Descriptions
 ****

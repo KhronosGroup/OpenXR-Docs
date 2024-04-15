@@ -48,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrActiveActionSetPrioritiesEXT structure is defined as:
 
-include::{generated}/api/structs/XrActiveActionSetPrioritiesEXT.txt[]
+include::{generated}/api/structs/XrActiveActionSetPrioritiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -64,7 +64,7 @@ include::{generated}/api/structs/XrActiveActionSetPrioritiesEXT.txt[]
   ename:XR_ERROR_VALIDATION_FAILURE from flink:xrSyncActions.
 ****
 
-include::{generated}/validity/structs/XrActiveActionSetPrioritiesEXT.txt[]
+include::{generated}/validity/structs/XrActiveActionSetPrioritiesEXT.adoc[]
 
 The runtime must: ignore any priority numbers for action sets that were not
 specified as an active action set in the slink:XrActionsSyncInfo structure
@@ -86,7 +86,7 @@ slink:XrActionSetCreateInfo when that action set was created.
 --
 The slink:XrActiveActionSetPriorityEXT structure is defined as:
 
-include::{generated}/api/structs/XrActiveActionSetPriorityEXT.txt[]
+include::{generated}/api/structs/XrActiveActionSetPriorityEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -96,7 +96,7 @@ include::{generated}/api/structs/XrActiveActionSetPriorityEXT.txt[]
   set while it is active.
 ****
 
-include::{generated}/validity/structs/XrActiveActionSetPriorityEXT.txt[]
+include::{generated}/validity/structs/XrActiveActionSetPriorityEXT.adoc[]
 --
 
 *New Functions*

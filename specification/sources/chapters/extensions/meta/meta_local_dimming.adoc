@@ -50,9 +50,9 @@ elink:XrStructureType enumeration is extended with:
 The local dimming mode is specified by the elink:XrLocalDimmingModeMETA
 enumeration:
 
-include::{generated}/api/enums/XrLocalDimmingModeMETA.txt[]
+include::{generated}/api/enums/XrLocalDimmingModeMETA.adoc[]
 
-include::{generated}/api/enums/XrLocalDimmingModeMETA.comments-box.txt[]
+include::{generated}/api/enums/XrLocalDimmingModeMETA.comments-box.adoc[]
 
 --
 
@@ -62,7 +62,7 @@ include::{generated}/api/enums/XrLocalDimmingModeMETA.comments-box.txt[]
 --
 The slink:XrLocalDimmingFrameEndInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrLocalDimmingFrameEndInfoMETA.txt[]
+include::{generated}/api/structs/XrLocalDimmingFrameEndInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -77,7 +77,7 @@ include::{generated}/api/structs/XrLocalDimmingFrameEndInfoMETA.txt[]
 The slink:XrLocalDimmingFrameEndInfoMETA is a structure that an application
 can: chain in slink:XrFrameEndInfo in order to request a local dimming mode.
 
-include::{generated}/validity/structs/XrLocalDimmingFrameEndInfoMETA.txt[]
+include::{generated}/validity/structs/XrLocalDimmingFrameEndInfoMETA.adoc[]
 --
 
 *New Functions*

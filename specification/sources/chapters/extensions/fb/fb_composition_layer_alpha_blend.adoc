@@ -25,7 +25,7 @@ Like color, destination alpha is initialized to 0 before composition begins.
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 These blend factors are specified by attaching a
 slink:XrCompositionLayerAlphaBlendFB structure to the pname:next chain of a
@@ -48,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 The possible blend factors are specified by the elink:XrBlendFactorFB
 enumeration.
 
-include::{generated}/api/enums/XrBlendFactorFB.txt[]
+include::{generated}/api/enums/XrBlendFactorFB.adoc[]
 --
 
 *New Structures*
@@ -57,7 +57,7 @@ include::{generated}/api/enums/XrBlendFactorFB.txt[]
 --
 The slink:XrCompositionLayerAlphaBlendFB structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerAlphaBlendFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerAlphaBlendFB.adoc[]
 
 .Member Descriptions
 ****
@@ -77,7 +77,7 @@ The slink:XrCompositionLayerAlphaBlendFB structure must: be provided in the
 pname:next chain of the slink:XrCompositionLayerBaseHeader structure.
 
 
-include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.adoc[]
 --
 
 *New Functions*

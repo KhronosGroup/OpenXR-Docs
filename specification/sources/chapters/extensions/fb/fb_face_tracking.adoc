@@ -49,7 +49,7 @@ is tracked properly.
 [open,refpage='XrSystemFaceTrackingPropertiesFB',type='structs',desc='System property for face tracking',xrefs='']
 --
 
-include::{generated}/api/structs/XrSystemFaceTrackingPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemFaceTrackingPropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -70,7 +70,7 @@ If a runtime returns ename:XR_FALSE for pname:supportsFaceTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateFaceTrackerFB.
 
-include::{generated}/validity/structs/XrSystemFaceTrackingPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemFaceTrackingPropertiesFB.adoc[]
 
 --
 
@@ -80,7 +80,7 @@ include::{generated}/validity/structs/XrSystemFaceTrackingPropertiesFB.txt[]
 --
 The slink:XrFaceTrackerFB handle represents the resources for face tracking.
 
-include::{generated}/api/handles/XrFaceTrackerFB.txt[]
+include::{generated}/api/handles/XrFaceTrackerFB.adoc[]
 
 This handle is used to obtain blend shapes using the
 flink:xrGetFaceExpressionWeightsFB function.
@@ -91,7 +91,7 @@ flink:xrGetFaceExpressionWeightsFB function.
 --
 The flink:xrCreateFaceTrackerFB function is defined as:
 
-include::{generated}/api/protos/xrCreateFaceTrackerFB.txt[]
+include::{generated}/api/protos/xrCreateFaceTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -112,7 +112,7 @@ slink:XrSystemFaceTrackingPropertiesFB::pname:supportsFaceTracking when the
 function flink:xrGetSystemProperties is called, so that the application can:
 avoid creating a face tracker.
 
-include::{generated}/validity/protos/xrCreateFaceTrackerFB.txt[]
+include::{generated}/validity/protos/xrCreateFaceTrackerFB.adoc[]
 
 --
 
@@ -120,7 +120,7 @@ include::{generated}/validity/protos/xrCreateFaceTrackerFB.txt[]
 --
 The slink:XrFaceTrackerCreateInfoFB structure is described as follows:
 
-include::{generated}/api/structs/XrFaceTrackerCreateInfoFB.txt[]
+include::{generated}/api/structs/XrFaceTrackerCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -135,7 +135,7 @@ include::{generated}/api/structs/XrFaceTrackerCreateInfoFB.txt[]
 The slink:XrFaceTrackerCreateInfoFB structure describes the information to
 create an slink:XrFaceTrackerFB handle.
 
-include::{generated}/validity/structs/XrFaceTrackerCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrFaceTrackerCreateInfoFB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionSetFB',type='enums',desc='The set of blend shapes of a facial expression to track.',xrefs='XrFaceTrackerCreateInfoFB']
@@ -143,14 +143,14 @@ include::{generated}/validity/structs/XrFaceTrackerCreateInfoFB.txt[]
 The elink:XrFaceExpressionSetFB enum describes the set of blend shapes of a
 facial expression to track when creating an slink:XrFaceTrackerFB.
 
-include::{generated}/api/enums/XrFaceExpressionSetFB.txt[]
+include::{generated}/api/enums/XrFaceExpressionSetFB.adoc[]
 
-include::{generated}/api/enums/XrFaceExpressionSetFB.comments-box.txt[]
+include::{generated}/api/enums/XrFaceExpressionSetFB.comments-box.adoc[]
 --
 
 [open,refpage='XR_FACE_EXPRESSSION_SET_DEFAULT_FB',type='defines',desc='Alias for XR_FACE_EXPRESSSION_SET_DEFAULT_FB',xrefs='XrFaceExpressionSetFB']
 --
-include::{generated}/api/defines/XR_FACE_EXPRESSSION_SET_DEFAULT_FB.txt[]
+include::{generated}/api/defines/XR_FACE_EXPRESSSION_SET_DEFAULT_FB.adoc[]
 
 The dlink:XR_FACE_EXPRESSSION_SET_DEFAULT_FB is an alias for
 ename:XR_FACE_EXPRESSION_SET_DEFAULT_FB for backward compatibility,
@@ -163,7 +163,7 @@ deprecated and should: not be used.
 --
 The flink:xrDestroyFaceTrackerFB function releases the pname:faceTracker and
 the underlying resources when face tracking experience is over.
-include::{generated}/api/protos/xrDestroyFaceTrackerFB.txt[]
+include::{generated}/api/protos/xrDestroyFaceTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -171,7 +171,7 @@ include::{generated}/api/protos/xrDestroyFaceTrackerFB.txt[]
   flink:xrCreateFaceTrackerFB.
 ****
 
-include::{generated}/validity/protos/xrDestroyFaceTrackerFB.txt[]
+include::{generated}/validity/protos/xrDestroyFaceTrackerFB.adoc[]
 --
 
 ==== Obtain facial expressions
@@ -181,7 +181,7 @@ include::{generated}/validity/protos/xrDestroyFaceTrackerFB.txt[]
 The flink:xrGetFaceExpressionWeightsFB function return blend shapes of
 facial expression at a given time.
 
-include::{generated}/api/protos/xrGetFaceExpressionWeightsFB.txt[]
+include::{generated}/api/protos/xrGetFaceExpressionWeightsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -193,7 +193,7 @@ include::{generated}/api/protos/xrGetFaceExpressionWeightsFB.txt[]
   receiving the returned facial expression weights.
 ****
 
-include::{generated}/validity/protos/xrGetFaceExpressionWeightsFB.txt[]
+include::{generated}/validity/protos/xrGetFaceExpressionWeightsFB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionInfoFB',type='structs',desc='Describes the information to obtain facial expression',xrefs='xrGetFaceExpressionWeightsFB']
@@ -201,7 +201,7 @@ include::{generated}/validity/protos/xrGetFaceExpressionWeightsFB.txt[]
 The slink:XrFaceExpressionInfoFB structure describes the information to
 obtain facial expression.
 
-include::{generated}/api/structs/XrFaceExpressionInfoFB.txt[]
+include::{generated}/api/structs/XrFaceExpressionInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -218,14 +218,14 @@ rendered frame.
 The system will employ appropriate modeling to provide expressions for this
 time.
 
-include::{generated}/validity/structs/XrFaceExpressionInfoFB.txt[]
+include::{generated}/validity/structs/XrFaceExpressionInfoFB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionWeightsFB',type='structs',desc='Returns the facial expression',xrefs='xrGetFaceExpressionWeightsFB']
 --
 slink:XrFaceExpressionWeightsFB structure returns the facial expression.
 
-include::{generated}/api/structs/XrFaceExpressionWeightsFB.txt[]
+include::{generated}/api/structs/XrFaceExpressionWeightsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -281,7 +281,7 @@ pname:confidenceCount to ename:XR_FACE_CONFIDENCE_COUNT_FB, and the runtime
 must: fill the pname:confidences array ordered so that it can: be indexed by
 the elink:XrFaceConfidenceFB enum.
 
-include::{generated}/validity/structs/XrFaceExpressionWeightsFB.txt[]
+include::{generated}/validity/structs/XrFaceExpressionWeightsFB.adoc[]
 --
 
 [open,refpage='XrFaceExpressionStatusFB',type='structs',desc='Describes the status of facial expression weights',xrefs='XrFaceExpressionWeightsFB']
@@ -289,7 +289,7 @@ include::{generated}/validity/structs/XrFaceExpressionWeightsFB.txt[]
 slink:XrFaceExpressionStatusFB structure describes the validity of facial
 expression weights.
 
-include::{generated}/api/structs/XrFaceExpressionStatusFB.txt[]
+include::{generated}/api/structs/XrFaceExpressionStatusFB.adoc[]
 
 .Member Descriptions
 ****
@@ -313,7 +313,7 @@ it indicates that the eye tracking driving blendshapes with prefix
 `XR_FACE_EXPRESSION_EYES_LOOK_*` lost track or the consent for eye tracking
 was denied.
 
-include::{generated}/validity/structs/XrFaceExpressionStatusFB.txt[]
+include::{generated}/validity/structs/XrFaceExpressionStatusFB.adoc[]
 --
 
 ==== Example code for obtaining facial expression
@@ -394,7 +394,7 @@ This extension defines 63 blend shapes for tracking facial expressions.
 
 [open,refpage='XrFaceExpressionFB',type='enums',desc='The names of trackable blend shapes',xrefs='']
 --
-include::{generated}/api/enums/XrFaceExpressionFB.txt[]
+include::{generated}/api/enums/XrFaceExpressionFB.adoc[]
 
 --
 
@@ -404,7 +404,7 @@ This extension defines two separate areas of confidence.
 
 [open,refpage='XrFaceConfidenceFB',type='enums',desc='The name of face areas where confidence is known',xrefs='']
 --
-include::{generated}/api/enums/XrFaceConfidenceFB.txt[]
+include::{generated}/api/enums/XrFaceConfidenceFB.adoc[]
 
 The "upper face" area represents everything above the upper lip, including
 eye, eyebrows + cheek, and nose.

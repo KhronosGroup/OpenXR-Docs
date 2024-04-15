@@ -21,23 +21,23 @@ flink:xrEnumerateApiLayerProperties and
 flink:xrEnumerateInstanceExtensionProperties can: be called before calling
 flink:xrCreateInstance.
 
-[[exported-functions]]
+[[api-initialization-exported-functions]]
 === Exported Functions
 
-A dynamically linked library (.dll or .so) that implements the API loader
-must: export all core OpenXR API functions.
+A dynamically linked library (`.dll` or `.so`) that implements the API
+loader must: export all core OpenXR API functions.
 However, the application can: gain access to extension functions by
 obtaining pointers to these functions through the use of
 flink:xrGetInstanceProcAddr.
 
-[[function-pointers]]
+[[api-initialization-function-pointers]]
 === Function Pointers
 [open,refpage='xrGetInstanceProcAddr',desc='Gets a function pointer for an OpenXR function',type='protos',xrefs='PFN_xrVoidFunction XrInstance']
 --
 Function pointers for all OpenXR functions can: be obtained with the
 function flink:xrGetInstanceProcAddr.
 
-include::{generated}/api/protos/xrGetInstanceProcAddr.txt[]
+include::{generated}/api/protos/xrGetInstanceProcAddr.adoc[]
 
 .Parameter Descriptions
 ****
@@ -119,13 +119,13 @@ pointer`") for each case.
     The returned function pointer must: only be called with a handle (the
     first parameter) that is pname:instance or a child of pname:instance.
 
-include::{generated}/validity/protos/xrGetInstanceProcAddr.txt[]
+include::{generated}/validity/protos/xrGetInstanceProcAddr.adoc[]
 --
 
 [open,refpage='PFN_xrVoidFunction',desc='Generic function pointer type returned by queries',type='funcpointers',xrefs='xrGetInstanceProcAddr']
 --
 
-include::{generated}/api/funcpointers/PFN_xrVoidFunction.txt[]
+include::{generated}/api/funcpointers/PFN_xrVoidFunction.adoc[]
 
 .Parameter Descriptions
 ****
@@ -140,7 +140,7 @@ queries, specifically those to flink:xrGetInstanceProcAddr.
 [open,refpage='PFN_xrGetInstanceProcAddr',desc='Function pointer type for flink:xrGetInstanceProcAddr',type='funcpointers',xrefs='xrGetInstanceProcAddr']
 --
 
-include::{generated}/api/funcpointers/PFN_xrGetInstanceProcAddr.txt[]
+include::{generated}/api/funcpointers/PFN_xrGetInstanceProcAddr.adoc[]
 
 tlink:PFN_xrGetInstanceProcAddr is a function pointer type for
 flink:xrGetInstanceProcAddr.
@@ -149,7 +149,7 @@ flink:xrGetInstanceProcAddr.
 [open,refpage='PFN_xrCreateApiLayerInstance',desc='Function pointer type for flink:xrCreateApiLayerInstance',type='funcpointers',xrefs='xrCreateApiLayerInstance']
 --
 
-include::{generated}/api/funcpointers/PFN_xrCreateApiLayerInstance.txt[]
+include::{generated}/api/funcpointers/PFN_xrCreateApiLayerInstance.adoc[]
 
 tlink:PFN_xrCreateApiLayerInstance is a function pointer type for
 flink:xrCreateApiLayerInstance.
@@ -159,7 +159,7 @@ and never by an application.
 --
 
 
-[[runtime-interface-negotiation]]
+[[api-initialization-runtime-interface-negotiation]]
 === Runtime Interface Negotiation
 
 In order to negotiate the runtime interface version with the loader, the
@@ -185,7 +185,7 @@ OpenXR API conventions are not followed in this section.
 --
 The flink:xrNegotiateLoaderRuntimeInterface function is defined as:
 
-include::{generated}/api/protos/xrNegotiateLoaderRuntimeInterface.txt[]
+include::{generated}/api/protos/xrNegotiateLoaderRuntimeInterface.adoc[]
 
 .Parameter Descriptions
 ****
@@ -236,28 +236,28 @@ is true:
 The runtime must: return ename:XR_ERROR_INITIALIZATION_FAILED if it does not
 support the loader's request.
 
-The runtime must: set the
+If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:runtimeInterfaceVersion with the
 runtime interface version it desires to support.
 The slink:XrNegotiateRuntimeRequest::pname:runtimeInterfaceVersion set must:
 be between slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
 slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion.
 
-The runtime must: set the
+If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:runtimeApiVersion with the API
 version of OpenXR it will execute under.
 The slink:XrNegotiateRuntimeRequest::pname:runtimeApiVersion set must: be
 between slink:XrNegotiateLoaderInfo::pname:minApiVersion and
 slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
 
-The runtime must: set the
+If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:getInstanceProcAddr with a valid
 function pointer for the loader to use to query function pointers to the
 remaining OpenXR functions supported by the runtime.
 
 If the function succeeds, the runtime must: return ename:XR_SUCCESS.
 
-include::{generated}/validity/protos/xrNegotiateLoaderRuntimeInterface.txt[]
+include::{generated}/validity/protos/xrNegotiateLoaderRuntimeInterface.adoc[]
 --
 
 The slink:XrNegotiateLoaderInfo structure is used to pass information about
@@ -267,7 +267,7 @@ the loader to a runtime or an API layer.
 --
 The slink:XrNegotiateLoaderInfo structure is defined as:
 
-include::{generated}/api/structs/XrNegotiateLoaderInfo.txt[]
+include::{generated}/api/structs/XrNegotiateLoaderInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -295,7 +295,7 @@ This structure is an input from the loader to the runtime in an
 flink:xrNegotiateLoaderRuntimeInterface call, as well as from the loader to
 an API layer in an flink:xrNegotiateLoaderApiLayerInterface call.
 
-include::{generated}/validity/structs/XrNegotiateLoaderInfo.txt[]
+include::{generated}/validity/structs/XrNegotiateLoaderInfo.adoc[]
 --
 
 
@@ -303,7 +303,7 @@ include::{generated}/validity/structs/XrNegotiateLoaderInfo.txt[]
 --
 The elink:XrLoaderInterfaceStructs enumeration is defined as:
 
-include::{generated}/api/enums/XrLoaderInterfaceStructs.txt[]
+include::{generated}/api/enums/XrLoaderInterfaceStructs.adoc[]
 
 This enumeration serves a similar purpose in the runtime and API layer
 interface negotiation (loader) API as elink:XrStructureType serves in the
@@ -312,7 +312,7 @@ application-facing API.
 
 [open,refpage='XR_LOADER_INFO_STRUCT_VERSION',type='defines',desc='Version of the OpenXR Loader Info',xrefs='XrNegotiateLoaderInfo xrNegotiateLoaderRuntimeInterface xrNegotiateLoaderApiLayerInterface']
 --
-include::{generated}/api/defines/XR_LOADER_INFO_STRUCT_VERSION.txt[]
+include::{generated}/api/defines/XR_LOADER_INFO_STRUCT_VERSION.adoc[]
 
 dlink:XR_LOADER_INFO_STRUCT_VERSION is the current version of the
 slink:XrNegotiateLoaderInfo structure.
@@ -322,7 +322,7 @@ field.
 
 [open,refpage='XR_CURRENT_LOADER_RUNTIME_VERSION',type='defines',desc='Version of the OpenXR Loader Runtime Interface',xrefs='XrNegotiateLoaderInfo xrNegotiateLoaderRuntimeInterface XR_CURRENT_LOADER_API_LAYER_VERSION']
 --
-include::{generated}/api/defines/XR_CURRENT_LOADER_RUNTIME_VERSION.txt[]
+include::{generated}/api/defines/XR_CURRENT_LOADER_RUNTIME_VERSION.adoc[]
 
 dlink:XR_CURRENT_LOADER_RUNTIME_VERSION is the current version of the
 overall OpenXR Loader Runtime interface.
@@ -332,7 +332,7 @@ slink:XrNegotiateLoaderInfo when loading a runtime.
 
 [open,refpage='XR_CURRENT_LOADER_API_LAYER_VERSION',type='defines',desc='Version of the OpenXR Loader API Layer Interface',xrefs='XrNegotiateLoaderInfo xrNegotiateLoaderApiLayerInterface XR_CURRENT_LOADER_RUNTIME_VERSION']
 --
-include::{generated}/api/defines/XR_CURRENT_LOADER_API_LAYER_VERSION.txt[]
+include::{generated}/api/defines/XR_CURRENT_LOADER_API_LAYER_VERSION.adoc[]
 
 dlink:XR_CURRENT_LOADER_API_LAYER_VERSION is the current version of the
 overall OpenXR Loader API Layer interface.
@@ -347,7 +347,7 @@ about the runtime back to the loader.
 --
 The slink:XrNegotiateRuntimeRequest structure is defined as:
 
-include::{generated}/api/structs/XrNegotiateRuntimeRequest.txt[]
+include::{generated}/api/structs/XrNegotiateRuntimeRequest.adoc[]
 
 .Member Descriptions
 ****
@@ -377,12 +377,12 @@ pname:structSize to ensure correct interpretation by the runtime, while the
 runtime populates the rest of the fields in a successful call to
 flink:xrNegotiateLoaderRuntimeInterface.
 
-include::{generated}/validity/structs/XrNegotiateRuntimeRequest.txt[]
+include::{generated}/validity/structs/XrNegotiateRuntimeRequest.adoc[]
 --
 
 [open,refpage='XR_RUNTIME_INFO_STRUCT_VERSION',type='defines',desc='Version of the OpenXR Loader Runtime structure',xrefs='XrNegotiateRuntimeRequest']
 --
-include::{generated}/api/defines/XR_RUNTIME_INFO_STRUCT_VERSION.txt[]
+include::{generated}/api/defines/XR_RUNTIME_INFO_STRUCT_VERSION.adoc[]
 
 dlink:XR_RUNTIME_INFO_STRUCT_VERSION is the current version of the
 slink:XrNegotiateRuntimeRequest structure.
@@ -391,7 +391,7 @@ slink:XrNegotiateRuntimeRequest::pname:structVersion field.
 --
 
 
-[[api-layer-interface-negotiation]]
+[[api-initialization-api-layer-interface-negotiation]]
 === API Layer Interface Negotiation
 
 In order to negotiate the API layer interface version with the loader, an
@@ -417,7 +417,7 @@ OpenXR API conventions are not followed in this section.
 --
 The flink:xrNegotiateLoaderApiLayerInterface function is defined as:
 
-include::{generated}/api/protos/xrNegotiateLoaderApiLayerInterface.txt[]
+include::{generated}/api/protos/xrNegotiateLoaderApiLayerInterface.adoc[]
 
 .Parameter Descriptions
 ****
@@ -471,26 +471,26 @@ following is true:
 The API layer must: return ename:XR_ERROR_INITIALIZATION_FAILED if it does
 not support the loader's request.
 
-The API layer must: set the
+If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:layerInterfaceVersion with the API
 layer interface version it desires to support.
 The slink:XrNegotiateApiLayerRequest::pname:layerInterfaceVersion set must:
 be between slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
 slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion.
 
-The API layer must: set the
+If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:layerApiVersion with the API version
 of OpenXR it will execute under.
 The slink:XrNegotiateApiLayerRequest::pname:layerApiVersion set must: be
 between slink:XrNegotiateLoaderInfo::pname:minApiVersion and
 slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
 
-The API layer must: set the
+If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:getInstanceProcAddr with a valid
 function pointer for the loader to use to query function pointers to the
 remaining OpenXR functions supported by the API layer.
 
-The API layer must: set the
+If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:createApiLayerInstance with a valid
 function pointer to an implementation of flink:xrCreateApiLayerInstance for
 the loader to use to create the instance through the API layer call chain.
@@ -502,7 +502,7 @@ of the flink:xrNegotiateLoaderApiLayerInterface function.
 The loader must: handle all API layer negotiations with each API layer
 individually.
 
-include::{generated}/validity/protos/xrNegotiateLoaderApiLayerInterface.txt[]
+include::{generated}/validity/protos/xrNegotiateLoaderApiLayerInterface.adoc[]
 --
 
 
@@ -513,7 +513,7 @@ about the API layer back to the loader.
 --
 The slink:XrNegotiateApiLayerRequest structure is defined as:
 
-include::{generated}/api/structs/XrNegotiateApiLayerRequest.txt[]
+include::{generated}/api/structs/XrNegotiateApiLayerRequest.adoc[]
 
 .Member Descriptions
 ****
@@ -550,12 +550,12 @@ pname:structSize before calling to ensure correct interpretation by the API
 layer, while the API layer populates the rest of the fields in a successful
 call to flink:xrNegotiateLoaderApiLayerInterface.
 
-include::{generated}/validity/structs/XrNegotiateApiLayerRequest.txt[]
+include::{generated}/validity/structs/XrNegotiateApiLayerRequest.adoc[]
 --
 
 [open,refpage='XR_API_LAYER_INFO_STRUCT_VERSION',type='defines',desc='Version of the OpenXR Loader API Layer structure',xrefs='XrNegotiateApiLayerRequest']
 --
-include::{generated}/api/defines/XR_API_LAYER_INFO_STRUCT_VERSION.txt[]
+include::{generated}/api/defines/XR_API_LAYER_INFO_STRUCT_VERSION.adoc[]
 
 dlink:XR_API_LAYER_INFO_STRUCT_VERSION is the current version of the
 slink:XrNegotiateApiLayerRequest structure.
@@ -568,7 +568,7 @@ slink:XrNegotiateApiLayerRequest::pname:structVersion field.
 --
 The flink:xrCreateApiLayerInstance function is defined as:
 
-include::{generated}/api/protos/xrCreateApiLayerInstance.txt[]
+include::{generated}/api/protos/xrCreateApiLayerInstance.adoc[]
 
 .Parameter Descriptions
 ****
@@ -630,7 +630,7 @@ call down the call chain to the next flink:xrCreateApiLayerInstance:
 * The API layer must: return the elink:XrResult returned from the next API
   layer.
 
-include::{generated}/validity/protos/xrCreateApiLayerInstance.txt[]
+include::{generated}/validity/protos/xrCreateApiLayerInstance.adoc[]
 --
 
 
@@ -641,7 +641,7 @@ required by a API layer during its create instance process.
 --
 The slink:XrApiLayerCreateInfo structure is defined as:
 
-include::{generated}/api/structs/XrApiLayerCreateInfo.txt[]
+include::{generated}/api/structs/XrApiLayerCreateInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -661,13 +661,13 @@ include::{generated}/api/structs/XrApiLayerCreateInfo.txt[]
   which contains information to work with the next API layer in the chain.
 ****
 
-include::{generated}/validity/structs/XrApiLayerCreateInfo.txt[]
+include::{generated}/validity/structs/XrApiLayerCreateInfo.adoc[]
 --
 
 
 [open,refpage='XR_API_LAYER_CREATE_INFO_STRUCT_VERSION',type='defines',desc='Version of the OpenXR Loader API Layer Create Info Struct',xrefs='XrApiLayerCreateInfo']
 --
-include::{generated}/api/defines/XR_API_LAYER_CREATE_INFO_STRUCT_VERSION.txt[]
+include::{generated}/api/defines/XR_API_LAYER_CREATE_INFO_STRUCT_VERSION.adoc[]
 
 dlink:XR_API_LAYER_CREATE_INFO_STRUCT_VERSION is the current version of the
 slink:XrApiLayerCreateInfo structure.
@@ -677,7 +677,7 @@ field.
 
 [open,refpage='XR_API_LAYER_MAX_SETTINGS_PATH_SIZE',type='defines',desc='Size of pname:settings_file_location',xrefs='XrApiLayerCreateInfo']
 --
-include::{generated}/api/defines/XR_API_LAYER_MAX_SETTINGS_PATH_SIZE.txt[]
+include::{generated}/api/defines/XR_API_LAYER_MAX_SETTINGS_PATH_SIZE.adoc[]
 
 dlink:XR_API_LAYER_MAX_SETTINGS_PATH_SIZE is the size of the
 slink:XrApiLayerCreateInfo::pname:settings_file_location field.
@@ -688,7 +688,7 @@ The slink:XrApiLayerNextInfo structure:
 --
 The slink:XrApiLayerNextInfo structure is defined as:
 
-include::{generated}/api/structs/XrApiLayerNextInfo.txt[]
+include::{generated}/api/structs/XrApiLayerNextInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -716,12 +716,12 @@ include::{generated}/api/structs/XrApiLayerNextInfo.txt[]
   If no API layer is after this, it will be code:NULL.
 ****
 
-include::{generated}/validity/structs/XrApiLayerNextInfo.txt[]
+include::{generated}/validity/structs/XrApiLayerNextInfo.adoc[]
 --
 
 [open,refpage='XR_API_LAYER_NEXT_INFO_STRUCT_VERSION',type='defines',desc='Version of the OpenXR Loader API Layer Next Info structure',xrefs='XrApiLayerNextInfo']
 --
-include::{generated}/api/defines/XR_API_LAYER_NEXT_INFO_STRUCT_VERSION.txt[]
+include::{generated}/api/defines/XR_API_LAYER_NEXT_INFO_STRUCT_VERSION.adoc[]
 
 dlink:XR_API_LAYER_NEXT_INFO_STRUCT_VERSION is the current version of the
 slink:XrApiLayerNextInfo structure.

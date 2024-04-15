@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-:uri-extprocess: {uri-openxr-registry-root}/specs/1.0/extprocess.html
+:uri-extprocess: {uri-openxr-registry-root}/specs/1.1/extprocess.html
 
 [[extensions]]
 = API Layers & Extensions
@@ -790,7 +790,7 @@ specification until the reservation is merged into
 In general, this is not done in any future extensions: create a chained
 structure with an entirely new bitmask field instead.
 See also
-https://www.khronos.org/registry/OpenXR/specs/1.0/extprocess.html#bitmasks[the
+https://www.khronos.org/registry/OpenXR/specs/1.1/extprocess.html#bitmasks[the
 Extension Process discussion of this].
 
 

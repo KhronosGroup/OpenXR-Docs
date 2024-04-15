@@ -42,7 +42,7 @@ This extension allows:
 To enable the functionality of this extension, an application must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 To create an overlay session, an application must: pass an
 slink:XrSessionCreateInfoOverlayEXTX structure to flink:xrCreateSession via
@@ -123,8 +123,8 @@ specification must change as defined below:
 
 ===== Modifications to Composition
 
-The <<compositing, Compositing>> section description of the composition
-process will be changed if this extension is enabled.
+The <<rendering-compositing>> section description of the composition process
+will be changed if this extension is enabled.
 If this extension is enabled, and there is only one active session, then
 there is no change.
 However, if this extension is enabled, and there are multiple active
@@ -185,9 +185,8 @@ endif::XR_KHR_composition_layer_depth[]
 
 ===== Modifications to xrEndFrame Behavior
 
-<<frame-submission, Frame Submission>> currently states that if
-flink:xrEndFrame is called with no layers, then the runtime should clear the
-VR display.
+<<rendering-frame-submission>> currently states that if flink:xrEndFrame is
+called with no layers, then the runtime should clear the VR display.
 
 If this extension is enabled, the above statement is now only true if the
 session is not an overlay session.
@@ -214,22 +213,22 @@ None
 
 [open,refpage='XrOverlayMainSessionFlagsEXTX',type='flags',desc='XrOverlayMainSessionFlagsEXTX']
 --
-include::{generated}/api/flags/XrOverlayMainSessionFlagsEXTX.txt[]
+include::{generated}/api/flags/XrOverlayMainSessionFlagsEXTX.adoc[]
 --
 
 [open,refpage='XrOverlayMainSessionFlagBitsEXTX',type='enums',desc='XrOverlayMainSessionFlagBitsEXTX']
 --
-include::{generated}/api/enums/XrOverlayMainSessionFlagBitsEXTX.txt[]
+include::{generated}/api/enums/XrOverlayMainSessionFlagBitsEXTX.adoc[]
 --
 
 [open,refpage='XrOverlaySessionCreateFlagsEXTX',type='flags',desc='XrOverlaySessionCreateFlagsEXTX']
 --
-include::{generated}/api/flags/XrOverlaySessionCreateFlagsEXTX.txt[]
+include::{generated}/api/flags/XrOverlaySessionCreateFlagsEXTX.adoc[]
 --
 
 [open,refpage='XrOverlaySessionCreateFlagBitsEXTX',type='enums',desc='XrOverlaySessionCreateFlagBitsEXTX']
 --
-include::{generated}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.txt[]
+include::{generated}/api/enums/XrOverlaySessionCreateFlagBitsEXTX.adoc[]
 --
 
 *New Enum Constants*
@@ -247,7 +246,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrSessionCreateInfoOverlayEXTX',type='structs',desc='Session creation extension struct providing overlay session parameters']
 --
-include::{generated}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+include::{generated}/api/structs/XrSessionCreateInfoOverlayEXTX.adoc[]
 
 .Member Descriptions
 ****
@@ -262,13 +261,13 @@ include::{generated}/api/structs/XrSessionCreateInfoOverlayEXTX.txt[]
   of the session's composition layers in terms of other sessions.
 ****
 
-include::{generated}/validity/structs/XrSessionCreateInfoOverlayEXTX.txt[]
+include::{generated}/validity/structs/XrSessionCreateInfoOverlayEXTX.adoc[]
 --
 
 
 [open,refpage='XrEventDataMainSessionVisibilityChangedEXTX',type='structs',desc='Event representing main session visibility change']
 --
-include::{generated}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+include::{generated}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.adoc[]
 
 Receiving the slink:XrEventDataMainSessionVisibilityChangedEXTX event
 structure indicates that the main session has gained or lost visibility.
@@ -295,7 +294,7 @@ apiext:XR_KHR_composition_layer_depth extension.
   which indicates various state information for the main session.
 ****
 
-include::{generated}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.txt[]
+include::{generated}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.adoc[]
 
 --
 

@@ -56,14 +56,14 @@ calling flink:xrSetDigitalLensControlALMALENCE.
 
 [open,refpage='XrDigitalLensControlFlagsALMALENCE',type='flags',desc='XrDigitalLensControlFlagsALMALENCE']
 --
-include::{generated}/api/flags/XrDigitalLensControlFlagsALMALENCE.txt[]
+include::{generated}/api/flags/XrDigitalLensControlFlagsALMALENCE.adoc[]
 --
 
 [open,refpage='XrDigitalLensControlFlagBitsALMALENCE',type='enums',desc='XrDigitalLensControlFlagBitsALMALENCE']
 --
-include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.txt[]
+include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.adoc[]
 
-include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.comments.txt[]
+include::{generated}/api/enums/XrDigitalLensControlFlagBitsALMALENCE.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -80,7 +80,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrDigitalLensControlALMALENCE structure is defined as:
 
-include::{generated}/api/structs/XrDigitalLensControlALMALENCE.txt[]
+include::{generated}/api/structs/XrDigitalLensControlALMALENCE.adoc[]
 
 .Member Descriptions
 ****
@@ -91,7 +91,7 @@ include::{generated}/api/structs/XrDigitalLensControlALMALENCE.txt[]
   indicating various characteristics desired for the Digital Lens.
 ****
 
-include::{generated}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
+include::{generated}/validity/structs/XrDigitalLensControlALMALENCE.adoc[]
 --
 
 *New Functions*
@@ -100,7 +100,7 @@ include::{generated}/validity/structs/XrDigitalLensControlALMALENCE.txt[]
 --
 The flink:xrSetDigitalLensControlALMALENCE function is defined as:
 
-include::{generated}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{generated}/api/protos/xrSetDigitalLensControlALMALENCE.adoc[]
 
 .Parameter Descriptions
 ****
@@ -112,7 +112,7 @@ include::{generated}/api/protos/xrSetDigitalLensControlALMALENCE.txt[]
 flink:xrSetDigitalLensControlALMALENCE handles state of Digital Lens API
 Layer
 
-include::{generated}/validity/protos/xrSetDigitalLensControlALMALENCE.txt[]
+include::{generated}/validity/protos/xrSetDigitalLensControlALMALENCE.adoc[]
 --
 
 *Issues*

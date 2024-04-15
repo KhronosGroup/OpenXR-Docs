@@ -17,6 +17,190 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.36 (2024-04-15)
+
+This is a substantial update to the OpenXR specification.
+
+- Major Update
+  - New ratified core OpenXR 1.1 specification.
+    ([internal MR 3053](https://gitlab.khronos.org/openxr/openxr/merge_requests/3053),
+    [internal MR 3046](https://gitlab.khronos.org/openxr/openxr/merge_requests/3046),
+    [internal MR 3187](https://gitlab.khronos.org/openxr/openxr/merge_requests/3187),
+    [internal MR 3199](https://gitlab.khronos.org/openxr/openxr/merge_requests/3199))
+  - New ratified Khronos extension specification: `XR_KHR_locate_spaces`. Promoted
+    to core OpenXR 1.1.
+    ([internal MR 2272](https://gitlab.khronos.org/openxr/openxr/merge_requests/2272),
+    [internal issue 1706](https://gitlab.khronos.org/openxr/openxr/issues/1706),
+    [internal MR 3178](https://gitlab.khronos.org/openxr/openxr/merge_requests/3178),
+    [internal MR 3196](https://gitlab.khronos.org/openxr/openxr/merge_requests/3196),
+    [internal MR 3300](https://gitlab.khronos.org/openxr/openxr/merge_requests/3300))
+  - New ratified Khronos extension specification: `XR_KHR_maintenance1`. Promoted
+    to core OpenXR 1.1.
+    ([internal MR 3053](https://gitlab.khronos.org/openxr/openxr/merge_requests/3053),
+    [internal MR 3046](https://gitlab.khronos.org/openxr/openxr/merge_requests/3046),
+    [internal MR 3187](https://gitlab.khronos.org/openxr/openxr/merge_requests/3187),
+    [internal MR 3199](https://gitlab.khronos.org/openxr/openxr/merge_requests/3199))
+  - Fundamentals chapter: Add assorted structures and values to core OpenXR 1.1.
+    Some are versions of structures from existing extensions.
+    ([internal MR 3046](https://gitlab.khronos.org/openxr/openxr/merge_requests/3046),
+    [internal MR 3061](https://gitlab.khronos.org/openxr/openxr/merge_requests/3061))
+  - Fundamentals chapter: Promote `XR_EXT_uuid` to core OpenXR 1.1.
+    ([internal MR 3046](https://gitlab.khronos.org/openxr/openxr/merge_requests/3046))
+  - Fundamentals chapter: Rename "Common Object Types" section to "Common Data
+    Types" and clarify its introduction.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Clarify `XrDuration` (and related constant)
+    specification.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Clarify and expand the "buffer size" section about the
+    two-call idiom.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Improve documentation for convenience macros acting on
+    `XrResult`, and clarify text about common return code name suffixes.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Clarify and expand documentation of "offsets" and
+    "extents".
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Clarify description of extension list.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062))
+  - Fundamentals chapter: Miscellaneous minor cleanup, clarification, and normative
+    language fixes.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062),
+    [internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062),
+    [internal MR 3210](https://gitlab.khronos.org/openxr/openxr/merge_requests/3210))
+  - Fundamentals chapter: Clarify the section on events and event polling.
+    ([internal MR 3062](https://gitlab.khronos.org/openxr/openxr/merge_requests/3062),
+    [internal MR 3163](https://gitlab.khronos.org/openxr/openxr/merge_requests/3163),
+    [internal MR 3276](https://gitlab.khronos.org/openxr/openxr/merge_requests/3276))
+  - Semantic Paths chapter: Promote the "grip_surface" pose identifier to core
+    OpenXR 1.1, renamed from `XR_EXT_palm_pose`.
+    ([internal MR 3050](https://gitlab.khronos.org/openxr/openxr/merge_requests/3050),
+    [internal MR 3303](https://gitlab.khronos.org/openxr/openxr/merge_requests/3303))
+  - Semantic Paths chapter: Promote many interaction profiles from extensions to
+    core OpenXR 1.1.
+    ([internal MR 3051](https://gitlab.khronos.org/openxr/openxr/merge_requests/3051),
+    [internal MR 3127](https://gitlab.khronos.org/openxr/openxr/merge_requests/3127),
+    [internal MR 3265](https://gitlab.khronos.org/openxr/openxr/merge_requests/3265),
+    [internal MR 3279](https://gitlab.khronos.org/openxr/openxr/merge_requests/3279),
+    [internal MR 3294](https://gitlab.khronos.org/openxr/openxr/merge_requests/3294))
+  - Semantic Paths chapter: Add several legacy interaction profiles to represent
+    specific controllers shipped under the Oculus/Meta Touch name and previously
+    grouped into a single Oculus Touch interaction profile.
+    ([internal MR 3127](https://gitlab.khronos.org/openxr/openxr/merge_requests/3127),
+    [internal MR 3299](https://gitlab.khronos.org/openxr/openxr/merge_requests/3299))
+  - Spaces chapter: Promote a refined version of `XR_EXT_local_floor` to core
+    OpenXR 1.1.
+    ([internal MR 3048](https://gitlab.khronos.org/openxr/openxr/merge_requests/3048),
+    [internal MR 3074](https://gitlab.khronos.org/openxr/openxr/merge_requests/3074),
+    [internal MR 3134](https://gitlab.khronos.org/openxr/openxr/merge_requests/3134),
+    [internal MR 3155](https://gitlab.khronos.org/openxr/openxr/merge_requests/3155),
+    [internal MR 3156](https://gitlab.khronos.org/openxr/openxr/merge_requests/3156),
+    [internal MR 3157](https://gitlab.khronos.org/openxr/openxr/merge_requests/3157),
+    [internal MR 3171](https://gitlab.khronos.org/openxr/openxr/merge_requests/3171),
+    [internal MR 3172](https://gitlab.khronos.org/openxr/openxr/merge_requests/3172),
+    [internal MR 3175](https://gitlab.khronos.org/openxr/openxr/merge_requests/3175))
+  - Spaces chapter: General improvements to the Spaces chapter.
+    ([internal MR 3169](https://gitlab.khronos.org/openxr/openxr/merge_requests/3169),
+    [internal MR 3189](https://gitlab.khronos.org/openxr/openxr/merge_requests/3189))
+  - View Configurations chapter: Promote
+    `XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET` to core OpenXR
+    1.1, renamed and refined from `XR_VARJO_quad_views`.
+    ([internal MR 3049](https://gitlab.khronos.org/openxr/openxr/merge_requests/3049),
+    [internal MR 3173](https://gitlab.khronos.org/openxr/openxr/merge_requests/3173))
+  - Rendering chapter: Formally deprecate
+    `XR_COMPOSITION_LAYER_CORRECT_CHROMATIC_ABERRATION_BIT`, previously noted to
+    have no effect on any known runtimes and as planned for deprecation.
+    ([internal MR 3096](https://gitlab.khronos.org/openxr/openxr/merge_requests/3096))
+  - Input chapter: Re-organize and clarify the Input chapter.
+    ([internal MR 3179](https://gitlab.khronos.org/openxr/openxr/merge_requests/3179),
+    [internal MR 3183](https://gitlab.khronos.org/openxr/openxr/merge_requests/3183),
+    [internal MR 3185](https://gitlab.khronos.org/openxr/openxr/merge_requests/3185),
+    [internal MR 3205](https://gitlab.khronos.org/openxr/openxr/merge_requests/3205),
+    [internal MR 3207](https://gitlab.khronos.org/openxr/openxr/merge_requests/3207))
+  - Core Revisions chapter: Add new informative (non-normative) chapter detailing
+    substantial core revisions, summarize changes in OpenXR 1.1 core, and
+    differences between extensions and the functionality promoted to core.
+    ([internal MR 3199](https://gitlab.khronos.org/openxr/openxr/merge_requests/3199),
+    [internal MR 3280](https://gitlab.khronos.org/openxr/openxr/merge_requests/3280))
+  - Appendix: Update Contributors section.
+    ([internal MR 3111](https://gitlab.khronos.org/openxr/openxr/merge_requests/3111))
+  - Tooling: Update scripts for 1.1, handling extension promotion, and partially
+    synchronize shared scripts with Vulkan.
+    ([internal MR 3056](https://gitlab.khronos.org/openxr/openxr/merge_requests/3056),
+    [internal MR 3139](https://gitlab.khronos.org/openxr/openxr/merge_requests/3139),
+    [internal MR 3188](https://gitlab.khronos.org/openxr/openxr/merge_requests/3188),
+    [internal MR 3190](https://gitlab.khronos.org/openxr/openxr/merge_requests/3190),
+    [internal MR 3219](https://gitlab.khronos.org/openxr/openxr/merge_requests/3219),
+    [internal MR 3226](https://gitlab.khronos.org/openxr/openxr/merge_requests/3226),
+    [internal MR 3262](https://gitlab.khronos.org/openxr/openxr/merge_requests/3262),
+    [internal MR 3263](https://gitlab.khronos.org/openxr/openxr/merge_requests/3263),
+    [internal MR 3260](https://gitlab.khronos.org/openxr/openxr/merge_requests/3260),
+    [internal MR 3266](https://gitlab.khronos.org/openxr/openxr/merge_requests/3266),
+    [internal MR 3295](https://gitlab.khronos.org/openxr/openxr/merge_requests/3295))
+- Registry
+  - New ratified OpenXR version: `XR_VERSION_1_1` - OpenXR 1.1.
+    ([internal MR 3053](https://gitlab.khronos.org/openxr/openxr/merge_requests/3053))
+  - New ratified Khronos extension: `XR_KHR_locate_spaces`
+    ([internal MR 2272](https://gitlab.khronos.org/openxr/openxr/merge_requests/2272),
+    [internal issue 1706](https://gitlab.khronos.org/openxr/openxr/issues/1706))
+  - New ratified Khronos extension: `XR_KHR_maintenance1`
+    ([internal MR 3053](https://gitlab.khronos.org/openxr/openxr/merge_requests/3053))
+  - New multi-vendor extension: `XR_EXT_future`
+    ([internal MR 2610](https://gitlab.khronos.org/openxr/openxr/merge_requests/2610))
+  - New vendor extension: `XR_META_environment_depth`
+    ([internal MR 2771](https://gitlab.khronos.org/openxr/openxr/merge_requests/2771),
+    [internal MR 3271](https://gitlab.khronos.org/openxr/openxr/merge_requests/3271))
+  - Update the XML schema to change how dependencies are described (replacing
+    `requiresCore` and `requires` attributes of `extension`, and `feature` and
+    `extension` attributes of `require`, with a new `depends` attribute.). This is
+    a **breaking change** of the XML schema, though in an infrequently processed
+    attribute. This corresponds to the change made in Vulkan 1.3.241.
+    ([internal MR 3260](https://gitlab.khronos.org/openxr/openxr/merge_requests/3260))
+  - Mark `XR_OCULUS_android_session_state_enable` as deprecated.
+    ([internal MR 3255](https://gitlab.khronos.org/openxr/openxr/merge_requests/3255))
+- Specification
+  - New multi-vendor extension specification: `XR_EXT_future`
+    ([internal MR 2610](https://gitlab.khronos.org/openxr/openxr/merge_requests/2610))
+  - New vendor extension specification: `XR_META_environment_depth`
+    ([internal MR 2771](https://gitlab.khronos.org/openxr/openxr/merge_requests/2771),
+    [internal MR 3271](https://gitlab.khronos.org/openxr/openxr/merge_requests/3271))
+  - Fix: Small clarification on post-conditions for loader negotiation functions.
+    ([internal MR 2117](https://gitlab.khronos.org/openxr/openxr/merge_requests/2117))
+  - Fix: Correct broken QR code specification link in extension ref page.
+    ([internal MR 3308](https://gitlab.khronos.org/openxr/openxr/merge_requests/3308))
+  - Fix: Adjust markup of non-normative note admonition blocks.
+    ([internal MR 3315](https://gitlab.khronos.org/openxr/openxr/merge_requests/3315))
+  - Fix: Adjust Makefile so builds that do not emit any errors during ref page
+    generation do not fail when looking for those errors.
+    ([internal MR 3226](https://gitlab.khronos.org/openxr/openxr/merge_requests/3226))
+  - Improvement: Switch code highlighter to "rouge", use customized Khronos
+    stylesheet for both main spec and ref pages for consistent style and improved
+    accessibility.
+    ([internal MR 3309](https://gitlab.khronos.org/openxr/openxr/merge_requests/3309))
+  - Improvement: Replace JavaScript in main specification source with build-time
+    postprocessing.
+    ([internal MR 3309](https://gitlab.khronos.org/openxr/openxr/merge_requests/3309))
+  - Improvement: Make reference pages use shared external CSS for faster load
+    times.
+    ([internal MR 3309](https://gitlab.khronos.org/openxr/openxr/merge_requests/3309))
+  - Improvement: Update the internal anchors in the specification to a standardized format.
+    ([internal MR 3315](https://gitlab.khronos.org/openxr/openxr/merge_requests/3315))
+  - Improvement: Specification build system cleanup, silence warnings that are not
+    relevant.
+    ([internal MR 3308](https://gitlab.khronos.org/openxr/openxr/merge_requests/3308))
+  - Loader design: Allow checking multiple records from the broker, all
+    corresponding to the same runtime, for compatibility purposes.
+    ([internal MR 3269](https://gitlab.khronos.org/openxr/openxr/merge_requests/3269),
+    [internal issue 2226](https://gitlab.khronos.org/openxr/openxr/issues/2226))
+  - New multi-vendor extension specification: `XR_EXT_future`
+    ([internal MR 2610](https://gitlab.khronos.org/openxr/openxr/merge_requests/2610))
+  - New vendor extension specification: `XR_META_environment_depth`
+    ([internal MR 2771](https://gitlab.khronos.org/openxr/openxr/merge_requests/2771),
+    [internal MR 3271](https://gitlab.khronos.org/openxr/openxr/merge_requests/3271))
+  - `XR_FB_face_tracking2`: Correct the number of blend shapes mentioned in the
+    prose.
+    ([internal MR 3277](https://gitlab.khronos.org/openxr/openxr/merge_requests/3277))
+
 ## OpenXR Specification 1.0.34 (2024-02-16)
 
 This release features clarifications to the specification, as well as a number

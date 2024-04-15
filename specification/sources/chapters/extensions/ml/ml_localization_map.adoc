@@ -73,7 +73,7 @@ To enable these events call flink:xrEnableLocalizationEventsML.
 
 The slink:XrEventDataLocalizationChangedML structure is defined as:
 
-include::{generated}/api/structs/XrEventDataLocalizationChangedML.txt[]
+include::{generated}/api/structs/XrEventDataLocalizationChangedML.adoc[]
 
 .Member Descriptions
 ****
@@ -103,7 +103,7 @@ This allows the application to synchronize with the current state.
 The arrival of the event is asynchronous to this call.
 ====
 
-include::{generated}/validity/structs/XrEventDataLocalizationChangedML.txt[]
+include::{generated}/validity/structs/XrEventDataLocalizationChangedML.adoc[]
 --
 
 [open,refpage='XrLocalizationMapErrorFlagsML',type='flags',desc='XrLocalizationMapErrorFlagsML',xrefs='XrLocalizationMapErrorFlagBitsML']
@@ -112,7 +112,7 @@ include::{generated}/validity/structs/XrEventDataLocalizationChangedML.txt[]
 
 The bitmask type elink:XrLocalizationMapErrorFlagsML is defined as:
 
-include::{generated}/api/flags/XrLocalizationMapErrorFlagsML.txt[]
+include::{generated}/api/flags/XrLocalizationMapErrorFlagsML.adoc[]
 
 As used in slink:XrEventDataLocalizationChangedML::pname:errorFlags field,
 elink:XrLocalizationMapErrorFlagsML contains a bitwise-OR of zero or more of
@@ -121,11 +121,11 @@ the bits defined in elink:XrLocalizationMapErrorFlagBitsML.
 
 [open,refpage='XrLocalizationMapErrorFlagBitsML',type='enums',desc='The world meshing detector flags.'xrefs='XrLocalizationMapErrorFlagsML']
 --
-include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.txt[]
+include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.comments.txt[]
+include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.comments.adoc[]
 --
 
 
@@ -134,7 +134,7 @@ include::{generated}/api/enums/XrLocalizationMapErrorFlagBitsML.comments.txt[]
 --
 The flink:xrEnableLocalizationEventsML function is defined as:
 
-include::{generated}/api/protos/xrEnableLocalizationEventsML.txt[]
+include::{generated}/api/protos/xrEnableLocalizationEventsML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -144,7 +144,7 @@ include::{generated}/api/protos/xrEnableLocalizationEventsML.txt[]
   structure.
 ****
 
-include::{generated}/validity/protos/xrEnableLocalizationEventsML.txt[]
+include::{generated}/validity/protos/xrEnableLocalizationEventsML.adoc[]
 --
 
 [open,refpage='XrLocalizationEnableEventsInfoML',type='structs',desc='Information to enable localization map events',xrefs='xrEnableLocalizationEventsML']
@@ -152,7 +152,7 @@ include::{generated}/validity/protos/xrEnableLocalizationEventsML.txt[]
 
 The slink:XrLocalizationEnableEventsInfoML structure is defined as:
 
-include::{generated}/api/structs/XrLocalizationEnableEventsInfoML.txt[]
+include::{generated}/api/structs/XrLocalizationEnableEventsInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -162,7 +162,7 @@ include::{generated}/api/structs/XrLocalizationEnableEventsInfoML.txt[]
 * pname:enabled is the flag to enable/disable localization status events.
 ****
 
-include::{generated}/validity/structs/XrLocalizationEnableEventsInfoML.txt[]
+include::{generated}/validity/structs/XrLocalizationEnableEventsInfoML.adoc[]
 --
 
 
@@ -171,7 +171,7 @@ include::{generated}/validity/structs/XrLocalizationEnableEventsInfoML.txt[]
 
 The slink:XrLocalizationMapML structure is defined as:
 
-include::{generated}/api/structs/XrLocalizationMapML.txt[]
+include::{generated}/api/structs/XrLocalizationMapML.adoc[]
 
 .Member Descriptions
 ****
@@ -185,7 +185,7 @@ include::{generated}/api/structs/XrLocalizationMapML.txt[]
 * pname:mapType is the elink:XrLocalizationMapTypeML of the map.
 ****
 
-include::{generated}/validity/structs/XrLocalizationMapML.txt[]
+include::{generated}/validity/structs/XrLocalizationMapML.adoc[]
 --
 
 ==== Listing Localization Maps
@@ -197,7 +197,7 @@ flink:xrQueryLocalizationMapsML.
 --
 The flink:xrQueryLocalizationMapsML function is defined as:
 
-include::{generated}/api/protos/xrQueryLocalizationMapsML.txt[]
+include::{generated}/api/protos/xrQueryLocalizationMapsML.adoc[]
 
 
 .Parameter Descriptions
@@ -213,8 +213,8 @@ include::{generated}/api/protos/xrQueryLocalizationMapsML.txt[]
   pname:mapCapacityInput is insufficient.
 * pname:maps is an array of slink:XrLocalizationMapML filled in by the
   runtime, but can: be code:NULL if pname:mapCapacityInput is `0`.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:maps size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:maps size.
 ****
 
 The list of localization maps returned will depend on the current device
@@ -231,7 +231,7 @@ This is however a rare occurrence and the application may: retry the call
 again if it receives ename:XR_ERROR_SIZE_INSUFFICIENT.
 
 
-include::{generated}/validity/protos/xrQueryLocalizationMapsML.txt[]
+include::{generated}/validity/protos/xrQueryLocalizationMapsML.adoc[]
 --
 
 [open,refpage='XrLocalizationMapQueryInfoBaseHeaderML',type='structs',desc='Enumeration filter for the available localization maps',xrefs='xrQueryLocalizationMapsML']
@@ -239,7 +239,7 @@ include::{generated}/validity/protos/xrQueryLocalizationMapsML.txt[]
 
 The slink:XrLocalizationMapQueryInfoBaseHeaderML structure is defined as:
 
-include::{generated}/api/structs/XrLocalizationMapQueryInfoBaseHeaderML.txt[]
+include::{generated}/api/structs/XrLocalizationMapQueryInfoBaseHeaderML.adoc[]
 
 .Member Descriptions
 ****
@@ -250,7 +250,7 @@ include::{generated}/api/structs/XrLocalizationMapQueryInfoBaseHeaderML.txt[]
 
 Currently no filters are available.
 
-include::{generated}/validity/structs/XrLocalizationMapQueryInfoBaseHeaderML.txt[]
+include::{generated}/validity/structs/XrLocalizationMapQueryInfoBaseHeaderML.adoc[]
 --
 
 ==== Request Localization Map
@@ -262,7 +262,7 @@ flink:xrRequestMapLocalizationML.
 --
 The flink:xrRequestMapLocalizationML function is defined as:
 
-include::{generated}/api/protos/xrRequestMapLocalizationML.txt[]
+include::{generated}/api/protos/xrRequestMapLocalizationML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -282,7 +282,7 @@ The runtime must: return ename:XR_ERROR_LOCALIZATION_MAP_UNAVAILABLE_ML if
 the requested is not a map known to the runtime.
 
 
-include::{generated}/validity/protos/xrRequestMapLocalizationML.txt[]
+include::{generated}/validity/protos/xrRequestMapLocalizationML.adoc[]
 --
 
 [open,refpage='XrMapLocalizationRequestInfoML',type='structs',desc='Information required to request a localization map.',xrefs='xrRequestMapLocalizationML']
@@ -290,7 +290,7 @@ include::{generated}/validity/protos/xrRequestMapLocalizationML.txt[]
 
 The slink:XrMapLocalizationRequestInfoML structure is defined as:
 
-include::{generated}/api/structs/XrMapLocalizationRequestInfoML.txt[]
+include::{generated}/api/structs/XrMapLocalizationRequestInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -301,7 +301,7 @@ include::{generated}/api/structs/XrMapLocalizationRequestInfoML.txt[]
   This mapUuid can: be obtained via flink:xrQueryLocalizationMapsML.
 ****
 
-include::{generated}/validity/structs/XrMapLocalizationRequestInfoML.txt[]
+include::{generated}/validity/structs/XrMapLocalizationRequestInfoML.adoc[]
 --
 
 
@@ -327,7 +327,7 @@ maps.
 --
 The flink:xrImportLocalizationMapML function is defined as:
 
-include::{generated}/api/protos/xrImportLocalizationMapML.txt[]
+include::{generated}/api/protos/xrImportLocalizationMapML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -347,7 +347,7 @@ the map being imported is not compatible.
 flink:xrImportLocalizationMapML may: take a long time to complete; as such
 applications should: not call this from the frame loop.
 
-include::{generated}/validity/protos/xrImportLocalizationMapML.txt[]
+include::{generated}/validity/protos/xrImportLocalizationMapML.adoc[]
 --
 
 [open,refpage='XrLocalizationMapImportInfoML',type='structs',desc='Data of a previously exported localization map.',xrefs='xrImportLocalizationMapML']
@@ -355,7 +355,7 @@ include::{generated}/validity/protos/xrImportLocalizationMapML.txt[]
 
 The slink:XrLocalizationMapImportInfoML structure is defined as:
 
-include::{generated}/api/structs/XrLocalizationMapImportInfoML.txt[]
+include::{generated}/api/structs/XrLocalizationMapImportInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -366,7 +366,7 @@ include::{generated}/api/structs/XrLocalizationMapImportInfoML.txt[]
 * pname:data is the byte data of the previously exported localization map.
 ****
 
-include::{generated}/validity/structs/XrLocalizationMapImportInfoML.txt[]
+include::{generated}/validity/structs/XrLocalizationMapImportInfoML.adoc[]
 --
 
 *Exporting*
@@ -375,7 +375,7 @@ include::{generated}/validity/structs/XrLocalizationMapImportInfoML.txt[]
 --
 The flink:xrCreateExportedLocalizationMapML function is defined as:
 
-include::{generated}/api/protos/xrCreateExportedLocalizationMapML.txt[]
+include::{generated}/api/protos/xrCreateExportedLocalizationMapML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -391,21 +391,21 @@ flink:xrGetExportedLocalizationMapDataML.
 Applications should: call flink:xrDestroyExportedLocalizationMapML once they
 are done with the data.
 
-include::{generated}/validity/protos/xrCreateExportedLocalizationMapML.txt[]
+include::{generated}/validity/protos/xrCreateExportedLocalizationMapML.adoc[]
 --
 
 [open,refpage='xrDestroyExportedLocalizationMapML',desc='Destroys an exported localization map.',type='protos',xrefs='xrCreateExportedLocalizationMapML']
 --
 The flink:xrDestroyExportedLocalizationMapML function is defined as:
 
-include::{generated}/api/protos/xrDestroyExportedLocalizationMapML.txt[]
+include::{generated}/api/protos/xrDestroyExportedLocalizationMapML.adoc[]
 
 .Parameter Descriptions
 ****
 * pname:map is the map to destroy.
 ****
 
-include::{generated}/validity/protos/xrDestroyExportedLocalizationMapML.txt[]
+include::{generated}/validity/protos/xrDestroyExportedLocalizationMapML.adoc[]
 --
 
 
@@ -413,7 +413,7 @@ include::{generated}/validity/protos/xrDestroyExportedLocalizationMapML.txt[]
 --
 The flink:xrGetExportedLocalizationMapDataML function is defined as:
 
-include::{generated}/api/protos/xrGetExportedLocalizationMapDataML.txt[]
+include::{generated}/api/protos/xrGetExportedLocalizationMapDataML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -429,7 +429,7 @@ include::{generated}/api/protos/xrGetExportedLocalizationMapDataML.txt[]
 flink:xrGetExportedLocalizationMapDataML may: take a long time to complete;
 as such applications should: not call this from the frame loop.
 
-include::{generated}/validity/protos/xrGetExportedLocalizationMapDataML.txt[]
+include::{generated}/validity/protos/xrGetExportedLocalizationMapDataML.adoc[]
 --
 
 ==== Reference Space
@@ -495,7 +495,7 @@ if (result == XR_SUCCESS) {
 
 [open,refpage='XrExportedLocalizationMapML',type='handles',desc='Exported Localization Map']
 --
-include::{generated}/api/handles/XrExportedLocalizationMapML.txt[]
+include::{generated}/api/handles/XrExportedLocalizationMapML.adoc[]
 
 slink:XrExportedLocalizationMapML represents a frozen exported localization
 map.
@@ -525,20 +525,20 @@ elink:XrResult enumeration is extended with:
 
 [open,refpage='XrLocalizationMapStateML',type='enums',desc='Localization Map State']
 --
-include::{generated}/api/enums/XrLocalizationMapStateML.txt[]
-include::{generated}/api/enums/XrLocalizationMapStateML.comments.txt[]
+include::{generated}/api/enums/XrLocalizationMapStateML.adoc[]
+include::{generated}/api/enums/XrLocalizationMapStateML.comments.adoc[]
 --
 
 [open,refpage='XrLocalizationMapConfidenceML',type='enums',desc='Localization Confidence']
 --
-include::{generated}/api/enums/XrLocalizationMapConfidenceML.txt[]
-include::{generated}/api/enums/XrLocalizationMapConfidenceML.comments.txt[]
+include::{generated}/api/enums/XrLocalizationMapConfidenceML.adoc[]
+include::{generated}/api/enums/XrLocalizationMapConfidenceML.comments.adoc[]
 --
 
 [open,refpage='XrLocalizationMapTypeML',type='enums',desc='Localization Map Type']
 --
-include::{generated}/api/enums/XrLocalizationMapTypeML.txt[]
-include::{generated}/api/enums/XrLocalizationMapTypeML.comments.txt[]
+include::{generated}/api/enums/XrLocalizationMapTypeML.adoc[]
+include::{generated}/api/enums/XrLocalizationMapTypeML.comments.adoc[]
 --
 
 *New Enum Constants*

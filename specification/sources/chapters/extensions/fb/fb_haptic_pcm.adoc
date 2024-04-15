@@ -30,7 +30,7 @@ flink:xrApplyHapticFeedback.
 --
 The slink:XrHapticPcmVibrationFB structure is defined as:
 
-include::{generated}/api/structs/XrHapticPcmVibrationFB.txt[]
+include::{generated}/api/structs/XrHapticPcmVibrationFB.adoc[]
 
 .Member Descriptions
 ****
@@ -80,7 +80,7 @@ samples from pname:buffer which were consumed.
 The pname:samplesConsumed is populated before the
 flink:xrApplyHapticFeedback returns.
 
-include::{generated}/validity/structs/XrHapticPcmVibrationFB.txt[]
+include::{generated}/validity/structs/XrHapticPcmVibrationFB.adoc[]
 --
 
 *Get the device sample rate*
@@ -95,7 +95,7 @@ value in pname:sampleRate of slink:XrHapticPcmVibrationFB.
 [open,refpage='xrGetDeviceSampleRateFB',type='protos',desc='Get device sample rate',xrefs='XrDevicePcmSampleRateStateFB']
 --
 
-include::{generated}/api/protos/xrGetDeviceSampleRateFB.txt[]
+include::{generated}/api/protos/xrGetDeviceSampleRateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -121,7 +121,7 @@ A device can be invalid if the runtime does not find any device (which can
 play haptics) connected to the headset, or if the device does not support
 PCM haptic effect.
 
-include::{generated}/validity/protos/xrGetDeviceSampleRateFB.txt[]
+include::{generated}/validity/protos/xrGetDeviceSampleRateFB.adoc[]
 --
 
 [open,refpage='XrDevicePcmSampleRateStateFB',type='structs',desc='Information about the device sample rate',xrefs='xrGetDeviceSampleRateFB']
@@ -131,7 +131,7 @@ include::{generated}/validity/protos/xrGetDeviceSampleRateFB.txt[]
 
 The slink:XrDevicePcmSampleRateStateFB structure is defined as:
 
-include::{generated}/api/structs/XrDevicePcmSampleRateStateFB.txt[]
+include::{generated}/api/structs/XrDevicePcmSampleRateStateFB.adoc[]
 
 .Member Descriptions
 ****
@@ -142,7 +142,7 @@ include::{generated}/api/structs/XrDevicePcmSampleRateStateFB.txt[]
   can play a haptic effect
 ****
 
-include::{generated}/validity/structs/XrDevicePcmSampleRateStateFB.txt[]
+include::{generated}/validity/structs/XrDevicePcmSampleRateStateFB.adoc[]
 --
 
 *New Object Types*
@@ -160,7 +160,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB',type='defines',desc='Maximum number of samples for PCM haptics',xrefs='']
 --
-include::{generated}/api/defines/XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB.txt[]
+include::{generated}/api/defines/XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB.adoc[]
 
 dlink:XR_MAX_HAPTIC_PCM_BUFFER_SIZE_FB defines the maximum number of samples
 the runtime can store.

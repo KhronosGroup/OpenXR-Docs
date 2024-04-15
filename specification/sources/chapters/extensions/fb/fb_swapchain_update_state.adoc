@@ -17,7 +17,7 @@ state associated with a swapchain.
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -33,7 +33,7 @@ indicated in the <<extensions>> section.
 --
 The slink:XrSwapchainStateBaseHeaderFB structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainStateBaseHeaderFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateBaseHeaderFB.adoc[]
 
 .Member Descriptions
 ****
@@ -47,7 +47,7 @@ include::{generated}/api/structs/XrSwapchainStateBaseHeaderFB.txt[]
 The slink:XrSwapchainStateBaseHeaderFB is a base structure that can be
 overridden by a specific stext:XrSwapchainState* child structure.
 
-include::{generated}/validity/structs/XrSwapchainStateBaseHeaderFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateBaseHeaderFB.adoc[]
 --
 
 *New Functions*
@@ -56,7 +56,7 @@ include::{generated}/validity/structs/XrSwapchainStateBaseHeaderFB.txt[]
 --
 The flink:xrUpdateSwapchainFB function is defined as:
 
-include::{generated}/api/protos/xrUpdateSwapchainFB.txt[]
+include::{generated}/api/protos/xrUpdateSwapchainFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -68,14 +68,14 @@ include::{generated}/api/protos/xrUpdateSwapchainFB.txt[]
 flink:xrUpdateSwapchainFB provides support for an application to update
 specific mutable state associated with an slink:XrSwapchain.
 
-include::{generated}/validity/protos/xrUpdateSwapchainFB.txt[]
+include::{generated}/validity/protos/xrUpdateSwapchainFB.adoc[]
 --
 
 [open,refpage='xrGetSwapchainStateFB',desc='Query state for the corresponding swapchain',type='protos',xrefs='xrCreateSwapchain XrSwapchainStateBaseHeaderFB xrUpdateSwapchainFB']
 --
 The flink:xrGetSwapchainStateFB function is defined as:
 
-include::{generated}/api/protos/xrGetSwapchainStateFB.txt[]
+include::{generated}/api/protos/xrGetSwapchainStateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -87,7 +87,7 @@ include::{generated}/api/protos/xrGetSwapchainStateFB.txt[]
 flink:xrGetSwapchainStateFB provides support for an application to query
 specific mutable state associated with an slink:XrSwapchain.
 
-include::{generated}/validity/protos/xrGetSwapchainStateFB.txt[]
+include::{generated}/validity/protos/xrGetSwapchainStateFB.adoc[]
 --
 
 *Issues*

@@ -18,7 +18,7 @@ specific swapchain create flags.
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 These additional create flags are specified by attaching a
 slink:XrAndroidSurfaceSwapchainCreateInfoFB structure to the pname:next
@@ -30,12 +30,12 @@ chain of an slink:XrSwapchainCreateInfo structure.
 
 [open,refpage='XrAndroidSurfaceSwapchainFlagsFB',type='flags',desc='XrAndroidSurfaceSwapchainFlagsFB']
 --
-include::{generated}/api/flags/XrAndroidSurfaceSwapchainFlagsFB.txt[]
+include::{generated}/api/flags/XrAndroidSurfaceSwapchainFlagsFB.adoc[]
 --
 
 [open,refpage='XrAndroidSurfaceSwapchainFlagBitsFB',type='enums',desc='XrAndroidSurfaceSwapchainFlagBitsFB']
 --
-include::{generated}/api/enums/XrAndroidSurfaceSwapchainFlagBitsFB.txt[]
+include::{generated}/api/enums/XrAndroidSurfaceSwapchainFlagBitsFB.adoc[]
 --
 
 .Flag Descriptions
@@ -69,7 +69,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrAndroidSurfaceSwapchainCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrAndroidSurfaceSwapchainCreateInfoFB.txt[]
+include::{generated}/api/structs/XrAndroidSurfaceSwapchainCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -90,7 +90,7 @@ in the pname:next chain of the slink:XrSwapchainCreateInfo structure when
 calling flink:xrCreateSwapchainAndroidSurfaceKHR.
 
 
-include::{generated}/validity/structs/XrAndroidSurfaceSwapchainCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrAndroidSurfaceSwapchainCreateInfoFB.adoc[]
 --
 
 *New Functions*

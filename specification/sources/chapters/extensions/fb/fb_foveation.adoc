@@ -38,13 +38,13 @@ This extension allows:
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
 [open,refpage='XrFoveationProfileFB',type='handles',desc='Foveation profile']
 --
-include::{generated}/api/handles/XrFoveationProfileFB.txt[]
+include::{generated}/api/handles/XrFoveationProfileFB.adoc[]
 
 slink:XrFoveationProfileFB represents a set of properties and resources that
 define a foveation pattern for the runtime, which can: be applied to
@@ -55,25 +55,25 @@ individual swapchains.
 
 [open,refpage='XrSwapchainCreateFoveationFlagsFB',type='flags',desc='XrSwapchainCreateFoveationFlagsFB',xrefs='XrSwapchainCreateFoveationFlagBitsFB']
 --
-include::{generated}/api/flags/XrSwapchainCreateFoveationFlagsFB.txt[]
+include::{generated}/api/flags/XrSwapchainCreateFoveationFlagsFB.adoc[]
 --
 
 [open,refpage='XrSwapchainCreateFoveationFlagBitsFB',type='enums',desc='XrSwapchainCreateFoveationFlagBitsFB',xrefs='XrSwapchainCreateFoveationFlagsFB']
 --
-include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.txt[]
-include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.adoc[]
+include::{generated}/api/enums/XrSwapchainCreateFoveationFlagBitsFB.comments.adoc[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFlagsFB',type='flags',desc='XrSwapchainStateFoveationFlagsFB',xrefs='XrSwapchainStateFoveationFlagBitsFB']
 --
-include::{generated}/api/flags/XrSwapchainStateFoveationFlagsFB.txt[]
+include::{generated}/api/flags/XrSwapchainStateFoveationFlagsFB.adoc[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFlagBitsFB',type='enums',desc='XrSwapchainStateFoveationFlagBitsFB',xrefs='XrSwapchainStateFoveationFlagsFB']
 --
-include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.txt[]
+include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.adoc[]
 
-// include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.comments.txt[]
+// include::{generated}/api/enums/XrSwapchainStateFoveationFlagBitsFB.comments.adoc[]
 There are currently no foveation swapchain state flags.
 This is reserved for future use.
 --
@@ -105,7 +105,7 @@ foveation profile that will apply no foveation to any area of the swapchain.
 
 The slink:XrFoveationProfileCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
+include::{generated}/api/structs/XrFoveationProfileCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -115,7 +115,7 @@ include::{generated}/api/structs/XrFoveationProfileCreateInfoFB.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::{generated}/validity/structs/XrFoveationProfileCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrFoveationProfileCreateInfoFB.adoc[]
 --
 
 [open,refpage='XrSwapchainCreateInfoFoveationFB',type='structs',desc='The information to create a swapchain supporting foveation',xrefs='']
@@ -130,7 +130,7 @@ foveation-specific flags for swapchain creation.
 
 The slink:XrSwapchainCreateInfoFoveationFB structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+include::{generated}/api/structs/XrSwapchainCreateInfoFoveationFB.adoc[]
 
 .Member Descriptions
 ****
@@ -143,7 +143,7 @@ include::{generated}/api/structs/XrSwapchainCreateInfoFoveationFB.txt[]
   swapchain.
 ****
 
-include::{generated}/validity/structs/XrSwapchainCreateInfoFoveationFB.txt[]
+include::{generated}/validity/structs/XrSwapchainCreateInfoFoveationFB.adoc[]
 --
 
 [open,refpage='XrSwapchainStateFoveationFB',type='structs',desc='Foveation swapchain state,xrefs='XrSwapchainStateFoveationFlagsFB']
@@ -157,7 +157,7 @@ profile and additional foveation specific flags for updating the swapchain.
 
 The slink:XrSwapchainStateFoveationFB structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainStateFoveationFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateFoveationFB.adoc[]
 
 .Member Descriptions
 ****
@@ -172,7 +172,7 @@ include::{generated}/api/structs/XrSwapchainStateFoveationFB.txt[]
   foveation properties to be applied to the swapchain.
 ****
 
-include::{generated}/validity/structs/XrSwapchainStateFoveationFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateFoveationFB.adoc[]
 --
 
 *New Functions*
@@ -181,7 +181,7 @@ include::{generated}/validity/structs/XrSwapchainStateFoveationFB.txt[]
 --
 The flink:xrCreateFoveationProfileFB function is defined as:
 
-include::{generated}/api/protos/xrCreateFoveationProfileFB.txt[]
+include::{generated}/api/protos/xrCreateFoveationProfileFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -198,14 +198,14 @@ Creates an slink:XrFoveationProfileFB handle.
 The returned foveation profile handle may: be subsequently used in API
 calls.
 
-include::{generated}/validity/protos/xrCreateFoveationProfileFB.txt[]
+include::{generated}/validity/protos/xrCreateFoveationProfileFB.adoc[]
 --
 
 [open,refpage='xrDestroyFoveationProfileFB',desc='Destroy a foveation profile',type='protos',xrefs='']
 --
 The flink:xrDestroyFoveationProfileFB function is defined as:
 
-include::{generated}/api/protos/xrDestroyFoveationProfileFB.txt[]
+include::{generated}/api/protos/xrDestroyFoveationProfileFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -220,7 +220,7 @@ foveation parameters of the swapchain.
 The application is responsible for ensuring that it has no calls using
 profile in progress when the foveation profile is destroyed.
 
-include::{generated}/validity/protos/xrDestroyFoveationProfileFB.txt[]
+include::{generated}/validity/protos/xrDestroyFoveationProfileFB.adoc[]
 --
 
 *Issues*

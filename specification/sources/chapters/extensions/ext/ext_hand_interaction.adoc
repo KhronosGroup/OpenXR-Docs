@@ -49,7 +49,7 @@ enable a hand and finger interaction model, whether the tracking inputs are
 provided by a hand tracking device or a motion controller device.
 
 The runtime must: support all of the following action subpaths on all
-<<semantic-path-interaction-profiles, interaction profiles>> that are valid
+<<semantic-paths-interaction-profiles, interaction profiles>> that are valid
 for the user paths of pathname:/user/hand/left and
 pathname:/user/hand/right, including those interaction profiles enabled
 through extensions.
@@ -67,7 +67,7 @@ For example, using a virtual laser pointer to aim at a virtual button on the
 wall is an interaction suited to the "aim" pose.
 
 This is the same "aim" pose defined in
-<<semantic-path-standard-pose-identifiers>>.
+<<semantic-paths-standard-pose-identifiers>>.
 Every tracked controller profile already supports this pose.
 
 image::images/hand_aim_pose.svg[align="center", title="Example aim pose."]
@@ -113,7 +113,7 @@ full hand grip gesture, for example, grasping and pushing a door's handle or
 holding and swinging a sword.
 
 This is the same "grip" pose defined in
-<<semantic-path-standard-pose-identifiers>>.
+<<semantic-paths-standard-pose-identifiers>>.
 Every tracked controller profile already supports this pose.
 
 The runtime should: optimize the "grip" pose orientation so that it
@@ -259,7 +259,7 @@ The +X direction is orthogonal to +Y and +Z using the right-hand rule.
 The "poke" pose must: rotate together with the tip of the finger or the
 controller's "grip" pose.
 
-[[ext_hand_interaction_profile]]
+[[ext_hand_interaction-profile]]
 ==== The interaction profile for hand tracking devices
 
 The hand interaction profile is designed for runtimes which provide hand
@@ -295,16 +295,8 @@ Supported component paths:
 * subpathname:/input/grasp_ext/value
 * subpathname:/input/grasp_ext/ready_ext
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
-
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
 
 This interaction profile supports the above
 <<ext_hand_interaction-the-four-action-poses, four action poses>>, as well

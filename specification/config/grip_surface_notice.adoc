@@ -1,0 +1,26 @@
+// Copyright (c) 2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifdef::XR_VERSION_1_1[]
+[NOTE]
+.Note
+====
+When the runtime supports apiext:XR_VERSION_1_1 and use of OpenXR 1.1 is
+requested by the application, this interaction profile must: also
+support
+
+* subpathname:/input/grip_surface/pose
+====
+endif::XR_VERSION_1_1[]
+
+ifdef::XR_KHR_maintenance1[]
+[NOTE]
+.Note
+====
+When the apiext:XR_KHR_maintenance1 extension is available and enabled, this
+interaction profile must: also support
+
+* subpathname:/input/grip_surface/pose
+====
+endif::XR_KHR_maintenance1[]

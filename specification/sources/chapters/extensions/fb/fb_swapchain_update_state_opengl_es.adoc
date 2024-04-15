@@ -23,7 +23,7 @@ ES-specific mutable state associated with a swapchain, examples include:
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -43,7 +43,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSwapchainStateSamplerOpenGLESFB structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainStateSamplerOpenGLESFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateSamplerOpenGLESFB.adoc[]
 
 .Member Descriptions
 ****
@@ -93,7 +93,7 @@ To use slink:XrSwapchainStateSamplerOpenGLESFB,
 dlink:XR_USE_GRAPHICS_API_OPENGL_ES must be defined before including
 `openxr_platform.h`.
 
-include::{generated}/validity/structs/XrSwapchainStateSamplerOpenGLESFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateSamplerOpenGLESFB.adoc[]
 --
 
 *New Functions*

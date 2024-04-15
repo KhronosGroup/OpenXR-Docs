@@ -60,28 +60,11 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
 
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
-
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
 
 *New Object Types*
 

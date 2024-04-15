@@ -35,7 +35,7 @@ suggested bindings that refer to the following component paths added to
 certain existing input source paths.
 
 * For a given interaction profile,
-** For each <<semantic-path-input,input source path>> valid in that
+** For each <<semantic-paths-input,input source path>> valid in that
    interaction profile that has identifier _trackpad_ but without a
    component specified (i.e. subpathname:/input/trackpad or
    subpathname:/input/trackpad_<location>), a runtime must: accept the
@@ -45,7 +45,7 @@ certain existing input source paths.
 *** subpathname:/dpad_left
 *** subpathname:/dpad_right
 *** subpathname:/dpad_center
-** For each <<semantic-path-input,input source path>> valid in that
+** For each <<semantic-paths-input,input source path>> valid in that
    interaction profile that has identifier _thumbstick_ but without a
    component specified (i.e. subpathname:/input/thumbstick or
    subpathname:/input/thumbstick_<location>), a runtime must: accept the
@@ -223,7 +223,7 @@ transitions.
 --
 The slink:XrInteractionProfileDpadBindingEXT structure is defined as:
 
-include::{generated}/api/structs/XrInteractionProfileDpadBindingEXT.txt[]
+include::{generated}/api/structs/XrInteractionProfileDpadBindingEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -294,7 +294,7 @@ pathname:/user/hand/left/input/thumbstick), and two or more of them specify
 the same actionset, the runtime must: return
 ename:XR_ERROR_VALIDATION_FAILURE.
 If the same input identifier, including top level path, is used for more
-than one action set, in addition to inputs being <<input-action-creation,
+than one action set, in addition to inputs being <<input-action-sets,
 suppressed by higher priority action sets>>, haptic events from dpads are
 also suppressed.
 
@@ -311,7 +311,7 @@ they can have different settings.
 If both action sets are active, the higher priority one trumps the lower
 priority one, and the lower priority one is suppressed.
 
-include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.txt[]
+include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.adoc[]
 --
 
 *New Functions*

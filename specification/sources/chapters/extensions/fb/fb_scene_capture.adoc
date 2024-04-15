@@ -19,7 +19,7 @@ capturing information about what is in the environment around the user.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -40,7 +40,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSceneCaptureRequestInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSceneCaptureRequestInfoFB.txt[]
+include::{generated}/api/structs/XrSceneCaptureRequestInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -60,14 +60,14 @@ instruct the system what to look for during a scene capture.
 If the pname:request parameter is code:NULL, then the runtime must: conduct
 a default scene capture.
 
-include::{generated}/validity/structs/XrSceneCaptureRequestInfoFB.txt[]
+include::{generated}/validity/structs/XrSceneCaptureRequestInfoFB.adoc[]
 --
 
 [open,refpage='XrEventDataSceneCaptureCompleteFB',type='structs',desc='Event which occurs after a scene capture operation completes',xrefs='']
 --
 The slink:XrEventDataSceneCaptureCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSceneCaptureCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSceneCaptureCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -83,7 +83,7 @@ include::{generated}/api/structs/XrEventDataSceneCaptureCompleteFB.txt[]
 The slink:XrEventDataSceneCaptureCompleteFB structure is used by an
 application to instruct the system what to look for during a scene capture.
 
-include::{generated}/validity/structs/XrEventDataSceneCaptureCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSceneCaptureCompleteFB.adoc[]
 --
 
 *New Functions*
@@ -92,7 +92,7 @@ include::{generated}/validity/structs/XrEventDataSceneCaptureCompleteFB.txt[]
 --
 The flink:xrRequestSceneCaptureFB function is defined as:
 
-include::{generated}/api/protos/xrRequestSceneCaptureFB.txt[]
+include::{generated}/api/protos/xrRequestSceneCaptureFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -107,7 +107,7 @@ The flink:xrRequestSceneCaptureFB function is used by an application to
 begin capturing the scene around the user.
 This is an asynchronous operation.
 
-include::{generated}/validity/protos/xrRequestSceneCaptureFB.txt[]
+include::{generated}/validity/protos/xrRequestSceneCaptureFB.adoc[]
 --
 
 *Issues*

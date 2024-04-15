@@ -27,7 +27,7 @@ CoreWindow, such as UWP applications on the HoloLens.
 --
 The slink:XrHolographicWindowAttachmentMSFT structure is defined as:
 
-include::{generated}/api/structs/XrHolographicWindowAttachmentMSFT.txt[]
+include::{generated}/api/structs/XrHolographicWindowAttachmentMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -55,7 +55,7 @@ programmatically request to make the CoreWindow visible (e.g. with
 The app must: not call flink:xrCreateSession while the specified CoreWindow
 thread is blocked, otherwise the call may: deadlock.
 
-include::{generated}/validity/structs/XrHolographicWindowAttachmentMSFT.txt[]
+include::{generated}/validity/structs/XrHolographicWindowAttachmentMSFT.adoc[]
 --
 
 ==== Sample code

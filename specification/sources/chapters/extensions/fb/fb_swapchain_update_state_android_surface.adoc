@@ -26,7 +26,7 @@ state associated with an Android surface swapchain, examples include:
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -47,7 +47,7 @@ elink:XrStructureType enumeration is extended with:
 The slink:XrSwapchainStateAndroidSurfaceDimensionsFB structure is defined
 as:
 
-include::{generated}/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+include::{generated}/api/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -78,7 +78,7 @@ To use slink:XrSwapchainStateAndroidSurfaceDimensionsFB,
 dlink:XR_USE_PLATFORM_ANDROID must be defined before including
 `openxr_platform.h`.
 
-include::{generated}/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.txt[]
+include::{generated}/validity/structs/XrSwapchainStateAndroidSurfaceDimensionsFB.adoc[]
 --
 
 *New Functions*

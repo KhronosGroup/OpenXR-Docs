@@ -38,7 +38,7 @@ operations on the spatial anchor store such as:
 * Enumeration of currently persisted anchors.
 * Clearing the spatial anchor store of all anchors.
 
-include::{generated}/api/handles/XrSpatialAnchorStoreConnectionMSFT.txt[]
+include::{generated}/api/handles/XrSpatialAnchorStoreConnectionMSFT.adoc[]
 
 --
 
@@ -53,7 +53,7 @@ The flink:xrCreateSpatialAnchorStoreConnectionMSFT function may: be a slow
 operation and therefore should: be invoked from a non-timing critical
 thread.
 
-include::{generated}/api/protos/xrCreateSpatialAnchorStoreConnectionMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorStoreConnectionMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -62,7 +62,7 @@ include::{generated}/api/protos/xrCreateSpatialAnchorStoreConnectionMSFT.txt[]
   slink:XrSpatialAnchorStoreConnectionMSFT handle.
 ****
 
-include::{generated}/validity/protos/xrCreateSpatialAnchorStoreConnectionMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorStoreConnectionMSFT.adoc[]
 --
 
 [open,refpage='xrDestroySpatialAnchorStoreConnectionMSFT',type='protos',desc='Destroys the anchor store handle',xrefs='']
@@ -70,7 +70,7 @@ include::{generated}/validity/protos/xrCreateSpatialAnchorStoreConnectionMSFT.tx
 The application can: use the flink:xrDestroySpatialAnchorStoreConnectionMSFT
 function to destroy an anchor store connection.
 
-include::{generated}/api/protos/xrDestroySpatialAnchorStoreConnectionMSFT.txt[]
+include::{generated}/api/protos/xrDestroySpatialAnchorStoreConnectionMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -78,7 +78,7 @@ include::{generated}/api/protos/xrDestroySpatialAnchorStoreConnectionMSFT.txt[]
   to be destroyed.
 ****
 
-include::{generated}/validity/protos/xrDestroySpatialAnchorStoreConnectionMSFT.txt[]
+include::{generated}/validity/protos/xrDestroySpatialAnchorStoreConnectionMSFT.adoc[]
 --
 
 ==== Persist Spatial Anchor
@@ -98,7 +98,7 @@ If there is already a spatial anchor of the same name persisted in the
 spatial anchor store, the existing spatial anchor will be replaced and
 flink:xrPersistSpatialAnchorMSFT must: return ename:XR_SUCCESS.
 
-include::{generated}/api/protos/xrPersistSpatialAnchorMSFT.txt[]
+include::{generated}/api/protos/xrPersistSpatialAnchorMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -110,7 +110,7 @@ include::{generated}/api/protos/xrPersistSpatialAnchorMSFT.txt[]
   and its name to persist.
 ****
 
-include::{generated}/validity/protos/xrPersistSpatialAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrPersistSpatialAnchorMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialAnchorPersistenceNameMSFT',desc='The name to identify a Spatial anchor persistence operations',type='structs',xrefs='XrSpatialAnchorMSFT xrEnumeratePersistedSpatialAnchorNamesMSFT xrUnpersistSpatialAnchorMSFT xrClearSpatialAnchorStoreMSFT']
@@ -123,7 +123,7 @@ anchor store.
 
 The slink:XrSpatialAnchorPersistenceNameMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorPersistenceNameMSFT.txt[]
+include::{generated}/api/structs/XrSpatialAnchorPersistenceNameMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -135,7 +135,7 @@ If an slink:XrSpatialAnchorPersistenceNameMSFT with an empty pname:name
 value is passed to any function as a parameter, that function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT.
 
-include::{generated}/validity/structs/XrSpatialAnchorPersistenceNameMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorPersistenceNameMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialAnchorPersistenceInfoMSFT',desc='Persistence info for a spatial anchor',type='structs',xrefs='XrSpatialAnchorMSFT xrPersistSpatialAnchorMSFT']
@@ -143,7 +143,7 @@ include::{generated}/validity/structs/XrSpatialAnchorPersistenceNameMSFT.txt[]
 
 The slink:XrSpatialAnchorPersistenceInfoMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorPersistenceInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialAnchorPersistenceInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -158,7 +158,7 @@ include::{generated}/api/structs/XrSpatialAnchorPersistenceInfoMSFT.txt[]
   wishes to perform persistence operations on.
 ****
 
-include::{generated}/validity/structs/XrSpatialAnchorPersistenceInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorPersistenceInfoMSFT.adoc[]
 --
 
 [open,refpage='xrEnumeratePersistedSpatialAnchorNamesMSFT',type='protos',desc='Enumerate the names of currently persisted spatial anchors in the spatial anchor store',xrefs='']
@@ -167,10 +167,10 @@ The application can: use the
 flink:xrEnumeratePersistedSpatialAnchorNamesMSFT function to enumerate the
 names of all spatial anchors currently persisted in the spatial anchor store
 for this application.
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:spatialAnchorNames.
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:spatialAnchorNames.
 
-include::{generated}/api/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.txt[]
+include::{generated}/api/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -185,12 +185,11 @@ include::{generated}/api/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.txt[]
 * pname:spatialAnchorNames is a pointer to an array of
   slink:XrSpatialAnchorPersistenceNameMSFT structures, but can: be code:NULL
   if propertyCapacityInput is `0`.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:spatialAnchorNames
-  size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:spatialAnchorNames size.
 ****
 
-include::{generated}/validity/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.txt[]
+include::{generated}/validity/protos/xrEnumeratePersistedSpatialAnchorNamesMSFT.adoc[]
 --
 
 [open,refpage='xrCreateSpatialAnchorFromPersistedNameMSFT',type='protos',desc='Create a spatial anchor from the spatial anchor store by name',xrefs='']
@@ -205,7 +204,7 @@ spatial anchor names returned from
 flink:xrEnumeratePersistedSpatialAnchorNamesMSFT), the function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT.
 
-include::{generated}/api/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -217,7 +216,7 @@ include::{generated}/api/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.txt[]
   that will be set by the runtime on successful load.
 ****
 
-include::{generated}/validity/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT',desc='Creation info for creating a spatial anchor handle from a persisted anchor',type='structs',xrefs='xrCreateSpatialAnchorFromPersistedNameMSFT']
@@ -226,7 +225,7 @@ include::{generated}/validity/protos/xrCreateSpatialAnchorFromPersistedNameMSFT.
 The slink:XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT structure is
 defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -251,7 +250,7 @@ If an empty pname:spatialAnchorPersistenceName value is passed to any
 function as a parameter, that function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_INVALID_MSFT.
 
-include::{generated}/validity/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT.adoc[]
 --
 
 [open,refpage='xrUnpersistSpatialAnchorMSFT',type='protos',desc='Removes an anchor from the store',xrefs='']
@@ -264,7 +263,7 @@ If the pname:spatialAnchorPersistenceName provided does not correspond to a
 currently stored anchor, the function must: return
 ename:XR_ERROR_SPATIAL_ANCHOR_NAME_NOT_FOUND_MSFT.
 
-include::{generated}/api/protos/xrUnpersistSpatialAnchorMSFT.txt[]
+include::{generated}/api/protos/xrUnpersistSpatialAnchorMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -274,7 +273,7 @@ include::{generated}/api/protos/xrUnpersistSpatialAnchorMSFT.txt[]
   slink:XrSpatialAnchorPersistenceNameMSFT.
 ****
 
-include::{generated}/validity/protos/xrUnpersistSpatialAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrUnpersistSpatialAnchorMSFT.adoc[]
 --
 
 [open,refpage='xrClearSpatialAnchorStoreMSFT',type='protos',desc='Clear all spatial anchors from the spatial anchor store',xrefs='']
@@ -286,7 +285,7 @@ The function only removes the record of the spatial anchors in the store but
 does not affect any slink:XrSpatialAnchorMSFT handles previously loaded in
 the current session.
 
-include::{generated}/api/protos/xrClearSpatialAnchorStoreMSFT.txt[]
+include::{generated}/api/protos/xrClearSpatialAnchorStoreMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -294,7 +293,7 @@ include::{generated}/api/protos/xrClearSpatialAnchorStoreMSFT.txt[]
   perform the clear operation on.
 ****
 
-include::{generated}/validity/protos/xrClearSpatialAnchorStoreMSFT.txt[]
+include::{generated}/validity/protos/xrClearSpatialAnchorStoreMSFT.adoc[]
 --
 
 *New Object Types*

@@ -172,3 +172,7 @@ include::schema.adoc[]
   working group practice.
 * 2023-08-02 - Document the XML schema and how it differs from the Vulkan
   equivalent.
+* 2024-04-08 - Document the intentional breaking change in the XML schema
+  released with the OpenXR 1.1 specification, bringing our schema back into
+  synchronization with the Vulkan specification by removing an outdated
+  convention no longer used by Vulkan.

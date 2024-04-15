@@ -25,7 +25,7 @@ include::{generated}/meta/XR_VARJO_composition_layer_depth_test.adoc[]
 This extension enables depth-based layer composition inside the compositor.
 
 Core OpenXR specifies that layer compositing must happen in the layer
-submission order (as described in <<Compositing>>).
+submission order (as described in <<rendering-compositing>>).
 However, an application may want to composite the final image against the
 other layers based on depth information for proper occlusion.
 Layers can now provide depth information that will be used to calculate
@@ -43,8 +43,8 @@ potentially covering only a subset of the full depth range.
 Layer composition rules change when this extension is enabled.
 
 If the application does not chain slink:XrCompositionLayerDepthTestVARJO,
-"painter's algorithm" such as described in <<Compositing>> must be used for
-layer composition.
+"painter's algorithm" such as described in <<rendering-compositing>> must be
+used for layer composition.
 
 Overall, composition should be performed in the following way:
 
@@ -97,7 +97,7 @@ depth testing functionality.
 
 The slink:XrCompositionLayerDepthTestVARJO structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerDepthTestVARJO.txt[]
+include::{generated}/api/structs/XrCompositionLayerDepthTestVARJO.adoc[]
 
 .Member Descriptions
 ****
@@ -117,7 +117,7 @@ include::{generated}/api/structs/XrCompositionLayerDepthTestVARJO.txt[]
   bound.
 ****
 
-include::{generated}/validity/structs/XrCompositionLayerDepthTestVARJO.txt[]
+include::{generated}/validity/structs/XrCompositionLayerDepthTestVARJO.adoc[]
 
 --
 

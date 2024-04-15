@@ -361,7 +361,7 @@ Unlike the `KHR` extension approval process:
 [[bitmasks]]
 ==== Extending Bitmasks
 
-:uri-styleguide-reserving: {uri-openxr-registry-root}/specs/1.0/styleguide.html#extensions-reserving-bitmask-values
+:uri-styleguide-reserving: {uri-openxr-registry-root}/specs/1.1/styleguide.html#extensions-reserving-bitmask-values
 
 Vendor and multi-vendor extensions must: not add new bits directly to a core
 or KHR bit mask, due to the limited number of bits available to express

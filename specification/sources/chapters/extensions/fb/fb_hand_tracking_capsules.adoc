@@ -48,7 +48,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrHandCapsuleFB structure is defined as:
 
-include::{generated}/api/structs/XrHandCapsuleFB.txt[]
+include::{generated}/api/structs/XrHandCapsuleFB.adoc[]
 
 It describes a collision capsule associated with a hand joint.
 
@@ -60,7 +60,7 @@ It describes a collision capsule associated with a hand joint.
   Multiple capsules may: be attached to the same joint.
 ****
 
-include::{generated}/validity/structs/XrHandCapsuleFB.txt[]
+include::{generated}/validity/structs/XrHandCapsuleFB.adoc[]
 --
 
 [open,refpage='XrHandTrackingCapsulesStateFB',type='structs',desc='A list of capsules associated to hand joints',xrefs='']
@@ -72,7 +72,7 @@ request collision capsule information associated with this hand.
 
 The slink:XrHandTrackingCapsulesStateFB structure is defined as:
 
-include::{generated}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
+include::{generated}/api/structs/XrHandTrackingCapsulesStateFB.adoc[]
 
 .Member Descriptions
 ****
@@ -83,7 +83,7 @@ include::{generated}/api/structs/XrHandTrackingCapsulesStateFB.txt[]
 * pname:capsules is an array of capsules.
 ****
 
-include::{generated}/validity/structs/XrHandTrackingCapsulesStateFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingCapsulesStateFB.adoc[]
 --
 
 *New Functions*

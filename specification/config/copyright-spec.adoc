@@ -43,7 +43,7 @@ ifndef::ratified_core_spec[]
 This document contains extensions which are not ratified by Khronos, and as
 such is not a ratified Specification, though it contains text from (and is a
 superset of) the ratified OpenXR Specification that can be found at
-https://registry.khronos.org/OpenXR/specs/1.0-khr/html/xrspec.html (core
+https://registry.khronos.org/OpenXR/specs/1.1-khr/html/xrspec.html (core
 with KHR extensions).
 endif::ratified_core_spec[]
 
@@ -59,7 +59,7 @@ the <<introduction>> defines how these parts of the Specification are
 identified.
 
 Where this Specification uses technical terminology, defined in the
-<<glossary, Glossary>> or otherwise, that refer to enabling technologies
+<<appendix-glossary>> or otherwise, that refer to enabling technologies
 that are not expressly set forth in this Specification, those enabling
 technologies are EXCLUDED from the Scope of this Specification.
 For clarity, enabling technologies not disclosed with particularity in this

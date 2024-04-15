@@ -29,7 +29,7 @@ audio devices for the active HMD.
 
 [open,refpage='xrGetAudioOutputDeviceGuidOculus',type='protos',desc='Query the GUID for the active audio output device',xrefs='xrGetAudioInputDeviceGuidOculus']
 --
-include::{generated}/api/protos/xrGetAudioOutputDeviceGuidOculus.txt[]
+include::{generated}/api/protos/xrGetAudioOutputDeviceGuidOculus.adoc[]
 
 .Parameter Descriptions
 ****
@@ -41,13 +41,13 @@ include::{generated}/api/protos/xrGetAudioOutputDeviceGuidOculus.txt[]
   API.
 ****
 
-include::{generated}/validity/protos/xrGetAudioOutputDeviceGuidOculus.txt[]
+include::{generated}/validity/protos/xrGetAudioOutputDeviceGuidOculus.adoc[]
 
 --
 
 [open,refpage='xrGetAudioInputDeviceGuidOculus',type='protos',desc='Query the GUID for the active audio input device',xrefs='xrGetAudioOutputDeviceGuidOculus']
 --
-include::{generated}/api/protos/xrGetAudioInputDeviceGuidOculus.txt[]
+include::{generated}/api/protos/xrGetAudioInputDeviceGuidOculus.adoc[]
 
 .Parameter Descriptions
 ****
@@ -59,7 +59,7 @@ include::{generated}/api/protos/xrGetAudioInputDeviceGuidOculus.txt[]
   API.
 ****
 
-include::{generated}/validity/protos/xrGetAudioInputDeviceGuidOculus.txt[]
+include::{generated}/validity/protos/xrGetAudioInputDeviceGuidOculus.adoc[]
 
 --
 

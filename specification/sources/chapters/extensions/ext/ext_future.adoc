@@ -1,0 +1,872 @@
+// Copyright (c) 2017-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_future.adoc[]
+
+*Contributors*::
+    Bryce Hutchings, Microsoft +
+    Andreas Selvik, Meta +
+    Ron Bessems, Magic Leap +
+    Yin Li, Microsoft Corporation +
+    Baolin Fu, Bytedance +
+    Cass Everitt, Meta Platforms +
+    Charlton Rodda, Collabora +
+    Jakob Bornecrantz, NVIDIA +
+    John Kearney, Meta Platforms +
+    Jonathan Wright, Meta Platforms +
+    Jun Yan, ByteDance +
+    Junyi Wang, Bytedance Ltd. +
+    Karthik Kadappan, Magic Leap +
+    Natalie Fleury, Meta Platforms +
+    Nathan Nuber, Valve +
+    Nikita Lutsenko, Meta Platforms +
+    Robert Blenkinsopp, Ultraleap +
+    Rylie Pavlik, Collabora +
+    Tim Mowrer, Meta Platforms +
+    Wenlin Mao, Meta Platforms +
+    Will Fu, Bytedance +
+    Zhipeng Liu, Bytedance +
+
+
+==== Overview
+
+In XR systems there are certain operations that are long running and do not
+reasonably complete within a normal frame loop.
+This extension introduces the concept of a _future_ which supports creation
+of asynchronous (async) functions for such long running operations.
+This extension does not include any asynchronous operations: it is expected
+that other extensions will use these _futures_ and their associated
+conventions in this extension to define their asynchronous operations.
+
+An basetype:XrFutureEXT represents the future result of an asynchronous
+operation, comprising an elink:XrResult and possibly additional outputs.
+Long running operations immediately return an basetype:XrFutureEXT when
+started, letting the application poll the state of the future, and get the
+result once ready by calling a "complete"-function.
+
+
+==== Getting a future
+
+[open,refpage='XrFutureEXT',type='basetypes',desc='Type identifying an asynchronous operation']
+--
+The basetype:XrFutureEXT basetype is defined as:
+
+include::{generated}/api/basetypes/XrFutureEXT.adoc[]
+
+Asynchronous functions return an basetype:XrFutureEXT token as a placeholder
+for a value that will be returned later.
+An basetype:XrFutureEXT returned by a successful call to a function starting
+an asynchronous operation should: normally start in the
+ename:XR_FUTURE_STATE_PENDING_EXT state, but may: skip directly to
+ename:XR_FUTURE_STATE_READY_EXT if the result is immediately available.
+
+The value ename:XR_NULL_FUTURE_EXT, numerically equal to `0`, is never a
+valid basetype:XrFutureEXT value.
+
+**Note** that an basetype:XrFutureEXT token is neither a
+<<fundamentals-handles,handle>> nor an <<XR_DEFINE_ATOM,atom>> type (such as
+basetype:XrPath).
+It belongs to a new category and is defined as an opaque 64-bit value.
+See <<ext_future-scope>> for details on the scope and lifecycle of a future.
+
+**Style note**: Functions that return an basetype:XrFutureEXT should: be
+named with the suffix "Async", e.g. `xrPerformLongTaskAsync`.
+This function must: not set the basetype:XrFutureEXT to
+ename:XR_NULL_FUTURE_EXT when the function returns ename:XR_SUCCESS.
+
+--
+
+==== Waiting for a future to become ready
+
+[open,refpage='xrPollFutureEXT',type='protos',desc='Polls the lifecycle state of an XrFuture',xrefs='']
+--
+The flink:xrPollFutureEXT function is defined as:
+include::{generated}/api/protos/xrPollFutureEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle
+* pname:pollInfo is a pointer to an slink:XrFuturePollInfoEXT structure.
+* pname:pollResult is a pointer to an slink:XrFuturePollResultEXT structure
+  to be populated on a successful call.
+****
+
+Applications can: use this function to check the current state of a future,
+typically while waiting for the async operation to complete and the future
+to become "ready" to complete.
+
+[NOTE]
+.Note
+====
+Each basetype:XrFutureEXT value must: be externally synchronized by the
+application when calling completion, polling, and cancellation functions,
+and when destroying the associated handle.
+====
+
+include::{generated}/validity/protos/xrPollFutureEXT.adoc[]
+--
+
+[open,refpage='XrFuturePollInfoEXT',type='structs',desc='Input for xrPollFutureEXT',xrefs='xrPollFutureEXT']
+--
+
+The slink:XrFuturePollInfoEXT structure is defined as:
+include::{generated}/api/structs/XrFuturePollInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:future is the basetype:XrFutureEXT future being polled.
+****
+
+An slink:XrFuturePollInfoEXT structure is used to pass pname:future to
+flink:xrPollFutureEXT.
+
+include::{generated}/validity/structs/XrFuturePollInfoEXT.adoc[]
+--
+
+[open,refpage='XrFuturePollResultEXT',type='structs',desc='Result of xrPollFutureEXT',xrefs='xrPollFutureEXT']
+--
+
+The slink:XrFuturePollResultEXT structure is defined as:
+include::{generated}/api/structs/XrFuturePollResultEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:state is the elink:XrFutureStateEXT of the basetype:XrFutureEXT
+  passed to flink:xrPollFutureEXT.
+****
+
+An slink:XrFuturePollResultEXT structure is used to return the result of
+flink:xrPollFutureEXT.
+
+include::{generated}/validity/structs/XrFuturePollResultEXT.adoc[]
+--
+
+[[ext_future-completing]]
+==== Completing a Future
+
+Extensions that provide async functions returning a future should: also
+provide a matching completion function to "complete" the future in order to
+return the result of the asynchronous operation.
+This function should: be named with the suffix "Complete" replacing the
+"Async" suffix, e.g. `xrPerformLongTaskComplete` is a suitable completion
+function name corresponding to `xrPerformLongTaskAsync`.
+
+A completion function must: populate a structure that must: be based on
+slink:XrFutureCompletionBaseHeaderEXT to return the result of the
+asynchronous operation.
+Such a structure may: be `static_cast` to and from
+slink:XrFutureCompletionBaseHeaderEXT, allowing generic handling of the
+asynchronous operation results as well as polymorphic output from such an
+operation.
+The elink:XrResult returned from a completion function must: not be used to
+return the result of the asynchronous operation.
+Instead, the elink:XrResult returned from a completion function must:
+indicate both whether the completion function was called correctly, and if
+the completion of the future succeeded.
+
+For instance, a completion function returning ename:XR_ERROR_HANDLE_INVALID
+means that a handle passed to the completion function was invalid, not that
+a handle associated with the asynchronous operation is invalid.
+Note that ename:XR_SUCCESS should: be returned from the completion function
+even if the asynchronous operation itself was a failure; that failure is
+indicated in slink:XrFutureCompletionBaseHeaderEXT::pname:futureResult
+rather than the return value of the completion function.
+
+When a completion function is called with a future that is in the
+ename:XR_FUTURE_STATE_PENDING_EXT state, the runtime must: return
+ename:XR_ERROR_FUTURE_PENDING_EXT.
+
+The elink:XrResult of the asynchronous operation must: be returned in the
+pname:futureResult of the return structure extending
+slink:XrFutureCompletionBaseHeaderEXT.
+Completion functions which only need to return an elink:XrResult may:
+populate the slink:XrFutureCompletionEXT structure provided by this
+extension as their output structure.
+
+[[ext_future-completed]]
+Once a completion function is called on a future with a valid output
+structure and returns ename:XR_SUCCESS, the future is considered
+**<<ext_future-completed,completed>>**, and therefore **invalidated**.
+Any usage of this future thereafter must: return
+ename:XR_ERROR_FUTURE_INVALID_EXT.
+
+Passing a completed future to any function accepting futures must: return
+ename:XR_ERROR_FUTURE_INVALID_EXT.
+
+The runtime may: release any resources associated with an
+basetype:XrFutureEXT once the future has been completed or invalidated.
+
+[NOTE]
+.Note
+====
+Each basetype:XrFutureEXT value must: be externally synchronized by the
+application when calling completion, polling, and cancellation functions,
+and when destroying the associated handle.
+====
+
+[open,refpage='XrFutureCompletionBaseHeaderEXT',type='structs',desc='Base header for the result of an a future, returned by a future completion function',xrefs='']
+--
+The slink:XrFutureCompletionBaseHeaderEXT structure is defined as:
+include::{generated}/api/structs/XrFutureCompletionBaseHeaderEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is elink:XrResult of the async operation associated
+  with future passed to the completion function.
+****
+
+slink:XrFutureCompletionBaseHeaderEXT is a base header for the result of a
+future completion function.
+
+include::{generated}/validity/structs/XrFutureCompletionBaseHeaderEXT.adoc[]
+--
+
+[open,refpage='XrFutureCompletionEXT',type='structs',desc='Implementation of the XrResult-only completion structure',xrefs='']
+--
+The slink:XrFutureCompletionEXT structure is defined as:
+include::{generated}/api/structs/XrFutureCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is elink:XrResult of the async operation associated
+  with future passed to the completion function.
+****
+
+This is a minimal implementation of slink:XrFutureCompletionBaseHeaderEXT,
+containing only the fields present in the base header structure.
+It is intended for use by asynchronous operations that do not have other
+outputs or return values beyond an elink:XrResult value, as the output
+parameter of their completion function.
+
+include::{generated}/validity/structs/XrFutureCompletionEXT.adoc[]
+--
+
+[[ext_future-two-call-idiom]]
+==== Two-Call Idiom in Asynchronous Operations
+
+OpenXR uses a <<fundamentals-buffer-size-parameters,two-call idiom>> for
+interfaces that return arrays or buffers of variable size.
+Asynchronous operations returning such an array or buffer similarly use the
+structure style of that two-call idiom, with small modifications to the
+typical completion function conventions to account for this pattern.
+
+For completion functions returning an array or buffer using the two-call
+idiom, the future must: be marked as **completed** if the output array size
+is sufficient for all elements of the data and was thus populated by the
+completion function.
+If the output array size is not sufficient, the runtime must: not mark the
+future as completed nor invalidated.
+
+For an array of zero data elements, this means the first call to the
+two-call idiom completion function must: mark the future as **completed**
+and invalidated, even if the array is a code:NULL pointer.
+If slink:XrFutureCompletionBaseHeaderEXT::pname:futureResult is a
+<<fundamentals-errorcodes,failure>> the runtime must: **invalidate** the
+future after the first call, and any further usage of this future must:
+return ename:XR_ERROR_FUTURE_INVALID_EXT.
+
+For non-zero output arrays where
+slink:XrFutureCompletionBaseHeaderEXT::pname:futureResult is not a failure,
+slink:XrFutureCompletionBaseHeaderEXT::pname:futureResult must: be identical
+for both calls to the completion function.
+
+This definition allows asynchronous operations to return dynamically sized
+outputs by using the <<fundamentals-buffer-size-parameters,two-call idiom>>
+in a familiar way.
+
+[[ext_future-cancelling]]
+==== Cancelling a future
+
+[open,refpage='xrCancelFutureEXT',type='protos',desc='Cancel future',xrefs='']
+--
+
+The flink:xrCancelFutureEXT function is defined as:
+include::{generated}/api/protos/xrCancelFutureEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle
+* pname:cancelInfo is a pointer to an slink:XrFutureCancelInfoEXT structure.
+****
+
+This function cancels the future and signals that the async operation is not
+required.
+After a future has been cancelled any functions using this future must:
+return ename:XR_ERROR_FUTURE_INVALID_EXT.
+
+A runtime may: stop the asynchronous operation associated with a future
+after an app has cancelled it.
+
+[NOTE]
+.Note
+====
+Each basetype:XrFutureEXT value must: be externally synchronized by the
+application when calling completion, polling, and cancellation functions, or
+destroying the associated handle.
+====
+
+include::{generated}/validity/protos/xrCancelFutureEXT.adoc[]
+--
+
+
+[open,refpage='XrFutureCancelInfoEXT',type='structs',desc='Information on future to cancel',xrefs='xrCancelFutureEXT']
+--
+
+The slink:XrFutureCancelInfoEXT structure is defined as:
+include::{generated}/api/structs/XrFutureCancelInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:future is basetype:XrFutureEXT to cancel.
+****
+
+An slink:XrFutureCancelInfoEXT describes which future to cancel.
+
+include::{generated}/validity/structs/XrFutureCancelInfoEXT.adoc[]
+--
+
+==== XrFutureEXT Lifecycle
+
+[open,refpage='XrFutureStateEXT',type='enums',desc='Information on future to cancel',xrefs='xrCancelFutureEXT']
+--
+
+The elink:XrFutureStateEXT enumerates the possible future lifecycle states:
+include::{generated}/api/enums/XrFutureStateEXT.adoc[]
+
+.Enumerant Descriptions
+****
+* ename:XR_FUTURE_STATE_PENDING_EXT.
+  The state of a future that is waiting for the async operation to conclude.
+  This is typically the initial state of a future returned from an async
+  function.
+* ename:XR_FUTURE_STATE_READY_EXT.
+  The state of a future when the result of the async operation is ready.
+  The application can: retrieve the result by calling the associated
+  completion function.
+****
+
+
+image::images/ext_future_lifecycle.svg[align="center", title="basetype:XrFutureEXT Life-cycle"]
+
+A future that is not invalidated (or completed) may: be in one of two
+states, `Pending` and `Ready`, represented by
+ename:XR_FUTURE_STATE_PENDING_EXT and ename:XR_FUTURE_STATE_READY_EXT
+respectively.
+
+* When successfully returned from an async function the future starts out as
+  `Pending`.
+  In this state the future may: be polled, but must: not be passed to a
+  completion function.
+  Applications should: wait for the future to become ready and keep polling
+  the state of the future.
+  If a pending future is passed to the associated completion function, it
+  must: return ename:XR_ERROR_FUTURE_PENDING_EXT.
+
+* Once the asynchronous operation succeeds or fails, the state of the future
+  moves to `Ready`.
+  In the ready state the future may: be "Completed" with the `Complete`
+  function.
+  See <<ext_future-completing>>.
+
+* After being successfully completed, the future becomes invalidated if the
+  completion function returns a success code, and in the case of two-call
+  idioms, the array was not code:NULL.
+
+* After a call to flink:xrCancelFutureEXT, the future becomes invalidated
+  immediately and any resources associated with it may: be freed (including
+  handles)
+
+* When the associated handle is destroyed, the futures become invalidated.
+  See <<ext_future-scope>>.
+
+A future returned from an async function must: be in either the state
+ename:XR_FUTURE_STATE_PENDING_EXT or ename:XR_FUTURE_STATE_READY_EXT.
+A runtime may: skip the `Pending` state and go directly to `Ready` if the
+result is immediately available.
+
+--
+
+[[ext_future-scope]]
+==== Future Scope
+
+An basetype:XrFutureEXT is scoped to the "associated handle" of the future.
+The associated handle is the handle passed to the asynchronous operation
+that returns the basetype:XrFutureEXT.
+When the associated handle is destroyed, the runtime must: invalidate the
+future and may: free any associated resources.
+
+
+[NOTE]
+.Note
+====
+For example, for a hypothetical async function `xrGetFooAsync(Session
+session, XrFooGetInfo info, ``XrFutureEXT``* future)` then `XrSession` is
+the associated handle, and if the app calls `xrDestroySession(...)` the
+returned future becomes invalid.
+
+Likewise, for `xrRequestBar(BarGenerator barGenerator, XrBarGenerateInfo
+info, ``XrFutureEXT``* future)`, the hypothetical `BarGenerator` is the
+associated handle that scopes the future.
+====
+
+
+==== Extension Guidelines for Asynchronous Functions
+
+Extensions exposing asynchronous functions using apiext:XR_EXT_future
+should: follow the following patterns:
+
+1. Functions returning a future should: use the suffix "Async", prior to an
+   author/vendor tag if applicable.
+   For example:
+   * `xrGetFooAsync(...)`
+   * `xrRequestBarAsyncKHR(...)`
+   * `xrCreateObjectAsyncVENDOR(...)`
+
+2. The name of the future out parameter should: be `future`.
+   For example:
+   * `xrGetFooAsync(..., ``XrFutureEXT``* future)`
+   * `xrRequestBarAsyncKHR(..., ``XrFutureEXT``* future)`
+   * `xrCreateObjectAsyncVENDOR(..., ``XrFutureEXT``* future)`
+
+3. Functions completing a future should: match the name of the function
+   returning the future, but with "Complete" rather than "Async" as the
+   suffix.
+   This is a deviation from the normal pattern in OpenXR, if "complete" is
+   considered to be the verb; however this provides for a useful sorting
+   order keeping the "Async" and "Complete" functions adjacent, and fits the
+   pattern of using suffixes for asynchronous functions.
+   The completion function must: use the same handle type as the
+   corresponding async function and the runtime must: return
+   ename:XR_ERROR_HANDLE_INVALID if the handle value passed to the
+   completion function is different from the value passed to the async
+   function that returned the future.
+   For example:
+   * `xrGetFooComplete(...)`
+   * `xrRequestBarCompleteKHR(...)`,
+   * `xrCreateObjectCompleteVENDOR(...)`
+
+4. The output structure used in the "Complete" function should: extend
+   slink:XrFutureCompletionBaseHeaderEXT (starting with pname:type,
+   pname:next, and pname:futureResult fields).
+
+5. If an operation requires more than the basic slink:XrFutureCompletionEXT
+   output, the output structure populated by the "Complete" function should:
+   be named based on the function that returned the future, with the suffix
+   "Completion".
+   For example:
+   * `xrGetFooComplete` populates `XrGetFooCompletion`
+   * `xrRequestBarComplete` populates `XrRequestBarCompletionKHR`
+   * `xrCreateObjectCompleteVENDOR` populates
+     `XrCreateObjectCompletionVENDOR`
+
+6. The basetype:XrFutureEXT parameter in the "Complete" function should: be
+   named `future`.
+   For example:
+   * `xrGetFooComplete(..., ``XrFutureEXT`` future)`
+   * `xrRequestBarCompleteKHR(..., ``XrFutureEXT`` future)`
+   * `xrCreateObjectCompleteVENDOR(..., ``XrFutureEXT`` future)`
+
+7. The parameter with the completion structure should: be named
+   `completion`.
+   e.g.
+   * `xrGetFooComplete(..., ``XrFutureEXT`` future, XrGetFooCompletion*
+     completion)`
+   * `xrRequestBarCompleteKHR(..., ``XrFutureEXT`` future,
+     XrRequestBarCompletionKHR* completion)`
+   * `xrCreateObjectCompleteVENDOR(..., ``XrFutureEXT`` future,
+     XrCreateObjectCompletionVENDOR* completion)`
+
+==== Asynchronous function patterns
+
+===== `xrCreate` functions
+
+[source,c++]
+----
+/****************************/
+/* Foo extension definition */
+/****************************/
+typedef void *XrFoo; // Handle definition
+typedef struct XrFooObjectCreateInfo {
+  XrStructureType type;
+  const void *next;
+} XrFooObjectCreateInfo;
+#define XR_TYPE_FOO_OBJECT_CREATE_INFO ((XrStructureType)1100092000U)
+
+// extends struct XrFutureCompletionBaseHeader using "parentstruct"
+typedef struct XrFooObjectCreateCompletionEXT {
+  XrStructureType type;
+  void *XR_MAY_ALIAS next;
+  XrResult futureResult;
+  XrFoo foo;
+} XrFooObjectCreateCompletionEXT;
+#define XR_TYPE_FOO_OBJECT_CREATE_COMPLETION ((XrStructureType)1100092001U)
+
+typedef XrResult(XRAPI_PTR *PFN_xrCreateFooObjectAsync)(
+    XrSession session, const XrFooObjectCreateInfo *createInfo,
+    XrFutureEXT *future);
+typedef XrResult(XRAPI_PTR *PFN_xrCreateFooObjectComplete)(
+    XrSession session, XrFutureEXT future,
+    XrFooObjectCreateCompletionEXT *completion);
+
+/*************************/
+/* End Foo definition    */
+/*************************/
+
+PFN_xrCreateFooObjectAsync xrCreateFooObjectAsync; // previously initialized
+PFN_xrCreateFooObjectComplete
+    xrCreateFooObjectComplete;       // previously initialized
+PFN_xrPollFutureEXT xrPollFutureEXT; // previously initialized
+XrInstance instance;                 // previously initialized
+XrSession session;                   // previously initialized
+
+XrFutureEXT futureFooObject;
+XrResult result;
+
+XrFooObjectCreateInfo createInfo{XR_TYPE_FOO_OBJECT_CREATE_INFO};
+result = xrCreateFooObjectAsync(session, &createInfo, &futureFooObject);
+CHK_XR(result);
+
+bool keepLooping = true;
+bool futureReady = false;
+while (keepLooping) {
+  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+  pollInfo.future = futureFooObject;
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+  if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+    futureReady = true;
+    keepLooping = false;
+  } else {
+    // sleep(10);
+  }
+}
+
+if (futureReady) {
+  XrFooObjectCreateCompletionEXT completion{
+      XR_TYPE_FOO_OBJECT_CREATE_COMPLETION};
+  result = xrCreateFooObjectComplete(session, futureFooObject, &completion);
+  CHK_XR(result);                  // Result of the complete function
+  CHK_XR(completion.futureResult); // Return code of the create function
+  // completion.fooObject is now valid and may be used!
+}
+
+----
+
+===== Two-call idiom
+[source,c++]
+----
+/****************************/
+/* Foo extension definition */
+/****************************/
+typedef struct XrFooObjectCreateInfo {
+  XrStructureType type;
+  const void *next;
+} XrFooObjectCreateInfo;
+#define XR_TYPE_FOO_OBJECTS_CREATE_INFO ((XrStructureType)1100092002U)
+
+// extends struct XrFutureCompletionBaseHeader using "parentstruct"
+typedef struct XrFooObjectsCreateCompletionEXT {
+  XrStructureType type;
+  void *next;
+  XrResult futureResult;
+  uint32_t elementCapacityInput;
+  uint32_t elementCapacityOutput;
+  float *elements;
+} XrFooObjectsCreateCompletionEXT;
+#define XR_TYPE_FOO_OBJECTS_CREATE_COMPLETION ((XrStructureType)1100092003U)
+
+typedef XrResult(XRAPI_PTR *PFN_xrCreateFooObjectsAsync)(
+    XrSession session, const XrFooObjectCreateInfo *createInfo,
+    XrFutureEXT *future);
+typedef XrResult(XRAPI_PTR *PFN_xrCreateFooObjectsComplete)(
+    XrSession session, XrFutureEXT future,
+    XrFooObjectsCreateCompletionEXT *completion);
+
+/*************************/
+/* End Foo definition    */
+/*************************/
+
+PFN_xrCreateFooObjectsAsync xrCreateFooObjectsAsync; // previously initialized
+PFN_xrCreateFooObjectsComplete
+    xrCreateFooObjectsComplete;      // previously initialized
+PFN_xrPollFutureEXT xrPollFutureEXT; // previously initialized
+XrInstance instance;                 // previously initialized
+XrSession session;                   // previously initialized
+
+XrFutureEXT futureFooObjects;
+XrResult result;
+
+XrFooObjectCreateInfo createInfo{XR_TYPE_FOO_OBJECTS_CREATE_INFO};
+result = xrCreateFooObjectsAsync(session, &createInfo, &futureFooObjects);
+CHK_XR(result);
+
+bool keepLooping = true;
+bool futureReady = false;
+while (keepLooping) {
+  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+  pollInfo.future = futureFooObjects;
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+  if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+    futureReady = true;
+    keepLooping = false;
+  } else {
+    // sleep(10);
+  }
+}
+
+if (futureReady) {
+  XrFooObjectsCreateCompletionEXT completion{
+      XR_TYPE_FOO_OBJECTS_CREATE_COMPLETION};
+  result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
+  CHK_XR(result); // Result of the complete function
+  CHK_XR(completion.futureResult);
+
+  std::vector<float> floatValues(completion.elementCapacityOutput);
+  completion.elementCapacityInput = (uint32_t)floatValues.size();
+  completion.elements = floatValues.data();
+
+  result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
+  CHK_XR(result); // Result of the complete function
+}
+
+// completion.elements has now been filled with values by the runtime.
+----
+
+===== Sample code
+
+[source,c++]
+----
+/*****************************************/
+/* Slow Foo extension definition */
+/*****************************************/
+// extends struct XrFutureCompletionBaseHeader using "parentstruct"
+typedef struct XrSlowFooCompletionEXT {
+  XrStructureType type;
+  void *XR_MAY_ALIAS next;
+  XrResult futureResult;
+  float foo;
+} XrSlowFooCompletionEXT;
+#define XR_TYPE_SLOW_FOO_COMPLETION_EXT ((XrStructureType)1100092005U)
+
+typedef struct XrSlowFooInfoEXT {
+  XrStructureType type;
+  void *XR_MAY_ALIAS next;
+} XrSlowFooInfoEXT;
+#define XR_TYPE_SLOW_FOO_INFO_EXT ((XrStructureType)1100092006U)
+
+typedef XrResult(XRAPI_PTR *PFN_xrSlowFooAsyncEXT)(XrSession session,
+                                                   XrSlowFooInfoEXT slowFooInfo,
+                                                   XrFutureEXT *future);
+typedef XrResult(XRAPI_PTR *PFN_xrSlowFooCompleteEXT)(
+    XrSession session, XrFutureEXT future, XrSlowFooCompletionEXT *completion);
+
+/*********************************************/
+/* End Slow Foo extension definition */
+/*********************************************/
+
+class MyGame {
+  void OnSlowFooRequest() {
+    if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
+      // Make initial request.
+      XrSlowFooInfoEXT fooInfo{XR_TYPE_SLOW_FOO_INFO_EXT};
+      XrResult result = xrSlowFooAsyncEXT(session, fooInfo, &m_slowFooFuture);
+      CHK_XR(result);
+    }
+  }
+
+  void OnGameTickOrSomeOtherReoccurringFunction() {
+
+    // Check if a future is outstanding
+    if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
+      return;
+    }
+
+    // Poll for state of future
+    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+    pollInfo.future = m_slowFooFuture;
+    CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+    if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+      // Complete the future, consuming the result
+      XrSlowFooCompletionEXT completion{XR_TYPE_SLOW_FOO_COMPLETION_EXT};
+      XrResult result =
+          xrSlowFooCompleteEXT(session, m_slowFooFuture, &completion);
+      // Check XrResult from the completion function
+      CHK_XR(result);
+      // Check XrResult from the async operation
+      CHK_XR(completion.futureResult);
+      m_fooValue = completion.foo;
+      m_slowFooFuture = XR_NULL_FUTURE_EXT;
+    }
+  }
+
+  XrFutureEXT m_slowFooFuture{XR_NULL_FUTURE_EXT};
+  float m_fooValue{0.0f};
+
+  PFN_xrSlowFooAsyncEXT xrSlowFooAsyncEXT;       // previously initialized
+  PFN_xrSlowFooCompleteEXT xrSlowFooCompleteEXT; // previously initialized
+  PFN_xrPollFutureEXT xrPollFutureEXT;           // previously initialized
+  XrInstance instance;                           // previously initialized
+  XrSession session;                             // previously initialized
+};
+----
+
+===== Multi-threaded code
+[source,c++]
+----
+class MyThreadedGame {
+
+  MyThreadedGame() {
+    // Start the thread
+    m_processThread = std::thread(&MyThreadedGame::ThreadFunction, this);
+    StartSlowFooRequest();
+  }
+
+  ~MyThreadedGame() {
+    // all functions using futures must be synchronized.
+    CancelSlowFooRequestFuture();
+    m_abort = true;
+    m_processThread.join();
+  }
+
+  void StartSlowFooRequest() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
+      // Make initial request.
+      XrSlowFooInfoEXT fooInfo{XR_TYPE_SLOW_FOO_INFO_EXT};
+      XrResult result = xrSlowFooAsyncEXT(session, fooInfo, &m_slowFooFuture);
+      CHK_XR(result);
+    }
+  }
+
+  void CancelSlowFooRequestFuture() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    if (m_slowFooFuture != XR_NULL_FUTURE_EXT) {
+      XrFutureCancelInfoEXT cancel_info{XR_TYPE_FUTURE_CANCEL_INFO_EXT};
+      cancel_info.future = m_slowFooFuture;
+      xrCancelFutureEXT(instance, &cancel_info);
+      m_slowFooFuture = XR_NULL_FUTURE_EXT;
+    }
+  }
+
+  void CheckFooRequestCompletion() {
+
+    std::unique_lock<std::mutex> lock(m_mutex);
+    // Check if a future is outstanding
+    if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
+      return;
+    }
+
+    // Poll for state of future
+    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+    pollInfo.future = m_slowFooFuture;
+    CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+    if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+      // Complete the future, consuming the result
+      XrSlowFooCompletionEXT completion{XR_TYPE_SLOW_FOO_COMPLETION_EXT};
+      XrResult result =
+          xrSlowFooCompleteEXT(session, m_slowFooFuture, &completion);
+      // Check XrResult from the completion function
+      CHK_XR(result);
+      // Check XrResult from the async operation
+      CHK_XR(completion.futureResult);
+      m_fooValue = completion.foo;
+      m_slowFooFuture = XR_NULL_FUTURE_EXT;
+
+      // Do something with the foo value.
+    }
+  }
+
+  void ThreadFunction() {
+    while (!m_abort) {
+      // other logic here
+
+      CheckFooRequestCompletion();
+
+      // sleep if needed.
+    }
+  }
+
+  XrFutureEXT m_slowFooFuture{XR_NULL_FUTURE_EXT};
+  float m_fooValue{0.0f};
+  bool m_abort{false};
+  std::mutex m_mutex;
+  std::thread m_processThread;
+};
+----
+
+
+*New Base Types*
+
+* basetype:XrFutureEXT
+
+*New Functions*
+
+* flink:xrPollFutureEXT
+* flink:xrCancelFutureEXT
+
+*New Structures*
+
+* slink:XrFutureCompletionEXT
+* slink:XrFutureCompletionBaseHeaderEXT
+* slink:XrFuturePollInfoEXT
+* slink:XrFuturePollResultEXT
+* slink:XrFutureCancelInfoEXT
+
+*New Enum Constants*
+
+* ename:XR_NULL_FUTURE_EXT
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_FUTURE_CANCEL_INFO_EXT
+* ename:XR_TYPE_FUTURE_POLL_INFO_EXT
+* ename:XR_TYPE_FUTURE_POLL_RESULT_EXT
+* ename:XR_TYPE_FUTURE_COMPLETION_EXT
+
+elink:XrResult enumeration is extended with:
+
+* ename:XR_ERROR_FUTURE_PENDING_EXT
+* ename:XR_ERROR_FUTURE_INVALID_EXT
+
+
+*Issues*
+
+* Should there be a state for completed functions that is separate from
+  "invalid"?
+** Resolved.
+** Answer: No.
+   This would force an implementing runtime to remember old futures forever.
+   In order to allow implementations that delete all associated data about a
+   future after completion, we cannot differentiate between a future that
+   never existed and one that was completed.
+   Similarly, invalidated/completed is not formally a "state" for futures in
+   the final API.
+
+*Version History*
+
+* Revision 1, 2023-02-14 (Andreas Løve Selvik, Meta Platforms and Ron
+  Bessems, Magic Leap)
+** Initial extension description

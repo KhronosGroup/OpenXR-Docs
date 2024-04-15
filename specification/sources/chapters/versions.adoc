@@ -1,0 +1,147 @@
+// Copyright (c) 2016-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+[[versions]]
+== Core Revisions (Informative)
+
+
+New minor versions of the OpenXR API are defined periodically by the Khronos
+OpenXR Working Group.
+These consist of some amount of additional functionality added to the core
+API, potentially including both new functionality and functionality promoted
+from extensions.
+
+[[versions-1.1]]
+[[XR_VERSION_1_1]]
+=== Version 1.1
+// Unfortunately we cannot include titles in an open refpage block, so this
+// is a refpage-specific alternate form of the section.
+ifdef::isrefpage[]
+[open,refpage='XR_VERSION_1_1',desc='OpenXR version 1.1',type='feature',anchor='versions-1.1']
+--
+OpenXR version 1.1 promoted a number of key extensions into the core API:
+
+include::{generated}/meta/promoted_extensions_XR_VERSION_1_1.adoc[]
+
+All differences in behavior between these extensions and the corresponding
+OpenXR 1.1 functionality are summarized in the <<versions-1.1-promotions,
+OpenXR 1.1 specification appendix>>.
+
+include::{generated}/interfaces/XR_VERSION_1_1.adoc[]
+--
+endif::isrefpage[]
+
+==== OpenXR 1.1 Promotions
+
+// This is the spec-specific form of the section
+[[versions-1.1-promotions]]
+OpenXR version 1.1 promoted a number of key extensions into the core API:
+
+include::{generated}/meta/promoted_extensions_XR_VERSION_1_1.adoc[]
+
+All differences in behavior between these extensions and the corresponding
+OpenXR 1.1 functionality are summarized below.
+
+===== Differences Relative to apiext:XR_EXT_local_floor
+
+The definition of this space was made more precise, and it was clarified
+that the mandatory support of this space does **not** dictate any particular
+quality of floor level estimation.
+Applications that can provide a head-relative interaction experience in the
+absence of a defined stage continue to use `LOCAL` space, while those that
+need higher quality assertions about floor level continue to use `STAGE`
+space or scene understanding extensions to detect floor level.
+The (mandatory) presence of this space when enumerating reference spaces is
+a convenience for portability rather than an assertion that e.g. floor
+detection scene understanding has taken place or that the floor is
+inherently walkable.
+
+===== Differences Relative to apiext:XR_EXT_palm_pose
+
+The input identifier `palm_ext` defined in the extension has been renamed to
+`grip_surface` to more clearly describe its intended use and distinguish it
+from hand tracking.
+
+===== Differences Relative to apiext:XR_VARJO_quad_views
+
+The view configuration type enumerant
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO was renamed to
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET, to
+clarify that it is not vendor-specific nor the only way four views are
+possible.
+In OpenXR 1.1, a runtime may: support
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET, but
+this is optional: like the other view configuration types.
+Use flink:xrEnumerateViewConfigurations to determine if it is provided,
+rather than using the presence or absence of the extension.
+
+==== Additional OpenXR 1.1 Changes
+
+[[versions-1.1-changes]]
+
+In addition to the promoted extensions described above, OpenXR 1.1 changed
+the following:
+
+* Substantial clarifications in the input and fundamentals chapters,
+  intended to be non-substantive.
+* Added the following legacy interaction profiles to represent specific
+  controllers shipped under the Oculus/Meta Touch name and previously
+  grouped into a single <<semantic-paths-oculus-touch-controller-profile,
+  Oculus Touch interaction profile>>:
+** pathname:/interaction_profiles/meta/touch_controller_rift_cv1 -
+   <<semantic-paths-meta-touch-controller-rift-cv1-profile>>
+** pathname:/interaction_profiles/meta/touch_controller_quest_1_rift_s -
+   <<semantic-paths-meta-touch-controller-quest-1-rift-s-profile>>
+** pathname:/interaction_profiles/meta/touch_controller_quest_2 -
+   <<semantic-paths-meta-touch-controller-quest-2-profile>>
+
+include::{generated}/interfaces/XR_VERSION_1_1.adoc[leveloffset=1]
+
+
+[[versions-loader-1.0]]
+[[XR_LOADER_VERSION_1_0]]
+=== Loader Runtime and API Layer Negotiation Version 1.0
+
+ifdef::isrefpage[]
+[open,refpage='XR_LOADER_VERSION_1_0',desc='OpenXR loader runtime and API layer negotiation interface version 1.0',type='feature',anchor='XR_LOADER_VERSION_1_0']
+--
+The OpenXR version 1.0.33 patch release included ratification of the runtime
+and API layer negotiation API, associated with the identifier
+apiext:XR_LOADER_VERSION_1_0, substantially unchanged from the unratified
+form previously described in the loader design document.
+This interface is intended for use only between the loader, runtimes, and
+API layers, and is not typically directly used by an application.
+
+include::{generated}/interfaces/XR_LOADER_VERSION_1_0.adoc[]
+--
+endif::isrefpage[]
+
+The OpenXR version 1.0.33 patch release included ratification of the runtime
+and API layer negotiation API, associated with the identifier
+apiext:XR_LOADER_VERSION_1_0, substantially unchanged from the unratified
+form previously described in the loader design document.
+This interface is intended for use only between the loader, runtimes, and
+API layers, and is not typically directly used by an application.
+
+include::{generated}/interfaces/XR_LOADER_VERSION_1_0.adoc[leveloffset=1]
+
+[[versions-1.0]]
+[[XR_VERSION_1_0]]
+=== Version 1.0
+// Unfortunately we cannot include titles in an open refpage block, so this
+// is a refpage-specific alternate form of the section.
+ifdef::isrefpage[]
+[open,refpage='XR_VERSION_1_0',desc='OpenXR version 1.0',type='feature',anchor='versions-1.0']
+--
+OpenXR version 1.0 defined the initial core API.
+
+include::{generated}/interfaces/XR_VERSION_1_0.adoc[]
+--
+endif::isrefpage[]
+
+OpenXR version 1.0 defined the initial core API.
+
+include::{generated}/interfaces/XR_VERSION_1_0.adoc[leveloffset=1]
+

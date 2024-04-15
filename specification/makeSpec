@@ -12,7 +12,7 @@
 #   -spec core - make a spec with no extensions (default)
 #   -spec khr - make a spec with all KHR extensions
 #   -spec all - make a spec with all registered extensions
-#   -version {1.0} - make a spec with this core version (OpenXR doesn't have version 1.1, yet)
+#   -version {1.0 | 1.1} - make a spec with this core version
 #   -ext name - add specified extension and its dependencies
 #   -clean - clean generated files before building
 #   -registry path - API XML to use instead of default
@@ -26,11 +26,13 @@ import argparse, copy, io, os, re, string, subprocess, sys
 import platform
 from pathlib import Path
 
+
 def execute(args, results):
     if results.verbose or results.dryrun:
         print("'" + "' '".join(args) + "'")
     if not results.dryrun:
         subprocess.check_call(args)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -44,12 +46,12 @@ if __name__ == '__main__':
                         default='generated',
                         help='Path to directory containing generated files')
     parser.add_argument('-spec', action='store',
-                        choices=[ 'core', 'khr', 'all' ],
+                        choices=['core', 'khr', 'all'],
                         default='core',
                         help='Type of spec to generate')
     parser.add_argument('-version', action='store',
-                        choices=[ '1.0' ],
-                        default='1.0',
+                        choices=[ '1.0', '1.1' ],
+                        default='1.1',
                         help='Type of spec to generate')
 
     parser.add_argument('-registry', action='store',
@@ -76,27 +78,29 @@ if __name__ == '__main__':
         genpath = genpath.relative_to(spec_dir).as_posix()
 
     # Look for scripts/extdependency.py
-    # This requires makeSpec to be invoked from the repository root, but we
-    # could derive that path.
     scripts_dir = spec_dir / 'scripts'
     sys.path.insert(0, str(scripts_dir))
     from scripts.extdependency import ApiDependencies
+
     deps = ApiDependencies(results.registry, results.apiname)
 
     # List of versions to build with from the requested -version
     # This should come from the extdependency module as well, eventually
     versionDict = {
-        '1.0' : [ 'XR_VERSION_1_0' ],
+        '1.0' : [ 'XR_VERSION_1_0', 'XR_LOADER_VERSION_1_0' ],
+        '1.1' : [ 'XR_VERSION_1_1', 'XR_VERSION_1_0', 'XR_LOADER_VERSION_1_0' ],
     }
     versions = 'VERSIONS={}'.format(' '.join(versionDict[results.version]))
 
     # List of extensions to build with from the requested -spec
     # Also construct a spec title
     # This should respect version dependencies as well
+    title = ''
     exts = set()
     if results.spec == 'core':
-        title = ''
-    if results.spec == 'khr':
+        # no extra title or exts
+        pass
+    elif results.spec == 'khr':
         title = 'with all KHR extensions'
         exts = set(deps.khrExtensions())
     elif results.spec == 'all':

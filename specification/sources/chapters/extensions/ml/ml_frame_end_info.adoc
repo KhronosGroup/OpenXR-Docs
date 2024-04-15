@@ -23,7 +23,7 @@ The slink:XrFrameEndInfoML::pname:flags member is of the following type, and
 contains a bitwise-OR of zero or more of the bits defined in
 elink:XrFrameEndInfoFlagBitsML.
 
-include::{generated}/api/flags/XrFrameEndInfoFlagsML.txt[]
+include::{generated}/api/flags/XrFrameEndInfoFlagsML.adoc[]
 --
 
 [open,refpage='XrFrameEndInfoFlagBitsML',type='enums',desc='XrFrameEndInfoFlagBitsML',xrefs='xrEndFrame XrFrameEndInfoML XrFrameEndInfoFlagsML']
@@ -31,11 +31,11 @@ include::{generated}/api/flags/XrFrameEndInfoFlagsML.txt[]
 Valid bits for elink:XrFrameEndInfoFlagsML are defined by
 elink:XrFrameEndInfoFlagBitsML, which is specified as:
 
-include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.txt[]
+include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.comments.txt[]
+include::{generated}/api/enums/XrFrameEndInfoFlagBitsML.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -51,7 +51,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrFrameEndInfoML structure is defined as:
 
-include::{generated}/api/structs/XrFrameEndInfoML.txt[]
+include::{generated}/api/structs/XrFrameEndInfoML.adoc[]
 
 
 .Member Descriptions
@@ -67,7 +67,7 @@ include::{generated}/api/structs/XrFrameEndInfoML.txt[]
 * pname:flags is a bitmask of elink:XrFrameEndInfoFlagsML
 ****
 
-include::{generated}/validity/structs/XrFrameEndInfoML.txt[]
+include::{generated}/validity/structs/XrFrameEndInfoML.adoc[]
 --
 
 *Version History*

@@ -48,7 +48,7 @@ utilize this extension to reliably obtain user presence information.
 
 The slink:XrSystemUserPresencePropertiesEXT structure is defined as:
 
-include::{generated}/api/structs/XrSystemUserPresencePropertiesEXT.txt[]
+include::{generated}/api/structs/XrSystemUserPresencePropertiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -72,7 +72,7 @@ system.
 In this case, an application typically assumes that the user is always
 present, as the runtime is unable to detect changes in user presence.
 
-include::{generated}/validity/structs/XrSystemUserPresencePropertiesEXT.txt[]
+include::{generated}/validity/structs/XrSystemUserPresencePropertiesEXT.adoc[]
 --
 
 ==== User Presence Changed Event
@@ -82,7 +82,7 @@ include::{generated}/validity/structs/XrSystemUserPresencePropertiesEXT.txt[]
 
 The slink:XrEventDataUserPresenceChangedEXT structure is defined as:
 
-include::{generated}/api/structs/XrEventDataUserPresenceChangedEXT.txt[]
+include::{generated}/api/structs/XrEventDataUserPresenceChangedEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -117,25 +117,25 @@ pname:isUserPresent, so that the application can be in sync on the state
 when a session begins running.
 
 The runtime must: return a valid slink:XrSession handle for
-<<session_running, a running session>>.
+<<session-running, a running session>>.
 
-After the application calls flink:xrEndSession, a <<session_running, running
+After the application calls flink:xrEndSession, a <<session-running, running
 session>> is ended and the runtime must: not enqueue any more user presence
 events.
 Therefore, the application will no longer observe any changes of the
-pname:isUserPresent until another <<session_running, running session>>.
+pname:isUserPresent until another <<session-running, running session>>.
 
 [NOTE]
 .Note
-****
+====
 This extension does not require any specific correlation between user
 presence state and session state except that the
 slink:XrEventDataUserPresenceChangedEXT event can not be observed without a
 running session.
 A runtime may choose to correlate the two states or keep them independent.
-****
+====
 
-include::{generated}/validity/structs/XrEventDataUserPresenceChangedEXT.txt[]
+include::{generated}/validity/structs/XrEventDataUserPresenceChangedEXT.adoc[]
 --
 
 [example]

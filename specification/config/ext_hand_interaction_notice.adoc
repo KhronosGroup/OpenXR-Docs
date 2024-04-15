@@ -1,0 +1,15 @@
+// Copyright (c) 2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+ifdef::XR_EXT_hand_interaction[]
+[NOTE]
+.Note
+====
+When the apiext:XR_EXT_hand_interaction extension is available and enabled,
+this interaction profile must: also support
+
+* subpathname:/input/pinch_ext/pose
+* subpathname:/input/poke_ext/pose
+====
+endif::XR_EXT_hand_interaction[]

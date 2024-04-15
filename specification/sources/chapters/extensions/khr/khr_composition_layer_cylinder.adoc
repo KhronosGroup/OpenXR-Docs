@@ -69,7 +69,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerCylinderKHR structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerCylinderKHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerCylinderKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -104,7 +104,7 @@ render a texture onto a cylinder when calling flink:xrEndFrame.
 slink:XrCompositionLayerCylinderKHR is an alias type for the base struct
 slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
 
-include::{generated}/validity/structs/XrCompositionLayerCylinderKHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerCylinderKHR.adoc[]
 --
 
 *New Functions*

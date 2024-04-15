@@ -34,7 +34,7 @@ This allows the application to synchronize with the current state.
 --
 The flink:xrEnableUserCalibrationEventsML function is defined as:
 
-include::{generated}/api/protos/xrEnableUserCalibrationEventsML.txt[]
+include::{generated}/api/protos/xrEnableUserCalibrationEventsML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -44,7 +44,7 @@ include::{generated}/api/protos/xrEnableUserCalibrationEventsML.txt[]
   enables or disables user calibration events.
 ****
 
-include::{generated}/validity/protos/xrEnableUserCalibrationEventsML.txt[]
+include::{generated}/validity/protos/xrEnableUserCalibrationEventsML.adoc[]
 --
 
 [open,refpage='XrUserCalibrationEnableEventsInfoML',type='structs',desc='Information to enable headset fit events',xrefs='xrEnableUserCalibrationEventsML']
@@ -52,7 +52,7 @@ include::{generated}/validity/protos/xrEnableUserCalibrationEventsML.txt[]
 
 The slink:XrUserCalibrationEnableEventsInfoML structure is defined as:
 
-include::{generated}/api/structs/XrUserCalibrationEnableEventsInfoML.txt[]
+include::{generated}/api/structs/XrUserCalibrationEnableEventsInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -62,7 +62,7 @@ include::{generated}/api/structs/XrUserCalibrationEnableEventsInfoML.txt[]
 * pname:enabled is the flag to enable/disable user calibration events.
 ****
 
-include::{generated}/validity/structs/XrUserCalibrationEnableEventsInfoML.txt[]
+include::{generated}/validity/structs/XrUserCalibrationEnableEventsInfoML.adoc[]
 --
 
 ==== Headset Fit Events
@@ -79,7 +79,7 @@ anytime it detects a change in the headset fit state.
 
 The slink:XrEventDataHeadsetFitChangedML structure is defined as:
 
-include::{generated}/api/structs/XrEventDataHeadsetFitChangedML.txt[]
+include::{generated}/api/structs/XrEventDataHeadsetFitChangedML.adoc[]
 
 .Member Descriptions
 ****
@@ -90,14 +90,14 @@ include::{generated}/api/structs/XrEventDataHeadsetFitChangedML.txt[]
 * pname:time is the basetype:XrTime at which the pname:status was captured.
 ****
 
-include::{generated}/validity/structs/XrEventDataHeadsetFitChangedML.txt[]
+include::{generated}/validity/structs/XrEventDataHeadsetFitChangedML.adoc[]
 
 --
 
 [open,refpage='XrHeadsetFitStatusML',type='enums',desc='Headset fit status']
 --
-include::{generated}/api/enums/XrHeadsetFitStatusML.txt[]
-include::{generated}/api/enums/XrHeadsetFitStatusML.comments.txt[]
+include::{generated}/api/enums/XrHeadsetFitStatusML.adoc[]
+include::{generated}/api/enums/XrHeadsetFitStatusML.comments.adoc[]
 --
 
 ==== Eye Calibration Events
@@ -116,7 +116,7 @@ There is no support for in-app eye calibration in this extension.
 
 The slink:XrEventDataEyeCalibrationChangedML structure is defined as:
 
-include::{generated}/api/structs/XrEventDataEyeCalibrationChangedML.txt[]
+include::{generated}/api/structs/XrEventDataEyeCalibrationChangedML.adoc[]
 
 .Member Descriptions
 ****
@@ -126,13 +126,13 @@ include::{generated}/api/structs/XrEventDataEyeCalibrationChangedML.txt[]
 * pname:status is the elink:XrEyeCalibrationStatusML eye calibration status.
 ****
 
-include::{generated}/validity/structs/XrEventDataEyeCalibrationChangedML.txt[]
+include::{generated}/validity/structs/XrEventDataEyeCalibrationChangedML.adoc[]
 --
 
 [open,refpage='XrEyeCalibrationStatusML',type='enums',desc='Headset fit status']
 --
-include::{generated}/api/enums/XrEyeCalibrationStatusML.txt[]
-include::{generated}/api/enums/XrEyeCalibrationStatusML.comments.txt[]
+include::{generated}/api/enums/XrEyeCalibrationStatusML.adoc[]
+include::{generated}/api/enums/XrEyeCalibrationStatusML.comments.adoc[]
 --
 
 

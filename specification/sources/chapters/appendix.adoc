@@ -6,7 +6,7 @@
 == Appendix
 
 
-[[code-style-conventions]]
+[[appendix-code-style-conventions]]
 === Code Style Conventions
 
 These are the code style conventions used in this specification to define
@@ -42,22 +42,22 @@ or as a label to avoid name clashes, and are explained here:
 |===================================================================
 
 
-[[applicationbinaryinterface]]
+[[appendix-abi]]
 === Application Binary Interface
 This section describes additional definitions and conventions that define
 the application binary interface.
 
-[[structure-types]]
+[[appendix-structure-types]]
 ==== Structure Types
 
 
 [open,refpage='XrStructureType',type='enums',desc='Values for type members of structs']
 --
-include::{generated}/api/enums/XrStructureType.txt[]
+include::{generated}/api/enums/XrStructureType.adoc[]
 
 Most structures containing pname:type members have a value of pname:type
 matching the type of the structure, as described more fully in
-<<valid-usage-for-structure-types,Valid Usage for Structure Types>>.
+<<fundamentals-valid-usage-for-structure-types>>.
 
 Note that all extension enums begin at the extension enum base of [eq]#10^9#
 (base 10).
@@ -68,12 +68,12 @@ and arranged by the extension's number.
 
 [open,refpage='XR_EXTENSION_ENUM_BASE',desc='Macro to define the enum base for extensions',type='defines']
 --
-include::{generated}/api/defines/XR_EXTENSION_ENUM_BASE.txt[]
+include::{generated}/api/defines/XR_EXTENSION_ENUM_BASE.adoc[]
 --
 
 [open,refpage='XR_EXTENSION_ENUM_STRIDE',desc='Macro to define the maximum allowed count of enums for an extension',type='defines']
 --
-include::{generated}/api/defines/XR_EXTENSION_ENUM_STRIDE.txt[]
+include::{generated}/api/defines/XR_EXTENSION_ENUM_STRIDE.adoc[]
 --
 
 For example, if extension number 5 wants to use an enum value of 3, the
@@ -87,12 +87,12 @@ dlink:XR_EXTENSION_ENUM_STRIDE + enum_value#
 The maximum allowed enum value in an extension is 2,147,482,999, which
 belongs to extension number 2147483.
 
-[[flag-types]]
+[[appendix-flag-types]]
 ==== Flag Types
 
 Flag types are all bitmasks aliasing the base type basetype:XrFlags64 and
 with corresponding bit flag types defining the valid bits for that flag, as
-described in <<valid-usage-for-flags>>.
+described in <<fundamentals-valid-usage-for-flags>>.
 
 Flag types defined in the core specification were originally listed/defined
 here, but have been moved to be adjacent to their associated `FlagBits`
@@ -105,7 +105,7 @@ See the Index for a list.
 endif::backend-html5[]
 
 
-[[general-macro-definitions]]
+[[appendix-general-macro-definitions]]
 ==== General Macro Definitions
 
 This API is defined in C and uses "C" linkage.
@@ -141,7 +141,7 @@ Macros>>.
 
 [open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION']
 --
-include::{generated}/api/defines/XR_CURRENT_API_VERSION.txt[]
+include::{generated}/api/defines/XR_CURRENT_API_VERSION.adoc[]
 
 dlink:XR_CURRENT_API_VERSION is the current version of the OpenXR API.
 --
@@ -158,7 +158,7 @@ numbers.
 
 [open,refpage='XR_MAKE_VERSION',type='defines',desc='Packs a three-component version number into a packed version number integer',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_VERSION_PATCH XR_CURRENT_API_VERSION']
 --
-include::{generated}/api/defines/XR_MAKE_VERSION.txt[]
+include::{generated}/api/defines/XR_MAKE_VERSION.adoc[]
 
 .Parameter Descriptions
 ****
@@ -171,8 +171,8 @@ include::{generated}/api/defines/XR_MAKE_VERSION.txt[]
 
 dlink:XR_MAKE_VERSION constructs a packed 64-bit integer API version number
 from three components.
-The format used is described in <<api-version-numbers-and-semantics,API
-Version Numbers and Semantics>>.
+The format used is described in
+<<fundamentals-api-version-numbers-and-semantics>>.
 
 This macro can: be used when constructing the
 slink:XrApplicationInfo::pname:apiVersion parameter passed to
@@ -182,7 +182,7 @@ flink:xrCreateInstance.
 
 [open,refpage='XR_VERSION_MAJOR',type='defines',desc='Extracts the major version number from a packed version number',xrefs='XR_VERSION_MINOR XR_VERSION_PATCH XR_MAKE_VERSION']
 --
-include::{generated}/api/defines/XR_VERSION_MAJOR.txt[]
+include::{generated}/api/defines/XR_VERSION_MAJOR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -197,7 +197,7 @@ version number.
 
 [open,refpage='XR_VERSION_MINOR',type='defines',desc='Extracts the minor version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_PATCH XR_CURRENT_API_VERSION XR_MAKE_VERSION']
 --
-include::{generated}/api/defines/XR_VERSION_MINOR.txt[]
+include::{generated}/api/defines/XR_VERSION_MINOR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -212,7 +212,7 @@ version number.
 
 [open,refpage='XR_VERSION_PATCH',type='defines',desc='Extracts the patch version number from a packed version number',xrefs='XR_VERSION_MAJOR XR_VERSION_MINOR XR_CURRENT_API_VERSION XR_MAKE_VERSION']
 --
-include::{generated}/api/defines/XR_VERSION_PATCH.txt[]
+include::{generated}/api/defines/XR_VERSION_PATCH.adoc[]
 
 .Parameter Descriptions
 ****
@@ -226,12 +226,12 @@ version number.
 
 
 
-[[handle-macros]]
+[[appendix-handle-macros]]
 ===== Handle and Atom Macros
 
 [open,refpage='XR_DEFINE_HANDLE',desc='Macro to define a handle type',type='defines',xrefs='XR_NULL_HANDLE']
 --
-include::{generated}/api/defines/XR_DEFINE_HANDLE.txt[]
+include::{generated}/api/defines/XR_DEFINE_HANDLE.adoc[]
 
 .Parameter Descriptions
 ****
@@ -242,12 +242,12 @@ dlink:XR_DEFINE_HANDLE defines a handle type, which is an opaque 64 bit
 value, which may: be implemented as an opaque, distinct pointer type on
 platforms with 64 bit pointers.
 
-For further details, see <<handles,Handles>>.
+For further details, see <<fundamentals-handles>>.
 --
 
 [open,refpage='XR_NULL_HANDLE',desc='Invalid handle value',type='defines',xrefs='XR_DEFINE_HANDLE']
 --
-include::{generated}/api/defines/XR_NULL_HANDLE.txt[]
+include::{generated}/api/defines/XR_NULL_HANDLE.adoc[]
 
 dlink:XR_NULL_HANDLE is a reserved value representing a non-valid object
 handle.
@@ -258,7 +258,7 @@ allowed.
 
 [open,refpage='XR_DEFINE_ATOM',desc='Macro to define a atom type',type='defines',xrefs='XrPath XR_NULL_PATH XrSystemId XR_NULL_SYSTEM_ID']
 --
-include::{generated}/api/defines/XR_DEFINE_ATOM.txt[]
+include::{generated}/api/defines/XR_DEFINE_ATOM.adoc[]
 
 .Parameter Descriptions
 ****
@@ -269,7 +269,21 @@ dlink:XR_DEFINE_ATOM defines an atom type, which is an opaque 64 bit
 integer.
 --
 
-[[platform-specific-macro-definitions]]
+[open,refpage='XR_DEFINE_OPAQUE_64',desc='Macro to define a type',type='defines',xrefs='']
+--
+include::{generated}/api/defines/XR_DEFINE_OPAQUE_64.adoc[]
+
+.Parameter Descriptions
+****
+* object is the name of the resulting C type.
+****
+
+dlink:XR_DEFINE_OPAQUE_64 defines an opaque 64 bit value, which may: be
+implemented as an opaque, distinct pointer type on platforms with 64 bit
+pointers.
+--
+
+[[appendix-platform-specific-macro-definitions]]
 ==== Platform-Specific Macro Definitions
 
 Additional platform-specific macros and interfaces are defined using the
@@ -279,7 +293,7 @@ exact definitions are under the control of specific platform implementations
 of the API.
 
 
-[[platform-specific-calling-conventions]]
+[[appendix-platform-specific-calling-conventions]]
 ===== Platform-Specific Calling Conventions
 
 On many platforms the following macros are empty strings, causing platform-
@@ -318,7 +332,7 @@ typedef <return_type> (XRAPI_PTR *PFN_<function_name>)(<function_parameters>);
 ----
 
 
-[[platform-specific-header-control]]
+[[appendix-platform-specific-header-control]]
 ===== Platform-Specific Header Control
 
 [[XR_NO_STDINT_H]]
@@ -335,7 +349,7 @@ earlier versions (which lack this header) that is automatically activated as
 needed.
 
 
-[[graphics-api-header-control]]
+[[appendix-graphics-api-header-control]]
 ===== Graphics API Header Control
 
 [cols=",",options="header",]
@@ -349,7 +363,7 @@ needed.
 |==========================================
 
 
-[[window-system-header-control]]
+[[appendix-window-system-header-control]]
 ===== Window System Header Control
 
 [cols=",",options="header",]
@@ -363,11 +377,11 @@ needed.
 |============================================
 
 
-[[android-notes]]
+[[appendix-android-notes]]
 === Android Notes
 Android specific notes for using the OpenXR specification.
 
-[[android-runtime-category]]
+[[appendix-android-runtime-category]]
 ==== Android Runtime category tag for immersive mode selection
 
 Android applications should add the `<category
@@ -390,7 +404,7 @@ For example:
 ----
 
 
-[[glossary]]
+[[appendix-glossary]]
 === Glossary
 
 The terms defined in this section are used throughout this Specification.
@@ -458,7 +472,7 @@ formatted 2D images, but in other cases they may be array images.
 Represented by a structure related to slink:XrSwapchainImageBaseHeader.
 |=======================================================================
 
-[[abbreviations]]
+[[appendix-abbreviations]]
 === Abbreviations
 
 Abbreviations and acronyms are sometimes used in the API where they are
@@ -481,7 +495,7 @@ considered clear and commonplace, and are defined here:
 |======================================
 
 <<<
-[[dedication]]
+[[appendix-dedication]]
 === Dedication (Informative)
 
 In memory of Johannes van Waveren: a loving father, husband, son, brother,
@@ -565,98 +579,129 @@ image::images/JP.jpg[align="center",pdfwidth="80%"]
 endif::include-dedication-photo[]
 
 <<<
-[[credits]]
+[[appendix-credits]]
 === Contributors (Informative)
 OpenXR is the result of contributions from many people and companies
 participating in the Khronos OpenXR Working Group.
 Members of the Working Group, including the company that they represented at
 the time of their most recent contribution, are listed below.
 
-==== Contributors to OpenXR 1.0
+==== Working Group Contributors to OpenXR
 
-* Adam Gousetis, Google
-* Alex Turner, Microsoft
-* Andreas Loeve Selvik, Arm
-* Andres Rodriguez, Valve Software
-* Armelle Laine, Qualcomm Technologies, Inc
-* Attila Maczak, CTRL-labs
-* Blake Taylor, Magic Leap
-* Brad Grantham, Google
-* Brandon Jones, Google
-* Brent E. Insko, Intel
-* Brent Wilson, Microsoft
-* Bryce Hutchings, Microsoft
-* Cass Everitt, Facebook
-* Charles Egenbacher, Epic Games
-* Chris Osborn, CTRL-labs
-* Christine Perey, Perey Research & Consulting
-* Christoph Haag, Collabora, Ltd.
-* Craig Donner, Google
-* Dan Ginsburg, Valve Software
-* Dave Houlton, LunarG
-* Dave Shreiner, Unity Technologies
-* Denny Rönngren, Tobii
-* Dmitriy Vasilev, Samsung Electronics
-* Doug Twileager, ZSpace
-* Ed Hutchins, Facebook
-* Gloria Kennickell, Facebook
-* Gregory Greeby, AMD
-* Guodong Chen, Huawei
-* Jack Pritz, Unity Technologies
-* Jakob Bornecrantz, Collabora, Ltd.
-* Jared Cheshier, PlutoVR
-* Javier Martinez, Intel
-* Jeff Bellinghausen, Valve Software
-* Jiehua Guo, Huawei
-* Joe Ludwig, Valve Software
-* Johannes van Waveren, Facebook
-* Jon Leech, Khronos
-* Jonathan Wright, Facebook
-* Juan Wee, Samsung Electronics
-* Jules Blok, Epic Games
-* Karl Schultz, LunarG
-* Kaye Mason, Google
-* Krzysztof Kosiński, Google
-* Lachlan Ford, Microsoft
-* Lubosz Sarnecki, Collabora, Ltd.
-* Mark Young, LunarG
-* Martin Renschler, Qualcomm Technologies, Inc.
-* Matias Koskela, Tampere University of Technology
-* Matt Wash, Arm
-* Mattias Brand, Tobii
-* Mattias O. Karlsson, Tobii
-* Michael Gatson, Dell
-* Minmin Gong, Microsoft
-* Mitch Singer, AMD
-* Nell Waliczek, Microsoft
-* Nick Whiting, Epic Games
-* Nigel Williams, Sony
-* Paul Pedriana, Facebook
-* Paulo Gomes, Samsung Electronics
-* Peter Kuhn, Unity Technologies
-* Peter Peterson, HP Inc.
-* Philippe Harscoet, Samsung Electronics
-* Pierre-Loup Griffais, Valve Software
-* Rajeev Gupta, Sony
-* Remi Arnaud, Starbreeze
-* Remy Zimmerman, Logitech
-* River Gillis, Google
-* Robert Memmott, Facebook
-* Robert Menzel, NVIDIA
-* Robert Simpson, Qualcomm Technologies, Inc.
-* Robin Bourianes, Starbreeze
-* Rylie Pavlik, Collabora, Ltd.
-* Ryan Vance, Epic Games
-* Sam Martin, Arm
-* Satish Salian, NVIDIA
-* Scott Flynn, Unity Technologies
-* Sean Payne, CTRL-labs
-* Sophia Baldonado, PlutoVR
-* Steve Smith, Epic Games
-* Sungye Kim, Intel
-* Tom Flynn, Samsung Electronics
-* Trevor F. Smith, Mozilla
-* Vivek Viswanathan, Dell
-* Yin Li, Microsoft
-* Yuval Boger, Sensics
-* Zheng Qin, Microsoft
+* Adam Gousetis, Google (version 1.0)
+* Alain Zanchetta, Microsoft (version 1.1)
+* Alex Turner, Microsoft (versions 1.0, 1.1)
+* Alex Sink, HTC (version 1.1)
+* Alfredo Muniz, XEED (version 1.1) (Working Group Chair)
+* Andreas Loeve Selvik, Meta Platforms (versions 1.0, 1.1)
+* Andres Rodriguez, Valve Software (version 1.0)
+* Armelle Laine, Qualcomm Technologies (version 1.0)
+* Attila Maczak, CTRL-labs (version 1.0)
+* David Fields, Microsoft (version 1.1)
+* Baolin Fu, Bytedance (version 1.1)
+* Blake Taylor, Magic Leap (version 1.0)
+* Brad Grantham, Google (version 1.0)
+* Brandon Jones, Google (version 1.0)
+* Brent E. Insko, Intel (version 1.0) (former Working Group Chair)
+* Brent Wilson, Microsoft (version 1.0)
+* Bryce Hutchings, Microsoft (versions 1.0, 1.1)
+* Cass Everitt, Meta Platforms (versions 1.0, 1.1)
+* Charles Egenbacher, Epic Games (version 1.0)
+* Charlton Rodda, Collabora (version 1.1)
+* Chris Kuo, HTC (version 1.1)
+* Chris Osborn, CTRL-labs (version 1.0)
+* Christine Perey, Perey Research & Consulting (version 1.0)
+* Christoph Haag, Collabora (version 1.0, 1.1)
+* Christopher Fiala, Epic Games (version 1.1)
+* Craig Donner, Google (version 1.0)
+* Dan Ginsburg, Valve Software (version 1.0)
+* Dave Houlton, LunarG (version 1.0)
+* Dave Shreiner, Unity Technologies (version 1.0)
+* Darryl Gough, Microsoft (version 1.1)
+* Denny Rönngren, Varjo (versions 1.0, 1.1)
+* Dmitriy Vasilev, Samsung Electronics (version 1.0)
+* Doug Twileager, ZSpace (version 1.0)
+* Ed Hutchins, Meta Platforms (version 1.0)
+* Eryk Pecyna, Meta Platforms (version 1.1)
+* Frederic Plourde, Collabora (version 1.1)
+* Gloria Kennickell, Meta Platforms (version 1.0)
+* Gregory Greeby, AMD (version 1.0)
+* Guodong Chen, Huawei (version 1.0)
+* Jack Pritz, Unity Technologies (versions 1.0, 1.1)
+* Jakob Bornecrantz, Collabora (versions 1.0, 1.1)
+* Jared Cheshier, PlutoVR (versions 1.0, 1.1)
+* Jared Finder, Google (version 1.1)
+* Javier Martinez, Intel (version 1.0)
+* Jeff Bellinghausen, Valve Software (version 1.0)
+* Jiehua Guo, Huawei (version 1.0)
+* Joe Ludwig, Valve Software (versions 1.0, 1.1)
+* John Kearney, Meta Platforms (version 1.1)
+* Johannes van Waveren, Meta Platforms (version 1.0)
+* Jon Leech, Khronos (version 1.0)
+* Jonas Pegerfalk, Tobii (version 1.1)
+* Jonathan Wright, Meta Platforms (versions 1.0, 1.1)
+* Juan Wee, Samsung Electronics (version 1.0)
+* Jules Blok, Epic Games (version 1.0)
+* Jun Yan, ByteDance (version 1.1)
+* Karl Schultz, LunarG (version 1.0)
+* Karthik Kadappan, Magic Leap (version 1.1)
+* Karthik Nagarajan, Qualcomm Technologies (version 1.1)
+* Kaye Mason, Google (version 1.0)
+* Krzysztof Kosiński, Google (version 1.0)
+* Kyle Chen, HTC (version 1.1)
+* Lachlan Ford, Google (versions 1.0, 1.1)
+* Lubosz Sarnecki, Collabora (version 1.0)
+* Mark Young, LunarG (version 1.0)
+* Martin Renschler, Qualcomm Technologies (version 1.0)
+* Matias Koskela, Tampere University of Technology (version 1.0)
+* Matt Wash, Arm (version 1.0)
+* Mattias Brand, Tobii (version 1.0)
+* Mattias O. Karlsson, Tobii (version 1.0)
+* Matthieu Bucchianeri, Microsoft (version 1.1)
+* Michael Gatson, Dell (version 1.0)
+* Minmin Gong, Microsoft (version 1.0)
+* Mitch Singer, AMD (version 1.0)
+* Nathan Nuber, Valve (version 1.1)
+* Nell Waliczek, Microsoft (version 1.0)
+* Nick Whiting, Epic Games (version 1.0) (former Working Group Chair)
+* Nigel Williams, Sony (version 1.0)
+* Nihav Jain, Google, Inc (version 1.1)
+* Paul Pedriana, Meta Platforms (version 1.0)
+* Paulo Gomes, Samsung Electronics (version 1.0)
+* Peter Kuhn, Unity Technologies (versions 1.0, 1.1)
+* Peter Peterson, HP Inc (version 1.0)
+* Philippe Harscoet, Samsung Electronics (versions 1.0, 1.1)
+* Pierre-Loup Griffais, Valve Software (version 1.0)
+* Rafael Wiltz, Magic Leap (version 1.1)
+* Rajeev Gupta, Sony (version 1.0)
+* Remi Arnaud, Starbreeze (version 1.0)
+* Remy Zimmerman, Logitech (version 1.0)
+* Ria Hsu, HTC (version 1.1)
+* River Gillis, Google (version 1.0)
+* Robert Blenkinsopp, Ultraleap (version 1.1)
+* Robert Memmott, Meta Platforms (version 1.0)
+* Robert Menzel, NVIDIA (version 1.0)
+* Robert Simpson, Qualcomm Technologies (version 1.0)
+* Robin Bourianes, Starbreeze (version 1.0)
+* Ron Bessems, Magic Leap (version 1.1) (Working Group Vice-Chair)
+* Rune Berg, independent (version 1.1)
+* Rylie Pavlik, Collabora (versions 1.0, 1.1) (Spec Editor)
+* Ryan Vance, Epic Games (version 1.0)
+* Sam Martin, Arm (version 1.0)
+* Satish Salian, NVIDIA (version 1.0)
+* Scott Flynn, Unity Technologies (version 1.0)
+* Shanliang Xu, Bytedance (version 1.1)
+* Sean Payne, CTRL-labs (version 1.0)
+* Sophia Baldonado, PlutoVR (version 1.0)
+* Steve Smith, Epic Games (version 1.0)
+* Sungye Kim, Intel (version 1.0)
+* Tom Flynn, Samsung Electronics (version 1.0)
+* Trevor F. Smith, Mozilla (version 1.0)
+* Victor Brodin, Epic Games (version 1.1)
+* Vivek Viswanathan, Dell (version 1.0)
+* Wenlin Mao, Meta Platforms (version 1.1)
+* Xiang Wei, Meta Platforms (version 1.1)
+* Yin Li, Microsoft (versions 1.0, 1.1)
+* Yuval Boger, Sensics (version 1.0)
+* Zhanrui Jia, Bytedance (version 1.1)
+* Zheng Qin, Microsoft (version 1.0)

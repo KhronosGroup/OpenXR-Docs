@@ -20,7 +20,7 @@ scene.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -28,14 +28,14 @@ indicated in the <<extensions>> section.
 
 [open,refpage='XrSemanticLabelsSupportFlagsFB',type='flags',desc='XrSemanticLabelsSupportFlagsFB',xrefs='XrSemanticLabelsSupportFlagBitsFB']
 --
-include::{generated}/api/flags/XrSemanticLabelsSupportFlagsFB.txt[]
+include::{generated}/api/flags/XrSemanticLabelsSupportFlagsFB.adoc[]
 --
 
 [open,refpage='XrSemanticLabelsSupportFlagBitsFB',type='enums',desc='XrSemanticLabelsSupportFlagBitsFB',xrefs='XrSemanticLabelsSupportFlagsFB']
 --
-include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.txt[]
+include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.adoc[]
 
-include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrSemanticLabelsSupportFlagBitsFB.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -55,7 +55,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrExtent3DfFB structure is defined as:
 
-include::{generated}/api/structs/XrExtent3DfFB.txt[]
+include::{generated}/api/structs/XrExtent3DfFB.adoc[]
 
 .Member Descriptions
 ****
@@ -69,14 +69,14 @@ This structure is used for component values that may be fractional
 If used to represent physical distances, values must be in meters.
 The width, height, and depth values must be non-negative.
 
-include::{generated}/validity/structs/XrExtent3DfFB.txt[]
+include::{generated}/validity/structs/XrExtent3DfFB.adoc[]
 --
 
 [open,refpage='XrOffset3DfFB',type='structs',desc='Represents a point of 3D space',xrefs='']
 --
 The slink:XrOffset3DfFB structure is defined as:
 
-include::{generated}/api/structs/XrOffset3DfFB.txt[]
+include::{generated}/api/structs/XrOffset3DfFB.adoc[]
 
 .Member Descriptions
 ****
@@ -89,14 +89,14 @@ This structure is used for component values that may be fractional
 (floating-point).
 If used to represent physical distances, values must be in meters.
 
-include::{generated}/validity/structs/XrOffset3DfFB.txt[]
+include::{generated}/validity/structs/XrOffset3DfFB.adoc[]
 --
 
 [open,refpage='XrRect3DfFB',type='structs',desc='Represents a rectangular prism containing a region of space',xrefs='']
 --
 The slink:XrRect3DfFB structure is defined as:
 
-include::{generated}/api/structs/XrRect3DfFB.txt[]
+include::{generated}/api/structs/XrRect3DfFB.adoc[]
 
 .Member Descriptions
 ****
@@ -115,14 +115,14 @@ The pname:extent refers to the dimensions of the box along each axis.
 The maximum corner can therefore be computed as [eq]#pname:offset +
 pname:extent#.
 
-include::{generated}/validity/structs/XrRect3DfFB.txt[]
+include::{generated}/validity/structs/XrRect3DfFB.adoc[]
 --
 
 [open,refpage='XrSemanticLabelsFB',type='structs',desc='Provides application with semantic usage of a spatial entity',xrefs='']
 --
 The slink:XrSemanticLabelsFB structure is defined as:
 
-include::{generated}/api/structs/XrSemanticLabelsFB.txt[]
+include::{generated}/api/structs/XrSemanticLabelsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -137,21 +137,21 @@ include::{generated}/api/structs/XrSemanticLabelsFB.txt[]
   pname:bufferCapacityInput is 0.
   Multiple labels represented by raw string, separated by a comma without
   spaces.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 This structure is used by the flink:xrGetSpaceSemanticLabelsFB function to
 provide the application with the intended usage of the spatial entity.
 
-include::{generated}/validity/structs/XrSemanticLabelsFB.txt[]
+include::{generated}/validity/structs/XrSemanticLabelsFB.adoc[]
 --
 
 [open,refpage='XrRoomLayoutFB',type='structs',desc='Provides additional context of a spatial entity representing a room',xrefs='']
 --
 The slink:XrRoomLayoutFB structure is defined as:
 
-include::{generated}/api/structs/XrRoomLayoutFB.txt[]
+include::{generated}/api/structs/XrRoomLayoutFB.adoc[]
 
 .Member Descriptions
 ****
@@ -171,23 +171,22 @@ include::{generated}/api/structs/XrRoomLayoutFB.txt[]
   insufficient.
 * pname:wallUuids is a pointer to an array of slink:XrUuidEXT handles, but
   can be code:NULL if pname:wallUuidCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:wallUuids array
-  size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:wallUuids array size.
 ****
 
 This structure is used by the flink:xrGetSpaceRoomLayoutFB function to
 provide the application with the slink:XrUuidEXT handles representing the
 various surfaces of a room.
 
-include::{generated}/validity/structs/XrRoomLayoutFB.txt[]
+include::{generated}/validity/structs/XrRoomLayoutFB.adoc[]
 --
 
 [open,refpage='XrBoundary2DFB',type='structs',desc='Provides additional context of a spatial entity representing a room',xrefs='']
 --
 The slink:XrBoundary2DFB structure is defined as:
 
-include::{generated}/api/structs/XrBoundary2DFB.txt[]
+include::{generated}/api/structs/XrBoundary2DFB.adoc[]
 
 .Member Descriptions
 ****
@@ -203,22 +202,22 @@ include::{generated}/api/structs/XrBoundary2DFB.txt[]
   insufficient.
 * pname:vertices is a pointer to an array of slink:XrVector2f, but can: be
   code:NULL if pname:vertexCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:vertices array size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:vertices array size.
 ****
 
 This structure is used by the flink:xrGetSpaceBoundary2DFB function to
 provide the application with the slink:XrVector2f vertices representing the
 a spatial entity with a boundary.
 
-include::{generated}/validity/structs/XrBoundary2DFB.txt[]
+include::{generated}/validity/structs/XrBoundary2DFB.adoc[]
 --
 
 [open,refpage='XrSemanticLabelsSupportInfoFB',type='structs',desc='Specifies additional behaviors of the xrGetSpaceSemanticLabelsFB function',xrefs='']
 --
 The slink:XrSemanticLabelsSupportInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSemanticLabelsSupportInfoFB.txt[]
+include::{generated}/api/structs/XrSemanticLabelsSupportInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -250,7 +249,7 @@ If the slink:XrSemanticLabelsSupportInfoFB structure is not present in the
 pname:next chain of slink:XrSemanticLabelsFB, the runtime may: return any
 semantic labels to the application.
 
-include::{generated}/validity/structs/XrSemanticLabelsSupportInfoFB.txt[]
+include::{generated}/validity/structs/XrSemanticLabelsSupportInfoFB.adoc[]
 --
 
 *New Functions*
@@ -259,7 +258,7 @@ include::{generated}/validity/structs/XrSemanticLabelsSupportInfoFB.txt[]
 --
 The flink:xrGetSpaceBoundingBox2DFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceBoundingBox2DFB.txt[]
+include::{generated}/api/protos/xrGetSpaceBoundingBox2DFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -284,14 +283,14 @@ The maximum corner can therefore be computed as
 [eq]#slink:XrRect2Df::pname:offset +
 slink:XrRect2Df::pname:extent#.
 
-include::{generated}/validity/protos/xrGetSpaceBoundingBox2DFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceBoundingBox2DFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceBoundingBox3DFB',desc='Gets the 3D bounding box for a spatial entity',type='protos',xrefs='']
 --
 The flink:xrGetSpaceBoundingBox3DFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceBoundingBox3DFB.txt[]
+include::{generated}/api/protos/xrGetSpaceBoundingBox3DFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -304,14 +303,14 @@ include::{generated}/api/protos/xrGetSpaceBoundingBox3DFB.txt[]
 Gets the 3D bounding box for a spatial entity with the
 ename:XR_SPACE_COMPONENT_TYPE_BOUNDED_3D_FB component type enabled.
 
-include::{generated}/validity/protos/xrGetSpaceBoundingBox3DFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceBoundingBox3DFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceSemanticLabelsFB',desc='Gets the semantic labels for a spatial entity',type='protos',xrefs='']
 --
 The flink:xrGetSpaceSemanticLabelsFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceSemanticLabelsFB.txt[]
+include::{generated}/api/protos/xrGetSpaceSemanticLabelsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -324,14 +323,14 @@ include::{generated}/api/protos/xrGetSpaceSemanticLabelsFB.txt[]
 Gets the semantic labels for a spatial entity with the
 ename:XR_SPACE_COMPONENT_TYPE_SEMANTIC_LABELS_FB component type enabled.
 
-include::{generated}/validity/protos/xrGetSpaceSemanticLabelsFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceSemanticLabelsFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceBoundary2DFB',desc='Gets the 2D boundary for a spatial entity',type='protos',xrefs='']
 --
 The flink:xrGetSpaceBoundary2DFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceBoundary2DFB.txt[]
+include::{generated}/api/protos/xrGetSpaceBoundary2DFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -344,14 +343,14 @@ include::{generated}/api/protos/xrGetSpaceBoundary2DFB.txt[]
 Gets the 2D boundary, specified by vertices, for a spatial entity with the
 ename:XR_SPACE_COMPONENT_TYPE_BOUNDED_2D_FB component type enabled.
 
-include::{generated}/validity/protos/xrGetSpaceBoundary2DFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceBoundary2DFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceRoomLayoutFB',desc='Gets the room layout for a spatial entity',type='protos',xrefs='']
 --
 The flink:xrGetSpaceRoomLayoutFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceRoomLayoutFB.txt[]
+include::{generated}/api/protos/xrGetSpaceRoomLayoutFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -371,7 +370,7 @@ slink:XrRoomLayoutFB::pname:wallUuids array), or if
 flink:xrGetSpaceRoomLayoutFB returns failure, then the values of `floorUuid`
 and `ceilingUuid` are unspecified and should not be used.
 
-include::{generated}/validity/protos/xrGetSpaceRoomLayoutFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceRoomLayoutFB.adoc[]
 --
 
 *Issues*

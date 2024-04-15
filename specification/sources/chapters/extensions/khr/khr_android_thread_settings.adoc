@@ -42,7 +42,7 @@ elink:XrResult enumeration is extended with:
 The possible thread types are specified by the elink:XrAndroidThreadTypeKHR
 enumeration:
 
-include::{generated}/api/enums/XrAndroidThreadTypeKHR.txt[]
+include::{generated}/api/enums/XrAndroidThreadTypeKHR.adoc[]
 
 .Enumerants
 ****
@@ -67,7 +67,7 @@ include::{generated}/api/enums/XrAndroidThreadTypeKHR.txt[]
 To declare a thread to be of a certain elink:XrAndroidThreadTypeKHR type
 call:
 
-include::{generated}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
+include::{generated}/api/protos/xrSetAndroidApplicationThreadKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -85,7 +85,7 @@ include::{generated}/api/protos/xrSetAndroidApplicationThreadKHR.txt[]
 flink:xrSetAndroidApplicationThreadKHR allows to declare an XR-critical
 thread and to classify it.
 
-include::{generated}/validity/protos/xrSetAndroidApplicationThreadKHR.txt[]
+include::{generated}/validity/protos/xrSetAndroidApplicationThreadKHR.adoc[]
 --
 
 *Version History*

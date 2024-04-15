@@ -35,7 +35,7 @@ manifest to use this extension.
 
 [open,refpage='XrMarkerDetectorML',type='handles',desc='Represents a marker detector for one or more markers.']
 --
-include::{generated}/api/handles/XrMarkerDetectorML.txt[]
+include::{generated}/api/handles/XrMarkerDetectorML.adoc[]
 
 The slink:XrMarkerDetectorML handle represents the resources for detecting
 one or more markers.
@@ -53,7 +53,7 @@ extension.
 --
 The flink:xrCreateMarkerDetectorML function is defined as:
 
-include::{generated}/api/protos/xrCreateMarkerDetectorML.txt[]
+include::{generated}/api/protos/xrCreateMarkerDetectorML.adoc[]
 .Parameter Descriptions
 ****
 * pname:session is an slink:XrSession in which the marker detection will be
@@ -71,7 +71,7 @@ return ename:XR_ERROR_MARKER_DETECTOR_INVALID_CREATE_INFO_ML.
 If a runtime is unable to create a marker detector due to some internal
 limit, the runtime must: return ename:XR_ERROR_LIMIT_REACHED.
 
-include::{generated}/validity/protos/xrCreateMarkerDetectorML.txt[]
+include::{generated}/validity/protos/xrCreateMarkerDetectorML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorCreateInfoML',type='structs',desc='Information to create a marker detection handle',xrefs='xrCreateMarkerDetectorML']
@@ -79,7 +79,7 @@ include::{generated}/validity/protos/xrCreateMarkerDetectorML.txt[]
 
 The slink:XrMarkerDetectorCreateInfoML structure is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorCreateInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorCreateInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -90,7 +90,7 @@ include::{generated}/api/structs/XrMarkerDetectorCreateInfoML.txt[]
 * pname:markerType is the detector type that this tracker enables.
 ****
 
-include::{generated}/validity/structs/XrMarkerDetectorCreateInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorCreateInfoML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorProfileML',desc='The possible premade profiles for an slink:XrMarkerDetectorML',type='enums',xrefs='XrMarkerDetectorCreateInfoML']
@@ -98,18 +98,18 @@ include::{generated}/validity/structs/XrMarkerDetectorCreateInfoML.txt[]
 The possible premade profiles for an slink:XrMarkerDetectorML are specified
 by the elink:XrMarkerDetectorProfileML enumeration:
 
-include::{generated}/api/enums/XrMarkerDetectorProfileML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorProfileML.adoc[]
 
-include::{generated}/api/enums/XrMarkerDetectorProfileML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorProfileML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerTypeML',desc='The type of marker to be tracked by an slink:XrMarkerDetectorML',type='enums']
 --
 The type of marker to be tracked is specified via slink:XrMarkerDetectorML:
 
-include::{generated}/api/enums/XrMarkerTypeML.txt[]
+include::{generated}/api/enums/XrMarkerTypeML.adoc[]
 
-include::{generated}/api/enums/XrMarkerTypeML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerTypeML.comments-box.adoc[]
 --
 
 An application specifies details of the type of marker to be tracked by
@@ -149,7 +149,7 @@ omitted.
 The slink:XrMarkerDetectorArucoInfoML structure extends
 slink:XrMarkerDetectorCreateInfoML and is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorArucoInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorArucoInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -162,18 +162,18 @@ include::{generated}/api/structs/XrMarkerDetectorArucoInfoML.txt[]
 
 This structure is required by the ename:XR_MARKER_TYPE_ARUCO_ML detector.
 
-include::{generated}/validity/structs/XrMarkerDetectorArucoInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorArucoInfoML.adoc[]
 --
 
 [open,refpage='XrMarkerArucoDictML',desc='ArUco dictionaries',type='enums']
 --
 The elink:XrMarkerArucoDictML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerArucoDictML.txt[]
+include::{generated}/api/enums/XrMarkerArucoDictML.adoc[]
 
 Supported predefined ArUco dictionary:
 
-include::{generated}/api/enums/XrMarkerArucoDictML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerArucoDictML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorAprilTagInfoML',type='structs',desc='Information to create a marker detection handle for AprilTag markers',xrefs=xrefs='xrCreateMarkerDetectorML XrMarkerDetectorCreateInfoML']
@@ -182,7 +182,7 @@ include::{generated}/api/enums/XrMarkerArucoDictML.comments-box.txt[]
 The slink:XrMarkerDetectorAprilTagInfoML structure extends
 slink:XrMarkerDetectorCreateInfoML and is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorAprilTagInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorAprilTagInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -196,18 +196,18 @@ include::{generated}/api/structs/XrMarkerDetectorAprilTagInfoML.txt[]
 This structure is required by the ename:XR_MARKER_TYPE_APRIL_TAG_ML
 detector.
 
-include::{generated}/validity/structs/XrMarkerDetectorAprilTagInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorAprilTagInfoML.adoc[]
 --
 
 [open,refpage='XrMarkerAprilTagDictML',desc='AprilTag dictionaries',type='enums']
 --
 The elink:XrMarkerAprilTagDictML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerAprilTagDictML.txt[]
+include::{generated}/api/enums/XrMarkerAprilTagDictML.adoc[]
 
 Supported predefined AprilTag dictionary:
 
-include::{generated}/api/enums/XrMarkerAprilTagDictML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerAprilTagDictML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorSizeInfoML',type='structs',desc='Information to create a marker detection handle for QR markers',xrefs='xrCreateMarkerDetectorML XrMarkerDetectorCreateInfoML']
@@ -216,7 +216,7 @@ include::{generated}/api/enums/XrMarkerAprilTagDictML.comments-box.txt[]
 The slink:XrMarkerDetectorSizeInfoML structure extends
 slink:XrMarkerDetectorCreateInfoML and is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorSizeInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorSizeInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -232,14 +232,14 @@ pname:markerLength.
 This structure is used by ename:XR_MARKER_TYPE_ARUCO_ML,
 ename:XR_MARKER_TYPE_APRIL_TAG_ML, and ename:XR_MARKER_TYPE_QR_ML detectors.
 
-include::{generated}/validity/structs/XrMarkerDetectorSizeInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorSizeInfoML.adoc[]
 --
 
 [open,refpage='xrDestroyMarkerDetectorML',desc='Destroy a marker detection handle',type='protos',xrefs='xrCreateMarkerDetectorML XrMarkerDetectorML']
 --
 The flink:xrDestroyMarkerDetectorML function is defined as:
 
-include::{generated}/api/protos/xrDestroyMarkerDetectorML.txt[]
+include::{generated}/api/protos/xrDestroyMarkerDetectorML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -248,7 +248,7 @@ include::{generated}/api/protos/xrDestroyMarkerDetectorML.txt[]
 
 Destroy a marker detection handle.
 
-include::{generated}/validity/protos/xrDestroyMarkerDetectorML.txt[]
+include::{generated}/validity/protos/xrDestroyMarkerDetectorML.adoc[]
 --
 
 *Using a custom profile*
@@ -258,7 +258,7 @@ include::{generated}/validity/protos/xrDestroyMarkerDetectorML.txt[]
 The slink:XrMarkerDetectorCustomProfileInfoML structure extends
 slink:XrMarkerDetectorCreateInfoML and is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorCustomProfileInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorCustomProfileInfoML.adoc[]
 
 
 .Member Descriptions
@@ -294,38 +294,38 @@ CPU load due to marker tracking is a function of the chosen
 elink:XrMarkerTypeML, elink:XrMarkerDetectorFpsML, and
 elink:XrMarkerDetectorResolutionML.
 
-include::{generated}/validity/structs/XrMarkerDetectorCustomProfileInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorCustomProfileInfoML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorFpsML',desc='Framerate hint used with a custom profile',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
 --
 The elink:XrMarkerDetectorFpsML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerDetectorFpsML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorFpsML.adoc[]
 
 Used to hint to the back-end the max frames per second that should: be
 analyzed.
 
-include::{generated}/api/enums/XrMarkerDetectorFpsML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorFpsML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorResolutionML',desc='Resolution hint used with a custom profile',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
 --
 The elink:XrMarkerDetectorResolutionML enumeration is defined as:
-include::{generated}/api/enums/XrMarkerDetectorResolutionML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorResolutionML.adoc[]
 
 Used to hint to the back-end the resolution that should: be used.
 CPU load is a combination of chosen elink:XrMarkerTypeML,
 elink:XrMarkerDetectorFpsML, and elink:XrMarkerDetectorResolutionML.
 
-include::{generated}/api/enums/XrMarkerDetectorResolutionML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorResolutionML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorCameraML',desc='Camera hint',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
 --
 The elink:XrMarkerDetectorCameraML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerDetectorCameraML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorCameraML.adoc[]
 
 The elink:XrMarkerDetectorCameraML enum values are used to hint to the
 camera that should: be used.
@@ -338,27 +338,27 @@ detected from far away.
 ename:XR_MARKER_DETECTOR_CAMERA_WORLD_CAMERAS_ML make use of multiple
 cameras to improve accuracy and increase the FoV for detection.
 
-include::{generated}/api/enums/XrMarkerDetectorCameraML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorCameraML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorCornerRefineMethodML',desc='Corner Refinement Method.',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
 --
 The elink:XrMarkerDetectorCornerRefineMethodML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.adoc[]
 
 The ArUco/AprilTag detector comes with several corner refinement methods.
 Choosing the right corner refinement method has an impact on the accuracy
 and speed trade-off that comes with each detection pipeline.
 
-include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorCornerRefineMethodML.comments-box.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorFullAnalysisIntervalML',desc='Full Frame Analysis Time Interval.',type='enums',xrefs='XrMarkerDetectorCustomProfileInfoML']
 --
 The elink:XrMarkerDetectorFullAnalysisIntervalML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.adoc[]
 
 In order to improve performance, the detectors do not always run on the full
 frame.
@@ -367,7 +367,7 @@ detected before.
 Use this option to control how often the detector should: detect new markers
 and its impact on tracking performance.
 
-include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.comments-box.adoc[]
 --
 
 ==== Scanning for markers
@@ -375,7 +375,7 @@ include::{generated}/api/enums/XrMarkerDetectorFullAnalysisIntervalML.comments-b
 --
 The flink:xrSnapshotMarkerDetectorML function is defined as:
 
-include::{generated}/api/protos/xrSnapshotMarkerDetectorML.txt[]
+include::{generated}/api/protos/xrSnapshotMarkerDetectorML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -403,7 +403,7 @@ After each snapshot, only the currently detected markers are available for
 inspection, though the same marker may: repeatedly be detected across
 snapshots.
 
-include::{generated}/validity/protos/xrSnapshotMarkerDetectorML.txt[]
+include::{generated}/validity/protos/xrSnapshotMarkerDetectorML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorSnapshotInfoML',type='structs',desc='Marker snapshot parameters.',xrefs='xrSnapshotMarkerDetectorML']
@@ -411,7 +411,7 @@ include::{generated}/validity/protos/xrSnapshotMarkerDetectorML.txt[]
 
 The slink:XrMarkerDetectorSnapshotInfoML structure is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorSnapshotInfoML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorSnapshotInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -421,7 +421,7 @@ include::{generated}/api/structs/XrMarkerDetectorSnapshotInfoML.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::{generated}/validity/structs/XrMarkerDetectorSnapshotInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorSnapshotInfoML.adoc[]
 --
 
 
@@ -429,7 +429,7 @@ include::{generated}/validity/structs/XrMarkerDetectorSnapshotInfoML.txt[]
 --
 The flink:xrGetMarkerDetectorStateML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerDetectorStateML.txt[]
+include::{generated}/api/protos/xrGetMarkerDetectorStateML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -453,7 +453,7 @@ If flink:xrSnapshotMarkerDetectorML has not yet been called for the
 pname:markerDetector, the runtime must: return
 ename:XR_ERROR_CALL_ORDER_INVALID.
 
-include::{generated}/validity/protos/xrGetMarkerDetectorStateML.txt[]
+include::{generated}/validity/protos/xrGetMarkerDetectorStateML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorStateML',type='structs',desc='Marker state query parameters',xrefs='xrGetMarkerDetectorStateML XrMarkerDetectorStatusML']
@@ -461,7 +461,7 @@ include::{generated}/validity/protos/xrGetMarkerDetectorStateML.txt[]
 
 The slink:XrMarkerDetectorStateML structure is defined as:
 
-include::{generated}/api/structs/XrMarkerDetectorStateML.txt[]
+include::{generated}/api/structs/XrMarkerDetectorStateML.adoc[]
 
 .Member Descriptions
 ****
@@ -472,21 +472,21 @@ include::{generated}/api/structs/XrMarkerDetectorStateML.txt[]
 * pname:state is the current state of the marker detector.
 ****
 
-include::{generated}/validity/structs/XrMarkerDetectorStateML.txt[]
+include::{generated}/validity/structs/XrMarkerDetectorStateML.adoc[]
 --
 
 [open,refpage='XrMarkerDetectorStatusML',desc='Detector states',type='enums'xrefs='xrGetMarkerDetectorStateML XrMarkerDetectorStateML']
 --
 The elink:XrMarkerDetectorStatusML enumeration is defined as:
 
-include::{generated}/api/enums/XrMarkerDetectorStatusML.txt[]
+include::{generated}/api/enums/XrMarkerDetectorStatusML.adoc[]
 
 The elink:XrMarkerDetectorStatusML enumeration describes the current state
 of the marker detector.
 It is queried via flink:xrGetMarkerDetectorStateML to determine if the
 marker tracker is currently available for inspection.
 
-include::{generated}/api/enums/XrMarkerDetectorStatusML.comments-box.txt[]
+include::{generated}/api/enums/XrMarkerDetectorStatusML.comments-box.adoc[]
 --
 
 ==== Getting Marker Results
@@ -494,7 +494,7 @@ include::{generated}/api/enums/XrMarkerDetectorStatusML.comments-box.txt[]
 --
 The flink:xrGetMarkersML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkersML.txt[]
+include::{generated}/api/protos/xrGetMarkersML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -507,8 +507,8 @@ include::{generated}/api/protos/xrGetMarkersML.txt[]
   pname:markerCapacityInput is insufficient.
 * pname:markers is a pointer to an array of basetype:XrMarkerML atoms, but
   can: be code:NULL if propertyCapacityInput is `0`.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:markers size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:markers size.
 ****
 
 Get the list of current snapshotted marker atoms, must: only be called when
@@ -534,15 +534,15 @@ particular marker has gone in or out of view.
 Note that basetype:XrMarkerML atoms are only usable with the
 slink:XrMarkerDetectorML that returned them.
 
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:markers.
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:markers.
 
-include::{generated}/validity/protos/xrGetMarkersML.txt[]
+include::{generated}/validity/protos/xrGetMarkersML.adoc[]
 --
 
 [open,refpage='XrMarkerML',desc='Marker atom',type='basetypes',xrefs='xrGetMarkersML xrGetMarkerNumberML xrGetMarkerStringML xrGetMarkerReprojectionErrorML XrMarkerSpaceCreateInfoML']
 --
-include::{generated}/api/basetypes/XrMarkerML.txt[]
+include::{generated}/api/basetypes/XrMarkerML.adoc[]
 
 The unique marker key used to retrieve the data about detected markers.
 For an slink:XrMarkerDetectorML a runtime must: use the same value of
@@ -555,7 +555,7 @@ recent snapshot.
 --
 The flink:xrGetMarkerNumberML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerNumberML.txt[]
+include::{generated}/api/protos/xrGetMarkerNumberML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -580,14 +580,14 @@ ename:XR_ERROR_CALL_ORDER_INVALID.
 The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
 is invalid.
 
-include::{generated}/validity/protos/xrGetMarkerNumberML.txt[]
+include::{generated}/validity/protos/xrGetMarkerNumberML.adoc[]
 --
 
 [open,refpage='xrGetMarkerStringML',desc='Get string information from detected marker',type='protos',xrefs='xrGetMarkersML XrMarkerML']
 --
 The flink:xrGetMarkerStringML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerStringML.txt[]
+include::{generated}/api/protos/xrGetMarkerStringML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -602,8 +602,8 @@ include::{generated}/api/protos/xrGetMarkerStringML.txt[]
 * pname:buffer is a pointer to an application-allocated buffer that should:
   be filled with the QR code's contents.
   It can: be NULL if bufferCapacityInput is 0.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 Get the string value of a marker, such as the QR encoded string.
@@ -618,20 +618,20 @@ ename:XR_MARKER_DETECTOR_STATUS_READY_ML since the last invocation of
 flink:xrSnapshotMarkerDetectorML, the runtime must: return
 ename:XR_ERROR_CALL_ORDER_INVALID.
 
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:buffer.
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:buffer.
 
 The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
 is invalid.
 
-include::{generated}/validity/protos/xrGetMarkerStringML.txt[]
+include::{generated}/validity/protos/xrGetMarkerStringML.adoc[]
 --
 
 [open,refpage='xrGetMarkerReprojectionErrorML',desc='Get the reprojection error of a marker.',type='protos',xrefs='xrGetMarkersML XrMarkerML']
 --
 The flink:xrGetMarkerReprojectionErrorML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerReprojectionErrorML.txt[]
+include::{generated}/api/protos/xrGetMarkerReprojectionErrorML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -663,14 +663,14 @@ length.
 The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
 is invalid.
 
-include::{generated}/validity/protos/xrGetMarkerReprojectionErrorML.txt[]
+include::{generated}/validity/protos/xrGetMarkerReprojectionErrorML.adoc[]
 --
 
 [open,refpage='xrGetMarkerLengthML',desc='Query for the length of a marker',type='protos']
 --
 The flink:xrGetMarkerLengthML function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerLengthML.txt[]
+include::{generated}/api/protos/xrGetMarkerLengthML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -698,7 +698,7 @@ ename:XR_ERROR_CALL_ORDER_INVALID.
 The runtime must: return ename:XR_ERROR_MARKER_INVALID_ML if the marker atom
 is invalid.
 
-include::{generated}/validity/protos/xrGetMarkerLengthML.txt[]
+include::{generated}/validity/protos/xrGetMarkerLengthML.adoc[]
 --
 
 ==== Getting an XrSpace from Marker Results
@@ -707,7 +707,7 @@ include::{generated}/validity/protos/xrGetMarkerLengthML.txt[]
 --
 The flink:xrCreateMarkerSpaceML function is defined as:
 
-include::{generated}/api/protos/xrCreateMarkerSpaceML.txt[]
+include::{generated}/api/protos/xrCreateMarkerSpaceML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -762,7 +762,7 @@ marker with the positive Z axis coming out of the marker face.
 
 image::images/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
 
-include::{generated}/validity/protos/xrCreateMarkerSpaceML.txt[]
+include::{generated}/validity/protos/xrCreateMarkerSpaceML.adoc[]
 --
 
 [open,refpage='XrMarkerSpaceCreateInfoML',type='structs',desc='Specify marker space creation parameters',xrefs='xrCreateMarkerSpaceML XrMarkerML']
@@ -770,7 +770,7 @@ include::{generated}/validity/protos/xrCreateMarkerSpaceML.txt[]
 
 The slink:XrMarkerSpaceCreateInfoML structure is defined as:
 
-include::{generated}/api/structs/XrMarkerSpaceCreateInfoML.txt[]
+include::{generated}/api/structs/XrMarkerSpaceCreateInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -786,7 +786,7 @@ include::{generated}/api/structs/XrMarkerSpaceCreateInfoML.txt[]
   The origin of each marker is located at its center.
 ****
 
-include::{generated}/validity/structs/XrMarkerSpaceCreateInfoML.txt[]
+include::{generated}/validity/structs/XrMarkerSpaceCreateInfoML.adoc[]
 --
 
 ==== Example code for locating a marker
@@ -956,7 +956,7 @@ the elink:XrResult enumeration is extended with:
 
 The slink:XrSystemMarkerUnderstandingPropertiesML structure is defined as:
 
-include::{generated}/api/structs/XrSystemMarkerUnderstandingPropertiesML.txt[]
+include::{generated}/api/structs/XrSystemMarkerUnderstandingPropertiesML.adoc[]
 
 .Member Descriptions
 ****
@@ -967,7 +967,7 @@ include::{generated}/api/structs/XrSystemMarkerUnderstandingPropertiesML.txt[]
   tracking is supported by this system.
 ****
 
-include::{generated}/validity/structs/XrSystemMarkerUnderstandingPropertiesML.txt[]
+include::{generated}/validity/structs/XrSystemMarkerUnderstandingPropertiesML.adoc[]
 --
 
 *Version History*

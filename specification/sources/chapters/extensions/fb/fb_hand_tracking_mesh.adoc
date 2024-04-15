@@ -43,7 +43,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrVector4sFB structure is defined as:
 
-include::{generated}/api/structs/XrVector4sFB.txt[]
+include::{generated}/api/structs/XrVector4sFB.adoc[]
 
 This is a short integer, four component vector type, used for per-vertex
 joint indexing for mesh skinning.
@@ -56,7 +56,7 @@ joint indexing for mesh skinning.
 * pname:w is the `w` component of the vector.
 ****
 
-include::{generated}/validity/structs/XrVector4sFB.txt[]
+include::{generated}/validity/structs/XrVector4sFB.adoc[]
 --
 
 [open,refpage='XrHandTrackingMeshFB',type='structs',desc='A container of mesh data',xrefs='']
@@ -68,7 +68,7 @@ and one with index data.
 
 The slink:XrHandTrackingMeshFB structure is defined as:
 
-include::{generated}/api/structs/XrHandTrackingMeshFB.txt[]
+include::{generated}/api/structs/XrHandTrackingMeshFB.adoc[]
 
 .Member Descriptions
 ****
@@ -106,8 +106,9 @@ include::{generated}/api/structs/XrHandTrackingMeshFB.txt[]
   pname:jointCapacityInput, pname:vertexCapacityInput, or
   pname:indexCapacityInput is insufficient.
 * pname:indices is an array of triangle indices.
-* See the <<buffer-size-parameters>> section for a detailed description of
-  retrieving the array sizes in the "struct form" as used here.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the array sizes in the "struct form" as used
+  here.
 ****
 
 All arrays are application-allocated, and all may: be code:NULL if any of
@@ -119,7 +120,7 @@ the lifetime of the corresponding slink:XrInstance, and is intended to be
 retrieved once then used in combination with data changing per-frame
 retrieved from flink:xrLocateHandJointsEXT.
 
-include::{generated}/validity/structs/XrHandTrackingMeshFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingMeshFB.adoc[]
 --
 
 
@@ -135,7 +136,7 @@ transforms.
 
 The slink:XrHandTrackingScaleFB structure is defined as:
 
-include::{generated}/api/structs/XrHandTrackingScaleFB.txt[]
+include::{generated}/api/structs/XrHandTrackingScaleFB.adoc[]
 
 .Member Descriptions
 ****
@@ -157,7 +158,7 @@ include::{generated}/api/structs/XrHandTrackingScaleFB.txt[]
   give the joints in mesh binding scale.
 ****
 
-include::{generated}/validity/structs/XrHandTrackingScaleFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingScaleFB.adoc[]
 --
 
 *New Functions*
@@ -166,7 +167,7 @@ include::{generated}/validity/structs/XrHandTrackingScaleFB.txt[]
 --
 The flink:xrGetHandMeshFB function is defined as:
 
-include::{generated}/api/protos/xrGetHandMeshFB.txt[]
+include::{generated}/api/protos/xrGetHandMeshFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -181,7 +182,7 @@ hand joints.
 As discussed in the specification for that structure, the data enumerated by
 this call is constant during the lifetime of an slink:XrInstance.
 
-include::{generated}/validity/protos/xrGetHandMeshFB.txt[]
+include::{generated}/validity/protos/xrGetHandMeshFB.adoc[]
 --
 
 *Issues*

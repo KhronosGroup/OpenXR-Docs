@@ -51,7 +51,7 @@ apiext:XR_VARJO_composition_layer_depth_test.
 --
 The flink:xrSetEnvironmentDepthEstimationVARJO function is defined as:
 
-include::{generated}/api/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+include::{generated}/api/protos/xrSetEnvironmentDepthEstimationVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -65,7 +65,7 @@ include::{generated}/api/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
   ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND.
 ****
 
-include::{generated}/validity/protos/xrSetEnvironmentDepthEstimationVARJO.txt[]
+include::{generated}/validity/protos/xrSetEnvironmentDepthEstimationVARJO.adoc[]
 --
 
 *New Functions*

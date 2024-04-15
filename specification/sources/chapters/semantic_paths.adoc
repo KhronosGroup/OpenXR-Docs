@@ -1,7 +1,7 @@
 // Copyright (c) 2016-2024, The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
-[[semantic-path]]
+[[semantic-paths]]
 == Path Tree and Semantic Paths
 
 OpenXR incorporates an internal _semantic path tree_ model, also known as
@@ -59,12 +59,12 @@ call is available at the path at that later time.
 A runtime should: permit the entity referenced by a path to vary over time
 to naturally reflect varying system configuration and hardware availability.
 
-[[path-atom-type]]
+[[semantic-paths-path-atom-type]]
 === Path Atom Type
 
 [open,refpage='XrPath',desc='A semantic path',type='basetypes',xrefs='XR_NULL_PATH']
 --
-include::{generated}/api/basetypes/XrPath.txt[]
+include::{generated}/api/basetypes/XrPath.adoc[]
 
 The basetype:XrPath is an atom that connects an application with a single
 path, within the context of a single instance.
@@ -140,7 +140,7 @@ no more can be created.
 
 [open,refpage='XR_NULL_PATH',desc='A NULL semantic path',type='defines',xrefs='XrPath']
 --
-include::{generated}/api/defines/XR_NULL_PATH.txt[]
+include::{generated}/api/defines/XR_NULL_PATH.adoc[]
 
 The only basetype:XrPath value defined to be constant across all instances
 is the invalid path dlink:XR_NULL_PATH.
@@ -149,7 +149,7 @@ Unless explicitly permitted, it should: not be passed to API calls or used
 as a structure attribute when a valid basetype:XrPath is required.
 --
 
-[[well-formed-path-strings]]
+[[semantic-paths-well-formed]]
 === Well-Formed Path Strings
 
 Even though they look similar, semantic paths are not file paths.
@@ -183,7 +183,7 @@ A well-formed path name string must: conform to the following rules:
 --
 The flink:xrStringToPath function is defined as:
 
-include::{generated}/api/protos/xrStringToPath.txt[]
+include::{generated}/api/protos/xrStringToPath.adoc[]
 
 .Parameter Descriptions
 ****
@@ -205,7 +205,7 @@ All calls to this function with the same slink:XrInstance and path string
 must: retrieve the same basetype:XrPath value.
 Upon failure, flink:xrStringToPath must: return an appropriate
 elink:XrResult, and may: set the output parameter to dlink:XR_NULL_PATH.
-See <<path-atom-type, Path Atom Type>> for the conditions under which an
+See <<semantic-paths-path-atom-type>> for the conditions under which an
 error may: be returned when this function is given a valid slink:XrInstance
 and a well-formed path string.
 
@@ -222,13 +222,13 @@ retrieved basetype:XrPath maps to the given path string within and during
 the lifetime of the slink:XrInstance given.
 
 
-include::{generated}/validity/protos/xrStringToPath.txt[]
+include::{generated}/validity/protos/xrStringToPath.adoc[]
 --
 ==== xrPathToString
 
 [open,refpage='xrPathToString',desc='Converts a semantic path to a string',type='protos',xrefs='XrPath xrStringToPath']
 --
-include::{generated}/api/protos/xrPathToString.txt[]
+include::{generated}/api/protos/xrPathToString.adoc[]
 
 .Parameter Descriptions
 ****
@@ -244,8 +244,8 @@ include::{generated}/api/protos/xrPathToString.txt[]
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the semantic path string.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 flink:xrPathToString retrieves the path name string associated with an
@@ -263,11 +263,11 @@ For invalid paths, including dlink:XR_NULL_PATH, ename:XR_ERROR_PATH_INVALID
 must: be returned.
 
 
-include::{generated}/validity/protos/xrPathToString.txt[]
+include::{generated}/validity/protos/xrPathToString.adoc[]
 --
 
 
-[[semantic-path-reserved]]
+[[semantic-paths-reserved]]
 === Reserved Paths
 
 In order for some uses of semantic paths to work consistently across
@@ -277,7 +277,7 @@ usage.
 Those paths are as follows.
 
 
-[[semantic-path-user]]
+[[semantic-paths-user]]
 ==== /user paths
 
 Some paths are used to refer to entities that are filling semantic roles in
@@ -296,7 +296,7 @@ The reserved user paths are:
   the left hand.
 * pathname:/user/head represents inputs on the user's head, often from a
   device such as a head-mounted display.
-  To reason about the user's head, see the <<reference-spaces,
+  To reason about the user's head, see the <<spaces-reference-spaces,
   ename:XR_REFERENCE_SPACE_TYPE_VIEW>> reference space.
 * pathname:/user/gamepad is a two-handed gamepad device held by the user.
 * pathname:/user/treadmill is a treadmill or other locomotion-targeted input
@@ -317,7 +317,7 @@ If more than two hand-held controllers or devices are active, the runtime
 must: determine which two are accessible as pathname:/user/hand/left and
 pathname:/user/hand/right.
 
-[[semantic-path-input]]
+[[semantic-paths-input]]
 ==== Input subpaths
 
 Devices on the source side of the input system need to define paths for each
@@ -338,10 +338,10 @@ When specifying a suggested binding there are several cases where the
 component part of the path can be determined automatically.
 See <<input-suggested-bindings, Suggested Bindings>> for more details.
 
-See <<semantic-path-interaction-profiles, Interaction Profiles>> for
+See <<semantic-paths-interaction-profiles, Interaction Profiles>> for
 examples of input subpaths.
 
-[[semantic-path-standard-identifiers]]
+[[semantic-paths-standard-identifiers]]
 ===== Standard identifiers
 
 * trackpad - A 2D input source that usually includes click and touch
@@ -393,8 +393,20 @@ examples of input subpaths.
   Sources with this identifier should: either follow button or trigger
   conventions for their components.
 * wheel - A steering wheel.
+* thumb_resting_surfaces - Any surfaces that a thumb may naturally rest on.
+  This may include, but is not limited to, face buttons, thumbstick, and
+  thumbrest (Provided by `XR_VERSION_1_1`)
+* stylus - Tip that can be used for writing or drawing.
+  May be able to detect various pressure levels (Provided by
+  `XR_VERSION_1_1`)
+* trigger_curl - This sensor detects how pointed or curled the user's finger
+  is on the trigger: 0 = fully pointed, 1 = finger flat on surface (Provided
+  by `XR_VERSION_1_1`)
+* trigger_slide - This sensor represents how far the user is sliding their
+  index finger along the surface of the trigger: 0 = finger flat on the
+  surface, 1 = finger fully drawn back (Provided by `XR_VERSION_1_1`)
 
-[[semantic-path-standard-pose-identifiers]]
+[[semantic-paths-standard-pose-identifiers]]
 ===== Standard pose identifiers
 
 Input sources whose orientation and/or position are tracked also expose pose
@@ -405,9 +417,10 @@ represented by pathname:/user/hand/left and pathname:/user/hand/right are:
 
 image::images/grip_axes_diagram.png[align="center", title="Example grip and aim poses for generic motion controllers"]
 
-* grip - [[grip-pose]]A pose that allows applications to reliably render a
-  virtual object held in the user's hand, whether it is tracked directly or
-  by a motion controller.
+[[semantic-paths-grip-pose]]
+* grip - A pose that allows applications to reliably render a virtual object
+  held in the user's hand, whether it is tracked directly or by a motion
+  controller.
   The grip pose is defined as follows:
 ** The grip position:
 *** For tracked hands: The user's palm centroid when closing the fist, at
@@ -427,9 +440,10 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
 ** The grip orientation's +Y axis: orthogonal to +Z and +X using the
    right-hand rule.
 
-* aim - [[aim-pose]]A pose that allows applications to point in the world
-  using the input source, according to the platform's conventions for aiming
-  with that kind of source.
+[[semantic-paths-aim-pose]]
+* aim - A pose that allows applications to point in the world using the
+  input source, according to the platform's conventions for aiming with that
+  kind of source.
   The aim pose is defined as follows:
 ** For tracked hands: The ray that follows platform conventions for how the
    user aims at objects in the world with their entire hand, with +Y up, +X
@@ -446,6 +460,28 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
    The ray chosen will be runtime-dependent, although this will often emerge
    from the frontmost tip of a motion controller.
 
+[[semantic-paths-grip_surface-pose]]
+* grip_surface - (Provided by `XR_VERSION_1_1`) A pose that allows
+  applications to reliably anchor visual content relative to the user's
+  physical hand, whether the user's hand is tracked directly or its position
+  and orientation is inferred by a physical controller.
+  The grip_surface pose is defined as follows:
+
+** The grip_surface position: The user's physical palm centroid, at the
+   surface of the palm.
+   For the avoidance of doubt, the palm does not include fingers.
+** The grip_surface orientation's +X axis: When a user is holding the
+   controller and straightens their index fingers pointing forward, the ray
+   that is normal (perpendicular) to the user's palm (away from the palm in
+   the left hand, into the palm in the right hand).
+** The grip_surface orientation's -Z axis: When a user is holding the
+   controller and straightens their index finger, the ray that is parallel
+   to their finger's pointing direction.
+** The grip_surface orientation's +Y axis: orthogonal to +Z and +X using the
+   right-hand rule.
+
+image::images/palm_pose.png[align="center", title="Example grip_surface pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar. The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
+
 // Linking to the palm pose extension here is a special exception due to its
 // effect on existing interaction profiles and its anticipated widespread
 // availability. Do not add even conditional links to extensions in this
@@ -454,30 +490,30 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
 ifdef::XR_EXT_palm_pose[]
 [NOTE]
 .Note
-****
+====
 When the apiext:XR_EXT_palm_pose extension is available and enabled, an
 additional "palm_ext" standard pose identifier is available, and a path is
 added to all interaction profiles valid for pathname:/user/hand/left or
 pathname:/user/hand/right.
 This includes interaction profiles defined in the core spec and in
 extensions.
-****
+====
 endif::XR_EXT_palm_pose[]
 
 ifdef::XR_EXT_hand_interaction[]
 [NOTE]
 .Note
-****
+====
 When the apiext:XR_EXT_hand_interaction extension is available and enabled,
 additional "pinch_ext" and "poke_ext" standard pose identifiers are
 available, and a path is added to all interaction profiles valid for
 pathname:/user/hand/left or pathname:/user/hand/right.
 This includes interaction profiles defined in the core spec and in
 extensions.
-****
+====
 endif::XR_EXT_hand_interaction[]
 
-
+[[semantic-paths-standard-locations]]
 ===== Standard locations
 
 When a single device contains multiple input sources that use the same
@@ -495,6 +531,7 @@ Standard locations are:
 * upper
 * lower
 
+[[semantic-paths-standard-components]]
 ===== Standard components
 
 Components are named for the specific boolean, scalar, or other value of the
@@ -532,7 +569,19 @@ Standard components are:
   This component may: exist for dedicated pose identifiers like grip and
   aim, or may: be defined on other identifiers such as trackpad to let
   applications reason about the surface of that part.
+* proximity - The user is in physical proximity of input source.
+  This may: be present for any kind of input source representing a physical
+  component, such as a button, if the device includes the necessary sensor.
+  The state of a "proximity" component must: be ename:XR_TRUE if the same
+  input source is returning ename:XR_TRUE for either a "touch" or any other
+  component that implies physical contact.
+  The runtime may: return ename:XR_TRUE for "proximity" when "touch" returns
+  ename:XR_FALSE which would indicate that the user is hovering just above,
+  but not touching the input source in question.
+  "proximity" components are always boolean.
+  (Provided by `XR_VERSION_1_1`)
 
+[[semantic-paths-output-paths]]
 ===== Output paths
 
 Many devices also have subpaths for output features such as haptics.
@@ -545,6 +594,10 @@ Standard output identifiers are:
 
 * haptic - A haptic element like an LRA (Linear Resonant Actuator) or
   vibration motor
+* haptic_trigger - A haptic element located in the trigger (Provided by
+  `XR_VERSION_1_1`)
+* haptic_thumb - A haptic element located in the resting place of the thumb,
+  like under the touchpad (Provided by `XR_VERSION_1_1`)
 
 Devices which contain multiple haptic elements with the same output
 identifier must use a location suffix as specified above.
@@ -576,7 +629,7 @@ new identifier and location combination using the appropriate suffix.
 E.g. subpathname:/input/newidentifier_newlocation_ext
 
 
-[[semantic-path-interaction-profiles]]
+[[semantic-paths-interaction-profiles]]
 === Interaction Profile Paths
 
 An interaction profile path identifies a collection of buttons and other
@@ -595,12 +648,12 @@ Interaction profile paths are of the form:
 ifdef::XR_EXT_palm_pose[]
 [NOTE]
 .Note
-****
+====
 When the apiext:XR_EXT_palm_pose extension is available and enabled, an
 additional input component path is added to all core interaction profiles
 valid for pathname:/user/hand/left or pathname:/user/hand/right.
 See the extension for more details.
-****
+====
 endif::XR_EXT_palm_pose[]
 
 ==== Khronos Simple Controller Profile
@@ -626,28 +679,130 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== Bytedance PICO Neo 3 controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/bytedance/pico_neo3_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Bytedance PICO Neo3 Controller.
+
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+* subpathname:/input/menu/click
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== Bytedance PICO 4 controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/bytedance/pico4_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Bytedance PICO 4 Controller.
+
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+* subpathname:/input/system/click (may: not be available for application
+use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== Bytedance PICO G3 controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/bytedance/pico_g3_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Bytedance PICO G3 Controller.
+
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/menu/click
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/input/thumbstick
+* subpathname:/input/thumbstick/click
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
 [NOTE]
 .Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
-
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
-
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
-
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+====
+When designing suggested bindings for this interaction profile, you may:
+suggest bindings for both pathname:/user/hand/left and
+pathname:/user/hand/right.
+However, only one of them will be active at a given time, so do not design
+interactions that require simultaneous use of both hands.
+====
 
 ==== Google Daydream Controller Profile
 
@@ -671,28 +826,42 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
+==== HP Mixed Reality Motion Controller Profile
+(Provided by `XR_VERSION_1_1`)
 
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
+Path: pathname:/interaction_profiles/hp/mixed_reality_controller
 
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the HP
+Mixed Reality Motion Controller.
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/y/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/b/click
+* subpathname:/input/menu/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
 ==== HTC Vive Controller Profile
 
@@ -722,28 +891,90 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
+==== HTC Vive Cosmos Controller Profile
+(Provided by `XR_VERSION_1_1`)
 
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
+Path: pathname:/interaction_profiles/htc/vive_cosmos_controller
 
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Vive Cosmos Controller.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/y/click
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/b/click
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/shoulder/click
+* subpathname:/input/squeeze/click
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== HTC Vive Focus 3 Controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/htc/vive_focus3_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Vive Focus 3 Controller.
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/y/click
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/b/click
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/touch
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/value
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbrest/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
 ==== HTC Vive Pro Profile
 
@@ -763,6 +994,39 @@ Supported component paths:
 * subpathname:/input/volume_up/click
 * subpathname:/input/volume_down/click
 * subpathname:/input/mute_mic/click
+
+==== Magic Leap 2 Controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/ml/ml2_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Magic Leap 2 controller.
+
+Supported component paths:
+
+* subpathname:/input/menu/click
+* subpathname:/input/home/click (may: not be available for application use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trackpad/y
+* subpathname:/input/trackpad/x
+* subpathname:/input/trackpad/click
+* subpathname:/input/trackpad/force
+* subpathname:/input/trackpad/touch
+* subpathname:/input/aim/pose
+* subpathname:/input/grip/pose
+* subpathname:/input/shoulder/click
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
 ==== Microsoft Mixed Reality Motion Controller Profile
 
@@ -792,28 +1056,9 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
-
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
-
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
-
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
 ==== Microsoft Xbox Controller Profile
 
@@ -878,29 +1123,11 @@ Supported component paths:
 * subpathname:/input/grip/pose
 * subpathname:/input/aim/pose
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
-
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
-
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
-
+[[semantic-paths-oculus-touch-controller-profile]]
 ==== Oculus Touch Controller Profile
 
 Path: pathname:/interaction_profiles/oculus/touch_controller
@@ -931,6 +1158,9 @@ Supported component paths:
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
+* subpathname:/input/trigger/proximity (Provided by `XR_VERSION_1_1`)
+* subpathname:/input/thumb_resting_surfaces/proximity (Provided by
+  `XR_VERSION_1_1`)
 * subpathname:/input/thumbstick/x
 * subpathname:/input/thumbstick/y
 * subpathname:/input/thumbstick/click
@@ -940,28 +1170,296 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
+==== Meta Touch Pro Controller Profile
+(Provided by `XR_VERSION_1_1`)
 
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
+Path: pathname:/interaction_profiles/meta/touch_pro_controller
 
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Meta Touch Pro controller.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/proximity
+* subpathname:/input/trigger_curl/value
+* subpathname:/input/trigger_slide/value
+* subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbrest/touch
+* subpathname:/input/thumbrest/force
+* subpathname:/input/stylus/force
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+* subpathname:/output/haptic_trigger
+* subpathname:/output/haptic_thumb
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== Meta Touch Plus Controller Profile
+
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/meta/touch_plus_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Meta Touch Plus controller.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/force
+* subpathname:/input/trigger/proximity
+* subpathname:/input/trigger_curl/value
+* subpathname:/input/trigger_slide/value
+* subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbrest/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+[[semantic-paths-meta-touch-controller-rift-cv1-profile]]
+==== Meta Touch Controller (Rift CV1) Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/meta/touch_controller_rift_cv1
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Oculus Touch controller and is a legacy profile added to specifically
+represent the controller shipped with the Rift CV1.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/proximity
+* subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbrest/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+
+[[semantic-paths-meta-touch-controller-quest-1-rift-s-profile]]
+==== Meta Touch Controller (Rift S / Quest 1) Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/meta/touch_controller_quest_1_rift_s
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Oculus Touch controller and is a legacy profile added to specifically
+represent the controller shipped with the Rift S and Quest 1.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/proximity
+* subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+[[semantic-paths-meta-touch-controller-quest-2-profile]]
+==== Meta Touch Controller (Quest 2) Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/meta/touch_controller_quest_2
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Oculus Touch controller and is a legacy profile added to specifically
+represent the controller shipped with the Quest 2.
+
+Supported component paths:
+
+* On pathname:/user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On pathname:/user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+** subpathname:/input/system/click (may: not be available for application
+   use)
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/trigger/proximity
+* subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/thumbrest/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+==== Samsung Odyssey Controller Profile
+(Provided by `XR_VERSION_1_1`)
+
+Path: pathname:/interaction_profiles/samsung/odyssey_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile represents the input sources and haptics on the
+Samsung Odyssey Controller.
+It is exactly the same, with the exception of the name of the interaction
+profile, as the Microsoft Mixed Reality Controller interaction profile.
+It enables the application to differentiate the newer form factor of motion
+controller released with the Samsung Odyssey headset.
+It enables the application to customize the appearance and experience of the
+controller differently from the original
+<<_microsoft_mixed_reality_motion_controller_profile, mixed reality motion
+controller>>.
+
+Supported component paths:
+
+* subpathname:/input/menu/click
+* subpathname:/input/squeeze/click
+* subpathname:/input/trigger/value
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+* subpathname:/input/trackpad/x
+* subpathname:/input/trackpad/y
+* subpathname:/input/trackpad/click
+* subpathname:/input/trackpad/touch
+* subpathname:/input/grip/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
 
 ==== Valve Index Controller Profile
 
@@ -1002,25 +1500,6 @@ Supported component paths:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
-ifdef::XR_EXT_palm_pose[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_palm_pose extension is available and enabled, this
-interaction profile must: also support
-
-* subpathname:/input/palm_ext/pose
-****
-endif::XR_EXT_palm_pose[]
-
-ifdef::XR_EXT_hand_interaction[]
-[NOTE]
-.Note
-****
-When the apiext:XR_EXT_hand_interaction extension is available and enabled,
-this interaction profile must: also support
-
-* subpathname:/input/pinch_ext/pose
-* subpathname:/input/poke_ext/pose
-****
-endif::XR_EXT_hand_interaction[]
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]

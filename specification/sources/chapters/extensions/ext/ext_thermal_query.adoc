@@ -36,23 +36,23 @@ The most critical temperature of the domain is the one which is currently
 most likely to be relevant for thermal throttling. +
 
 To query the status of a given domain:
-include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.no-xref.txt[]
+include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.no-xref.adoc[]
 
-include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.adoc[]
 
-include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.adoc[]
 
 For the definition of the notification levels, see
-<<performance-settings-notification-levels>>
+<<ext_performance_settings-notification-levels>>.
 
-[thermal-early-warnings-api]
+[[ext_thermal_query-api]]
 ==== Thermal Query API Reference
 
 ===== [big]#xrThermalGetTemperatureTrendEXT#
 
 [open,refpage='xrThermalGetTemperatureTrendEXT',type='protos',desc='xrThermalGetTemperatureTrendEXT',xrefs='']
 --
-include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.txt[]
+include::{generated}/api/protos/xrThermalGetTemperatureTrendEXT.adoc[]
 Allows to query the current temperature warning level of a domain, the
 remaining headroom and the trend.
 
@@ -68,12 +68,12 @@ remaining headroom and the trend.
   most critical temperature of the domain.
 ****
 
-include::{generated}/validity/protos/xrThermalGetTemperatureTrendEXT.txt[]
+include::{generated}/validity/protos/xrThermalGetTemperatureTrendEXT.adoc[]
 --
 
-include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.adoc[]
 
-include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.adoc[]
 
 *Version History*
 

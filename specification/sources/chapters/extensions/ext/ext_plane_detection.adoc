@@ -33,7 +33,7 @@ flink:xrGetSystemProperties can: be used.
 slink:XrSystemPlaneDetectionPropertiesEXT provides information on the
 features supported by the runtime.
 
-include::{generated}/api/structs/XrSystemPlaneDetectionPropertiesEXT.txt[]
+include::{generated}/api/structs/XrSystemPlaneDetectionPropertiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -44,7 +44,7 @@ include::{generated}/api/structs/XrSystemPlaneDetectionPropertiesEXT.txt[]
   elink:XrPlaneDetectionCapabilityFlagBitsEXT.
 ****
 
-include::{generated}/validity/structs/XrSystemPlaneDetectionPropertiesEXT.txt[]
+include::{generated}/validity/structs/XrSystemPlaneDetectionPropertiesEXT.adoc[]
 --
 
 
@@ -54,7 +54,7 @@ The slink:XrSystemPlaneDetectionPropertiesEXT::pname:supportedFeatures
 member is of the following type, and contains a bitwise-OR of zero or more
 of the bits defined in elink:XrPlaneDetectionCapabilityFlagBitsEXT.
 
-include::{generated}/api/flags/XrPlaneDetectionCapabilityFlagsEXT.txt[]
+include::{generated}/api/flags/XrPlaneDetectionCapabilityFlagsEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectionCapabilityFlagBitsEXT',desc='Feature Flag Bits',type='enums',xrefs='XrPlaneDetectionCapabilityFlagsEXT']
@@ -62,11 +62,11 @@ include::{generated}/api/flags/XrPlaneDetectionCapabilityFlagsEXT.txt[]
 Valid bits for elink:XrPlaneDetectionCapabilityFlagsEXT are defined by
 elink:XrPlaneDetectionCapabilityFlagBitsEXT, which is specified as:
 
-include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.txt[]
+include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.comments.txt[]
+include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.comments.adoc[]
 
 --
 
@@ -75,7 +75,7 @@ include::{generated}/api/enums/XrPlaneDetectionCapabilityFlagBitsEXT.comments.tx
 
 [open,refpage='XrPlaneDetectorEXT',type='handles',desc='Represents a plane detector for one or more planes.']
 --
-include::{generated}/api/handles/XrPlaneDetectorEXT.txt[]
+include::{generated}/api/handles/XrPlaneDetectorEXT.adoc[]
 
 The slink:XrPlaneDetectorEXT handle represents the resources for detecting
 one or more planes.
@@ -92,7 +92,7 @@ Plane detection provides locations of planes in the scene.
 --
 The flink:xrCreatePlaneDetectorEXT function is defined as:
 
-include::{generated}/api/protos/xrCreatePlaneDetectorEXT.txt[]
+include::{generated}/api/protos/xrCreatePlaneDetectorEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -109,14 +109,14 @@ flink:xrCreatePlaneDetectorEXT function.
 If the system does not support plane detection, the runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreatePlaneDetectorEXT.
 
-include::{generated}/validity/protos/xrCreatePlaneDetectorEXT.txt[]
+include::{generated}/validity/protos/xrCreatePlaneDetectorEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorCreateInfoEXT',type='structs',desc='Information to create a plane detection handle',xrefs='xrCreatePlaneDetectorEXT']
 --
 The slink:XrPlaneDetectorCreateInfoEXT structure is defined as:
 
-include::{generated}/api/structs/XrPlaneDetectorCreateInfoEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorCreateInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -131,7 +131,7 @@ include::{generated}/api/structs/XrPlaneDetectorCreateInfoEXT.txt[]
 The slink:XrPlaneDetectorCreateInfoEXT structure describes the information
 to create an slink:XrPlaneDetectorEXT handle.
 
-include::{generated}/validity/structs/XrPlaneDetectorCreateInfoEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorCreateInfoEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorFlagsEXT',desc='Plane Detector flags',type='flags',xrefs='XrPlaneDetectorCreateInfoEXT XrPlaneDetectorFlagBitsEXT']
@@ -140,7 +140,7 @@ The slink:XrPlaneDetectorCreateInfoEXT::pname:flags member is of the
 following type, and contains a bitwise-OR of zero or more of the bits
 defined in elink:XrPlaneDetectorFlagBitsEXT.
 
-include::{generated}/api/flags/XrPlaneDetectorFlagsEXT.txt[]
+include::{generated}/api/flags/XrPlaneDetectorFlagsEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorFlagBitsEXT',desc='Plane Detector flags',type='enums',xrefs='XrPlaneDetectorFlagsEXT']
@@ -148,11 +148,11 @@ include::{generated}/api/flags/XrPlaneDetectorFlagsEXT.txt[]
 Valid bits for elink:XrPlaneDetectorFlagsEXT are defined by
 elink:XrPlaneDetectorFlagBitsEXT, which is specified as:
 
-include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.txt[]
+include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.comments.txt[]
+include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.comments.adoc[]
 --
 
 
@@ -160,7 +160,7 @@ include::{generated}/api/enums/XrPlaneDetectorFlagBitsEXT.comments.txt[]
 --
 The flink:xrDestroyPlaneDetectorEXT function is defined as:
 
-include::{generated}/api/protos/xrDestroyPlaneDetectorEXT.txt[]
+include::{generated}/api/protos/xrDestroyPlaneDetectorEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -171,7 +171,7 @@ include::{generated}/api/protos/xrDestroyPlaneDetectorEXT.txt[]
 flink:xrDestroyPlaneDetectorEXT function releases the pname:planeDetector
 and the underlying resources when finished with plane detection experiences.
 
-include::{generated}/validity/protos/xrDestroyPlaneDetectorEXT.txt[]
+include::{generated}/validity/protos/xrDestroyPlaneDetectorEXT.adoc[]
 --
 
 ==== Detecting planes
@@ -180,7 +180,7 @@ include::{generated}/validity/protos/xrDestroyPlaneDetectorEXT.txt[]
 --
 The flink:xrBeginPlaneDetectionEXT function is defined as:
 
-include::{generated}/api/protos/xrBeginPlaneDetectionEXT.txt[]
+include::{generated}/api/protos/xrBeginPlaneDetectionEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -218,7 +218,7 @@ The runtime must: return ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT if the
 slink:XrPlaneDetectorBeginInfoEXT::pname:baseSpace is not locatable at the
 time of the call.
 
-include::{generated}/validity/protos/xrBeginPlaneDetectionEXT.txt[]
+include::{generated}/validity/protos/xrBeginPlaneDetectionEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorBeginInfoEXT',type='structs',desc='Describes the information to detect planes',xrefs='xrBeginPlaneDetectionEXT']
@@ -226,7 +226,7 @@ include::{generated}/validity/protos/xrBeginPlaneDetectionEXT.txt[]
 The slink:XrPlaneDetectorBeginInfoEXT structure describes the information to
 detect planes.
 
-include::{generated}/api/structs/XrPlaneDetectorBeginInfoEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorBeginInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -267,7 +267,7 @@ include::{generated}/api/structs/XrPlaneDetectorBeginInfoEXT.txt[]
   clip the results to that internally.
 ****
 
-include::{generated}/validity/structs/XrPlaneDetectorBeginInfoEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorBeginInfoEXT.adoc[]
 --
 
 
@@ -275,7 +275,7 @@ include::{generated}/validity/structs/XrPlaneDetectorBeginInfoEXT.txt[]
 --
 The flink:xrGetPlaneDetectionStateEXT function is defined as:
 
-include::{generated}/api/protos/xrGetPlaneDetectionStateEXT.txt[]
+include::{generated}/api/protos/xrGetPlaneDetectionStateEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -300,14 +300,14 @@ For all three states the function must: return ename:XR_SUCCESS.
 When a query error occurs the function must: return ename:XR_SUCCESS and the
 appropriate error state value must: be set.
 
-include::{generated}/validity/protos/xrGetPlaneDetectionStateEXT.txt[]
+include::{generated}/validity/protos/xrGetPlaneDetectionStateEXT.adoc[]
 --
 
 [open,refpage='xrGetPlaneDetectionsEXT',type='protos',desc='Get the detected planes',xrefs='xrBeginPlaneDetectionEXT']
 --
 The flink:xrGetPlaneDetectionsEXT function is defined as:
 
-include::{generated}/api/protos/xrGetPlaneDetectionsEXT.txt[]
+include::{generated}/api/protos/xrGetPlaneDetectionsEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -346,7 +346,7 @@ If the slink:XrEventDataReferenceSpaceChangePending is queued and the
 changeTime elapsed while the application is holding cached data the
 application may: use the event data to adjusted poses accordingly.
 
-include::{generated}/validity/protos/xrGetPlaneDetectionsEXT.txt[]
+include::{generated}/validity/protos/xrGetPlaneDetectionsEXT.adoc[]
 --
 
 
@@ -355,7 +355,7 @@ include::{generated}/validity/protos/xrGetPlaneDetectionsEXT.txt[]
 slink:XrPlaneDetectorGetInfoEXT structure contains the information required
 to retrieve the detected planes.
 
-include::{generated}/api/structs/XrPlaneDetectorGetInfoEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorGetInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -368,7 +368,7 @@ include::{generated}/api/structs/XrPlaneDetectorGetInfoEXT.txt[]
   relative to the pname:baseSpace.
 ****
 
-include::{generated}/validity/structs/XrPlaneDetectorGetInfoEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorGetInfoEXT.adoc[]
 --
 
 
@@ -377,7 +377,7 @@ include::{generated}/validity/structs/XrPlaneDetectorGetInfoEXT.txt[]
 slink:XrPlaneDetectorLocationsEXT structure contains information on the
 detected planes.
 
-include::{generated}/api/structs/XrPlaneDetectorLocationsEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorLocationsEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -391,11 +391,11 @@ include::{generated}/api/structs/XrPlaneDetectorLocationsEXT.txt[]
   insufficient.
 * pname:planeLocations is an array of slink:XrPlaneDetectorLocationEXT.
   It can: be code:NULL if pname:planeLocationCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:planeLocations size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:planeLocations size.
 ****
 
-include::{generated}/validity/structs/XrPlaneDetectorLocationsEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorLocationsEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorLocationEXT',type='structs',desc='Describes the location of a plane',xrefs='xrGetPlaneDetectionsEXT']
@@ -403,7 +403,7 @@ include::{generated}/validity/structs/XrPlaneDetectorLocationsEXT.txt[]
 slink:XrPlaneDetectorLocationEXT structure describes the position and
 orientation of a plane.
 
-include::{generated}/api/structs/XrPlaneDetectorLocationEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorLocationEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -439,7 +439,7 @@ include::{generated}/api/structs/XrPlaneDetectorLocationEXT.txt[]
   at least 1.
 ****
 
-include::{generated}/validity/structs/XrPlaneDetectorLocationEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorLocationEXT.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorOrientationEXT',type='enums',desc='Orientation of the detected plane (upward, downward...)',xrefs='xrGetPlaneDetectionsEXT']
@@ -447,11 +447,11 @@ include::{generated}/validity/structs/XrPlaneDetectorLocationEXT.txt[]
 The elink:XrPlaneDetectorOrientationEXT enumeration identifies the different
 general categories of orientations of detected planes.
 
-include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.txt[]
+include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.adoc[]
 
 The enums have the following meanings:
 
-include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.comments.txt[]
+include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.comments.adoc[]
 --
 
 [open,refpage='XrPlaneDetectorSemanticTypeEXT',type='enums',desc='Type of the detected plane (upward, downward...)',xrefs='xrGetPlaneDetectionsEXT']
@@ -459,11 +459,11 @@ include::{generated}/api/enums/XrPlaneDetectorOrientationEXT.comments.txt[]
 The elink:XrPlaneDetectorSemanticTypeEXT enumeration identifies the
 different semantic types of detected planes.
 
-include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.txt[]
+include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.adoc[]
 
 The enums have the following meanings:
 
-include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.comments.txt[]
+include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.comments.adoc[]
 --
 
 
@@ -472,7 +472,7 @@ include::{generated}/api/enums/XrPlaneDetectorSemanticTypeEXT.comments.txt[]
 The elink:XrPlaneDetectionStateEXT enumeration identifies the possible
 states of the plane detector.
 
-include::{generated}/api/enums/XrPlaneDetectionStateEXT.txt[]
+include::{generated}/api/enums/XrPlaneDetectionStateEXT.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -501,7 +501,7 @@ include::{generated}/api/enums/XrPlaneDetectionStateEXT.txt[]
 --
 The flink:xrGetPlanePolygonBufferEXT function is defined as:
 
-include::{generated}/api/protos/xrGetPlanePolygonBufferEXT.txt[]
+include::{generated}/api/protos/xrGetPlanePolygonBufferEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -540,7 +540,7 @@ with it.
 This function only retrieves polygons, which means that it needs to be
 converted to a regular mesh to be rendered.
 
-include::{generated}/validity/protos/xrGetPlanePolygonBufferEXT.txt[]
+include::{generated}/validity/protos/xrGetPlanePolygonBufferEXT.adoc[]
 --
 
 
@@ -549,7 +549,7 @@ include::{generated}/validity/protos/xrGetPlanePolygonBufferEXT.txt[]
 slink:XrPlaneDetectorPolygonBufferEXT is an input/output structure for
 reading plane contour polygon vertices.
 
-include::{generated}/api/structs/XrPlaneDetectorPolygonBufferEXT.txt[]
+include::{generated}/api/structs/XrPlaneDetectorPolygonBufferEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -566,14 +566,14 @@ include::{generated}/api/structs/XrPlaneDetectorPolygonBufferEXT.txt[]
   pose.
 ****
 
-include::{generated}/validity/structs/XrPlaneDetectorPolygonBufferEXT.txt[]
+include::{generated}/validity/structs/XrPlaneDetectorPolygonBufferEXT.adoc[]
 --
 
 [open,refpage='XrExtent3DfEXT',desc='Extent in three dimensions',type='structs',xrefs='XrExtent2Df']
 --
 The slink:XrExtent3DfEXT structure is defined as:
 
-include::{generated}/api/structs/XrExtent3DfEXT.txt[]
+include::{generated}/api/structs/XrExtent3DfEXT.adoc[]
 
 .Member Descriptions
 ****

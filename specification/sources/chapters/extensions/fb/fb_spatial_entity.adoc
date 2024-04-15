@@ -28,7 +28,7 @@ slink:XrSpace handles to identify the affected spatial entities.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 This extension allows:
 
@@ -66,11 +66,11 @@ elink:XrResult enumeration is extended with:
 
 [open,refpage='XrSpaceComponentTypeFB',desc='Component type',type='enums']
 --
-include::{generated}/api/enums/XrSpaceComponentTypeFB.txt[]
+include::{generated}/api/enums/XrSpaceComponentTypeFB.adoc[]
 
 Specify the component interfaces attached to the spatial entity.
 
-include::{generated}/api/enums/XrSpaceComponentTypeFB.comments-box.txt[]
+include::{generated}/api/enums/XrSpaceComponentTypeFB.comments-box.adoc[]
 --
 
 *New Base Types*
@@ -79,7 +79,7 @@ include::{generated}/api/enums/XrSpaceComponentTypeFB.comments-box.txt[]
 --
 The basetype:XrAsyncRequestIdFB base type is defined as:
 
-include::{generated}/api/basetypes/XrAsyncRequestIdFB.txt[]
+include::{generated}/api/basetypes/XrAsyncRequestIdFB.adoc[]
 
 Represents a request to the spatial entity system.
 Several functions in this and other extensions will populate an output
@@ -93,7 +93,7 @@ specific request.
 --
 The slink:XrSystemSpatialEntityPropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrSystemSpatialEntityPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemSpatialEntityPropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -113,14 +113,14 @@ If a runtime returns ename:XR_FALSE for pname:supportsSpatialEntity, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrGetSpaceUuidFB.
 
-include::{generated}/validity/structs/XrSystemSpatialEntityPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemSpatialEntityPropertiesFB.adoc[]
 --
 
 [open,refpage='XrSpatialAnchorCreateInfoFB',type='structs',desc='Parameters to create a new spatial anchor',xrefs='']
 --
 The slink:XrSpatialAnchorCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorCreateInfoFB.txt[]
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -138,14 +138,14 @@ include::{generated}/api/structs/XrSpatialAnchorCreateInfoFB.txt[]
 
 Parameters to create a new spatial anchor.
 
-include::{generated}/validity/structs/XrSpatialAnchorCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceComponentStatusSetInfoFB',type='structs',desc='Request info to enable or disable an entity's component',xrefs='']
 --
 The slink:XrSpaceComponentStatusSetInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceComponentStatusSetInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceComponentStatusSetInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -158,20 +158,20 @@ include::{generated}/api/structs/XrSpaceComponentStatusSetInfoFB.txt[]
 * pname:timeout is the number of nanoseconds before the operation should be
   cancelled.
   A value of dlink:XR_INFINITE_DURATION indicates to never time out.
-  See <<duration>> for more details.
+  See <<fundamentals-duration>> for more details.
 ****
 
 Enables or disables the specified component for the specified spatial
 entity.
 
-include::{generated}/validity/structs/XrSpaceComponentStatusSetInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceComponentStatusSetInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceComponentStatusFB',type='structs',desc='Current status of an entity's component',xrefs='']
 --
 The slink:XrSpaceComponentStatusFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceComponentStatusFB.txt[]
+include::{generated}/api/structs/XrSpaceComponentStatusFB.adoc[]
 
 .Member Descriptions
 ****
@@ -187,14 +187,14 @@ include::{generated}/api/structs/XrSpaceComponentStatusFB.txt[]
 
 It holds information on the current state of a component.
 
-include::{generated}/validity/structs/XrSpaceComponentStatusFB.txt[]
+include::{generated}/validity/structs/XrSpaceComponentStatusFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpatialAnchorCreateCompleteFB',type='structs',desc='Result of request to create a new spatial anchor',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpatialAnchorCreateCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpatialAnchorCreateCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpatialAnchorCreateCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -217,14 +217,14 @@ ownership of the slink:XrSpace.
 The slink:XrSession passed into flink:xrCreateSpatialAnchorFB is the parent
 handle of the newly created slink:XrSpace.
 
-include::{generated}/validity/structs/XrEventDataSpatialAnchorCreateCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpatialAnchorCreateCompleteFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceSetStatusCompleteFB',type='structs',desc='Result of request to enable or disable a component',xrefs='']
 --
 The slink:XrEventDataSpaceSetStatusCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceSetStatusCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceSetStatusCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -246,7 +246,7 @@ include::{generated}/api/structs/XrEventDataSpaceSetStatusCompleteFB.txt[]
 It describes the result of a request to enable or disable a component of a
 spatial entity.
 
-include::{generated}/validity/structs/XrEventDataSpaceSetStatusCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceSetStatusCompleteFB.adoc[]
 --
 
 *New Functions*
@@ -255,7 +255,7 @@ include::{generated}/validity/structs/XrEventDataSpaceSetStatusCompleteFB.txt[]
 --
 The flink:xrCreateSpatialAnchorFB function is defined as:
 
-include::{generated}/api/protos/xrCreateSpatialAnchorFB.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -279,14 +279,14 @@ The pname:requestId can: be used to later refer to the request, such as
 identifying which request has completed when an
 slink:XrEventDataSpatialAnchorCreateCompleteFB is posted to the event queue.
 
-include::{generated}/validity/protos/xrCreateSpatialAnchorFB.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceUuidFB',desc='Gets an entity's unique identifier',type='protos',xrefs='']
 --
 The flink:xrGetSpaceUuidFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceUuidFB.txt[]
+include::{generated}/api/protos/xrGetSpaceUuidFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -301,14 +301,14 @@ in the event corresponding to the creation of that space.
 Subsequent calls to flink:xrGetSpaceUuidFB using the same slink:XrSpace
 must: return the same slink:XrUuidEXT.
 
-include::{generated}/validity/protos/xrGetSpaceUuidFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceUuidFB.adoc[]
 --
 
 [open,refpage='xrEnumerateSpaceSupportedComponentsFB',desc='Enumerates supported components for a given spatial entity',type='protos',xrefs='']
 --
 The flink:xrEnumerateSpaceSupportedComponentsFB function is defined as:
 
-include::{generated}/api/protos/xrEnumerateSpaceSupportedComponentsFB.txt[]
+include::{generated}/api/protos/xrEnumerateSpaceSupportedComponentsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -322,8 +322,8 @@ include::{generated}/api/protos/xrEnumerateSpaceSupportedComponentsFB.txt[]
 * pname:componentTypes is a pointer to an array of
   elink:XrSpaceComponentTypeFB values, but can: be code:NULL if
   pname:componentTypeCapacityInput is `0`.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:componentTypes size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:componentTypes size.
 ****
 
 Lists any component types that an entity supports.
@@ -332,14 +332,14 @@ extensions are enabled.
 Component types must: not be enumerated unless the corresponding extension
 that defines them is also enabled.
 
-include::{generated}/validity/protos/xrEnumerateSpaceSupportedComponentsFB.txt[]
+include::{generated}/validity/protos/xrEnumerateSpaceSupportedComponentsFB.adoc[]
 --
 
 [open,refpage='xrSetSpaceComponentStatusFB',desc='Enables or disables supported component interfaces for an entity',type='protos',xrefs='']
 --
 The flink:xrSetSpaceComponentStatusFB function is defined as:
 
-include::{generated}/api/protos/xrSetSpaceComponentStatusFB.txt[]
+include::{generated}/api/protos/xrSetSpaceComponentStatusFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -361,14 +361,14 @@ If this function returns a failure code, no event is posted.
 This function must: return ename:XR_ERROR_SPACE_COMPONENT_NOT_SUPPORTED_FB
 if the slink:XrSpace does not support the specified component type.
 
-include::{generated}/validity/protos/xrSetSpaceComponentStatusFB.txt[]
+include::{generated}/validity/protos/xrSetSpaceComponentStatusFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceComponentStatusFB',desc='Provides the current state of a component',type='protos',xrefs='']
 --
 The flink:xrGetSpaceComponentStatusFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceComponentStatusFB.txt[]
+include::{generated}/api/protos/xrGetSpaceComponentStatusFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -382,7 +382,7 @@ Gets the current status of the specified component for the specified entity.
 This function must: return ename:XR_ERROR_SPACE_COMPONENT_NOT_SUPPORTED_FB
 if the slink:XrSpace does not support the specified component type.
 
-include::{generated}/validity/protos/xrGetSpaceComponentStatusFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceComponentStatusFB.adoc[]
 --
 
 *Issues*

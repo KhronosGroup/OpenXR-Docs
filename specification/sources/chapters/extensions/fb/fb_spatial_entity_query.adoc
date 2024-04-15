@@ -25,7 +25,7 @@ results.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -47,11 +47,11 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrSpaceQueryActionFB',desc='Type of query being performed',type='enums']
 --
-include::{generated}/api/enums/XrSpaceQueryActionFB.txt[]
+include::{generated}/api/enums/XrSpaceQueryActionFB.adoc[]
 
 Specify the type of query being performed.
 
-include::{generated}/api/enums/XrSpaceQueryActionFB.comments-box.txt[]
+include::{generated}/api/enums/XrSpaceQueryActionFB.comments-box.adoc[]
 --
 
 *New Structures*
@@ -60,7 +60,7 @@ include::{generated}/api/enums/XrSpaceQueryActionFB.comments-box.txt[]
 --
 The slink:XrSpaceQueryInfoBaseHeaderFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceQueryInfoBaseHeaderFB.txt[]
+include::{generated}/api/structs/XrSpaceQueryInfoBaseHeaderFB.adoc[]
 .Member Descriptions
 ****
 * pname:type is the elink:XrStructureType of this structure.
@@ -78,14 +78,14 @@ slink:XrSpaceQueryInfoBaseHeaderFB, and a query info pointer must: be cast
 to a pointer to slink:XrSpaceQueryInfoBaseHeaderFB when passing it to the
 flink:xrQuerySpacesFB function.
 
-include::{generated}/validity/structs/XrSpaceQueryInfoBaseHeaderFB.txt[]
+include::{generated}/validity/structs/XrSpaceQueryInfoBaseHeaderFB.adoc[]
 --
 
 [open,refpage='XrSpaceFilterInfoBaseHeaderFB',type='structs',desc='Base structure for all query filter structures',xrefs='']
 --
 The slink:XrSpaceFilterInfoBaseHeaderFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceFilterInfoBaseHeaderFB.txt[]
+include::{generated}/api/structs/XrSpaceFilterInfoBaseHeaderFB.adoc[]
 
 .Member Descriptions
 ****
@@ -105,14 +105,14 @@ slink:XrSpaceQueryInfoFB::pname:filter and
 slink:XrSpaceQueryInfoFB::pname:excludeFilter to pass to the
 flink:xrQuerySpacesFB function.
 
-include::{generated}/validity/structs/XrSpaceFilterInfoBaseHeaderFB.txt[]
+include::{generated}/validity/structs/XrSpaceFilterInfoBaseHeaderFB.adoc[]
 --
 
 [open,refpage='XrSpaceQueryInfoFB',type='structs',desc='Query for entities and perform an action on any results',xrefs='XrSpaceQueryInfoBaseHeaderFB']
 --
 The slink:XrSpaceQueryInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceQueryInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceQueryInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -143,14 +143,14 @@ the criteria in pname:excludeFilter, must: be included in the results
 returned.
 This is to allow for a more selective style query.
 
-include::{generated}/validity/structs/XrSpaceQueryInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceQueryInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceStorageLocationFilterInfoFB',type='structs',desc='Describes where a spatial entity is stored',xrefs='']
 --
 The slink:XrSpaceStorageLocationFilterInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceStorageLocationFilterInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceStorageLocationFilterInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -165,14 +165,14 @@ Extends a query filter to limit a query to a specific storage location.
 Set the pname:next pointer of an slink:XrSpaceFilterInfoBaseHeaderFB to
 chain this extra filtering functionality.
 
-include::{generated}/validity/structs/XrSpaceStorageLocationFilterInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceStorageLocationFilterInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceUuidFilterInfoFB',type='structs',desc='Filters for entities with specific unique identifiers',xrefs='XrSpaceFilterInfoBaseHeaderFB XrSpaceQueryInfoFB']
 --
 The slink:XrSpaceUuidFilterInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceUuidFilterInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceUuidFilterInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -189,14 +189,14 @@ The slink:XrSpaceUuidFilterInfoFB structure is a filter an application can:
 use to find slink:XrSpace entities that match specified UUIDs, to include or
 exclude them from a query.
 
-include::{generated}/validity/structs/XrSpaceUuidFilterInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceUuidFilterInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceComponentFilterInfoFB',type='structs',desc='Filters for entities with specific components enabled',xrefs='XrSpaceFilterInfoBaseHeaderFB XrSpaceQueryInfoFB']
 --
 The slink:XrSpaceComponentFilterInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceComponentFilterInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceComponentFilterInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -211,14 +211,14 @@ The slink:XrSpaceComponentFilterInfoFB structure is a filter an application
 can: use to find slink:XrSpace entities which have the pname:componentType
 enabled, to include or exclude them from a query.
 
-include::{generated}/validity/structs/XrSpaceComponentFilterInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceComponentFilterInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceQueryResultFB',type='structs',desc='Query result',xrefs='']
 --
 The slink:XrSpaceQueryResultFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceQueryResultFB.txt[]
+include::{generated}/api/structs/XrSpaceQueryResultFB.adoc[]
 
 .Member Descriptions
 ****
@@ -231,14 +231,14 @@ The slink:XrSpaceQueryResultFB structure is a query result returned in the
 flink:xrRetrieveSpaceQueryResultsFB::pname:results output parameter of the
 flink:xrRetrieveSpaceQueryResultsFB function.
 
-include::{generated}/validity/structs/XrSpaceQueryResultFB.txt[]
+include::{generated}/validity/structs/XrSpaceQueryResultFB.adoc[]
 --
 
 [open,refpage='XrSpaceQueryResultsFB',type='structs',desc='Used to retrieve query results',xrefs='']
 --
 The slink:XrSpaceQueryResultsFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceQueryResultsFB.txt[]
+include::{generated}/api/structs/XrSpaceQueryResultsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -253,21 +253,21 @@ include::{generated}/api/structs/XrSpaceQueryResultsFB.txt[]
   pname:resultCapacityInput is insufficient.
 * pname:results is a pointer to an array of results, but can: be code:NULL
   if pname:resultCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:results size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:results size.
 ****
 
 The slink:XrSpaceQueryResultsFB structure is used by the
 flink:xrRetrieveSpaceQueryResultsFB function to retrieve query results.
 
-include::{generated}/validity/structs/XrSpaceQueryResultsFB.txt[]
+include::{generated}/validity/structs/XrSpaceQueryResultsFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceQueryResultsAvailableFB',type='structs',desc='Event indicating a query has produced results',xrefs='']
 --
 The slink:XrEventDataSpaceQueryResultsAvailableFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceQueryResultsAvailableFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceQueryResultsAvailableFB.adoc[]
 
 .Member Descriptions
 ****
@@ -283,14 +283,14 @@ If a query yields results this event must: be delivered before the
 slink:XrEventDataSpaceQueryCompleteFB event is delivered.
 Call flink:xrRetrieveSpaceQueryResultsFB to retrieve those results.
 
-include::{generated}/validity/structs/XrEventDataSpaceQueryResultsAvailableFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceQueryResultsAvailableFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceQueryCompleteFB',type='structs',desc='Event indicating a query has finished',xrefs='']
 --
 The slink:XrEventDataSpaceQueryCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceQueryCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceQueryCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -309,7 +309,7 @@ number of results found.
 If any results have been found, then this event must: be delivered after any
 slink:XrEventDataSpaceQueryResultsAvailableFB events have been delivered.
 
-include::{generated}/validity/structs/XrEventDataSpaceQueryCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceQueryCompleteFB.adoc[]
 --
 
 *New Functions*
@@ -318,7 +318,7 @@ include::{generated}/validity/structs/XrEventDataSpaceQueryCompleteFB.txt[]
 --
 The flink:xrQuerySpacesFB function is defined as:
 
-include::{generated}/api/protos/xrQuerySpacesFB.txt[]
+include::{generated}/api/protos/xrQuerySpacesFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -347,14 +347,14 @@ Once an slink:XrEventDataSpaceQueryResultsAvailableFB event has been posted,
 the application may: call flink:xrRetrieveSpaceQueryResultsFB to retrieve
 the available results.
 
-include::{generated}/validity/protos/xrQuerySpacesFB.txt[]
+include::{generated}/validity/protos/xrQuerySpacesFB.adoc[]
 --
 
 [open,refpage='xrRetrieveSpaceQueryResultsFB',desc='Copies query results into an output buffer',type='protos',xrefs='']
 --
 The flink:xrRetrieveSpaceQueryResultsFB function is defined as:
 
-include::{generated}/api/protos/xrRetrieveSpaceQueryResultsFB.txt[]
+include::{generated}/api/protos/xrRetrieveSpaceQueryResultsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -364,9 +364,9 @@ include::{generated}/api/protos/xrRetrieveSpaceQueryResultsFB.txt[]
   for.
 * pname:results is a pointer to an slink:XrSpaceQueryResultsFB to populate
   with results.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required size of the results in
-  this parameter.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required size of the results in this
+  parameter.
 ****
 
 Allows an application to retrieve all available results for a specified
@@ -383,7 +383,7 @@ pname:requestId refers to a request that is not yet complete, a request for
 which results have already been retrieved, or if pname:requestId does not
 refer to a known request.
 
-include::{generated}/validity/protos/xrRetrieveSpaceQueryResultsFB.txt[]
+include::{generated}/validity/protos/xrRetrieveSpaceQueryResultsFB.adoc[]
 --
 
 *Issues*

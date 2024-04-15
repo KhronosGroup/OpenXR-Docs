@@ -42,9 +42,9 @@ images acquired by calling flink:xrEnumerateSwapchainImages.
 In order to expose the structures, types, and functions of this extension,
 the application source code must: define
 dlink:XR_USE_GRAPHICS_API_OPENGL_ES, as well as an appropriate
-<<window-system-header-control,window system define>>, before including the
-OpenXR platform header `openxr_platform.h`, in all portions of your library
-or application that include it.
+<<appendix-window-system-header-control,window system define>>, before
+including the OpenXR platform header `openxr_platform.h`, in all portions of
+your library or application that include it.
 The only window system define currently supported by this extension is:
 
 * dlink:XR_USE_PLATFORM_ANDROID
@@ -96,7 +96,7 @@ These structures are only available when the corresponding
 --
 The slink:XrGraphicsBindingOpenGLESAndroidKHR structure is defined as:
 
-include::{generated}/api/structs/XrGraphicsBindingOpenGLESAndroidKHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingOpenGLESAndroidKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -117,14 +117,14 @@ of the slink:XrSessionCreateInfo.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_ANDROID.
 
-include::{generated}/validity/structs/XrGraphicsBindingOpenGLESAndroidKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingOpenGLESAndroidKHR.adoc[]
 --
 
 [open,refpage='XrSwapchainImageOpenGLESKHR',type='structs',desc='OpenGL ES-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
 The slink:XrSwapchainImageOpenGLESKHR structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainImageOpenGLESKHR.txt[]
+include::{generated}/api/structs/XrSwapchainImageOpenGLESKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -153,14 +153,14 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing up, near Z plane at -1, and far Z plane at 1.
 
-include::{generated}/validity/structs/XrSwapchainImageOpenGLESKHR.txt[]
+include::{generated}/validity/structs/XrSwapchainImageOpenGLESKHR.adoc[]
 --
 
 [open,refpage='XrGraphicsRequirementsOpenGLESKHR',type='structs',desc='OpenGL ES API version requirements',xrefs='xrGetOpenGLESGraphicsRequirementsKHR']
 --
 The slink:XrGraphicsRequirementsOpenGLESKHR structure is defined as:
 
-include::{generated}/api/structs/XrGraphicsRequirementsOpenGLESKHR.txt[]
+include::{generated}/api/structs/XrGraphicsRequirementsOpenGLESKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -183,7 +183,7 @@ slink:XrGraphicsRequirementsOpenGLESKHR is populated by
 flink:xrGetOpenGLESGraphicsRequirementsKHR with the runtime's OpenGL ES API
 version requirements.
 
-include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLESKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLESKHR.adoc[]
 --
 
 *New Functions*
@@ -193,7 +193,7 @@ include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLESKHR.txt[]
 To query OpenGL ES API version requirements for an instance and system,
 call:
 
-include::{generated}/api/protos/xrGetOpenGLESGraphicsRequirementsKHR.txt[]
+include::{generated}/api/protos/xrGetOpenGLESGraphicsRequirementsKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -214,7 +214,7 @@ on calls to flink:xrCreateSession if
 flink:xrGetOpenGLESGraphicsRequirementsKHR has not been called for the same
 pname:instance and pname:systemId.
 
-include::{generated}/validity/protos/xrGetOpenGLESGraphicsRequirementsKHR.txt[]
+include::{generated}/validity/protos/xrGetOpenGLESGraphicsRequirementsKHR.adoc[]
 --
 
 *Issues*

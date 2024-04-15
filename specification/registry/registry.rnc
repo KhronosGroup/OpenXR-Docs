@@ -254,7 +254,8 @@ EnumInEnums =
         mixed {
             attribute value { xsd:long },
             attribute name { XrUpperSnakeCase_t },
-            CommentAttr?
+            CommentAttr?,
+            attribute deprecated { "true" | "ignored" }?
         }
     }
 
@@ -268,7 +269,8 @@ BitmaskEnumInEnums =
     element enum {
         BitposAttr,
         attribute name { XrUpperSnakeCase_t },
-        CommentAttr?
+        CommentAttr?,
+        attribute deprecated { "true" | "ignored" }?
     }
 
 # <unused> defines a range of enumerants not currently being used
@@ -361,9 +363,11 @@ Feature =
         ProtectAttr?,
         CommentAttr?,
         (element require {
-             ExtensionNameAttr?,
+             DependsAttr?,
              CommentAttr?,
-             (InterfaceElement | CommentElt)*
+             (InterfaceElement
+              | CommentElt
+              | ExtendInteractionProfileElt)*
          }
          | element remove {
                CommentAttr?, (InterfaceElement | CommentElt)*
@@ -382,28 +386,29 @@ Extension =
         # attribute author { text }?,
         # attribute contact { text }?,
         attribute type { "instance" },
-        attribute requires { XrExtNameList_t }?,
-        # attribute requiresCore { text }?,
+        DependsAttr?,
         attribute supported { "openxr" | "disabled" }?,
         attribute promotedto { text }?,
-        # attribute deprecatedby { text }?,
-        # attribute obsoletedby { text }?,
+        attribute deprecatedby { text }?,
+        attribute obsoletedby { text }?,
         attribute provisional { "true" }?,
         CommentAttr?,
         (element require {
              attribute api { text }?,
              attribute feature { text }?,
-             ExtensionNameAttr?,
+             DependsAttr?,
              CommentAttr?,
-             (InterfaceElement | CommentElt | ExtendInteractionProfileElt)*
+             (InterfaceElement
+              | CommentElt
+              | ExtendInteractionProfileElt)*
          }
          | element remove {
                attribute api { text }?,
                CommentAttr?,
                (InterfaceElement | CommentElt)*
-           }
-           )*
+           })*
     }
+
 # Contents of a <require> / <remove> tag, defining a group
 # of features to require or remove.
 #
@@ -447,7 +452,7 @@ InterfaceElement =
               | attribute alias { XrUpperSnakeCase_t }),
              attribute extends { XrTypeNameRef_t },
              attribute dir { "-" }?,
-
+             attribute extnumber { xsd:unsignedInt }?,
              CommentAttr?)
           | (# Extending another bitmask
              attribute name { XrUpperSnakeCase_t },
@@ -486,10 +491,10 @@ XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 
 XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
-XrExtNameList_t =
+XrExtNameExpression_t =
     xsd:token {
         pattern =
-            "XR_[A-Z]+(_[A-Za-z0-9]+)+(,XR_[A-Z]+(_[A-Za-z0-9]+)+)*"
+            "XR_[A-Z]+(_[A-Za-z0-9]+)+([+,]XR_[A-Z]+(_[A-Za-z0-9]+)+)*"
     }
 
 XrPathString_t = xsd:token { pattern = "/[a-z0-9_]+(/[a-z0-9_]+)*" }
@@ -509,6 +514,7 @@ XrEntityName_t =
     XrUpperSnakeCase_t | XrFuncName_t | XrPFNName_t | XrTypeName_t
 
 # Repeatedly used attributes
+DependsAttr = attribute depends { XrExtNameExpression_t | "XR_VERSION_1_0" | "XR_VERSION_1_1"}
 ExtensionNameAttr = attribute extension { XrExtName_t }
 VendorAttr = attribute vendor { VendorIdRef_t }
 CommentAttr = attribute comment { text }
@@ -539,3 +545,4 @@ OptionalAttr = attribute optional { "true" }
 TypeRefElt = element type { xsd:NCName }
 ParamOrMemberNameElt = element name { MemberOrParamName_t }
 CommentElt = element comment { text }
+

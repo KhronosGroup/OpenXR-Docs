@@ -34,9 +34,9 @@ in order to use this extension.
 The elink:XrForceFeedbackCurlLocationMNDX describes which location to apply
 force feedback.
 
-include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.txt[]
+include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.adoc[]
 
-include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.comments-box.txt[]
+include::{generated}/api/enums/XrForceFeedbackCurlLocationMNDX.comments-box.adoc[]
 --
 
 *New Object Types*
@@ -61,7 +61,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrSystemForceFeedbackCurlPropertiesMNDX structure is defined as:
 
-include::{generated}/api/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
+include::{generated}/api/structs/XrSystemForceFeedbackCurlPropertiesMNDX.adoc[]
 
 .Member Descriptions
 ****
@@ -82,14 +82,14 @@ when force feedback is available in the system, otherwise ename:XR_FALSE.
 Force feedback calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
 force feedback is not available in the system.
 
-include::{generated}/validity/structs/XrSystemForceFeedbackCurlPropertiesMNDX.txt[]
+include::{generated}/validity/structs/XrSystemForceFeedbackCurlPropertiesMNDX.adoc[]
 --
 
 [open,refpage='XrForceFeedbackCurlApplyLocationsMNDX',type='structs',desc='Structure representing an array of locations to apply force feedback to',xrefs='xrApplyForceFeedbackCurlMNDX']
 --
 The slink:XrForceFeedbackCurlApplyLocationsMNDX structure is defined as:
 
-include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.adoc[]
 
 .Member Descriptions
 ****
@@ -106,14 +106,14 @@ include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
 Contains an array of slink:XrForceFeedbackCurlApplyLocationMNDX that
 contains information on locations to apply force feedback to.
 
-include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationsMNDX.txt[]
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationsMNDX.adoc[]
 --
 
 [open,refpage='XrForceFeedbackCurlApplyLocationMNDX',type='structs',desc='Structure representing and containing information on how to apply force feedback to a single location.',xrefs='xrApplyForceFeedbackCurlMNDX']
 --
 The slink:XrForceFeedbackCurlApplyLocationMNDX structure is defined as:
 
-include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
+include::{generated}/api/structs/XrForceFeedbackCurlApplyLocationMNDX.adoc[]
 
 .Member Descriptions
 ****
@@ -133,7 +133,7 @@ For example, if the value specified is 0.5, a location must: have free
 movement from the point where it would be incapable of movement if
 pname:value was 1, to 0.5 of the range the location is capable of moving.
 
-include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
+include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.adoc[]
 --
 
 *New Functions*
@@ -142,7 +142,7 @@ include::{generated}/validity/structs/XrForceFeedbackCurlApplyLocationMNDX.txt[]
 --
 The flink:xrApplyForceFeedbackCurlMNDX function is defined as:
 
-include::{generated}/api/protos/xrApplyForceFeedbackCurlMNDX.txt[]
+include::{generated}/api/protos/xrApplyForceFeedbackCurlMNDX.adoc[]
 
 .Parameter Descriptions
 ****
@@ -177,7 +177,7 @@ loses focus.
 An application should: call the function again after regaining focus if
 force feedback is still desired.
 
-include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.txt[]
+include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.adoc[]
 --
 
 *Issues*

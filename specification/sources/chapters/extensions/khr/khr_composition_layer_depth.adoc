@@ -23,7 +23,7 @@ slink:XrCompositionLayerProjection.
 The XR runtime may: use this information to perform more accurate
 reprojections taking depth into account.
 Use of this extension does not affect the order of layer composition as
-described in <<Compositing>>.
+described in <<rendering-compositing>>.
 
 *New Object Types*
 
@@ -47,7 +47,7 @@ slink:XrCompositionLayerProjectionView structures in the given layer.
 
 The slink:XrCompositionLayerDepthInfoKHR structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerDepthInfoKHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerDepthInfoKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -103,7 +103,7 @@ component with value 1.0.
 General homogeneous values are projected back to real space by dividing by
 the w component.
 
-include::{generated}/validity/structs/XrCompositionLayerDepthInfoKHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerDepthInfoKHR.adoc[]
 --
 
 *New Functions*

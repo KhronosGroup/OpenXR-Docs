@@ -17,13 +17,13 @@ used by the application to reference a user other than the current user.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
 [open,refpage='XrSpaceUserFB',type='handles',desc='Represents a user with which spaces can be shared']
 --
-include::{generated}/api/handles/XrSpaceUserFB.txt[]
+include::{generated}/api/handles/XrSpaceUserFB.adoc[]
 
 Represents a user with which the application can: interact using various
 extensions including apiext:XR_FB_spatial_entity_sharing.
@@ -46,7 +46,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The basetype:XrSpaceUserIdFB type is defined as:
 
-include::{generated}/api/basetypes/XrSpaceUserIdFB.txt[]
+include::{generated}/api/basetypes/XrSpaceUserIdFB.adoc[]
 
 An implementation-defined ID of the underlying user.
 --
@@ -57,7 +57,7 @@ An implementation-defined ID of the underlying user.
 --
 The slink:XrSpaceUserCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceUserCreateInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceUserCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -71,7 +71,7 @@ include::{generated}/api/structs/XrSpaceUserCreateInfoFB.txt[]
 The slink:XrSpaceUserCreateInfoFB structure describes a user with which the
 application can: interact.
 
-include::{generated}/validity/structs/XrSpaceUserCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceUserCreateInfoFB.adoc[]
 --
 
 *New Functions*
@@ -80,7 +80,7 @@ include::{generated}/validity/structs/XrSpaceUserCreateInfoFB.txt[]
 --
 The flink:xrCreateSpaceUserFB function is defined as:
 
-include::{generated}/api/protos/xrCreateSpaceUserFB.txt[]
+include::{generated}/api/protos/xrCreateSpaceUserFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -94,14 +94,14 @@ include::{generated}/api/protos/xrCreateSpaceUserFB.txt[]
 The application can: use this function to create a user handle with which it
 can: then interact, such as sharing slink:XrSpace objects.
 
-include::{generated}/validity/protos/xrCreateSpaceUserFB.txt[]
+include::{generated}/validity/protos/xrCreateSpaceUserFB.adoc[]
 --
 
 [open,refpage='xrGetSpaceUserIdFB',desc='Gets the user ID for a given user handle',type='protos',xrefs='']
 --
 The flink:xrGetSpaceUserIdFB function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceUserIdFB.txt[]
+include::{generated}/api/protos/xrGetSpaceUserIdFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -113,14 +113,14 @@ include::{generated}/api/protos/xrGetSpaceUserIdFB.txt[]
 The application can: use this function to retrieve the user ID of a given
 user handle.
 
-include::{generated}/validity/protos/xrGetSpaceUserIdFB.txt[]
+include::{generated}/validity/protos/xrGetSpaceUserIdFB.adoc[]
 --
 
 [open,refpage='xrDestroySpaceUserFB',desc='Destroys a user handle',type='protos',xrefs='']
 --
 The flink:xrDestroySpaceUserFB function is defined as:
 
-include::{generated}/api/protos/xrDestroySpaceUserFB.txt[]
+include::{generated}/api/protos/xrDestroySpaceUserFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -131,7 +131,7 @@ The application should: use this function to release resources tied to a
 given slink:XrSpaceUserFB once the application no longer needs to reference
 the user.
 
-include::{generated}/validity/protos/xrDestroySpaceUserFB.txt[]
+include::{generated}/validity/protos/xrDestroySpaceUserFB.adoc[]
 --
 
 *Issues*

@@ -76,7 +76,7 @@ a session.
 --
 The flink:xrSetViewOffsetVARJO function is defined as:
 
-include::{generated}/api/protos/xrSetViewOffsetVARJO.txt[]
+include::{generated}/api/protos/xrSetViewOffsetVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -101,7 +101,7 @@ active, a.k.a.
 in MR (ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND or
 ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE).
 
-include::{generated}/validity/protos/xrSetViewOffsetVARJO.txt[]
+include::{generated}/validity/protos/xrSetViewOffsetVARJO.adoc[]
 
 *Version History*
 

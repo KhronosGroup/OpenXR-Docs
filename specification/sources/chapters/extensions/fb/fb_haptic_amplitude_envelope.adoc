@@ -31,7 +31,7 @@ flink:xrApplyHapticFeedback.
 
 The slink:XrHapticAmplitudeEnvelopeVibrationFB structure is defined as:
 
-include::{generated}/api/structs/XrHapticAmplitudeEnvelopeVibrationFB.txt[]
+include::{generated}/api/structs/XrHapticAmplitudeEnvelopeVibrationFB.adoc[]
 
 This structure describes an amplitude envelope haptic effect.
 
@@ -41,7 +41,7 @@ This structure describes an amplitude envelope haptic effect.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
 * pname:duration is the duration of the haptic effect in nanoseconds.
-  See <<duration>> for more details.
+  See <<fundamentals-duration>> for more details.
 * pname:amplitudeCount is the number of samples in the buffer.
 * pname:amplitudes is the pointer to a float array that contains the
   samples.
@@ -53,7 +53,7 @@ dlink:XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB length.
 The resampling should: happen based on the pname:duration,
 pname:amplitudeCount, and the device's sample rate.
 
-include::{generated}/validity/structs/XrHapticAmplitudeEnvelopeVibrationFB.txt[]
+include::{generated}/validity/structs/XrHapticAmplitudeEnvelopeVibrationFB.adoc[]
 --
 
 
@@ -69,7 +69,7 @@ include::{generated}/validity/structs/XrHapticAmplitudeEnvelopeVibrationFB.txt[]
 
 [open,refpage='XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB',type='defines',desc='Maximum number of samples for Amplitude Envelope haptics',xrefs='']
 --
-include::{generated}/api/defines/XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB.txt[]
+include::{generated}/api/defines/XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB.adoc[]
 
 dlink:XR_MAX_HAPTIC_AMPLITUDE_ENVELOPE_SAMPLES_FB defines the maximum number
 of sample the runtime should: store in memory.

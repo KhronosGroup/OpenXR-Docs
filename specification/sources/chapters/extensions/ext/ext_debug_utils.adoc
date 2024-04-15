@@ -30,13 +30,13 @@ This extension provides the following capabilities:
   - The ability to identify specific OpenXR handles using a name to improve
     tracking.
 
-[[object-debug-annotation]]
+[[ext_debug_utils-object-debug-annotation]]
 ==== Object Debug Annotation
 
 It can be useful for an application to provide its own content relative to a
 specific OpenXR handle.
 
-[[object-naming]]
+[[ext_debug_utils-object-naming]]
 ===== Object Naming
 
 flink:xrSetDebugUtilsObjectNameEXT allows application developers to
@@ -52,7 +52,7 @@ calling flink:xrSetDebugUtilsObjectNameEXT again with a new string.
 If the objectName member of the slink:XrDebugUtilsObjectNameInfoEXT
 structure is an empty string, then any previously set name is removed.
 
-[[debug-messengers]]
+[[ext_debug_utils-debug-messengers]]
 ==== Debug Messengers
 
 OpenXR allows an application to register arbitrary number of callbacks with
@@ -73,7 +73,7 @@ Additionally, the debug messenger is responsible with filtering out debug
 messages that the callback isn't interested in and will only provide desired
 debug messages.
 
-[[debug-message-categorization]]
+[[ext_debug_utils-debug-message-categorization]]
 ==== Debug Message Categorization
 
 Messages that are triggered by the debug messenger are categorized by their
@@ -174,7 +174,7 @@ See the core_validation API Layer documentation for more information on how
 this can be done.
 
 
-[[session-labels]]
+[[ext_debug_utils-session-labels]]
 ==== Session Labels
 
 All OpenXR work is performed inside of an slink:XrSession.
@@ -213,7 +213,7 @@ flink:xrSessionEndDebugUtilsLabelRegionEXT overrides this value.
 
 [open,refpage='XrDebugUtilsMessengerEXT',type='handles',desc='Callback for debug data']
 --
-include::{generated}/api/handles/XrDebugUtilsMessengerEXT.txt[]
+include::{generated}/api/handles/XrDebugUtilsMessengerEXT.adoc[]
 
 slink:XrDebugUtilsMessengerEXT represents a callback function and associated
 filters registered with the runtime.
@@ -223,22 +223,22 @@ filters registered with the runtime.
 
 [open,refpage='XrDebugUtilsMessageSeverityFlagsEXT',type='flags',desc='XrDebugUtilsMessageSeverityFlagsEXT']
 --
-include::{generated}/api/flags/XrDebugUtilsMessageSeverityFlagsEXT.txt[]
+include::{generated}/api/flags/XrDebugUtilsMessageSeverityFlagsEXT.adoc[]
 --
 
 [open,refpage='XrDebugUtilsMessageSeverityFlagBitsEXT',type='enums',desc='XrDebugUtilsMessageSeverityFlagBitsEXT']
 --
-include::{generated}/api/enums/XrDebugUtilsMessageSeverityFlagBitsEXT.txt[]
+include::{generated}/api/enums/XrDebugUtilsMessageSeverityFlagBitsEXT.adoc[]
 --
 
 [open,refpage='XrDebugUtilsMessageTypeFlagsEXT',type='flags',desc='XrDebugUtilsMessageTypeFlagsEXT']
 --
-include::{generated}/api/flags/XrDebugUtilsMessageTypeFlagsEXT.txt[]
+include::{generated}/api/flags/XrDebugUtilsMessageTypeFlagsEXT.adoc[]
 --
 
 [open,refpage='XrDebugUtilsMessageTypeFlagBitsEXT',type='enums',desc='XrDebugUtilsMessageTypeFlagBitsEXT']
 --
-include::{generated}/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.txt[]
+include::{generated}/api/enums/XrDebugUtilsMessageTypeFlagBitsEXT.adoc[]
 --
 
 *New Enum Constants*
@@ -258,7 +258,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrDebugUtilsObjectNameInfoEXT',type='structs',desc='Debug utils object name info']
 --
-include::{generated}/api/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
+include::{generated}/api/structs/XrDebugUtilsObjectNameInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -281,13 +281,13 @@ include::{generated}/api/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
   pname:objectHandle must: be dlink:XR_NULL_HANDLE or an OpenXR handle of
   the type associated with pname:objectType
 ****
-include::{generated}/validity/structs/XrDebugUtilsObjectNameInfoEXT.txt[]
+include::{generated}/validity/structs/XrDebugUtilsObjectNameInfoEXT.adoc[]
 --
 
 
 [open,refpage='XrDebugUtilsLabelEXT',type='structs',desc='Debug Utils Label']
 --
-include::{generated}/api/structs/XrDebugUtilsLabelEXT.txt[]
+include::{generated}/api/structs/XrDebugUtilsLabelEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -299,12 +299,12 @@ include::{generated}/api/structs/XrDebugUtilsLabelEXT.txt[]
   label name.
 ****
 
-include::{generated}/validity/structs/XrDebugUtilsLabelEXT.txt[]
+include::{generated}/validity/structs/XrDebugUtilsLabelEXT.adoc[]
 --
 
 [open,refpage='XrDebugUtilsMessengerCallbackDataEXT',type='structs',desc='Debug utils messenger callback data']
 --
-include::{generated}/api/structs/XrDebugUtilsMessengerCallbackDataEXT.txt[]
+include::{generated}/api/structs/XrDebugUtilsMessengerCallbackDataEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -339,10 +339,10 @@ include::{generated}/api/structs/XrDebugUtilsMessengerCallbackDataEXT.txt[]
 * pname:sessionLabels is code:NULL or a pointer to an array of
   slink:XrDebugUtilsLabelEXT active in the current slink:XrSession at the
   time the callback was triggered.
-  Refer to <<session-labels,Session Labels>> for more information.
+  Refer to <<ext_debug_utils-session-labels>> for more information.
 ****
 
-include::{generated}/validity/structs/XrDebugUtilsMessengerCallbackDataEXT.txt[]
+include::{generated}/validity/structs/XrDebugUtilsMessengerCallbackDataEXT.adoc[]
 
 An slink:XrDebugUtilsMessengerCallbackDataEXT is a messenger object that
 handles passing along debug messages to a provided debug callback.
@@ -361,7 +361,7 @@ appearing last.
 
 [open,refpage='XrDebugUtilsMessengerCreateInfoEXT',type='structs',desc='Debug utils messenger create info']
 --
-include::{generated}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
+include::{generated}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -384,7 +384,7 @@ include::{generated}/api/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
 * pname:userCallback must: be a valid PFN_xrDebugUtilsMessengerCallbackEXT
 ****
 
-include::{generated}/validity/structs/XrDebugUtilsMessengerCreateInfoEXT.txt[]
+include::{generated}/validity/structs/XrDebugUtilsMessengerCreateInfoEXT.adoc[]
 
 For each slink:XrDebugUtilsMessengerEXT that is created the
 slink:XrDebugUtilsMessengerCreateInfoEXT::pname:messageSeverities and
@@ -432,7 +432,7 @@ application is making OpenXR calls from multiple threads.
 
 [open,refpage='xrSetDebugUtilsObjectNameEXT',type='protos',desc='Sets debug utils object name']
 --
-include::{generated}/api/protos/xrSetDebugUtilsObjectNameEXT.txt[]
+include::{generated}/api/protos/xrSetDebugUtilsObjectNameEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -452,7 +452,7 @@ include::{generated}/api/protos/xrSetDebugUtilsObjectNameEXT.txt[]
   dlink:XR_NULL_HANDLE
 ****
 
-include::{generated}/validity/protos/xrSetDebugUtilsObjectNameEXT.txt[]
+include::{generated}/validity/protos/xrSetDebugUtilsObjectNameEXT.adoc[]
 
 Applications may: change the name associated with an object simply by
 calling flink:xrSetDebugUtilsObjectNameEXT again with a new string.
@@ -462,7 +462,7 @@ then any previously set name is removed.
 
 [open,refpage='xrCreateDebugUtilsMessengerEXT',type='protos',desc='Creates a debug messenger',xrefs='XrDebugUtilsMessengerCreateInfoEXT xrDestroyDebugUtilsMessengerEXT']
 --
-include::{generated}/api/protos/xrCreateDebugUtilsMessengerEXT.txt[]
+include::{generated}/api/protos/xrCreateDebugUtilsMessengerEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -474,7 +474,7 @@ include::{generated}/api/protos/xrCreateDebugUtilsMessengerEXT.txt[]
   slink:XrDebugUtilsMessengerEXT object is returned.
 ****
 
-include::{generated}/validity/protos/xrCreateDebugUtilsMessengerEXT.txt[]
+include::{generated}/validity/protos/xrCreateDebugUtilsMessengerEXT.adoc[]
 
 The application must: ensure that flink:xrCreateDebugUtilsMessengerEXT is
 not executed in parallel with any OpenXR function that is also called with
@@ -490,7 +490,7 @@ slink:XrDebugUtilsMessengerCreateInfoEXT flags, as described below.
 
 [open,refpage='xrDestroyDebugUtilsMessengerEXT',type='protos',desc='Destroys a debug messenger',xrefs='xrCreateDebugUtilsMessengerEXT XrDebugUtilsMessengerEXT']
 --
-include::{generated}/api/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
+include::{generated}/api/protos/xrDestroyDebugUtilsMessengerEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -501,7 +501,7 @@ include::{generated}/api/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
   when a callback is active.
 ****
 
-include::{generated}/validity/protos/xrDestroyDebugUtilsMessengerEXT.txt[]
+include::{generated}/validity/protos/xrDestroyDebugUtilsMessengerEXT.adoc[]
 
 The application must: ensure that flink:xrDestroyDebugUtilsMessengerEXT is
 not executed in parallel with any OpenXR function that is also called with
@@ -510,7 +510,7 @@ the `instance` or child of `instance` that it was created with.
 
 [open,refpage='xrSubmitDebugUtilsMessageEXT',type='protos',desc='Submits debug utils message',xrefs='']
 --
-include::{generated}/api/protos/xrSubmitDebugUtilsMessageEXT.txt[]
+include::{generated}/api/protos/xrSubmitDebugUtilsMessageEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -532,7 +532,7 @@ include::{generated}/api/protos/xrSubmitDebugUtilsMessageEXT.txt[]
   ename:XR_OBJECT_TYPE_UNKNOWN
 ****
 
-include::{generated}/validity/protos/xrSubmitDebugUtilsMessageEXT.txt[]
+include::{generated}/validity/protos/xrSubmitDebugUtilsMessageEXT.adoc[]
 
 The application can: also produce a debug message, and submit it into the
 OpenXR messaging system.
@@ -545,7 +545,7 @@ value that was defined at the time the messenger was created.
 
 [open,refpage='xrSessionBeginDebugUtilsLabelRegionEXT',type='protos',desc='Session begin debug utils label region',xrefs='XrDebugUtilsLabelEXT']
 --
-include::{generated}/api/protos/xrSessionBeginDebugUtilsLabelRegionEXT.txt[]
+include::{generated}/api/protos/xrSessionBeginDebugUtilsLabelRegionEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -555,7 +555,7 @@ include::{generated}/api/protos/xrSessionBeginDebugUtilsLabelRegionEXT.txt[]
   information for the region that should be begun.
 ****
 
-include::{generated}/validity/protos/xrSessionBeginDebugUtilsLabelRegionEXT.txt[]
+include::{generated}/validity/protos/xrSessionBeginDebugUtilsLabelRegionEXT.adoc[]
 
 The flink:xrSessionBeginDebugUtilsLabelRegionEXT function begins a label
 region within pname:session.
@@ -563,7 +563,7 @@ region within pname:session.
 
 [open,refpage='xrSessionEndDebugUtilsLabelRegionEXT',type='protos',desc='Session end debug utils label region',xrefs='']
 --
-include::{generated}/api/protos/xrSessionEndDebugUtilsLabelRegionEXT.txt[]
+include::{generated}/api/protos/xrSessionEndDebugUtilsLabelRegionEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -577,7 +577,7 @@ include::{generated}/api/protos/xrSessionEndDebugUtilsLabelRegionEXT.txt[]
   matching flink:xrSessionBeginDebugUtilsLabelRegionEXT.
 ****
 
-include::{generated}/validity/protos/xrSessionEndDebugUtilsLabelRegionEXT.txt[]
+include::{generated}/validity/protos/xrSessionEndDebugUtilsLabelRegionEXT.adoc[]
 
 This function ends the last label region begun with the
 flink:xrSessionBeginDebugUtilsLabelRegionEXT function within the same
@@ -586,7 +586,7 @@ pname:session.
 
 [open,refpage='xrSessionInsertDebugUtilsLabelEXT',type='protos',desc='Session insert debug utils label',xrefs='xrSessionBeginDebugUtilsLabelRegionEXT xrSessionEndDebugUtilsLabelRegionEXT']
 --
-include::{generated}/api/protos/xrSessionInsertDebugUtilsLabelEXT.txt[]
+include::{generated}/api/protos/xrSessionInsertDebugUtilsLabelEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -596,7 +596,7 @@ include::{generated}/api/protos/xrSessionInsertDebugUtilsLabelEXT.txt[]
   information for the region that should be begun.
 ****
 
-include::{generated}/validity/protos/xrSessionInsertDebugUtilsLabelEXT.txt[]
+include::{generated}/validity/protos/xrSessionInsertDebugUtilsLabelEXT.adoc[]
 
 The flink:xrSessionInsertDebugUtilsLabelEXT function inserts an individual
 label within pname:session.
@@ -618,7 +618,7 @@ call to any of the label functions:
 
 [open,refpage='PFN_xrDebugUtilsMessengerCallbackEXT',type='funcpointers',desc='Type of callback function invoked by the debug utils',xrefs='xrCreateDebugUtilsMessengerEXT XrDebugUtilsMessengerCreateInfoEXT']
 --
-include::{generated}/api/funcpointers/PFN_xrDebugUtilsMessengerCallbackEXT.txt[]
+include::{generated}/api/funcpointers/PFN_xrDebugUtilsMessengerCallbackEXT.adoc[]
 
 .Parameter Descriptions
 ****

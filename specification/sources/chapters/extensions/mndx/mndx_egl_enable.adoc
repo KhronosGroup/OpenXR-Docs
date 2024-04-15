@@ -38,7 +38,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrGraphicsBindingEGLMNDX structure is defined as:
 
-include::{generated}/api/structs/XrGraphicsBindingEGLMNDX.txt[]
+include::{generated}/api/structs/XrGraphicsBindingEGLMNDX.adoc[]
 
 .Member Descriptions
 ****
@@ -60,7 +60,7 @@ chain of the slink:XrSessionCreateInfo.
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_EGL.
 
-include::{generated}/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingEGLMNDX.adoc[]
 --
 
 *New Functions*
@@ -69,7 +69,7 @@ include::{generated}/validity/structs/XrGraphicsBindingEGLMNDX.txt[]
 
 [open,refpage='PFN_xrEglGetProcAddressMNDX',type='funcpointers',desc='typedef of eglGetProcAddress',xrefs='']
 --
-include::{generated}/api/funcpointers/PFN_xrEglGetProcAddressMNDX.txt[]
+include::{generated}/api/funcpointers/PFN_xrEglGetProcAddressMNDX.adoc[]
 
 .Parameter Descriptions
 ****

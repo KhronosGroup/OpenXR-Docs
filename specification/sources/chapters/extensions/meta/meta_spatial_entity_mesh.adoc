@@ -30,7 +30,7 @@ entity.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 
 ==== Retrieving a triangle mesh
@@ -39,7 +39,7 @@ indicated in the <<extensions>> section.
 --
 The flink:xrGetSpaceTriangleMeshMETA function is defined as:
 
-include::{generated}/api/protos/xrGetSpaceTriangleMeshMETA.txt[]
+include::{generated}/api/protos/xrGetSpaceTriangleMeshMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -60,14 +60,14 @@ ename:XR_SPACE_COMPONENT_TYPE_TRIANGLE_MESH_META component type enabled,
 otherwise this function will return
 ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
 
-include::{generated}/validity/protos/xrGetSpaceTriangleMeshMETA.txt[]
+include::{generated}/validity/protos/xrGetSpaceTriangleMeshMETA.adoc[]
 --
 
 [open,refpage='XrSpaceTriangleMeshGetInfoMETA',type='structs',desc='Input parameter to the xrGetSpaceTriangleMeshMETA function',xrefs='']
 --
 The slink:XrSpaceTriangleMeshGetInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrSpaceTriangleMeshGetInfoMETA.txt[]
+include::{generated}/api/structs/XrSpaceTriangleMeshGetInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -77,14 +77,14 @@ include::{generated}/api/structs/XrSpaceTriangleMeshGetInfoMETA.txt[]
   No such structures are defined in core OpenXR or this extension.
 ****
 
-include::{generated}/validity/structs/XrSpaceTriangleMeshGetInfoMETA.txt[]
+include::{generated}/validity/structs/XrSpaceTriangleMeshGetInfoMETA.adoc[]
 --
 
 [open,refpage='XrSpaceTriangleMeshMETA',type='structs',desc='Output parameter to the xrGetSpaceTriangleMeshMETA function',xrefs='']
 --
 The slink:XrSpaceTriangleMeshMETA structure is defined as:
 
-include::{generated}/api/structs/XrSpaceTriangleMeshMETA.txt[]
+include::{generated}/api/structs/XrSpaceTriangleMeshMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -113,9 +113,9 @@ include::{generated}/api/structs/XrSpaceTriangleMeshMETA.txt[]
 * pname:indices is a pointer to an array of code:uint32_t, but can: be
   code:NULL if pname:indexCapacityInput is 0.
   Each element refers to a vertex in pname:vertices.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:vertices and
-  pname:indices array sizes.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:vertices and pname:indices
+  array sizes.
 ****
 
 The slink:XrSpaceTriangleMeshMETA structure can: be used by the application
@@ -126,7 +126,7 @@ The output values written in the pname:indices array represent indices of
 vertices: Three consecutive elements represent a triangle with a
 counter-clockwise winding order.
 
-include::{generated}/validity/structs/XrSpaceTriangleMeshMETA.txt[]
+include::{generated}/validity/structs/XrSpaceTriangleMeshMETA.adoc[]
 --
 
 

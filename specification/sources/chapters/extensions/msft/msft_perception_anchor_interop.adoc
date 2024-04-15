@@ -31,7 +31,7 @@ The flink:xrCreateSpatialAnchorFromPerceptionAnchorMSFT function creates a
 slink:XrSpatialAnchorMSFT handle from an `IUnknown` pointer to
 link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
 
-include::{generated}/api/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -57,7 +57,7 @@ using flink:xrDestroySpatialAnchorMSFT function.
 This also decrements the refcount of underlying windows perception anchor
 object.
 
-include::{generated}/validity/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorFromPerceptionAnchorMSFT.adoc[]
 --
 
 [open,refpage='xrTryGetPerceptionAnchorFromSpatialAnchorMSFT',type='protos',desc='Convert an slink:XrSpatialAnchorMSFT to a Windows SpatialAnchor',xrefs='']
@@ -66,7 +66,7 @@ The flink:xrTryGetPerceptionAnchorFromSpatialAnchorMSFT function converts a
 slink:XrSpatialAnchorMSFT handle into an `IUnknown` pointer to
 link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
 
-include::{generated}/api/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.txt[]
+include::{generated}/api/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -94,7 +94,7 @@ link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor
 object, the function must: return ename:XR_SUCCESS, and the output
 `IUnknown` in the pointer of pname:perceptionAnchor must: be code:NULL.
 
-include::{generated}/validity/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.txt[]
+include::{generated}/validity/protos/xrTryGetPerceptionAnchorFromSpatialAnchorMSFT.adoc[]
 --
 
 *New Object Types*

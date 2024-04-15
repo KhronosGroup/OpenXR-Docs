@@ -126,7 +126,7 @@ corresponding texture ids.
 
 The runtime must: refer to these textures in the returned glTF model by URIs
 in the following format: +
-`metaVirtualKeyboard://texture/{textureID}?w={width}&h={height}&fmt=RGBA32`
+`+metaVirtualKeyboard://texture/{textureID}?w={width}&h={height}&fmt=RGBA32+`
 
 The application should: retrieve new pixel data from the runtime with
 flink:xrGetVirtualKeyboardDirtyTexturesMETA and
@@ -165,7 +165,7 @@ keyboard's availability.
 --
 The slink:XrSystemVirtualKeyboardPropertiesMETA structure is defined as:
 
-include::{generated}/api/structs/XrSystemVirtualKeyboardPropertiesMETA.txt[]
+include::{generated}/api/structs/XrSystemVirtualKeyboardPropertiesMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -179,7 +179,7 @@ include::{generated}/api/structs/XrSystemVirtualKeyboardPropertiesMETA.txt[]
 
 The struct is used for checking virtual keyboard support.
 
-include::{generated}/validity/structs/XrSystemVirtualKeyboardPropertiesMETA.txt[]
+include::{generated}/validity/structs/XrSystemVirtualKeyboardPropertiesMETA.adoc[]
 --
 
 ==== Create a virtual keyboard
@@ -191,7 +191,7 @@ flink:xrCreateVirtualKeyboardMETA.
 --
 The flink:xrCreateVirtualKeyboardMETA function is defined as:
 
-include::{generated}/api/protos/xrCreateVirtualKeyboardMETA.txt[]
+include::{generated}/api/protos/xrCreateVirtualKeyboardMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -204,14 +204,14 @@ flink:xrCreateVirtualKeyboardMETA creates an slink:XrVirtualKeyboardMETA
 handle and establishes a keyboard within the runtime slink:XrSession.
 The returned virtual keyboard handle may: be subsequently used in API calls.
 
-include::{generated}/validity/protos/xrCreateVirtualKeyboardMETA.txt[]
+include::{generated}/validity/protos/xrCreateVirtualKeyboardMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardCreateInfoMETA',type='structs',desc='Virtual keyboard creation info',xrefs='']
 --
 The slink:XrVirtualKeyboardCreateInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardCreateInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardCreateInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -228,7 +228,7 @@ The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
 slink:XrSystemVirtualKeyboardPropertiesMETA::pname:supportsVirtualKeyboard
 is ename:XR_FALSE when checking the device compatibility.
 
-include::{generated}/validity/structs/XrVirtualKeyboardCreateInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardCreateInfoMETA.adoc[]
 --
 
 ==== Destroy the virtual keyboard
@@ -240,7 +240,7 @@ flink:xrDestroyVirtualKeyboardMETA.
 --
 The flink:xrDestroyVirtualKeyboardMETA function is defined as:
 
-include::{generated}/api/protos/xrDestroyVirtualKeyboardMETA.txt[]
+include::{generated}/api/protos/xrDestroyVirtualKeyboardMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -248,7 +248,7 @@ include::{generated}/api/protos/xrDestroyVirtualKeyboardMETA.txt[]
   to destroy.
 ****
 
-include::{generated}/validity/protos/xrDestroyVirtualKeyboardMETA.txt[]
+include::{generated}/validity/protos/xrDestroyVirtualKeyboardMETA.adoc[]
 --
 
 ==== Place the virtual keyboard
@@ -260,7 +260,7 @@ by calling flink:xrCreateVirtualKeyboardSpaceMETA.
 --
 The flink:xrCreateVirtualKeyboardSpaceMETA function is defined as:
 
-include::{generated}/api/protos/xrCreateVirtualKeyboardSpaceMETA.txt[]
+include::{generated}/api/protos/xrCreateVirtualKeyboardSpaceMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -281,14 +281,14 @@ keyboard's movement.
 The runtime must: return ename:XR_ERROR_HANDLE_INVALID if pname:session is
 different than what is used to create pname:keyboard.
 
-include::{generated}/validity/protos/xrCreateVirtualKeyboardSpaceMETA.txt[]
+include::{generated}/validity/protos/xrCreateVirtualKeyboardSpaceMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardSpaceCreateInfoMETA',type='structs',desc='Virtual keyboard space creation info',xrefs='']
 --
 The slink:XrVirtualKeyboardSpaceCreateInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardSpaceCreateInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardSpaceCreateInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -311,7 +311,7 @@ Otherwise, the runtime must: provide a default pose and ignore
 pname:poseInSpace.
 In all cases, the runtime must: default the scale to 1.0.
 
-include::{generated}/validity/structs/XrVirtualKeyboardSpaceCreateInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardSpaceCreateInfoMETA.adoc[]
 --
 
 ==== Move and scale the virtual keyboard
@@ -325,7 +325,7 @@ flink:xrSuggestVirtualKeyboardLocationMETA.
 --
 The flink:xrSuggestVirtualKeyboardLocationMETA function is defined as:
 
-include::{generated}/api/protos/xrSuggestVirtualKeyboardLocationMETA.txt[]
+include::{generated}/api/protos/xrSuggestVirtualKeyboardLocationMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -333,14 +333,14 @@ include::{generated}/api/protos/xrSuggestVirtualKeyboardLocationMETA.txt[]
 * pname:locationInfo is the desired slink:XrVirtualKeyboardLocationInfoMETA.
 ****
 
-include::{generated}/validity/protos/xrSuggestVirtualKeyboardLocationMETA.txt[]
+include::{generated}/validity/protos/xrSuggestVirtualKeyboardLocationMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardLocationInfoMETA',type='structs',desc='Virtual keyboard location info',xrefs='']
 --
 The slink:XrVirtualKeyboardLocationInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardLocationInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardLocationInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -365,7 +365,7 @@ the values pname:poseInSpace and pname:scale set by the application.
 Otherwise, the runtime must: provide a default pose and scale and ignore
 pname:poseInSpace and pname:scale.
 
-include::{generated}/validity/structs/XrVirtualKeyboardLocationInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardLocationInfoMETA.adoc[]
 --
 
 ==== Get the virtual keyboard scale
@@ -378,7 +378,7 @@ flink:xrGetVirtualKeyboardScaleMETA.
 --
 The flink:xrGetVirtualKeyboardScaleMETA function is defined as:
 
-include::{generated}/api/protos/xrGetVirtualKeyboardScaleMETA.txt[]
+include::{generated}/api/protos/xrGetVirtualKeyboardScaleMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -389,7 +389,7 @@ include::{generated}/api/protos/xrGetVirtualKeyboardScaleMETA.txt[]
 With both the pose and scale, the application has all the information to
 draw the virtual keyboard render model.
 
-include::{generated}/validity/protos/xrGetVirtualKeyboardScaleMETA.txt[]
+include::{generated}/validity/protos/xrGetVirtualKeyboardScaleMETA.adoc[]
 --
 
 ==== Show and hide the virtual keyboard
@@ -404,7 +404,7 @@ flink:xrSetVirtualKeyboardModelVisibilityMETA.
 --
 The flink:xrSetVirtualKeyboardModelVisibilityMETA function is defined as:
 
-include::{generated}/api/protos/xrSetVirtualKeyboardModelVisibilityMETA.txt[]
+include::{generated}/api/protos/xrSetVirtualKeyboardModelVisibilityMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -419,7 +419,7 @@ To get the actual visibility state of the render model, the application
 should: wait for the slink:XrEventDataVirtualKeyboardShownMETA and
 slink:XrEventDataVirtualKeyboardHiddenMETA events.
 
-include::{generated}/validity/protos/xrSetVirtualKeyboardModelVisibilityMETA.txt[]
+include::{generated}/validity/protos/xrSetVirtualKeyboardModelVisibilityMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardModelVisibilitySetInfoMETA',type='structs',desc='Virtual keyboard model visibility',xrefs='']
@@ -427,7 +427,7 @@ include::{generated}/validity/protos/xrSetVirtualKeyboardModelVisibilityMETA.txt
 The slink:XrVirtualKeyboardModelVisibilitySetInfoMETA structure is defined
 as:
 
-include::{generated}/api/structs/XrVirtualKeyboardModelVisibilitySetInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardModelVisibilitySetInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -439,7 +439,7 @@ include::{generated}/api/structs/XrVirtualKeyboardModelVisibilitySetInfoMETA.txt
   the keyboard.
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardModelVisibilitySetInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardModelVisibilitySetInfoMETA.adoc[]
 --
 
 ==== Update render model textures
@@ -458,7 +458,7 @@ reference.
 --
 The flink:xrGetVirtualKeyboardDirtyTexturesMETA function is defined as:
 
-include::{generated}/api/protos/xrGetVirtualKeyboardDirtyTexturesMETA.txt[]
+include::{generated}/api/protos/xrGetVirtualKeyboardDirtyTexturesMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -471,21 +471,21 @@ include::{generated}/api/protos/xrGetVirtualKeyboardDirtyTexturesMETA.txt[]
 * pname:textureIds is the array of texture IDs that need to be updated.
 ****
 
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:textureIds array.
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:textureIds array.
 Note that new texture data may be added after the runtime processes inputs
 from flink:xrSendVirtualKeyboardInputMETA.
 Therefore, after sending new keyboard inputs the application should: query
 the buffer size again before getting any texture data.
 
-include::{generated}/validity/protos/xrGetVirtualKeyboardDirtyTexturesMETA.txt[]
+include::{generated}/validity/protos/xrGetVirtualKeyboardDirtyTexturesMETA.adoc[]
 --
 
 [open,refpage='xrGetVirtualKeyboardTextureDataMETA',desc='Get the data to update a model texture',type='protos',xrefs='']
 --
 The flink:xrGetVirtualKeyboardTextureDataMETA function is defined as:
 
-include::{generated}/api/protos/xrGetVirtualKeyboardTextureDataMETA.txt[]
+include::{generated}/api/protos/xrGetVirtualKeyboardTextureDataMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -495,22 +495,22 @@ include::{generated}/api/protos/xrGetVirtualKeyboardTextureDataMETA.txt[]
 * pname:textureData is the returned slink:XrVirtualKeyboardTextureDataMETA.
 ****
 
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:textureData array in the
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:textureData array in the
 slink:XrVirtualKeyboardTextureDataMETA structure.
 Note that new texture data may be added after the runtime processes inputs
 from flink:xrSendVirtualKeyboardInputMETA.
 Therefore, after sending new keyboard inputs the application should: query
 the buffer size again before getting any texture data.
 
-include::{generated}/validity/protos/xrGetVirtualKeyboardTextureDataMETA.txt[]
+include::{generated}/validity/protos/xrGetVirtualKeyboardTextureDataMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardTextureDataMETA',type='structs',desc='Virtual keyboard texture data',xrefs='']
 --
 The slink:XrVirtualKeyboardTextureDataMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardTextureDataMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardTextureDataMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -530,7 +530,7 @@ include::{generated}/api/structs/XrVirtualKeyboardTextureDataMETA.txt[]
   VK_FORMAT_R8G8B8A8_UNORM in Vulkan).
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardTextureDataMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardTextureDataMETA.adoc[]
 --
 
 ==== Update render model animations
@@ -551,7 +551,7 @@ animation array index order.
 The flink:xrGetVirtualKeyboardModelAnimationStatesMETA function is defined
 as:
 
-include::{generated}/api/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.txt[]
+include::{generated}/api/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -560,22 +560,22 @@ include::{generated}/api/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.txt
   slink:XrVirtualKeyboardModelAnimationStatesMETA.
 ****
 
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:animationStates array in the
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:animationStates array in the
 slink:XrVirtualKeyboardModelAnimationStatesMETA structure.
 Note that new animations may be added after the runtime processes inputs
 from flink:xrSendVirtualKeyboardInputMETA.
 Therefore, after sending new keyboard inputs the application should: query
 the buffer size again before getting any animation data.
 
-include::{generated}/validity/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.txt[]
+include::{generated}/validity/protos/xrGetVirtualKeyboardModelAnimationStatesMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardAnimationStateMETA',type='structs',desc='State for a single animation',xrefs='']
 --
 The slink:XrVirtualKeyboardAnimationStateMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardAnimationStateMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardAnimationStateMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -589,14 +589,14 @@ include::{generated}/api/structs/XrVirtualKeyboardAnimationStateMETA.txt[]
   the animation.
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardAnimationStateMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardAnimationStateMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardModelAnimationStatesMETA',type='structs',desc='Virtual keyboard model animation states',xrefs='']
 --
 The slink:XrVirtualKeyboardModelAnimationStatesMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardModelAnimationStatesMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardModelAnimationStatesMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -613,7 +613,7 @@ include::{generated}/api/structs/XrVirtualKeyboardModelAnimationStatesMETA.txt[]
   apply to the model.
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardModelAnimationStatesMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardModelAnimationStatesMETA.adoc[]
 --
 
 ==== Send user input and text context
@@ -643,7 +643,7 @@ application's text context prior to the input cursor.
 --
 The flink:xrSendVirtualKeyboardInputMETA function is defined as:
 
-include::{generated}/api/protos/xrSendVirtualKeyboardInputMETA.txt[]
+include::{generated}/api/protos/xrSendVirtualKeyboardInputMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -666,14 +666,14 @@ etext:XR_VIRTUAL_KEYBOARD_INPUT_SOURCE_HAND_DIRECT_INDEX_TIP_*.
 Different input poses can be used to accommodate application specific
 controller or hand models.
 
-include::{generated}/validity/protos/xrSendVirtualKeyboardInputMETA.txt[]
+include::{generated}/validity/protos/xrSendVirtualKeyboardInputMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardInputInfoMETA',type='structs',desc='Virtual keyboard input info',xrefs='']
 --
 The slink:XrVirtualKeyboardInputInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrVirtualKeyboardInputInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardInputInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -693,14 +693,14 @@ include::{generated}/api/structs/XrVirtualKeyboardInputInfoMETA.txt[]
   state of the pname:inputSource.
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardInputInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardInputInfoMETA.adoc[]
 --
 
 [open,refpage='xrChangeVirtualKeyboardTextContextMETA',desc='Change virtual keyboard text context',type='protos',xrefs='']
 --
 The flink:xrChangeVirtualKeyboardTextContextMETA function is defined as:
 
-include::{generated}/api/protos/xrChangeVirtualKeyboardTextContextMETA.txt[]
+include::{generated}/api/protos/xrChangeVirtualKeyboardTextContextMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -709,7 +709,7 @@ include::{generated}/api/protos/xrChangeVirtualKeyboardTextContextMETA.txt[]
   detailing prior input text context to the runtime.
 ****
 
-include::{generated}/validity/protos/xrChangeVirtualKeyboardTextContextMETA.txt[]
+include::{generated}/validity/protos/xrChangeVirtualKeyboardTextContextMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardTextContextChangeInfoMETA',type='structs',desc='Virtual keyboard text context change info',xrefs='']
@@ -717,7 +717,7 @@ include::{generated}/validity/protos/xrChangeVirtualKeyboardTextContextMETA.txt[
 The slink:XrVirtualKeyboardTextContextChangeInfoMETA structure is defined
 as:
 
-include::{generated}/api/structs/XrVirtualKeyboardTextContextChangeInfoMETA.txt[]
+include::{generated}/api/structs/XrVirtualKeyboardTextContextChangeInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -729,7 +729,7 @@ include::{generated}/api/structs/XrVirtualKeyboardTextContextChangeInfoMETA.txt[
   input text context terminated with a null character.
 ****
 
-include::{generated}/validity/structs/XrVirtualKeyboardTextContextChangeInfoMETA.txt[]
+include::{generated}/validity/structs/XrVirtualKeyboardTextContextChangeInfoMETA.adoc[]
 --
 
 ==== Handling events
@@ -741,7 +741,7 @@ the runtime that reflects the state of the keyboard.
 --
 The slink:XrEventDataVirtualKeyboardCommitTextMETA structure is defined as:
 
-include::{generated}/api/structs/XrEventDataVirtualKeyboardCommitTextMETA.txt[]
+include::{generated}/api/structs/XrEventDataVirtualKeyboardCommitTextMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -758,14 +758,14 @@ the runtime when a character or string is input by the keyboard.
 The application should: append to the text field that the keyboard is
 editing.
 
-include::{generated}/validity/structs/XrEventDataVirtualKeyboardCommitTextMETA.txt[]
+include::{generated}/validity/structs/XrEventDataVirtualKeyboardCommitTextMETA.adoc[]
 --
 
 [open,refpage='XrEventDataVirtualKeyboardBackspaceMETA',type='structs',desc='Backspace key event',xrefs='xrPollEvent']
 --
 The slink:XrEventDataVirtualKeyboardBackspaceMETA structure is defined as:
 
-include::{generated}/api/structs/XrEventDataVirtualKeyboardBackspaceMETA.txt[]
+include::{generated}/api/structs/XrEventDataVirtualKeyboardBackspaceMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -780,14 +780,14 @@ The slink:XrEventDataVirtualKeyboardBackspaceMETA event must: be sent by the
 runtime when the [Backspace] key is pressed.
 The application should: update the text field that the keyboard is editing.
 
-include::{generated}/validity/structs/XrEventDataVirtualKeyboardBackspaceMETA.txt[]
+include::{generated}/validity/structs/XrEventDataVirtualKeyboardBackspaceMETA.adoc[]
 --
 
 [open,refpage='XrEventDataVirtualKeyboardEnterMETA',type='structs',desc='Enter key event',xrefs='xrPollEvent']
 --
 The slink:XrEventDataVirtualKeyboardEnterMETA structure is defined as:
 
-include::{generated}/api/structs/XrEventDataVirtualKeyboardEnterMETA.txt[]
+include::{generated}/api/structs/XrEventDataVirtualKeyboardEnterMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -802,14 +802,14 @@ The slink:XrEventDataVirtualKeyboardEnterMETA event must: be sent by the
 runtime when the [Enter] key is pressed.
 The application should: respond accordingly (e.g. newline, accept, etc).
 
-include::{generated}/validity/structs/XrEventDataVirtualKeyboardEnterMETA.txt[]
+include::{generated}/validity/structs/XrEventDataVirtualKeyboardEnterMETA.adoc[]
 --
 
 [open,refpage='XrEventDataVirtualKeyboardShownMETA',type='structs',desc='Keyboard shown event',xrefs='xrPollEvent']
 --
 The slink:XrEventDataVirtualKeyboardShownMETA structure is defined as:
 
-include::{generated}/api/structs/XrEventDataVirtualKeyboardShownMETA.txt[]
+include::{generated}/api/structs/XrEventDataVirtualKeyboardShownMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -825,14 +825,14 @@ runtime has shown the keyboard render model (via animation).
 The application should: update its state accordingly (e.g. update UI, pause
 simulation, etc).
 
-include::{generated}/validity/structs/XrEventDataVirtualKeyboardShownMETA.txt[]
+include::{generated}/validity/structs/XrEventDataVirtualKeyboardShownMETA.adoc[]
 --
 
 [open,refpage='XrEventDataVirtualKeyboardHiddenMETA',type='structs',desc='Keyboard hidden event',xrefs='xrPollEvent']
 --
 The slink:XrEventDataVirtualKeyboardHiddenMETA structure is defined as:
 
-include::{generated}/api/structs/XrEventDataVirtualKeyboardHiddenMETA.txt[]
+include::{generated}/api/structs/XrEventDataVirtualKeyboardHiddenMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -848,7 +848,7 @@ keyboard render model is hidden by the runtime (via animation).
 The application should: update its state accordingly (e.g. update UI, resume
 simulation, etc).
 
-include::{generated}/validity/structs/XrEventDataVirtualKeyboardHiddenMETA.txt[]
+include::{generated}/validity/structs/XrEventDataVirtualKeyboardHiddenMETA.adoc[]
 --
 
 ==== Example code for using virtual keyboard
@@ -1004,7 +1004,7 @@ CHK_XR(xrDestroyVirtualKeyboardMETA(keyboardHandle));
 
 [open,refpage='XrVirtualKeyboardMETA',type='handles',desc='Virtual Keyboard Instance']
 --
-include::{generated}/api/handles/XrVirtualKeyboardMETA.txt[]
+include::{generated}/api/handles/XrVirtualKeyboardMETA.adoc[]
 
 slink:XrVirtualKeyboardMETA represents a virtual keyboard instance.
 --
@@ -1013,13 +1013,13 @@ slink:XrVirtualKeyboardMETA represents a virtual keyboard instance.
 
 [open,refpage='XrVirtualKeyboardInputStateFlagsMETA',type='flags',desc='XrVirtualKeyboardInputStateFlagsMETA',xrefs='XrVirtualKeyboardInputStateFlagBitsMETA']
 --
-include::{generated}/api/flags/XrVirtualKeyboardInputStateFlagsMETA.txt[]
+include::{generated}/api/flags/XrVirtualKeyboardInputStateFlagsMETA.adoc[]
 --
 
 [open,refpage='XrVirtualKeyboardInputStateFlagBitsMETA',type='enums',desc='XrVirtualKeyboardInputStateFlagBitsMETA',xrefs='XrVirtualKeyboardInputStateFlagsMETA']
 --
-include::{generated}/api/enums/XrVirtualKeyboardInputStateFlagBitsMETA.txt[]
-include::{generated}/api/enums/XrVirtualKeyboardInputStateFlagBitsMETA.comments.txt[]
+include::{generated}/api/enums/XrVirtualKeyboardInputStateFlagBitsMETA.adoc[]
+include::{generated}/api/enums/XrVirtualKeyboardInputStateFlagBitsMETA.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -1053,7 +1053,7 @@ elink:XrStructureType enumeration is extended with:
 The possible location types are specified by the
 elink:XrVirtualKeyboardLocationTypeMETA enumeration:
 
-include::{generated}/api/enums/XrVirtualKeyboardLocationTypeMETA.txt[]
+include::{generated}/api/enums/XrVirtualKeyboardLocationTypeMETA.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -1074,8 +1074,8 @@ include::{generated}/api/enums/XrVirtualKeyboardLocationTypeMETA.txt[]
 The possible input sources are specified by the
 elink:XrVirtualKeyboardInputSourceMETA enumeration:
 
-include::{generated}/api/enums/XrVirtualKeyboardInputSourceMETA.txt[]
-include::{generated}/api/enums/XrVirtualKeyboardInputSourceMETA.comments.txt[]
+include::{generated}/api/enums/XrVirtualKeyboardInputSourceMETA.adoc[]
+include::{generated}/api/enums/XrVirtualKeyboardInputSourceMETA.comments.adoc[]
 --
 
 *New Structures*

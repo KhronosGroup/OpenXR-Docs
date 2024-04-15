@@ -34,7 +34,7 @@ passing in a layer with a swapchain handle dlink:XR_NULL_HANDLE.
 
 The slink:XrRecommendedLayerResolutionMETA structure is defined as:
 
-include::{generated}/api/structs/XrRecommendedLayerResolutionMETA.txt[]
+include::{generated}/api/structs/XrRecommendedLayerResolutionMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -53,7 +53,7 @@ If the runtime does not wish to make a recommendation, pname:isValid must:
 be ename:XR_FALSE and pname:recommendedImageDimensions must: be {0,0}.
 
 
-include::{generated}/validity/structs/XrRecommendedLayerResolutionMETA.txt[]
+include::{generated}/validity/structs/XrRecommendedLayerResolutionMETA.adoc[]
 
 --
 
@@ -63,7 +63,7 @@ include::{generated}/validity/structs/XrRecommendedLayerResolutionMETA.txt[]
 
 The slink:XrRecommendedLayerResolutionGetInfoMETA structure is defined as:
 
-include::{generated}/api/structs/XrRecommendedLayerResolutionGetInfoMETA.txt[]
+include::{generated}/api/structs/XrRecommendedLayerResolutionGetInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -85,7 +85,7 @@ returned from most recent flink:xrWaitFrame then, the runtime must: return
 ename:XR_ERROR_TIME_INVALID.
 
 
-include::{generated}/validity/structs/XrRecommendedLayerResolutionGetInfoMETA.txt[]
+include::{generated}/validity/structs/XrRecommendedLayerResolutionGetInfoMETA.adoc[]
 --
 
 *New Functions*
@@ -95,7 +95,7 @@ include::{generated}/validity/structs/XrRecommendedLayerResolutionGetInfoMETA.tx
 --
 The flink:xrGetRecommendedLayerResolutionMETA function is defined as:
 
-include::{generated}/api/protos/xrGetRecommendedLayerResolutionMETA.txt[]
+include::{generated}/api/protos/xrGetRecommendedLayerResolutionMETA.adoc[]
 
 .Parameter Descriptions
 ****

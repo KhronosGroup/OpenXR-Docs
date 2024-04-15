@@ -8,12 +8,12 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </comment>
 
     <tags>
-        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+        <tag name="EXT" author="Khronos" contact="Brent Insko @insko"/>
     </tags>
 
     <interaction_profiles>
 
-        <interaction_profile name="/interaction_profiles/khr/flux_compensator" title="Flux Compensator">
+        <interaction_profile name="/interaction_profiles/ext/flux_compensator" title="Flux Compensator">
             <user_path path="/user/hand/left"/>
             <user_path path="/user/hand/right"/>
             <component subpath="/input/menu/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
@@ -21,11 +21,11 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </interaction_profiles>
 
     <extensions>
-        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr">
+        <extension name="XR_EXT_loader_init" number="89" type="instance" supported="openxr">
             <require>
-                <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
-                <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
-                <interaction_profile name="/interaction_profiles/khr/flux_compensator"/>
+                <enum value="1" name="XR_EXT_loader_init_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_loader_init&quot;" name="XR_EXT_LOADER_INIT_EXTENSION_NAME"/>
+                <interaction_profile name="/interaction_profiles/ext/flux_compensator"/>
             </require>
         </extension>
     </extensions>

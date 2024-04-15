@@ -38,10 +38,18 @@ perform hand tracking for more complex use cases: the use of "palm" in the
 name is to reflect that it is a user-focused pose rather than a
 held-object-focused pose.
 
+[NOTE]
+.Note
+====
+OpenXR 1.1 replaces subpathname:/input/palm_ext/pose with
+subpathname:/input/grip_surface/pose.
+The definitions of both poses are identical.
+====
+
 *Pose Identifier*
 
 When this extension is active, a runtime must: behave as if the following
-were added to the list of <<semantic-path-standard-pose-identifiers>>.
+were added to the list of <<semantic-paths-standard-pose-identifiers>>.
 
 * palm_ext - a pose that allows applications to reliably anchor visual
   content relative to the user's physical hand, whether the user's hand is
@@ -63,6 +71,8 @@ were added to the list of <<semantic-path-standard-pose-identifiers>>.
 image::images/palm_pose.png[align="center", title="Example palm pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar). The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
 
 This pose is explicitly static for rigid controller type devices.
+The pose of subpathname:/input/palm_ext/pose and
+subpathname:/input/grip_surface/pose must: be identical.
 
 *Interaction Profile Additions*
 
@@ -86,7 +96,7 @@ Supported component paths:
 
 [NOTE]
 .Note
-****
+====
 While this extension itself does not add the
 subpathname:/input/palm_ext/pose input component path to interaction
 profiles defined in extensions, extension authors may: update existing
@@ -105,7 +115,7 @@ provide data or indicate an active binding.
 This behavior, while unexpected, does not violate the specification, and
 does not substantially increase the difficulty of providing additional input
 support using an API layer.
-****
+====
 
 *Version History*
 
@@ -114,4 +124,8 @@ support using an API layer.
 
 * Revision 2, 2022-05-18 (Lachlan Ford)
 ** Modification and cleanup of extension proposal based on working group
-   discussion
+   discussion.
+
+* Revision 3, 2023-11-16 (Ron Bessems)
+** Notes and clarification for the addition of
+   subpathname:/input/grip_surface/pose to the core spec in OpenXR 1.1.

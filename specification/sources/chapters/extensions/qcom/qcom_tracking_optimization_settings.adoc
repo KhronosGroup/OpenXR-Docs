@@ -39,14 +39,14 @@ elink:XrTrackingOptimizationSettingsHintQCOM.
 
 [open,refpage='XrTrackingOptimizationSettingsDomainQCOM',type='enums',desc='Domains to apply tracking optimization hints',xrefs='XrTrackingOptimizationSettingsHintQCOM xrSetTrackingOptimizationSettingsHintQCOM']
 --
-include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.txt[]
-include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.comments-box.txt[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.adoc[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.comments-box.adoc[]
 --
 
 [open,refpage='XrTrackingOptimizationSettingsHintQCOM',type='enums',desc='Hints for prioritizing different tracking goals',xrefs='XrTrackingOptimizationSettingsDomainQCOM xrSetTrackingOptimizationSettingsHintQCOM']
 --
-include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.txt[]
-include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.comments-box.txt[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.adoc[]
+include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.comments-box.adoc[]
 --
 
 
@@ -54,7 +54,7 @@ include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.comments-b
 --
 The flink:xrSetTrackingOptimizationSettingsHintQCOM function is defined as:
 
-include::{generated}/api/protos/xrSetTrackingOptimizationSettingsHintQCOM.txt[]
+include::{generated}/api/protos/xrSetTrackingOptimizationSettingsHintQCOM.adoc[]
 
 .Parameter Descriptions
 ****
@@ -83,7 +83,7 @@ ename:XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_NONE_QCOM was set.
 In this scenario, the runtime should: accommodate new valid hints that may:
 be set for the same domain.
 
-include::{generated}/validity/protos/xrSetTrackingOptimizationSettingsHintQCOM.txt[]
+include::{generated}/validity/protos/xrSetTrackingOptimizationSettingsHintQCOM.adoc[]
 --
 
 

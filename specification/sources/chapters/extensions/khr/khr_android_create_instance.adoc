@@ -40,7 +40,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrInstanceCreateInfoAndroidKHR structure is defined as:
 
-include::{generated}/api/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+include::{generated}/api/structs/XrInstanceCreateInfoAndroidKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -66,7 +66,7 @@ pname:next chain of the slink:XrInstanceCreateInfo structure when calling
 flink:xrCreateInstance.
 
 
-include::{generated}/validity/structs/XrInstanceCreateInfoAndroidKHR.txt[]
+include::{generated}/validity/structs/XrInstanceCreateInfoAndroidKHR.adoc[]
 --
 
 *New Functions*

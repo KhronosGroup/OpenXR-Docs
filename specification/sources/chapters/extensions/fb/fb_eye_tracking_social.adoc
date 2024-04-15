@@ -48,7 +48,7 @@ pname:isValid on the supplied slink:XrEyeGazeFB structure to ename:XR_TRUE.
 
 The slink:XrSystemEyeTrackingPropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrSystemEyeTrackingPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemEyeTrackingPropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -69,7 +69,7 @@ If a runtime returns ename:XR_FALSE for pname:supportsEyeTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateEyeTrackerFB.
 
-include::{generated}/validity/structs/XrSystemEyeTrackingPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemEyeTrackingPropertiesFB.adoc[]
 
 --
 
@@ -79,7 +79,7 @@ include::{generated}/validity/structs/XrSystemEyeTrackingPropertiesFB.txt[]
 --
 The slink:XrEyeTrackerFB handle represents the resources for eye tracking.
 
-include::{generated}/api/handles/XrEyeTrackerFB.txt[]
+include::{generated}/api/handles/XrEyeTrackerFB.adoc[]
 
 This handle is used for getting eye gaze using flink:xrGetEyeGazesFB
 function.
@@ -91,7 +91,7 @@ An eye tracker provides eye gaze directions.
 --
 An application creates an slink:XrEyeTrackerFB handle using
 flink:xrCreateEyeTrackerFB function.
-include::{generated}/api/protos/xrCreateEyeTrackerFB.txt[]
+include::{generated}/api/protos/xrCreateEyeTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -109,14 +109,14 @@ slink:XrSystemEyeTrackingPropertiesFB::pname:supportsEyeTracking when the
 function flink:xrGetSystemProperties is called, so that the application can:
 avoid creating an eye tracker.
 
-include::{generated}/validity/protos/xrCreateEyeTrackerFB.txt[]
+include::{generated}/validity/protos/xrCreateEyeTrackerFB.adoc[]
 --
 
 [open,refpage='XrEyeTrackerCreateInfoFB',type='structs',desc='Information to create an eye gaze handle',xrefs='']
 --
 The slink:XrEyeTrackerCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrEyeTrackerCreateInfoFB.txt[]
+include::{generated}/api/structs/XrEyeTrackerCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -129,7 +129,7 @@ include::{generated}/api/structs/XrEyeTrackerCreateInfoFB.txt[]
 The slink:XrEyeTrackerCreateInfoFB structure describes the information to
 create an slink:XrEyeTrackerFB handle.
 
-include::{generated}/validity/structs/XrEyeTrackerCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrEyeTrackerCreateInfoFB.adoc[]
 --
 
 ==== Destroy an eye tracker handle
@@ -139,7 +139,7 @@ include::{generated}/validity/structs/XrEyeTrackerCreateInfoFB.txt[]
 flink:xrDestroyEyeTrackerFB function releases the pname:eyeTracker and the
 underlying resources when the eye tracking experience is over.
 
-include::{generated}/api/protos/xrDestroyEyeTrackerFB.txt[]
+include::{generated}/api/protos/xrDestroyEyeTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -147,7 +147,7 @@ include::{generated}/api/protos/xrDestroyEyeTrackerFB.txt[]
   flink:xrCreateEyeTrackerFB.
 ****
 
-include::{generated}/validity/protos/xrDestroyEyeTrackerFB.txt[]
+include::{generated}/validity/protos/xrDestroyEyeTrackerFB.adoc[]
 --
 
 ==== Get eye gaze
@@ -157,7 +157,7 @@ include::{generated}/validity/protos/xrDestroyEyeTrackerFB.txt[]
 
 The flink:xrGetEyeGazesFB function is defined as:
 
-include::{generated}/api/protos/xrGetEyeGazesFB.txt[]
+include::{generated}/api/protos/xrGetEyeGazesFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -171,7 +171,7 @@ include::{generated}/api/protos/xrGetEyeGazesFB.txt[]
 The flink:xrGetEyeGazesFB function obtains pose for a user's eyes at a
 specific time and within a specific coordinate system.
 
-include::{generated}/validity/protos/xrGetEyeGazesFB.txt[]
+include::{generated}/validity/protos/xrGetEyeGazesFB.adoc[]
 --
 
 [open,refpage='XrEyeGazesInfoFB',type='structs',desc='Describes the information to get eye gaze',xrefs='xrGetEyeGazesFB']
@@ -179,7 +179,7 @@ include::{generated}/validity/protos/xrGetEyeGazesFB.txt[]
 The slink:XrEyeGazesInfoFB structure describes the information to get eye
 gaze directions.
 
-include::{generated}/api/structs/XrEyeGazesInfoFB.txt[]
+include::{generated}/api/structs/XrEyeGazesInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -198,14 +198,14 @@ for the rendered frame.
 The system will employ appropriate modeling to provide eye gaze at this
 time.
 
-include::{generated}/validity/structs/XrEyeGazesInfoFB.txt[]
+include::{generated}/validity/structs/XrEyeGazesInfoFB.adoc[]
 --
 
 [open,refpage='XrEyeGazesFB',type='structs',desc='Returns the eye gaze directions',xrefs='xrGetEyeGazesFB']
 --
 slink:XrEyeGazesFB structure returns the state of the eye gaze directions.
 
-include::{generated}/api/structs/XrEyeGazesFB.txt[]
+include::{generated}/api/structs/XrEyeGazesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -221,7 +221,7 @@ include::{generated}/api/structs/XrEyeGazesFB.txt[]
   at the time was successful.
 ****
 
-include::{generated}/validity/structs/XrEyeGazesFB.txt[]
+include::{generated}/validity/structs/XrEyeGazesFB.adoc[]
 --
 
 [open,refpage='XrEyeGazeFB',type='structs',desc='Describes the eye gaze direction',xrefs='XrEyeGazesFB']
@@ -229,7 +229,7 @@ include::{generated}/validity/structs/XrEyeGazesFB.txt[]
 slink:XrEyeGazeFB structure describes the validity, direction, and
 confidence of a social eye gaze observation.
 
-include::{generated}/api/structs/XrEyeGazeFB.txt[]
+include::{generated}/api/structs/XrEyeGazeFB.adoc[]
 
 .Member Descriptions
 ****
@@ -256,7 +256,7 @@ The eye gaze pose is natively oriented with +Y up, +X to the right, and -Z
 forward and not gravity-aligned, similar to the
 ename:XR_REFERENCE_SPACE_TYPE_VIEW.
 
-include::{generated}/validity/structs/XrEyeGazeFB.txt[]
+include::{generated}/validity/structs/XrEyeGazeFB.adoc[]
 --
 
 [open,refpage='XrEyePositionFB',type='enums',desc='Enumerates eyes.',xrefs='XrEyeGazesFB']
@@ -264,9 +264,9 @@ include::{generated}/validity/structs/XrEyeGazeFB.txt[]
 The elink:XrEyePositionFB describes which eye in the specific position of
 the pname:gaze is in the slink:XrEyeGazesFB.
 
-include::{generated}/api/enums/XrEyePositionFB.txt[]
+include::{generated}/api/enums/XrEyePositionFB.adoc[]
 
-include::{generated}/api/enums/XrEyePositionFB.comments-box.txt[]
+include::{generated}/api/enums/XrEyePositionFB.comments-box.adoc[]
 --
 
 ==== Example code for locating eye gaze

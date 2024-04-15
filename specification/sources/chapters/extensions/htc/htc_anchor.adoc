@@ -26,7 +26,7 @@ real world.
 --
 The slink:XrSystemAnchorPropertiesHTC structure is defined as:
 
-include::{generated}/api/structs/XrSystemAnchorPropertiesHTC.txt[]
+include::{generated}/api/structs/XrSystemAnchorPropertiesHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -44,14 +44,14 @@ the slink:XrSystemProperties when calling flink:xrGetSystemProperties.
 The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
 slink:XrSystemAnchorPropertiesHTC::pname:supportsAnchor was ename:XR_FALSE.
 
-include::{generated}/validity/structs/XrSystemAnchorPropertiesHTC.txt[]
+include::{generated}/validity/structs/XrSystemAnchorPropertiesHTC.adoc[]
 --
 
 [open,refpage='xrCreateSpatialAnchorHTC',desc='Creates a spatial anchor',type='protos']
 --
 The flink:xrCreateSpatialAnchorHTC function is defined as:
 
-include::{generated}/api/protos/xrCreateSpatialAnchorHTC.txt[]
+include::{generated}/api/protos/xrCreateSpatialAnchorHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -68,14 +68,14 @@ via flink:xrLocateSpace.
 Once the anchor is no longer needed, call flink:xrDestroySpace to erase the
 anchor.
 
-include::{generated}/validity/protos/xrCreateSpatialAnchorHTC.txt[]
+include::{generated}/validity/protos/xrCreateSpatialAnchorHTC.adoc[]
 --
 
 [open,refpage='XrSpatialAnchorCreateInfoHTC',desc='Information to create a spatial anchor',type='structs']
 --
 The slink:XrSpatialAnchorCreateInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorCreateInfoHTC.txt[]
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -95,7 +95,7 @@ in the real world.
 The anchor tracks changes of the reality and may: not be affected by the
 changes of pname:space.
 
-include::{generated}/validity/structs/XrSpatialAnchorCreateInfoHTC.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoHTC.adoc[]
 --
 
 
@@ -103,7 +103,7 @@ include::{generated}/validity/structs/XrSpatialAnchorCreateInfoHTC.txt[]
 --
 The slink:XrSpatialAnchorNameHTC structure is defined as:
 
-include::{generated}/api/structs/XrSpatialAnchorNameHTC.txt[]
+include::{generated}/api/structs/XrSpatialAnchorNameHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -111,7 +111,7 @@ include::{generated}/api/structs/XrSpatialAnchorNameHTC.txt[]
   equal to ename:XR_MAX_SPATIAL_ANCHOR_NAME_SIZE_HTC.
 ****
 
-include::{generated}/validity/structs/XrSpatialAnchorNameHTC.txt[]
+include::{generated}/validity/structs/XrSpatialAnchorNameHTC.adoc[]
 --
 
 
@@ -119,7 +119,7 @@ include::{generated}/validity/structs/XrSpatialAnchorNameHTC.txt[]
 --
 The flink:xrGetSpatialAnchorNameHTC function is defined as:
 
-include::{generated}/api/protos/xrGetSpatialAnchorNameHTC.txt[]
+include::{generated}/api/protos/xrGetSpatialAnchorNameHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -133,7 +133,7 @@ If the provided pname:anchor is a valid space handle but was *not* created
 with flink:xrCreateSpatialAnchorHTC, the runtime must: return
 ename:XR_ERROR_NOT_AN_ANCHOR_HTC.
 
-include::{generated}/validity/protos/xrGetSpatialAnchorNameHTC.txt[]
+include::{generated}/validity/protos/xrGetSpatialAnchorNameHTC.adoc[]
 --
 
 

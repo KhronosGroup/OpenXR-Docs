@@ -85,7 +85,7 @@ returned by the flink:xrGetSystemProperties call.
 
 [open,refpage='XrSystemEyeGazeInteractionPropertiesEXT',type='structs',desc='Eye gaze interaction system properties']
 --
-include::{generated}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
+include::{generated}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -99,7 +99,7 @@ include::{generated}/api/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
   set this to ename:XR_FALSE.
 ****
 
-include::{generated}/validity/structs/XrSystemEyeGazeInteractionPropertiesEXT.txt[]
+include::{generated}/validity/structs/XrSystemEyeGazeInteractionPropertiesEXT.adoc[]
 --
 
 ==== Eye gaze input
@@ -174,7 +174,7 @@ yet been requested.
 
 [open,refpage='XrEyeGazeSampleTimeEXT',type='structs',desc='Eye gaze sample time structure']
 --
-include::{generated}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
+include::{generated}/api/structs/XrEyeGazeSampleTimeEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -185,7 +185,7 @@ include::{generated}/api/structs/XrEyeGazeSampleTimeEXT.txt[]
 * pname:time is when in time the eye gaze pose is expressed.
 ****
 
-include::{generated}/validity/structs/XrEyeGazeSampleTimeEXT.txt[]
+include::{generated}/validity/structs/XrEyeGazeSampleTimeEXT.adoc[]
 --
 
 ==== Sample code

@@ -1,0 +1,59 @@
+// Copyright (c) 2017-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_KHR_maintenance1.adoc[]
+
+*Last Modified Date*::
+    2023-10-25
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap +
+    Rylie Pavlik, Collabora +
+    Nihav Jain, Google +
+    Lachlan Ford, Google +
+    John Kearney, Meta +
+    Yin Li, Microsoft +
+    Robert Blenkinsopp, Ultraleap +
+
+==== Overview
+
+apiext:XR_KHR_maintenance1 adds a collection of minor features that were
+intentionally left out or overlooked from the original OpenXR 1.0 release.
+All are promoted to the OpenXR 1.1 release.
+
+
+[open,refpage='XrColor3fKHR',desc='Color Vector',type='structs']
+--
+include::{generated}/api/structs/XrColor3fKHR.adoc[]
+--
+
+[open,refpage='XrExtent3DfKHR',type='structs',desc='Represents a rectangular prism',xrefs='']
+--
+include::{generated}/api/structs/XrExtent3DfKHR.adoc[]
+--
+
+[open,refpage='XrSpherefKHR',desc='Describe a oriented sphere',type='structs',xrefs='']
+--
+include::{generated}/api/structs/XrSpherefKHR.adoc[]
+--
+
+[open,refpage='XrBoxfKHR',desc='Describe a oriented box',type='structs',xrefs='']
+--
+include::{generated}/api/structs/XrBoxfKHR.adoc[]
+--
+
+[open,refpage='XrFrustumfKHR',desc='Describe a frustum',type='structs',xrefs='']
+--
+include::{generated}/api/structs/XrFrustumfKHR.adoc[]
+--
+
+include::{generated}/interfaces/XR_KHR_maintenance1.adoc[leveloffset=1]
+
+
+==== Version History
+
+* Revision 1, 2023-10-25 (Ron Bessems)
+** Initial extension description

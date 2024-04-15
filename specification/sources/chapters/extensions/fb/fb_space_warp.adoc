@@ -22,7 +22,7 @@ users.
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 [NOTE]
 .Note
@@ -41,12 +41,12 @@ pname:depthSubImage.
 
 [open,refpage='XrCompositionLayerSpaceWarpInfoFlagsFB',type='flags',desc='XrCompositionLayerSpaceWarpInfoFlagsFB']
 --
-include::{generated}/api/flags/XrCompositionLayerSpaceWarpInfoFlagsFB.txt[]
+include::{generated}/api/flags/XrCompositionLayerSpaceWarpInfoFlagsFB.adoc[]
 --
 
 [open,refpage='XrCompositionLayerSpaceWarpInfoFlagBitsFB',type='enums',desc='XrCompositionLayerSpaceWarpInfoFlagBitsFB',xrefs='XrCompositionLayerSpaceWarpInfoFlagsFB']
 --
-include::{generated}/api/enums/XrCompositionLayerSpaceWarpInfoFlagBitsFB.txt[]
+include::{generated}/api/enums/XrCompositionLayerSpaceWarpInfoFlagBitsFB.adoc[]
 
 .Flag Descriptions
 ****
@@ -79,7 +79,7 @@ slink:XrCompositionLayerProjectionView::pname:next chain, for each
 slink:XrCompositionLayerProjectionView structure in the given layer.
 
 The slink:XrCompositionLayerSpaceWarpInfoFB structure is defined as:
-include::{generated}/api/structs/XrCompositionLayerSpaceWarpInfoFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerSpaceWarpInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -126,7 +126,7 @@ Signed 16 bit float pixel format is recommended for this image.
 The runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE if
 pname:nearZ == pname:farZ.
 
-include::{generated}/validity/structs/XrCompositionLayerSpaceWarpInfoFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerSpaceWarpInfoFB.adoc[]
 --
 
 [open,refpage='XrSystemSpaceWarpPropertiesFB',type='structs',desc='Composition Layer Space Warp structure',xrefs='XrSystemProperties']
@@ -138,7 +138,7 @@ flink:xrGetSystemProperties to acquire information about recommended motion
 vector buffer resolution.
 The slink:XrSystemSpaceWarpPropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrSystemSpaceWarpPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemSpaceWarpPropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -150,7 +150,7 @@ include::{generated}/api/structs/XrSystemSpaceWarpPropertiesFB.txt[]
 * pname:recommendedMotionVectorImageRectHeight: recommended motion vector
   and depth image height
 ****
-include::{generated}/validity/structs/XrSystemSpaceWarpPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemSpaceWarpPropertiesFB.adoc[]
 --
 
 *Issues*

@@ -26,7 +26,7 @@ This extension allows:
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -45,9 +45,9 @@ elink:XrStructureType enumeration is extended with:
 The possible foveation levels are specified by the elink:XrFoveationLevelFB
 enumeration:
 
-include::{generated}/api/enums/XrFoveationLevelFB.txt[]
+include::{generated}/api/enums/XrFoveationLevelFB.adoc[]
 
-include::{generated}/api/enums/XrFoveationLevelFB.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationLevelFB.comments-box.adoc[]
 
 --
 
@@ -56,9 +56,9 @@ include::{generated}/api/enums/XrFoveationLevelFB.comments-box.txt[]
 The possible foveation levels are specified by the
 elink:XrFoveationDynamicFB enumeration:
 
-include::{generated}/api/enums/XrFoveationDynamicFB.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFB.adoc[]
 
-include::{generated}/api/enums/XrFoveationDynamicFB.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFB.comments-box.adoc[]
 
 --
 
@@ -78,7 +78,7 @@ slink:XrFoveationLevelProfileCreateInfoFB.
 
 The slink:XrFoveationLevelProfileCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
+include::{generated}/api/structs/XrFoveationLevelProfileCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -92,7 +92,7 @@ include::{generated}/api/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
 * pname:dynamic is the desired dynamic foveation setting.
 ****
 
-include::{generated}/validity/structs/XrFoveationLevelProfileCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrFoveationLevelProfileCreateInfoFB.adoc[]
 --
 
 *New Functions*

@@ -37,14 +37,14 @@ An application can: create an slink:XrPassthroughHTC handle by calling
 flink:xrCreatePassthroughHTC.
 The returned passthrough handle can: be subsequently used in API calls.
 
-include::{generated}/api/handles/XrPassthroughHTC.txt[]
+include::{generated}/api/handles/XrPassthroughHTC.adoc[]
 --
 
 [open,refpage='xrCreatePassthroughHTC',type='protos',desc='Create a passthrough handle.',xrefs='']
 --
 The flink:xrCreatePassthroughHTC function is defined as:
 
-include::{generated}/api/protos/xrCreatePassthroughHTC.txt[]
+include::{generated}/api/protos/xrCreatePassthroughHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -61,14 +61,14 @@ Creates an slink:XrPassthroughHTC handle.
 If the function successfully returned, the output pname:passthrough must: be
 a valid handle.
 
-include::{generated}/validity/protos/xrCreatePassthroughHTC.txt[]
+include::{generated}/validity/protos/xrCreatePassthroughHTC.adoc[]
 --
 
 [open,refpage='XrPassthroughCreateInfoHTC',type='structs',desc='Information to create a passthrough handle',xrefs='']
 --
 The slink:XrPassthroughCreateInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughCreateInfoHTC.txt[]
+include::{generated}/api/structs/XrPassthroughCreateInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -80,7 +80,7 @@ include::{generated}/api/structs/XrPassthroughCreateInfoHTC.txt[]
   passthrough.
 ****
 
-include::{generated}/validity/structs/XrPassthroughCreateInfoHTC.txt[]
+include::{generated}/validity/structs/XrPassthroughCreateInfoHTC.adoc[]
 --
 
 [open,refpage='XrPassthroughFormHTC',type='enums',desc='Describes the form of passthrough.',xrefs='']
@@ -89,9 +89,9 @@ The elink:XrPassthroughFormHTC enumeration identifies the form of the
 passthrough, presenting the passthrough fill the full screen or project onto
 a specified mesh.
 
-include::{generated}/api/enums/XrPassthroughFormHTC.txt[]
+include::{generated}/api/enums/XrPassthroughFormHTC.adoc[]
 
-include::{generated}/api/enums/XrPassthroughFormHTC.comments-box.txt[]
+include::{generated}/api/enums/XrPassthroughFormHTC.comments-box.adoc[]
 --
 
 [open,refpage='xrDestroyPassthroughHTC',type='protos',desc='Destroy a passthrough handle',xrefs='']
@@ -99,7 +99,7 @@ include::{generated}/api/enums/XrPassthroughFormHTC.comments-box.txt[]
 
 The flink:xrDestroyPassthroughHTC function is defined as:
 
-include::{generated}/api/protos/xrDestroyPassthroughHTC.txt[]
+include::{generated}/api/protos/xrDestroyPassthroughHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -109,7 +109,7 @@ include::{generated}/api/protos/xrDestroyPassthroughHTC.txt[]
 The flink:xrDestroyPassthroughHTC function releases the passthrough and the
 underlying resources.
 
-include::{generated}/validity/protos/xrDestroyPassthroughHTC.txt[]
+include::{generated}/validity/protos/xrDestroyPassthroughHTC.adoc[]
 --
 
 *Composite the passthrough layer*
@@ -118,7 +118,7 @@ include::{generated}/validity/protos/xrDestroyPassthroughHTC.txt[]
 --
 The slink:XrCompositionLayerPassthroughHTC structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerPassthroughHTC.txt[]
+include::{generated}/api/structs/XrCompositionLayerPassthroughHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -150,7 +150,7 @@ chain.
 If they are absent, the runtime must: return error
 ename:XR_ERROR_VALIDATION_FAILURE.
 
-include::{generated}/validity/structs/XrCompositionLayerPassthroughHTC.txt[]
+include::{generated}/validity/structs/XrCompositionLayerPassthroughHTC.adoc[]
 --
 
 [open,refpage='XrPassthroughColorHTC',type='structs',desc='The alpha value of the passthrough']
@@ -158,7 +158,7 @@ include::{generated}/validity/structs/XrCompositionLayerPassthroughHTC.txt[]
 
 The slink:XrPassthroughColorHTC structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughColorHTC.txt[]
+include::{generated}/api/structs/XrPassthroughColorHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -172,14 +172,14 @@ The application can: specify the slink:XrPassthroughColorHTC to adjust the
 alpha value of the passthrough.
 The range is between 0.0f and 1.0f, 1.0f means opaque.
 
-include::{generated}/validity/structs/XrPassthroughColorHTC.txt[]
+include::{generated}/validity/structs/XrPassthroughColorHTC.adoc[]
 --
 
 [open,refpage='XrPassthroughMeshTransformInfoHTC',type='structs',desc='The information of mesh and transformation of the passthrough']
 --
 The slink:XrPassthroughMeshTransformInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughMeshTransformInfoHTC.txt[]
+include::{generated}/api/structs/XrPassthroughMeshTransformInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -215,7 +215,7 @@ If slink:XrPassthroughMeshTransformInfoHTC is not set correctly, runtime
 must: return error ename:XR_ERROR_VALIDATION_FAILURE when flink:xrEndFrame
 is called with composition layer slink:XrCompositionLayerPassthroughHTC.
 
-include::{generated}/validity/structs/XrPassthroughMeshTransformInfoHTC.txt[]
+include::{generated}/validity/structs/XrPassthroughMeshTransformInfoHTC.adoc[]
 --
 
 *New Object Types*

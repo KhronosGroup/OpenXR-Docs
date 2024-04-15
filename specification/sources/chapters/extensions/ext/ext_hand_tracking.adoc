@@ -39,7 +39,7 @@ input by extending the slink:XrSystemProperties with
 slink:XrSystemHandTrackingPropertiesEXT structure when calling
 flink:xrGetSystemProperties.
 
-include::{generated}/api/structs/XrSystemHandTrackingPropertiesEXT.txt[]
+include::{generated}/api/structs/XrSystemHandTrackingPropertiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -51,7 +51,7 @@ include::{generated}/api/structs/XrSystemHandTrackingPropertiesEXT.txt[]
   system is capable of hand tracking input.
 ****
 
-include::{generated}/validity/structs/XrSystemHandTrackingPropertiesEXT.txt[]
+include::{generated}/validity/structs/XrSystemHandTrackingPropertiesEXT.adoc[]
 
 If a runtime returns ename:XR_FALSE for pname:supportsHandTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
@@ -65,7 +65,7 @@ flink:xrCreateHandTrackerEXT.
 The slink:XrHandTrackerEXT handle represents the resources for hand tracking
 of the specific hand.
 
-include::{generated}/api/handles/XrHandTrackerEXT.txt[]
+include::{generated}/api/handles/XrHandTrackerEXT.adoc[]
 
 An application creates separate slink:XrHandTrackerEXT handles for left and
 right hands.
@@ -87,7 +87,7 @@ extension
 --
 An application can create an slink:XrHandTrackerEXT handle using
 flink:xrCreateHandTrackerEXT function.
-include::{generated}/api/protos/xrCreateHandTrackerEXT.txt[]
+include::{generated}/api/protos/xrCreateHandTrackerEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -98,7 +98,7 @@ include::{generated}/api/protos/xrCreateHandTrackerEXT.txt[]
 * pname:handTracker is the returned slink:XrHandTrackerEXT handle.
 ****
 
-include::{generated}/validity/protos/xrCreateHandTrackerEXT.txt[]
+include::{generated}/validity/protos/xrCreateHandTrackerEXT.adoc[]
 
 If the system does not support hand tracking, runtime must: return
 ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateHandTrackerEXT.
@@ -113,7 +113,7 @@ avoid creating a hand tracker.
 The slink:XrHandTrackerCreateInfoEXT structure describes the information to
 create an slink:XrHandTrackerEXT handle.
 
-include::{generated}/api/structs/XrHandTrackerCreateInfoEXT.txt[]
+include::{generated}/api/structs/XrHandTrackerCreateInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -127,7 +127,7 @@ include::{generated}/api/structs/XrHandTrackerCreateInfoEXT.txt[]
   joints to retrieve.
 ****
 
-include::{generated}/validity/structs/XrHandTrackerCreateInfoEXT.txt[]
+include::{generated}/validity/structs/XrHandTrackerCreateInfoEXT.adoc[]
 --
 
 [open,refpage='XrHandEXT',type='enums',desc='Describes which hand the tracker is tracking.',xrefs='']
@@ -135,7 +135,7 @@ include::{generated}/validity/structs/XrHandTrackerCreateInfoEXT.txt[]
 The elink:XrHandEXT describes which hand the slink:XrHandTrackerEXT is
 tracking.
 
-include::{generated}/api/enums/XrHandEXT.txt[]
+include::{generated}/api/enums/XrHandEXT.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -151,7 +151,7 @@ include::{generated}/api/enums/XrHandEXT.txt[]
 The elink:XrHandJointSetEXT enum describes the set of hand joints to track
 when creating an slink:XrHandTrackerEXT.
 
-include::{generated}/api/enums/XrHandJointSetEXT.txt[]
+include::{generated}/api/enums/XrHandJointSetEXT.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -169,7 +169,7 @@ include::{generated}/api/enums/XrHandJointSetEXT.txt[]
 flink:xrDestroyHandTrackerEXT function releases the pname:handTracker and
 the underlying resources when finished with hand tracking experiences.
 
-include::{generated}/api/protos/xrDestroyHandTrackerEXT.txt[]
+include::{generated}/api/protos/xrDestroyHandTrackerEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -177,7 +177,7 @@ include::{generated}/api/protos/xrDestroyHandTrackerEXT.txt[]
   flink:xrCreateHandTrackerEXT.
 ****
 
-include::{generated}/validity/protos/xrDestroyHandTrackerEXT.txt[]
+include::{generated}/validity/protos/xrDestroyHandTrackerEXT.adoc[]
 --
 
 ==== Locate hand joints
@@ -187,7 +187,7 @@ include::{generated}/validity/protos/xrDestroyHandTrackerEXT.txt[]
 The flink:xrLocateHandJointsEXT function locates an array of hand joints to
 a base space at given time.
 
-include::{generated}/api/protos/xrLocateHandJointsEXT.txt[]
+include::{generated}/api/protos/xrLocateHandJointsEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -199,7 +199,7 @@ include::{generated}/api/protos/xrLocateHandJointsEXT.txt[]
   the returned hand joint locations.
 ****
 
-include::{generated}/validity/protos/xrLocateHandJointsEXT.txt[]
+include::{generated}/validity/protos/xrLocateHandJointsEXT.adoc[]
 --
 
 [open,refpage='XrHandJointsLocateInfoEXT',type='structs',desc='Describes the information to locate hand joints',xrefs='xrLocateHandJointsEXT']
@@ -207,7 +207,7 @@ include::{generated}/validity/protos/xrLocateHandJointsEXT.txt[]
 The slink:XrHandJointsLocateInfoEXT structure describes the information to
 locate hand joints.
 
-include::{generated}/api/structs/XrHandJointsLocateInfoEXT.txt[]
+include::{generated}/api/structs/XrHandJointsLocateInfoEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -220,7 +220,7 @@ include::{generated}/api/structs/XrHandJointsLocateInfoEXT.txt[]
 * pname:time is an basetype:XrTime at which to locate the hand joints.
 ****
 
-include::{generated}/validity/structs/XrHandJointsLocateInfoEXT.txt[]
+include::{generated}/validity/structs/XrHandJointsLocateInfoEXT.adoc[]
 --
 
 [open,refpage='XrHandJointLocationsEXT',type='structs',desc='Returns the hand joint locations',xrefs='xrLocateHandJointsEXT']
@@ -228,7 +228,7 @@ include::{generated}/validity/structs/XrHandJointsLocateInfoEXT.txt[]
 slink:XrHandJointLocationsEXT structure returns the state of the hand joint
 locations.
 
-include::{generated}/api/structs/XrHandJointLocationsEXT.txt[]
+include::{generated}/api/structs/XrHandJointLocationsEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -281,7 +281,7 @@ In this case, the runtime must: return all pname:jointLocations with neither
 ename:XR_SPACE_LOCATION_POSITION_VALID_BIT nor
 ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
 
-include::{generated}/validity/structs/XrHandJointLocationsEXT.txt[]
+include::{generated}/validity/structs/XrHandJointLocationsEXT.adoc[]
 --
 
 [open,refpage='XrHandJointLocationEXT',type='structs',desc='Describes the location and radius of a hand joint',xrefs='XrHandJointLocationsEXT']
@@ -289,7 +289,7 @@ include::{generated}/validity/structs/XrHandJointLocationsEXT.txt[]
 slink:XrHandJointLocationEXT structure describes the position, orientation,
 and radius of a hand joint.
 
-include::{generated}/api/structs/XrHandJointLocationEXT.txt[]
+include::{generated}/api/structs/XrHandJointLocationEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -313,7 +313,7 @@ If the returned pname:locationFlags has
 ename:XR_SPACE_LOCATION_POSITION_VALID_BIT unset, the returned radius value
 is undefined and should be avoided.
 
-include::{generated}/validity/structs/XrHandJointLocationEXT.txt[]
+include::{generated}/validity/structs/XrHandJointLocationEXT.adoc[]
 --
 
 [open,refpage='XrHandJointVelocitiesEXT',type='structs',desc='Returns the hand joint velocities',xrefs='XrHandJointLocationsEXT']
@@ -322,7 +322,7 @@ The application can chain an slink:XrHandJointVelocitiesEXT structure to the
 pname:next pointer of slink:XrHandJointLocationsEXT when calling
 flink:xrLocateHandJointsEXT to retrieve the hand joint velocities.
 
-include::{generated}/api/structs/XrHandJointVelocitiesEXT.txt[]
+include::{generated}/api/structs/XrHandJointVelocitiesEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -376,7 +376,7 @@ must: fill in the angular velocity of each joint within the reference frame
 of slink:XrHandJointsLocateInfoEXT::pname:baseSpace and set the
 ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
 
-include::{generated}/validity/structs/XrHandJointVelocitiesEXT.txt[]
+include::{generated}/validity/structs/XrHandJointVelocitiesEXT.adoc[]
 --
 
 [open,refpage='XrHandJointVelocityEXT',type='structs',desc='Describes the velocity of a hand joint',xrefs='XrHandJointVelocitiesEXT']
@@ -384,7 +384,7 @@ include::{generated}/validity/structs/XrHandJointVelocitiesEXT.txt[]
 slink:XrHandJointVelocityEXT structure describes the linear and angular
 velocity of a hand joint.
 
-include::{generated}/api/structs/XrHandJointVelocityEXT.txt[]
+include::{generated}/api/structs/XrHandJointVelocityEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -408,7 +408,7 @@ include::{generated}/api/structs/XrHandJointVelocityEXT.txt[]
   The vector follows the right-hand rule for torque/rotation.
 ****
 
-include::{generated}/validity/structs/XrHandJointVelocityEXT.txt[]
+include::{generated}/validity/structs/XrHandJointVelocityEXT.adoc[]
 --
 
 ==== Example code for locating hand joints
@@ -510,7 +510,7 @@ image::images/ext_hand_tracking_joint_convention.png["Convention of hand joints"
 
 [open,refpage='XrHandJointEXT',type='enums',desc='The name of hand joints that can be tracked',xrefs='']
 --
-include::{generated}/api/enums/XrHandJointEXT.txt[]
+include::{generated}/api/enums/XrHandJointEXT.adoc[]
 --
 
 The finger joints, except the tips, are named after the corresponding bone
@@ -577,7 +577,7 @@ which is inside the user's hand.
 
 [open,refpage='XR_HAND_JOINT_COUNT_EXT',type='defines',desc='The number of hand joint enums defined in XrHandJointEXT',xrefs='XrHandJointEXT']
 --
-include::{generated}/api/defines/XR_HAND_JOINT_COUNT_EXT.txt[]
+include::{generated}/api/defines/XR_HAND_JOINT_COUNT_EXT.adoc[]
 
 dlink:XR_HAND_JOINT_COUNT_EXT defines the number of hand joint enumerants
 defined in elink:XrHandJointEXT

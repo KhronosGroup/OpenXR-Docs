@@ -27,12 +27,12 @@ fallback.
 
 View configurations are identified with an elink:XrViewConfigurationType.
 
-[[view_configuration_type]]
+[[view_configurations-type]]
 === Primary View Configurations
 
 [open,refpage='XrViewConfigurationType',desc='Supported view configuration type',type='enums']
 --
-include::{generated}/api/enums/XrViewConfigurationType.txt[]
+include::{generated}/api/enums/XrViewConfigurationType.adoc[]
 
 The application selects its primary view configuration type when calling
 flink:xrBeginSession, and that configuration remains constant for the
@@ -59,10 +59,55 @@ The predefined primary view configuration types are:
   slink:XrCompositionLayerProjection layer.
   View index 0 must: represent the left eye and view index 1 must: represent
   the right eye.
+* ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET.
+  Four views representing the form factor's primary stereo displays.
+  This view configuration type represents a hardware independent way of
+  providing foveated rendering.
+  The view configuration adds two foveated inset views for the left and
+  right eye separately to the already defined two views specified in the
+  ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO view configuration.
+  View index 0 must: represent the left eye and view index 1 must: represent
+  the right eye as specified in
+  ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO view configuration, and
+  view index 2 must: represent the left eye inset view and view index 3
+  must: represent the right eye inset view.
+  The new inset view 2 and view 3 must:, after applying the pose and FoV
+  projection to same plane, be contained within view 0 and 1 respectively.
+  The inset views may: have a higher resolution with respect to the same
+  field of view as the corresponding wide FoV view for each eye.
+  The runtime may: blend between the views at the edges, so the application
+  must: not omit the inner field of view from being rendered in the outer
+  view.
+  The pname:fov returned by flink:xrLocateViews for each inset view relative
+  to the corresponding outer stereo view may: change at run-time, the
+  pname:pose for inset view and stereo view for each eye respectively must:
+  have the same values.
+
+[NOTE]
+====
+The benefits of the
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET view
+configuration type can be demonstrated by looking at the rendered pixel
+count.
+For example, a Varjo Aero requires a pair of stereo views rendered at 4148 x
+3556 (14.7 million pixels) to achieve a pixel density of 35 pixels per
+degree.
+By using four views, with an eye-tracked foveated inset covering about 1/9th
+of the full FoV and rendered with the same 35 pixels per degree and while
+the remaining views are dropped to 14 pixels per degree, the resolution of
+the inset is 1076 x 1076 (1.1 million pixels) and the resolution of the
+stereo views is 1660 x 1420 (2.3 million pixels).
+The total pixel count is 75% less with
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO_WITH_FOVEATED_INSET over the
+ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO view configuration type.
+====
+
 ****
 --
 
-[[view_configuration_api]]
+image::images/view_configurations.png[align="center", title="View configurations. The numbers in the figure is the view indices of the specific view."]
+
+[[view_configurations-api]]
 === View Configuration API
 
 First an application needs to select which primary view configuration it
@@ -81,7 +126,7 @@ each view configuration type and its individual views.
 --
 The flink:xrEnumerateViewConfigurations function is defined as:
 
-include::{generated}/api/protos/xrEnumerateViewConfigurations.txt[]
+include::{generated}/api/protos/xrEnumerateViewConfigurations.adoc[]
 
 .Parameter Descriptions
 ****
@@ -98,9 +143,8 @@ include::{generated}/api/protos/xrEnumerateViewConfigurations.txt[]
 * pname:viewConfigurationTypes is a pointer to an array of
   elink:XrViewConfigurationType values, but can: be code:NULL if
   pname:viewConfigurationTypeCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required
-  pname:viewConfigurationTypes size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:viewConfigurationTypes size.
 ****
 
 flink:xrEnumerateViewConfigurations enumerates the view configuration types
@@ -115,7 +159,8 @@ runtime prefers the application to use if possible.
 Runtimes must: always return identical buffer contents from this enumeration
 for the given pname:systemId and for the lifetime of the instance.
 
-include::{generated}/validity/protos/xrEnumerateViewConfigurations.txt[]
+include::{generated}/validity/protos/xrEnumerateViewConfigurations.adoc[]
+
 --
 
 ==== xrGetViewConfigurationProperties
@@ -124,7 +169,7 @@ include::{generated}/validity/protos/xrEnumerateViewConfigurations.txt[]
 --
 The flink:xrGetViewConfigurationProperties function is defined as:
 
-include::{generated}/api/protos/xrGetViewConfigurationProperties.txt[]
+include::{generated}/api/protos/xrGetViewConfigurationProperties.adoc[]
 
 .Parameter Descriptions
 ****
@@ -144,7 +189,7 @@ returned by flink:xrEnumerateViewConfigurations.
 If pname:viewConfigurationType is not supported by this slink:XrInstance the
 runtime must: return ename:XR_ERROR_VIEW_CONFIGURATION_TYPE_UNSUPPORTED.
 
-include::{generated}/validity/protos/xrGetViewConfigurationProperties.txt[]
+include::{generated}/validity/protos/xrGetViewConfigurationProperties.adoc[]
 --
 
 ==== XrViewConfigurationProperties
@@ -153,7 +198,7 @@ include::{generated}/validity/protos/xrGetViewConfigurationProperties.txt[]
 --
 
 The slink:XrViewConfigurationProperties structure is defined as:
-include::{generated}/api/structs/XrViewConfigurationProperties.txt[]
+include::{generated}/api/structs/XrViewConfigurationProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -167,7 +212,7 @@ include::{generated}/api/structs/XrViewConfigurationProperties.txt[]
   the application.
 ****
 
-include::{generated}/validity/structs/XrViewConfigurationProperties.txt[]
+include::{generated}/validity/structs/XrViewConfigurationProperties.adoc[]
 --
 
 ==== xrEnumerateViewConfigurationViews
@@ -176,7 +221,7 @@ include::{generated}/validity/structs/XrViewConfigurationProperties.txt[]
 --
 The flink:xrEnumerateViewConfigurationViews function is defined as:
 
-include::{generated}/api/protos/xrEnumerateViewConfigurationViews.txt[]
+include::{generated}/api/protos/xrEnumerateViewConfigurationViews.adoc[]
 
 .Parameter Descriptions
 ****
@@ -206,7 +251,7 @@ Runtimes must: always return identical buffer contents from this enumeration
 for the given pname:systemId and pname:viewConfigurationType for the
 lifetime of the instance.
 
-include::{generated}/validity/protos/xrEnumerateViewConfigurationViews.txt[]
+include::{generated}/validity/protos/xrEnumerateViewConfigurationViews.adoc[]
 --
 
 ==== XrViewConfigurationView
@@ -217,7 +262,7 @@ Each slink:XrViewConfigurationView specifies properties related to rendering
 of an individual view within a view configuration.
 
 The slink:XrViewConfigurationView structure is defined as:
-include::{generated}/api/structs/XrViewConfigurationView.txt[]
+include::{generated}/api/structs/XrViewConfigurationView.adoc[]
 
 .Member Descriptions
 ****
@@ -255,10 +300,10 @@ The array of slink:XrViewConfigurationView returned by the runtime must:
 adhere to the rules defined in elink:XrViewConfigurationType, such as the
 count and association to the left and right eyes.
 
-include::{generated}/validity/structs/XrViewConfigurationView.txt[]
+include::{generated}/validity/structs/XrViewConfigurationView.adoc[]
 --
 
-[[example_view_configurations_code]]
+[[view_configurations-example]]
 === Example View Configuration Code
 
 // see view_configuration.0.h

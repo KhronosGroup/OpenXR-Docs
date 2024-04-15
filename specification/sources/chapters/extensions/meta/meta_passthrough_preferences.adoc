@@ -24,13 +24,13 @@ passthrough, see `<<XR_FB_passthrough>>`.
 
 [open,refpage='XrPassthroughPreferenceFlagsMETA',type='flags',desc='XrPassthroughPreferenceFlagsMETA',xrefs='XrPassthroughPreferenceFlagBitsMETA']
 --
-include::{generated}/api/flags/XrPassthroughPreferenceFlagsMETA.txt[]
+include::{generated}/api/flags/XrPassthroughPreferenceFlagsMETA.adoc[]
 --
 
 [open,refpage='XrPassthroughPreferenceFlagBitsMETA',type='enums',desc='XrPassthroughPreferenceFlagBitsMETA',xrefs='XrPassthroughPreferenceFlagsMETA']
 --
-include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.txt[]
-include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.comments.txt[]
+include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.adoc[]
+include::{generated}/api/enums/XrPassthroughPreferenceFlagBitsMETA.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -46,7 +46,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrPassthroughPreferencesMETA structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughPreferencesMETA.txt[]
+include::{generated}/api/structs/XrPassthroughPreferencesMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -71,7 +71,7 @@ this flag bit.
 Apps should: test for this flag explicitly, as more flag bits may: be
 introduced in the future.
 
-include::{generated}/validity/structs/XrPassthroughPreferencesMETA.txt[]
+include::{generated}/validity/structs/XrPassthroughPreferencesMETA.adoc[]
 --
 
 *New Functions*
@@ -80,7 +80,7 @@ include::{generated}/validity/structs/XrPassthroughPreferencesMETA.txt[]
 --
 The flink:xrGetPassthroughPreferencesMETA function is defined as:
 
-include::{generated}/api/protos/xrGetPassthroughPreferencesMETA.txt[]
+include::{generated}/api/protos/xrGetPassthroughPreferencesMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -93,7 +93,7 @@ include::{generated}/api/protos/xrGetPassthroughPreferencesMETA.txt[]
 An application can: call flink:xrGetPassthroughPreferencesMETA to retrieve
 passthrough-related preferences from the system.
 
-include::{generated}/validity/protos/xrGetPassthroughPreferencesMETA.txt[]
+include::{generated}/validity/protos/xrGetPassthroughPreferencesMETA.adoc[]
 --
 
 *Version History*

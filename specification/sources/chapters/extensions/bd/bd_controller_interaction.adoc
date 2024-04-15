@@ -137,6 +137,10 @@ Be careful with the following difference:
   However, only one of them will be active at a given time, so do not design
   interactions that require simultaneous use of both hands.
 
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
 *New Object Types*
 
 *New Flag Types*

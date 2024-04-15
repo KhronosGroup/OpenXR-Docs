@@ -22,14 +22,14 @@ loading them.
 
 [open,refpage='XrRenderModelFlagsFB',type='flags',desc='XrRenderModelFlagsFB',xrefs='XrRenderModelFlagBitsFB']
 --
-include::{generated}/api/flags/XrRenderModelFlagsFB.txt[]
+include::{generated}/api/flags/XrRenderModelFlagsFB.adoc[]
 --
 
 [open,refpage='XrRenderModelFlagBitsFB',type='enums',desc='XrRenderModelFlagBitsFB',xrefs='XrRenderModelFlagsFB']
 --
-include::{generated}/api/enums/XrRenderModelFlagBitsFB.txt[]
+include::{generated}/api/enums/XrRenderModelFlagBitsFB.adoc[]
 
-include::{generated}/api/enums/XrRenderModelFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrRenderModelFlagBitsFB.comments.adoc[]
 
 Render Model Support Levels: An application should: request a model of a
 certain complexity via the slink:XrRenderModelCapabilitiesRequestFB on the
@@ -59,7 +59,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XR_NULL_RENDER_MODEL_KEY_FB',type='defines',desc='The value representing an invalid model key',xrefs='XrRenderModelKeyFB XrRenderModelPropertiesFB']
 --
-include::{generated}/api/defines/XR_NULL_RENDER_MODEL_KEY_FB.txt[]
+include::{generated}/api/defines/XR_NULL_RENDER_MODEL_KEY_FB.adoc[]
 
 dlink:XR_NULL_RENDER_MODEL_KEY_FB defines an invalid model key atom.
 --
@@ -68,7 +68,7 @@ dlink:XR_NULL_RENDER_MODEL_KEY_FB defines an invalid model key atom.
 
 [open,refpage='XrRenderModelKeyFB',desc='Model key',type='basetypes',xrefs='XR_NULL_RENDER_MODEL_KEY_FB']
 --
-include::{generated}/api/basetypes/XrRenderModelKeyFB.txt[]
+include::{generated}/api/basetypes/XrRenderModelKeyFB.adoc[]
 
 The unique model key used to retrieve the data for the render model that is
 valid across multiple instances and installs.
@@ -82,7 +82,7 @@ cached or saved version of the model.
 --
 The slink:XrSystemRenderModelPropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrSystemRenderModelPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemRenderModelPropertiesFB.adoc[]
 
 It describes a render model system property.
 
@@ -96,14 +96,14 @@ It describes a render model system property.
   loading render models.
 ****
 
-include::{generated}/validity/structs/XrSystemRenderModelPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemRenderModelPropertiesFB.adoc[]
 --
 
 [open,refpage='XrRenderModelPathInfoFB',type='structs',desc='Supported model paths',xrefs='xrEnumerateRenderModelPathsFB']
 --
 The slink:XrRenderModelPathInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrRenderModelPathInfoFB.txt[]
+include::{generated}/api/structs/XrRenderModelPathInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -133,7 +133,7 @@ flink:xrGetRenderModelPropertiesFB.
   (if the apiext:XR_META_virtual_keyboard extension is enabled)
 ****
 
-include::{generated}/validity/structs/XrRenderModelPathInfoFB.txt[]
+include::{generated}/validity/structs/XrRenderModelPathInfoFB.adoc[]
 --
 
 [open,refpage='XrRenderModelPropertiesFB',type='structs',desc='The information about the render model',xrefs='xrGetRenderModelPropertiesFB']
@@ -142,7 +142,7 @@ include::{generated}/validity/structs/XrRenderModelPathInfoFB.txt[]
 
 The slink:XrRenderModelPropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrRenderModelPropertiesFB.txt[]
+include::{generated}/api/structs/XrRenderModelPropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -173,14 +173,14 @@ If the application decides to cache or save the render model in any way,
 pname:modelVersion can be used to determine if the render model has changed.
 The application should: then update its cached or saved version.
 
-include::{generated}/validity/structs/XrRenderModelPropertiesFB.txt[]
+include::{generated}/validity/structs/XrRenderModelPropertiesFB.adoc[]
 --
 
 [open,refpage='XrRenderModelCapabilitiesRequestFB',type='structs',desc='A render model system property',xrefs='']
 --
 The slink:XrRenderModelCapabilitiesRequestFB structure is defined as:
 
-include::{generated}/api/structs/XrRenderModelCapabilitiesRequestFB.txt[]
+include::{generated}/api/structs/XrRenderModelCapabilitiesRequestFB.adoc[]
 
 .Member Descriptions
 ****
@@ -209,14 +209,14 @@ supports flags set, then it must: return a
 ename:XR_RENDER_MODEL_UNAVAILABLE_FB result.
 
 
-include::{generated}/validity/structs/XrRenderModelCapabilitiesRequestFB.txt[]
+include::{generated}/validity/structs/XrRenderModelCapabilitiesRequestFB.adoc[]
 --
 
 [open,refpage='XrRenderModelLoadInfoFB',type='structs',desc='The information for which render model to load',xrefs='xrLoadRenderModelFB']
 --
 The slink:XrRenderModelLoadInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrRenderModelLoadInfoFB.txt[]
+include::{generated}/api/structs/XrRenderModelLoadInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -233,7 +233,7 @@ render model to load.
 slink:XrRenderModelLoadInfoFB must: be provided when calling
 flink:xrLoadRenderModelFB.
 
-include::{generated}/validity/structs/XrRenderModelLoadInfoFB.txt[]
+include::{generated}/validity/structs/XrRenderModelLoadInfoFB.adoc[]
 --
 
 [open,refpage='XrRenderModelBufferFB',type='structs',desc='The buffer containing the data for the render model',xrefs='xrLoadRenderModelFB']
@@ -241,7 +241,7 @@ include::{generated}/validity/structs/XrRenderModelLoadInfoFB.txt[]
 
 The slink:XrRenderModelBufferFB structure is defined as:
 
-include::{generated}/api/structs/XrRenderModelBufferFB.txt[]
+include::{generated}/api/structs/XrRenderModelBufferFB.adoc[]
 
 .Member Descriptions
 ****
@@ -256,8 +256,8 @@ include::{generated}/api/structs/XrRenderModelBufferFB.txt[]
   insufficient.
 * pname:buffer is a pointer to an application-allocated array that will be
   filled with the render model binary data.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 slink:XrRenderModelBufferFB is used when loading the binary data for a
@@ -265,7 +265,7 @@ render model.
 slink:XrRenderModelBufferFB must: be provided when calling
 flink:xrLoadRenderModelFB.
 
-include::{generated}/validity/structs/XrRenderModelBufferFB.txt[]
+include::{generated}/validity/structs/XrRenderModelBufferFB.adoc[]
 --
 
 *New Functions*
@@ -274,7 +274,7 @@ include::{generated}/validity/structs/XrRenderModelBufferFB.txt[]
 --
 The flink:xrEnumerateRenderModelPathsFB function is defined as:
 
-include::{generated}/api/protos/xrEnumerateRenderModelPathsFB.txt[]
+include::{generated}/api/protos/xrEnumerateRenderModelPathsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -287,8 +287,8 @@ include::{generated}/api/protos/xrEnumerateRenderModelPathsFB.txt[]
 * pname:paths is a pointer to an application-allocated array that will be
   filled with slink:XrRenderModelPathInfoFB values that are supported by the
   runtime, but can: be code:NULL if pname:pathCapacityInput is `0`
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:paths size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:paths size.
 ****
 
 The application must: call flink:xrEnumerateRenderModelPathsFB to enumerate
@@ -296,14 +296,14 @@ the valid render model paths that are supported by the runtime before
 calling flink:xrGetRenderModelPropertiesFB.
 The paths returned may: be used later in flink:xrGetRenderModelPropertiesFB.
 
-include::{generated}/validity/protos/xrEnumerateRenderModelPathsFB.txt[]
+include::{generated}/validity/protos/xrEnumerateRenderModelPathsFB.adoc[]
 --
 
 [open,refpage='xrGetRenderModelPropertiesFB',desc='Get information for a render model',type='protos',xrefs='']
 --
 The flink:xrGetRenderModelPropertiesFB function is defined as:
 
-include::{generated}/api/protos/xrGetRenderModelPropertiesFB.txt[]
+include::{generated}/api/protos/xrGetRenderModelPropertiesFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -337,14 +337,14 @@ device is unavailable.
 The application may: keep calling flink:xrGetRenderModelPropertiesFB because
 the model may: become available later when a device is connected.
 
-include::{generated}/validity/protos/xrGetRenderModelPropertiesFB.txt[]
+include::{generated}/validity/protos/xrGetRenderModelPropertiesFB.adoc[]
 --
 
 [open,refpage='xrLoadRenderModelFB',desc='Load binary data for a render model',type='protos',xrefs='']
 --
 The flink:xrLoadRenderModelFB function is defined as:
 
-include::{generated}/api/protos/xrLoadRenderModelFB.txt[]
+include::{generated}/api/protos/xrLoadRenderModelFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -372,7 +372,7 @@ as well as an slink:XrRenderModelBufferFB::pname:bufferCountOutput value of
 The flink:xrLoadRenderModelFB function may: be slow, therefore applications
 should: call it from a non-time sensitive thread.
 
-include::{generated}/validity/protos/xrLoadRenderModelFB.txt[]
+include::{generated}/validity/protos/xrLoadRenderModelFB.adoc[]
 --
 
 *Issues*

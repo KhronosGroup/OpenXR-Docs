@@ -28,15 +28,15 @@ This extension allows:
 
 [open,refpage='XrHandTrackingAimFlagsFB',type='flags',desc='XrHandTrackingAimFlagsFB',xrefs='XrHandTrackingAimFlagBitsFB']
 --
-include::{generated}/api/flags/XrHandTrackingAimFlagsFB.txt[]
+include::{generated}/api/flags/XrHandTrackingAimFlagsFB.adoc[]
 --
 
 
 [open,refpage='XrHandTrackingAimFlagBitsFB',type='enums',desc='XrHandTrackingAimFlagBitsFB',xrefs='XrHandTrackingAimFlagsFB']
 --
-include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.txt[]
+include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.adoc[]
 
-include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrHandTrackingAimFlagBitsFB.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -58,7 +58,7 @@ request aiming gesture information associated with this hand.
 
 The slink:XrHandTrackingAimStateFB structure is defined as:
 
-include::{generated}/api/structs/XrHandTrackingAimStateFB.txt[]
+include::{generated}/api/structs/XrHandTrackingAimStateFB.adoc[]
 
 .Member Descriptions
 ****
@@ -69,8 +69,8 @@ include::{generated}/api/structs/XrHandTrackingAimStateFB.txt[]
 * pname:status is a bitmask of elink:XrHandTrackingAimFlagBitsFB describing
   the availability and state of other signals.
 * pname:aimPose is a system-determined "aim" pose, similar in intent and
-  convention to the <<aim-pose,aim poses>> used with the action system,
-  based on hand data.
+  convention to the <<semantic-paths-aim-pose,aim poses>> used with the
+  action system, based on hand data.
 * pname:pinchStrengthIndex is the current pinching strength for the index
   finger of this hand.
   Range is 0.0 to 1.0, with 1.0 meaning index and thumb are fully touching.
@@ -85,7 +85,7 @@ include::{generated}/api/structs/XrHandTrackingAimStateFB.txt[]
   Range is 0.0 to 1.0, with 1.0 meaning little and thumb are fully touching.
 ****
 
-include::{generated}/validity/structs/XrHandTrackingAimStateFB.txt[]
+include::{generated}/validity/structs/XrHandTrackingAimStateFB.adoc[]
 --
 
 *New Functions*

@@ -43,7 +43,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrLoaderInitInfoAndroidKHR structure is defined as:
 
-include::{generated}/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
+include::{generated}/api/structs/XrLoaderInitInfoAndroidKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -58,7 +58,7 @@ include::{generated}/api/structs/XrLoaderInitInfoAndroidKHR.txt[]
   pointer.
 ****
 
-include::{generated}/validity/structs/XrLoaderInitInfoAndroidKHR.txt[]
+include::{generated}/validity/structs/XrLoaderInitInfoAndroidKHR.adoc[]
 --
 
 *New Functions*

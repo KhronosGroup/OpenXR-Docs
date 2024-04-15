@@ -25,7 +25,7 @@ This extension allows:
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -57,7 +57,7 @@ slink:XrSwapchainImageVulkanKHR.
 
 The slink:XrSwapchainImageFoveationVulkanFB structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+include::{generated}/api/structs/XrSwapchainImageFoveationVulkanFB.adoc[]
 
 .Member Descriptions
 ****
@@ -70,7 +70,7 @@ include::{generated}/api/structs/XrSwapchainImageFoveationVulkanFB.txt[]
 * pname:height is the vertical height in pixels of the image.
 ****
 
-include::{generated}/validity/structs/XrSwapchainImageFoveationVulkanFB.txt[]
+include::{generated}/validity/structs/XrSwapchainImageFoveationVulkanFB.adoc[]
 --
 
 *New Functions*

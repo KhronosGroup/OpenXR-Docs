@@ -62,7 +62,7 @@ ename:XR_ERROR_MARKER_ID_INVALID_VARJO.
 --
 The flink:xrSetMarkerTrackingVARJO function is defined as:
 
-include::{generated}/api/protos/xrSetMarkerTrackingVARJO.txt[]
+include::{generated}/api/protos/xrSetMarkerTrackingVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -78,7 +78,7 @@ and corresponding events will be generated.
 An application may: call any of the functions in this extension regardless
 if the marker tracking functionality is enabled or disabled.
 
-include::{generated}/validity/protos/xrSetMarkerTrackingVARJO.txt[]
+include::{generated}/validity/protos/xrSetMarkerTrackingVARJO.adoc[]
 --
 
 [open,refpage='xrSetMarkerTrackingTimeoutVARJO',desc='Sets marker lifetime duration',type='protos',xrefs='']
@@ -86,7 +86,7 @@ include::{generated}/validity/protos/xrSetMarkerTrackingVARJO.txt[]
 
 The flink:xrSetMarkerTrackingTimeoutVARJO function is defined as:
 
-include::{generated}/api/protos/xrSetMarkerTrackingTimeoutVARJO.txt[]
+include::{generated}/api/protos/xrSetMarkerTrackingTimeoutVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -110,14 +110,14 @@ timeout period.
 The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
 supplied pname:markerId is invalid.
 
-include::{generated}/validity/protos/xrSetMarkerTrackingTimeoutVARJO.txt[]
+include::{generated}/validity/protos/xrSetMarkerTrackingTimeoutVARJO.adoc[]
 --
 
 [open,refpage='xrSetMarkerTrackingPredictionVARJO',desc='Sets marker tracking with prediction',type='protos',xrefs='']
 --
 The flink:xrSetMarkerTrackingPredictionVARJO function is defined as:
 
-include::{generated}/api/protos/xrSetMarkerTrackingPredictionVARJO.txt[]
+include::{generated}/api/protos/xrSetMarkerTrackingPredictionVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -136,14 +136,14 @@ The prediction can: be used to improve tracking of movable markers.
 The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
 supplied pname:markerId is invalid.
 
-include::{generated}/validity/protos/xrSetMarkerTrackingPredictionVARJO.txt[]
+include::{generated}/validity/protos/xrSetMarkerTrackingPredictionVARJO.adoc[]
 --
 
 [open,refpage='xrGetMarkerSizeVARJO',desc='Gets physical size of marker',type='protos',xrefs='']
 --
 The flink:xrGetMarkerSizeVARJO function is defined as:
 
-include::{generated}/api/protos/xrGetMarkerSizeVARJO.txt[]
+include::{generated}/api/protos/xrGetMarkerSizeVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -163,14 +163,14 @@ is inactive.
 The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
 supplied pname:markerId is invalid.
 
-include::{generated}/validity/protos/xrGetMarkerSizeVARJO.txt[]
+include::{generated}/validity/protos/xrGetMarkerSizeVARJO.adoc[]
 --
 
 [open,refpage='xrCreateMarkerSpaceVARJO',desc='Creates marker space',type='protos',xrefs='XrMarkerSpaceCreateInfoVARJO']
 --
 The flink:xrCreateMarkerSpaceVARJO function is defined as:
 
-include::{generated}/api/protos/xrCreateMarkerSpaceVARJO.txt[]
+include::{generated}/api/protos/xrCreateMarkerSpaceVARJO.adoc[]
 
 .Parameter Descriptions
 ****
@@ -187,7 +187,7 @@ pose relative to the marker specified in slink:XrMarkerSpaceCreateInfoVARJO.
 The runtime must: return ename:XR_ERROR_MARKER_ID_INVALID_VARJO if the
 supplied slink:XrMarkerSpaceCreateInfoVARJO::pname:markerId is invalid.
 
-include::{generated}/validity/protos/xrCreateMarkerSpaceVARJO.txt[]
+include::{generated}/validity/protos/xrCreateMarkerSpaceVARJO.adoc[]
 --
 
 *New Structures*
@@ -197,7 +197,7 @@ include::{generated}/validity/protos/xrCreateMarkerSpaceVARJO.txt[]
 
 The slink:XrSystemMarkerTrackingPropertiesVARJO structure is defined as:
 
-include::{generated}/api/structs/XrSystemMarkerTrackingPropertiesVARJO.txt[]
+include::{generated}/api/structs/XrSystemMarkerTrackingPropertiesVARJO.adoc[]
 
 .Member Descriptions
 ****
@@ -217,14 +217,14 @@ when marker tracking is available in the system, otherwise ename:XR_FALSE.
 Marker tracking calls must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
 marker tracking is not available in the system.
 
-include::{generated}/validity/structs/XrSystemMarkerTrackingPropertiesVARJO.txt[]
+include::{generated}/validity/structs/XrSystemMarkerTrackingPropertiesVARJO.adoc[]
 --
 
 [open,refpage='XrEventDataMarkerTrackingUpdateVARJO',type='structs',desc='Structure representing marker tracking information',xrefs='xrPollEvent']
 --
 The slink:XrEventDataMarkerTrackingUpdateVARJO structure is defined as:
 
-include::{generated}/api/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
+include::{generated}/api/structs/XrEventDataMarkerTrackingUpdateVARJO.adoc[]
 
 .Member Descriptions
 ****
@@ -246,7 +246,7 @@ or inactive).
 The runtime must: send an event if it has detected pose change of the active
 marker.
 
-include::{generated}/validity/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
+include::{generated}/validity/structs/XrEventDataMarkerTrackingUpdateVARJO.adoc[]
 --
 
 [open,refpage='XrMarkerSpaceCreateInfoVARJO',type='structs',desc='Information to create a space from a spatial anchor',xrefs='xrCreateMarkerSpaceVARJO']
@@ -254,7 +254,7 @@ include::{generated}/validity/structs/XrEventDataMarkerTrackingUpdateVARJO.txt[]
 
 The slink:XrMarkerSpaceCreateInfoVARJO structure is defined as:
 
-include::{generated}/api/structs/XrMarkerSpaceCreateInfoVARJO.txt[]
+include::{generated}/api/structs/XrMarkerSpaceCreateInfoVARJO.adoc[]
 
 .Member Descriptions
 ****
@@ -268,7 +268,7 @@ include::{generated}/api/structs/XrMarkerSpaceCreateInfoVARJO.txt[]
   origin.
 ****
 
-include::{generated}/validity/structs/XrMarkerSpaceCreateInfoVARJO.txt[]
+include::{generated}/validity/structs/XrMarkerSpaceCreateInfoVARJO.adoc[]
 --
 
 *New Enum Constants*

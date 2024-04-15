@@ -23,7 +23,7 @@ persisted slink:XrSpace entities.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -42,22 +42,22 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrSpaceStorageLocationFB',desc='Storage location to persist spatial entities',type='enums']
 --
-include::{generated}/api/enums/XrSpaceStorageLocationFB.txt[]
+include::{generated}/api/enums/XrSpaceStorageLocationFB.adoc[]
 
 The elink:XrSpaceStorageLocationFB enumeration contains the storage
 locations used to store, erase, and query spatial entities.
 
-include::{generated}/api/enums/XrSpaceStorageLocationFB.comments-box.txt[]
+include::{generated}/api/enums/XrSpaceStorageLocationFB.comments-box.adoc[]
 --
 
 [open,refpage='XrSpacePersistenceModeFB',desc='Persistence mode',type='enums']
 --
-include::{generated}/api/enums/XrSpacePersistenceModeFB.txt[]
+include::{generated}/api/enums/XrSpacePersistenceModeFB.adoc[]
 
 The elink:XrSpacePersistenceModeFB enumeration specifies the persistence
 mode for the save operation.
 
-include::{generated}/api/enums/XrSpacePersistenceModeFB.comments-box.txt[]
+include::{generated}/api/enums/XrSpacePersistenceModeFB.comments-box.adoc[]
 --
 
 *New Structures*
@@ -66,7 +66,7 @@ include::{generated}/api/enums/XrSpacePersistenceModeFB.comments-box.txt[]
 --
 The slink:XrSpaceSaveInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceSaveInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceSaveInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -83,14 +83,14 @@ include::{generated}/api/structs/XrSpaceSaveInfoFB.txt[]
 The slink:XrSpaceSaveInfoFB structure contains information used to save the
 spatial entity.
 
-include::{generated}/validity/structs/XrSpaceSaveInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceSaveInfoFB.adoc[]
 --
 
 [open,refpage='XrSpaceEraseInfoFB',type='structs',desc='Parameters for an erase operation',xrefs='']
 --
 The slink:XrSpaceEraseInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceEraseInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceEraseInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -106,14 +106,14 @@ include::{generated}/api/structs/XrSpaceEraseInfoFB.txt[]
 The slink:XrSpaceEraseInfoFB structure contains information used to erase
 the spatial entity.
 
-include::{generated}/validity/structs/XrSpaceEraseInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceEraseInfoFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceSaveCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
 --
 The slink:XrEventDataSpaceSaveCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceSaveCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceSaveCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -134,14 +134,14 @@ the specified location, as well as the slink:XrSpace handle on which the
 save operation was attempted on, the unique UUID, and the triggered async
 request ID from the initial calling function.
 
-include::{generated}/validity/structs/XrEventDataSpaceSaveCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceSaveCompleteFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceEraseCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
 --
 The slink:XrEventDataSpaceEraseCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceEraseCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceEraseCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -162,7 +162,7 @@ specified storage location.
 It also provides the UUID of the entity and the async request ID from the
 initial calling function.
 
-include::{generated}/validity/structs/XrEventDataSpaceEraseCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceEraseCompleteFB.adoc[]
 --
 
 *New Functions*
@@ -171,7 +171,7 @@ include::{generated}/validity/structs/XrEventDataSpaceEraseCompleteFB.txt[]
 --
 The flink:xrSaveSpaceFB function is defined as:
 
-include::{generated}/api/protos/xrSaveSpaceFB.txt[]
+include::{generated}/api/protos/xrSaveSpaceFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -194,14 +194,14 @@ slink:XrEventDataSpaceSaveCompleteFB event when the operation completes
 successfully or encounters an error.
 If this function returns a failure code, no event is posted.
 
-include::{generated}/validity/protos/xrSaveSpaceFB.txt[]
+include::{generated}/validity/protos/xrSaveSpaceFB.adoc[]
 --
 
 [open,refpage='xrEraseSpaceFB',desc='Erases a spatial entity from persistent storage',type='protos',xrefs='xrSaveSpaceFB']
 --
 The flink:xrEraseSpaceFB function is defined as:
 
-include::{generated}/api/protos/xrEraseSpaceFB.txt[]
+include::{generated}/api/protos/xrEraseSpaceFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -225,7 +225,7 @@ slink:XrEventDataSpaceEraseCompleteFB event when the operation completes
 successfully or encounters an error.
 If this function returns a failure code, no event is posted.
 
-include::{generated}/validity/protos/xrEraseSpaceFB.txt[]
+include::{generated}/validity/protos/xrEraseSpaceFB.adoc[]
 --
 
 *Issues*

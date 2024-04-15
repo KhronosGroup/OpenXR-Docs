@@ -38,7 +38,7 @@ In summary, the APIs allow:
 
 ==== Setting Performance Levels Hints
 
-[[EXT_performance_settings-level-definition]]
+[[ext_performance_settings-level-definition]]
 ===== Performance level hint definition
 
 The XR performance level hints for a given hardware system are expressed as
@@ -48,12 +48,12 @@ domain):
 
 [open,refpage='XrPerfSettingsDomainEXT',type='enums',desc='XrPerfSettingsDomainEXT']
 --
-include::{generated}/api/enums/XrPerfSettingsDomainEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.adoc[]
 --
 
 [open,refpage='XrPerfSettingsLevelEXT',type='enums',desc='XrPerfSettingsLevelEXT']
 --
-include::{generated}/api/enums/XrPerfSettingsLevelEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsLevelEXT.adoc[]
 --
 
 This extension defines platform-independent level hints:
@@ -90,14 +90,14 @@ application should also in the sustainable modes be prepared to react to
 performance notifications (in particular
 ename:XR_PERF_SETTINGS_NOTIF_LEVEL_WARNING_EXT and
 ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT in the thermal sub-domain,
-see <<performance-settings-notification-levels>>). +
+see <<ext_performance_settings-notification-levels>>). +
 
 The XR Runtime shall select ename:XR_PERF_SETTINGS_LEVEL_SUSTAINED_HIGH_EXT
 as the default hint if the application does not provide any.
 The function to call for setting performance level hints is
 flink:xrPerfSettingsSetPerformanceLevelEXT.
 
-include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.txt[]]
+include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.adoc[]]
 
 ===== Example of using the short-term boost level hint
 
@@ -195,9 +195,9 @@ their deadlines, or the thermal pname:subDomain to avoid or stop throttling.
 When improvement is observed, the application can potentially rollback some
 of its mitigations.
 
-include::{generated}/api/structs/XrEventDataPerfSettingsEXT.no-xref.txt[]
+include::{generated}/api/structs/XrEventDataPerfSettingsEXT.no-xref.adoc[]
 
-include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.no-xref.adoc[]
 
 ===== Compositing Sub-Domain
 One of the major functions the runtime shall provide is the timely
@@ -235,12 +235,12 @@ The performance notification with the pname:subDomain set to
 ename:XR_PERF_SETTINGS_SUB_DOMAIN_THERMAL_EXT provides an early warning
 allowing the application to take mitigation actions.
 
-[[performance-settings-notification-levels]]
+[[ext_performance_settings-notification-levels]]
 ===== Notification level definition
 
 The levels are defined as follows:
 
-include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.adoc[]
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT notifies that the sub-domain
   has reached a level where no further actions other than currently applied
   are necessary.
@@ -337,7 +337,7 @@ within thermal limits) have ended.​
 
 [open,refpage='xrPerfSettingsSetPerformanceLevelEXT',type='protos',desc='xrPerfSettingsSetPerformanceLevelEXT',xrefs='']
 --
-include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
+include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -346,10 +346,10 @@ include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
 * pname:level: the level hint to be applied
 ****
 
-include::{generated}/validity/protos/xrPerfSettingsSetPerformanceLevelEXT.txt[]
+include::{generated}/validity/protos/xrPerfSettingsSetPerformanceLevelEXT.adoc[]
 --
 
-Refer to <<EXT_performance_settings-level-definition>> for the definition of
+Refer to <<ext_performance_settings-level-definition>> for the definition of
 the level enumerations.
 
 '''
@@ -357,7 +357,7 @@ the level enumerations.
 
 [open,refpage='XrEventDataPerfSettingsEXT',type='structs',desc='XrEventDataPerfSettingsEXT',xrefs='']
 --
-include::{generated}/api/structs/XrEventDataPerfSettingsEXT.txt[]
+include::{generated}/api/structs/XrEventDataPerfSettingsEXT.adoc[]
 
 .Member Descriptions
 ****
@@ -371,19 +371,19 @@ include::{generated}/api/structs/XrEventDataPerfSettingsEXT.txt[]
 * pname:toLevel : enumerated notification level which has been entered
 ****
 
-include::{generated}/validity/structs/XrEventDataPerfSettingsEXT.txt[]
+include::{generated}/validity/structs/XrEventDataPerfSettingsEXT.adoc[]
 --
 
-include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.txt[]
+include::{generated}/api/enums/XrPerfSettingsDomainEXT.no-xref.adoc[]
 
 [open,refpage='XrPerfSettingsSubDomainEXT',type='enums',desc='XrPerfSettingsSubDomainEXT',xrefs='']
 --
-include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.adoc[]
 --
 
 [open,refpage='XrPerfSettingsNotificationLevelEXT',type='enums',desc='XrPerfSettingsNotificationLevelEXT',xrefs='']
 --
-include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.txt[]
+include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.adoc[]
 --
 
 *Version History*

@@ -30,7 +30,7 @@ inspect what reprojection mode the view configuration supports.
 The flink:xrEnumerateReprojectionModesMSFT function returns the supported
 reprojection modes of the view configuration.
 
-include::{generated}/api/protos/xrEnumerateReprojectionModesMSFT.txt[]
+include::{generated}/api/protos/xrEnumerateReprojectionModesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -48,11 +48,11 @@ include::{generated}/api/protos/xrEnumerateReprojectionModesMSFT.txt[]
   filled with the elink:XrReprojectionModeMSFT values that are supported by
   the runtime.
   It can: be code:NULL if pname:modeCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:modes size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:modes size.
 ****
 
-include::{generated}/validity/protos/xrEnumerateReprojectionModesMSFT.txt[]
+include::{generated}/validity/protos/xrEnumerateReprojectionModesMSFT.adoc[]
 
 A system may: support different sets of reprojection modes for different
 view configuration types.
@@ -68,7 +68,7 @@ An slink:XrCompositionLayerReprojectionInfoMSFT structure can: be added to
 the pname:next chain of slink:XrCompositionLayerProjection structure when
 calling flink:xrEndFrame.
 
-include::{generated}/api/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
+include::{generated}/api/structs/XrCompositionLayerReprojectionInfoMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -79,7 +79,7 @@ include::{generated}/api/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
   hint to the reprojection mode to the corresponding projection layer.
 ****
 
-include::{generated}/validity/structs/XrCompositionLayerReprojectionInfoMSFT.txt[]
+include::{generated}/validity/structs/XrCompositionLayerReprojectionInfoMSFT.adoc[]
 
 When the application chained this structure when calling flink:xrEndFrame,
 the pname:reprojectionMode must: be one of the supported
@@ -101,7 +101,7 @@ in flink:xrEndFrame function, and it must: not affect other frames.
 The elink:XrReprojectionModeMSFT describes the reprojection mode of a
 projection composition layer.
 
-include::{generated}/api/enums/XrReprojectionModeMSFT.txt[]
+include::{generated}/api/enums/XrReprojectionModeMSFT.adoc[]
 
 ****
 * ename:XR_REPROJECTION_MODE_DEPTH_MSFT indicates the corresponding layer
@@ -167,7 +167,7 @@ pname:next chain of slink:XrCompositionLayerProjection structure.
 The runtime must: only use the given plane override for the corresponding
 frame in flink:xrEndFrame function, and it must: not affect other frames.
 
-include::{generated}/api/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.txt[]
+include::{generated}/api/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -198,7 +198,7 @@ ename:XR_REPROJECTION_MODE_PLANAR_MANUAL_MSFT.
 When application choose ename:XR_REPROJECTION_MODE_ORIENTATION_ONLY_MSFT
 mode, the reprojection plane override may: be ignored by the runtime.
 
-include::{generated}/validity/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.txt[]
+include::{generated}/validity/structs/XrCompositionLayerReprojectionPlaneOverrideMSFT.adoc[]
 
 --
 

@@ -52,7 +52,7 @@ apiext:XR_KHR_vulkan_enable or the apiext:XR_KHR_vulkan_enable2 extension.
 
 [open,refpage='XrVulkanSwapchainCreateInfoMETA',type='structs',desc='Debug utils object name info']
 --
-include::{generated}/api/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+include::{generated}/api/structs/XrVulkanSwapchainCreateInfoMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -70,7 +70,7 @@ The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if any bit of
 either pname:additionalCreateFlags or pname:additionalUsageFlags is not
 supported.
 
-include::{generated}/validity/structs/XrVulkanSwapchainCreateInfoMETA.txt[]
+include::{generated}/validity/structs/XrVulkanSwapchainCreateInfoMETA.adoc[]
 --
 
 *New Functions*

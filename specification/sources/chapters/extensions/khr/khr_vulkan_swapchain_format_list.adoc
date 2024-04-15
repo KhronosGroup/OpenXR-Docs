@@ -54,7 +54,7 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrVulkanSwapchainFormatListCreateInfoKHR',type='structs',desc='A list of Vulkan view formats',xrefs='xrCreateSwapchain']
 --
-include::{generated}/api/structs/XrVulkanSwapchainFormatListCreateInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanSwapchainFormatListCreateInfoKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -67,7 +67,7 @@ include::{generated}/api/structs/XrVulkanSwapchainFormatListCreateInfoKHR.txt[]
 * pname:viewFormats is an array of sname:VkFormat.
 ****
 
-include::{generated}/validity/structs/XrVulkanSwapchainFormatListCreateInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanSwapchainFormatListCreateInfoKHR.adoc[]
 --
 
 *New Functions*

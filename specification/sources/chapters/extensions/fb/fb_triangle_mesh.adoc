@@ -27,13 +27,13 @@ This extension allows:
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
 [open,refpage='XrTriangleMeshFB',type='handles',desc='Triangle mesh']
 --
-include::{generated}/api/handles/XrTriangleMeshFB.txt[]
+include::{generated}/api/handles/XrTriangleMeshFB.adoc[]
 
 slink:XrTriangleMeshFB represents a triangle mesh with its corresponding
 mesh data: a vertex buffer and an index buffer.
@@ -43,13 +43,13 @@ mesh data: a vertex buffer and an index buffer.
 
 [open,refpage='XrTriangleMeshFlagsFB',type='flags',desc='XrTriangleMeshFlagsFB',xrefs='XrTriangleMeshFlagBitsFB']
 --
-include::{generated}/api/flags/XrTriangleMeshFlagsFB.txt[]
+include::{generated}/api/flags/XrTriangleMeshFlagsFB.adoc[]
 --
 
 [open,refpage='XrTriangleMeshFlagBitsFB',type='enums',desc='XrTriangleMeshFlagBitsFB',xrefs='XrTriangleMeshFlagsFB']
 --
-include::{generated}/api/enums/XrTriangleMeshFlagBitsFB.txt[]
-include::{generated}/api/enums/XrTriangleMeshFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrTriangleMeshFlagBitsFB.adoc[]
+include::{generated}/api/enums/XrTriangleMeshFlagBitsFB.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -66,8 +66,8 @@ Applications may specify the triangle winding order of a mesh - whether the
 vertices of an outward-facing side of a triangle appear in clockwise or
 counter-clockwise order - using elink:XrWindingOrderFB enumeration.
 
-include::{generated}/api/enums/XrWindingOrderFB.txt[]
-include::{generated}/api/enums/XrWindingOrderFB.comments-box.txt[]
+include::{generated}/api/enums/XrWindingOrderFB.adoc[]
+include::{generated}/api/enums/XrWindingOrderFB.comments-box.adoc[]
 --
 
 *New Structures*
@@ -80,7 +80,7 @@ flink:xrCreateTriangleMeshFB.
 
 The slink:XrTriangleMeshCreateInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrTriangleMeshCreateInfoFB.txt[]
+include::{generated}/api/structs/XrTriangleMeshCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -124,7 +124,7 @@ array of pname:vertexCount slink:XrVector3f structures.
 If the mesh is non-mutable, pname:indexBuffer must: be a pointer to an array
 of 3 * pname:triangleCount code:uint32_t vertex indices.
 
-include::{generated}/validity/structs/XrTriangleMeshCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrTriangleMeshCreateInfoFB.adoc[]
 --
 
 *Mutable Mesh Update States*
@@ -172,7 +172,7 @@ The states are as follows:
 --
 The flink:xrCreateTriangleMeshFB function is defined as:
 
-include::{generated}/api/protos/xrCreateTriangleMeshFB.txt[]
+include::{generated}/api/protos/xrCreateTriangleMeshFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -194,14 +194,14 @@ Immutable meshes have no state machine; they may be considered to be in
 state <<fb_triangle_mesh_state_ready>> with no valid edges leaving that
 state.
 
-include::{generated}/validity/protos/xrCreateTriangleMeshFB.txt[]
+include::{generated}/validity/protos/xrCreateTriangleMeshFB.adoc[]
 --
 
 [open,refpage='xrDestroyTriangleMeshFB',desc='Destroy a triangle mesh',type='protos',xrefs='XrTriangleMeshFB']
 --
 The flink:xrDestroyTriangleMeshFB function is defined as:
 
-include::{generated}/api/protos/xrDestroyTriangleMeshFB.txt[]
+include::{generated}/api/protos/xrDestroyTriangleMeshFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -214,14 +214,14 @@ The mesh buffers retrieved by flink:xrTriangleMeshGetVertexBufferFB and
 flink:xrTriangleMeshGetIndexBufferFB must: not be accessed anymore after
 their parent mesh object has been destroyed.
 
-include::{generated}/validity/protos/xrDestroyTriangleMeshFB.txt[]
+include::{generated}/validity/protos/xrDestroyTriangleMeshFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshGetVertexBufferFB',desc='Obtain the vertex buffer of a triangle mesh',type='protos',xrefs='xrTriangleMeshGetIndexBufferFB']
 --
 The flink:xrTriangleMeshGetVertexBufferFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshGetVertexBufferFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshGetVertexBufferFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -250,14 +250,14 @@ A mesh must: be mutable and in a specific state for the application to
   in the vertex buffer retrieved by this function.
   The new count is passed as a parameter to flink:xrTriangleMeshEndUpdateFB.
 
-include::{generated}/validity/protos/xrTriangleMeshGetVertexBufferFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshGetVertexBufferFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshGetIndexBufferFB',desc='Obtain the index buffer of a triangle mesh',type='protos',xrefs='xrTriangleMeshGetVertexBufferFB']
 --
 The flink:xrTriangleMeshGetIndexBufferFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshGetIndexBufferFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshGetIndexBufferFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -280,14 +280,14 @@ A triangle mesh must: be mutable and in state
 the contents and/or triangle count in the index buffer retrieved by this
 function.
 
-include::{generated}/validity/protos/xrTriangleMeshGetIndexBufferFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshGetIndexBufferFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshBeginUpdateFB',desc='Begin an update of the mesh data',type='protos',xrefs='xrTriangleMeshEndUpdateFB']
 --
 The flink:xrTriangleMeshBeginUpdateFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshBeginUpdateFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshBeginUpdateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -320,14 +320,14 @@ The triangle mesh pname:mesh must: be in state
   this call, a successful call moves it to state
   <<fb_triangle_mesh_state_updating_mesh>>.
 
-include::{generated}/validity/protos/xrTriangleMeshBeginUpdateFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshBeginUpdateFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshEndUpdateFB',desc='End an update of the mesh data',type='protos',xrefs='xrTriangleMeshBeginUpdateFB']
 --
 The flink:xrTriangleMeshEndUpdateFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshEndUpdateFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshEndUpdateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -356,14 +356,14 @@ The triangle mesh pname:mesh must: be in state
 A successful call moves pname:mesh to state
 <<fb_triangle_mesh_state_ready>>.
 
-include::{generated}/validity/protos/xrTriangleMeshEndUpdateFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshEndUpdateFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshBeginVertexBufferUpdateFB',desc='Begin an update of the vertex data',type='protos',xrefs='xrTriangleMeshBeginUpdateFB xrTriangleMeshEndVertexBufferUpdateFB']
 --
 The flink:xrTriangleMeshBeginVertexBufferUpdateFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshBeginVertexBufferUpdateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -390,14 +390,14 @@ The triangle mesh pname:mesh must: be in state
 A successful call moves pname:mesh to state
 <<fb_triangle_mesh_state_updating_vertices>>.
 
-include::{generated}/validity/protos/xrTriangleMeshBeginVertexBufferUpdateFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshBeginVertexBufferUpdateFB.adoc[]
 --
 
 [open,refpage='xrTriangleMeshEndVertexBufferUpdateFB',desc='End an update of the vertex data',type='protos',xrefs='xrTriangleMeshBeginVertexBufferUpdateFB']
 --
 The flink:xrTriangleMeshEndVertexBufferUpdateFB function is defined as:
 
-include::{generated}/api/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
+include::{generated}/api/protos/xrTriangleMeshEndVertexBufferUpdateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -418,7 +418,7 @@ The triangle mesh pname:mesh must: be in state
 A successful call moves pname:mesh to state
 <<fb_triangle_mesh_state_ready>>.
 
-include::{generated}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.txt[]
+include::{generated}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.adoc[]
 --
 
 *Issues*

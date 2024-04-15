@@ -56,7 +56,7 @@ This function follows the two-call idiom for filling the buffer.
 
 The flink:xrGetSerializedSceneFragmentDataMSFT function is defined as:
 
-include::{generated}/api/protos/xrGetSerializedSceneFragmentDataMSFT.txt[]
+include::{generated}/api/protos/xrGetSerializedSceneFragmentDataMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -71,14 +71,14 @@ include::{generated}/api/protos/xrGetSerializedSceneFragmentDataMSFT.txt[]
 The runtime must: return ename:XR_ERROR_SCENE_COMPONENT_ID_INVALID_MSFT if
 the given scene fragment slink:XrUuidMSFT was not found.
 
-include::{generated}/validity/protos/xrGetSerializedSceneFragmentDataMSFT.txt[]
+include::{generated}/validity/protos/xrGetSerializedSceneFragmentDataMSFT.adoc[]
 --
 
 [open,refpage='XrSerializedSceneFragmentDataGetInfoMSFT',desc='The information to get the serialized scene fragment data',type='structs',xrefs='xrGetSerializedSceneFragmentDataMSFT']
 --
 The slink:XrSerializedSceneFragmentDataGetInfoMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSerializedSceneFragmentDataGetInfoMSFT.txt[]
+include::{generated}/api/structs/XrSerializedSceneFragmentDataGetInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -91,7 +91,7 @@ include::{generated}/api/structs/XrSerializedSceneFragmentDataGetInfoMSFT.txt[]
   ename:XR_SCENE_COMPONENT_TYPE_SERIALIZED_SCENE_FRAGMENT_MSFT.
 ****
 
-include::{generated}/validity/structs/XrSerializedSceneFragmentDataGetInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSerializedSceneFragmentDataGetInfoMSFT.adoc[]
 --
 
 *Deserialize a scene*
@@ -108,7 +108,7 @@ scene from the given binary scene fragment data.
 --
 The flink:xrDeserializeSceneMSFT function is defined as:
 
-include::{generated}/api/protos/xrDeserializeSceneMSFT.txt[]
+include::{generated}/api/protos/xrDeserializeSceneMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -146,7 +146,7 @@ returns ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT, a valid
 slink:XrSceneMSFT handle must: be returned, but that handle must: contain
 zero scene components.
 
-include::{generated}/validity/protos/xrDeserializeSceneMSFT.txt[]
+include::{generated}/validity/protos/xrDeserializeSceneMSFT.adoc[]
 --
 
 [open,refpage='XrSceneDeserializeInfoMSFT',desc='The information to deserialize a binary scene',type='structs',xrefs='XrDeserializeSceneFragmentMSFT xrDeserializeSceneMSFT']
@@ -155,7 +155,7 @@ slink:XrSceneDeserializeInfoMSFT is an input structure that describes the
 array of serialized scene fragments that will be deserialized by the
 flink:xrDeserializeSceneMSFT function.
 
-include::{generated}/api/structs/XrSceneDeserializeInfoMSFT.txt[]
+include::{generated}/api/structs/XrSceneDeserializeInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -173,7 +173,7 @@ flink:xrGetSceneComponentsMSFT or the runtime failed to deserialized the
 binary data then flink:xrGetSceneComputeStateMSFT must: return
 ename:XR_SCENE_COMPUTE_STATE_COMPLETED_WITH_ERROR_MSFT.
 
-include::{generated}/validity/structs/XrSceneDeserializeInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSceneDeserializeInfoMSFT.adoc[]
 --
 
 [open,refpage='XrDeserializeSceneFragmentMSFT',desc='Deserialize Scene Fragment',type='structs',xrefs='XrSceneDeserializeInfoMSFT']
@@ -182,7 +182,7 @@ The slink:XrDeserializeSceneFragmentMSFT structure represents a single
 fragment of a binary stream to be deserialized.
 It is defined as:
 
-include::{generated}/api/structs/XrDeserializeSceneFragmentMSFT.txt[]
+include::{generated}/api/structs/XrDeserializeSceneFragmentMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -191,7 +191,7 @@ include::{generated}/api/structs/XrDeserializeSceneFragmentMSFT.txt[]
   deserialized.
 ****
 
-include::{generated}/validity/structs/XrDeserializeSceneFragmentMSFT.txt[]
+include::{generated}/validity/structs/XrDeserializeSceneFragmentMSFT.adoc[]
 --
 
 *New Object Types*

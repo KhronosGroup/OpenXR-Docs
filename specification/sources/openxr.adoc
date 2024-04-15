@@ -2,7 +2,11 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
-= The OpenXR(TM) Specification
+// Core versions and extensions to enable
+// Must be included before the header and attribs.adoc
+include::{generated}/specattribs.adoc[]
+
+= The OpenXR™ {revnumber} Specification {apititle}
 :regtitle: pass:q,r[^®^]
 The Khronos{regtitle} OpenXR Working Group
 :data-uri:
@@ -13,8 +17,10 @@ The Khronos{regtitle} OpenXR Working Group
 :numbered:
 :imagewidth: 800
 :fullimagewidth: width="800"
-:source-highlighter: prettify
+:source-highlighter: rouge
+:rouge-style: github
 :docinfo: shared-footer
+:attribute-missing: warn
 
 
 // Include attributes for special symbols
@@ -27,43 +33,40 @@ toc::[]
 // Preamble "chapter"
 
 :numbered!:
-include::chapters/preamble.adoc[]
+include::{chapters}/preamble.adoc[]
 
 :numbered:
 // Actual chapters
 
-include::chapters/introduction.adoc[]
+include::{chapters}/introduction.adoc[]
 
-include::chapters/fundamentals.adoc[]
+include::{chapters}/fundamentals.adoc[]
 
-include::chapters/api_initialization.adoc[]
+include::{chapters}/api_initialization.adoc[]
 
-include::chapters/instance.adoc[]
+include::{chapters}/instance.adoc[]
 
-include::chapters/system.adoc[]
+include::{chapters}/system.adoc[]
 
-include::chapters/semantic_paths.adoc[]
+include::{chapters}/semantic_paths.adoc[]
 
-include::chapters/spaces.adoc[]
+include::{chapters}/spaces.adoc[]
 
-include::chapters/view_configurations.adoc[]
+include::{chapters}/view_configurations.adoc[]
 
-include::chapters/session.adoc[]
+include::{chapters}/session.adoc[]
 
-include::chapters/rendering.adoc[]
+include::{chapters}/rendering.adoc[]
 
-include::chapters/input.adoc[]
-
-// Extension process removed from specification
-// per discussion.  See (i/863) for issue involving adding
-// it back.
-// include::chapters/extensions/extension_process.adoc[]
+include::{chapters}/input.adoc[]
 
 include::{generated}/meta/current_extensions_appendix.adoc[]
 
 include::{generated}/meta/provisional_extensions_appendix.adoc[]
 
 include::{generated}/meta/deprecated_extensions_appendix.adoc[]
+
+include::{chapters}/versions.adoc[]
 
 :numbered!:
 
@@ -72,7 +75,7 @@ ifndef::backend-pdf[]
 include::{generated}/index.adoc[]
 endif::backend-pdf[]
 
-include::chapters/appendix.adoc[]
+include::{chapters}/appendix.adoc[]
 
 // In PDF, use the auto-generated index.
 ifdef::backend-pdf[]

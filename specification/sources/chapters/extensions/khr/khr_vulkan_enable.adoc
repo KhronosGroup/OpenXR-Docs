@@ -190,7 +190,7 @@ certain operating systems.
 --
 The slink:XrGraphicsBindingVulkanKHR structure is defined as:
 
-include::{generated}/api/structs/XrGraphicsBindingVulkanKHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingVulkanKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -222,14 +222,14 @@ slink:XrSessionCreateInfo.
   flink:xrGetVulkanDeviceExtensionsKHR
 ****
 
-include::{generated}/validity/structs/XrGraphicsBindingVulkanKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingVulkanKHR.adoc[]
 --
 
 [open,refpage='XrSwapchainImageVulkanKHR',type='structs',desc='Vulkan-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
 The slink:XrSwapchainImageVulkanKHR structure is defined as:
 
-include::{generated}/api/structs/XrSwapchainImageVulkanKHR.txt[]
+include::{generated}/api/structs/XrSwapchainImageVulkanKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -257,14 +257,14 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing down, near Z plane at 0, and far Z plane at 1.
 
-include::{generated}/validity/structs/XrSwapchainImageVulkanKHR.txt[]
+include::{generated}/validity/structs/XrSwapchainImageVulkanKHR.adoc[]
 --
 
 [open,refpage='XrGraphicsRequirementsVulkanKHR',type='structs',desc='Vulkan API version requirements',xrefs='xrGetVulkanGraphicsRequirementsKHR']
 --
 The slink:XrGraphicsRequirementsVulkanKHR structure is defined as:
 
-include::{generated}/api/structs/XrGraphicsRequirementsVulkanKHR.txt[]
+include::{generated}/api/structs/XrGraphicsRequirementsVulkanKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -287,7 +287,7 @@ slink:XrGraphicsRequirementsVulkanKHR is populated by
 flink:xrGetVulkanGraphicsRequirementsKHR with the runtime's Vulkan API
 version requirements.
 
-include::{generated}/validity/structs/XrGraphicsRequirementsVulkanKHR.txt[]
+include::{generated}/validity/structs/XrGraphicsRequirementsVulkanKHR.adoc[]
 --
 
 *New Functions*
@@ -296,7 +296,7 @@ include::{generated}/validity/structs/XrGraphicsRequirementsVulkanKHR.txt[]
 --
 To query Vulkan API version requirements, call:
 
-include::{generated}/api/protos/xrGetVulkanGraphicsRequirementsKHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsRequirementsKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -317,7 +317,7 @@ on calls to flink:xrCreateSession if
 flink:xrGetVulkanGraphicsRequirementsKHR has not been called for the same
 pname:instance and pname:systemId.
 
-include::{generated}/validity/protos/xrGetVulkanGraphicsRequirementsKHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsRequirementsKHR.adoc[]
 --
 
 Some computer systems may have multiple graphics devices, each of which may
@@ -332,7 +332,7 @@ so that they can use that graphics device to generate XR images.
 To identify what graphics device needs to be used for an instance and
 system, call:
 
-include::{generated}/api/protos/xrGetVulkanGraphicsDeviceKHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsDeviceKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -352,12 +352,12 @@ flink:xrCreateSession, and the sname:VkPhysicalDevice that
 flink:xrGetVulkanGraphicsDeviceKHR returns should be passed to
 flink:xrCreateSession in the slink:XrGraphicsBindingVulkanKHR.
 
-include::{generated}/validity/protos/xrGetVulkanGraphicsDeviceKHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsDeviceKHR.adoc[]
 --
 
 [open,refpage='xrGetVulkanInstanceExtensionsKHR',type='protos',desc='Get list of required Vulkan instance extensions for an OpenXR instance and system',xrefs='xrGetVulkanDeviceExtensionsKHR']
 --
-include::{generated}/api/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
+include::{generated}/api/protos/xrGetVulkanInstanceExtensionsKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -374,16 +374,16 @@ include::{generated}/api/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
   if pname:bufferCapacityInput is 0.
   The format of the output is a single space (ASCII `0x20`) delimited string
   of extension names.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
-include::{generated}/validity/protos/xrGetVulkanInstanceExtensionsKHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanInstanceExtensionsKHR.adoc[]
 --
 
 [open,refpage='xrGetVulkanDeviceExtensionsKHR',type='protos',desc='Get list of required Vulkan device extensions for an OpenXR instance and system',xrefs='xrGetVulkanInstanceExtensionsKHR']
 --
-include::{generated}/api/protos/xrGetVulkanDeviceExtensionsKHR.txt[]
+include::{generated}/api/protos/xrGetVulkanDeviceExtensionsKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -400,11 +400,11 @@ include::{generated}/api/protos/xrGetVulkanDeviceExtensionsKHR.txt[]
   if pname:bufferCapacityInput is 0.
   The format of the output is a single space (ASCII `0x20`) delimited string
   of extension names.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
-include::{generated}/validity/protos/xrGetVulkanDeviceExtensionsKHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanDeviceExtensionsKHR.adoc[]
 --
 
 *Issues*

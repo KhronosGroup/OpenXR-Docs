@@ -29,7 +29,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrCoordinateSpaceCreateInfoML structure is defined as:
 
-include::{generated}/api/structs/XrCoordinateSpaceCreateInfoML.txt[]
+include::{generated}/api/structs/XrCoordinateSpaceCreateInfoML.adoc[]
 
 .Member Descriptions
 ****
@@ -50,7 +50,7 @@ generated sname:MLCoordinateFrameUID to an slink:XrSpace.
 The conversion only needs to be done once even if the underlying
 sname:MLCoordinateFrameUID changes its pose.
 
-include::{generated}/validity/structs/XrCoordinateSpaceCreateInfoML.txt[]
+include::{generated}/validity/structs/XrCoordinateSpaceCreateInfoML.adoc[]
 --
 
 *New Functions*
@@ -59,7 +59,7 @@ include::{generated}/validity/structs/XrCoordinateSpaceCreateInfoML.txt[]
 --
 The flink:xrCreateSpaceFromCoordinateFrameUIDML function is defined as:
 
-include::{generated}/api/protos/xrCreateSpaceFromCoordinateFrameUIDML.txt[]
+include::{generated}/api/protos/xrCreateSpaceFromCoordinateFrameUIDML.adoc[]
 
 .Parameter Descriptions
 ****
@@ -79,7 +79,7 @@ service, the runtime may: set slink:XrSpaceLocation::pname:locationFlags to 0.
 
 slink:XrSpace handles are destroyed using flink:xrDestroySpace.
 
-include::{generated}/validity/protos/xrCreateSpaceFromCoordinateFrameUIDML.txt[]
+include::{generated}/validity/protos/xrCreateSpaceFromCoordinateFrameUIDML.adoc[]
 --
 
 *Issues*

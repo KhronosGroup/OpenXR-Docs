@@ -38,7 +38,7 @@ The slink:XrViewConfigurationViewFovEPIC structure is an output struct which
 can be added to the next chain of slink:XrViewConfigurationView to retrieve
 the field-of-view for that view.
 
-include::{generated}/api/structs/XrViewConfigurationViewFovEPIC.txt[]
+include::{generated}/api/structs/XrViewConfigurationViewFovEPIC.adoc[]
 
 .Member Descriptions
 ****
@@ -52,7 +52,7 @@ include::{generated}/api/structs/XrViewConfigurationViewFovEPIC.txt[]
   display.
 ****
 
-include::{generated}/validity/structs/XrViewConfigurationViewFovEPIC.txt[]
+include::{generated}/validity/structs/XrViewConfigurationViewFovEPIC.adoc[]
 --
 
 *New Functions*

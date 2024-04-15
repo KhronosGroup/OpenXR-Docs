@@ -55,7 +55,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerEquirect2KHR structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerEquirect2KHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerEquirect2KHR.adoc[]
 
 .Member Descriptions
 ****
@@ -92,7 +92,7 @@ slink:XrCompositionLayerEquirect2KHR is an alias type for the base struct
 slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
 
 
-include::{generated}/validity/structs/XrCompositionLayerEquirect2KHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerEquirect2KHR.adoc[]
 --
 
 *New Functions*

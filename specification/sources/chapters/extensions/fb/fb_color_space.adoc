@@ -27,7 +27,7 @@ This extension allows:
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -50,7 +50,7 @@ elink:XrResult enumeration is extended with:
 The possible color spaces are specified by the elink:XrColorSpaceFB
 enumeration.
 
-include::{generated}/api/enums/XrColorSpaceFB.txt[]
+include::{generated}/api/enums/XrColorSpaceFB.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -129,7 +129,7 @@ slink:XrSystemProperties when calling flink:xrGetSystemProperties.
 
 The slink:XrSystemColorSpacePropertiesFB structure is defined as:
 
-include::{generated}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemColorSpacePropertiesFB.adoc[]
 
 .Member Descriptions
 ****
@@ -140,7 +140,7 @@ include::{generated}/api/structs/XrSystemColorSpacePropertiesFB.txt[]
 * pname:colorSpace is the native color space of the XR device.
 ****
 
-include::{generated}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemColorSpacePropertiesFB.adoc[]
 --
 
 *New Functions*
@@ -149,7 +149,7 @@ include::{generated}/validity/structs/XrSystemColorSpacePropertiesFB.txt[]
 --
 The flink:xrEnumerateColorSpacesFB function is defined as:
 
-include::{generated}/api/protos/xrEnumerateColorSpacesFB.txt[]
+include::{generated}/api/protos/xrEnumerateColorSpacesFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -162,8 +162,8 @@ include::{generated}/api/protos/xrEnumerateColorSpacesFB.txt[]
   insufficient.
 * pname:colorSpaces is a pointer to an array of elink:XrColorSpaceFB color
   spaces, but can: be code:NULL if pname:colorSpaceCapacityInput is `0`.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:colorSpaces size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:colorSpaces size.
 ****
 
 flink:xrEnumerateColorSpacesFB enumerates the color spaces supported by the
@@ -171,14 +171,14 @@ current session.
 Runtimes must: always return identical buffer contents from this enumeration
 for the lifetime of the session.
 
-include::{generated}/validity/protos/xrEnumerateColorSpacesFB.txt[]
+include::{generated}/validity/protos/xrEnumerateColorSpacesFB.adoc[]
 --
 
 [open,refpage='xrSetColorSpaceFB',desc='Set a color space',type='protos',xrefs='xrEnumerateColorSpacesFB']
 --
 The flink:xrSetColorSpaceFB function is defined as:
 
-include::{generated}/api/protos/xrSetColorSpaceFB.txt[]
+include::{generated}/api/protos/xrSetColorSpaceFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -213,7 +213,7 @@ guide:
 link:https://developer.oculus.com/resources/color-management-guide/[Color
 Management in Oculus Headsets]
 
-include::{generated}/validity/protos/xrSetColorSpaceFB.txt[]
+include::{generated}/validity/protos/xrSetColorSpaceFB.adoc[]
 --
 
 *Issues*

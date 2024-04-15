@@ -11,14 +11,14 @@ made up of several individual hardware components working together to enable
 XR experiences.
 An basetype:XrSystemId is returned by flink:xrGetSystem representing the
 system of devices the runtime will use to support a given
-<<form_factor_description,form factor>>.
+<<system-form-factor-description,form factor>>.
 Each system may include: a VR/AR display, various forms of input (gamepad,
 touchpad, motion controller), and other trackable objects.
 
 The application uses the system to create a <<session,session>>, which can
 then be used to accept input from the user and output rendered frames.
-The application also provides a default set of bindings from its actions to
-any number of input sources.
+The application also provides suggested bindings from its actions to any
+number of input sources.
 The runtime may: use this action information to activate only a subset of
 devices and avoid wasting resources on devices that are not in use.
 Exactly which devices are active once an XR system is selected will depend
@@ -28,7 +28,7 @@ For example, a runtime that is capable of mapping from one tracking system's
 space to another's may: support devices from multiple tracking systems
 simultaneously.
 
-[[form_factor_description]]
+[[system-form-factor-description]]
 === Form Factors
 
 The first step in selecting a system is for the application to request its
@@ -47,7 +47,7 @@ headset.
 
 [open,refpage='XrFormFactor',desc='Supported form factors',type='enums',xrefs='XrSystemId xrGetSystem XR_NULL_SYSTEM_ID']
 --
-include::{generated}/api/enums/XrFormFactor.txt[]
+include::{generated}/api/enums/XrFormFactor.adoc[]
 
 The predefined form factors which may: be supported by OpenXR runtimes are:
 
@@ -66,12 +66,12 @@ The predefined form factors which may: be supported by OpenXR runtimes are:
 ****
 --
 
-[[getting-system]]
+[[system-getting]]
 === Getting the XrSystemId
 
 [open,refpage='XrSystemId',desc='Identifier for a system',type='basetypes',xrefs='xrGetSystem XR_NULL_SYSTEM_ID']
 --
-include::{generated}/api/basetypes/XrSystemId.txt[]
+include::{generated}/api/basetypes/XrSystemId.adoc[]
 
 An basetype:XrSystemId is an opaque atom used by the runtime to identify a
 system.
@@ -80,7 +80,7 @@ The value dlink:XR_NULL_SYSTEM_ID is considered an invalid system.
 
 [open,refpage='XR_NULL_SYSTEM_ID',desc='NULL system identifier',type='defines',xrefs='XrSystemId xrGetSystem']
 --
-include::{generated}/api/defines/XR_NULL_SYSTEM_ID.txt[]
+include::{generated}/api/defines/XR_NULL_SYSTEM_ID.adoc[]
 
 The only basetype:XrSystemId value defined to be constant across all
 instances is the invalid system dlink:XR_NULL_SYSTEM_ID.
@@ -93,7 +93,7 @@ as a structure attribute when a valid basetype:XrSystemId is required.
 --
 The flink:xrGetSystem function is defined as:
 
-include::{generated}/api/protos/xrGetSystem.txt[]
+include::{generated}/api/protos/xrGetSystem.adoc[]
 
 .Parameter Descriptions
 ****
@@ -105,8 +105,8 @@ include::{generated}/api/protos/xrGetSystem.txt[]
 ****
 
 To get an basetype:XrSystemId, an application specifies its desired
-<<form_factor_description,form factor>> to flink:xrGetSystem and gets the
-runtime's basetype:XrSystemId associated with that configuration.
+<<system-form-factor-description,form factor>> to flink:xrGetSystem and gets
+the runtime's basetype:XrSystemId associated with that configuration.
 
 If the form factor is supported but temporarily unavailable,
 flink:xrGetSystem must: return ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
@@ -115,14 +115,14 @@ factor it previously returned ename:XR_ERROR_FORM_FACTOR_UNAVAILABLE.
 For example, connecting or warming up hardware might cause an unavailable
 form factor to become available.
 
-include::{generated}/validity/protos/xrGetSystem.txt[]
+include::{generated}/validity/protos/xrGetSystem.adoc[]
 --
 
 [open,refpage='XrSystemGetInfo',desc='Specifies desired attributes of the system',type='structs',xrefs='xrGetSystem']
 --
 
 The slink:XrSystemGetInfo structure is defined as:
-include::{generated}/api/structs/XrSystemGetInfo.txt[]
+include::{generated}/api/structs/XrSystemGetInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -136,7 +136,7 @@ include::{generated}/api/structs/XrSystemGetInfo.txt[]
 The slink:XrSystemGetInfo structure specifies attributes about a system as
 desired by an application.
 
-include::{generated}/validity/structs/XrSystemGetInfo.txt[]
+include::{generated}/validity/structs/XrSystemGetInfo.adoc[]
 --
 
 
@@ -169,7 +169,7 @@ CHK_XR(xrGetSystem(instance, &system_get_info, &systemId));
 --
 The flink:xrGetSystemProperties function is defined as:
 
-include::{generated}/api/protos/xrGetSystemProperties.txt[]
+include::{generated}/api/protos/xrGetSystemProperties.adoc[]
 
 .Parameter Descriptions
 ****
@@ -184,14 +184,14 @@ An application can: call flink:xrGetSystemProperties to retrieve information
 about the system such as vendor ID, system name, and graphics and tracking
 properties.
 
-include::{generated}/validity/protos/xrGetSystemProperties.txt[]
+include::{generated}/validity/protos/xrGetSystemProperties.adoc[]
 --
 
 [open,refpage='XrSystemProperties',desc='Properties of a particular system',type='structs',xrefs='XrSystemId xrGetSystem xrGetSystemProperties XrSystemGraphicsProperties XrSystemTrackingProperties']
 --
 The slink:XrSystemProperties structure is defined as:
 
-include::{generated}/api/structs/XrSystemProperties.txt[]
+include::{generated}/api/structs/XrSystemProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -207,7 +207,7 @@ include::{generated}/api/structs/XrSystemProperties.txt[]
   specifying system tracking properties.
 ****
 
-include::{generated}/validity/structs/XrSystemProperties.txt[]
+include::{generated}/validity/structs/XrSystemProperties.adoc[]
 --
 
 [open,refpage='XrSystemGraphicsProperties',desc='Graphics-related properties of a particular system',type='structs',xrefs='XrSystemId xrGetSystem xrGetSystemProperties XrSystemProperties XrSystemTrackingProperties']
@@ -219,7 +219,7 @@ device or a Khronos vendor ID.
 
 The slink:XrSystemGraphicsProperties structure is defined as:
 
-include::{generated}/api/structs/XrSystemGraphicsProperties.txt[]
+include::{generated}/api/structs/XrSystemGraphicsProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -233,12 +233,12 @@ include::{generated}/api/structs/XrSystemGraphicsProperties.txt[]
   dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED layers.
 ****
 
-include::{generated}/validity/structs/XrSystemGraphicsProperties.txt[]
+include::{generated}/validity/structs/XrSystemGraphicsProperties.adoc[]
 --
 
 [open,refpage='XR_MIN_COMPOSITION_LAYERS_SUPPORTED',desc='Defines the minimum composition layers that a conformant runtime must support',type='defines',xrefs='XrSystemGraphicsProperties']
 --
-include::{generated}/api/defines/XR_MIN_COMPOSITION_LAYERS_SUPPORTED.txt[]
+include::{generated}/api/defines/XR_MIN_COMPOSITION_LAYERS_SUPPORTED.adoc[]
 
 dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED defines the minimum number of
 composition layers that a conformant runtime must support.
@@ -251,7 +251,7 @@ dlink:XR_MIN_COMPOSITION_LAYERS_SUPPORTED.
 --
 The slink:XrSystemTrackingProperties structure is defined as:
 
-include::{generated}/api/structs/XrSystemTrackingProperties.txt[]
+include::{generated}/api/structs/XrSystemTrackingProperties.adoc[]
 
 .Member Descriptions
 ****
@@ -263,5 +263,5 @@ include::{generated}/api/structs/XrSystemTrackingProperties.txt[]
   otherwise.
 ****
 
-include::{generated}/validity/structs/XrSystemTrackingProperties.txt[]
+include::{generated}/validity/structs/XrSystemTrackingProperties.adoc[]
 --

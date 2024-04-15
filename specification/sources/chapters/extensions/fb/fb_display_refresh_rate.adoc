@@ -34,7 +34,7 @@ This extension allows:
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -61,7 +61,7 @@ indicates that the display refresh rate has changed.
 
 The slink:XrEventDataDisplayRefreshRateChangedFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+include::{generated}/api/structs/XrEventDataDisplayRefreshRateChangedFB.adoc[]
 
 .Member Descriptions
 ****
@@ -73,7 +73,7 @@ include::{generated}/api/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
 * pname:toDisplayRefreshRate is the new display refresh rate.
 ****
 
-include::{generated}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt[]
+include::{generated}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.adoc[]
 --
 
 *New Functions*
@@ -82,7 +82,7 @@ include::{generated}/validity/structs/XrEventDataDisplayRefreshRateChangedFB.txt
 --
 The flink:xrEnumerateDisplayRefreshRatesFB function is defined as:
 
-include::{generated}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+include::{generated}/api/protos/xrEnumerateDisplayRefreshRatesFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -97,9 +97,8 @@ include::{generated}/api/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
 * pname:displayRefreshRates is a pointer to an array of code:float display
   refresh rates, but can: be code:NULL if
   pname:displayRefreshRateCapacityInput is `0`.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:displayRefreshRates
-  size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:displayRefreshRates size.
 ****
 
 flink:xrEnumerateDisplayRefreshRatesFB enumerates the display refresh rates
@@ -109,14 +108,14 @@ display refresh rates.
 Runtimes must: always return identical buffer contents from this enumeration
 for the lifetime of the session.
 
-include::{generated}/validity/protos/xrEnumerateDisplayRefreshRatesFB.txt[]
+include::{generated}/validity/protos/xrEnumerateDisplayRefreshRatesFB.adoc[]
 --
 
 [open,refpage='xrGetDisplayRefreshRateFB',desc='Get the current display refresh rate',type='protos',xrefs='xrRequestDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
 --
 The flink:xrGetDisplayRefreshRateFB function is defined as:
 
-include::{generated}/api/protos/xrGetDisplayRefreshRateFB.txt[]
+include::{generated}/api/protos/xrGetDisplayRefreshRateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -127,14 +126,14 @@ include::{generated}/api/protos/xrGetDisplayRefreshRateFB.txt[]
 
 flink:xrGetDisplayRefreshRateFB retrieves the current display refresh rate.
 
-include::{generated}/validity/protos/xrGetDisplayRefreshRateFB.txt[]
+include::{generated}/validity/protos/xrGetDisplayRefreshRateFB.adoc[]
 --
 
 [open,refpage='xrRequestDisplayRefreshRateFB',desc='Request a display refresh rate',type='protos',xrefs='xrGetDisplayRefreshRateFB xrEnumerateDisplayRefreshRatesFB']
 --
 The flink:xrRequestDisplayRefreshRateFB function is defined as:
 
-include::{generated}/api/protos/xrRequestDisplayRefreshRateFB.txt[]
+include::{generated}/api/protos/xrRequestDisplayRefreshRateFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -156,7 +155,7 @@ preference.
 Note that this is only a request and does not guarantee the system will
 switch to the requested display refresh rate.
 
-include::{generated}/validity/protos/xrRequestDisplayRefreshRateFB.txt[]
+include::{generated}/validity/protos/xrRequestDisplayRefreshRateFB.adoc[]
 --
 
 *Issues*

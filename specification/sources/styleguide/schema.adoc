@@ -21,6 +21,9 @@ for a machine-readable definition of OpenXR.
 Maintaining compatibility with Vulkan, with whom we share substantial
 specification toolchain software, and with downstream consumers of the XML,
 is very important and guides its development.
+As of the OpenXR 1.1 release, the intentional breaking change introduced in
+Vulkan's dependency notation with Vulkan 1.3.241 has also been applied to
+the OpenXR schema.
 
 == Machine Readable Schema Definitions
 
@@ -87,9 +90,6 @@ It is incorporated here by reference, with the following changes.
    and which may be used by other tools operating on the XML.
 * Modify section 19 ("Required and Removed Interfaces (`require` and
   `remove` tags)")
-** OpenXR still uses the `extension` and `feature` attributes of `require`
-   tags, rather than the `depends` attribute that replaced them in Vulkan
-   1.3.241.
 ** In "Contents of `require` and `remove` tags", add:
    <<xml-require-interaction-profile,`interaction_profile` Tags>>
 ** In "Contents of `require` and `remove` tags", add:
@@ -115,6 +115,9 @@ It is incorporated here by reference, with the following changes.
 OpenXR also defines interaction profile elements and adaptations of existing
 elements, which are currently not documented but which may be understood by
 looking at the existing usages and schemas.
+
+Changes to the Vulkan schema documentation as of its 2024-01-31 changelog
+entry have been reviewed and confirmed to apply to OpenXR.
 
 [[xml-interaction-profiles]]
 === Interaction Profile Blocks (`interaction_profiles` tag)

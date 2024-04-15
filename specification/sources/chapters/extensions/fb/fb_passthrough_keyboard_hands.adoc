@@ -58,7 +58,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrPassthroughKeyboardHandsIntensityFB structure is defined as:
 
-include::{generated}/api/structs/XrPassthroughKeyboardHandsIntensityFB.txt[]
+include::{generated}/api/structs/XrPassthroughKeyboardHandsIntensityFB.adoc[]
 
 .Member Descriptions
 ****
@@ -84,7 +84,7 @@ opaque hands (maximal visibility).
 If either pname:leftHandIntensity or pname:rightHandIntensity is outside the
 range [0.0, 1.0], the runtime must return ename:XR_ERROR_VALIDATION_FAILURE.
 
-include::{generated}/validity/structs/XrPassthroughKeyboardHandsIntensityFB.txt[]
+include::{generated}/validity/structs/XrPassthroughKeyboardHandsIntensityFB.adoc[]
 --
 
 *New Functions*
@@ -94,7 +94,7 @@ include::{generated}/validity/structs/XrPassthroughKeyboardHandsIntensityFB.txt[
 The flink:xrPassthroughLayerSetKeyboardHandsIntensityFB function is defined
 as:
 
-include::{generated}/api/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.txt[]
+include::{generated}/api/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -106,7 +106,7 @@ include::{generated}/api/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.tx
 Sets an slink:XrPassthroughKeyboardHandsIntensityFB intensity on an
 slink:XrPassthroughLayerFB layer.
 
-include::{generated}/validity/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.txt[]
+include::{generated}/validity/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.adoc[]
 --
 
 *Issues*

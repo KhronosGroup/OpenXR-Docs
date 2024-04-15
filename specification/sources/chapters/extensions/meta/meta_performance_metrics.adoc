@@ -52,19 +52,19 @@ by measuring them.
 In order to enable the functionality of this extension, the application
 must: pass the name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Flag Types*
 
 [open,refpage='XrPerformanceMetricsCounterFlagsMETA',type='flags',desc='XrPerformanceMetricsCounterFlagsMETA',xrefs='XrPerformanceMetricsCounterFlagBitsMETA']
 --
-include::{generated}/api/flags/XrPerformanceMetricsCounterFlagsMETA.txt[]
+include::{generated}/api/flags/XrPerformanceMetricsCounterFlagsMETA.adoc[]
 --
 
 [open,refpage='XrPerformanceMetricsCounterFlagBitsMETA',type='enums',desc='XrPerformanceMetricsCounterFlagBitsMETA',xrefs='XrPerformanceMetricsCounterFlagsMETA']
 --
-include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.txt[]
-include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.comments.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.adoc[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsMETA.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -78,8 +78,8 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrPerformanceMetricsCounterUnitMETA',type='enums',desc='XrPerformanceMetricsCounterUnitMETA']
 --
-include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.txt[]
-include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.adoc[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.adoc[]
 --
 
 *New Structures*
@@ -89,7 +89,7 @@ include::{generated}/api/enums/XrPerformanceMetricsCounterUnitMETA.comments.txt[
 
 The slink:XrPerformanceMetricsStateMETA structure is defined as:
 
-include::{generated}/api/structs/XrPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/structs/XrPerformanceMetricsStateMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -110,7 +110,7 @@ slink:XrPerformanceMetricsStateMETA is populated as an output parameter when
 calling flink:xrGetPerformanceMetricsStateMETA to query if the performance
 metrics system is enabled.
 
-include::{generated}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/structs/XrPerformanceMetricsStateMETA.adoc[]
 --
 
 [open,refpage='XrPerformanceMetricsCounterMETA',type='structs',desc='Performance metrics counter value',xrefs='xrQueryPerformanceMetricsCounterMETA']
@@ -118,7 +118,7 @@ include::{generated}/validity/structs/XrPerformanceMetricsStateMETA.txt[]
 
 The slink:XrPerformanceMetricsCounterMETA structure is defined as:
 
-include::{generated}/api/structs/XrPerformanceMetricsCounterMETA.txt[]
+include::{generated}/api/structs/XrPerformanceMetricsCounterMETA.adoc[]
 
 .Member Descriptions
 ****
@@ -144,7 +144,7 @@ slink:XrPerformanceMetricsCounterMETA is populated by calling
 flink:xrQueryPerformanceMetricsCounterMETA to query real-time performance
 metrics counter information.
 
-include::{generated}/validity/structs/XrPerformanceMetricsCounterMETA.txt[]
+include::{generated}/validity/structs/XrPerformanceMetricsCounterMETA.adoc[]
 --
 
 *New Functions*
@@ -155,7 +155,7 @@ The flink:xrEnumeratePerformanceMetricsCounterPathsMETA function enumerates
 all performance metrics counter paths that supported by the runtime, it is
 defined as:
 
-include::{generated}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+include::{generated}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -169,18 +169,18 @@ include::{generated}/api/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.tx
 * pname:counterPaths is an array of basetype:XrPath filled in by the runtime
   which contains all the available performance metrics counters, but can: be
   code:NULL if pname:counterPathCapacityInput is `0`.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:counterPaths size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:counterPaths size.
 ****
 
-include::{generated}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.txt[]
+include::{generated}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsMETA.adoc[]
 --
 
 [open,refpage='xrSetPerformanceMetricsStateMETA',desc='Enable/disable performance metrics',type='protos',xrefs='xrGetPerformanceMetricsStateMETA']
 --
 The flink:xrSetPerformanceMetricsStateMETA function is defined as:
 
-include::{generated}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/protos/xrSetPerformanceMetricsStateMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -193,14 +193,14 @@ include::{generated}/api/protos/xrSetPerformanceMetricsStateMETA.txt[]
 The flink:xrSetPerformanceMetricsStateMETA function enables or disables the
 performance metrics system.
 
-include::{generated}/validity/protos/xrSetPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/protos/xrSetPerformanceMetricsStateMETA.adoc[]
 --
 
 [open,refpage='xrGetPerformanceMetricsStateMETA',desc='Get current state of performance metrics',type='protos',xrefs='xrSetPerformanceMetricsStateMETA']
 --
 The flink:xrGetPerformanceMetricsStateMETA function is defined as:
 
-include::{generated}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
+include::{generated}/api/protos/xrGetPerformanceMetricsStateMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -213,14 +213,14 @@ include::{generated}/api/protos/xrGetPerformanceMetricsStateMETA.txt[]
 The flink:xrGetPerformanceMetricsStateMETA function gets the current state
 of the performance metrics system.
 
-include::{generated}/validity/protos/xrGetPerformanceMetricsStateMETA.txt[]
+include::{generated}/validity/protos/xrGetPerformanceMetricsStateMETA.adoc[]
 --
 
 [open,refpage='xrQueryPerformanceMetricsCounterMETA',desc='Query performance metrics counter',type='protos',xrefs='']
 --
 The flink:xrQueryPerformanceMetricsCounterMETA function is defined as:
 
-include::{generated}/api/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+include::{generated}/api/protos/xrQueryPerformanceMetricsCounterMETA.adoc[]
 
 .Parameter Descriptions
 ****
@@ -245,7 +245,7 @@ If `counterPath` is not in the list returned by
 flink:xrEnumeratePerformanceMetricsCounterPathsMETA, the runtime must return
 ename:XR_ERROR_PATH_UNSUPPORTED.
 
-include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.txt[]
+include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.adoc[]
 --
 
 *Issues*

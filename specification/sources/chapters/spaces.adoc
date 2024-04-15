@@ -13,7 +13,7 @@ real-world locations where they will be rendered.
 reference in which they choose to track the real world, and then determine
 how those frames of reference move relative to one another over time.
 
-include::{generated}/api/handles/XrSpace.txt[]
+include::{generated}/api/handles/XrSpace.adoc[]
 
 Spaces are represented by slink:XrSpace handles, which the application
 creates and then uses in API calls.
@@ -26,13 +26,13 @@ coordinates.
 
 OpenXR defines a set of well-known **reference spaces** that applications
 use to bootstrap their spatial reasoning.
-These reference spaces are: `VIEW`, `LOCAL` and `STAGE`.
+These reference spaces are: `VIEW`, `LOCAL`, `LOCAL_FLOOR`, and `STAGE`.
 Each reference space has a well-defined meaning, which establishes where its
 origin is positioned and how its axes are oriented.
 
 Runtimes whose tracking systems improve their understanding of the world
 over time may: track spaces independently.
-For example, even though a `LOCAL` space and a `STAGE` space each map their
+For example, even though a {local_space} and a {stage_space} each map their
 origin to a static position in the world, a runtime with an inside-out
 tracking system may: introduce slight adjustments to the origin of each
 space on a continuous basis to keep each origin in place.
@@ -51,8 +51,8 @@ In other XR APIs, it is common to report the "pose" of an object relative to
 some presumed underlying global space.
 This API is careful to not explicitly define such an underlying global
 space, because it does not apply to all systems.
-Some systems will support no `STAGE` space, while others may support a
-`STAGE` space that switches between various physical stages with dynamic
+Some systems will support no {stage_space}, while others may support a
+{stage_space} that switches between various physical stages with dynamic
 availability.
 To satisfy this wide variability, "poses" are always described as the
 relationship between two spaces.
@@ -69,45 +69,41 @@ space are implicitly "head-locked", even if they may not be "display-locked"
 for non-head-mounted form factors.
 --
 
-[[reference-spaces]]
+[[spaces-reference-spaces]]
 === Reference Spaces
 
 [open,refpage='XrReferenceSpaceType',desc='Reference space types',type='enums']
 --
-An slink:XrSpace handle for a reference space is created using
-flink:xrCreateReferenceSpace, by specifying the chosen reference space type
-and a pose within the natural reference frame defined for that reference
-space type.
+The elink:XrReferenceSpaceType enumeration is defined as:
 
-Runtimes implement well-known reference spaces from
-elink:XrReferenceSpaceType if they support tracking of that kind:
-include::{generated}/api/enums/XrReferenceSpaceType.txt[]
+include::{generated}/api/enums/XrReferenceSpaceType.adoc[]
 
-Available reference space types are indicated by
-flink:xrEnumerateReferenceSpaces.
-Note that other spaces can be created as well, such as pose action spaces
-created by flink:xrCreateActionSpace, which are not enumerated by that API.
+Brief introductions to core reference space types follow.
+Each has full requirements in a subsequent section, linked from these
+descriptions.
 
 .Enumerant Descriptions
 ****
-* ename:XR_REFERENCE_SPACE_TYPE_VIEW.
-  The `VIEW` space tracks the view origin used to generate view transforms
-  for the primary viewer (or centroid of view origins if stereo), with +Y
-  up, +X to the right, and -Z forward.
+ifdef::doctype-manpage[]
+* xref:XR_REFERENCE_SPACE_TYPE_VIEW.adoc[ename:XR_REFERENCE_SPACE_TYPE_VIEW].
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+* <<XR_REFERENCE_SPACE_TYPE_VIEW,ename:XR_REFERENCE_SPACE_TYPE_VIEW>>.
+endif::doctype-manpage[]
+  The `VIEW` reference space tracks the view origin used to generate view
+  transforms for the primary viewer (or centroid of view origins if stereo),
+  with +Y up, +X to the right, and -Z forward.
   This space points in the forward direction for the viewer without
   incorporating the user's eye orientation, and is not gravity-aligned.
 +
-`VIEW` space is primarily useful when projecting from the user's perspective
-into another space to obtain a targeting ray, or when rendering small
-head-locked content such as a reticle.
-Content rendered in `VIEW` space will stay at a fixed point on head-mounted
-displays and may be uncomfortable to view if too large.
-To obtain the ideal view and projection transforms to use each frame for
-rendering world content, applications should call flink:xrLocateViews
-instead of using this space.
-+
-Runtimes must: support this reference space.
-* ename:XR_REFERENCE_SPACE_TYPE_LOCAL.
+Runtimes must: support `VIEW` reference space.
+
+ifdef::doctype-manpage[]
+* xref:XR_REFERENCE_SPACE_TYPE_LOCAL.adoc[ename:XR_REFERENCE_SPACE_TYPE_LOCAL].
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+* <<XR_REFERENCE_SPACE_TYPE_LOCAL,ename:XR_REFERENCE_SPACE_TYPE_LOCAL>>.
+endif::doctype-manpage[]
   The `LOCAL` reference space establishes a world-locked origin,
   gravity-aligned to exclude pitch and roll, with +Y up, +X to the right,
   and -Z forward.
@@ -115,37 +111,14 @@ Runtimes must: support this reference space.
   runtime may: define to be either the initial position at application
   launch or some other calibrated zero position.
 +
-`LOCAL` space is useful when an application needs to render *seated-scale*
-content that is not positioned relative to the physical floor.
-+
-When a user needs to recenter `LOCAL` space, a runtime may: offer some
-system-level recentering interaction that is transparent to the application,
-but which causes the current leveled head space to become the new `LOCAL`
-space.
-When such a recentering occurs, the runtime must: queue the
-slink:XrEventDataReferenceSpaceChangePending event, with the recentered
-`LOCAL` space origin only taking effect for flink:xrLocateSpace or
-flink:xrLocateViews calls whose basetype:XrTime parameter is greater than or
-equal to the pname:changeTime provided in that event.
-+
-When views, controllers or other spaces experience tracking loss relative to
-the `LOCAL` space, runtimes should: continue to provide inferred or
-last-known pname:position and pname:orientation values.
-These inferred poses can, for example, be based on neck model updates,
-inertial dead reckoning, or a last-known position, so long as it is still
-reasonable for the application to use that pose.
-While a runtime is providing position data, it must: continue to set
-ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
-ename:XR_VIEW_STATE_POSITION_VALID_BIT but it can: clear
-ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
-ename:XR_VIEW_STATE_POSITION_TRACKED_BIT to indicate that the position is
-inferred or last-known in this way.
-+
-When tracking is recovered, runtimes should: snap the pose of other spaces
-back into position relative to the `LOCAL` space's original origin.
-+
-Runtimes must: support this reference space.
-* ename:XR_REFERENCE_SPACE_TYPE_STAGE.
+Runtimes must: support `LOCAL` reference space.
+
+ifdef::doctype-manpage[]
+* xref:XR_REFERENCE_SPACE_TYPE_STAGE.adoc[ename:XR_REFERENCE_SPACE_TYPE_STAGE].
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+* <<XR_REFERENCE_SPACE_TYPE_STAGE,ename:XR_REFERENCE_SPACE_TYPE_STAGE>>.
+endif::doctype-manpage[]
   The `STAGE` reference space is a runtime-defined flat, rectangular space
   that is empty and can be walked around on.
   The origin is on the floor at the center of the rectangle, with +Y up, and
@@ -153,22 +126,90 @@ Runtimes must: support this reference space.
   The runtime may: not be able to locate spaces relative to the `STAGE`
   reference space if the user has not yet defined one within the
   runtime-specific UI.
-  Applications can use flink:xrGetReferenceSpaceBoundsRect to determine the
+  Applications can: use flink:xrGetReferenceSpaceBoundsRect to determine the
   extents of the `STAGE` reference space's XZ bounds rectangle, if defined.
 +
-`STAGE` space is useful when an application needs to render *standing-scale*
-content (no bounds) or *room-scale* content (with bounds) that is relative
-to the physical floor.
+Support for the `STAGE` reference space is optional:.
+
+ifdef::doctype-manpage[]
+* xref:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR.adoc[ename:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR].
+endif::doctype-manpage[]
+ifndef::doctype-manpage[]
+* <<XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR,ename:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR>>
+endif::doctype-manpage[]
+  (provided by `XR_VERSION_1_1`) Similar to {local_space}, the `LOCAL_FLOOR`
+  reference space establishes a world-locked origin, gravity-aligned to
+  exclude pitch and roll, with +Y up, +X to the right, and -Z forward.
+  However, the origin of this space is defined to be on an estimate of the
+  floor level.
 +
-When the user redefines the origin or bounds of the current `STAGE` space,
-or the runtime otherwise switches to a new `STAGE` definition, the runtime
-must: queue the slink:XrEventDataReferenceSpaceChangePending event, with the
-new `STAGE` space origin only taking effect for flink:xrLocateSpace or
+Runtimes must: support `LOCAL_FLOOR` reference space.
+
+****
+
+An slink:XrSpace handle for a reference space is created using
+flink:xrCreateReferenceSpace, by specifying the chosen reference space type
+and a pose within the natural reference frame defined for that reference
+space type.
+
+Runtimes implement well-known reference spaces from
+elink:XrReferenceSpaceType if they support tracking of that kind.
+Available reference space types are indicated by
+flink:xrEnumerateReferenceSpaces.
+Note that other spaces can be created as well, such as pose action spaces
+created by flink:xrCreateActionSpace, which are not enumerated by that API.
+
+--
+
+==== View Reference Space
+[open,refpage='XR_REFERENCE_SPACE_TYPE_VIEW',desc='View reference space',type='freeform',xrefs='XrReferenceSpaceType']
+--
+[[XR_REFERENCE_SPACE_TYPE_VIEW]]
+
+The ename:XR_REFERENCE_SPACE_TYPE_VIEW or `VIEW` reference space tracks the
+view origin used to generate view transforms for the primary viewer (or
+centroid of view origins if stereo), with +Y up, +X to the right, and -Z
+forward.
+This space points in the forward direction for the viewer without
+incorporating the user's eye orientation, and is not gravity-aligned.
+
+The {view_space} is primarily useful when projecting from the user's
+perspective into another space to obtain a targeting ray, or when rendering
+small head-locked content such as a reticle.
+Content rendered in the {view_space} will stay at a fixed point on
+head-mounted displays and may be uncomfortable to view if too large.
+To obtain the ideal view and projection transforms to use each frame for
+rendering world content, applications should call flink:xrLocateViews
+instead of using this space.
+
+--
+
+
+==== Local Reference Space
+[open,refpage='XR_REFERENCE_SPACE_TYPE_LOCAL',desc='Local reference space',type='freeform',xrefs='XrReferenceSpaceType']
+--
+[[XR_REFERENCE_SPACE_TYPE_LOCAL]]
+
+The ename:XR_REFERENCE_SPACE_TYPE_LOCAL or `LOCAL` reference space
+establishes a world-locked origin, gravity-aligned to exclude pitch and
+roll, with +Y up, +X to the right, and -Z forward.
+This space locks in both its initial position and orientation, which the
+runtime may: define to be either the initial position at application launch
+or some other calibrated zero position.
+
+When a user needs to recenter the {local_space}, a runtime may: offer some
+system-level recentering interaction that is transparent to the application,
+but which causes the current leveled head space to become the new `LOCAL`
+space.
+When such a recentering occurs, the runtime must: queue the
+slink:XrEventDataReferenceSpaceChangePending event, with the recentered
+`LOCAL` space origin only taking effect for flink:xrLocateSpace or
 flink:xrLocateViews calls whose basetype:XrTime parameter is greater than or
-equal to the pname:changeTime provided in that event.
-+
+equal to the slink:XrEventDataReferenceSpaceChangePending::pname:changeTime
+in that event.
+
 When views, controllers or other spaces experience tracking loss relative to
-the `STAGE` space, runtimes should: continue to provide inferred or
+the {local_space}, runtimes should: continue to provide inferred or
 last-known pname:position and pname:orientation values.
 These inferred poses can, for example, be based on neck model updates,
 inertial dead reckoning, or a last-known position, so long as it is still
@@ -179,17 +220,127 @@ ename:XR_VIEW_STATE_POSITION_VALID_BIT but it can: clear
 ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
 ename:XR_VIEW_STATE_POSITION_TRACKED_BIT to indicate that the position is
 inferred or last-known in this way.
-+
+
 When tracking is recovered, runtimes should: snap the pose of other spaces
-back into position relative to the `STAGE` space's original origin.
-****
+back into position relative to the original origin of {local_space}.
+
+--
+
+
+==== Stage Reference Space
+[open,refpage='XR_REFERENCE_SPACE_TYPE_STAGE',desc='Stage reference space',type='freeform',xrefs='XrReferenceSpaceType']
+--
+[[XR_REFERENCE_SPACE_TYPE_STAGE]]
+
+The `STAGE` reference space is a runtime-defined flat, rectangular space
+that is empty and can be walked around on.
+The origin is on the floor at the center of the rectangle, with +Y up, and
+the X and Z axes aligned with the rectangle edges.
+The runtime may: not be able to locate spaces relative to the `STAGE`
+reference space if the user has not yet defined one within the
+runtime-specific UI.
+Applications can: use flink:xrGetReferenceSpaceBoundsRect to determine the
+extents of the `STAGE` reference space's XZ bounds rectangle, if defined.
+
+The {stage_space} is useful when an application needs to render
+*standing-scale* content (no bounds) or *room-scale* content (with bounds)
+that is relative to the physical floor.
+
+When the user redefines the origin or bounds of the current {stage_space},
+or the runtime otherwise switches to a new `STAGE` space definition, the
+runtime must: queue the slink:XrEventDataReferenceSpaceChangePending event,
+with the new `STAGE` space origin only taking effect for flink:xrLocateSpace
+or flink:xrLocateViews calls whose basetype:XrTime parameter is greater than
+or equal to the
+slink:XrEventDataReferenceSpaceChangePending::pname:changeTime in that
+event.
+
+When views, controllers, or other spaces experience tracking loss relative
+to the {stage_space}, runtimes should: continue to provide inferred or
+last-known pname:position and pname:orientation values.
+These inferred poses can, for example, be based on neck model updates,
+inertial dead reckoning, or a last-known position, so long as it is still
+reasonable for the application to use that pose.
+While a runtime is providing position data, it must: continue to set
+ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+ename:XR_VIEW_STATE_POSITION_VALID_BIT but it can: clear
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_VIEW_STATE_POSITION_TRACKED_BIT to indicate that the position is
+inferred or last-known in this way.
+When tracking is recovered, runtimes should: snap the pose of other spaces
+back into position relative to the original origin of the {stage_space}.
+
+--
+
+==== Local Floor Reference Space
+[open,refpage='XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR',desc='Local floor reference space',type='freeform',xrefs='XrReferenceSpaceType']
+--
+[[XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR]]
+
+Local floor reference space, indicated by
+ename:XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR, is closely related to the `LOCAL`
+reference space.
+It always aligns with the {local_space}, and matches it in X and Z position.
+However, unlike the `LOCAL` space, the `LOCAL_FLOOR` space has its Y axis
+origin on the runtime's best estimate of the floor level under the origin of
+the `LOCAL` space.
+
+The location of the origin of the `LOCAL_FLOOR` space must: match the
+{local_space} in the X and Z coordinates but not in the Y coordinate.
+
+The orientation of the `LOCAL_FLOOR` space must: match the {local_space}.
+
+The runtime must: establish the Y axis origin at its best estimate of the
+floor level under the origin of the {local_space} space, subject to
+requirements under the following conditions to match the floor level of the
+{stage_space}.
+
+If all of the following conditions are true, the Y axis origin of the
+{local_floor_space} must: match the Y axis origin of the {stage_space}:
+
+* the {stage_space} is supported
+* the location of the {local_space} relative to the `STAGE` space has valid
+  position (ename:XR_SPACE_LOCATION_POSITION_VALID_BIT is set)
+* bounds are available from flink:xrGetReferenceSpaceBoundsRect for the
+  `STAGE` space
+* the position of the `LOCAL` space relative to the `STAGE` space is within
+  the `STAGE` space XZ bounds
+
+That is, if there is a stage with bounds, and if the local space and thus
+the local floor is logically within the stage, the local floor and the stage
+share the same floor level.
+
+When the origin of the {local_space} is changed in orientation or XZ
+position, the origin of the {local_floor_space} must: also change
+accordingly.
+
+When a change in origin of the {local_floor_space} occurs, the runtime must:
+queue the slink:XrEventDataReferenceSpaceChangePending event, with the
+changed `LOCAL_FLOOR` space origin only taking effect for
+flink:xrLocateSpace or flink:xrLocateViews calls whose basetype:XrTime
+parameter is greater than or equal to the
+slink:XrEventDataReferenceSpaceChangePending::pname:changeTime in that
+event.
 --
 
 [open,refpage='xrGetReferenceSpaceBoundsRect',desc='Gets the bounds rectangle of a reference space',type='protos',xrefs='xrCreateReferenceSpace']
 --
-XR systems may have limited real world spatial ranges in which users can
+The flink:xrGetReferenceSpaceBoundsRect function is defined as:
+
+include::{generated}/api/protos/xrGetReferenceSpaceBoundsRect.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:referenceSpaceType is the reference space type whose bounds should
+  be retrieved.
+* pname:bounds is the returned space extents.
+****
+
+XR systems may: have limited real world spatial ranges in which users can
 freely move around while remaining tracked.
-Applications may wish to query these boundaries and alter application
+Applications sometimes wish to query these boundaries and alter application
 behavior or content placement to ensure the user can complete the experience
 while remaining within the boundary.
 Applications can: query this information using
@@ -203,10 +354,10 @@ The returned extent represents the dimensions of an axis-aligned bounding
 box where the slink:XrExtent2Df::pname:width and
 slink:XrExtent2Df::pname:height fields correspond to the X and Z axes of the
 provided space, with the extents centered at the origin of the space.
-Not all systems or spaces may support boundaries.
+Not all systems or spaces support boundaries.
 If a runtime is unable to provide bounds for a given space,
-ename:XR_SPACE_BOUNDS_UNAVAILABLE will be returned and all fields of
-pname:bounds will be set to 0.
+ename:XR_SPACE_BOUNDS_UNAVAILABLE must: be returned and all fields of
+pname:bounds must: be set to 0.
 
 The returned extents are expressed relative to the natural origin of the
 provided elink:XrReferenceSpaceType and must: not incorporate any origin
@@ -221,22 +372,36 @@ When a runtime will begin operating with updated space bounds, the runtime
 must: queue a corresponding slink:XrEventDataReferenceSpaceChangePending
 event.
 
-include::{generated}/api/protos/xrGetReferenceSpaceBoundsRect.txt[]
-
-.Parameter Descriptions
-****
-* pname:session is a handle to an slink:XrSession previously created with
-  flink:xrCreateSession.
-* pname:referenceSpaceType is the reference space type whose bounds should
-  be retrieved.
-* pname:bounds is the returned space extents.
-****
-
-include::{generated}/validity/protos/xrGetReferenceSpaceBoundsRect.txt[]
+include::{generated}/validity/protos/xrGetReferenceSpaceBoundsRect.adoc[]
 --
 
 [open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XrReferenceSpaceType']
 --
+The slink:XrEventDataReferenceSpaceChangePending event structure is defined
+as:
+
+include::{generated}/api/structs/XrEventDataReferenceSpaceChangePending.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:session is the slink:XrSession for which the reference space is
+  changing.
+* pname:referenceSpaceType is the elink:XrReferenceSpaceType that is
+  changing.
+* pname:changeTime is the target basetype:XrTime after which
+  flink:xrLocateSpace or flink:xrLocateViews will return values that respect
+  this change.
+* pname:poseValid is true if the runtime can determine the
+  pname:poseInPreviousSpace of the new space in the previous space before
+  the change.
+* pname:poseInPreviousSpace is an slink:XrPosef defining the position and
+  orientation of the new reference space's natural origin within the natural
+  reference frame of its previous space.
+****
 
 The slink:XrEventDataReferenceSpaceChangePending event is sent to the
 application to notify it that the origin (and perhaps the bounds) of a
@@ -262,31 +427,7 @@ flink:xrCreateReferenceSpace.
 If the runtime does not know the location of the space's new origin relative
 to its previous origin, pname:poseValid must: be false, and the position and
 orientation of pname:poseInPreviousSpace are undefined.
-
-include::{generated}/api/structs/XrEventDataReferenceSpaceChangePending.txt[]
-
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR.
-* pname:session is the slink:XrSession for which the reference space is
-  changing.
-* pname:referenceSpaceType is the elink:XrReferenceSpaceType that is
-  changing.
-* pname:changeTime is the target basetype:XrTime after which
-  flink:xrLocateSpace or flink:xrLocateViews will return values that respect
-  this change.
-* pname:poseValid is true if the runtime can determine the
-  pname:poseInPreviousSpace of the new space in the previous space before
-  the change.
-* pname:poseInPreviousSpace is an slink:XrPosef defining the position and
- orientation of the new reference space's natural origin within the natural
- reference frame of its previous space.
-****
-
-include::{generated}/validity/structs/XrEventDataReferenceSpaceChangePending.txt[]
+include::{generated}/validity/structs/XrEventDataReferenceSpaceChangePending.adoc[]
 --
 
 === Action Spaces
@@ -307,7 +448,8 @@ Some example well-known pose action paths:
 ****
 
 For definitions of these well-known pose device paths, see the discussion of
-<<semantic-path-input,device input subpaths>> in the Semantic Paths chapter.
+<<semantic-paths-input,device input subpaths>> in the Semantic Paths
+chapter.
 
 [[spaces-action-spaces-lifetime]]
 ==== Action Spaces Lifetime
@@ -330,7 +472,7 @@ implementation must: return no position or orientation and both
 ename:XR_VIEW_STATE_POSITION_VALID_BIT and
 ename:XR_VIEW_STATE_ORIENTATION_VALID_BIT must: be unset.
 
-[[space_lifecycle]]
+[[spaces-lifecycle]]
 === Space Lifecycle
 
 There are a small set of core APIs that allow applications to reason about
@@ -342,7 +484,7 @@ reference spaces, action spaces, and their relative locations.
 --
 The flink:xrEnumerateReferenceSpaces function is defined as:
 
-include::{generated}/api/protos/xrEnumerateReferenceSpaces.txt[]
+include::{generated}/api/protos/xrEnumerateReferenceSpaces.adoc[]
 
 .Parameter Descriptions
 ****
@@ -356,8 +498,8 @@ include::{generated}/api/protos/xrEnumerateReferenceSpaces.txt[]
 * pname:spaces is a pointer to an application-allocated array that will be
   filled with the enumerant of each supported reference space.
   It can: be code:NULL if pname:spaceCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:spaces size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:spaces size.
 ****
 
 Enumerates the set of reference space types that this runtime supports for a
@@ -370,7 +512,7 @@ flink:xrCreateReferenceSpace must: succeed for that session, with any
 transient unavailability of poses expressed later during calls to
 flink:xrLocateSpace.
 
-include::{generated}/validity/protos/xrEnumerateReferenceSpaces.txt[]
+include::{generated}/validity/protos/xrEnumerateReferenceSpaces.adoc[]
 --
 
 ==== xrCreateReferenceSpace
@@ -379,7 +521,7 @@ include::{generated}/validity/protos/xrEnumerateReferenceSpaces.txt[]
 --
 The flink:xrCreateReferenceSpace function is defined as:
 
-include::{generated}/api/protos/xrCreateReferenceSpace.txt[]
+include::{generated}/api/protos/xrCreateReferenceSpace.adoc[]
 
 .Parameter Descriptions
 ****
@@ -403,14 +545,14 @@ flink:xrDestroySpace function.
 The runtime must: return ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED if the
 given reference space type is not supported by this pname:session.
 
-include::{generated}/validity/protos/xrCreateReferenceSpace.txt[]
+include::{generated}/validity/protos/xrCreateReferenceSpace.adoc[]
 --
 
 [open,refpage='XrReferenceSpaceCreateInfo',desc='Creation info for a reference space',type='structs',xrefs='XrSpace xrCreateReferenceSpace']
 --
 The slink:XrReferenceSpaceCreateInfo structure is defined as:
 
-include::{generated}/api/structs/XrReferenceSpaceCreateInfo.txt[]
+include::{generated}/api/structs/XrReferenceSpaceCreateInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -424,7 +566,7 @@ include::{generated}/api/structs/XrReferenceSpaceCreateInfo.txt[]
   of the reference space.
 ****
 
-include::{generated}/validity/structs/XrReferenceSpaceCreateInfo.txt[]
+include::{generated}/validity/structs/XrReferenceSpaceCreateInfo.adoc[]
 --
 
 ==== xrCreateActionSpace
@@ -432,7 +574,7 @@ include::{generated}/validity/structs/XrReferenceSpaceCreateInfo.txt[]
 --
 The flink:xrCreateActionSpace function is defined as:
 
-include::{generated}/api/protos/xrCreateActionSpace.txt[]
+include::{generated}/api/protos/xrCreateActionSpace.adoc[]
 
 .Parameter Descriptions
 ****
@@ -457,14 +599,14 @@ The runtime must: return ename:XR_ERROR_ACTION_TYPE_MISMATCH if the action
 provided in slink:XrActionSpaceCreateInfo::pname:action is not of type
 ename:XR_ACTION_TYPE_POSE_INPUT.
 
-include::{generated}/validity/protos/xrCreateActionSpace.txt[]
+include::{generated}/validity/protos/xrCreateActionSpace.adoc[]
 --
 
 [open,refpage='XrActionSpaceCreateInfo',desc='Creation info for an action space',type='structs',xrefs='XrSpace xrCreateActionSpace']
 --
 The slink:XrActionSpaceCreateInfo structure is defined as:
 
-include::{generated}/api/structs/XrActionSpaceCreateInfo.txt[]
+include::{generated}/api/structs/XrActionSpaceCreateInfo.adoc[]
 
 .Member Descriptions
 ****
@@ -485,7 +627,7 @@ include::{generated}/api/structs/XrActionSpaceCreateInfo.txt[]
   of the pose action.
 ****
 
-include::{generated}/validity/structs/XrActionSpaceCreateInfo.txt[]
+include::{generated}/validity/structs/XrActionSpaceCreateInfo.adoc[]
 --
 
 ==== xrDestroySpace
@@ -494,7 +636,7 @@ include::{generated}/validity/structs/XrActionSpaceCreateInfo.txt[]
 --
 The flink:xrDestroySpace function is defined as:
 
-include::{generated}/api/protos/xrDestroySpace.txt[]
+include::{generated}/api/protos/xrDestroySpace.adoc[]
 
 .Parameter Descriptions
 ****
@@ -506,10 +648,10 @@ slink:XrSpace handles are destroyed using flink:xrDestroySpace.
 The runtime may: still use this space if there are active dependencies (e.g,
 compositions in progress).
 
-include::{generated}/validity/protos/xrDestroySpace.txt[]
+include::{generated}/validity/protos/xrDestroySpace.adoc[]
 --
 
-[[locating_spaces]]
+[[spaces-locating-spaces]]
 === Locating Spaces
 
 Applications use the flink:xrLocateSpace function to find the pose of an
@@ -530,7 +672,7 @@ of the components of the location.
 flink:xrLocateSpace provides the physical location of a space in a base
 space at a specified time, if currently known by the runtime.
 
-include::{generated}/api/protos/xrLocateSpace.txt[]
+include::{generated}/api/protos/xrLocateSpace.adoc[]
 
 .Parameter Descriptions
 ****
@@ -550,7 +692,7 @@ on the runtime's most up-to-date prediction of how the world will be at that
 future time.
 
 The minimum valid range of values for pname:time are described in
-<<prediction-time-limits>>.
+<<fundamentals-prediction-time-limits>>.
 For values of pname:time outside this range, flink:xrLocateSpace may: return
 a location with no position and ename:XR_SPACE_LOCATION_POSITION_VALID_BIT
 unset.
@@ -608,7 +750,7 @@ observed or can be calculated by the runtime, the runtime must: fill in the
 angular velocity of the origin of space within the reference frame of
 pname:baseSpace and set the ename:XR_SPACE_VELOCITY_ANGULAR_VALID_BIT.
 
-[[example_locate_space_code]]
+[[spaces-example-locate-code]]
 The following example code shows how an application can get both the
 location and velocity of a space within a base space using the
 flink:xrLocateSpace function by chaining an slink:XrSpaceVelocity to the
@@ -625,7 +767,7 @@ XrSpaceLocation location {XR_TYPE_SPACE_LOCATION, &velocity};
 xrLocateSpace(space, baseSpace, time, &location);
 ----
 
-include::{generated}/validity/protos/xrLocateSpace.txt[]
+include::{generated}/validity/protos/xrLocateSpace.adoc[]
 --
 
 
@@ -633,7 +775,7 @@ include::{generated}/validity/protos/xrLocateSpace.txt[]
 --
 The slink:XrSpaceLocation structure is defined as:
 
-include::{generated}/api/structs/XrSpaceLocation.txt[]
+include::{generated}/api/structs/XrSpaceLocation.adoc[]
 
 .Member Descriptions
 ****
@@ -650,7 +792,7 @@ include::{generated}/api/structs/XrSpaceLocation.txt[]
   of flink:xrLocateSpace::pname:baseSpace.
 ****
 
-include::{generated}/validity/structs/XrSpaceLocation.txt[]
+include::{generated}/validity/structs/XrSpaceLocation.adoc[]
 --
 
 [open,refpage='XrSpaceLocationFlags',desc='Space location flags',type='flags',xrefs='xrLocateSpace XrSpaceLocation XrSpaceLocationFlagBits']
@@ -659,7 +801,7 @@ The slink:XrSpaceLocation::pname:locationFlags member is of the following
 type, and contains a bitwise-OR of zero or more of the bits defined in
 elink:XrSpaceLocationFlagBits.
 
-include::{generated}/api/flags/XrSpaceLocationFlags.txt[]
+include::{generated}/api/flags/XrSpaceLocationFlags.adoc[]
 --
 
 [open,refpage='XrSpaceLocationFlagBits',desc='Space location flags',type='enums',xrefs='xrLocateSpace XrSpaceLocation XrSpaceLocationFlags']
@@ -667,7 +809,7 @@ include::{generated}/api/flags/XrSpaceLocationFlags.txt[]
 Valid bits for elink:XrSpaceLocationFlags are defined by
 elink:XrSpaceLocationFlagBits, which is specified as:
 
-include::{generated}/api/enums/XrSpaceLocationFlagBits.txt[]
+include::{generated}/api/enums/XrSpaceLocationFlagBits.adoc[]
 
 The flag bits have the following meanings:
 
@@ -715,7 +857,7 @@ The flag bits have the following meanings:
 
 The slink:XrSpaceVelocity structure is defined as:
 
-include::{generated}/api/structs/XrSpaceVelocity.txt[]
+include::{generated}/api/structs/XrSpaceVelocity.adoc[]
 
 .Member Descriptions
 ****
@@ -743,7 +885,7 @@ include::{generated}/api/structs/XrSpaceVelocity.txt[]
   The vector follows the right-hand rule for torque/rotation.
 ****
 
-include::{generated}/validity/structs/XrSpaceVelocity.txt[]
+include::{generated}/validity/structs/XrSpaceVelocity.adoc[]
 --
 
 
@@ -753,7 +895,7 @@ The slink:XrSpaceVelocity::pname:velocityFlags member is of the following
 type, and contains a bitwise-OR of zero or more of the bits defined in
 elink:XrSpaceVelocityFlagBits.
 
-include::{generated}/api/flags/XrSpaceVelocityFlags.txt[]
+include::{generated}/api/flags/XrSpaceVelocityFlags.adoc[]
 --
 
 [open,refpage='XrSpaceVelocityFlagBits',desc='Space velocity flags',type='enums',xrefs='XrSpaceVelocity XrSpaceVelocityFlags']
@@ -761,12 +903,278 @@ include::{generated}/api/flags/XrSpaceVelocityFlags.txt[]
 Valid bits for elink:XrSpaceVelocityFlags are defined by
 elink:XrSpaceVelocityFlagBits, which is specified as:
 
-include::{generated}/api/enums/XrSpaceVelocityFlagBits.txt[]
+include::{generated}/api/enums/XrSpaceVelocityFlagBits.adoc[]
 
 The flag bits have the following meanings:
 
-include::{generated}/api/enums/XrSpaceVelocityFlagBits.comments.txt[]
+include::{generated}/api/enums/XrSpaceVelocityFlagBits.comments.adoc[]
 
 --
 
+
+==== Locate spaces
+
+[open,refpage='xrLocateSpaces',type='protos',desc='Locate an array of spaces',xrefs='XrSpacesLocateInfo XrSpaceLocations']
+--
+Applications can: use flink:xrLocateSpaces function to locate an array of
+spaces.
+
+The flink:xrLocateSpaces function is defined as:
+
+include::{generated}/api/protos/xrLocateSpaces.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:locateInfo is a pointer to an slink:XrSpacesLocateInfo that provides
+  the input information to locate spaces.
+* pname:spaceLocations is a pointer to an slink:XrSpaceLocations for the
+  runtime to return the locations of the specified spaces in the base space.
+****
+
+flink:xrLocateSpaces provides the physical location of one or more spaces in
+a base space at a specified time, if currently known by the runtime.
+
+The slink:XrSpacesLocateInfo::pname:time, the
+slink:XrSpacesLocateInfo::pname:baseSpace, and each space in
+slink:XrSpacesLocateInfo::pname:spaces, in the pname:locateInfo parameter,
+all follow the same specifics as the corresponding inputs to the
+flink:xrLocateSpace function.
+
+include::{generated}/validity/protos/xrLocateSpaces.adoc[]
+--
+
+[open,refpage='XrSpacesLocateInfo',type='structs',desc='Inputs the information to locate spaces.',xrefs='xrLocateSpaces']
+--
+The slink:XrSpacesLocateInfo structure is defined as:
+
+include::{generated}/api/structs/XrSpacesLocateInfo.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace identifies the underlying space in which to locate
+  pname:spaces.
+* pname:time is the time for which the location is requested.
+* pname:spaceCount is a code:uint32_t specifying the count of elements in
+  the pname:spaces array.
+* pname:spaces is an array of valid slink:XrSpace handles to be located.
+****
+
+The pname:time, the pname:baseSpace, and each space in pname:spaces all
+follow the same specifics as the corresponding inputs to the
+flink:xrLocateSpace function.
+
+The pname:baseSpace and all of the slink:XrSpace handles in the pname:spaces
+array must: be valid and share the same parent slink:XrSession.
+
+If the pname:time is invalid, the flink:xrLocateSpaces must: return
+ename:XR_ERROR_TIME_INVALID.
+
+The pname:spaceCount must: be a positive number, i.e. the array pname:spaces
+must: not be empty.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpacesLocateInfo.adoc[]
+--
+
+[open,refpage='XrSpaceLocations',type='structs',desc='Returns an array of space locations',xrefs='xrLocateSpaces']
+--
+The slink:XrSpaceLocations structure is defined as:
+
+include::{generated}/api/structs/XrSpaceLocations.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain, such as slink:XrSpaceVelocities.
+* pname:locationCount is a code:uint32_t specifying the count of elements in
+  the pname:locations array.
+* pname:locations is an array of slink:XrSpaceLocations for the runtime to
+  populate with the locations of the specified spaces in the
+  slink:XrSpacesLocateInfo::pname:baseSpace at the specified
+  slink:XrSpacesLocateInfo::pname:time.
+****
+
+The slink:XrSpaceLocations structure contains an array of space locations in
+the member pname:locations, to be used as output for flink:xrLocateSpaces.
+The application must: allocate this array to be populated with the function
+output.
+The pname:locationCount value must: be the same as
+slink:XrSpacesLocateInfo::pname:spaceCount, otherwise, the
+flink:xrLocateSpaces function must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpaceLocations.adoc[]
+--
+
+[open,refpage='XrSpaceLocationData',type='structs',desc='Returns the data of a space's location',xrefs='XrSpaceLocations']
+--
+The slink:XrSpaceLocationData structure is defined as:
+
+include::{generated}/api/structs/XrSpaceLocationData.adoc[]
+
+.Member Descriptions
+****
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits.
+  It behaves the same as slink:XrSpaceLocation::pname:locationFlags.
+* pname:pose is an slink:XrPosef that behaves the same as
+  slink:XrSpaceLocation::pname:pose.
+****
+
+This is a single element of the array in
+slink:XrSpaceLocations::pname:locations, and is used to return the pose and
+location flags for a single space with respect to the specified base space
+from a call to flink:xrLocateSpaces.
+It does not accept chained structures to allow for easier use in dynamically
+allocated container datatypes.
+Chained structures are possible with the slink:XrSpaceLocations that
+describes an array of these elements.
+
+include::{generated}/validity/structs/XrSpaceLocationData.adoc[]
+--
+
+==== Locate space velocities
+
+[open,refpage='XrSpaceVelocities',type='structs',desc='Returns an array of space velocities',xrefs='xrLocateSpaces XrSpaceLocations']
+--
+Applications can: request the velocities of spaces by chaining the
+slink:XrSpaceVelocities structure to the next pointer of
+slink:XrSpaceLocations when calling flink:xrLocateSpaces.
+
+The slink:XrSpaceVelocities structure is defined as:
+
+include::{generated}/api/structs/XrSpaceVelocities.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:velocityCount is a code:uint32_t specifying the count of elements in
+  the pname:velocities array.
+* pname:velocities is an array of slink:XrSpaceVelocityData for the runtime
+  to populate with the velocities of the specified spaces in the
+  slink:XrSpacesLocateInfo::pname:baseSpace at the specified
+  slink:XrSpacesLocateInfo::pname:time.
+****
+
+The pname:velocities member contains an array of space velocities in the
+member pname:velocities, to be used as output for flink:xrLocateSpaces.
+The application must: allocate this array to be populated with the function
+output.
+The pname:velocityCount value must: be the same as
+slink:XrSpacesLocateInfo::pname:spaceCount, otherwise, the
+flink:xrLocateSpaces function must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpaceVelocities.adoc[]
+--
+
+[open,refpage='XrSpaceVelocityData',type='structs',desc='Returns the data of a space's velocity',xrefs='XrSpaceVelocities']
+--
+The slink:XrSpaceVelocityData structure is defined as:
+
+include::{generated}/api/structs/XrSpaceVelocityData.adoc[]
+
+.Member Descriptions
+****
+* pname:velocityFlags is a bitfield, with bit values defined in
+  elink:XrSpaceVelocityFlagBits.
+  It behaves the same as slink:XrSpaceVelocity::pname:velocityFlags.
+* pname:linearVelocity is an slink:XrVector3f.
+  It behaves the same as slink:XrSpaceVelocity::pname:linearVelocity.
+* pname:angularVelocity is an slink:XrVector3f.
+  It behaves the same as slink:XrSpaceVelocity::pname:angularVelocity.
+****
+
+This is a single element of the array in
+slink:XrSpaceVelocities::pname:velocities, and is used to return the linear
+and angular velocity and velocity flags for a single space with respect to
+the specified base space from a call to flink:xrLocateSpaces.
+It does not accept chained structures to allow for easier use in dynamically
+allocated container datatypes.
+
+include::{generated}/validity/structs/XrSpaceVelocityData.adoc[]
+--
+
+==== Example code for flink:xrLocateSpaces
+
+The following example code shows how an application retrieves both the
+location and velocity of one or more spaces in a base space at a given time
+using the flink:xrLocateSpaces function.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+XrSpace baseSpace; // previously initialized
+std::vector<XrSpace> spacesToLocate;  // previously initialized
+
+// Prepare output buffers to receive data and get reused in frame loop.
+std::vector<XrSpaceLocationData> locationBuffer(spacesToLocate.size());
+std::vector<XrSpaceVelocityData> velocityBuffer(spacesToLocate.size());
+
+// Get function pointer for xrLocateSpaces.
+PFN_xrLocateSpaces xrLocateSpaces;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateSpaces",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrLocateSpaces)));
+
+// application frame loop
+while (1) {
+    // Typically the time is the predicted display time returned from xrWaitFrame.
+    XrTime displayTime; // previously initialized.
+
+    XrSpacesLocateInfo locateInfo{XR_TYPE_SPACES_LOCATE_INFO};
+    locateInfo.baseSpace = baseSpace;
+    locateInfo.time = displayTime;
+    locateInfo.spaceCount = (uint32_t)spacesToLocate.size();
+    locateInfo.spaces = spacesToLocate.data();
+
+    XrSpaceLocations locations{XR_TYPE_SPACE_LOCATIONS};
+    locations.locationCount = (uint32_t)locationBuffer.size();
+    locations.locations = locationBuffer.data();
+
+    XrSpaceVelocities velocities{XR_TYPE_SPACE_VELOCITIES};
+    velocities.velocityCount = (uint32_t)velocityBuffer.size();
+    velocities.velocities = velocityBuffer.data();
+
+    locations.next = &velocities;
+    CHK_XR(xrLocateSpaces(session, &locateInfo, &locations));
+
+    for (uint32_t i = 0; i < spacesToLocate.size(); i++) {
+        const auto positionAndOrientationTracked =
+          XR_SPACE_LOCATION_POSITION_TRACKED_BIT | XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT;
+        const auto orientationOnlyTracked = XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT;
+
+        if ((locationBuffer[i].locationFlags & positionAndOrientationTracked) == positionAndOrientationTracked) {
+            // if the location is 6dof tracked
+            do_something(locationBuffer[i].pose.position);
+            do_something(locationBuffer[i].pose.orientation);
+
+            const auto velocityValidBits =
+              XR_SPACE_VELOCITY_LINEAR_VALID_BIT | XR_SPACE_VELOCITY_ANGULAR_VALID_BIT;
+            if ((velocityBuffer[i].velocityFlags & velocityValidBits) == velocityValidBits) {
+                do_something(velocityBuffer[i].linearVelocity);
+                do_something(velocityBuffer[i].angularVelocity);
+            }
+        }
+        else if ((locationBuffer[i].locationFlags & orientationOnlyTracked) == orientationOnlyTracked) {
+            // if the location is 3dof tracked
+            do_something(locationBuffer[i].pose.orientation);
+
+            if ((velocityBuffer[i].velocityFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) == XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) {
+                do_something(velocityBuffer[i].angularVelocity);
+            }
+        }
+    }
+}
+----
 

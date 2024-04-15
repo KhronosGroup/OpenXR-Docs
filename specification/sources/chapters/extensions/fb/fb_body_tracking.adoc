@@ -31,7 +31,7 @@ by extending the slink:XrSystemProperties with
 slink:XrSystemBodyTrackingPropertiesFB structure when calling
 flink:xrGetSystemProperties.
 
-include::{generated}/api/structs/XrSystemBodyTrackingPropertiesFB.txt[]
+include::{generated}/api/structs/XrSystemBodyTrackingPropertiesFB.adoc[]
 
 
 .Member Descriptions
@@ -48,7 +48,7 @@ If a runtime returns ename:XR_FALSE for pname:supportsBodyTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
 flink:xrCreateBodyTrackerFB.
 
-include::{generated}/validity/structs/XrSystemBodyTrackingPropertiesFB.txt[]
+include::{generated}/validity/structs/XrSystemBodyTrackingPropertiesFB.adoc[]
 --
 
 ==== Create a body tracker handle
@@ -57,7 +57,7 @@ include::{generated}/validity/structs/XrSystemBodyTrackingPropertiesFB.txt[]
 --
 The slink:XrBodyTrackerFB handle represents the resources for body tracking.
 
-include::{generated}/api/handles/XrBodyTrackerFB.txt[]
+include::{generated}/api/handles/XrBodyTrackerFB.adoc[]
 
 This handle can: be used to locate body joints using
 flink:xrLocateBodyJointsFB function.
@@ -73,7 +73,7 @@ It also provides the estimated scale of this body.
 An application can: create an slink:XrBodyTrackerFB handle using
 flink:xrCreateBodyTrackerFB function.
 
-include::{generated}/api/protos/xrCreateBodyTrackerFB.txt[]
+include::{generated}/api/protos/xrCreateBodyTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -91,7 +91,7 @@ slink:XrSystemBodyTrackingPropertiesFB::pname:supportsBodyTracking when the
 function flink:xrGetSystemProperties is called, so that the application can:
 avoid creating a body tracker.
 
-include::{generated}/validity/protos/xrCreateBodyTrackerFB.txt[]
+include::{generated}/validity/protos/xrCreateBodyTrackerFB.adoc[]
 --
 
 [open,refpage='XrBodyTrackerCreateInfoFB',type='structs',desc='Information to create a body joints handle',xrefs='']
@@ -99,7 +99,7 @@ include::{generated}/validity/protos/xrCreateBodyTrackerFB.txt[]
 The slink:XrBodyTrackerCreateInfoFB structure describes the information to
 create an slink:XrBodyTrackerFB handle.
 
-include::{generated}/api/structs/XrBodyTrackerCreateInfoFB.txt[]
+include::{generated}/api/structs/XrBodyTrackerCreateInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -111,7 +111,7 @@ include::{generated}/api/structs/XrBodyTrackerCreateInfoFB.txt[]
   body joints to retrieve.
 ****
 
-include::{generated}/validity/structs/XrBodyTrackerCreateInfoFB.txt[]
+include::{generated}/validity/structs/XrBodyTrackerCreateInfoFB.adoc[]
 --
 
 [open,refpage='XrBodyJointSetFB',type='enums',desc='The set of body joints to track.',xrefs='XrBodyTrackerCreateInfoFB']
@@ -119,9 +119,9 @@ include::{generated}/validity/structs/XrBodyTrackerCreateInfoFB.txt[]
 The elink:XrBodyJointSetFB enum describes the set of body joints to track
 when creating an slink:XrBodyTrackerFB.
 
-include::{generated}/api/enums/XrBodyJointSetFB.txt[]
+include::{generated}/api/enums/XrBodyJointSetFB.adoc[]
 
-include::{generated}/api/enums/XrBodyJointSetFB.comments-box.txt[]
+include::{generated}/api/enums/XrBodyJointSetFB.comments-box.adoc[]
 --
 
 [open,refpage='xrDestroyBodyTrackerFB',type='protos',desc='Destroy a body joints handle',xrefs='']
@@ -129,7 +129,7 @@ include::{generated}/api/enums/XrBodyJointSetFB.comments-box.txt[]
 flink:xrDestroyBodyTrackerFB function releases the pname:bodyTracker and the
 underlying resources when the body tracking experience is over.
 
-include::{generated}/api/protos/xrDestroyBodyTrackerFB.txt[]
+include::{generated}/api/protos/xrDestroyBodyTrackerFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -137,7 +137,7 @@ include::{generated}/api/protos/xrDestroyBodyTrackerFB.txt[]
   flink:xrCreateBodyTrackerFB.
 ****
 
-include::{generated}/validity/protos/xrDestroyBodyTrackerFB.txt[]
+include::{generated}/validity/protos/xrDestroyBodyTrackerFB.adoc[]
 --
 
 ==== Locate body joints
@@ -147,7 +147,7 @@ include::{generated}/validity/protos/xrDestroyBodyTrackerFB.txt[]
 The flink:xrLocateBodyJointsFB function locates an array of body joints to a
 base space at a given time.
 
-include::{generated}/api/protos/xrLocateBodyJointsFB.txt[]
+include::{generated}/api/protos/xrLocateBodyJointsFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -159,7 +159,7 @@ include::{generated}/api/protos/xrLocateBodyJointsFB.txt[]
   returned body joint locations.
 ****
 
-include::{generated}/validity/protos/xrLocateBodyJointsFB.txt[]
+include::{generated}/validity/protos/xrLocateBodyJointsFB.adoc[]
 --
 
 [open,refpage='XrBodyJointsLocateInfoFB',type='structs',desc='Describes the information to locate body joints',xrefs='xrLocateBodyJointsFB']
@@ -167,7 +167,7 @@ include::{generated}/validity/protos/xrLocateBodyJointsFB.txt[]
 The slink:XrBodyJointsLocateInfoFB structure describes the information to
 locate body joints.
 
-include::{generated}/api/structs/XrBodyJointsLocateInfoFB.txt[]
+include::{generated}/api/structs/XrBodyJointsLocateInfoFB.adoc[]
 
 
 .Member Descriptions
@@ -186,7 +186,7 @@ rendered frame.
 The system will employ appropriate modeling to support body tracking at this
 time.
 
-include::{generated}/validity/structs/XrBodyJointsLocateInfoFB.txt[]
+include::{generated}/validity/structs/XrBodyJointsLocateInfoFB.adoc[]
 --
 
 [open,refpage='XrBodyJointLocationsFB',type='structs',desc='Returns the body joint locations',xrefs='xrLocateBodyJointsFB']
@@ -194,7 +194,7 @@ include::{generated}/validity/structs/XrBodyJointsLocateInfoFB.txt[]
 slink:XrBodyJointLocationsFB structure returns the state of the body joint
 locations.
 
-include::{generated}/api/structs/XrBodyJointLocationsFB.txt[]
+include::{generated}/api/structs/XrBodyJointLocationsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -258,7 +258,7 @@ In this case, the runtime must: return all pname:jointLocations with neither
 ename:XR_SPACE_LOCATION_POSITION_VALID_BIT nor
 ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set.
 
-include::{generated}/validity/structs/XrBodyJointLocationsFB.txt[]
+include::{generated}/validity/structs/XrBodyJointLocationsFB.adoc[]
 --
 
 [open,refpage='XrBodyJointLocationFB',type='structs',desc='Describes the location and radius of a body joint',xrefs='XrBodyJointLocationsFB']
@@ -266,7 +266,7 @@ include::{generated}/validity/structs/XrBodyJointLocationsFB.txt[]
 slink:XrBodyJointLocationFB structure describes the position, orientation,
 and radius of a body joint.
 
-include::{generated}/api/structs/XrBodyJointLocationFB.txt[]
+include::{generated}/api/structs/XrBodyJointLocationFB.adoc[]
 
 .Member Descriptions
 ****
@@ -280,7 +280,7 @@ include::{generated}/api/structs/XrBodyJointLocationFB.txt[]
   slink:XrBodyJointsLocateInfoFB::pname:baseSpace.
 ****
 
-include::{generated}/validity/structs/XrBodyJointLocationFB.txt[]
+include::{generated}/validity/structs/XrBodyJointLocationFB.adoc[]
 --
 
 ==== Retrieve body skeleton
@@ -289,7 +289,7 @@ include::{generated}/validity/structs/XrBodyJointLocationFB.txt[]
 --
 The flink:xrGetBodySkeletonFB function returns the body skeleton in T-pose.
 
-include::{generated}/api/protos/xrGetBodySkeletonFB.txt[]
+include::{generated}/api/protos/xrGetBodySkeletonFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -305,7 +305,7 @@ slink:XrBodyJointLocationsFB::pname:skeletonChangedCount is incremented
 whenever the tracking auto-calibrates the user skeleton scale and
 proportions.
 
-include::{generated}/validity/protos/xrGetBodySkeletonFB.txt[]
+include::{generated}/validity/protos/xrGetBodySkeletonFB.adoc[]
 --
 
 [open,refpage='XrBodySkeletonFB',type='structs',desc='Returns the body skeleton hierarchy',xrefs='xrGetBodySkeletonFB']
@@ -313,7 +313,7 @@ include::{generated}/validity/protos/xrGetBodySkeletonFB.txt[]
 The slink:XrBodySkeletonFB structure is a container to represent the body
 skeleton in T-pose including the joint hierarchy.
 
-include::{generated}/api/structs/XrBodySkeletonFB.txt[]
+include::{generated}/api/structs/XrBodySkeletonFB.adoc[]
 
 .Member Descriptions
 ****
@@ -335,7 +335,7 @@ elink:XrBodyJointSetFB used to create the slink:XrBodyTrackerFB.
 The runtime must: return pname:joints representing the default pose of the
 current estimation regarding the user's skeleton.
 
-include::{generated}/validity/structs/XrBodySkeletonFB.txt[]
+include::{generated}/validity/structs/XrBodySkeletonFB.adoc[]
 --
 
 [open,refpage='XrBodySkeletonJointFB',type='structs',desc='Describes the location and position of a joint in the skeleton hierarchy',xrefs='XrBodySkeletonFB']
@@ -343,7 +343,7 @@ include::{generated}/validity/structs/XrBodySkeletonFB.txt[]
 slink:XrBodySkeletonJointFB structure describes the position, orientation of
 the joint in space, and position of the joint in the skeleton hierarchy.
 
-include::{generated}/api/structs/XrBodySkeletonJointFB.txt[]
+include::{generated}/api/structs/XrBodySkeletonJointFB.adoc[]
 
 .Member Descriptions
 ****
@@ -356,7 +356,7 @@ include::{generated}/api/structs/XrBodySkeletonJointFB.txt[]
   slink:XrBodyJointsLocateInfoFB::pname:baseSpace.
 ****
 
-include::{generated}/validity/structs/XrBodySkeletonJointFB.txt[]
+include::{generated}/validity/structs/XrBodySkeletonJointFB.adoc[]
 --
 
 ==== Example code for locating body joints
@@ -438,7 +438,7 @@ while (1) {
 This extension defines 70 joints for body tracking: 18 core body joints + 52
 hand joints.
 
-include::{generated}/api/enums/XrBodyJointFB.txt[]
+include::{generated}/api/enums/XrBodyJointFB.adoc[]
 
 The backward (+Z) direction is parallel to the corresponding bone and points
 away from the finger tip.

@@ -29,7 +29,7 @@ handle.
 The flink:xrCreateSpatialGraphNodeSpaceMSFT function creates an
 slink:XrSpace handle for a given spatial graph node type and ID.
 
-include::{generated}/api/protos/xrCreateSpatialGraphNodeSpaceMSFT.txt[]
+include::{generated}/api/protos/xrCreateSpatialGraphNodeSpaceMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -40,7 +40,7 @@ include::{generated}/api/protos/xrCreateSpatialGraphNodeSpaceMSFT.txt[]
   node ID.
 ****
 
-include::{generated}/validity/protos/xrCreateSpatialGraphNodeSpaceMSFT.txt[]
+include::{generated}/validity/protos/xrCreateSpatialGraphNodeSpaceMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialGraphNodeSpaceCreateInfoMSFT',desc='The information to create space from a spatial graph node.',type='structs',xrefs='XrSpatialGraphNodeTypeMSFT xrCreateSpatialGraphNodeSpaceMSFT']
@@ -50,7 +50,7 @@ The slink:XrSpatialGraphNodeSpaceCreateInfoMSFT structure is used with
 flink:xrCreateSpatialGraphNodeSpaceMSFT to create an slink:XrSpace handle
 for a given spatial node type and node ID.
 
-include::{generated}/api/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -68,7 +68,7 @@ include::{generated}/api/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.txt[]
   graph node.
 ****
 
-include::{generated}/validity/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialGraphNodeTypeMSFT',desc='The type of spatial graph node.',type='enums',xrefs='xrCreateSpatialGraphNodeSpaceMSFT']
@@ -77,7 +77,7 @@ include::{generated}/validity/structs/XrSpatialGraphNodeSpaceCreateInfoMSFT.txt[
 The enum elink:XrSpatialGraphNodeTypeMSFT describes the types of spatial
 graph nodes.
 
-include::{generated}/api/enums/XrSpatialGraphNodeTypeMSFT.txt[]
+include::{generated}/api/enums/XrSpatialGraphNodeTypeMSFT.adoc[]
 
 There are two types of spatial graph nodes: static and dynamic.
 
@@ -120,7 +120,7 @@ When the slink:XrSpatialGraphNodeBindingMSFT handle is destroyed then the
 runtime's tracking system may: forget about the spatial graphic node and
 stop tracking it.
 
-include::{generated}/api/handles/XrSpatialGraphNodeBindingMSFT.txt[]
+include::{generated}/api/handles/XrSpatialGraphNodeBindingMSFT.adoc[]
 --
 
 [open,refpage='xrTryCreateSpatialGraphStaticNodeBindingMSFT',type='protos',desc='Try create spatial graph static node binding',xrefs='XrSpatialGraphNodeBindingMSFT xrDestroySpatialGraphNodeBindingMSFT']
@@ -129,7 +129,7 @@ The flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT function tries to
 create a binding to the best spatial graph static node relative to the given
 location and returns an slink:XrSpatialGraphNodeBindingMSFT handle.
 
-include::{generated}/api/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.txt[]
+include::{generated}/api/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -152,7 +152,7 @@ The flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT function may: be a
 slow operation and therefore should: be invoked from a non-timing critical
 thread.
 
-include::{generated}/validity/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.txt[]
+include::{generated}/validity/protos/xrTryCreateSpatialGraphStaticNodeBindingMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialGraphStaticNodeBindingCreateInfoMSFT',desc='The information to create a spatial graph static node binding handle',type='structs',xrefs='xrTryCreateSpatialGraphStaticNodeBindingMSFT']
@@ -160,7 +160,7 @@ include::{generated}/validity/protos/xrTryCreateSpatialGraphStaticNodeBindingMSF
 slink:XrSpatialGraphStaticNodeBindingCreateInfoMSFT is an input structure
 for flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT.
 
-include::{generated}/api/structs/XrSpatialGraphStaticNodeBindingCreateInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialGraphStaticNodeBindingCreateInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -174,7 +174,7 @@ include::{generated}/api/structs/XrSpatialGraphStaticNodeBindingCreateInfoMSFT.t
   evaluated within pname:space.
 ****
 
-include::{generated}/validity/structs/XrSpatialGraphStaticNodeBindingCreateInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialGraphStaticNodeBindingCreateInfoMSFT.adoc[]
 --
 
 [open,refpage='xrDestroySpatialGraphNodeBindingMSFT',type='protos',desc='Destroy a spatial graph node handle',xrefs='xrTryCreateSpatialGraphStaticNodeBindingMSFT XrSpatialGraphNodeBindingMSFT']
@@ -182,7 +182,7 @@ include::{generated}/validity/structs/XrSpatialGraphStaticNodeBindingCreateInfoM
 The flink:xrDestroySpatialGraphNodeBindingMSFT function releases the
 pname:nodeBinding and the underlying resources.
 
-include::{generated}/api/protos/xrDestroySpatialGraphNodeBindingMSFT.txt[]
+include::{generated}/api/protos/xrDestroySpatialGraphNodeBindingMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -190,7 +190,7 @@ include::{generated}/api/protos/xrDestroySpatialGraphNodeBindingMSFT.txt[]
   created by flink:xrTryCreateSpatialGraphStaticNodeBindingMSFT.
 ****
 
-include::{generated}/validity/protos/xrDestroySpatialGraphNodeBindingMSFT.txt[]
+include::{generated}/validity/protos/xrDestroySpatialGraphNodeBindingMSFT.adoc[]
 --
 
 ===== Get spatial graph node binding properties
@@ -201,7 +201,7 @@ The flink:xrGetSpatialGraphNodeBindingPropertiesMSFT function retrieves the
 spatial graph node GUID and the pose in the node space from an
 slink:XrSpatialGraphNodeBindingMSFT handle.
 
-include::{generated}/api/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.txt[]
+include::{generated}/api/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -213,7 +213,7 @@ include::{generated}/api/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.txt[]
   slink:XrSpatialGraphNodeBindingPropertiesMSFT output structure.
 ****
 
-include::{generated}/validity/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.txt[]
+include::{generated}/validity/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialGraphNodeBindingPropertiesGetInfoMSFT',desc='The information to get node binding properties',type='structs',xrefs='xrGetSpatialGraphNodeBindingPropertiesMSFT']
@@ -221,7 +221,7 @@ include::{generated}/validity/protos/xrGetSpatialGraphNodeBindingPropertiesMSFT.
 slink:XrSpatialGraphNodeBindingPropertiesGetInfoMSFT is an input structure
 for flink:xrGetSpatialGraphNodeBindingPropertiesMSFT.
 
-include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesGetInfoMSFT.txt[]
+include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesGetInfoMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -230,7 +230,7 @@ include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesGetInfoMSFT.
   chain.
 ****
 
-include::{generated}/validity/structs/XrSpatialGraphNodeBindingPropertiesGetInfoMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialGraphNodeBindingPropertiesGetInfoMSFT.adoc[]
 --
 
 [open,refpage='XrSpatialGraphNodeBindingPropertiesMSFT',desc='The spatial graph node binding properties',type='structs',xrefs='xrGetSpatialGraphNodeBindingPropertiesMSFT']
@@ -238,7 +238,7 @@ include::{generated}/validity/structs/XrSpatialGraphNodeBindingPropertiesGetInfo
 slink:XrSpatialGraphNodeBindingPropertiesMSFT is an output structure for
 flink:xrGetSpatialGraphNodeBindingPropertiesMSFT.
 
-include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesMSFT.txt[]
+include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -251,7 +251,7 @@ include::{generated}/api/structs/XrSpatialGraphNodeBindingPropertiesMSFT.txt[]
   underlying node's space.
 ****
 
-include::{generated}/validity/structs/XrSpatialGraphNodeBindingPropertiesMSFT.txt[]
+include::{generated}/validity/structs/XrSpatialGraphNodeBindingPropertiesMSFT.adoc[]
 --
 
 *New Object Types*

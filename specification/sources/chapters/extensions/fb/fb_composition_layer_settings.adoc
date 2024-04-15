@@ -16,7 +16,7 @@ such as sharpening or super-sampling on a composition layer.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -24,14 +24,14 @@ indicated in the <<extensions>> section.
 
 [open,refpage='XrCompositionLayerSettingsFlagsFB',type='flags',desc='XrCompositionLayerSettingsFlagsFB',xrefs='XrCompositionLayerSettingsFlagBitsFB']
 --
-include::{generated}/api/flags/XrCompositionLayerSettingsFlagsFB.txt[]
+include::{generated}/api/flags/XrCompositionLayerSettingsFlagsFB.adoc[]
 --
 
 [open,refpage='XrCompositionLayerSettingsFlagBitsFB',type='enums',desc='XrCompositionLayerSettingsFlagBitsFB',xrefs='XrCompositionLayerSettingsFlagsFB']
 --
-include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.txt[]
+include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.adoc[]
 
-include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.comments.txt[]
+include::{generated}/api/enums/XrCompositionLayerSettingsFlagBitsFB.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -53,7 +53,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerSettingsFB structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerSettingsFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerSettingsFB.adoc[]
 
 .Member Descriptions
 ****
@@ -82,7 +82,7 @@ To specify the additional flags, create an
 slink:XrCompositionLayerSettingsFB structure and pass it via the
 slink:XrCompositionLayerBaseHeader structure's pname:next parameter.
 
-include::{generated}/validity/structs/XrCompositionLayerSettingsFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerSettingsFB.adoc[]
 --
 
 *New Functions*

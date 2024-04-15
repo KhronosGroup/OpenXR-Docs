@@ -26,7 +26,7 @@ interact with.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 This extension allows:
 
@@ -136,7 +136,7 @@ elink:XrStructureType enumeration is extended with:
 
 The slink:XrViveTrackerPathsHTCX structure is defined as:
 
-include::{generated}/api/structs/XrViveTrackerPathsHTCX.txt[]
+include::{generated}/api/structs/XrViveTrackerPathsHTCX.adoc[]
 
 .Member Descriptions
 ****
@@ -153,7 +153,7 @@ include::{generated}/api/structs/XrViveTrackerPathsHTCX.txt[]
 The slink:XrViveTrackerPathsHTCX structure contains two paths of VIVE
 tracker.
 
-include::{generated}/validity/structs/XrViveTrackerPathsHTCX.txt[]
+include::{generated}/validity/structs/XrViveTrackerPathsHTCX.adoc[]
 --
 
 [open,refpage='XrEventDataViveTrackerConnectedHTCX',type='structs',desc='Event representing a new VIVE tracker connected',xrefs='xrPollEvent']
@@ -161,7 +161,7 @@ include::{generated}/validity/structs/XrViveTrackerPathsHTCX.txt[]
 
 The slink:XrEventDataViveTrackerConnectedHTCX structure is defined as:
 
-include::{generated}/api/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+include::{generated}/api/structs/XrEventDataViveTrackerConnectedHTCX.adoc[]
 
 .Member Descriptions
 ****
@@ -176,7 +176,7 @@ Receiving the slink:XrEventDataViveTrackerConnectedHTCX event structure
 indicates that a new VIVE tracker was connected or its role changed.
 It is received via flink:xrPollEvent.
 
-include::{generated}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
+include::{generated}/validity/structs/XrEventDataViveTrackerConnectedHTCX.adoc[]
 --
 
 
@@ -187,7 +187,7 @@ include::{generated}/validity/structs/XrEventDataViveTrackerConnectedHTCX.txt[]
 
 The flink:xrEnumerateViveTrackerPathsHTCX function is defined as:
 
-include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.adoc[]
 
 .Parameter Descriptions
 ****
@@ -200,14 +200,14 @@ include::{generated}/api/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
   insufficient.
 * pname:paths is a pointer to an array of slink:XrViveTrackerPathsHTCX VIVE
   tracker paths, but can: be code:NULL if pname:pathCapacityInput is `0`.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:paths size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:paths size.
 ****
 
 flink:xrEnumerateViveTrackerPathsHTCX enumerates all connected VIVE trackers
 to retrieve their paths under current instance.
 
-include::{generated}/validity/protos/xrEnumerateViveTrackerPathsHTCX.txt[]
+include::{generated}/validity/protos/xrEnumerateViveTrackerPathsHTCX.adoc[]
 --
 
 *Examples*

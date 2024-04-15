@@ -25,7 +25,7 @@ expressions.
 
 slink:XrSystemFacialTrackingPropertiesHTC is defined as:
 
-include::{generated}/api/structs/XrSystemFacialTrackingPropertiesHTC.txt[]
+include::{generated}/api/structs/XrSystemFacialTrackingPropertiesHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -44,7 +44,7 @@ facial tracking by extending the slink:XrSystemProperties with
 slink:XrSystemFacialTrackingPropertiesHTC structure when calling
 flink:xrGetSystemProperties.
 
-include::{generated}/validity/structs/XrSystemFacialTrackingPropertiesHTC.txt[]
+include::{generated}/validity/structs/XrSystemFacialTrackingPropertiesHTC.adoc[]
 
 If a runtime returns ename:XR_FALSE for pname:supportEyeFacialTracking, the
 runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
@@ -66,7 +66,7 @@ elink:XrFacialTrackingTypeHTC in slink:XrFacialTrackerCreateInfoHTC.
 The slink:XrFacialTrackerHTC handle represents the resources for an facial
 tracker of the specific facial tracking type.
 
-include::{generated}/api/handles/XrFacialTrackerHTC.txt[]
+include::{generated}/api/handles/XrFacialTrackerHTC.adoc[]
 
 An application creates separate slink:XrFacialTrackerHTC handles for eye
 tracker or lip tracker.
@@ -78,7 +78,7 @@ flink:xrGetFacialExpressionsHTC function.
 --
 The flink:xrCreateFacialTrackerHTC function is defined as
 
-include::{generated}/api/protos/xrCreateFacialTrackerHTC.txt[]
+include::{generated}/api/protos/xrCreateFacialTrackerHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -101,7 +101,7 @@ slink:XrSystemFacialTrackingPropertiesHTC::pname:supportLipFacialTracking
 when the function flink:xrGetSystemProperties is called, so that the
 application may: avoid creating a facial tracker.
 
-include::{generated}/validity/protos/xrCreateFacialTrackerHTC.txt[]
+include::{generated}/validity/protos/xrCreateFacialTrackerHTC.adoc[]
 
 --
 
@@ -109,7 +109,7 @@ include::{generated}/validity/protos/xrCreateFacialTrackerHTC.txt[]
 --
 The slink:XrFacialTrackerCreateInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrFacialTrackerCreateInfoHTC.txt[]
+include::{generated}/api/structs/XrFacialTrackerCreateInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -124,7 +124,7 @@ include::{generated}/api/structs/XrFacialTrackerCreateInfoHTC.txt[]
 The slink:XrFacialTrackerCreateInfoHTC structure describes the information
 to create an slink:XrFacialTrackerHTC handle.
 
-include::{generated}/validity/structs/XrFacialTrackerCreateInfoHTC.txt[]
+include::{generated}/validity/structs/XrFacialTrackerCreateInfoHTC.adoc[]
 --
 
 [open,refpage='XrFacialTrackingTypeHTC',type='enums',desc='Describes the type of facial tracking.',xrefs='']
@@ -132,16 +132,16 @@ include::{generated}/validity/structs/XrFacialTrackerCreateInfoHTC.txt[]
 The elink:XrFacialTrackingTypeHTC describes which type of tracking the
 slink:XrFacialTrackerHTC is using.
 
-include::{generated}/api/enums/XrFacialTrackingTypeHTC.txt[]
+include::{generated}/api/enums/XrFacialTrackingTypeHTC.adoc[]
 
-include::{generated}/api/enums/XrFacialTrackingTypeHTC.comments-box.txt[]
+include::{generated}/api/enums/XrFacialTrackingTypeHTC.comments-box.adoc[]
 --
 
 [open,refpage='xrDestroyFacialTrackerHTC',type='protos',desc='Destroy a facial tracker handle',xrefs='']
 --
 The flink:xrDestroyFacialTrackerHTC function is defined as:
 
-include::{generated}/api/protos/xrDestroyFacialTrackerHTC.txt[]
+include::{generated}/api/protos/xrDestroyFacialTrackerHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -152,7 +152,7 @@ include::{generated}/api/protos/xrDestroyFacialTrackerHTC.txt[]
 flink:xrDestroyFacialTrackerHTC releases the pname:facialTracker and the
 underlying resources when finished with facial tracking experiences.
 
-include::{generated}/validity/protos/xrDestroyFacialTrackerHTC.txt[]
+include::{generated}/validity/protos/xrDestroyFacialTrackerHTC.adoc[]
 --
 
 *Retrieve facial expressions*
@@ -161,7 +161,7 @@ include::{generated}/validity/protos/xrDestroyFacialTrackerHTC.txt[]
 --
 The flink:xrGetFacialExpressionsHTC function is defined as:
 
-include::{generated}/api/protos/xrGetFacialExpressionsHTC.txt[]
+include::{generated}/api/protos/xrGetFacialExpressionsHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -174,14 +174,14 @@ include::{generated}/api/protos/xrGetFacialExpressionsHTC.txt[]
 flink:xrGetFacialExpressionsHTC retrieves an array of values of blend shapes
 for a facial expression on a given time.
 
-include::{generated}/validity/protos/xrGetFacialExpressionsHTC.txt[]
+include::{generated}/validity/protos/xrGetFacialExpressionsHTC.adoc[]
 --
 
 [open,refpage='XrFacialExpressionsHTC',type='structs',desc='Returns the expression data',xrefs='xrGetFacialExpressionsHTC']
 --
 The slink:XrFacialExpressionsHTC structure is defined as:
 
-include::{generated}/api/structs/XrFacialExpressionsHTC.txt[]
+include::{generated}/api/structs/XrFacialExpressionsHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -238,12 +238,12 @@ indices, the runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT on calls
 to flink:xrGetFacialExpressionsHTC and not change the content in
 pname:expressionWeightings.
 
-include::{generated}/validity/structs/XrFacialExpressionsHTC.txt[]
+include::{generated}/validity/structs/XrFacialExpressionsHTC.adoc[]
 --
 
 [open,refpage='XR_FACIAL_EXPRESSION_EYE_COUNT_HTC',type='defines',desc='The number of blend shapes in an expression of type XR_FACIAL_TRACKING_TYPE_EYE_DEFAULT_HTC',xrefs='XrFacialExpressionsHTC']
 --
-include::{generated}/api/defines/XR_FACIAL_EXPRESSION_EYE_COUNT_HTC.txt[]
+include::{generated}/api/defines/XR_FACIAL_EXPRESSION_EYE_COUNT_HTC.adoc[]
 
 The number of blend shapes in an expression of type
 ename:XR_FACIAL_TRACKING_TYPE_EYE_DEFAULT_HTC.
@@ -251,7 +251,7 @@ ename:XR_FACIAL_TRACKING_TYPE_EYE_DEFAULT_HTC.
 
 [open,refpage='XR_FACIAL_EXPRESSION_LIP_COUNT_HTC',type='defines',desc='The number of blend shapes in an expression of type XR_FACIAL_TRACKING_TYPE_LIP_DEFAULT_HTC',xrefs='XrFacialExpressionsHTC']
 --
-include::{generated}/api/defines/XR_FACIAL_EXPRESSION_LIP_COUNT_HTC.txt[]
+include::{generated}/api/defines/XR_FACIAL_EXPRESSION_LIP_COUNT_HTC.adoc[]
 
 The number of blend shapes in an expression of type
 ename:XR_FACIAL_TRACKING_TYPE_LIP_DEFAULT_HTC.
@@ -268,7 +268,7 @@ according to each set of eye blend shape values.
 
 [open,refpage='XrEyeExpressionHTC',type='enums',desc='The blend shapes of eye expression',xrefs='']
 --
-include::{generated}/api/enums/XrEyeExpressionHTC.txt[]
+include::{generated}/api/enums/XrEyeExpressionHTC.adoc[]
 --
 
 [width="80%",options="header"]
@@ -391,7 +391,7 @@ according to each set of lip blend shape values.
 
 [open,refpage='XrLipExpressionHTC',type='enums',desc='The blend shapes of lip expression',xrefs='']
 --
-include::{generated}/api/enums/XrLipExpressionHTC.txt[]
+include::{generated}/api/enums/XrLipExpressionHTC.adoc[]
 --
 
 [width="80%",options="header"]

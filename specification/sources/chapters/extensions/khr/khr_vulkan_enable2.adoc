@@ -63,7 +63,7 @@ call:
 
 [open,refpage='xrGetVulkanGraphicsRequirements2KHR',type='protos',desc='Retrieve the Vulkan version requirements for an instance and system',xrefs='XrGraphicsRequirementsVulkan2KHR']
 --
-include::{generated}/api/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsRequirements2KHR.adoc[]
 
 The flink:xrGetVulkanGraphicsRequirements2KHR function identifies to the
 application the runtime's minimum Vulkan version requirement and the highest
@@ -85,7 +85,7 @@ pname:instance and pname:systemId.
   output structure.
 ****
 
-include::{generated}/validity/protos/xrGetVulkanGraphicsRequirements2KHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsRequirements2KHR.adoc[]
 --
 
 The slink:XrGraphicsRequirementsVulkan2KHR structure populated by
@@ -93,7 +93,7 @@ flink:xrGetVulkanGraphicsRequirements2KHR is defined as:
 
 [open,refpage='XrGraphicsRequirementsVulkan2KHR',type='structs',desc='Vulkan API version requirements',xrefs='xrGetVulkanGraphicsRequirements2KHR']
 --
-include::{generated}/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+include::{generated}/api/structs/XrGraphicsRequirementsVulkan2KHR.adoc[]
 
 .Member Descriptions
 ****
@@ -112,7 +112,7 @@ include::{generated}/api/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
   patch version component.
 ****
 
-include::{generated}/validity/structs/XrGraphicsRequirementsVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrGraphicsRequirementsVulkan2KHR.adoc[]
 --
 
 ===== Vulkan Instance Creation
@@ -128,7 +128,7 @@ pname:pfnGetInstanceProcAddr.
 
 [open,refpage='xrCreateVulkanInstanceKHR',type='protos',desc='Create an OpenXR compatible VkInstance',xrefs='xrCreateVulkanDeviceKHR']
 --
-include::{generated}/api/protos/xrCreateVulkanInstanceKHR.txt[]
+include::{generated}/api/protos/xrCreateVulkanInstanceKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -143,7 +143,7 @@ include::{generated}/api/protos/xrCreateVulkanInstanceKHR.txt[]
   slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 ****
 
-include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.txt[]
+include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.adoc[]
 --
 
 
@@ -152,7 +152,7 @@ include::{generated}/validity/protos/xrCreateVulkanInstanceKHR.txt[]
 The slink:XrVulkanInstanceCreateInfoKHR structure contains the input
 parameters to flink:xrCreateVulkanInstanceKHR.
 
-include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -173,7 +173,7 @@ include::{generated}/api/structs/XrVulkanInstanceCreateInfoKHR.txt[]
   by Vulkan].
 ****
 
-include::{generated}/validity/structs/XrVulkanInstanceCreateInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanInstanceCreateInfoKHR.adoc[]
 --
 
 [open,refpage='XrVulkanInstanceCreateFlagsKHR',desc='Vulkan Instance Create Info Flags',type='flags',xrefs='XrVulkanInstanceCreateInfoKHR XrVulkanInstanceCreateFlagBitsKHR']
@@ -182,7 +182,7 @@ The slink:XrVulkanInstanceCreateInfoKHR::pname:createFlags member is of the
 following type, and contains a bitwise-OR of zero or more of the bits
 defined in elink:XrVulkanInstanceCreateFlagBitsKHR.
 
-include::{generated}/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
+include::{generated}/api/flags/XrVulkanInstanceCreateFlagsKHR.adoc[]
 --
 
 [open,refpage='XrVulkanInstanceCreateFlagBitsKHR',desc='Vulkan Instance Create Info Flags',type='enums',xrefs='XrVulkanInstanceCreateInfoKHR XrVulkanInstanceCreateFlagsKHR']
@@ -191,14 +191,14 @@ include::{generated}/api/flags/XrVulkanInstanceCreateFlagsKHR.txt[]
 Valid bits for elink:XrVulkanInstanceCreateFlagsKHR are defined by
 elink:XrVulkanInstanceCreateFlagBitsKHR.
 
-include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.txt[]
+include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.adoc[]
 
 There are currently no Vulkan instance creation flag bits defined.
 This is reserved for future use.
 
 // The flag bits have the following meanings:
 //
-// include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.comments.txt[]
+// include::{generated}/api/enums/XrVulkanInstanceCreateFlagBitsKHR.comments.adoc[]
 --
 
 ===== Physical Device Selection
@@ -214,7 +214,7 @@ OpenXR runtime.
 
 [open,refpage='xrGetVulkanGraphicsDevice2KHR',type='protos',desc='Retrieve the Vulkan physical device associated with an OpenXR instance and system']
 --
-include::{generated}/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+include::{generated}/api/protos/xrGetVulkanGraphicsDevice2KHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -226,7 +226,7 @@ include::{generated}/api/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
   to populate.
 ****
 
-include::{generated}/validity/protos/xrGetVulkanGraphicsDevice2KHR.txt[]
+include::{generated}/validity/protos/xrGetVulkanGraphicsDevice2KHR.adoc[]
 --
 
 The slink:XrVulkanGraphicsDeviceGetInfoKHR structure contains the input
@@ -234,7 +234,7 @@ parameters to flink:xrCreateVulkanInstanceKHR.
 
 [open,refpage='XrVulkanGraphicsDeviceGetInfoKHR',type='structs',desc='Vulkan Graphics Device Get Info',xrefs='xrGetVulkanGraphicsDevice2KHR']
 --
-include::{generated}/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -246,7 +246,7 @@ include::{generated}/api/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
 * pname:vulkanInstance is a valid Vulkan sname:VkInstance.
 ****
 
-include::{generated}/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanGraphicsDeviceGetInfoKHR.adoc[]
 --
 
 ===== Vulkan Device Creation
@@ -261,7 +261,7 @@ slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 
 [open,refpage='xrCreateVulkanDeviceKHR',type='protos',desc='Create an OpenXR compatible VkDevice',xrefs='xrCreateVulkanInstanceKHR']
 --
-include::{generated}/api/protos/xrCreateVulkanDeviceKHR.txt[]
+include::{generated}/api/protos/xrCreateVulkanDeviceKHR.adoc[]
 
 .Parameter Descriptions
 ****
@@ -276,7 +276,7 @@ include::{generated}/api/protos/xrCreateVulkanDeviceKHR.txt[]
   slink:XrVulkanInstanceCreateInfoKHR::pname:pfnGetInstanceProcAddr.
 ****
 
-include::{generated}/validity/protos/xrCreateVulkanDeviceKHR.txt[]
+include::{generated}/validity/protos/xrCreateVulkanDeviceKHR.adoc[]
 --
 
 The slink:XrVulkanDeviceCreateInfoKHR structure contains the input
@@ -284,7 +284,7 @@ parameters to flink:xrCreateVulkanDeviceKHR.
 
 [open,refpage='XrVulkanDeviceCreateInfoKHR',type='structs',desc='Vulkan Device Create Info',xrefs='xrCreateVulkanDeviceKHR']
 --
-include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+include::{generated}/api/structs/XrVulkanDeviceCreateInfoKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -309,7 +309,7 @@ If the pname:vulkanPhysicalDevice parameter does not match the output of
 flink:xrGetVulkanGraphicsDeviceKHR, then the runtime must: return
 ename:XR_ERROR_HANDLE_INVALID.
 
-include::{generated}/validity/structs/XrVulkanDeviceCreateInfoKHR.txt[]
+include::{generated}/validity/structs/XrVulkanDeviceCreateInfoKHR.adoc[]
 --
 
 [open,refpage='XrVulkanDeviceCreateFlagsKHR',type='flags',desc='Vulkan Device Create Info Flags',xrefs='XrVulkanDeviceCreateInfoKHR XrVulkanDeviceCreateFlagBitsKHR']
@@ -319,7 +319,7 @@ The slink:XrVulkanDeviceCreateInfoKHR::pname:createFlags member is of the
 following type, and contains a bitwise-OR of zero or more of the bits
 defined in elink:XrVulkanDeviceCreateFlagBitsKHR.
 
-include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
+include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.adoc[]
 --
 
 [open,refpage='XrVulkanDeviceCreateFlagBitsKHR',type='enums',desc='Vulkan Device Create Info Flag bits',xrefs='XrVulkanDeviceCreateInfoKHR XrVulkanDeviceCreateFlagsKHR']
@@ -327,7 +327,7 @@ include::{generated}/api/flags/XrVulkanDeviceCreateFlagsKHR.txt[]
 Valid bits for elink:XrVulkanDeviceCreateFlagsKHR are defined by
 elink:XrVulkanDeviceCreateFlagBitsKHR.
 
-include::{generated}/api/enums/XrVulkanDeviceCreateFlagBitsKHR.txt[]
+include::{generated}/api/enums/XrVulkanDeviceCreateFlagBitsKHR.adoc[]
 
 There are currently no Vulkan device creation flag bits defined.
 This is reserved for future use.
@@ -356,7 +356,7 @@ slink:XrGraphicsBindingVulkan2KHR structure for session creation.
 
 [open,refpage='XrGraphicsBindingVulkan2KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use Vulkan',xrefs='xrCreateSession']
 --
-include::{generated}/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
+include::{generated}/api/structs/XrGraphicsBindingVulkan2KHR.adoc[]
 
 .Member Descriptions
 ****
@@ -383,7 +383,7 @@ include::{generated}/api/structs/XrGraphicsBindingVulkan2KHR.txt[]
 * pname:device must: have been created using flink:xrCreateVulkanDeviceKHR
 ****
 
-include::{generated}/validity/structs/XrGraphicsBindingVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrGraphicsBindingVulkan2KHR.adoc[]
 --
 
 Populating an slink:XrGraphicsBindingVulkan2KHR structure with a member that
@@ -428,7 +428,7 @@ These are defined as:
 
 [open,refpage='XrSwapchainImageVulkan2KHR',type='structs',desc='Vulkan-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
-include::{generated}/api/structs/XrSwapchainImageVulkan2KHR.txt[]
+include::{generated}/api/structs/XrSwapchainImageVulkan2KHR.adoc[]
 
 .Member Descriptions
 ****
@@ -456,7 +456,7 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing down, near Z plane at 0, and far Z plane at 1.
 
-include::{generated}/validity/structs/XrSwapchainImageVulkan2KHR.txt[]
+include::{generated}/validity/structs/XrSwapchainImageVulkan2KHR.adoc[]
 --
 
 ===== Swapchain Image Layout

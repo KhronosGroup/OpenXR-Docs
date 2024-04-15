@@ -31,13 +31,13 @@ This API supports returning camera intrinsics and extrinsics:
 
 [open,refpage='XrExternalCameraStatusFlagsOCULUS',type='flags',desc='XrExternalCameraStatusFlagsOCULUS',xrefs='XrExternalCameraStatusFlagBitsOCULUS']
 --
-include::{generated}/api/flags/XrExternalCameraStatusFlagsOCULUS.txt[]
+include::{generated}/api/flags/XrExternalCameraStatusFlagsOCULUS.adoc[]
 --
 
 [open,refpage='XrExternalCameraStatusFlagBitsOCULUS',type='enums',desc='XrExternalCameraStatusFlagBitsOCULUS',xrefs='XrExternalCameraStatusFlagsOCULUS']
 --
-include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.txt[]
-include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.comments.txt[]
+include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.adoc[]
+include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.comments.adoc[]
 --
 
 *New Enum Constants*
@@ -48,7 +48,7 @@ include::{generated}/api/enums/XrExternalCameraStatusFlagBitsOCULUS.comments.txt
 ename:XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS defines the length of the
 field slink:XrExternalCameraOCULUS::pname:name.
 
-include::{generated}/api/enums/XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS.txt[]
+include::{generated}/api/enums/XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS.adoc[]
 
 --
 
@@ -60,8 +60,8 @@ elink:XrStructureType enumeration is extended with:
 
 [open,refpage='XrExternalCameraAttachedToDeviceOCULUS',type='enums',desc='XrExternalCameraAttachedToDeviceOCULUS']
 --
-include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.txt[]
-include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.comments.txt[]
+include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.adoc[]
+include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.comments.adoc[]
 --
 
 *New Structures*
@@ -71,7 +71,7 @@ include::{generated}/api/enums/XrExternalCameraAttachedToDeviceOCULUS.comments.t
 
 The slink:XrExternalCameraIntrinsicsOCULUS structure is defined as:
 
-include::{generated}/api/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
+include::{generated}/api/structs/XrExternalCameraIntrinsicsOCULUS.adoc[]
 
 .Member Descriptions
 ****
@@ -86,7 +86,7 @@ include::{generated}/api/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
   camera's resolution (in pixels).
 ****
 
-include::{generated}/validity/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
+include::{generated}/validity/structs/XrExternalCameraIntrinsicsOCULUS.adoc[]
 --
 
 [open,refpage='XrExternalCameraExtrinsicsOCULUS',type='structs',desc='Camera extrinsics state',xrefs='']
@@ -94,7 +94,7 @@ include::{generated}/validity/structs/XrExternalCameraIntrinsicsOCULUS.txt[]
 
 The slink:XrExternalCameraExtrinsicsOCULUS structure is defined as:
 
-include::{generated}/api/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
+include::{generated}/api/structs/XrExternalCameraExtrinsicsOCULUS.adoc[]
 
 .Member Descriptions
 ****
@@ -108,7 +108,7 @@ include::{generated}/api/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
   device that the camera is attached to
 ****
 
-include::{generated}/validity/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
+include::{generated}/validity/structs/XrExternalCameraExtrinsicsOCULUS.adoc[]
 --
 
 [open,refpage='XrExternalCameraOCULUS',type='structs',desc='Camera intrintics state',xrefs='']
@@ -116,7 +116,7 @@ include::{generated}/validity/structs/XrExternalCameraExtrinsicsOCULUS.txt[]
 
 The slink:XrExternalCameraOCULUS structure is defined as:
 
-include::{generated}/api/structs/XrExternalCameraOCULUS.txt[]
+include::{generated}/api/structs/XrExternalCameraOCULUS.adoc[]
 
 .Member Descriptions
 ****
@@ -132,7 +132,7 @@ include::{generated}/api/structs/XrExternalCameraOCULUS.txt[]
   camera
 ****
 
-include::{generated}/validity/structs/XrExternalCameraOCULUS.txt[]
+include::{generated}/validity/structs/XrExternalCameraOCULUS.adoc[]
 --
 
 
@@ -143,7 +143,7 @@ include::{generated}/validity/structs/XrExternalCameraOCULUS.txt[]
 The flink:xrEnumerateExternalCamerasOCULUS function enumerates all the
 external cameras that are supported by the runtime, it is defined as:
 
-include::{generated}/api/protos/xrEnumerateExternalCamerasOCULUS.txt[]
+include::{generated}/api/protos/xrEnumerateExternalCamerasOCULUS.adoc[]
 
 .Parameter Descriptions
 ****
@@ -156,11 +156,11 @@ include::{generated}/api/protos/xrEnumerateExternalCamerasOCULUS.txt[]
 * pname:cameras is an array of slink:XrExternalCameraOCULUS filled in by the
   runtime which contains all the available external cameras, but can: be
   code:NULL if pname:cameraCapacityInput is `0`.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:cameras size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:cameras size.
 ****
 
-include::{generated}/validity/protos/xrEnumerateExternalCamerasOCULUS.txt[]
+include::{generated}/validity/protos/xrEnumerateExternalCamerasOCULUS.adoc[]
 --
 
 *Issues*

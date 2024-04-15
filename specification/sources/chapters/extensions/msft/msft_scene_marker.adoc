@@ -9,8 +9,6 @@ include::{generated}/meta/XR_MSFT_scene_marker.adoc[]
     Yin Li, Microsoft +
     Alex Turner, Microsoft
 
-:uri-iso-iec-18004-2015: https://www.iso.org/standard/62021.html
-
 ==== Overview
 
 This extension enables the application to observe the tracked markers, such
@@ -64,7 +62,7 @@ A typical use of this extension is:
 --
 The slink:XrSceneMarkersMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSceneMarkersMSFT.txt[]
+include::{generated}/api/structs/XrSceneMarkersMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -84,9 +82,10 @@ slink:XrSceneMarkersMSFT structure to the next pointer of
 slink:XrSceneComponentsGetInfoMSFT when calling
 flink:xrGetSceneComponentsMSFT.
 
-flink:xrGetSceneComponentsMSFT follows the <<buffer-size-parameters,two-call
-idiom>> for filling the slink:XrSceneComponentsMSFT structure to which an
-slink:XrSceneMarkersMSFT structure can: be chained.
+flink:xrGetSceneComponentsMSFT follows the
+<<fundamentals-buffer-size-parameters,two-call idiom>> for filling the
+slink:XrSceneComponentsMSFT structure to which an slink:XrSceneMarkersMSFT
+structure can: be chained.
 
 The input pname:sceneMarkerCapacityInput must: be equal to or greater than
 the corresponding slink:XrSceneComponentsMSFT::componentCapacityInput,
@@ -96,7 +95,7 @@ The actual count of elements returned in the array pname:sceneMarkers is
 consistent with the extended slink:XrSceneComponentsMSFT structure and
 returned in slink:XrSceneComponentsMSFT::pname:componentCountOutput.
 
-include::{generated}/validity/structs/XrSceneMarkersMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMarkersMSFT.adoc[]
 
 --
 
@@ -105,7 +104,7 @@ include::{generated}/validity/structs/XrSceneMarkersMSFT.txt[]
 
 The slink:XrSceneMarkerMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSceneMarkerMSFT.txt[]
+include::{generated}/api/structs/XrSceneMarkerMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -124,8 +123,8 @@ include::{generated}/api/structs/XrSceneMarkerMSFT.txt[]
 The slink:XrSceneMarkerMSFT structure is an element in the array of
 slink:XrSceneMarkersMSFT::pname:sceneMarkers.
 
-Refer to the <<qr_code_convention, QR code convention>> for an example of
-marker's center and size in the context of a QR code.
+Refer to the <<msft_scene_marker-qr-code-convention, QR code convention>>
+for an example of marker's center and size in the context of a QR code.
 
 When the runtime updates the location or properties of an observed marker,
 the runtime must: set the slink:XrSceneMarkerMSFT::pname:lastSeenTime to the
@@ -141,14 +140,14 @@ The pname:center and pname:size are measured in meters, relative to the
 slink:XrPosef of the marker for the visual bound of the marker in XY plane,
 regardless of the marker type.
 
-include::{generated}/validity/structs/XrSceneMarkerMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMarkerMSFT.adoc[]
 --
 
 [open,refpage='XrSceneMarkerTypeFilterMSFT',desc='The information to filter marker query results',type='structs',xrefs='xrGetSceneComponentsMSFT']
 --
 The slink:XrSceneMarkerTypeFilterMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSceneMarkerTypeFilterMSFT.txt[]
+include::{generated}/api/structs/XrSceneMarkerTypeFilterMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -176,7 +175,7 @@ pname:markerTypes array must: not have duplicated values.
 Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE for
 flink:xrGetSceneComponentsMSFT function.
 
-include::{generated}/validity/structs/XrSceneMarkerTypeFilterMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMarkerTypeFilterMSFT.adoc[]
 
 --
 
@@ -184,7 +183,7 @@ include::{generated}/validity/structs/XrSceneMarkerTypeFilterMSFT.txt[]
 --
 The elink:XrSceneMarkerTypeMSFT identifies the type of a scene marker.
 
-include::{generated}/api/enums/XrSceneMarkerTypeMSFT.txt[]
+include::{generated}/api/enums/XrSceneMarkerTypeMSFT.adoc[]
 
 .Enumerant Descriptions
 ****
@@ -232,7 +231,7 @@ image in physical world must: be well defined and consistent for each
 elink:XrSceneMarkerTypeMSFT, including the new marker types defined in
 future extensions.
 
-[[qr_code_convention]]
+[[msft_scene_marker-qr-code-convention]]
 ==== The convention of QRCode marker location
 
 For a marker with ename:XR_SCENE_MARKER_TYPE_QR_CODE_MSFT, the origin is at
@@ -255,7 +254,7 @@ image::images/marker_size.png[align="center", title="The center and size of QR C
 --
 The slink:XrSceneMarkerQRCodesMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSceneMarkerQRCodesMSFT.txt[]
+include::{generated}/api/structs/XrSceneMarkerQRCodesMSFT.adoc[]
 
 .Member Descriptions
 ****
@@ -274,8 +273,9 @@ pointer of slink:XrSceneComponentsMSFT when calling
 flink:xrGetSceneComponentsMSFT function to retrieve the QR Code specific
 properties through an array of slink:XrSceneMarkerQRCodeMSFT structures.
 
-flink:xrGetSceneComponentsMSFT follows the <<buffer-size-parameters,two-call
-idiom>> for filling the slink:XrSceneComponentsMSFT structure to which an
+flink:xrGetSceneComponentsMSFT follows the
+<<fundamentals-buffer-size-parameters,two-call idiom>> for filling the
+slink:XrSceneComponentsMSFT structure to which an
 slink:XrSceneMarkerQRCodesMSFT structure can: be chained.
 
 The pname:qrCodeCapacityInput must: be equal to or greater than the
@@ -287,14 +287,14 @@ The actual count of elements returned in the array pname:qrCodes is
 consistent to the extended slink:XrSceneComponentsMSFT structure and
 returned in slink:XrSceneComponentsMSFT::componentCountOutput.
 
-include::{generated}/validity/structs/XrSceneMarkerQRCodesMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMarkerQRCodesMSFT.adoc[]
 --
 
 [open,refpage='XrSceneMarkerQRCodeMSFT',desc='Properties specific to QR Codes',type='structs',xrefs='xrGetSceneComponentsMSFT']
 --
 The slink:XrSceneMarkerQRCodeMSFT structure is defined as:
 
-include::{generated}/api/structs/XrSceneMarkerQRCodeMSFT.txt[]
+include::{generated}/api/structs/XrSceneMarkerQRCodeMSFT.adoc[]
 .Member Descriptions
 ****
 * pname:symbolType is an elink:XrSceneMarkerQRCodeSymbolTypeMSFT indicating
@@ -307,12 +307,12 @@ symbol type and version according to {uri-iso-iec-18004-2015}[ISO/IEC
 The pname:version must: be in the range 1 to 40 inclusively for a QR Code
 and 1 to 4 inclusively for a Micro QR Code.
 
-include::{generated}/validity/structs/XrSceneMarkerQRCodeMSFT.txt[]
+include::{generated}/validity/structs/XrSceneMarkerQRCodeMSFT.adoc[]
 --
 
 [open,refpage='XrSceneMarkerQRCodeSymbolTypeMSFT',desc='QR Code Symbol type',type='enums'']
 --
-include::{generated}/api/enums/XrSceneMarkerQRCodeSymbolTypeMSFT.txt[]
+include::{generated}/api/enums/XrSceneMarkerQRCodeSymbolTypeMSFT.adoc[]
 
 The elink:XrSceneMarkerQRCodeSymbolTypeMSFT identifies the symbol type of
 the QR Code.
@@ -330,7 +330,7 @@ the QR Code.
 --
 The flink:xrGetSceneMarkerDecodedStringMSFT function is defined as:
 
-include::{generated}/api/protos/xrGetSceneMarkerDecodedStringMSFT.txt[]
+include::{generated}/api/protos/xrGetSceneMarkerDecodedStringMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -347,28 +347,28 @@ include::{generated}/api/protos/xrGetSceneMarkerDecodedStringMSFT.txt[]
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the string stored in the QR Code.
   It can be NULL if bufferCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 The flink:xrGetSceneMarkerDecodedStringMSFT function retrieves the string
 stored in the scene marker as an UTF-8 string, including the terminating
 '\0'.
-This function follows the <<buffer-size-parameters,two-call idiom>> for
-filling the pname:buffer array.
+This function follows the <<fundamentals-buffer-size-parameters,two-call
+idiom>> for filling the pname:buffer array.
 
 If the stored data in the marker is not an encoded string, the runtime must:
 return the success code ename:XR_SCENE_MARKER_DATA_NOT_STRING_MSFT, set
 pname:bufferCountOutput to 1, and make pname:buffer an empty string.
 
-include::{generated}/validity/protos/xrGetSceneMarkerDecodedStringMSFT.txt[]
+include::{generated}/validity/protos/xrGetSceneMarkerDecodedStringMSFT.adoc[]
 --
 
 [open,refpage='xrGetSceneMarkerRawDataMSFT',type='protos',desc='Get the data stored in the scene marker']
 --
 The flink:xrGetSceneMarkerRawDataMSFT function is defined as:
 
-include::{generated}/api/protos/xrGetSceneMarkerRawDataMSFT.txt[]
+include::{generated}/api/protos/xrGetSceneMarkerRawDataMSFT.adoc[]
 
 .Parameter Descriptions
 ****
@@ -385,14 +385,14 @@ include::{generated}/api/protos/xrGetSceneMarkerRawDataMSFT.txt[]
 * pname:buffer is a pointer to an application-allocated buffer that will be
   filled with the data stored in the QR Code.
   It can be NULL if bufferCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 The flink:xrGetSceneMarkerRawDataMSFT function retrieves the data stored in
 the scene marker.
 
-include::{generated}/validity/protos/xrGetSceneMarkerRawDataMSFT.txt[]
+include::{generated}/validity/protos/xrGetSceneMarkerRawDataMSFT.adoc[]
 
 --
 

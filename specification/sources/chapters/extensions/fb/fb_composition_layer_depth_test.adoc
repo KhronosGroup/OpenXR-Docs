@@ -51,9 +51,9 @@ elink:XrStructureType enumeration is extended with:
 The possible comparison operations are specified by the elink:XrCompareOpFB
 enumeration.
 
-include::{generated}/api/enums/XrCompareOpFB.txt[]
+include::{generated}/api/enums/XrCompareOpFB.adoc[]
 
-include::{generated}/api/enums/XrCompareOpFB.comments-box.txt[]
+include::{generated}/api/enums/XrCompareOpFB.comments-box.adoc[]
 --
 
 *New Structures*
@@ -62,7 +62,7 @@ include::{generated}/api/enums/XrCompareOpFB.comments-box.txt[]
 --
 The slink:XrCompositionLayerDepthTestFB structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerDepthTestFB.txt[]
+include::{generated}/api/structs/XrCompositionLayerDepthTestFB.adoc[]
 
 .Member Descriptions
 ****
@@ -81,7 +81,7 @@ polymorphic slink:XrCompositionLayerBaseHeader structure's pname:next
 parameter chain.
 
 
-include::{generated}/validity/structs/XrCompositionLayerDepthTestFB.txt[]
+include::{generated}/validity/structs/XrCompositionLayerDepthTestFB.adoc[]
 --
 
 *New Functions*

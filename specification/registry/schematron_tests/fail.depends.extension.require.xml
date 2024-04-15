@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2024, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+    </types>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+    </feature>
+
+    <extensions>
+        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
+            </require>
+            <require depends="BogusExtension">
+            </require>
+        </extension>
+    </extensions>
+</registry>

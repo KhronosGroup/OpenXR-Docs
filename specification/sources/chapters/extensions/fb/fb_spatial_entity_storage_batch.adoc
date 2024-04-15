@@ -19,7 +19,7 @@ slink:XrSpace entities.
 In order to enable the functionality of this extension, you must: pass the
 name of the extension into flink:xrCreateInstance via the
 slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
+indicated in the <<fundamentals-extensions>> section.
 
 *New Object Types*
 
@@ -40,7 +40,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrSpaceListSaveInfoFB structure is defined as:
 
-include::{generated}/api/structs/XrSpaceListSaveInfoFB.txt[]
+include::{generated}/api/structs/XrSpaceListSaveInfoFB.adoc[]
 
 .Member Descriptions
 ****
@@ -57,14 +57,14 @@ include::{generated}/api/structs/XrSpaceListSaveInfoFB.txt[]
 The slink:XrSpaceListSaveInfoFB structure contains information used to save
 multiple spatial entities.
 
-include::{generated}/validity/structs/XrSpaceListSaveInfoFB.txt[]
+include::{generated}/validity/structs/XrSpaceListSaveInfoFB.adoc[]
 --
 
 [open,refpage='XrEventDataSpaceListSaveCompleteFB',type='structs',desc='Describes the completion of a save list operation',xrefs='']
 --
 The slink:XrEventDataSpaceListSaveCompleteFB structure is defined as:
 
-include::{generated}/api/structs/XrEventDataSpaceListSaveCompleteFB.txt[]
+include::{generated}/api/structs/XrEventDataSpaceListSaveCompleteFB.adoc[]
 
 .Member Descriptions
 ****
@@ -105,7 +105,7 @@ endif::doctype-manpage[]
 * ename:XR_ERROR_SPACE_CLOUD_STORAGE_DISABLED_FB
 ****
 
-include::{generated}/validity/structs/XrEventDataSpaceListSaveCompleteFB.txt[]
+include::{generated}/validity/structs/XrEventDataSpaceListSaveCompleteFB.adoc[]
 --
 
 *New Functions*
@@ -114,7 +114,7 @@ include::{generated}/validity/structs/XrEventDataSpaceListSaveCompleteFB.txt[]
 --
 The flink:xrSaveSpaceListFB function is defined as:
 
-include::{generated}/api/protos/xrSaveSpaceListFB.txt[]
+include::{generated}/api/protos/xrSaveSpaceListFB.adoc[]
 
 .Parameter Descriptions
 ****
@@ -133,7 +133,7 @@ slink:XrEventDataSpaceListSaveCompleteFB event when the operation completes
 successfully or encounters an error.
 If this function returns a failure code, no event is posted.
 
-include::{generated}/validity/protos/xrSaveSpaceListFB.txt[]
+include::{generated}/validity/protos/xrSaveSpaceListFB.adoc[]
 --
 
 *Issues*

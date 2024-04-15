@@ -46,7 +46,7 @@ the specified slink:XrSwapchainSubImage.
 
 The flink:xrApplyFoveationHTC function is defined as:
 
-include::{generated}/api/protos/xrApplyFoveationHTC.txt[]
+include::{generated}/api/protos/xrApplyFoveationHTC.adoc[]
 
 .Parameter Descriptions
 ****
@@ -63,7 +63,7 @@ this slink:XrSession, whichever comes first.
 You should: not call flink:xrApplyFoveationHTC during rendering to target
 image layer slink:XrSwapchainSubImage in render loop.
 
-include::{generated}/validity/protos/xrApplyFoveationHTC.txt[]
+include::{generated}/validity/protos/xrApplyFoveationHTC.adoc[]
 --
 
 [open,refpage='XrFoveationApplyInfoHTC',type='structs',desc='Information for foveation applying',xrefs='']
@@ -71,7 +71,7 @@ include::{generated}/validity/protos/xrApplyFoveationHTC.txt[]
 
 The slink:XrFoveationApplyInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrFoveationApplyInfoHTC.txt[]
+include::{generated}/api/structs/XrFoveationApplyInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -109,7 +109,7 @@ structure.
 The order of pname:subImages must: be the same order as in
 slink:XrCompositionLayerProjectionView when submitted in flink:xrEndFrame.
 
-include::{generated}/validity/structs/XrFoveationApplyInfoHTC.txt[]
+include::{generated}/validity/structs/XrFoveationApplyInfoHTC.adoc[]
 --
 
 [open,refpage='XrFoveationModeHTC',desc='Foveation mode',type='enums']
@@ -117,8 +117,8 @@ include::{generated}/validity/structs/XrFoveationApplyInfoHTC.txt[]
 
 elink:XrFoveationModeHTC identifies the different foveation modes.
 
-include::{generated}/api/enums/XrFoveationModeHTC.txt[]
-include::{generated}/api/enums/XrFoveationModeHTC.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationModeHTC.adoc[]
+include::{generated}/api/enums/XrFoveationModeHTC.comments-box.adoc[]
 --
 
 *Dynamic foveation mode*
@@ -131,7 +131,7 @@ dynamically according to the system metrics or other extensions.
 
 The slink:XrFoveationDynamicModeInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrFoveationDynamicModeInfoHTC.txt[]
+include::{generated}/api/structs/XrFoveationDynamicModeInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -145,19 +145,19 @@ include::{generated}/api/structs/XrFoveationDynamicModeInfoHTC.txt[]
 The application must: chain an slink:XrFoveationDynamicModeInfoHTC structure
 to slink:XrFoveationApplyInfoHTC if dynamic mode is set.
 
-include::{generated}/validity/structs/XrFoveationDynamicModeInfoHTC.txt[]
+include::{generated}/validity/structs/XrFoveationDynamicModeInfoHTC.adoc[]
 --
 
 
 [open,refpage='XrFoveationDynamicFlagsHTC',type='flags',desc='XrFoveationDynamicFlagsHTC',xrefs='XrFoveationDynamicFlagBitsHTC']
 --
-include::{generated}/api/flags/XrFoveationDynamicFlagsHTC.txt[]
+include::{generated}/api/flags/XrFoveationDynamicFlagsHTC.adoc[]
 --
 
 [open,refpage='XrFoveationDynamicFlagBitsHTC',desc='Features allow to change in dynamic mode',type='enums']
 --
-include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.txt[]
-include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.comments.txt[]
+include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.adoc[]
+include::{generated}/api/enums/XrFoveationDynamicFlagBitsHTC.comments.adoc[]
 --
 
 *Custom foveation mode*
@@ -170,7 +170,7 @@ preference of content.
 
 The slink:XrFoveationCustomModeInfoHTC structure is defined as:
 
-include::{generated}/api/structs/XrFoveationCustomModeInfoHTC.txt[]
+include::{generated}/api/structs/XrFoveationCustomModeInfoHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -187,7 +187,7 @@ The application must: chain an slink:XrFoveationCustomModeInfoHTC structure
 to slink:XrFoveationApplyInfoHTC to customize foveation if custom mode is
 set.
 
-include::{generated}/validity/structs/XrFoveationCustomModeInfoHTC.txt[]
+include::{generated}/validity/structs/XrFoveationCustomModeInfoHTC.adoc[]
 --
 
 [open,refpage='XrFoveationConfigurationHTC',desc='Configuration of foveation',type='structs',xrefs='']
@@ -195,7 +195,7 @@ include::{generated}/validity/structs/XrFoveationCustomModeInfoHTC.txt[]
 
 The slink:XrFoveationConfigurationHTC structure is defined as:
 
-include::{generated}/api/structs/XrFoveationConfigurationHTC.txt[]
+include::{generated}/api/structs/XrFoveationConfigurationHTC.adoc[]
 
 .Member Descriptions
 ****
@@ -210,7 +210,7 @@ elink:XrFoveationLevelHTC .
   The x and y of pname:focalCenterOffset must: be in the range [-1, 1].
 ****
 
-include::{generated}/validity/structs/XrFoveationConfigurationHTC.txt[]
+include::{generated}/validity/structs/XrFoveationConfigurationHTC.adoc[]
 
 --
 
@@ -218,8 +218,8 @@ include::{generated}/validity/structs/XrFoveationConfigurationHTC.txt[]
 [open,refpage='XrFoveationLevelHTC',desc='The pixel density drop level of periphery area',type='enums']
 --
 
-include::{generated}/api/enums/XrFoveationLevelHTC.txt[]
-include::{generated}/api/enums/XrFoveationLevelHTC.comments-box.txt[]
+include::{generated}/api/enums/XrFoveationLevelHTC.adoc[]
+include::{generated}/api/enums/XrFoveationLevelHTC.comments-box.adoc[]
 --
 
 *New Object Types*

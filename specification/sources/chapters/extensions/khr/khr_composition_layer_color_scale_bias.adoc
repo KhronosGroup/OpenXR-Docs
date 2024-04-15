@@ -53,7 +53,7 @@ elink:XrStructureType enumeration is extended with:
 --
 The slink:XrCompositionLayerColorScaleBiasKHR structure is defined as:
 
-include::{generated}/api/structs/XrCompositionLayerColorScaleBiasKHR.txt[]
+include::{generated}/api/structs/XrCompositionLayerColorScaleBiasKHR.adoc[]
 
 .Member Descriptions
 ****
@@ -74,7 +74,7 @@ The slink:XrCompositionLayerColorScaleBiasKHR structure can: be applied by
 applications to composition layers by adding an instance of the struct to
 the slink:XrCompositionLayerBaseHeader::pname:next list.
 
-include::{generated}/validity/structs/XrCompositionLayerColorScaleBiasKHR.txt[]
+include::{generated}/validity/structs/XrCompositionLayerColorScaleBiasKHR.adoc[]
 --
 
 *New Functions*
