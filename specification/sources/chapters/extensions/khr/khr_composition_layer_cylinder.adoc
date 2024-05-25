@@ -44,8 +44,8 @@ parameters.
 Typically the aspectRatio would be set to be the aspect ratio of the texture
 being used, so that it looks the same within the cylinder as it does in 2D.
 
-
-image::images/khr_composition_layer_cylinder.svg[align="center", title="Cylinder Layer Parameters"]
+[[fig-KHR_composition_layer_cylinder]]
+image::images/khr_composition_layer_cylinder.svg[opts="inline", align="center", title="Cylinder Layer Parameters"]
 
 * __r__ -- Radius
 * __a__ -- Central angle in [eq]#(0, 2{pi})#

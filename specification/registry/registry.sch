@@ -6,6 +6,19 @@
 
          SPDX-License-Identifier: Apache-2.0
     -->
+
+    <sch:pattern name="Vendor tag naming requirements">
+        <sch:rule context="tags/tag">
+            <!-- Our tooling treats a trailing X in a vendor tag as an experimental version, this will cause  -->
+            <!-- problems if someone adds a vendor tag that ends in X. -->
+            <!-- Please see gitlab merge request !2518 for more details. -->
+            <sch:assert test="not(ends-with(@name, 'X'))">
+                Vendor tag cannot end in "X" but got <sch:value-of select="@name" />
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+
     <sch:pattern name="Extension uniqueness and basic requirements">
         <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#extensions -->
         <sch:rule context="extensions/extension">

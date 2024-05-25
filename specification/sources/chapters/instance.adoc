@@ -306,7 +306,7 @@ This is reserved for future use.
 --
 
 
-[open,refpage='XrApplicationInfo',desc='Structure specifying application info',type='structs']
+[open,refpage='XrApplicationInfo',desc='Structure specifying application info',type='structs',xrefs='xrCreateInstance XrInstanceCreateInfo XR_API_VERSION_1_0 XR_API_VERSION_1_1']
 --
 The slink:XrApplicationInfo structure is defined as:
 
@@ -317,7 +317,7 @@ include::{generated}/api/structs/XrApplicationInfo.adoc[]
 * pname:applicationName is a non-empty string containing the name of the
   application.
 * pname:applicationVersion is an unsigned integer variable containing the
-developer-supplied version number of the application.
+  developer-supplied version number of the application.
 * pname:engineName is a string containing the name of the engine (if any)
   used to create the application.
   It may be empty to indicate no specified engine.
@@ -331,6 +331,9 @@ developer-supplied version number of the application.
   If the runtime does not support the requested pname:apiVersion it must:
   return ename:XR_ERROR_API_VERSION_UNSUPPORTED.
 ****
+
+Useful values for pname:apiVersion include dlink:XR_API_VERSION_1_0 and
+dlink:XR_API_VERSION_1_1.
 
 include::{generated}/validity/structs/XrApplicationInfo.adoc[]
 

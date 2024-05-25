@@ -362,7 +362,8 @@ include::{generated}/api/enums/XrFutureStateEXT.adoc[]
 ****
 
 
-image::images/ext_future_lifecycle.svg[align="center", title="basetype:XrFutureEXT Life-cycle"]
+[[fig-EXT_future-lifecycle]]
+image::images/ext_future_lifecycle.svg[opts="inline", align="center", title="basetype:XrFutureEXT Lifecycle"]
 
 A future that is not invalidated (or completed) may: be in one of two
 states, `Pending` and `Ready`, represented by

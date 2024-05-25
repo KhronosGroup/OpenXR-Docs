@@ -131,6 +131,8 @@ within this radius corresponds to the subpathname:/dpad_center component.
 When used with an input path with an identifier of _thumbstick_, the area
 within this radius is a region where all dpad components must: be inactive.
 
+// This diagram renders poorly when it has opts="inline"
+[[fig-EXT_dpad_binding-wedge-angles]]
 image::images/ext_dpad_binding_wedge.svg[align="center", title="Wedge Angles"]
 
 *Behavior*

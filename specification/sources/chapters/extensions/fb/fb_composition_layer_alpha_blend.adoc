@@ -15,7 +15,9 @@ include::{generated}/meta/XR_FB_composition_layer_alpha_blend.adoc[]
 This extension provides explicit control over source and destination blend
 factors, with separate controls for color and alpha.
 When specified, these blend controls supersede the behavior of
-ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT.
+ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT, as well as the
+layer blending operation which defined in the section of
+<<composition-layer-blending, Composition Layer Blending>>.
 
 When ename:XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT is specified, the
 source color is unpremultiplied alpha.
@@ -30,6 +32,16 @@ indicated in the <<fundamentals-extensions>> section.
 These blend factors are specified by attaching a
 slink:XrCompositionLayerAlphaBlendFB structure to the pname:next chain of a
 layer structure derived from slink:XrCompositionLayerBaseHeader.
+
+.Warning
+****
+Please note that using this extension is mutually exclusive with accessing
+an environment blend mode other than ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE.
+The latter must: be the only mode returned from
+flink:xrEnumerateEnvironmentBlendModes if this extension is enabled.
+Application should: not enable this extension if a different value of
+elink:XrEnvironmentBlendMode is required.
+****
 
 *New Object Types*
 
@@ -96,3 +108,7 @@ include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.adoc[]
 ** Initial draft
 * Revision 2, 2020-06-22 (Gloria Kennickell)
 ** Provide separate controls for color and alpha blend factors.
+* Revision 3, 2024-03-04 (Xiang Wei)
+** Clarify the superseding of layer blending operation.
+** Add warning about the exclusive usage with non-opaque environment blend
+   modes.

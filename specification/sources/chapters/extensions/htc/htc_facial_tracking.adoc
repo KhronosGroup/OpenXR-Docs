@@ -274,7 +274,7 @@ include::{generated}/api/enums/XrEyeExpressionHTC.adoc[]
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_WIDE_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_WIDE_HTC.png[Static,width=210]| **Description** +
+^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_WIDE_HTC.png[width=210]| **Description** +
 This blend shape keeps left eye wide and at that time
 ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 0.
 |====
@@ -618,7 +618,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UP_HTC.png[width=210] | **Description** +
+^.^a|image::images/XR_LIP_SHAPE_TONGUE_UP_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out and up extremely. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).

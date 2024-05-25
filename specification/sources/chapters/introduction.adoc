@@ -22,6 +22,7 @@ OpenXR Registry, located at URL
 
 {uri-openxr-registry-root}
 
+[[introduction-what-is-openxr]]
 === What is OpenXR?
 
 OpenXR is an API (Application Programming Interface) for XR applications.
@@ -37,6 +38,7 @@ management, and raw tracking information.
 Optionally, a runtime may support device layer plugins which allow access to
 a variety of hardware across a commonly defined interface.
 
+[[introduction-programmer-view]]
 === The Programmer's View of OpenXR
 
 To the application programmer, OpenXR is a set of functions that interface
@@ -54,6 +56,7 @@ platform.
 Finally calls are made to create a session and begin the application's XR
 rendering loop.
 
+[[introduction-implementor-view]]
 === The Implementor's View of OpenXR
 
 To the runtime implementor, OpenXR is a set of functions that control the
@@ -64,6 +67,7 @@ The implementor's task is to provide a software library on the host which
 implements the OpenXR API, while mapping the work for each OpenXR function
 to the graphics hardware as appropriate for the capabilities of the device.
 
+[[introduction-our-view]]
 === Our View of OpenXR
 
 We view OpenXR as a mechanism for interacting with VR/AR/MR systems in a

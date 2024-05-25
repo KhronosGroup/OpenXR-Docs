@@ -430,6 +430,7 @@ orientation of pname:poseInPreviousSpace are undefined.
 include::{generated}/validity/structs/XrEventDataReferenceSpaceChangePending.adoc[]
 --
 
+[[spaces-action-spaces]]
 === Action Spaces
 An slink:XrSpace handle for a pose action is created using
 flink:xrCreateActionSpace, by specifying the chosen pose action and a pose

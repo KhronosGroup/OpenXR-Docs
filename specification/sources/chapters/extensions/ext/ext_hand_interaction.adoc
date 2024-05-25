@@ -70,7 +70,8 @@ This is the same "aim" pose defined in
 <<semantic-paths-standard-pose-identifiers>>.
 Every tracked controller profile already supports this pose.
 
-image::images/hand_aim_pose.svg[align="center", title="Example aim pose."]
+[[fig-EXT_hand_interaction-hand-aim-pose]]
+image::images/hand_aim_pose.svg[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
 
 *Position*
 
@@ -119,7 +120,8 @@ Every tracked controller profile already supports this pose.
 The runtime should: optimize the "grip" pose orientation so that it
 stabilizes large virtual objects held in the user's hand.
 
-image::images/hand_grip_pose.svg[align="center", title="Example grip pose."]
+[[fig-EXT_hand_interaction-hand-grip-pose]]
+image::images/hand_grip_pose.svg[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example grip pose."]
 
 *Position*
 
@@ -159,7 +161,8 @@ control are interactions suited to the "pinch" pose.
 The runtime should: stabilize the "pinch" pose while the user is performing
 the "pinch" gesture.
 
-image::images/hand_pinch_pose.svg[align="center", title="Example pinch pose."]
+[[fig-EXT_hand_interaction-hand-pinch-pose]]
+image::images/hand_pinch_pose.svg[opts="inline", width=400, pdfwidth=50%, align="center", title="Example pinch pose."]
 
 *Position*
 
@@ -183,7 +186,8 @@ profile of the motion controller.
 
 The "pinch" pose orientation must: rotate together with the hand rotation.
 
-image::images/hand_pinch_orientation.svg[align="center", title="Example pinch orientation on right hand."]
+[[fig-EXT_hand_interaction-hand-pinch-orientation]]
+image::images/hand_pinch_orientation.svg[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example pinch orientation on right hand."]
 
 The "pinch" pose's orientation may: be used to render a virtual object being
 held by a "pinch" gesture, for example, holding a key as illustrated in
@@ -226,7 +230,8 @@ direction of the "poke" pose, such that the "poke" pose falls on the surface
 of the sphere and the sphere models the shape of the fingertip.
 
 
-image::images/hand_poke_pose.svg[align="center", title="Example poke pose."]
+[[fig-EXT_hand_interaction-hand-poke-pose]]
+image::images/hand_poke_pose.svg[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example poke pose."]
 
 *Position*
 

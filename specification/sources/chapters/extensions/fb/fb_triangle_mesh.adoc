@@ -131,7 +131,7 @@ include::{generated}/validity/structs/XrTriangleMeshCreateInfoFB.adoc[]
 
 Mutable meshes have a state machine controlling how they may be updated.
 
-image::images/fb_trimesh_states.svg[align="center", title="Mutable Triangle Mesh States"]
+image::images/fb_trimesh_states.svg[opts=inline, align="center", title="Mutable Triangle Mesh States"]
 
 The states are as follows:
 

@@ -133,19 +133,39 @@ macros that are described below.
 [[appendix-version-number-macros]]
 ===== Version Number Macros
 
-Two version numbers are defined in `openxr.h`.
+Three version numbers are defined in `openxr.h`.
 Each is packed into a 32-bit integer as described in
 <<appendix-api-version-number-macros,API Version Number Function-like
 Macros>>.
 
 
-[open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION']
+[open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION XR_API_VERSION_1_0 XR_API_VERSION_1_1']
 --
 include::{generated}/api/defines/XR_CURRENT_API_VERSION.adoc[]
 
 dlink:XR_CURRENT_API_VERSION is the current version of the OpenXR API.
+
+In many cases, dlink:XR_API_VERSION_1_0 or dlink:XR_API_VERSION_1_1 are
+preferred for source forward-compatibility.
 --
 
+[open,refpage='XR_API_VERSION_1_0',type='defines',desc='Version of the OpenXR 1.0 API',xrefs='XR_API_VERSION_1_1 XR_MAKE_VERSION XR_CURRENT_API_VERSION']
+--
+include::{generated}/api/defines/XR_API_VERSION_1_0.adoc[]
+
+dlink:XR_API_VERSION_1_0 is the version of the OpenXR 1.0 API.
+The "major" and "minor" components are always 1.0, while the "patch"
+component matches dlink:XR_CURRENT_API_VERSION.
+--
+
+[open,refpage='XR_API_VERSION_1_1',type='defines',desc='Version of the OpenXR 1.1 API',xrefs='XR_API_VERSION_1_0 XR_MAKE_VERSION XR_CURRENT_API_VERSION']
+--
+include::{generated}/api/defines/XR_API_VERSION_1_1.adoc[]
+
+dlink:XR_API_VERSION_1_1 is the version of the OpenXR 1.1 API.
+The "major" and "minor" components are always 1.1, while the "patch"
+component matches dlink:XR_CURRENT_API_VERSION.
+--
 
 [[appendix-api-version-number-macros]]
 ===== API Version Number Function-like Macros

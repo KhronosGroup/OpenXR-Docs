@@ -944,7 +944,7 @@ and its size parameters:
 ** The pname:elements parameter is ignored (any value passed is considered
    valid usage).
 * If the pname:elementCapacityInput is non-zero but less than required, the
-  function nust: set pname:elementCountOutput to the required capacity, and
+  function must: set pname:elementCountOutput to the required capacity, and
   must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
   After the function returns, the data in the array pname:elements is
   undefined.
@@ -1166,7 +1166,7 @@ zero.
 
 This API uses a Cartesian right-handed coordinate system.
 
-image::images/right-handed.svg[align="center", title="Right Handed Coordinate System"]
+image::images/right-handed.svg[opts=inline, align="center", title="Right Handed Coordinate System"]
 
 The conventions for mapping coordinate axes of any particular space to
 meaningful directions depend on and are documented with the description of
@@ -1596,7 +1596,7 @@ When pname:angleDown > pname:angleUp, the content of the view must: be
 flipped vertically.
 --
 
-
+[[fundamentals-boolean-values]]
 === Boolean Values
 
 [open,refpage='XrBool32',desc='Boolean value',type='basetypes',xrefs='XR_TRUE XR_FALSE']
