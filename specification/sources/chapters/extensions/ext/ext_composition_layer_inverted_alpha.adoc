@@ -1,0 +1,62 @@
+// Copyright (c) 2017-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_composition_layer_inverted_alpha.adoc[]
+
+
+*Last Modified Date*::
+    2023-12-06
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Xiang Wei, Meta +
+    Jian Zhang, Bytedance +
+    Erica Stella, Epic Games
+
+==== Overview
+
+This extension provides a flag which, when applied to a composition layer,
+inverts the interpretation of the alpha value in the layer's swapchain
+images.
+With this bit set, an alpha value of 1.0 represents fully transparent, and
+an alpha value of 0.0 represents fully opaque.
+This extension is primarily intended to allow applications using inverted
+alpha internally to submit composition layers with inverted alpha.
+Doing so using this extension over more general alternatives may result in
+less runtime overhead.
+
+==== Modifications to Composition Layer Blending
+
+Specifically, this extension supersedes some operations in
+<<composition-layer-blending, Composition Layer Blending>> section, when
+ename:XR_COMPOSITION_LAYER_INVERTED_ALPHA_BIT_EXT is set.
+
+* If a submitted swapchain's texture format does not include an alpha
+  channel or if the
+  ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT is unset, then
+  the layer alpha is initialized to zero, instead of one.
+
+* After the LayerColor is fully initialized, the alpha component of
+  LayerColor will then be inverted by the following formula, just before it
+  might be further altered by the
+  ename:XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT.
+
+```
+LayerColor.A = 1.0 - LayerColor.A
+```
+
+When this extension is enabled and
+ename:XR_COMPOSITION_LAYER_INVERTED_ALPHA_BIT_EXT is set, the inversion of
+LayerColor.A must: happen before any other modification to the LayerColor,
+including the operations that the
+apiext:XR_KHR_composition_layer_color_scale_bias extension may introduce.
+
+include::{generated}/interfaces/XR_EXT_composition_layer_inverted_alpha.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2023-12-06 (Xiang Wei)
+** Initial extension description

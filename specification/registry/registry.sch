@@ -294,8 +294,9 @@
             <sch:let name="should_be_shared_with_parent" value="not($field_num > $parent_member_count)"/>
             <sch:let name="matching_parent_field" value="$parentstruct/member[position() = $field_num]" />
             <sch:let name="matching_parent_field_name" value="$matching_parent_field/name/text()" />
+            <sch:let name="is_exception" value="$struct_name = 'XrCompositionLayerPassthroughFB' and $field_name = 'flags'"/>
 
-            <sch:assert test="$field_name = $matching_parent_field_name or not($should_be_shared_with_parent)">
+            <sch:assert test="$field_name = $matching_parent_field_name or not($should_be_shared_with_parent) or $is_exception">
                 <sch:value-of select="$struct_name"/>: field <sch:value-of select="$field_name"/> (field number <sch:value-of select="$field_num"/>) should have matching name to the corresponding parent field, but does not: <sch:value-of select="$matching_parent_field_name"/>. Please make them match.
             </sch:assert>
 

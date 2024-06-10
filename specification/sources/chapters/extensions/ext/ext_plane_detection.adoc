@@ -6,7 +6,7 @@ include::{generated}/meta/XR_EXT_plane_detection.adoc[]
 
 
 *Last Modified Date*::
-    2023-06-26
+    2024-05-23
 
 *Contributors*::
     Aitor Font, Qualcomm +
@@ -426,8 +426,9 @@ include::{generated}/api/structs/XrPlaneDetectorLocationEXT.adoc[]
 * pname:pose is an slink:XrPosef defining the position and orientation of
   the origin of a plane within the reference frame of the corresponding
   slink:XrPlaneDetectorGetInfoEXT::pname:baseSpace.
-* pname:extents is the extent of the plane along the x-axis (width) and
-  z-axis (height) centered on the pname:pose.
+* pname:extents is the extent of the plane along the x-axis
+  (`extents.width`) and y-axis (`extents.height`) centered on the
+  pname:pose.
 * pname:orientation is the detected orientation of the plane.
 * pname:semanticType elink:XrPlaneDetectorSemanticTypeEXT type of the plane.
 * pname:polygonBufferCount is the number of polygon buffers associated with
@@ -815,3 +816,5 @@ the elink:XrResult enumeration is extended with:
 *Version History*
 
 * Revision 1, 2023-06-26 (Ron Bessems)
+* Revision 2, 2024-05-23 (Ron Bessems)
+** Fix extents description and plane axis to match CTS and implementations.

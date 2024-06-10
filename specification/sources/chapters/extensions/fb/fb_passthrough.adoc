@@ -254,9 +254,6 @@ The slink:XrCompositionLayerPassthroughFB structure is defined as:
 
 include::{generated}/api/structs/XrCompositionLayerPassthroughFB.adoc[]
 
-It is a composition layer type that may be submitted in flink:xrEndFrame
-where an slink:XrCompositionLayerBaseHeader is specified, as a stand-in for
-the actual passthrough contents.
 
 .Member Descriptions
 ****
@@ -271,6 +268,14 @@ the actual passthrough contents.
 * pname:layerHandle is the slink:XrPassthroughLayerFB that defines this
   layer's behavior.
 ****
+
+It is a composition layer type that may be submitted in flink:xrEndFrame
+where an slink:XrCompositionLayerBaseHeader is specified, as a stand-in for
+the actual passthrough contents.
+
+Errata: the third field of this structure is named pname:flags rather than
+`layerFlags` as expected and as documented for for the parent type
+slink:XrCompositionLayerBaseHeader.
 
 include::{generated}/validity/structs/XrCompositionLayerPassthroughFB.adoc[]
 --
@@ -726,3 +731,6 @@ include::{generated}/validity/protos/xrGeometryInstanceSetTransformFB.adoc[]
    slink:XrSystemPassthroughProperties2FB.
 ** Introduce a new flag bit that enables submission of depth maps for
    compositing: ename:XR_PASSTHROUGH_LAYER_DEPTH_BIT_FB.
+* Revision 4, 2024-06-03 (Rylie Pavlik, Collabora)
+** Correct registry for `XrCompositionLayerPassthroughFB`, note errata
+   regarding field name.
