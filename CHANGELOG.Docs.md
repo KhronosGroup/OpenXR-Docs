@@ -17,6 +17,55 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.40 (2024-08-22)
+
+This release features a new ratified graphics API binding extension,
+`XR_KHR_metal_enable`, as well as an update to the wording about environments
+and environment blend modes, making it clear they can be used for physical as
+well as synthetic passthrough. There are also an assortment of smaller fixes and
+clarifications.
+
+- Registry
+  - Add: New ratified Khronos extension: `XR_KHR_metal_enable`.
+    ([internal MR 2721](https://gitlab.khronos.org/openxr/openxr/merge_requests/2721))
+  - Chore: Reserve 15 extension id numbers for ByteDance.
+    ([internal MR 3409](https://gitlab.khronos.org/openxr/openxr/merge_requests/3409))
+  - Fix: Clarified that views in `XR_VARJO_quad_views` needs to have identical
+    poses for each eye.
+    ([internal MR 3396](https://gitlab.khronos.org/openxr/openxr/merge_requests/3396))
+  - Fix: Add missing interaction profile extensions for OpenXR 1.1 promoted Meta
+    interaction profiles.
+    ([internal MR 3398](https://gitlab.khronos.org/openxr/openxr/merge_requests/3398))
+  - Fix: Correctly mark the Magic Leap home button as a system button in the XML.
+    ([internal MR 3405](https://gitlab.khronos.org/openxr/openxr/merge_requests/3405))
+  - Fix: Add `XR_ERROR_VALIDATION_FAILURE` to all functions from
+    `XR_EXT_conformance_automation`.
+    ([internal MR 3417](https://gitlab.khronos.org/openxr/openxr/merge_requests/3417))
+- Specification
+  - Add: New ratified Khronos extension specification: `XR_KHR_metal_enable`.
+    ([internal MR 2721](https://gitlab.khronos.org/openxr/openxr/merge_requests/2721))
+  - Clarify: Clarify the definition of "environment" in the context of "environment
+    blend mode".
+    ([internal MR 3301](https://gitlab.khronos.org/openxr/openxr/merge_requests/3301))
+  - Clarify: Devices may use environment blend mode to control passthrough and
+    synthentic environments.
+    ([internal MR 3301](https://gitlab.khronos.org/openxr/openxr/merge_requests/3301))
+  - Clarify: Clarified that views in `XR_VARJO_quad_views` needs to have identical
+    poses for each eye.
+    ([internal MR 3396](https://gitlab.khronos.org/openxr/openxr/merge_requests/3396))
+  - Fix: Correct the maximum extension number in the appendix.
+    ([internal MR 3397](https://gitlab.khronos.org/openxr/openxr/merge_requests/3397))
+  - Fix: Add missing interaction profile extensions for OpenXR 1.1 promoted Meta
+    interaction profiles.
+    ([internal MR 3398](https://gitlab.khronos.org/openxr/openxr/merge_requests/3398))
+  - Fix: Remove incorrect implicit valid usage from loader interface APIs.
+    ([internal MR 3416](https://gitlab.khronos.org/openxr/openxr/merge_requests/3416))
+  - Fix: Fix a typo in the spec for xrCreateApiLayerInstance.
+    ([internal MR 3416](https://gitlab.khronos.org/openxr/openxr/merge_requests/3416))
+
+**Note**: There is no 1.1.39 release: it was skipped to keep the monthly patch
+version increment cadence given the lack of a release in July.
+
 ## OpenXR Specification 1.1.38 (2024-06-09)
 
 This is a fairly small release, with one new extension and a handful of fixes.

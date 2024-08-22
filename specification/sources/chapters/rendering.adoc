@@ -1437,13 +1437,18 @@ include::{generated}/api/enums/XrEyeVisibility.adoc[]
 After the compositor has blended and flattened all layers (including any
 layers added by the runtime itself), it will then present this image to the
 system's display.
-The composited image will then blend with the user's view of the physical
-world behind the displays in one of three modes, based on the application's
-chosen **environment blend mode**.
+The composited image will then blend with the environment in one of three
+modes, based on the application's chosen **environment blend mode**.
 VR applications will generally choose the
 ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE blend mode, while AR applications
 will generally choose either the ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE or
 ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND mode.
+
+The environment may: be perceived in two ways.
+It could be the user's view of the physical world that exists beyond the
+displays, or it could be a synthetic environment including virtual
+components generated externally from the application.
+Alternatively, it could be a combination of both these elements.
 
 Applications select their environment blend mode each frame as part of their
 call to flink:xrEndFrame.
@@ -1470,6 +1475,12 @@ ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes unless it has video
 passthrough, while an AR headset with an additive display may not support
 the ename:XR_ENVIRONMENT_BLEND_MODE_OPAQUE or
 ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes.
+
+For devices that support video/optical passthrough or synthetic
+environments, they may: support the ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE
+or ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND modes.
+Selecting one of these modes would display the environment in the
+background, contingent upon the capability and status of the headsets.
 
 For devices that can support multiple environment blend modes, such as AR
 phones with video passthrough, the runtime may: optimize power consumption

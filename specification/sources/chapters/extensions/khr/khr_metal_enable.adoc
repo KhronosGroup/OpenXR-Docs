@@ -1,0 +1,255 @@
+// Copyright (c) 2017-2024, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_KHR_metal_enable.adoc[]
+
+*Last Modified Date*::
+    2023-10-11
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Xiang Wei, Meta +
+    Peter Kuhn, Unity +
+    John Kearney, Meta +
+    Andreas Selvik, Meta +
+    Jakob Bornecrantz, Collabora +
+    Rylie Pavlik, Collabora
+
+*Overview*
+
+This extension enables the use of the Metal(R) graphics API in an OpenXR
+runtime.
+Without this extension, the OpenXR runtime may: not be able to provide any
+Metal swapchain images.
+
+This extension provides the mechanisms necessary for an application to
+generate a valid slink:XrGraphicsBindingMetalKHR structure in order to
+create a Metal-based slink:XrSession.
+Note that during this process, the runtime is responsible for creating the
+Metal device for the application's drawing operations, and the application
+is responsible for creating all the required Metal objects from that,
+including a Metal command queue to be used for rendering.
+The runtime however will provide the Metal textures to render into in the
+form of a swapchain.
+
+This extension also provides mechanisms for the application to interact with
+images acquired by calling flink:xrEnumerateSwapchainImages.
+
+In order to expose the structures, types, and functions of this extension,
+you must: define dlink:XR_USE_GRAPHICS_API_METAL before including the OpenXR
+platform header `openxr_platform.h`, in all portions of your library or
+application that include it.
+
+*Swapchain Flag Bits*
+
+All elink:XrSwapchainUsageFlags values passed in a session created using
+slink:XrGraphicsBindingMetalKHR must: be interpreted as follows by the
+runtime, so that the returned swapchain images used by the application may:
+be used as if they were created with the corresponding `MTLTextureUsage`
+flags.
+The runtime may: set additional bind flags but must: not restrict usage.
+
+[cols=2*,options=header]
+|===
+| elink:XrSwapchainUsageFlagBits
+| Corresponding `MTLTextureUsage` bits
+
+| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+| `MTLTextureUsageRenderTarget`
+
+| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+| `MTLTextureUsageRenderTarget`
+
+| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+| `MTLTextureUsageShaderRead \| MTLTextureUsageShaderWrite`
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+| _ignored_
+
+| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+| `MTLTextureUsageShaderRead`
+
+| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+| `MTLTextureUsagePixelFormatView`
+
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+  (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
+| _ignored_
+
+|===
+
+All Metal swapchain textures are created with
+`MTLResourceStorageModePrivate` resource option, and can be accessed only by
+the GPU.
+
+*New Object Types*
+
+*New Flag Types*
+
+*New Enum Constants*
+
+elink:XrStructureType enumeration is extended with:
+
+* ename:XR_TYPE_GRAPHICS_REQUIREMENTS_METAL_KHR
+* ename:XR_TYPE_GRAPHICS_BINDING_METAL_KHR
+* ename:XR_TYPE_SWAPCHAIN_IMAGE_METAL_KHR
+
+*New Enums*
+
+*New Structures*
+
+The following structures are provided to supply supporting runtimes the
+necessary information required to work with the Metal API.
+
+[open,refpage='XrGraphicsBindingMetalKHR',type='structs',desc='The graphics binding structure to be passed at session creation to use Metal',xrefs='xrCreateSession']
+--
+The slink:XrGraphicsBindingMetalKHR structure is defined as:
+
+include::{generated}/api/structs/XrGraphicsBindingMetalKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:commandQueue is a valid Metal command queue, which must: be bridged
+  casted from an Objective-C object that conforms to the
+  sname:MTLCommandQueue protocol.
+****
+
+When creating a Metal-backed slink:XrSession, the application will provide a
+pointer to an slink:XrGraphicsBindingMetalKHR in the
+slink:XrSessionCreateInfo::pname:next field of structure passed to
+flink:xrCreateSession.
+The Metal command queue specified in
+slink:XrGraphicsBindingMetalKHR::pname:commandQueue must: be created on the
+Metal device retrieved through
+slink:XrGraphicsRequirementsMetalKHR::pname:metalDevice, otherwise
+flink:xrCreateSession must: return ename:XR_ERROR_GRAPHICS_DEVICE_INVALID.
+
+include::{generated}/validity/structs/XrGraphicsBindingMetalKHR.adoc[]
+--
+
+[open,refpage='XrSwapchainImageMetalKHR',type='structs',desc='Metal-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
+--
+The slink:XrSwapchainImageMetalKHR structure is defined as:
+
+include::{generated}/api/structs/XrSwapchainImageMetalKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:texture is populated with a valid Metal texture to use, which must:
+  be able to be bridged casted to an Objective-C object that conforms to the
+  sname:MTLTexture protocol.
+****
+
+If a given session was created with slink:XrGraphicsBindingMetalKHR, the
+following conditions must: apply.
+
+* Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
+  session must: return an array of slink:XrSwapchainImageMetalKHR
+  structures.
+* Whenever an OpenXR function accepts an slink:XrSwapchainImageBaseHeader
+  pointer as a parameter in that session, the runtime must: also accept a
+  pointer to an slink:XrSwapchainImageMetalKHR.
+
+The OpenXR runtime must: interpret the top-left corner of the swapchain
+image as the coordinate origin unless specified otherwise by extension
+functionality.
+
+The OpenXR runtime must: interpret the swapchain images in a clip space of
+positive Y pointing up, near Z plane at 0, and far Z plane at 1.
+
+include::{generated}/validity/structs/XrSwapchainImageMetalKHR.adoc[]
+--
+
+[open,refpage='XrGraphicsRequirementsMetalKHR',type='structs',desc='Metal GPU device requirements',xrefs='xrGetMetalGraphicsRequirementsKHR']
+--
+The slink:XrGraphicsRequirementsMetalKHR structure is defined as:
+
+include::{generated}/api/structs/XrGraphicsRequirementsMetalKHR.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:metalDevice is the Metal device that the application must: use for
+  drawing operations, which may: be bridged casted to an Objective-C object
+  that conforms to the sname:MTLDevice protocol.
+****
+
+slink:XrGraphicsRequirementsMetalKHR is populated by
+flink:xrGetMetalGraphicsRequirementsKHR.
+
+include::{generated}/validity/structs/XrGraphicsRequirementsMetalKHR.adoc[]
+--
+
+*New Functions*
+
+Some computer systems may have multiple graphics devices, each of which may
+have independent external display outputs.
+XR systems that connect to such graphics devices are typically connected to
+a single device.
+Applications need to know what graphics device the XR system is connected to
+so that they can use that graphics device to generate XR images.
+
+[open,refpage='xrGetMetalGraphicsRequirementsKHR',type='protos',desc='Retrieve the Metal device to use in drawing operations',xrefs='XrGraphicsRequirementsMetalKHR xrCreateSession']
+--
+To retrieve the Metal device that can: be used in drawing operations, call:
+
+include::{generated}/api/protos/xrGetMetalGraphicsRequirementsKHR.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:graphicsRequirements is the slink:XrGraphicsRequirementsMetalKHR
+  output structure.
+****
+
+The flink:xrGetMetalGraphicsRequirementsKHR function identifies to the
+application the Metal device to be used in drawing operations.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+on calls to flink:xrCreateSession if flink:xrGetMetalGraphicsRequirementsKHR
+has not been called for the same pname:instance and pname:systemId.
+
+The Metal device that flink:xrGetMetalGraphicsRequirementsKHR returns must:
+be used to create the Metal command queue that the application passes to
+flink:xrCreateSession in the slink:XrGraphicsBindingMetalKHR.
+
+include::{generated}/validity/protos/xrGetMetalGraphicsRequirementsKHR.adoc[]
+--
+
+*Issues*
+
+*Questions*
+
+* How to manage the resource state of the Swapchain textures, etc?
+
+** The application uses the Metal device that is created by the runtime for
+   the drawing operations.
+   The runtime uses the same Metal device to create the swapchain images,
+   and also create the synchronization events when necessary.
+   On top of that, Metal tracks the write hazards and synchronizes the
+   resources which are created from the same Metal device and directly bind
+   to a pipeline.
+   Please check this Apple documentation for more details:
+   https://developer.apple.com/documentation/metal/resource_synchronization?language=objc
+
+*Version History*
+
+* Revision 1, 2023-05-08 (Xiang Wei)
+** Initial draft

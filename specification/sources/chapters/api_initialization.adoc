@@ -616,9 +616,8 @@ call down the call chain to the next flink:xrCreateApiLayerInstance:
 * The API layer must: copy the slink:XrApiLayerCreateInfo structure into its
   own structure.
 * The API layer must: then update its copy of the slink:XrApiLayerCreateInfo
-  structure, setting
-  slink:XrApiLayerCreateInfo::slink:XrApiLayerCreateInfo::pname:nextInfo to
-  point to the slink:XrApiLayerNextInfo for the next API layer (e.g.
+  structure, setting slink:XrApiLayerCreateInfo::pname:nextInfo to point to
+  the slink:XrApiLayerNextInfo for the next API layer (e.g.
   `layerInfoCopy->nextInfo = layerInfo->nextInfo->next;`).
 * The API layer must: then use the pointer to its slink:XrApiLayerCreateInfo
   structure (instead of the one that was passed in) when it makes a call to
