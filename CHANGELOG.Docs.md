@@ -17,6 +17,65 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.41 (2024-09-25)
+
+This release features several new vendor extensions, as well as several
+clarifications and improvements to existing specifications.
+
+- Registry
+  - Change: Allow structs that can extend multiple other structs in the RelaxNG
+    schema, as already permitted by the Vulkan schema.
+    ([internal MR 2869](https://gitlab.khronos.org/openxr/openxr/merge_requests/2869))
+  - New vendor extension: `XR_HTC_body_tracking`
+    ([internal MR 2549](https://gitlab.khronos.org/openxr/openxr/merge_requests/2549))
+  - New vendor extension: `XR_ML_spatial_anchors`
+    ([internal MR 2803](https://gitlab.khronos.org/openxr/openxr/merge_requests/2803))
+  - New vendor extension: `XR_ML_spatial_anchors_storage`
+    ([internal MR 2804](https://gitlab.khronos.org/openxr/openxr/merge_requests/2804))
+  - New vendor extension: `XR_ML_system_notifications`
+    ([internal MR 2946](https://gitlab.khronos.org/openxr/openxr/merge_requests/2946))
+  - New vendor extension: `XR_ML_world_mesh_detection`
+    ([internal MR 2950](https://gitlab.khronos.org/openxr/openxr/merge_requests/2950))
+  - New vendor extension: `XR_ML_view_configuration_depth_range_change`
+    ([internal MR 3036](https://gitlab.khronos.org/openxr/openxr/merge_requests/3036))
+- Specification
+  - New vendor extension specification: `XR_HTC_body_tracking` provides an
+    interface for full-body joint tracking.
+    ([internal MR 2549](https://gitlab.khronos.org/openxr/openxr/merge_requests/2549))
+  - New vendor extension specification: `XR_ML_spatial_anchors` introduces an API
+    to interact with Magic Leap spatial anchors.
+    ([internal MR 2803](https://gitlab.khronos.org/openxr/openxr/merge_requests/2803))
+  - New vendor extension specification: `XR_ML_spatial_anchors_storage` allows for
+    storage and retrieval of Magic Leap spatial anchors in local or cloud storage
+    ([internal MR 2804](https://gitlab.khronos.org/openxr/openxr/merge_requests/2804))
+  - New vendor extension specification: `XR_ML_system_notifications` provides
+    control over suppressing system notifications.
+    ([internal MR 2946](https://gitlab.khronos.org/openxr/openxr/merge_requests/2946))
+  - New vendor extension specification: `XR_ML_world_mesh_detection` provides
+    access to a world mesh.
+    ([internal MR 2950](https://gitlab.khronos.org/openxr/openxr/merge_requests/2950))
+  - New vendor extension specification:
+    `XR_ML_view_configuration_depth_range_change` permits the clipping planes to be
+    changed by the runtime during the lifetime of an instance.
+    ([internal MR 3036](https://gitlab.khronos.org/openxr/openxr/merge_requests/3036))
+  - Fix: Corrected swapchain image layout requirements for `XR_KHR_D3D12_enable`,
+    `XR_KHR_vulkan_enable`, and `XR_KHR_vulkan_enable2` so that the runtime's
+    guarantees are made after `xrWaitSwapchainImage` returns `XR_SUCCESS`, instead
+    of after `xrAcquireSwapchainImage`. (Queue access rules are unchanged.)
+    ([internal MR 3353](https://gitlab.khronos.org/openxr/openxr/merge_requests/3353),
+    [internal issue 2269](https://gitlab.khronos.org/openxr/openxr/issues/2269))
+  - Fix: references to core specification from
+    `XR_EXT_composition_layer_inverted_alpha` and
+    `XR_FB_composition_layer_alpha_blend`.
+    ([internal MR 3470](https://gitlab.khronos.org/openxr/openxr/merge_requests/3470))
+  - Fix: markup for internal anchors for revision history subsections.
+    ([internal MR 3470](https://gitlab.khronos.org/openxr/openxr/merge_requests/3470))
+  - Fix: remove a normative keyword from `XR_META_headset_id` version history.
+    ([internal MR 3470](https://gitlab.khronos.org/openxr/openxr/merge_requests/3470))
+  - Improvement: Clean up formatting of source adoc files.
+    ([internal MR 3461](https://gitlab.khronos.org/openxr/openxr/merge_requests/3461))
+
+
 ## OpenXR Specification 1.1.40 (2024-08-22)
 
 This release features a new ratified graphics API binding extension,

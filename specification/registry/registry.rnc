@@ -161,7 +161,7 @@ TypeStruct =
     attribute alias { XrTypeName_t }?,
     attribute protect { XrUpperSnakeCase_t }?,
     # structextends indicates to which struct this may be chained on the next pointer.
-    attribute structextends { XrTypeNameRef_t }?,
+    attribute structextends { XrTypeNameListRef_t }?,
     MayAliasAttr?,
     ReturnedOnlyAttr?,
     (# Struct has type and next
@@ -489,6 +489,10 @@ XrPFNName_t = xsd:NCName { pattern = "PFN_xr([A-Z]+[a-z0-9]*)+" }
 
 XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
+XrTypeNameListRef_t = xsd:token {
+        pattern =
+            "Xr([A-Z]+[a-z0-9]*)+(,Xr([A-Z]+[a-z0-9]*)+)*"
+    }
 
 XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
 XrExtNameExpression_t =

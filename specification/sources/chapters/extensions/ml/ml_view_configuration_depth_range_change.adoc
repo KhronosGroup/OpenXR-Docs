@@ -1,0 +1,52 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_view_configuration_depth_range_change.adoc[]
+
+*Last Modified Date*::
+    2023-11-09
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Andrei Aristarkhov, Magic Leap
+
+==== Overview
+
+There is a desire for runtimes to be able to inform applications of changes
+in clipping planes during the lifetime of an slink:XrInstance.
+
+==== Background
+
+The slink:XrViewConfigurationDepthRangeEXT structure is used to inform
+applications of the clipping plane values.
+However, since this information is obtained via
+flink:xrEnumerateViewConfigurations its contents must: not change.
+
+==== Behavior change
+
+When this extension is enabled, the runtime may: change the contents of
+slink:XrViewConfigurationDepthRangeEXT during the lifetime of an
+slink:XrInstance.
+
+Applications should: track changes in the clipping plane values as provided
+by the runtime every frame.
+
+**Be aware** that unlike most OpenXR extensions, enabling this extension is
+all that is required for runtime behavior to change, which may: have impacts
+on modular applications, including applications built on engines.
+
+
+
+include::{generated}/interfaces/XR_ML_view_configuration_depth_range_change.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2023-11-09 (Ron Bessems)
+
+** Initial extension description
+
+

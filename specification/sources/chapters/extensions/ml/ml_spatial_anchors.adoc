@@ -1,0 +1,329 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_spatial_anchors.adoc[]
+
+*Last Modified Date*::
+    2023-06-09
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+==== Overview
+
+Spatial anchors are slink:XrSpace entities tied to a physical location.
+This allows the developer to place virtual content in real world locations.
+
+The runtime should: then adjust the slink:XrSpace over time as needed,
+independently of all other spaces and anchors, to ensure that it maintains
+its original mapping to the real world.
+
+[CAUTION]
+.Caution
+====
+If head pose is lost and regained, spatial anchors may: also be lost.
+It is therefore strongly recommended that once an anchor is created, it is
+also persisted using the apiext:XR_ML_spatial_anchors_storage extension.
+====
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the com.magicleap.permission.SPATIAL_ANCHOR
+permission listed in their manifest to use this extension.
+(protection level: normal)
+====
+
+==== Begin spatial anchor creation
+
+flink:xrCreateSpatialAnchorsAsyncML is used to create spatial anchors.
+It can: create anchors in different ways depending on the parameter passed
+in.
+This extension defines one way to create single anchors using the
+slink:XrSpatialAnchorsCreateInfoFromPoseML structure.
+apiext:XR_ML_spatial_anchors_storage extends this to also create spatial
+anchors from a persistent storage using their slink:XrUuidEXT.
+
+[open,refpage='xrCreateSpatialAnchorsAsyncML',desc='Create spatial anchors',type='protos',xrefs='xrCreateSpatialAnchorsCompleteML XrSpatialAnchorsCreateInfoFromPoseML']
+--
+The flink:xrCreateSpatialAnchorsAsyncML function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorsAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialAnchorsCreateInfoBaseHeaderML derived structure.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+
+This function starts an asynchronous spatial anchor creation.
+Call one of the flink:xrPollFutureEXT functions to check the ready state on
+the future.
+Once the future is in ready state, call
+flink:xrCreateSpatialAnchorsCompleteML to retrieve the results.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorsAsyncML.adoc[]
+--
+
+
+
+[open,refpage='XrSpatialAnchorsCreateInfoFromPoseML',type='structs',desc='Structure used to create a single anchors at a certain pose.',xrefs='xrCreateSpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsCreateInfoFromPoseML structure can: be used to
+create an spatial anchor from a pose in an slink:XrSpace.
+
+include::{generated}/api/structs/XrSpatialAnchorsCreateInfoFromPoseML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace slink:XrSpace used to calculate the position of the
+  anchor.
+* pname:poseInBaseSpace slink:XrPosef of the anchor to create.
+* pname:time basetype:XrTime to resolve the pose in the base space.
+****
+
+Note that flink:xrCreateSpatialAnchorsCompleteML must: be called with
+slink:XrCreateSpatialAnchorsCompletionML::pname:spaceCount set to 1 when
+using slink:XrSpatialAnchorsCreateInfoFromPoseML to create a spatial anchor.
+
+include::{generated}/validity/structs/XrSpatialAnchorsCreateInfoFromPoseML.adoc[]
+--
+
+
+The base structure for slink:XrSpatialAnchorsCreateInfoFromPoseML is
+slink:XrSpatialAnchorsCreateInfoBaseHeaderML.
+
+
+[open,refpage='XrSpatialAnchorsCreateInfoBaseHeaderML',type='structs',desc='Base structure used in the creation of spatial anchors.',xrefs='xrCreateSpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsCreateInfoBaseHeaderML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsCreateInfoBaseHeaderML.adoc[]
+
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+This structure is not directly used in the API, please see
+slink:XrSpatialAnchorsCreateInfoFromPoseML for an example of a child
+structure.
+
+include::{generated}/validity/structs/XrSpatialAnchorsCreateInfoBaseHeaderML.adoc[]
+--
+
+==== Complete spatial anchor operation
+
+flink:xrCreateSpatialAnchorsCompleteML completes the asynchronous operation
+started by flink:xrCreateSpatialAnchorsAsyncML.
+The basetype:XrFutureEXT must: be in ready state before calling the
+completion function.
+
+[open,refpage='xrCreateSpatialAnchorsCompleteML',desc='Completion function for spatial anchor creation.',type='protos',xrefs='xrCreateSpatialAnchorsAsyncML XrCreateSpatialAnchorsCompletionML']
+--
+The flink:xrCreateSpatialAnchorsCompleteML function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorsCompleteML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:future is the basetype:XrFutureEXT to complete.
+* pname:completion is a pointer to an
+  slink:XrCreateSpatialAnchorsCompletionML filled in by the runtime.
+****
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorsCompleteML.adoc[]
+--
+
+The completion structure is slink:XrCreateSpatialAnchorsCompletionML.
+
+[open,refpage='XrCreateSpatialAnchorsCompletionML',type='structs',desc='Completion struct to retrieve the result of the anchor creation',xrefs='xrCreateSpatialAnchorsCompleteML']
+--
+
+The slink:XrCreateSpatialAnchorsCompletionML structure is defined as:
+
+include::{generated}/api/structs/XrCreateSpatialAnchorsCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the create spatial anchor
+  operation.
+* pname:spaceCount is the number of elements in the pname:spaces array.
+  This must: match the number of spaces requested to be created.
+* pname:spaces is an array of slink:XrSpace values to populate with the
+  results of the anchor creation.
+  If creation failed, the slink:XrSpace values must: be set to
+  dlink:XR_NULL_HANDLE.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_SPATIAL_ANCHORS_SPACE_NOT_LOCATABLE_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_OUT_OF_MAP_BOUNDS_ML
+****
+
+include::{generated}/validity/structs/XrCreateSpatialAnchorsCompletionML.adoc[]
+--
+
+==== Retrieve spatial anchor state
+
+Spatial anchor state can: be queried using flink:xrGetSpatialAnchorStateML.
+
+[open,refpage='xrGetSpatialAnchorStateML',desc='Retrieve spatial anchor state',type='protos',xrefs='xrCreateSpatialAnchorsAsyncML XrCreateSpatialAnchorsCompletionML']
+--
+The flink:xrGetSpatialAnchorStateML function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialAnchorStateML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:anchor is a handle to an slink:XrSpace corresponding to a spatial
+  anchor.
+* pname:state is a pointer to an slink:XrSpatialAnchorStateML structure to
+  populate with the spatial anchor state.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+slink:XrSpace is not an spatial anchor.
+
+include::{generated}/validity/protos/xrGetSpatialAnchorStateML.adoc[]
+--
+
+
+[open,refpage='XrSpatialAnchorStateML',type='structs',desc='Structure describing the state of a spatial anchor.']
+--
+
+The slink:XrSpatialAnchorStateML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorStateML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:confidence is the elink:XrSpatialAnchorConfidenceML of the anchor.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorStateML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorConfidenceML',type='enums',desc='Spatial anchor confidence']
+--
+include::{generated}/api/enums/XrSpatialAnchorConfidenceML.adoc[]
+include::{generated}/api/enums/XrSpatialAnchorConfidenceML.comments.adoc[]
+--
+
+
+==== Example code
+
+This code shows how to create a spatial anchor in a synchronous manner.
+This can: be changed to be completely asynchronous by changing the
+`waitInfo.duration` to 0 and checking it during the frame loop until the
+function returns ready.
+
+[source,C++]
+----
+XrInstance instance;                // previously initialized
+XrSession session;                  // previously initialized
+
+// these are setup to match the location and time
+// of the position in the world you wish to set the
+// spatial anchor for.
+XrSpace baseSpace;                  // previously initialized
+XrTime time;                        // previously initialized
+XrPosef pose;                       // previously initialized
+
+// Get function pointer for xrCreateSpatialAnchorsAsyncML
+PFN_xrCreateSpatialAnchorsAsyncML xrCreateSpatialAnchorsAsyncML;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAnchorsAsyncML",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSpatialAnchorsAsyncML)))
+
+// Get function pointer for xrCreateSpatialAnchorsCompleteML
+PFN_xrCreateSpatialAnchorsCompleteML xrCreateSpatialAnchorsCompleteML;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAnchorsCompleteML",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSpatialAnchorsCompleteML)));
+
+
+// Get function pointer for xrPollFutureEXT
+PFN_xrPollFutureEXT xrPollFutureEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrPollFutureEXT",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrPollFutureEXT)));
+
+XrSpatialAnchorsCreateInfoFromPoseML createInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_INFO_FROM_POSE_ML};
+XrFutureEXT future;
+createInfo.baseSpace = baseSpace;
+createInfo.poseInBaseSpace = pose;
+createInfo.time = time;
+
+CHK_XR(xrCreateSpatialAnchorsAsyncML(session, reinterpret_cast<const XrSpatialAnchorsCreateInfoBaseHeaderML*>(&createInfo), &future));
+
+XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+
+pollInfo.future = future;
+pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+
+while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
+  // Ideally this check is done in your game loop
+  // instead of busy waiting, this is just an
+  // example.
+  // If you do choose busy wait sleep to avoid
+  // CPU overloading.
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+}
+
+XrSpace anchor;
+XrCreateSpatialAnchorsCompletionML completion{XR_TYPE_CREATE_SPATIAL_ANCHORS_COMPLETION_ML};
+completion.spaceCount = 1;
+completion.spaces = &anchor;
+
+CHK_XR(xrCreateSpatialAnchorsCompleteML(session, future, &completion));
+// Check the future completion result as well!
+CHK_XR(completion.futureResult);
+
+// Now the anchor is usable!
+
+----
+
+include::{generated}/interfaces/XR_ML_spatial_anchors.adoc[leveloffset=1]
+
+
+==== Version history
+
+* Revision 1, 2023-06-13 (Ron Bessems)
+
+** Initial extension description

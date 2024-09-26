@@ -1,0 +1,855 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_world_mesh_detection.adoc[]
+
+*Last Modified Date*::
+    2023-08-29
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+==== Overview
+
+This extension provides the functionality to detect the world mesh.
+
+==== Creating a world mesh detector
+
+[open,refpage='XrWorldMeshDetectorML',type='handles',desc='The world mesh detector object']
+--
+The slink:XrWorldMeshDetectorML handle is defined as:
+
+include::{generated}/api/handles/XrWorldMeshDetectorML.adoc[]
+
+slink:XrWorldMeshDetectorML is created by flink:xrCreateWorldMeshDetectorML.
+--
+
+
+[open,refpage='xrCreateWorldMeshDetectorML',desc='Create a world mesh detector.',type='protos',xrefs='XrWorldMeshDetectorML']
+--
+The flink:xrCreateWorldMeshDetectorML function is defined as:
+
+include::{generated}/api/protos/xrCreateWorldMeshDetectorML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:createInfo is a pointer to an slink:XrWorldMeshDetectorCreateInfoML
+  structure.
+* pname:detector is a pointer to slink:XrWorldMeshDetectorML, returned by
+  the runtime.
+****
+
+include::{generated}/validity/protos/xrCreateWorldMeshDetectorML.adoc[]
+--
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the com.magicleap.permission.SPATIAL_MAPPING
+permission listed in their manifest to use this extension.
+(protection level: dangerous)
+====
+
+[open,refpage='XrWorldMeshDetectorCreateInfoML',type='structs',desc='Mesh Detector Create Info.',xrefs='xrCreateWorldMeshDetectorML']
+--
+
+The slink:XrWorldMeshDetectorCreateInfoML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshDetectorCreateInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+
+include::{generated}/validity/structs/XrWorldMeshDetectorCreateInfoML.adoc[]
+--
+
+==== Destroying a world mesh detector
+
+
+[open,refpage='xrDestroyWorldMeshDetectorML',desc='Destroy a world mesh detector.',type='protos',xrefs='XrWorldMeshDetectorML']
+--
+The flink:xrDestroyWorldMeshDetectorML function is defined as:
+
+include::{generated}/api/protos/xrDestroyWorldMeshDetectorML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to destroy.
+****
+
+include::{generated}/validity/protos/xrDestroyWorldMeshDetectorML.adoc[]
+--
+
+
+==== Detecting the World Mesh
+
+Detecting the world mesh is done by blocks.
+Instead of returning the whole world mesh as one entity, this system returns
+the world mesh in chunks called blocks.
+To retrieve the currently detected chunks use
+flink:xrRequestWorldMeshStateAsyncML.
+
+[open,refpage='xrRequestWorldMeshStateAsyncML',desc='Request the current mesh block state.',type='protos',xrefs='XrWorldMeshDetectorML']
+--
+The flink:xrRequestWorldMeshStateAsyncML function is defined as:
+
+include::{generated}/api/protos/xrRequestWorldMeshStateAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:stateRequest is the slink:XrWorldMeshStateRequestInfoML request
+  information.
+* pname:future is a pointer to a runtime created basetype:XrFutureEXT.
+****
+
+include::{generated}/validity/protos/xrRequestWorldMeshStateAsyncML.adoc[]
+--
+
+[open,refpage='XrWorldMeshStateRequestInfoML',type='structs',desc='Mesh block detection info.',xrefs='xrRequestWorldMeshStateAsyncML']
+--
+
+The slink:XrWorldMeshStateRequestInfoML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshStateRequestInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace is the base space used by the bounding box.
+* pname:time is the time at which the bounding box location is resolved.
+* pname:boundingBoxCenter the slink:XrPosef of the bounding box center.
+* pname:boundingBoxExtents the slink:XrExtent3DfEXT of the bounding box.
+  These extents indicate the full size of the box, so an
+  slink:XrExtent3DfEXT of 1.0,1.0,1.0 has a volume of 1 cubic meter and the
+  box's center is at pname:boundingBoxCenter.
+****
+
+Each mesh block may: have a 'skirt' if
+ename:XR_WORLD_MESH_DETECTOR_REMOVE_MESH_SKIRT_BIT_ML was not specified
+during the creation of the slink:XrWorldMeshDetectorML.
+A skirt provides some overlap between adjacent mesh blocks.
+While a skirt improves coverage between blocks, it does not create a
+watertight mesh.
+
+
+include::{generated}/validity/structs/XrWorldMeshStateRequestInfoML.adoc[]
+--
+
+
+
+[open,refpage='XrWorldMeshDetectorFlagsML',type='flags',desc='XrWorldMeshDetectorFlagsML',xrefs='XrWorldMeshDetectorFlagBitsML']
+--
+include::{generated}/api/flags/XrWorldMeshDetectorFlagsML.adoc[]
+--
+
+[open,refpage='XrWorldMeshDetectorFlagBitsML',type='enums',desc='The world meshing detector flags.'xrefs='XrWorldMeshDetectorFlagsML']
+--
+include::{generated}/api/enums/XrWorldMeshDetectorFlagBitsML.adoc[]
+include::{generated}/api/enums/XrWorldMeshDetectorFlagBitsML.comments.adoc[]
+--
+
+flink:xrRequestWorldMeshStateAsyncML is an asynchronous function and
+flink:xrRequestWorldMeshStateCompleteML retrieves the data once the future
+is ready.
+
+
+[open,refpage='xrRequestWorldMeshStateCompleteML',desc='Completes the current mesh block state query.',type='protos',xrefs='XrWorldMeshDetectorML']
+--
+The flink:xrRequestWorldMeshStateCompleteML function is defined as:
+
+include::{generated}/api/protos/xrRequestWorldMeshStateCompleteML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:future is a the basetype:XrFutureEXT to complete.
+* pname:completion is a pointer to the
+  slink:XrWorldMeshStateRequestCompletionML structure.
+****
+
+include::{generated}/validity/protos/xrRequestWorldMeshStateCompleteML.adoc[]
+--
+
+
+[open,refpage='XrWorldMeshStateRequestCompletionML',type='structs',desc='Mesh block detection info.',xrefs='xrRequestWorldMeshStateCompleteML']
+--
+
+The slink:XrWorldMeshStateRequestCompletionML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshStateRequestCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+* pname:timestamp is the basetype:XrTime of the request.
+* pname:meshBlockStateCapacityInput is the capacity of the
+  pname:meshBlockStates array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:meshBlockStateCountOutput is filled in by the runtime with the count
+  of mesh states written or the required capacity in the case that
+  pname:meshBlockStateCapacityInput is insufficient.
+* pname:meshBlockStates is a pointer to an array of
+  slink:XrWorldMeshBlockStateML.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_WORLD_MESH_DETECTOR_SPACE_NOT_LOCATABLE_ML
+****
+
+include::{generated}/validity/structs/XrWorldMeshStateRequestCompletionML.adoc[]
+--
+
+
+[open,refpage='XrWorldMeshBlockStateML',type='structs',desc='Mesh block detection info.',xrefs='xrRequestWorldMeshStateCompleteML']
+--
+
+The slink:XrWorldMeshBlockStateML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBlockStateML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuid is the slink:XrUuidEXT of the mesh block.
+* pname:meshBoundingBoxCenter the slink:XrPosef of the mesh's bounding box
+  center.
+* pname:meshBoundingBoxExtents the slink:XrExtent3DfEXT of the mesh's
+  bounding box.
+* pname:lastUpdateTime is the basetype:XrTime at which this mesh was last
+  updated.
+* pname:status is an elink:XrWorldMeshBlockStatusML indicating the status of
+  the mesh block.
+****
+
+include::{generated}/validity/structs/XrWorldMeshBlockStateML.adoc[]
+--
+
+[open,refpage='XrWorldMeshBlockStatusML',type='enums',desc='The mesh block status.']
+--
+include::{generated}/api/enums/XrWorldMeshBlockStatusML.adoc[]
+include::{generated}/api/enums/XrWorldMeshBlockStatusML.comments.adoc[]
+--
+
+==== Allocate Mesh Block Memory
+
+The next step is to retrieve the actual vertex data.
+This operation will require a buffer to be available for the duration of the
+asynchronous operation and for as long as the application needs access to
+slink:XrWorldMeshRequestCompletionML.
+
+This buffer must be allocated by the application, the system provides
+recommended buffer size using the flink:xrGetWorldMeshBufferRecommendSizeML
+function.
+
+[open,refpage='xrGetWorldMeshBufferRecommendSizeML',desc='Allocates memory.',type='protos',xrefs='xrFreeWorldMeshBufferML']
+--
+The flink:xrGetWorldMeshBufferRecommendSizeML function is defined as:
+
+include::{generated}/api/protos/xrGetWorldMeshBufferRecommendSizeML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:sizeInfo is a pointer to an
+  slink:XrWorldMeshBufferRecommendedSizeInfoML structure.
+* pname:size is the slink:XrWorldMeshBufferSizeML, this will be filled by
+  the runtime with the size to allocate for the
+  flink:xrRequestWorldMeshAsyncML function.
+  pname:size must: be larger than 0.
+****
+
+Errata: This function is called `xrGetWorldMeshBufferRecommendSizeML` rather
+than the expected `xrGetWorldMeshBufferRecommendedSizeML`.
+
+include::{generated}/validity/protos/xrGetWorldMeshBufferRecommendSizeML.adoc[]
+--
+
+
+[open,refpage='XrWorldMeshBufferRecommendedSizeInfoML',type='structs',desc='Memory Allocation Info',xrefs='xrGetWorldMeshBufferRecommendSizeML']
+--
+
+The slink:XrWorldMeshBufferRecommendedSizeInfoML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBufferRecommendedSizeInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:maxBlockCount is a code:uint32_t of the maximum number of blocks in
+  the request.
+****
+
+The value for pname:maxBlockCount should: be populated
+slink:XrWorldMeshStateRequestCompletionML::pname:meshBlockStateCountOutput.
+As long as the pname:maxBlockCount is equal or larger to this
+slink:XrWorldMeshStateRequestCompletionML::pname:meshBlockStateCountOutput,
+a memory block may: be re-used for new requests.
+
+include::{generated}/validity/structs/XrWorldMeshBufferRecommendedSizeInfoML.adoc[]
+--
+
+[open,refpage='XrWorldMeshBufferSizeML',type='structs',desc='Memory Allocation Info',xrefs='xrGetWorldMeshBufferRecommendSizeML']
+--
+
+The slink:XrWorldMeshBufferSizeML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBufferSizeML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:size is a code:uint32_t indicating the number of bytes recommended.
+****
+
+include::{generated}/validity/structs/XrWorldMeshBufferSizeML.adoc[]
+--
+
+
+Some runtimes have optimized memory available that avoids memory copies and
+provides the fastest way to get the vertex data.
+Applications should: use the flink:xrAllocateWorldMeshBufferML function to
+reserve memory for the vertex data.
+The application however may: choose to allocate its own memory using
+alternative methods.
+
+[open,refpage='xrAllocateWorldMeshBufferML',desc='Allocates memory.',type='protos',xrefs='xrFreeWorldMeshBufferML']
+--
+The flink:xrAllocateWorldMeshBufferML function is defined as:
+
+include::{generated}/api/protos/xrAllocateWorldMeshBufferML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:size is the slink:XrWorldMeshBufferSizeML request information
+  previously retrieved via flink:xrGetWorldMeshBufferRecommendSizeML.
+* pname:buffer is a pointer to an slink:XrWorldMeshBufferML that will be
+  filled by the runtime with a pointer to a memory block and size of the
+  buffer.
+****
+
+include::{generated}/validity/protos/xrAllocateWorldMeshBufferML.adoc[]
+--
+
+[open,refpage='XrWorldMeshBufferML',type='structs',desc='Memory Block Information',xrefs='']
+--
+
+The slink:XrWorldMeshBufferML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBufferML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:bufferSize is a code:uint32_t indicating the size of the buffer in
+  bytes.
+* pname:buffer is a code:void memory block.
+  This memory may: be allocated using flink:xrAllocateWorldMeshBufferML or
+  otherwise.
+****
+
+include::{generated}/validity/structs/XrWorldMeshBufferML.adoc[]
+--
+
+Memory blocks allocated with flink:xrAllocateWorldMeshBufferML must: be
+freed using flink:xrFreeWorldMeshBufferML.
+
+[open,refpage='xrFreeWorldMeshBufferML',desc='Frees memory.',type='protos',xrefs='xrAllocateWorldMeshBufferML']
+--
+The flink:xrFreeWorldMeshBufferML function is defined as:
+
+include::{generated}/api/protos/xrFreeWorldMeshBufferML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:buffer is a pointer to slink:XrWorldMeshBufferML to be freed.
+****
+
+include::{generated}/validity/protos/xrFreeWorldMeshBufferML.adoc[]
+--
+
+
+
+
+
+==== Start Mesh Data Query
+
+Once a buffer has been allocated the mesh data retrieval may: be started
+using flink:xrRequestWorldMeshAsyncML.
+
+[open,refpage='xrRequestWorldMeshAsyncML',desc='Retrieve mesh vertex data.',type='protos',xrefs='xrRequestWorldMeshCompleteML']
+--
+The flink:xrRequestWorldMeshAsyncML function is defined as:
+
+include::{generated}/api/protos/xrRequestWorldMeshAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:getInfo is a pointer to an slink:XrWorldMeshGetInfoML structure.
+* pname:buffer is a pointer to an slink:XrWorldMeshBufferML to be used.
+  This buffer must: be kept available for the duration of the request and
+  for however long the application needs access to the vertex buffer.
+* pname:future is a pointer to an basetype:XrFutureEXT to be filled by the
+  runtime.
+****
+
+include::{generated}/validity/protos/xrRequestWorldMeshAsyncML.adoc[]
+--
+
+
+
+[open,refpage='XrWorldMeshGetInfoML',type='structs',desc='Block Request Info',xrefs='xrRequestWorldMeshAsyncML']
+--
+
+The slink:XrWorldMeshGetInfoML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshGetInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:flags are the detector flags defined by
+  elink:XrWorldMeshDetectorFlagBitsML.
+* pname:fillHoleLength Any hole which has perimeter (in meters) less than
+  pname:fillHoleLength will be filled.
+  The maximum hole perimeter is limited to 5 meters, the runtime must: clamp
+  the value between 0 and 5 meters.
+  Also the maximum area of the hole should: not exceed 0.5 square meters.
+  If the hole overlaps with neighboring mesh block(s), it will not be filled
+  in.
+* pname:disconnectedComponentArea Any component that is disconnected from
+  the main mesh which has an area (in square meters) less than
+  pname:disconnectedComponentArea will be removed.
+  The maximum area is limited to 2 square meters, and the area needs to
+  exist fully within a mesh block boundary without skirt.
+  The runtime must: clamp this value between 0 and 2 square meters.
+* pname:blockCount is a code:uint32_t indicating the number of elements in
+  the pname:blocks array.
+* pname:blocks is an array of slink:XrWorldMeshBlockRequestML.
+****
+
+include::{generated}/validity/structs/XrWorldMeshGetInfoML.adoc[]
+--
+
+
+[open,refpage='XrWorldMeshBlockRequestML',type='structs',desc='Block Request Info',xrefs='xrRequestWorldMeshAsyncML']
+--
+
+The slink:XrWorldMeshBlockRequestML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBlockRequestML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuid is the slink:XrUuidEXT of the mesh block to retrieve.
+* pname:lod is the elink:XrWorldMeshDetectorLodML level of detail of the
+  mesh to retrieve.
+****
+
+include::{generated}/validity/structs/XrWorldMeshBlockRequestML.adoc[]
+--
+
+[open,refpage='XrWorldMeshDetectorLodML',type='enums',desc='Mesh Levels Of Detail.']
+--
+include::{generated}/api/enums/XrWorldMeshDetectorLodML.adoc[]
+include::{generated}/api/enums/XrWorldMeshDetectorLodML.comments.adoc[]
+--
+
+
+==== Complete Mesh Data Query
+
+To complete the previously started mesh data query
+flink:xrRequestWorldMeshCompleteML is used.
+
+[open,refpage='xrRequestWorldMeshCompleteML',desc='Retrieve mesh vertex data.',type='protos',xrefs='xrRequestWorldMeshAsyncML']
+--
+The flink:xrRequestWorldMeshCompleteML function is defined as:
+
+include::{generated}/api/protos/xrRequestWorldMeshCompleteML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:detector is the slink:XrWorldMeshDetectorML to use.
+* pname:future is an basetype:XrFutureEXT to complete.
+* pname:completionInfo is a pointer to
+  slink:XrWorldMeshRequestCompletionInfoML.
+* pname:completion is a pointer to slink:XrWorldMeshRequestCompletionML
+  containing the completion result.
+****
+
+include::{generated}/validity/protos/xrRequestWorldMeshCompleteML.adoc[]
+--
+
+[open,refpage='XrWorldMeshRequestCompletionInfoML',type='structs',desc='Block Request Completion Info',xrefs='xrRequestWorldMeshCompleteML']
+--
+
+The slink:XrWorldMeshRequestCompletionInfoML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshRequestCompletionInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:meshSpace the space used to express the vertex data in.
+* pname:meshSpaceLocateTime the time used to locate the pname:meshSpace.
+****
+
+include::{generated}/validity/structs/XrWorldMeshRequestCompletionInfoML.adoc[]
+--
+
+
+
+[open,refpage='XrWorldMeshRequestCompletionML',type='structs',desc='Block Request Completion',xrefs='xrRequestWorldMeshCompleteML']
+--
+
+The slink:XrWorldMeshRequestCompletionML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshRequestCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+* pname:blockCount is a code:uint32_t that must: match
+  slink:XrWorldMeshGetInfoML::blockCount parameter.
+* pname:blocks is an array of slink:XrWorldMeshBlockML structures containing
+  the vertex data pointers.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+include::{generated}/validity/structs/XrWorldMeshRequestCompletionML.adoc[]
+--
+
+
+[open,refpage='XrWorldMeshBlockML',type='structs',desc='Block Vertex Data.',xrefs='xrRequestWorldMeshCompleteML']
+--
+
+The slink:XrWorldMeshBlockML structure is defined as:
+include::{generated}/api/structs/XrWorldMeshBlockML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuid is the slink:XrUuidEXT of the mesh block
+* pname:blockResult is the elink:XrWorldMeshBlockResultML of the mesh block.
+* pname:lod is the elink:XrWorldMeshDetectorLodML used to generated this
+  mesh block.
+* pname:flags are the detector flags defined by
+  elink:XrWorldMeshDetectorFlagBitsML.
+* pname:indexCount is the number of indices in the pname:indexBuffer.
+* pname:indexBuffer is the index buffer of type code:uint16_t.
+  In the indexBuffer each value is the index of a vertex in the
+  vertexBuffer.
+  Three indices define one triangle.
+  For example, the first triangle will have the vertices:
+  `vertexBuffer[index[0]]`, `vertexBuffer[index[1]]`,
+  `vertexBuffer[index[2]]`.
+  Index order is defined by the
+  ename:XR_WORLD_MESH_DETECTOR_INDEX_ORDER_CW_BIT_ML flag.
+* pname:vertexCount is the number of vertices in the pname:vertexBuffer.
+* pname:vertexBuffer is the vertex buffer of type slink:XrVector3f.
+  Vertex data will be provided in the
+  slink:XrWorldMeshStateRequestInfoML::pname:baseSpace at time
+  slink:XrWorldMeshBlockStateML::pname:lastUpdateTime.
+* pname:normalCount is the number of normals in the pname:normalBuffer.
+* pname:normalBuffer is the normal buffer of type slink:XrVector3f.
+* pname:confidenceCount is the number of confidence values in the
+  pname:confidenceBuffer.
+* pname:confidenceBuffer is the confidence buffer of type code:float with
+  range 0.0 - 1.0.
+****
+
+pname:normalCount must: be equal to pname:vertexCount if
+ename:XR_WORLD_MESH_DETECTOR_COMPUTE_NORMALS_BIT_ML was specified during
+slink:XrWorldMeshDetectorML creation, otherwise 0.
+
+pname:confidenceCount must: be equal to pname:vertexCount if
+ename:XR_WORLD_MESH_DETECTOR_COMPUTE_CONFIDENCE_BIT_ML was specified during
+slink:XrWorldMeshDetectorML creation, otherwise 0.
+
+include::{generated}/validity/structs/XrWorldMeshBlockML.adoc[]
+--
+
+[open,refpage='XrWorldMeshBlockResultML',type='enums',desc='The mesh block result values.']
+--
+include::{generated}/api/enums/XrWorldMeshBlockResultML.adoc[]
+include::{generated}/api/enums/XrWorldMeshBlockResultML.comments.adoc[]
+--
+
+==== Sample code
+
+[source,c++]
+----
+class MeshDetector {
+  private:
+
+    enum State {
+      INFO_START, INFO_WAIT_COMPLETE, MESH_START, MESH_WAIT_COMPLETE, DONE
+    };
+
+    XrInstance m_Instance; // previously initialized.
+    XrSession m_Session; // previously initialized.
+    XrSpace m_ViewSpace; // previously initialized.
+    XrSpace m_LocalSpace; // previously initialized.
+
+    State m_State{INFO_START};
+    XrFutureEXT m_Future{XR_NULL_FUTURE_EXT};
+    XrWorldMeshDetectorML m_Detector;
+    std::vector<XrWorldMeshBlockStateML> m_MeshBlocks;
+
+    std::array<uint32_t,2> m_MaxBlockCounts{0};
+    std::array<XrWorldMeshBufferML,2> m_WorldMeshBuffers{XR_TYPE_WORLD_MESH_BUFFER_ML};
+    uint32_t m_QueryBuffer{0};
+    std::vector<XrWorldMeshBlockML> m_WorldMeshBlocks;
+
+    bool m_ApplicationCreatedMemory{false};
+
+
+    bool StartInfoQuery(XrTime displayTime) {
+      XrWorldMeshStateRequestInfoML requestInfo{XR_TYPE_WORLD_MESH_STATE_REQUEST_INFO_ML};
+      requestInfo.baseSpace = m_ViewSpace;
+      requestInfo.time = displayTime;
+      requestInfo.boundingBoxCenter.orientation.w = 1.0f;
+      requestInfo.boundingBoxExtents = {10.0f, 10.0f, 10.0f};
+      return xrRequestWorldMeshStateAsyncML(m_Detector, &requestInfo, &m_Future)==XR_SUCCESS;
+    }
+
+    bool CompleteInfoQuery() {
+      XrWorldMeshStateRequestCompletionML completion{XR_TYPE_WORLD_MESH_STATE_REQUEST_COMPLETION_ML};
+      if (xrRequestWorldMeshStateCompleteML(m_Detector, m_Future, &completion)!=XR_SUCCESS) {
+        return false;
+      }
+      if (completion.futureResult!=XR_SUCCESS) {
+        return false;
+      }
+      m_MeshBlocks.resize(completion.meshBlockStateCountOutput);
+      for (auto &mb:m_MeshBlocks) {
+        mb.type = XR_TYPE_WORLD_MESH_BLOCK_STATE_ML;
+      }
+      completion.meshBlockStateCapacityInput = completion.meshBlockStateCountOutput;
+      completion.meshBlockStates = m_MeshBlocks.data();
+      CHK_XR(xrRequestWorldMeshStateCompleteML(m_Detector, m_Future, &completion));
+
+      if (completion.meshBlockStateCountOutput==0) {
+        return false; // start a new query.
+      }
+
+      // switch to next buffer.
+      m_QueryBuffer = ( m_QueryBuffer + 1 ) % 2;
+
+      if (completion.meshBlockStateCountOutput>m_MaxBlockCounts[m_QueryBuffer]) {
+        m_MaxBlockCounts[m_QueryBuffer] = completion.meshBlockStateCountOutput;
+
+        XrWorldMeshBufferRecommendedSizeInfoML sizeInfo{XR_TYPE_WORLD_MESH_BUFFER_RECOMMENDED_SIZE_INFO_ML};
+        XrWorldMeshBufferSizeML bufferSize{XR_TYPE_WORLD_MESH_BUFFER_SIZE_ML};
+
+        sizeInfo.maxBlockCount = m_MaxBlockCounts[m_QueryBuffer];
+        CHK_XR(xrGetWorldMeshBufferRecommendSizeML(m_Detector, &sizeInfo, &bufferSize ));
+
+        if (m_ApplicationCreatedMemory) {
+          // It may be advantageous to use memory allocated
+          // specific to the use case. For example shared graphics
+          // memory may provide some performance benefits by avoiding
+          // extra copying.
+          m_WorldMeshBuffers[m_QueryBuffer].bufferSize = bufferSize.size;
+          m_WorldMeshBuffers[m_QueryBuffer].buffer = malloc(bufferSize.size);
+        } else {
+          CHK_XR(xrAllocateWorldMeshBufferML(m_Detector, &bufferSize, &m_WorldMeshBuffers[m_QueryBuffer]));
+        }
+      }
+      return true;
+    }
+
+    bool StartMeshQuery() {
+      std::vector<XrWorldMeshBlockRequestML> blockRequests;
+      blockRequests.resize(m_MeshBlocks.size());
+      for (size_t i = 0; i< m_MeshBlocks.size();i++) {
+        blockRequests[i].type = XR_TYPE_WORLD_MESH_BLOCK_REQUEST_ML;
+        blockRequests[i].uuid = m_MeshBlocks[i].uuid;
+        blockRequests[i].lod = XR_WORLD_MESH_DETECTOR_LOD_MEDIUM_ML;
+      }
+
+      XrWorldMeshGetInfoML getInfo{XR_TYPE_WORLD_MESH_GET_INFO_ML};
+      getInfo.flags = 0;
+      getInfo.fillHoleLength = 0.5f;
+      getInfo.disconnectedComponentArea = 1.0f;
+      getInfo.blockCount = static_cast<uint32_t>(blockRequests.size());
+      getInfo.blocks = blockRequests.data();
+      CHK_XR(xrRequestWorldMeshAsyncML(m_Detector, &getInfo, &m_WorldMeshBuffers[m_QueryBuffer], &m_Future));
+      return true;
+    }
+
+    bool CompleteMeshQuery(XrTime displayTime) {
+      XrWorldMeshRequestCompletionML completion{XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_ML};
+      m_WorldMeshBlocks.resize(m_MeshBlocks.size());
+      completion.blockCount = static_cast<uint32_t>(m_WorldMeshBlocks.size());
+      completion.blocks = m_WorldMeshBlocks.data();
+      XrWorldMeshRequestCompletionInfoML completionInfo{XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_INFO_ML};
+      completionInfo.meshSpace = m_LocalSpace;
+      completionInfo.meshSpaceLocateTime = displayTime;
+      CHK_XR(xrRequestWorldMeshCompleteML(m_Detector, &completionInfo, m_Future, &completion));
+      CHK_XR(completion.futureResult);
+
+      // The vertex data is now usable.
+      // the backing buffer double-buffered, so the vertex data remains valid
+      // even though a new request might be processing.
+
+
+      return true;
+    }
+
+  public:
+
+    MeshDetector() {
+      XrWorldMeshDetectorCreateInfoML createInfo{XR_TYPE_WORLD_MESH_DETECTOR_CREATE_INFO_ML};
+      CHK_XR(xrCreateWorldMeshDetectorML(m_Session,&createInfo, &m_Detector));
+    }
+
+
+    ~MeshDetector() {
+
+      // Must ensure the future has finished before destroying.
+      // std::assert(IsDone());
+
+      for (auto &buffer : m_WorldMeshBuffers) {
+        if ( buffer.buffer != nullptr ) {
+          if (m_ApplicationCreatedMemory) {
+            free(buffer.buffer);
+          } else {
+            xrFreeWorldMeshBufferML(m_Detector, &buffer);
+          }
+        }
+      }
+
+      xrDestroyWorldMeshDetectorML(m_Detector);
+      m_Detector = XR_NULL_HANDLE;
+    }
+
+    void RequestShutdown() {
+      if ( m_Future != XR_NULL_FUTURE_EXT) {
+        XrFutureCancelInfoEXT cancelInfo{XR_TYPE_FUTURE_CANCEL_INFO_EXT};
+        cancelInfo.future = m_Future;
+        xrCancelFutureEXT(m_Instance, &cancelInfo);
+        m_State = DONE;
+      } else {
+        m_State = DONE;
+      }
+    }
+
+    bool IsDone() {
+      return m_State == DONE;
+    }
+
+    void FrameLoop(XrTime displayTime) {
+
+      if (m_Future == XR_NULL_FUTURE_EXT) {
+        return;
+      }
+
+      XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+      pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+
+      XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+      pollInfo.future = m_Future;
+      CHK_XR(xrPollFutureEXT(m_Instance, &pollInfo, &pollResult));
+
+      switch (m_State) {
+
+        case INFO_START:
+          if (StartInfoQuery(displayTime)) {
+            m_State = INFO_WAIT_COMPLETE;
+          }
+          break;
+
+        case INFO_WAIT_COMPLETE:
+          if (pollResult.state==XR_FUTURE_STATE_READY_EXT) {
+            if (CompleteInfoQuery()) {
+              m_State = MESH_START;
+            } else {
+              m_State = INFO_START;
+            }
+          }
+          break;
+
+        case MESH_START:
+          if (StartMeshQuery()) {
+            m_State = MESH_WAIT_COMPLETE;
+          }
+          break;
+
+        case MESH_WAIT_COMPLETE:
+          if (pollResult.state==XR_FUTURE_STATE_READY_EXT) {
+            if (CompleteMeshQuery(displayTime)) {
+              m_State = INFO_START;
+            }
+          }
+          break;
+        case DONE:
+          break;
+      }
+
+    }
+
+};
+----
+
+include::{generated}/interfaces/XR_ML_world_mesh_detection.adoc[leveloffset=1]
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2023-08-29
+** Initial Revision

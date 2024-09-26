@@ -31,8 +31,8 @@ less runtime overhead.
 ==== Modifications to Composition Layer Blending
 
 Specifically, this extension supersedes some operations in
-<<composition-layer-blending, Composition Layer Blending>> section, when
-ename:XR_COMPOSITION_LAYER_INVERTED_ALPHA_BIT_EXT is set.
+<<rendering-composition-layer-blending, Composition Layer Blending>>
+section, when ename:XR_COMPOSITION_LAYER_INVERTED_ALPHA_BIT_EXT is set.
 
 * If a submitted swapchain's texture format does not include an alpha
   channel or if the

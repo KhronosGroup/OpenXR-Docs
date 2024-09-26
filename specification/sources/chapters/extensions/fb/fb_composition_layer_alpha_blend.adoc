@@ -17,7 +17,7 @@ factors, with separate controls for color and alpha.
 When specified, these blend controls supersede the behavior of
 ename:XR_COMPOSITION_LAYER_BLEND_TEXTURE_SOURCE_ALPHA_BIT, as well as the
 layer blending operation which defined in the section of
-<<composition-layer-blending, Composition Layer Blending>>.
+<<rendering-composition-layer-blending, Composition Layer Blending>>.
 
 When ename:XR_COMPOSITION_LAYER_UNPREMULTIPLIED_ALPHA_BIT is specified, the
 source color is unpremultiplied alpha.

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2024, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <types>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="void"/>
+
+        <type name="XrStructureType" category="enum"/>
+
+        <type category="struct" name="XrFirstStruct">
+            <member values="XR_TYPE_FIRST_STRUCT"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+        </type>
+
+        <type category="struct" name="XrSecondStruct" returnedonly="true">
+            <member values="XR_TYPE_SECOND_STRUCT"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+        </type>
+
+        <type category="struct" name="XrExtendStruct" structextends="XrFirstStruct,XrSecondStruct,XrThirdStruct">
+            <member values="XR_TYPE_EXTEND_STRUCT"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+        </type>
+
+    </types>
+
+    <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"    name="XR_TYPE_FIRST_STRUCT"/>
+        <enum value="2"    name="XR_TYPE_SECOND_STRUCT"/>
+        <enum value="3"    name="XR_TYPE_EXTEND_STRUCT"/>
+    </enums>
+
+</registry>

@@ -219,24 +219,24 @@
     <!-- look for structs with structextends -->
     <sch:pattern name="structextends">
         <sch:rule context="types/type[@structextends]">
-            <sch:let name="structextends_name" value="current()/@structextends"/>
+            <sch:let name="structextends_names" value="current()/@structextends/tokenize(., ',')"/>
             <!-- the thing you extend must exist -->
-            <sch:assert test="/registry/types/type[@name=$structextends_name]">
-                <sch:value-of select="current()/@name"/> structextends: names <sch:value-of select="$structextends_name"/> but that type does not exist.
+            <sch:assert test="every $struct in $structextends_names satisfies /registry/types/type[@name=$struct]">
+                <sch:value-of select="current()/@name"/> structextends: names <sch:value-of select="string-join($structextends_names, ', ')"/> but one of those types does not exist.
             </sch:assert>
 
-            <sch:let name="structextends" value="/registry/types/type[@name=$structextends_name]"/>
+            <sch:let name="structextends" value="/registry/types/type[@name=$structextends_names]"/>
             <!-- TODO this is an exception because we want to make sure the location array is populated, but the rest is returnedonly. -->
             <sch:let name="is_returnedonly_exception" value="$structextends/@name = ('XrHandJointLocationsEXT')"/>
             <!-- you probably want to agree on presence/absence of "returnedonly" with the struct you extend -->
-            <sch:assert test="count($structextends/@returnedonly) = count(current()/@returnedonly) or $is_returnedonly_exception" role="warning">
-                <sch:value-of select="current()/@name"/> structextends warning: This struct and the struct it extends, <sch:value-of select="$structextends_name"/>, do not agree on whether they are "returnedonly".
-                    <sch:value-of select="current()/@name"/> says <sch:value-of select="count(current()/@returnedonly)"/>, but <sch:value-of select="$structextends_name"/> says <sch:value-of select="count($structextends/@returnedonly)"/>
+            <sch:assert test="every $extend_type in $structextends satisfies count($extend_type/@returnedonly) = count(current()/@returnedonly) or $is_returnedonly_exception" role="warning">
+                <sch:value-of select="current()/@name"/> structextends warning: This struct and one of the structs it extends, <sch:value-of select="$structextends_names"/>, do not agree on whether they are "returnedonly".
+                    <sch:value-of select="current()/@name"/> says returnedonly=<sch:value-of select="count(current()/@returnedonly)"/>
                     This is not an always an error, but usually is.
             </sch:assert>
             <!-- can't extend a struct without a next pointer -->
-            <sch:assert test="$structextends/member/name[text()='next']">
-                <sch:value-of select="current()/@name"/> structextends: cannot extend <sch:value-of select="$structextends_name"/>, as that type does not have a next pointer.
+            <sch:assert test="every $extend_type in $structextends satisfies $extend_type/member/name[text()='next']">
+                <sch:value-of select="current()/@name"/> structextends: cannot extend <sch:value-of select="$structextends_names"/>, as one of these types does not have a next pointer.
             </sch:assert>
         </sch:rule>
     </sch:pattern>

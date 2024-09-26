@@ -13,8 +13,7 @@ These consist of some amount of additional functionality added to the core
 API, potentially including both new functionality and functionality promoted
 from extensions.
 
-[[versions-1.1]]
-[[XR_VERSION_1_1]]
+[[versions-1.1,XR_VERSION_1_1]]
 === Version 1.1
 // Unfortunately we cannot include titles in an open refpage block, so this
 // is a refpage-specific alternate form of the section.
@@ -100,8 +99,7 @@ the following:
 include::{generated}/interfaces/XR_VERSION_1_1.adoc[leveloffset=1]
 
 
-[[versions-loader-1.0]]
-[[XR_LOADER_VERSION_1_0]]
+[[versions-loader-1.0,XR_LOADER_VERSION_1_0]]
 === Loader Runtime and API Layer Negotiation Version 1.0
 
 ifdef::isrefpage[]
@@ -127,8 +125,7 @@ API layers, and is not typically directly used by an application.
 
 include::{generated}/interfaces/XR_LOADER_VERSION_1_0.adoc[leveloffset=1]
 
-[[versions-1.0]]
-[[XR_VERSION_1_0]]
+[[versions-1.0,XR_VERSION_1_0]]
 === Version 1.0
 // Unfortunately we cannot include titles in an open refpage block, so this
 // is a refpage-specific alternate form of the section.

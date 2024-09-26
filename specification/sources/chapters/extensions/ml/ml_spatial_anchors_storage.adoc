@@ -1,0 +1,826 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_spatial_anchors_storage.adoc[]
+
+*Last Modified Date*::
+    2023-08-24
+
+*Contributors*::
+    Ron Bessems, Magic Leap +
+    Karthik Kadappan, Magic Leap
+
+==== Overview
+
+This extension allows spatial anchors created by
+apiext:XR_ML_spatial_anchors to be persisted beyond the head pose session.
+
+Spatial anchor management is closely tied to the selected mapping mode on
+the device.
+The modes are mutually exclusive and affect the functionality of these APIs.
+The available mapping modes are:
+
+On-Device Mode:: A persistent mode in which anchors are persisted locally
+and will be available across multiple sessions when localized to the same
+localization map in which they were published.
+
+AR Cloud Mode:: A persistent mode in which anchors are persisted in the
+cloud environment and will be available across multiple sessions and across
+multiple devices that are localized to the same localization map in which
+they were published.
+
+For more details on mapping modes refer to the apiext:XR_ML_localization_map
+extension.
+
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the com.magicleap.permission.SPATIAL_ANCHOR
+permission listed in their manifest to use this extension.
+(protection level: normal)
+====
+
+==== Storage
+
+
+[open,refpage='XrSpatialAnchorsStorageML',type='handles',desc='Handle to interact with storage for spatial anchors']
+--
+include::{generated}/api/handles/XrSpatialAnchorsStorageML.adoc[]
+
+The slink:XrSpatialAnchorsStorageML handle maintains the connection with the
+backend service.
+This may: be on device or in cloud depending on the localization map that is
+active.
+Use the apiext:XR_ML_localization_map extension to deduce the current mode
+if the application needs to know this.
+
+The slink:XrSpatialAnchorsStorageML handle represents the resources for
+storing spatial anchors.
+--
+
+[open,refpage='xrCreateSpatialAnchorsStorageML',desc='Create spatial anchors storage connection',type='protos',xrefs='XrSpatialAnchorsCreateStorageInfoML']
+--
+The flink:xrCreateSpatialAnchorsStorageML function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorsStorageML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialAnchorsCreateInfoBaseHeaderML derived structure.
+* pname:storage is a pointer to an slink:XrSpatialAnchorsStorageML where the
+  created storage is returned.
+****
+
+The flink:xrCreateSpatialAnchorsStorageML function is used to create a
+slink:XrSpatialAnchorsStorageML.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorsStorageML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsCreateStorageInfoML',type='structs',desc='Information used to create a handle to interact with storage for spatial anchors.',xrefs='xrCreateSpatialAnchorsStorageML']
+--
+
+The slink:XrSpatialAnchorsCreateStorageInfoML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsCreateStorageInfoML.adoc[]
+
+Currently no extra information is needed to create this structure.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsCreateStorageInfoML.adoc[]
+--
+
+[open,refpage='xrDestroySpatialAnchorsStorageML',desc='Destroy spatial anchors storage',type='protos',xrefs='xrCreateSpatialAnchorsStorageML']
+--
+The flink:xrDestroySpatialAnchorsStorageML function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialAnchorsStorageML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML to destroy.
+****
+
+include::{generated}/validity/protos/xrDestroySpatialAnchorsStorageML.adoc[]
+--
+
+==== Query Stored Anchors
+
+To find out which spatial anchors are stored near a certain slink:XrPosef,
+this extension provides a query system.
+This function is asynchronous and uses the apiext:XR_EXT_future extension.
+
+[open,refpage='xrQuerySpatialAnchorsAsyncML',desc='Begin a storage query',type='protos',xrefs='']
+--
+The flink:xrQuerySpatialAnchorsAsyncML function is defined as:
+
+include::{generated}/api/protos/xrQuerySpatialAnchorsAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML to use.
+* pname:queryInfo is the slink:XrSpatialAnchorsQueryInfoBaseHeaderML
+  structure used to define the query.
+  slink:XrSpatialAnchorsQueryInfoRadiusML allows querying around a pose.
+* pname:future is a pointer the created basetype:XrFutureEXT.
+****
+
+If the space was not locatable during the query the runtime must: return
+ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT in
+slink:XrSpatialAnchorsQueryCompletionML::pname:futureResult.
+
+
+include::{generated}/validity/protos/xrQuerySpatialAnchorsAsyncML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsQueryInfoRadiusML',type='structs',desc='Information used to query for anchors.',xrefs='XrSpatialAnchorsQueryInfoBaseHeaderML xrQuerySpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsQueryInfoRadiusML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsQueryInfoRadiusML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace is the slink:XrSpace to create the anchor relative to.
+* pname:center is the center of the query relative to the baseSpace.
+* pname:time is the time at which the pose should: be resolved.
+* pname:radius is the radius of the search area in meters.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsQueryInfoRadiusML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsQueryInfoBaseHeaderML',type='structs',desc='Information used to query for anchors.',xrefs='xrQuerySpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsQueryInfoBaseHeaderML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsQueryInfoBaseHeaderML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsQueryInfoBaseHeaderML.adoc[]
+--
+
+
+[open,refpage='xrQuerySpatialAnchorsCompleteML',type='protos',desc='Complete the asynchronous query operation.',xrefs='xrQuerySpatialAnchorsAsyncML']
+--
+The flink:xrQuerySpatialAnchorsCompleteML function is defined as:
+
+include::{generated}/api/protos/xrQuerySpatialAnchorsCompleteML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML used to start the
+  query.
+* pname:future is the basetype:XrFutureEXT of the future to complete.
+* pname:completion is a pointer to an
+  slink:XrSpatialAnchorsQueryCompletionML structure containing the result of
+  the operation.
+****
+
+Once the basetype:XrFutureEXT has completed
+flink:xrQuerySpatialAnchorsCompleteML must: be called to retrieve the
+slink:XrUuidEXT values of the found anchors.
+
+include::{generated}/validity/protos/xrQuerySpatialAnchorsCompleteML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsQueryCompletionML',type='structs',desc='Completion structure to retrieve the result of the anchor query',xrefs='xrQuerySpatialAnchorsCompleteML xrQuerySpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsQueryCompletionML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsQueryCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+* pname:uuidCapacityInput is the capacity of the pname:uuids array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:uuidCountOutput is the number of elements populated in pname:uuids,
+  or the required capacity in the case that pname:uuidCapacityInput is
+  insufficient.
+* pname:uuids is an array of slink:XrUuidEXT.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_VALIDATION_FAILURE
+* ename:XR_ERROR_SPACE_NOT_LOCATABLE_EXT
+* ename:XR_ERROR_SPATIAL_ANCHORS_SPACE_NOT_LOCATABLE_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsQueryCompletionML.adoc[]
+--
+
+
+==== Publish Anchors
+
+If the application needs to persist an anchor beyond the current head pose
+session it should: publish the anchor.
+Publishing is an asynchronous operation and can: publish multiple anchors at
+the same time.
+
+
+[open,refpage='xrPublishSpatialAnchorsAsyncML',type='protos',desc='Begin a storage query',type='protos',xrefs='']
+--
+The flink:xrPublishSpatialAnchorsAsyncML function is defined as:
+
+include::{generated}/api/protos/xrPublishSpatialAnchorsAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML to use.
+* pname:publishInfo is the slink:XrSpatialAnchorsPublishInfoML structure use
+  to specify the anchors to publish.
+* pname:future is a pointer the created basetype:XrFutureEXT.
+****
+
+include::{generated}/validity/protos/xrPublishSpatialAnchorsAsyncML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsPublishInfoML',type='structs',desc='Structure used to list the anchors that need to be published.',xrefs='xrPublishSpatialAnchorsAsyncML xrPublishSpatialAnchorsCompleteML']
+--
+
+The slink:XrSpatialAnchorsPublishInfoML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsPublishInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:anchorCount is the number of anchors in the anchors array.
+* pname:anchors is an array of slink:XrSpace.
+* pname:expiration is an code:uint64_t, is the time in **seconds** since
+  epoch after which these anchors may: expire.
+  The system may: retain the anchors longer but should: retain the anchors
+  at least until this timestamp.
+  Use 0 or dlink:XR_INFINITE_DURATION to create an anchor that does not
+  expire.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsPublishInfoML.adoc[]
+--
+
+Once the basetype:XrFutureEXT has completed
+flink:xrPublishSpatialAnchorsCompleteML must: be called to retrieve the
+slink:XrUuidEXT values of the published anchors.
+
+[open,refpage='xrPublishSpatialAnchorsCompleteML',desc='Complete the asynchronous publish operation.',type='protos',xrefs='xrPublishSpatialAnchorsAsyncML XrSpatialAnchorsPublishCompletionML']
+--
+
+The flink:xrPublishSpatialAnchorsCompleteML function is defined as:
+
+include::{generated}/api/protos/xrPublishSpatialAnchorsCompleteML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML used to start the
+  publish operation.
+* pname:future is the basetype:XrFutureEXT of the future to complete.
+* pname:completion is a pointer to a
+  slink:XrSpatialAnchorsPublishCompletionML structure containing the result
+  of the operation.
+****
+
+include::{generated}/validity/protos/xrPublishSpatialAnchorsCompleteML.adoc[]
+--
+
+
+[open,refpage='XrSpatialAnchorsPublishCompletionML',type='structs',desc='Completion structure to retrieve the result of the anchor creation',xrefs='xrCreateSpatialAnchorsCompleteML xrQuerySpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsPublishCompletionML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsPublishCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+* pname:uuidCount is the capacity of the pname:uuids array and must: match
+  the number of anchors passed to flink:xrPublishSpatialAnchorsAsyncML
+* pname:uuids is an array of slink:XrUuidEXT.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_VALIDATION_FAILURE
+* ename:XR_ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_OUT_OF_MAP_BOUNDS_ML
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsPublishCompletionML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsPublishCompletionDetailsML',type='structs',desc='Completion structure to retrieve the per anchor result of the anchor creation',xrefs='xrPublishSpatialAnchorsCompleteML XrSpatialAnchorsPublishCompletionML']
+--
+
+The slink:XrSpatialAnchorsPublishCompletionDetailsML structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialAnchorsPublishCompletionDetailsML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:resultCount is the capacity of the pname:results array and must:
+  match the number of anchors passed to
+  flink:xrPublishSpatialAnchorsAsyncML.
+* pname:results is the per UUID status of the publish operation.
+  The order of results in this array correspond to the async request order.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsPublishCompletionDetailsML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorCompletionResultML',type='structs',desc='Per Anchor Completion detail',xrefs='XrSpatialAnchorsPublishCompletionML']
+--
+
+The slink:XrSpatialAnchorCompletionResultML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorCompletionResultML.adoc[]
+
+.Member Descriptions
+****
+* pname:uuid is the UUID of the anchor.
+* pname:result is the result of the operation.
+****
+
+.Anchor Operation Result Codes
+****
+pname:result values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_VALIDATION_FAILURE
+* ename:XR_ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_OUT_OF_MAP_BOUNDS_ML
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorCompletionResultML.adoc[]
+--
+
+
+
+==== Delete Published Anchors
+
+To delete anchors from the storage, flink:xrDeleteSpatialAnchorsAsyncML can:
+be used.
+
+
+[open,refpage='xrDeleteSpatialAnchorsAsyncML',desc='Begin a storage query',type='protos',xrefs='XrSpatialAnchorsDeleteInfoML xrDeleteSpatialAnchorsCompleteML']
+--
+The flink:xrDeleteSpatialAnchorsAsyncML function is defined as:
+
+include::{generated}/api/protos/xrDeleteSpatialAnchorsAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML to use.
+* pname:deleteInfo is the slink:XrSpatialAnchorsDeleteInfoML structure used
+  to specify the anchors to delete.
+* pname:future is a pointer the created basetype:XrFutureEXT.
+****
+
+include::{generated}/validity/protos/xrDeleteSpatialAnchorsAsyncML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsDeleteInfoML',type='structs',desc='Structure used to list the anchors that need to be deleted.',xrefs='xrDeleteSpatialAnchorsAsyncML xrDeleteSpatialAnchorsCompleteML']
+--
+
+The slink:XrSpatialAnchorsDeleteInfoML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsDeleteInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuidCount is the number of UUIDs in the pname:uuids array.
+* pname:uuids is an array of slink:XrUuidEXT.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsDeleteInfoML.adoc[]
+--
+
+Once the basetype:XrFutureEXT has completed
+flink:xrPublishSpatialAnchorsCompleteML must: be called to retrieve the
+status of the delete operation.
+
+[open,refpage='xrDeleteSpatialAnchorsCompleteML',desc='Complete the asynchronous deletion operation.',type='protos',xrefs='xrDeleteSpatialAnchorsAsyncML XrSpatialAnchorsDeleteCompletionML']
+--
+
+The flink:xrDeleteSpatialAnchorsCompleteML function is defined as:
+
+include::{generated}/api/protos/xrDeleteSpatialAnchorsCompleteML.adoc[]
+
+.Member Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML used to start the
+  publish operation.
+* pname:future is the basetype:XrFutureEXT of the future to complete.
+* pname:completion is a pointer to a
+  slink:XrSpatialAnchorsDeleteCompletionML structure containing the result
+  of the operation.
+****
+
+include::{generated}/validity/protos/xrDeleteSpatialAnchorsCompleteML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsDeleteCompletionML',type='structs',desc='Completion structure to retrieve the result of the anchor deletion',xrefs='xrDeleteSpatialAnchorsCompleteML xrDeleteSpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsDeleteCompletionML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsDeleteCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_SPATIAL_ANCHORS_ANCHOR_NOT_FOUND_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsDeleteCompletionML.adoc[]
+--
+
+
+[open,refpage='XrSpatialAnchorsDeleteCompletionDetailsML',type='structs',desc='Completion structure to retrieve the per anchor result of the anchor deletion',xrefs='xrDeleteSpatialAnchorsAsyncML XrSpatialAnchorsDeleteCompletionML']
+--
+
+The slink:XrSpatialAnchorsDeleteCompletionDetailsML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsDeleteCompletionDetailsML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:resultCount is the capacity of the pname:results array and must:
+  match the number of anchors passed to flink:xrDeleteSpatialAnchorsAsyncML
+* pname:results is the per UUID status of the delete operation.
+  The order of results in this array correspond to the async request order.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsDeleteCompletionDetailsML.adoc[]
+--
+
+==== Update Published Anchors Expiration
+
+To update the expiration time on anchors
+flink:xrUpdateSpatialAnchorsExpirationAsyncML can: be used.
+
+
+[open,refpage='xrUpdateSpatialAnchorsExpirationAsyncML',desc='Update anchors expiration time',type='protos',xrefs='XrSpatialAnchorsUpdateExpirationInfoML xrUpdateSpatialAnchorsExpirationCompleteML']
+--
+The flink:xrUpdateSpatialAnchorsExpirationAsyncML function is defined as:
+
+include::{generated}/api/protos/xrUpdateSpatialAnchorsExpirationAsyncML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML to use.
+* pname:updateInfo is a pointer to
+  slink:XrSpatialAnchorsUpdateExpirationInfoML structure used to specify the
+  anchors to update.
+* pname:future is a pointer to the created basetype:XrFutureEXT.
+****
+
+include::{generated}/validity/protos/xrUpdateSpatialAnchorsExpirationAsyncML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsUpdateExpirationInfoML',type='structs',desc='Structure used to list the anchors that need to be updated.',xrefs='xrUpdateSpatialAnchorsExpirationAsyncML xrUpdateSpatialAnchorsExpirationCompleteML']
+--
+
+The slink:XrSpatialAnchorsUpdateExpirationInfoML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsUpdateExpirationInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuidCount is the number of anchors in the anchors array.
+* pname:uuids is an array of slink:XrUuidEXT.
+* pname:expiration is an code:uint64_t, is the time in seconds since epoch
+  after which these anchors may: expire.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsUpdateExpirationInfoML.adoc[]
+--
+
+Once the basetype:XrFutureEXT has completed
+flink:xrUpdateSpatialAnchorsExpirationCompleteML must: be called to retrieve
+the status of the publish operation.
+
+[open,refpage='xrUpdateSpatialAnchorsExpirationCompleteML',desc='Complete the asynchronous update operation.',type='protos',xrefs='xrUpdateSpatialAnchorsExpirationAsyncML XrSpatialAnchorsUpdateExpirationCompletionML']
+--
+
+The flink:xrUpdateSpatialAnchorsExpirationCompleteML function is defined as:
+
+include::{generated}/api/protos/xrUpdateSpatialAnchorsExpirationCompleteML.adoc[]
+
+.Member Descriptions
+****
+* pname:storage is the slink:XrSpatialAnchorsStorageML used to start the
+  publish operation.
+* pname:future is the basetype:XrFutureEXT of the future to complete.
+* pname:completion is a pointer to a
+  slink:XrSpatialAnchorsUpdateExpirationCompletionML structure containing
+  the result of the operation.
+****
+
+include::{generated}/validity/protos/xrUpdateSpatialAnchorsExpirationCompleteML.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorsUpdateExpirationCompletionML',type='structs',desc='Completion structure to retrieve the result of the anchor update',xrefs='xrUpdateSpatialAnchorsExpirationCompleteML xrUpdateSpatialAnchorsExpirationAsyncML']
+--
+
+The slink:XrSpatialAnchorsUpdateExpirationCompletionML structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialAnchorsUpdateExpirationCompletionML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_SPATIAL_ANCHORS_ANCHOR_NOT_FOUND_ML
+* ename:XR_ERROR_SPATIAL_ANCHORS_NOT_LOCALIZED_ML
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsUpdateExpirationCompletionML.adoc[]
+--
+
+
+
+[open,refpage='XrSpatialAnchorsUpdateExpirationCompletionDetailsML',type='structs',desc='Completion structure to retrieve the per anchor result of the anchor expiration update',xrefs='xrUpdateSpatialAnchorsExpirationAsyncML XrSpatialAnchorsUpdateExpirationCompletionML']
+--
+
+The slink:XrSpatialAnchorsUpdateExpirationCompletionDetailsML structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsUpdateExpirationCompletionDetailsML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:resultCount is the capacity of the pname:results array and must:
+  match the number of anchors passed to
+  flink:xrUpdateSpatialAnchorsExpirationAsyncML
+* pname:results is the per UUID status of the update operation.
+  The order of anchors in this array must: match the async request order.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorsUpdateExpirationCompletionDetailsML.adoc[]
+--
+
+==== Create Spatial Anchors from Storage
+
+Spatial anchors can: be created from the storage slink:XrUuidEXT by passing
+the slink:XrSpatialAnchorsCreateInfoFromUuidsML structure to
+flink:xrCreateSpatialAnchorsAsyncML.
+
+[open,refpage='XrSpatialAnchorsCreateInfoFromUuidsML',type='structs',desc='Structure used to create tracked spatial anchors from uuids.',xrefs='xrCreateSpatialAnchorsAsyncML']
+--
+
+The slink:XrSpatialAnchorsCreateInfoFromUuidsML structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorsCreateInfoFromUuidsML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:storage is the slink:XrSpatialAnchorsStorageML to use.
+* pname:uuidCount is the number of elements in the uuids array.
+* pname:uuids is pointer to an array of slink:XrUuidEXT.
+****
+
+The slink:XrSpace handle or handles returned via
+slink:XrCreateSpatialAnchorsCompletionML::pname:spaces must: be in the same
+order as pname:uuids.
+
+The slink:XrCreateSpatialAnchorsCompletionML::pname:spaceCount field must:
+match pname:uuidCount.
+If not the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE in
+slink:XrCreateSpatialAnchorsCompletionML::pname:futureResult.
+
+If an anchor with a given UUID is not found, the runtime must: return
+dlink:XR_NULL_HANDLE for the corresponding slink:XrSpace handle(s) and
+return ename:XR_SUCCESS in
+slink:XrCreateSpatialAnchorsCompletionML::pname:futureResult.
+
+include::{generated}/validity/structs/XrSpatialAnchorsCreateInfoFromUuidsML.adoc[]
+--
+
+
+==== Examples
+
+This example shows how to persist a list of anchors.
+
+[source,C++]
+----
+XrInstance instance;                // previously initialized
+XrSession session;                  // previously initialized
+
+XrSpace anchor1; // previously initialized
+XrSpace anchor2; // previously initialized
+
+std::vector<XrSpace> anchors{anchor1, anchor2};
+
+XrSpatialAnchorsCreateStorageInfoML storageCreateInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML};
+XrSpatialAnchorsStorageML storage;
+
+CHK_XR(xrCreateSpatialAnchorsStorageML(session, &storageCreateInfo, &storage));
+
+XrSpatialAnchorsPublishInfoML publishInfo{XR_TYPE_SPATIAL_ANCHORS_PUBLISH_INFO_ML};
+publishInfo.anchorCount = static_cast<uint32_t>(anchors.size());
+publishInfo.anchors = anchors.data();
+publishInfo.expiration = 0;
+
+XrFutureEXT future;
+CHK_XR(xrPublishSpatialAnchorsAsyncML(storage, &publishInfo, &future));
+
+XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+pollInfo.future = future;
+pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+
+// Ideally this is done once in your
+// game loop instead of a busy wait.
+while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+}
+
+XrSpatialAnchorsPublishCompletionML completion{XR_TYPE_SPATIAL_ANCHORS_PUBLISH_COMPLETION_ML};
+std::vector<XrUuidEXT> uuids(anchors.size());
+completion.uuidCount = static_cast<uint32_t>(uuids.size());
+completion.uuids = uuids.data();
+CHK_XR(xrPublishSpatialAnchorsCompleteML(storage, future, &completion));
+CHK_XR(completion.futureResult);
+
+// completion.uuid will now contain the UUID of the corresponding spatial anchors.
+
+CHK_XR(xrDestroySpatialAnchorsStorageML(storage));
+----
+
+This example shows how to query for anchors.
+
+[source,C++]
+----
+XrTime currentTime;                 // previously initialized
+XrVector3f center;                       // previously initialized
+
+XrSpatialAnchorsCreateStorageInfoML storageCreateInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML};
+XrSpatialAnchorsStorageML storage;
+
+CHK_XR(xrCreateSpatialAnchorsStorageML(session, &storageCreateInfo, &storage));
+
+// set up a query around a previously initialized center position with a radius of 10 meters.
+XrSpatialAnchorsQueryInfoRadiusML queryInfo{XR_TYPE_SPATIAL_ANCHORS_QUERY_INFO_RADIUS_ML};
+queryInfo.baseSpace = viewSpace; // using viewspace, but can: be any space.
+queryInfo.center = center;
+queryInfo.time = currentTime;
+queryInfo.radius = 10.0f;
+
+XrFutureEXT future;
+CHK_XR(xrQuerySpatialAnchorsAsyncML(storage, reinterpret_cast<XrSpatialAnchorsQueryInfoBaseHeaderML*>(&queryInfo), &future));
+
+XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+pollInfo.future = future;
+pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+
+// Ideally this is done once in your
+// frame loop instead of a busy wait.
+while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+}
+
+XrSpatialAnchorsQueryCompletionML completion{XR_TYPE_SPATIAL_ANCHORS_QUERY_COMPLETION_ML};
+CHK_XR(xrQuerySpatialAnchorsCompleteML(storage, future, &completion));
+CHK_XR(completion.futureResult);
+
+std::vector<XrUuidEXT> uuids(completion.uuidCountOutput);
+completion.uuidCapacityInput = static_cast<uint32_t>(uuids.size());
+completion.uuids = uuids.data();
+
+CHK_XR(xrQuerySpatialAnchorsCompleteML(storage, future, &completion));
+
+// completion.uuid will now contain the UUID of the corresponding spatial anchors.
+
+CHK_XR(xrDestroySpatialAnchorsStorageML(storage));
+----
+
+
+include::{generated}/interfaces/XR_ML_spatial_anchors_storage.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2023-06-22 (Ron Bessems)
+
+** Initial extension description

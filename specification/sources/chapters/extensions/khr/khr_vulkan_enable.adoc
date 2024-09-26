@@ -92,9 +92,12 @@ is not listed above or in an extension definition.
 
 *Swapchain Image Layout*
 
-When an application acquires a swapchain image by calling
-flink:xrAcquireSwapchainImage in a session created using
-slink:XrGraphicsBindingVulkanKHR, the OpenXR runtime must: guarantee that:
+If an application waits on a swapchain image by calling
+flink:xrWaitSwapchainImage in a session created using
+slink:XrGraphicsBindingVulkanKHR, and that call returns ename:XR_SUCCESS or
+ename:XR_SESSION_LOSS_PENDING, then the OpenXR runtime must: guarantee that
+the following conditions are true, keeping in mind that the runtime must:
+not access the sname:VkQueue in flink:xrWaitSwapchainImage:
 
 * The image has a memory layout compatible with
   ename:VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL for color images, or

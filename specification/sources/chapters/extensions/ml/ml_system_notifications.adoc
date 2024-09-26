@@ -1,0 +1,90 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_system_notifications.adoc[]
+
+*Last Modified Date*::
+    2023-09-06
+
+*Contributors*::
+    Michał Kulągowski, Magic Leap +
+    Ron Bessems, Magic Leap
+
+==== Overview
+
+This extension provides control over the system notifications.
+This extension allows system notifications that might obscure the field of
+view to be disabled.
+
+Note that even when all system notifications have been suppressed,
+developers can: still intercept certain events that allow them to properly
+react to the underlying reason of system notifications.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+com.magicleap.permission.SYSTEM_NOTIFICATION permission listed in their
+manifest to use this extension.
+(protection level: normal)
+====
+
+==== Suppressing All System Notifications
+
+Applications can: suppress system notifications from being shown while the
+application has focus by calling flink:xrSetSystemNotificationsML with the
+properly filled slink:XrSystemNotificationsSetInfoML structure.
+
+
+[open,refpage='xrSetSystemNotificationsML',desc='Set system notification suppression state.',type='protos']
+--
+The flink:xrSetSystemNotificationsML function is defined as:
+
+include::{generated}/api/protos/xrSetSystemNotificationsML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is slink:XrInstance.
+* pname:info is a pointer to an slink:XrSystemNotificationsSetInfoML
+  structure.
+****
+
+This API will work only on certain SKUs.
+When called on an incompatible SKU the
+ename:XR_ERROR_SYSTEM_NOTIFICATION_INCOMPATIBLE_SKU_ML error must: be
+returned.
+
+If the com.magicleap.permission.SYSTEM_NOTIFICATION permission is not
+granted, the runtime must: return
+ename:XR_ERROR_SYSTEM_NOTIFICATION_PERMISSION_DENIED_ML.
+
+include::{generated}/validity/protos/xrSetSystemNotificationsML.adoc[]
+--
+
+[open,refpage='XrSystemNotificationsSetInfoML',type='structs',desc='Information for setting system notifications.']
+--
+
+The slink:XrSystemNotificationsSetInfoML structure is defined as:
+include::{generated}/api/structs/XrSystemNotificationsSetInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:suppressNotifications is a boolean flag for suppressing all system
+  notifications.
+****
+
+include::{generated}/validity/structs/XrSystemNotificationsSetInfoML.adoc[]
+--
+
+include::{generated}/interfaces/XR_ML_system_notifications.adoc[leveloffset=1]
+
+
+*Version History*
+
+* Revision 1, 2023-09-06 (Michał Kulągowski)
+
+** Initial extension description

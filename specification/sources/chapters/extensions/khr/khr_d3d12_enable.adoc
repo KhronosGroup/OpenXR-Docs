@@ -40,9 +40,11 @@ application that include it.
 
 *Swapchain Image Resource State*
 
-When an application acquires a swapchain image by calling
-flink:xrAcquireSwapchainImage in a session create using
-slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: guarantee that:
+If an application waits on a swapchain image by calling
+flink:xrWaitSwapchainImage in a session created using
+slink:XrGraphicsBindingD3D12KHR, and that call returns ename:XR_SUCCESS or
+ename:XR_SESSION_LOSS_PENDING, then the OpenXR runtime must: guarantee that
+the following conditions are true:
 
 * The color rendering target image has a resource state match with
   ename:D3D12_RESOURCE_STATE_RENDER_TARGET
@@ -52,7 +54,7 @@ slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: guarantee that:
   can write to the image.
 
 When an application releases a swapchain image by calling
-flink:xrReleaseSwapchainImage, in a session create using
+flink:xrReleaseSwapchainImage, in a session created using
 slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: interpret the
 image as:
 
