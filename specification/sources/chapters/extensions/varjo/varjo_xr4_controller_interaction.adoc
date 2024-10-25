@@ -1,11 +1,11 @@
-// Copyright (c) 2023 Varjo Technologies
+// Copyright (c) 2024 Varjo Technologies
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
 include::{generated}/meta/XR_VARJO_xr4_controller_interaction.adoc[]
 
 *Last Modified Date*::
-    2023-12-06
+    2024-09-17
 
 *IP Status*::
     No known IP claims.
@@ -14,7 +14,8 @@ include::{generated}/meta/XR_VARJO_xr4_controller_interaction.adoc[]
     Denny Rönngren, Varjo Technologies +
     Szymon Policht, Varjo Technologies +
     Roman Golovanov, Varjo Technologies +
-    Jussi Karhu, Varjo Technologies
+    Jussi Karhu, Varjo Technologies +
+    Fabian Wahlster, Varjo Technologies
 
 *Overview*
 
@@ -24,6 +25,12 @@ compatible with the Varjo XR-4 headset.
 Interaction profile path:
 
 * pathname:/interaction_profiles/varjo/xr-4_controller
+
+// This extension does not meet the current style guide requirements:
+// the path name must be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/varjo/xr-4_controller
+:properly-suffixed-path: /interaction_profiles/varjo/xr-4_controller_varjo
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
 
 Valid for the user paths:
 
@@ -57,6 +64,9 @@ Supported component paths on both pathnames:
 * subpathname:/input/aim/pose
 * subpathname:/output/haptic
 
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+
 *New Object Types*
 
 *New Flag Types*
@@ -75,3 +85,5 @@ Supported component paths on both pathnames:
 
 * Revision 1, 2023-12-06 (Denny Rönngren)
 ** Initial extension description
+* Revision 2, 2024-09-17 (Fabian Wahlster)
+** Interacting extensions description

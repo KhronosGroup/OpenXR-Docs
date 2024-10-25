@@ -25,6 +25,13 @@ As of the OpenXR 1.1 release, the intentional breaking change introduced in
 Vulkan's dependency notation with Vulkan 1.3.241 has also been applied to
 the OpenXR schema.
 
+[IMPORTANT]
+====
+Changes to the Vulkan schema documentation as of its **2024-01-31
+changelog** entry have been reviewed and confirmed to apply to OpenXR.
+More recent changes have **not** been reviewed and may not apply to OpenXR.
+====
+
 == Machine Readable Schema Definitions
 
 The schema is described in two ways within the specification source
@@ -90,11 +97,13 @@ It is incorporated here by reference, with the following changes.
    and which may be used by other tools operating on the XML.
 * Modify section 19 ("Required and Removed Interfaces (`require` and
   `remove` tags)")
+// Some new sections are listed here, if they are direct children of `require` tags.
 ** In "Contents of `require` and `remove` tags", add:
    <<xml-require-interaction-profile,`interaction_profile` Tags>>
 ** In "Contents of `require` and `remove` tags", add:
    <<xml-require-extend-interaction-profile,`extend` Tags for interaction
-   profile paths>>
+   profiles>>
+// end require tag children
 * Ignore sections 20, 21, 22, and 23 ("Formats (`formats` tag)", "Image
   Format (`format` tag)", "Format Components (`component` tag)", "Format
   Planes (`plane` tag)")
@@ -107,23 +116,19 @@ It is incorporated here by reference, with the following changes.
    or `syncequivalent` tags.
 * Add the following sections defining new tags related to interaction
   profiles:
+// Remaining new sections are listed here
 ** <<xml-interaction-profiles>>
 ** <<xml-interaction-profile>>
 ** <<xml-interaction-profile-user-path>>
 ** <<xml-interaction-profile-component>>
 
-OpenXR also defines interaction profile elements and adaptations of existing
-elements, which are currently not documented but which may be understood by
-looking at the existing usages and schemas.
-
-Changes to the Vulkan schema documentation as of its 2024-01-31 changelog
-entry have been reviewed and confirmed to apply to OpenXR.
-
 [[xml-interaction-profiles]]
-=== Interaction Profile Blocks (`interaction_profiles` tag)
+=== Interaction Profiles Blocks (`interaction_profiles` tag)
 
 An `interaction_profiles` tag contains definitions of interaction profile
 paths and their associated valid component paths exposed through the API.
+
+Identified as `InteractionProfiles` in the Relax-NG schema.
 
 ==== Attributes of `interaction_profiles` tags
 
@@ -131,7 +136,9 @@ None.
 
 ==== Contents of `interaction_profiles`
 
-Zero or more `interaction_profile` tags, in arbitrary order.
+Zero or more <<xml-interaction-profile,`interaction_profile`>> tags, in
+arbitrary order.
+
 
 [[xml-interaction-profile]]
 === Interaction Profiles (`interaction_profile` tag)
@@ -139,6 +146,8 @@ Zero or more `interaction_profile` tags, in arbitrary order.
 An `interaction_profile` tag defines an interaction profile path, the user
 paths it is valid for, and the valid component subpaths and their action
 types.
+
+Identified as `InteractionProfileElt` in the Relax-NG schema.
 
 ==== Attributes of `interaction_profile` tags
 
@@ -149,11 +158,13 @@ types.
   Human readable description of the physical controller/device this
   interaction profile corresponds to, if applicable.
 
-==== Contents of `interaction_profiles` tags
+==== Contents of `interaction_profile` tags
 
-One or more `user_path` tags, and zero or more `component` tags, in
-arbitrary order.
-The `user_path` tag or tags are typically placed before all components.
+One or more <<xml-interaction-profile-user-path,`user_path`>> tags, followed
+by one or more <<xml-interaction-profile-component,`component`>> tags.
+Order within the `user_path` tags and within the `component` tags is not
+meaningful, though all `user_path` tags must precede all `component` tags.
+
 
 [[xml-interaction-profile-user-path]]
 === Interaction Profile User Paths (`user_path` tag)
@@ -161,10 +172,12 @@ The `user_path` tag or tags are typically placed before all components.
 A `user_path` tag denotes a top-level user path, also known as a sub-action
 path, for which the enclosing interaction profile is accepted.
 
+Identified as `InteractionProfileUserPathElt` in the Relax-NG schema.
+
 ==== Attributes of `user_path` tags
 
 * `path` - required.
-  Full top-level user path (starting with pathname:/user/)
+  Full top-level pathname:/user path (starting with pathname:/user/)
 
 ==== Contents of `user_path` tags
 
@@ -176,6 +189,8 @@ None.
 
 A `component` tag denotes a component subpath for the enclosing interaction
 profile that is valid on at least one of its user paths.
+
+Identified as `InteractionProfileComponentElt` in the Relax-NG schema.
 
 ==== Attributes of `component` tags
 
@@ -194,34 +209,36 @@ profile that is valid on at least one of its user paths.
   not be available for normal application use.
 * `user_path` - optional.
   If present, must correspond to one of the paths in the
-  <<xml-interaction-profile-user-path,`user_path` tags>> for this
+  <<xml-interaction-profile-user-path,`user_path`>> tags for this
   interaction profile.
-  Indicates that the component path is only available when suggesting
-  bindings for this particular user path, rather than all indicated user
-  paths as default.
+  Indicates that the component sub-path is **only** available when
+  suggesting bindings for this particular user path.
+  If not present, the component sub-path is available on all indicated top
+  level pathname:/user paths defined in this interaction profile.
 
-==== Contents of `user_path` tags
+==== Contents of `component` tags
 
 None.
+
 
 [[xml-require-interaction-profile]]
 === Contents of `require`: `interaction_profile` Tags
 
-Specifies a required interaction profile, by path, defined by an
-`interaction_profile` block within an `interaction_profiles` block.
+Specifies a required interaction profile, by path, defined in an
+<<`interaction_profile`,xml-interaction-profile>> block within an
+<<`interaction_profiles`,xml-interaction-profiles>> block.
 Valid only in `require` blocks.
 
-==== Attributes of `interaction_profile` tags in `require` blocks
+This is one of the cases in `InterfaceElement` in the Relax-NG schema.
+. The tag has no content, but contains an attribute:
 
 * `name` - required.
   Full interaction profile path (starting with
   pathname:/interaction_profiles/).
-  Must match the `name` attribute of an `interaction_profile` block within
-  an `interaction_profiles` block.
+  Must match the `name` attribute of an
+  <<xml-interaction-profile,`interaction_profile`>> tag within an
+  <<xml-interaction-profiles,`interaction_profiles`>> block.
 
-==== Contents of `interaction_profile` tags in `require` blocks
-
-None.
 
 [[xml-require-extend-interaction-profile]]
 === Contents of `require`: `extend` Tags for interaction profiles
@@ -231,6 +248,8 @@ previously included in the specification by a dependency of this block's
 parent.
 Valid only in `require` blocks.
 
+Identified as `ExtendInteractionProfileElt` in the Relax-NG schema.
+
 ==== Attributes of interaction profile `extend` tags in `require` blocks
 
 * `interaction_profile_path` - required.
@@ -239,7 +258,7 @@ Valid only in `require` blocks.
   Must match the `name` attribute of an `interaction_profile` block within
   an `interaction_profiles` block.
 
-==== Contents of `interaction_profile` tags in `require` blocks
+==== Contents of interaction profile `extend` tags in `require` blocks
 
-One or more <<xml-interaction-profile-component,`component` tags>>, in the
+One or more <<xml-interaction-profile-component,`component`>> tags, in the
 same schema used directly within an `interaction_profile` block.

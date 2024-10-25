@@ -1096,21 +1096,26 @@ that the timeout never occurs.
 [[fundamentals-prediction-time-limits]]
 === Prediction Time Limits
 
-Some functions involve prediction.
+Some functions involve prediction or history retrieval for a supplied
+basetype:XrTime timepoint.
 For example, flink:xrLocateViews accepts a display time for which to return
 the resulting data.
-Prediction times provided by applications may refer to time in the past or
-the future.
+Timepoints provided by applications may: refer to time in the past or the
+future.
 Times in the past may: be interpolated historical data.
-Runtimes have different practical limits with respect to how far forward or
-backward prediction times can be accurate.
-There is no prescribed forward limit the application can successfully
-request predictions for, though predictions may become less accurate as they
-get farther into the future.
-With respect to backward prediction, the application can pass a prediction
+Runtimes have different practical limits with respect to the accuracy
+possible at varying past (historical or backwards prediction) and future
+timepoints.
+The runtime must: treat as valid any future time requested by an
+application, except when disqualified by size limitations of the underlying
+types, though predictions may: become less accurate as they get farther into
+the future.
+With respect to backward prediction, the application can: pass a prediction
 time equivalent to the timestamp of the most recently received pose plus as
 much as code:50 milliseconds in the past to retrieve accurate historical
 data.
+The runtime must: retain and return at least 50 milliseconds of historical
+data, interpolating as required, preceding the most recently received pose.
 Requested times predating this time window, or requested times predating the
 earliest received pose, may: result in a best effort data whose accuracy
 reduced or unspecified.

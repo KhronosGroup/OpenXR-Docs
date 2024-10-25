@@ -322,8 +322,9 @@ Command =
 
 # <interaction_profiles> defines a group of interaction profiles
 InteractionProfiles =
-    element interaction_profiles { CommentAttr?, InteractionProfile* }
-
+    element interaction_profiles {
+        CommentAttr?, InteractionProfileElt*
+    }
 # <interaction_profile> defines a single component path in an interaction profile
 InteractionProfileComponentElt =
     element component {
@@ -333,19 +334,23 @@ InteractionProfileComponentElt =
         attribute system { "true" }?
     }
 
+# <user_path> defines a single top-level /user path valid for a given interaction profile
+InteractionProfileUserPathElt =
+    element user_path {
+        attribute path { XrPathString_t }
+    }
+
 # <interaction_profile> defines a single interaction profile path
-InteractionProfile =
+InteractionProfileElt =
     element interaction_profile {
         # actually the path
         attribute name { XrPathString_t },
         attribute title { text },
         CommentAttr?,
 
-        element user_path {
-            attribute path { XrPathString_t }
-        }*,
+        InteractionProfileUserPathElt+,
 
-        InteractionProfileComponentElt*
+        InteractionProfileComponentElt+
     }
 
 ExtendInteractionProfileElt =
@@ -471,7 +476,10 @@ PlatformDefinesName = "openxr_platform_defines"
 # Data types - all end in _t
 # exception: settings_file_location name predates validation
 MemberOrParamName_t =
-    xsd:NCName { pattern = "settings_file_location|[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*" }
+    xsd:NCName {
+        pattern =
+            "settings_file_location|[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*"
+    }
 VendorId_t = xsd:ID { pattern = "[A-Z]+" }
 VendorIdRef_t = xsd:IDREF { pattern = "[A-Z]+" }
 HexValue_t = xsd:token { pattern = "0[xX][0-9a-fA-F]+" }
@@ -489,9 +497,9 @@ XrPFNName_t = xsd:NCName { pattern = "PFN_xr([A-Z]+[a-z0-9]*)+" }
 
 XrTypeName_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
 XrTypeNameRef_t = xsd:NCName { pattern = "Xr([A-Z]+[a-z0-9]*)+" }
-XrTypeNameListRef_t = xsd:token {
-        pattern =
-            "Xr([A-Z]+[a-z0-9]*)+(,Xr([A-Z]+[a-z0-9]*)+)*"
+XrTypeNameListRef_t =
+    xsd:token {
+        pattern = "Xr([A-Z]+[a-z0-9]*)+(,Xr([A-Z]+[a-z0-9]*)+)*"
     }
 
 XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
@@ -501,7 +509,7 @@ XrExtNameExpression_t =
             "XR_[A-Z]+(_[A-Za-z0-9]+)+([+,]XR_[A-Z]+(_[A-Za-z0-9]+)+)*"
     }
 
-XrPathString_t = xsd:token { pattern = "/[a-z0-9_]+(/[a-z0-9_]+)*" }
+XrPathString_t = xsd:token { pattern = "/[a-z0-9_\-]+(/[a-z0-9_\-]+)*" }
 XrInteractionComponentType_t =
     xsd:NCName { pattern = "XR_ACTION_TYPE_[A-Z0-9]+(_INPUT|_OUTPUT)" }
 
@@ -518,7 +526,10 @@ XrEntityName_t =
     XrUpperSnakeCase_t | XrFuncName_t | XrPFNName_t | XrTypeName_t
 
 # Repeatedly used attributes
-DependsAttr = attribute depends { XrExtNameExpression_t | "XR_VERSION_1_0" | "XR_VERSION_1_1"}
+DependsAttr =
+    attribute depends {
+        XrExtNameExpression_t | "XR_VERSION_1_0" | "XR_VERSION_1_1"
+    }
 ExtensionNameAttr = attribute extension { XrExtName_t }
 VendorAttr = attribute vendor { VendorIdRef_t }
 CommentAttr = attribute comment { text }

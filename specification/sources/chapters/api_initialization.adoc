@@ -26,9 +26,8 @@ flink:xrCreateInstance.
 
 A dynamically linked library (`.dll` or `.so`) that implements the API
 loader must: export all core OpenXR API functions.
-However, the application can: gain access to extension functions by
-obtaining pointers to these functions through the use of
-flink:xrGetInstanceProcAddr.
+The application can: gain access to extension functions by obtaining
+pointers to these functions through the use of flink:xrGetInstanceProcAddr.
 
 [[api-initialization-function-pointers]]
 === Function Pointers
@@ -57,9 +56,9 @@ Because of this, applications that use only the core OpenXR functions have
 no need to use flink:xrGetInstanceProcAddr.
 
 Because an application can: call flink:xrGetInstanceProcAddr before creating
-an instance, flink:xrGetInstanceProcAddr returns a valid function pointer
-when the pname:instance parameter is dlink:XR_NULL_HANDLE and the pname:name
-parameter is one of the following strings:
+an instance, flink:xrGetInstanceProcAddr must: return a valid function
+pointer when the pname:instance parameter is dlink:XR_NULL_HANDLE and the
+pname:name parameter is one of the following strings:
 
 .No Instance Required
 ****
@@ -93,8 +92,8 @@ Because of this, function pointers returned by flink:xrGetInstanceProcAddr
 using one slink:XrInstance may not be valid when used with objects related
 to a different slink:XrInstance.
 
-The returned function pointer is of type tlink:PFN_xrVoidFunction, and must
-be cast to the type of the function being queried.
+The returned function pointer is of type tlink:PFN_xrVoidFunction, and must:
+be cast by the application to the type of the function being queried.
 
 The table below defines the various use cases for
 flink:xrGetInstanceProcAddr and return value ("`fp`" is "`function

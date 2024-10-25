@@ -978,7 +978,8 @@
                 '/interaction_profiles/bytedance/pico4_controller',
                 '/interaction_profiles/bytedance/pico_g3_controller',
                 '/interaction_profiles/facebook/touch_controller_pro',
-                '/interaction_profiles/meta/touch_controller_plus'
+                '/interaction_profiles/meta/touch_controller_plus',
+                '/interaction_profiles/varjo/xr-4_controller'
                 )"/>
             <sch:let name="is_khr" value="$vendor-tag = '_khr'"/>
             <sch:assert test="ends-with(@name, $vendor-tag) or $is_exception or $is_khr">

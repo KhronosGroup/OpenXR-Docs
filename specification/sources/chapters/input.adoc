@@ -1361,7 +1361,7 @@ include::{generated}/validity/structs/XrActiveActionSet.adoc[]
 An application can: use the flink:xrEnumerateBoundSourcesForAction and
 flink:xrGetInputSourceLocalizedName calls to prompt the user which physical
 inputs to use in order to perform an action.
-The bound pname:sources are basetype:XrPath semantic paths representing the
+The bound pname:sources are opaque basetype:XrPath values representing the
 physical controls that an action is bound to.
 An action may: be bound to multiple sources at one time, for example an
 action named actionname:hold could be bound to both the X and A buttons.

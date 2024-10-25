@@ -5,12 +5,13 @@
 include::{generated}/meta/XR_HTC_facial_tracking.adoc[]
 
 *Last Modified Date*::
-    2021-12-16
+    2024-07-26
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Kyle Chen, HTC +
-    Chris Kuo
+    Chris Kuo, HTC +
+    Andy Chen, HTC
 
 
 *Overview*
@@ -484,32 +485,32 @@ This blend shape allows the lips to pout more with a higher value.
 
 [width="80%",options="header"]
 |====
-2+|ename:XR_LIP_EXPRESSION_MOUTH_SMILE_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_SMILE_LEFT_HTC.png[width=210]| **Description** +
+2+|ename:XR_LIP_EXPRESSION_MOUTH_RAISER_LEFT_HTC
+^.^a|image::images/XR_LIP_SHAPE_MOUTH_RAISER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape raises the left side of the mouth further with a
 higher value.
 |====
 
 [width="80%",options="header"]
 |====
-2+|ename:XR_LIP_EXPRESSION_MOUTH_SMILE_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_SMILE_RIGHT_HTC.png[width=210]| **Description** +
+2+|ename:XR_LIP_EXPRESSION_MOUTH_RAISER_RIGHT_HTC
+^.^a|image::images/XR_LIP_SHAPE_MOUTH_RAISER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape raises the right side of the mouth further with a
 higher value.
 |====
 
 [width="80%",options="header"]
 |====
-2+|ename:XR_LIP_EXPRESSION_MOUTH_SAD_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_SAD_LEFT_HTC.png[width=210]| **Description** +
+2+|ename:XR_LIP_EXPRESSION_MOUTH_STRETCHER_LEFT_HTC
+^.^a|image::images/XR_LIP_SHAPE_MOUTH_STRETCHER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape lowers the left side of the mouth further with a
 higher value.
 |====
 
 [width="80%",options="header"]
 |====
-2+|ename:XR_LIP_EXPRESSION_MOUTH_SAD_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_SAD_RIGHT_HTC.png[width=210]| **Description** +
+2+|ename:XR_LIP_EXPRESSION_MOUTH_STRETCHER_RIGHT_HTC
+^.^a|image::images/XR_LIP_SHAPE_MOUTH_STRETCHER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape lowers the right side of the mouth further with a
 higher value.
 |====
@@ -774,3 +775,15 @@ elink:XrStructureType enumeration is extended with:
 
 * Revision 2, 2022-09-22 (Andy Chen)
 ** Correct the range of the blink blend shapes.
+
+* Revision 3, 2024-07-26 (Andy Chen)
+** Change expression naming convention: rename
+   `XR_LIP_EXPRESSION_MOUTH_SMILE_RIGHT_HTC` to
+   `XR_LIP_EXPRESSION_MOUTH_RAISER_RIGHT_HTC`,
+   `XR_LIP_EXPRESSION_MOUTH_SMILE_LEFT_HTC` to
+   `XR_LIP_EXPRESSION_MOUTH_RAISER_LEFT_HTC`,
+   `XR_LIP_EXPRESSION_MOUTH_SAD_RIGHT_HTC` to
+   `XR_LIP_EXPRESSION_MOUTH_STRETCHER_RIGHT_HTC` and
+   `XR_LIP_EXPRESSION_MOUTH_SAD_LEFT_HTC` to
+   `XR_LIP_EXPRESSION_MOUTH_STRETCHER_LEFT_HTC`, providing the old names as
+   compatibility aliases.
