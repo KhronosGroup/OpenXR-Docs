@@ -1,0 +1,815 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_colocation_discovery.adoc[]
+
+*Last Modified Date*::
+    2024-06-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    TJ Gilbrough, Meta Platforms +
+    Lionel Reyero, Meta Platforms +
+    Scott Dewald, Meta Platforms
+
+
+==== Overview
+
+Colocation discovery is a capability available through the
+apiext:XR_META_colocation_discovery extension that allows apps to discover
+physically colocated devices running the same app.
+
+In the context of this extension, "the same application" means "bytewise
+identical Android package name" when running on an Android-based platform.
+
+==== Check compatibility
+
+[open,refpage='XrSystemColocationDiscoveryPropertiesMETA',desc='Colocation discovery system properties',type='structs',xrefs='']
+--
+
+The slink:XrSystemColocationDiscoveryPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemColocationDiscoveryPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsColocationDiscovery is an basetype:XrBool32 specifying if
+  colocation discovery (and relatedly, colocation advertisement) is
+  supported.
+****
+
+An application can: inspect whether the system is capable of colocation
+advertisement and discovery by extending the slink:XrSystemProperties with
+slink:XrSystemColocationDiscoveryPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsColocationDiscovery,
+the runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for all
+functions in the apiext:XR_META_colocation_discovery extension.
+
+Colocation advertisement controls whether a device is discoverable using
+colocation discovery, so the term "colocation discovery" on its own is used
+here to refer to the combined capability of colocation advertisement and
+colocation discovery.
+
+include::{generated}/validity/structs/XrSystemColocationDiscoveryPropertiesMETA.adoc[]
+--
+
+==== Controlling Colocation Advertisement
+
+The ability for other physically colocated devices running the same
+application to discover the current device is known as "colocation
+advertisement".
+The flink:xrStartColocationAdvertisementMETA function requests starting
+colocation advertisement, while the flink:xrStopColocationAdvertisementMETA
+requests that colocation advertisement stop.
+Both of these functions initiate an asynchronous operation similar to that
+found in extensions built on apiext:XR_FB_spatial_entity, with their
+asynchronous completion results returned in an event structure
+(slink:XrEventDataStartColocationAdvertisementCompleteMETA and
+slink:XrEventDataStopColocationAdvertisementCompleteMETA, respectively).
+
+Colocation advertisement may: stop without being explicitly requested for a
+variety of reasons.
+If it stops, whether subsequent to an
+flink:xrStopColocationAdvertisementMETA call or not, an
+slink:XrEventDataColocationAdvertisementCompleteMETA event is queued.
+
+The following figures show examples of the advertisement process in two
+general circumstances: normal use and the case where the runtime stops
+advertisement before the application requests it.
+
+.XR_META_colocation_discovery Advertisement Process - Normal
+[#XR_META_colocation_discovery-advertisement-normal]
+image::images/XR_META_colocation_discovery-advertisement-normal.svg["Typical Advertisement Process", opts=inline, align="center"]
+
+.XR_META_colocation_discovery Advertisement Process - runtime needs to stop advertisement
+[#XR_META_colocation_discovery-advertisement-runtime-stop]
+image::images/XR_META_colocation_discovery-advertisement-runtime-stop.svg["Advertisement Process Stopped Early", opts=inline, align="center"]
+
+[open,refpage='xrStartColocationAdvertisementMETA',type='protos',desc='Start colocation visibility',xrefs='XrEventDataStartColocationAdvertisementCompleteMETA']
+--
+The flink:xrStartColocationAdvertisementMETA function is defined as:
+
+include::{generated}/api/protos/xrStartColocationAdvertisementMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the colocation discovery will
+  be active.
+* pname:info is a pointer to slink:XrColocationAdvertisementStartInfoMETA
+  structure to specify the visibility configuration.
+* pname:advertisementRequestId is an output parameter, and the variable it
+  points to will be populated with the ID of this asynchronous request.
+  Note that this ID is used for associating additional events with this
+  original call, in addition to the typical completion event.
+****
+
+The flink:xrStartColocationAdvertisementMETA function requests that the
+current device become discoverable by other physically colocated devices
+running the same application.
+
+If the system does not support colocation advertisement and discovery, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrStartColocationAdvertisementMETA.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemColocationDiscoveryPropertiesMETA::pname:supportsColocationDiscovery
+when the function flink:xrGetSystemProperties is called, so that the
+application knows to not use this functionality.
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataStartColocationAdvertisementCompleteMETA.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataStartColocationAdvertisementCompleteMETA event
+identified with a `advertisementRequestId` matching the
+pname:advertisementRequestId value output by this function, referred to as
+the "corresponding completion event."
+
+(This implies that if the runtime returns anything other than
+ename:XR_SUCCESS, the runtime must: not queue any
+slink:XrEventDataStartColocationAdvertisementCompleteMETA events with
+`advertisementRequestId` field matching the pname:advertisementRequestId
+populated by this function.)
+
+If the asynchronous operation is successful, in the corresponding completion
+event, the runtime must: set the
+slink:XrEventDataStartColocationAdvertisementCompleteMETA::pname:result
+field to ename:XR_SUCCESS.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataStartColocationAdvertisementCompleteMETA::pname:result
+field to an appropriate error code instead of ename:XR_SUCCESS.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See
+xref:openxr.adoc#XR_META_colocation_discovery-advertisement-normal[xrefstyle=short]
+and
+xref:openxr.adoc#XR_META_colocation_discovery-advertisement-runtime-stop[xrefstyle=short]
+for sample flows incorporating use of
+flink:xrStartColocationAdvertisementMETA.
+
+endif::doctype-manpage[]
+
+
+include::{generated}/validity/protos/xrStartColocationAdvertisementMETA.adoc[]
+--
+
+[open,refpage='XrColocationAdvertisementStartInfoMETA',desc='Information about start colocation visibility request',type='structs',xrefs='xrStartColocationAdvertisementMETA XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META']
+--
+
+The slink:XrColocationAdvertisementStartInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrColocationAdvertisementStartInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:bufferSize is the count of bytes used in the pname:buffer array.
+  If pname:bufferSize is greater than
+  ename:XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META, then the runtime must:
+  return ename:XR_ERROR_VALIDATION_FAILURE.
+  The maximum supported count is
+  ename:XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META.
+* pname:buffer is a byte array which allows the application to define app
+  buffer.
+  It is the advertisement payload.
+****
+
+slink:XrColocationAdvertisementStartInfoMETA is the input data for
+flink:xrStartColocationAdvertisementMETA.
+Implicitly, while the application has an active advertisement, the runtime
+will retain a copy of the slink:XrColocationAdvertisementStartInfoMETA
+submitted with flink:xrStartColocationAdvertisementMETA.
+
+include::{generated}/validity/structs/XrColocationAdvertisementStartInfoMETA.adoc[]
+--
+
+[open,refpage='XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META',desc='Maximum advertisement data size',type='enums',xrefs='xrStartColocationAdvertisementMETA XrColocationAdvertisementStartInfoMETA']
+--
+include::{generated}/api/enums/XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META.adoc[]
+
+ename:XR_MAX_COLOCATION_DISCOVERY_BUFFER_SIZE_META is the maximum size of
+data supported in a colocation advertisement.
+--
+
+[open,refpage='XrEventDataStartColocationAdvertisementCompleteMETA',desc='Start colocation visibility complete event',type='structs',xrefs='xrStartColocationAdvertisementMETA XrColocationAdvertisementStartInfoMETA']
+--
+
+The slink:XrEventDataStartColocationAdvertisementCompleteMETA event
+structure is defined as:
+
+include::{generated}/api/structs/XrEventDataStartColocationAdvertisementCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:advertisementRequestId is an basetype:XrAsyncRequestIdFB that
+  identifies which request this event is in response to.
+  The runtime must: ensure this value matches a pname:advertisementRequestId
+  returned during an flink:xrStartColocationAdvertisementMETA call.
+* pname:result is an elink:XrResult that specifies the request result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE,
+  ename:XR_COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META,
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META, and
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META.
+  If the application already has an active colocation advertisement, the
+  runtime must: return
+  ename:XR_COLOCATION_DISCOVERY_ALREADY_ADVERTISING_META in this field.
+* pname:advertisementUuid is an slink:XrUuid which is discoverable by other
+  physically colocated devices running the same application.
+  The runtime must: return a unique slink:XrUuid which has not been returned
+  in a previous slink:XrEventDataStartColocationAdvertisementCompleteMETA
+  event, if pname:result is ename:XR_SUCCESS.
+****
+
+This event conveys the results of the asynchronous operation started by
+flink:xrStopColocationAdvertisementMETA.
+
+
+include::{generated}/validity/structs/XrEventDataStartColocationAdvertisementCompleteMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataColocationAdvertisementCompleteMETA',desc='advertisement complete event',type='structs',xrefs='xrStartColocationAdvertisementMETA xrStopColocationAdvertisementMETA']
+--
+
+The slink:XrEventDataColocationAdvertisementCompleteMETA structure is
+defined as:
+
+include::{generated}/api/structs/XrEventDataColocationAdvertisementCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:advertisementRequestId is an basetype:XrAsyncRequestIdFB specifying
+  the original start advertisement async request id.
+  The runtime must: return a value which matches a previously returned
+  pname:advertisementRequestId value from an
+  flink:xrStartColocationAdvertisementMETA request.
+* pname:result is an elink:XrResult representing the advertisement process
+  result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE, and
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META.
+****
+
+The runtime must: queue exactly one
+slink:XrEventDataColocationAdvertisementCompleteMETA event whenever an
+active colocation advertisement is stopped.
+This includes if the colocation advertisement is stopped due to an
+application calling flink:xrStopColocationAdvertisementMETA, or the runtime
+needs to stop the colocation advertisement for any reason.
+If the colocation advertisement is stopped due to an application calling
+flink:xrStopColocationAdvertisementMETA, the runtime must: queue the
+slink:XrEventDataColocationAdvertisementCompleteMETA event before queuing
+the corresponding slink:XrEventDataStopColocationAdvertisementCompleteMETA
+event.
+When the slink:XrSession is destroyed, the runtime must: stop all active
+advertisements started from the same slink:XrSession.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-advertisement-normal[xrefstyle=short]
+and
+xref:XR_META_colocation_discovery-advertisement-runtime-stop[xrefstyle=short]
+for sample flows that show how
+slink:XrEventDataColocationAdvertisementCompleteMETA is used.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/structs/XrEventDataColocationAdvertisementCompleteMETA.adoc[]
+--
+
+[open,refpage='xrStopColocationAdvertisementMETA',type='protos',desc='Stop colocation advertisement',xrefs='xrStartColocationAdvertisementMETA XrEventDataStopColocationAdvertisementCompleteMETA']
+--
+The flink:xrStopColocationAdvertisementMETA function is defined as:
+
+include::{generated}/api/protos/xrStopColocationAdvertisementMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the colocation discovery will
+  be active.
+* pname:info is a pointer to slink:XrColocationAdvertisementStopInfoMETA
+  structure to specify the advertisement configuration.
+* pname:requestId is an output parameter, and the variable it points to will
+  be populated with the ID of this asynchronous request.
+****
+
+The application can: use the flink:xrStopColocationAdvertisementMETA
+function to disable the ability for other physically colocated devices
+running the same application to discover the current device.
+
+If the system does not support colocation advertisement and discovery, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrStopColocationAdvertisementMETA.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemColocationDiscoveryPropertiesMETA::pname:supportsColocationDiscovery
+when the function flink:xrGetSystemProperties is called, so that the
+application knows to not use this functionality.
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataStopColocationAdvertisementCompleteMETA.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataStopColocationAdvertisementCompleteMETA event
+identified with a `requestId` matching the pname:requestId value output by
+this function, referred to as the "corresponding completion event."
+
+(This implies that if the runtime returns anything other than
+ename:XR_SUCCESS, the runtime must: not queue any
+slink:XrEventDataStopColocationAdvertisementCompleteMETA events with
+`requestId` field matching the pname:requestId populated by this function.)
+
+If the asynchronous operation is successful, in the corresponding completion
+event, the runtime must: set the
+slink:XrEventDataStopColocationAdvertisementCompleteMETA::pname:result field
+to ename:XR_SUCCESS.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataStopColocationAdvertisementCompleteMETA::pname:result field
+to an appropriate error code instead of ename:XR_SUCCESS.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-advertisement-normal[xrefstyle=short]
+for a sample flow incorporating use of
+flink:xrStopColocationAdvertisementMETA.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/protos/xrStopColocationAdvertisementMETA.adoc[]
+--
+
+[open,refpage='XrColocationAdvertisementStopInfoMETA',desc='Information about stop colocation advertisement request',type='structs',xrefs='xrStopColocationAdvertisementMETA']
+--
+
+The slink:XrColocationAdvertisementStopInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrColocationAdvertisementStopInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+****
+
+include::{generated}/validity/structs/XrColocationAdvertisementStopInfoMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataStopColocationAdvertisementCompleteMETA',desc='Stop colocation advertisement complete event',type='structs',xrefs='XrColocationAdvertisementStopInfoMETA']
+--
+
+The slink:XrEventDataStopColocationAdvertisementCompleteMETA event structure
+is defined as:
+
+include::{generated}/api/structs/XrEventDataStopColocationAdvertisementCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:requestId is an basetype:XrAsyncRequestIdFB that identifies which
+  request this event is in response to.
+  The runtime must: ensure this value matches a pname:requestId returned
+  during an flink:xrStopColocationAdvertisementMETA call.
+* pname:result is an elink:XrResult that specifies the request result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE, and
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META.
+  If the application does not already have an active colocation
+  advertisement, the runtime must: return ename:XR_SUCCESS.
+****
+
+This event conveys the results of the asynchronous operation started by
+flink:xrStopColocationAdvertisementMETA.
+
+include::{generated}/validity/structs/XrEventDataStopColocationAdvertisementCompleteMETA.adoc[]
+--
+
+==== Colocation Discovery
+
+Discovering other physically colocated devices, running the same application
+and currently advertising, is known as "colocation discovery".
+It is a background process that is controlled by
+flink:xrStartColocationDiscoveryMETA and
+flink:xrStopColocationDiscoveryMETA.
+Both of these functions initiate an asynchronous operation similar to that
+found in extensions built on apiext:XR_FB_spatial_entity, with their
+asynchronous completion results returned in an event structure
+(slink:XrEventDataStartColocationDiscoveryCompleteMETA and
+slink:XrEventDataStopColocationAdvertisementCompleteMETA, respectively).
+
+Results from colocation discovery, if it is successfully started, are
+returned through a sequence of
+slink:XrEventDataColocationDiscoveryResultMETA events.
+When colocation discovery stops for any reason (application request or
+otherwise), an slink:XrEventDataColocationDiscoveryCompleteMETA event is
+enqueued.
+
+The following figures show examples of the discovery process in two general
+circumstances: normal use and the case where the runtime stops discovery
+before the application requests it.
+
+.XR_META_colocation_discovery Discovery Process - Normal
+[#XR_META_colocation_discovery-discovery-normal]
+image::images/XR_META_colocation_discovery-discovery-normal.svg["Typical Discovery Process",opts=inline, align="center"]
+
+.XR_META_colocation_discovery Discovery Process - runtime needs to stop discovery
+[#XR_META_colocation_discovery-discovery-runtime-stop]
+image::images/XR_META_colocation_discovery-discovery-runtime-stop.svg["Discovery Process Stopped Early", opts=inline, align="center"]
+
+[open,refpage='xrStartColocationDiscoveryMETA',type='protos',desc='Start colocation discovery',xrefs='XrEventDataStartColocationDiscoveryCompleteMETA']
+--
+The flink:xrStartColocationDiscoveryMETA function is defined as:
+
+include::{generated}/api/protos/xrStartColocationDiscoveryMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the colocation discovery will
+  be active.
+* pname:info is a pointer to slink:XrColocationDiscoveryStartInfoMETA
+  structure to specify the discovery request information.
+* pname:discoveryRequestId is an output parameter, and the variable it
+  points to will be populated with the ID of this asynchronous request.
+  Note that this ID is used for associating additional events with this
+  original call, in addition to the typical completion event.
+****
+
+The application can: call flink:xrStartColocationDiscoveryMETA to start
+discovering physically colocated devices.
+
+
+If the system does not support colocation advertisement and discovery, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrStartColocationDiscoveryMETA.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemColocationDiscoveryPropertiesMETA::pname:supportsColocationDiscovery
+when the function flink:xrGetSystemProperties is called, so that the
+application knows to not use this functionality.
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataStartColocationDiscoveryCompleteMETA.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataStartColocationDiscoveryCompleteMETA event
+identified with a `discoveryRequestId` matching the pname:discoveryRequestId
+value output by this function, referred to as the "corresponding completion
+event."
+
+(This implies that if the runtime returns anything other than
+ename:XR_SUCCESS, the runtime must: not queue any
+slink:XrEventDataStartColocationDiscoveryCompleteMETA events with
+`discoveryRequestId` field matching the pname:discoveryRequestId populated
+by this function.)
+
+If the asynchronous operation is successful, in the corresponding completion
+event, the runtime must: set the
+slink:XrEventDataStartColocationDiscoveryCompleteMETA::pname:result field to
+ename:XR_SUCCESS.
+The runtime may: subsequently queue zero or more
+slink:XrEventDataColocationDiscoveryResultMETA events asynchronously as the
+runtime discovers nearby advertisements.
+Once the application or runtime stops the colocation discovery, the runtime
+must: queue a single slink:XrEventDataColocationDiscoveryCompleteMETA event.
+All slink:XrEventDataColocationDiscoveryResultMETA and
+slink:XrEventDataColocationDiscoveryCompleteMETA events will identified with
+`discoveryRequestId` matching the value populated in
+pname:discoveryRequestId by flink:xrStartColocationDiscoveryMETA.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataStartColocationDiscoveryCompleteMETA::pname:result field to
+an appropriate error code instead of ename:XR_SUCCESS.
+
+If the application already has an active colocation discovery, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataStartColocationDiscoveryCompleteMETA::pname:result field to
+ename:XR_COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
+sample flows incorporating use of flink:xrStartColocationDiscoveryMETA.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/protos/xrStartColocationDiscoveryMETA.adoc[]
+--
+
+[open,refpage='XrColocationDiscoveryStartInfoMETA',desc='start discovery information',type='structs',xrefs='xrStartColocationDiscoveryMETA']
+--
+
+The slink:XrColocationDiscoveryStartInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrColocationDiscoveryStartInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+****
+
+include::{generated}/validity/structs/XrColocationDiscoveryStartInfoMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataStartColocationDiscoveryCompleteMETA',desc='Colocation discovery start complete event',type='structs',xrefs='xrStartColocationDiscoveryMETA']
+--
+
+The slink:XrEventDataStartColocationDiscoveryCompleteMETA structure is
+defined as:
+
+include::{generated}/api/structs/XrEventDataStartColocationDiscoveryCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:discoveryRequestId is an basetype:XrAsyncRequestIdFB specifying the
+  original start discovery async request id.
+  The runtime must: return a value which matches a previously returned
+  pname:discoveryRequestId value from an
+  flink:xrStartColocationDiscoveryMETA request.
+* pname:result is an elink:XrResult representing the discovery process
+  result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE,
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NETWORK_FAILED_META,
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META, and
+  ename:XR_COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META.
+  If the application already has an active colocation discovery, the runtime
+  must: return ename:XR_COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META in
+  slink:XrEventDataStartColocationDiscoveryCompleteMETA::pname:result.
+****
+
+This event conveys the results of the asynchronous operation started by
+flink:xrStartColocationDiscoveryMETA.
+
+include::{generated}/validity/structs/XrEventDataStartColocationDiscoveryCompleteMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataColocationDiscoveryResultMETA',desc='Colocation discovery result',type='structs',xrefs='xrStartColocationDiscoveryMETA']
+--
+
+The slink:XrEventDataColocationDiscoveryResultMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataColocationDiscoveryResultMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:discoveryRequestId is an basetype:XrAsyncRequestIdFB specifying the
+  original start discovery async request id.
+  The runtime must: return a value which matches a previously returned
+  pname:discoveryRequestId value from an
+  flink:xrStartColocationDiscoveryMETA request.
+* pname:advertisementUuid is an slink:XrUuid of the discovered colocated
+  application.
+* pname:bufferSize is the count of bytes used in the pname:buffer array.
+* pname:buffer is a byte array which is the application may: set when the
+  application starts the advertisement.
+****
+
+pname:advertisementUuid and pname:buffer are both considered the payload of
+colocated advertisements.
+The value of pname:advertisementUuid matches the value returned in
+slink:XrEventDataStartColocationAdvertisementCompleteMETA::pname:advertisementUuid
+on the advertising device.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
+sample flows that show how slink:XrEventDataColocationDiscoveryResultMETA is
+used.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/structs/XrEventDataColocationDiscoveryResultMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataColocationDiscoveryCompleteMETA',desc='discovery complete event',type='structs',xrefs='xrStartColocationDiscoveryMETA xrStopColocationDiscoveryMETA']
+--
+
+The slink:XrEventDataColocationDiscoveryCompleteMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrEventDataColocationDiscoveryCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:discoveryRequestId is an basetype:XrAsyncRequestIdFB specifying the
+  original start discovery async request id.
+  The runtime must: return a value which matches a previously returned
+  pname:discoveryRequestId value from an
+  flink:xrStartColocationDiscoveryMETA request.
+* pname:result is an elink:XrResult representing the discovery process
+  result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE, and
+  ename:XR_ERROR_COLOCATION_DISCOVERY_NO_DISCOVERY_METHOD_META.
+****
+
+The runtime must: queue exactly one
+slink:XrEventDataColocationDiscoveryCompleteMETA event whenever an active
+colocation discovery is stopped.
+This includes if the colocation discovery is stopped due to an application
+calling flink:xrStopColocationDiscoveryMETA, or the runtime needs to stop
+the colocation discovery for any reason.
+When the slink:XrSession is destroyed, the runtime must: stop all active
+advertisements started from the same slink:XrSession.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
+sample flows that show how slink:XrEventDataColocationDiscoveryCompleteMETA
+is used.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/structs/XrEventDataColocationDiscoveryCompleteMETA.adoc[]
+--
+
+[open,refpage='xrStopColocationDiscoveryMETA',type='protos',desc='Stop ongoing discovery process',xrefs='xrStartColocationDiscoveryMETA']
+--
+The flink:xrStopColocationDiscoveryMETA function is defined as:
+
+include::{generated}/api/protos/xrStopColocationDiscoveryMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the colocation discovery will
+  be active.
+* pname:info is a pointer to slink:XrColocationDiscoveryStopInfoMETA
+  structure to specify the stop discovery request information.
+* pname:requestId is an output parameter, and the variable it points to will
+  be populated with the ID of this asynchronous request.
+****
+
+The application can: call flink:xrStopColocationDiscoveryMETA to stop an
+ongoing discovery process that was started by
+flink:xrStartColocationDiscoveryMETA.
+
+If the system does not support colocation advertisement and discovery, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrStopColocationDiscoveryMETA.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemColocationDiscoveryPropertiesMETA::pname:supportsColocationDiscovery
+when the function flink:xrGetSystemProperties is called, so that the
+application knows to not use this functionality.
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataStopColocationDiscoveryCompleteMETA.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataStopColocationDiscoveryCompleteMETA event
+identified with a `requestId` matching the pname:requestId value output by
+this function, referred to as the "corresponding completion event."
+
+(This implies that if the runtime returns anything other than
+ename:XR_SUCCESS, the runtime must: not queue any
+slink:XrEventDataStopColocationDiscoveryCompleteMETA events with `requestId`
+field matching the pname:requestId populated by this function.)
+
+If the asynchronous operation is successful, in the corresponding completion
+event, the runtime must: set the
+slink:XrEventDataStopColocationDiscoveryCompleteMETA::pname:result field to
+ename:XR_SUCCESS.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataStopColocationDiscoveryCompleteMETA::pname:result field to
+an appropriate error code instead of ename:XR_SUCCESS.
+
+ifndef::doctype-manpage[]
+// These links break when extracted to a manpage without additional magic
+
+See xref:XR_META_colocation_discovery-discovery-normal[xrefstyle=short] for
+a sample flow incorporating use of flink:xrStopColocationDiscoveryMETA.
+
+endif::doctype-manpage[]
+
+include::{generated}/validity/protos/xrStopColocationDiscoveryMETA.adoc[]
+--
+
+[open,refpage='XrColocationDiscoveryStopInfoMETA',desc='stop discovery information',type='structs',xrefs='xrStopColocationDiscoveryMETA']
+--
+
+The slink:XrColocationDiscoveryStopInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrColocationDiscoveryStopInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+****
+
+include::{generated}/validity/structs/XrColocationDiscoveryStopInfoMETA.adoc[]
+--
+
+[open,refpage='XrEventDataStopColocationDiscoveryCompleteMETA',desc='Colocation discovery stop complete event',type='structs',xrefs='xrStopColocationDiscoveryMETA']
+--
+
+The slink:XrEventDataStopColocationDiscoveryCompleteMETA structure is
+defined as:
+
+include::{generated}/api/structs/XrEventDataStopColocationDiscoveryCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:requestId is an basetype:XrAsyncRequestIdFB that identifies which
+  request this event is in response to.
+  The runtime must: ensure this value matches a pname:requestId returned
+  during an flink:xrStopColocationDiscoveryMETA call.
+* pname:result is an elink:XrResult representing the discovery process
+  result.
+  The valid pname:result values are: ename:XR_SUCCESS and
+  ename:XR_ERROR_RUNTIME_FAILURE.
+  If the application does not already have an active colocation discovery,
+  the runtime must: return ename:XR_SUCCESS.
+****
+
+This event conveys the results of the asynchronous operation started by
+flink:xrStopColocationDiscoveryMETA.
+
+include::{generated}/validity/structs/XrEventDataStopColocationDiscoveryCompleteMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_colocation_discovery.adoc[leveloffset=1]
+
+
+*Version History*
+
+* Revision 1, 2024-06-15 (TJ Gilbrough)
+** Initial extension description

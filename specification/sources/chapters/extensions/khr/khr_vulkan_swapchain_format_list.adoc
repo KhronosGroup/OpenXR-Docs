@@ -5,12 +5,13 @@
 include::{generated}/meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
 
 *Last Modified Date*::
-    2020-01-01
+    2024-11-13
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Paul Pedriana, Oculus +
-    Dan Ginsburg, Valve
+    Dan Ginsburg, Valve +
+    Jakob Bornecrantz, NVIDIA +
 
 *Overview*
 
@@ -31,7 +32,8 @@ ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT bit set.
 
 Runtimes implementing this extension must: support the
 apiext:XR_KHR_vulkan_enable or the apiext:XR_KHR_vulkan_enable2 extension.
-When apiext:XR_KHR_vulkan_enable is used, the runtime must: add
+When an application enables and uses apiext:XR_KHR_vulkan_enable2 as the
+graphics binding extension, the runtime must: add
 ename:VK_KHR_image_format_list to the list of extensions enabled in
 flink:xrCreateVulkanDeviceKHR.
 
@@ -85,3 +87,6 @@ include::{generated}/validity/structs/XrVulkanSwapchainFormatListCreateInfoKHR.a
 ** Update for `XR_KHR_vulkan_enable2`
 * Revision 4, 2021-01-21 (Rylie Pavlik, Collabora, Ltd.)
 ** Fix reference to the mutable-format bit in Vulkan.
+* Revision 5, 2024-11-13 (Jakob Bornecrantz, NVIDIA)
+** Fix correct Vulkan enable extension being referenced.
+** Clarify `XR_KHR_vulkan_enable2` being used by the app.

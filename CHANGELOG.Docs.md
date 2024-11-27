@@ -17,6 +17,64 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.43 (2024-11-27)
+
+This release has a few clarifications and fixes, as well as several new vendor
+extensions.
+
+- Registry
+  - Bump version of `XR_KHR_vulkan_swapchain_format_list` and note that it depends
+    on either `XR_KHR_vulkan_enable` or `XR_KHR_vulkan_enable2`.
+    ([internal MR 3418](https://gitlab.khronos.org/openxr/openxr/merge_requests/3418))
+  - Fix: Correctly mark `XR_FB_touch_controller_pro` and
+    `XR_META_touch_controller_plus` as promoted to 1.1.
+    ([internal MR 3586](https://gitlab.khronos.org/openxr/openxr/merge_requests/3586))
+  - Improvement: Small XML formatting/organization cleanups.
+    ([internal MR 3610](https://gitlab.khronos.org/openxr/openxr/merge_requests/3610))
+  - New vendor extension: `XR_ML_facial_expression`
+    ([internal MR 3100](https://gitlab.khronos.org/openxr/openxr/merge_requests/3100))
+  - New vendor extension: `XR_META_passthrough_layer_resumed_event`
+    ([internal MR 3106](https://gitlab.khronos.org/openxr/openxr/merge_requests/3106))
+  - New vendor extensions: `XR_META_colocation_discovery`,
+    `XR_META_spatial_entity_sharing`, and `XR_META_spatial_entity_group_sharing`
+    ([internal MR 2782](https://gitlab.khronos.org/openxr/openxr/merge_requests/2782))
+  - Reservation: Reserve numbers for spatial extensions.
+    ([internal MR 3577](https://gitlab.khronos.org/openxr/openxr/merge_requests/3577))
+- Specification
+  - Clarify: Improve the Input and Semantic Paths chapters by reducing the number
+    of undefined or conflated terms used and improving consistency.
+    ([internal MR 3443](https://gitlab.khronos.org/openxr/openxr/merge_requests/3443))
+  - Fix: Correct extension reference in `XR_KHR_vulkan_swapchain_format_list` and
+    clarify "being used" to not just mean "enabled".
+    ([internal MR 3418](https://gitlab.khronos.org/openxr/openxr/merge_requests/3418))
+  - Fix: The parent of an action space is a XrSession.
+    ([internal MR 3601](https://gitlab.khronos.org/openxr/openxr/merge_requests/3601),
+    [OpenXR-Docs issue 178](https://github.com/KhronosGroup/OpenXR-Docs/issues/178),
+    [internal issue 2395](https://gitlab.khronos.org/openxr/openxr/issues/2395))
+  - Improvement: Clarify XR_EXT_future code example for two-call idiom.
+    ([internal MR 3578](https://gitlab.khronos.org/openxr/openxr/merge_requests/3578))
+  - Improvement: Note the changes made when promoting `XR_FB_touch_controller_pro`
+    and `XR_META_touch_controller_plus` to OpenXR 1.1.
+    ([internal MR 3586](https://gitlab.khronos.org/openxr/openxr/merge_requests/3586))
+  - New vendor extension: `XR_META_passthrough_layer_resumed_event` allowing
+    applications to receive feedback from `XR_FB_passthrough`
+    ([internal MR 3106](https://gitlab.khronos.org/openxr/openxr/merge_requests/3106))
+  - New vendor extension specification: `XR_META_colocation_discovery` - allowing
+    advertisement and discovery of other devices, physically colocated, running the
+    same app.
+    ([internal MR 2782](https://gitlab.khronos.org/openxr/openxr/merge_requests/2782),
+    [internal MR 3604](https://gitlab.khronos.org/openxr/openxr/merge_requests/3604),
+    [internal MR 3605](https://gitlab.khronos.org/openxr/openxr/merge_requests/3605))
+  - New vendor extension specification: `XR_ML_facial_expression` providing access
+    to face tracking on supported devices, with a custom subset of blend shapes
+    possible.
+    ([internal MR 3100](https://gitlab.khronos.org/openxr/openxr/merge_requests/3100))
+  - New vendor extension specifications: `XR_META_spatial_entity_sharing`, and
+    `XR_META_spatial_entity_group_sharing` - an updated way to share vendor-
+    specific spatial entities.
+    ([internal MR 2782](https://gitlab.khronos.org/openxr/openxr/merge_requests/2782),
+    [internal MR 3605](https://gitlab.khronos.org/openxr/openxr/merge_requests/3605))
+
 ## OpenXR Specification 1.1.42 (2024-10-25)
 
 This release contains a collection of specification clarifications, an updated

@@ -641,12 +641,15 @@ if (futureReady) {
   CHK_XR(result); // Result of the complete function
   CHK_XR(completion.futureResult);
 
-  std::vector<float> floatValues(completion.elementCapacityOutput);
-  completion.elementCapacityInput = (uint32_t)floatValues.size();
-  completion.elements = floatValues.data();
+  // If elementCapacityOutput is 0, then the future is now complete / invalid
+  if (completion.elementCapacityOutput != 0) {
+    std::vector<float> floatValues(completion.elementCapacityOutput);
+    completion.elementCapacityInput = (uint32_t)floatValues.size();
+    completion.elements = floatValues.data();
 
-  result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
-  CHK_XR(result); // Result of the complete function
+    result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
+    CHK_XR(result); // Result of the complete function
+  }
 }
 
 // completion.elements has now been filled with values by the runtime.

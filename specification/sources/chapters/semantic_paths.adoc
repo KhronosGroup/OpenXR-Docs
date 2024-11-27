@@ -278,7 +278,7 @@ Those paths are as follows.
 
 
 [[semantic-paths-user]]
-==== /user paths
+==== Top level /user paths
 
 Some paths are used to refer to entities that are filling semantic roles in
 the system.
@@ -320,14 +320,20 @@ pathname:/user/hand/right.
 [[semantic-paths-input]]
 ==== Input subpaths
 
-Devices on the source side of the input system need to define paths for each
-component that can be bound to an action.
+Interaction profiles define paths for each component that can be bound to an
+action.
 This section describes the naming conventions for those input components.
-Runtimes must: ignore input source paths that use identifiers and component
+Runtimes must: ignore input subpaths that use identifiers and component
 names that do not appear in this specification or otherwise do not follow
 the pattern specified below.
+Input subpaths further qualify top-level pathname:/user paths to form
+binding paths.
+For this reason, they are often shown starting with ...
+or omitting path components before `/input` or `/output` entirely.
+The input subpaths considered valid when combined with any given top-level
+pathname:/user path vary by interaction profile.
 
-Each input source path must: match the following pattern:
+Each input subpath must: match the following pattern:
 
 * subpathname:/input/<identifier>[_<location>][/<component>]
 

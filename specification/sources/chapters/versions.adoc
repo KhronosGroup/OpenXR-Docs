@@ -76,6 +76,53 @@ this is optional: like the other view configuration types.
 Use flink:xrEnumerateViewConfigurations to determine if it is provided,
 rather than using the presence or absence of the extension.
 
+===== Differences Relative to apiext:XR_FB_touch_controller_pro
+
+The interaction profile path was changed from
+pathname:/interaction_profiles/facebook/touch_controller_pro to
+pathname:/interaction_profiles/meta/touch_pro_controller.
+Note the updated company name and different word order in the device name
+level.
+
+The following input/output subpaths were renamed when changing to this new
+interaction profile path:
+
+* subpathname:/input/stylus_fb/force -> subpathname:/input/stylus/force
+* subpathname:/input/trigger/proximity_fb ->
+  subpathname:/input/trigger/proximity
+* subpathname:/output/haptic_trigger_fb ->
+  subpathname:/output/haptic_trigger
+* subpathname:/output/haptic_thumb_fb -> subpathname:/output/haptic_thumb
+* subpathname:/input/thumb_fb/proximity_fb ->
+  subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/trigger/curl_fb ->
+  subpathname:/input/trigger_curl/value
+* subpathname:/input/trigger/slide_fb ->
+  subpathname:/input/trigger_slide/value
+
+The last two changes listed moved from being components on the trigger
+identifier to being independent identifiers in order to clarify how they
+relate to actions bound to other trigger components with regards to action
+priority.
+
+===== Differences Relative to apiext:XR_META_touch_controller_plus
+
+The interaction profile path was changed from
+pathname:/interaction_profiles/meta/touch_controller_plus to
+pathname:/interaction_profiles/meta/touch_plus_controller.
+Note the different word order in the device name level.
+
+The following input subpaths were renamed when changing to this new
+interaction profile path:
+* subpathname:/input/trigger/proximity_meta ->
+  subpathname:/input/trigger/proximity
+* subpathname:/input/thumb_meta/proximity_meta ->
+  subpathname:/input/thumb_resting_surfaces/proximity
+* subpathname:/input/trigger/curl_meta ->
+  subpathname:/input/trigger_curl/value
+* subpathname:/input/trigger/slide_meta ->
+  subpathname:/input/trigger_slide/value
+
 ==== Additional OpenXR 1.1 Changes
 
 [[versions-1.1-changes]]

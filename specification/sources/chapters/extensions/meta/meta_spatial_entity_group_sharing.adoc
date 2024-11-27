@@ -1,0 +1,148 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_group_sharing.adoc[]
+
+*Last Modified Date*::
+    2024-06-14
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    TJ Gilbrough, Meta Platforms +
+    Jiawen Zhang, Meta Platforms +
+    Scott Dewald, Meta Platforms +
+    Ribel Fares, Meta Platforms
+
+==== Overview
+
+The apiext:XR_META_spatial_entity_group_sharing extension enables
+applications to share spatial entities to an application-specified group
+UUID.
+An application can: share spatial entities with one or more group UUIDs, and
+query for spatial entities previously shared with a group UUID.
+A Group UUID is any application provided UUID.
+The Group will be established for the application simply by sharing spatial
+entities to it.
+
+==== Check compatibility
+[open,refpage='XrSystemSpatialEntityGroupSharingPropertiesMETA',desc='Group sharing system properties',type='structs',xrefs='xrGetSystemProperties XrSystemProperties']
+--
+
+The slink:XrSystemSpatialEntityGroupSharingPropertiesMETA structure is
+defined as:
+
+include::{generated}/api/structs/XrSystemSpatialEntityGroupSharingPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialEntityGroupSharing is an basetype:XrBool32 specifying
+  if group sharing is supported.
+****
+
+An application can: inspect whether the system is capable of group based
+sharing by extending the slink:XrSystemProperties with
+slink:XrSystemSpatialEntityGroupSharingPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+In order to use slink:XrShareSpacesRecipientGroupsMETA with
+flink:xrShareSpacesMETA, the system must: also support
+apiext:XR_META_spatial_entity_sharing.
+Please see apiext:XR_META_spatial_entity_sharing's section for how to check
+if apiext:XR_META_spatial_entity_sharing is supported.
+
+In order to use slink:XrSpaceGroupUuidFilterInfoMETA with
+flink:xrQuerySpacesFB, the system must: also support
+apiext:XR_FB_spatial_entity_query.
+Please see apiext:XR_FB_spatial_entity_query's section for how to check if
+apiext:XR_FB_spatial_entity_query is supported.
+
+include::{generated}/validity/structs/XrSystemSpatialEntityGroupSharingPropertiesMETA.adoc[]
+--
+
+==== Sharing Spaces to a Group UUID
+An application can: share spatial entities with any application provided
+UUID.
+
+Once spatial entities are shared with this group UUID, the application can:
+query for spatial entities previously shared with this group UUID.
+
+Applications can: share multiple spatial entities to the same group UUID.
+
+Spatial entities will remain shared with the Group UUID for 30 days since
+the last successful share.
+
+Any logged-in user using the same application may query for spatial entities
+shared with the Group UUID.
+
+[open,refpage='XrShareSpacesRecipientGroupsMETA',desc='Information about the share spaces recipient',type='structs']
+--
+
+The slink:XrShareSpacesRecipientGroupsMETA structure is defined as:
+
+include::{generated}/api/structs/XrShareSpacesRecipientGroupsMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:groupCount is the number of elements in the pname:groups list.
+  The maximum supported count in a single request is 16.
+* pname:groups is a list of slink:XrUuid defined by the application, which
+  the spaces will be shared with.
+****
+
+slink:XrShareSpacesRecipientGroupsMETA implements the
+slink:XrShareSpacesRecipientBaseHeaderMETA base type.
+Where flink:xrShareSpacesMETA specifies that a valid structure based on
+slink:XrShareSpacesRecipientBaseHeaderMETA is to be passed, a valid
+slink:XrShareSpacesRecipientGroupsMETA structure may: be passed.
+
+include::{generated}/validity/structs/XrShareSpacesRecipientGroupsMETA.adoc[]
+--
+
+==== Query Spaces Shared with a Group UUID
+
+[open,refpage='XrSpaceGroupUuidFilterInfoMETA',type='structs',desc='Filters for entities with specific unique identifiers',xrefs='XrSpaceFilterInfoBaseHeaderFB XrSpaceQueryInfoFB']
+--
+The slink:XrSpaceGroupUuidFilterInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceGroupUuidFilterInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:groupUuid is an slink:XrUuid specifying which group UUID that the
+  application wants to query for spaces shared within.
+****
+
+This structure is a space query filter for use with query functions
+introduced in the apiext:XR_FB_spatial_entity_query extension.
+
+To query spaces shared with a group, the application can: include the
+slink:XrSpaceGroupUuidFilterInfoMETA filter in the query filters when
+calling flink:xrQuerySpacesFB.
+
+If slink:XrSpaceGroupUuidFilterInfoMETA is passed into flink:xrQuerySpacesFB
+and the group UUID is not found by the runtime, the runtime must: return an
+ename:XR_ERROR_SPACE_GROUP_NOT_FOUND_META as the
+slink:XrEventDataSpaceQueryCompleteFB::pname:result.
+
+include::{generated}/validity/structs/XrSpaceGroupUuidFilterInfoMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_spatial_entity_group_sharing.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2024-06-14 (TJ Gilbrough)
+** Initial extension description

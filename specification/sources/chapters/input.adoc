@@ -599,9 +599,10 @@ include::{generated}/api/structs/XrActionSuggestedBinding.adoc[]
 * pname:action is the slink:XrAction handle for an action
 * pname:binding is the basetype:XrPath of a binding for the action specified
   in pname:action.
-  This path is any top level user path plus input source path, for example
+  This "binding path" is any top level pathname:/user path plus an
+  applicable <<semantic-paths-input,input subpath>>, for example
   pathname:/user/hand/right/input/trigger/click.
-  See <<input-suggested-bindings, suggested bindings>> for more details.
+  See <<input-suggested-bindings>> for more details.
 ****
 
 include::{generated}/validity/structs/XrActionSuggestedBinding.adoc[]

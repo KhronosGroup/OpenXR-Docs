@@ -1,0 +1,81 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_passthrough_layer_resumed_event.adoc[]
+
+*Last Modified Date*::
+    2023-12-12
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Ante Trbojevic, Meta Platforms +
+
+==== Overview
+
+This extension defines an event that is emitted once a passthrough layer
+(created using apiext:XR_FB_passthrough) is resumed and ready for displaying
+after a resume command or when the passthrough layer was created with
+ename:XR_PASSTHROUGH_IS_RUNNING_AT_CREATION_BIT_FB.
+
+The functions flink:xrPassthroughLayerResumeFB and
+flink:xrCreatePassthroughLayerFB from apiext:XR_FB_passthrough are
+asynchronous without any guarantees on when their effect will be visible on
+the display.
+Runtimes may: asynchronously perform operations which may: take several
+frames to complete, such as turning on sensor hardware.
+Runtimes queue this event under the aforementioned conditions when this
+extension is requested during instance creation.
+
+Unlike most extensions, to start receiving the event, an app only needs to
+enable this extension.
+
+This extension depends on apiext:XR_FB_passthrough.
+
+==== New Event
+[open,refpage='XrEventDataPassthroughLayerResumedMETA',type='structs',desc='An event that is triggered after a passthrough layer is resumed by client.',xrefs='xrPollEvent XrEventDataBaseHeader']
+--
+
+The slink:XrEventDataPassthroughLayerResumedMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataPassthroughLayerResumedMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:layer is an slink:XrPassthroughLayerFB for which the event has been
+  triggered.
+****
+
+Runtimes must: queue the event exactly once when first presenting
+passthrough after an app successfully calls one of the following:
+
+* flink:xrPassthroughLayerResumeFB
+* flink:xrCreatePassthroughLayerFB with flag
+  ename:XR_PASSTHROUGH_IS_RUNNING_AT_CREATION_BIT_FB set
+
+The passthrough layer state is reset when the app calls
+flink:xrPassthroughLayerPauseFB.
+
+Runtimes must: queue the event again, if flink:xrPassthroughLayerPauseFB is
+followed by flink:xrPassthroughLayerResumeFB.
+During the transition from paused to resumed state, the event is queued
+exactly once when passthrough has been presented for the first time.
+If the passthrough feature is not active during the transition, for example
+because it has been paused using flink:xrPassthroughPauseFB, the event is
+queued when passthrough becomes active.
+
+include::{generated}/validity/structs/XrEventDataPassthroughLayerResumedMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_passthrough_layer_resumed_event.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2023-05-31 (Ante Trbojevic)
+** Initial extension description

@@ -1,0 +1,207 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_sharing.adoc[]
+
+*Last Modified Date*::
+    2024-06-14
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    TJ Gilbrough, Meta Platforms +
+    Jiawen Zhang, Meta Platforms +
+    Scott Dewald, Meta Platforms
+
+
+==== Overview
+
+The apiext:XR_META_spatial_entity_sharing extension enables applications to
+share spatial entities.
+
+This base extension provides a generic space sharing endpoint.
+This extension depends on other extensions (such as
+apiext:XR_META_spatial_entity_group_sharing) to define concrete "recipient
+info" structures, which are passed into the generic endpoint introduced in
+this extension.
+
+The scope/lifetime of the sharing action is dependent on the recipient type
+of the sharing.
+Therefore, the scope/lifetime of the sharing action is defined in the
+extensions which provide concrete "recipient info" structures.
+
+apiext:XR_META_spatial_entity_sharing is a more generic and extendable
+alternative to apiext:XR_FB_spatial_entity_sharing (which is tightly coupled
+with slink:XrSpaceUserFB).
+
+==== Check compatibility
+
+
+[open,refpage='XrSystemSpatialEntitySharingPropertiesMETA',desc='spatial entity sharing system properties',type='structs',xrefs='xrGetSystemProperties XrSystemProperties']
+--
+
+The slink:XrSystemSpatialEntitySharingPropertiesMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrSystemSpatialEntitySharingPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialEntitySharing is an basetype:XrBool32 specifying if
+  the spatial entity sharing is supported.
+****
+
+An application can: inspect whether the system is capable of Spatial Entity
+Sharing by extending the slink:XrSystemProperties with
+slink:XrSystemSpatialEntitySharingPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialEntitySharing,
+the runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrShareSpacesMETA.
+
+include::{generated}/validity/structs/XrSystemSpatialEntitySharingPropertiesMETA.adoc[]
+--
+
+==== Sharing Spaces
+
+[open,refpage='xrShareSpacesMETA',type='protos',desc='Share a spatial entity',xrefs='']
+--
+The flink:xrShareSpacesMETA function is defined as:
+
+include::{generated}/api/protos/xrShareSpacesMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the spatial entity will be
+  active.
+* pname:info is a pointer to slink:XrShareSpacesInfoMETA structure to
+  specify the spatial entity sharing details.
+* pname:requestId is a pointer to an basetype:XrAsyncRequestIdFB variable in
+  which the generated async request ID will be stored.
+  It is used to identify the corresponding
+  slink:XrEventDataShareSpacesCompleteMETA completion event.
+****
+
+The application may: use the flink:xrShareSpacesMETA function to share
+spaces (slink:XrSpace) if the ename:XR_SPACE_COMPONENT_TYPE_SHARABLE_FB
+component has been enabled on the space.
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataShareSpacesCompleteMETA.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataShareSpacesCompleteMETA event identified with a
+`requestId` field matching the value output by this function, referred to as
+the "corresponding completion event."
+
+(If the runtime returns anything other than ename:XR_SUCCESS, the runtime
+must: not queue any slink:XrEventDataShareSpacesCompleteMETA events with
+`requestId` field matching the pname:requestId populated by this function.)
+
+If the asynchronous operation is successful, the runtime must: set the
+slink:XrEventDataShareSpacesCompleteMETA::pname:result field to
+ename:XR_SUCCESS in the corresponding completion event.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataShareSpacesCompleteMETA::pname:result field to an
+appropriate error code instead of ename:XR_SUCCESS.
+
+include::{generated}/validity/protos/xrShareSpacesMETA.adoc[]
+--
+
+[open,refpage='XrShareSpacesInfoMETA',desc='Information about share spatial entity request',type='structs',xrefs='xrShareSpacesMETA']
+--
+
+The slink:XrShareSpacesInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrShareSpacesInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:spaceCount is the count spaces populated in the pname:spaces field
+  of this request.
+* pname:spaces is an array pointer of type slink:XrSpace containing all
+  spaces to be shared
+* pname:recipientInfo is a structure based on
+  slink:XrShareSpacesRecipientBaseHeaderMETA, defining the target recipient
+  of the shared spaces.
+****
+
+include::{generated}/validity/structs/XrShareSpacesInfoMETA.adoc[]
+--
+
+[open,refpage='XrShareSpacesRecipientBaseHeaderMETA',desc='Information about share spatial entity request',type='structs',xrefs='xrShareSpacesMETA']
+--
+
+The slink:XrShareSpacesRecipientBaseHeaderMETA structure is defined as:
+
+include::{generated}/api/structs/XrShareSpacesRecipientBaseHeaderMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+****
+
+slink:XrShareSpacesRecipientBaseHeaderMETA is designed to be an abstract
+base struct which is to be extended by other structures.
+
+Any valid structure that identifies
+slink:XrShareSpacesRecipientBaseHeaderMETA as its parent structure may: be
+provided anywhere a valid slink:XrShareSpacesRecipientBaseHeaderMETA is
+specified to be passed.
+
+include::{generated}/validity/structs/XrShareSpacesRecipientBaseHeaderMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataShareSpacesCompleteMETA',desc='share spatial entity complete event',type='structs',xrefs='xrShareSpacesMETA']
+--
+
+The slink:XrEventDataShareSpacesCompleteMETA event structure is defined as:
+
+include::{generated}/api/structs/XrEventDataShareSpacesCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:requestId is an basetype:XrAsyncRequestIdFB that identifies which
+  request this event is referring to.
+* pname:result is an elink:XrResult that specifies the request result.
+  The valid pname:result values are: ename:XR_SUCCESS,
+  ename:XR_ERROR_RUNTIME_FAILURE, ename:XR_ERROR_SPACE_NETWORK_TIMEOUT_FB,
+  and ename:XR_ERROR_SPACE_NETWORK_REQUEST_FAILED_FB.
+****
+This event conveys the results of the asynchronous operation started by
+flink:xrShareSpacesMETA.
+
+include::{generated}/validity/structs/XrEventDataShareSpacesCompleteMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_spatial_entity_sharing.adoc[leveloffset=1]
+
+
+*Version History*
+
+* Revision 1, 2024-06-14 (TJ Gilbrough)
+** Initial extension description

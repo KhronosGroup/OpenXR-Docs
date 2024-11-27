@@ -593,8 +593,9 @@ the action space.
 Multiple slink:XrSpace handles may exist simultaneously, up to some limit
 imposed by the runtime.
 The slink:XrSpace handle must be eventually freed via the
-flink:xrDestroySpace function or by destroying the parent slink:XrAction
+flink:xrDestroySpace function or by destroying the parent slink:XrSession
 handle.
+See <<spaces-action-spaces-lifetime>> for details.
 
 The runtime must: return ename:XR_ERROR_ACTION_TYPE_MISMATCH if the action
 provided in slink:XrActionSpaceCreateInfo::pname:action is not of type

@@ -1,0 +1,389 @@
+// Copyright (c) 2023 Magic Leap
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ML_facial_expression.adoc[]
+
+*Last Modified Date*::
+    2023-11-22
+
+*Contributors*::
+    Dushan Vasilevski, Magic Leap +
+    Karthik Kadappan, Magic Leap +
+    Ron Bessems, Magic Leap +
+    Johannes Fung, Magic Leap
+
+==== Overview
+
+This extension provides the weights of facial blend shapes usable for a
+variety of purposes, such as mood monitoring or interpolating the expression
+of an avatar's face.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+com.magicleap.permission.FACIAL_EXPRESSION permission listed in their
+manifest and granted to use this extension, otherwise
+flink:xrCreateFacialExpressionClientML will return a
+ename:XR_ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML error.
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemFacialExpressionPropertiesML',type='structs',desc='System property for facial expression parsing',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemFacialExpressionPropertiesML structure is defined as:
+
+include::{generated}/api/structs/XrSystemFacialExpressionPropertiesML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsFacialExpression is an basetype:XrBool32, indicating if
+  current system is capable of parsing facial expressions enumerated in
+  elink:XrFacialBlendShapeML
+****
+
+An application can: inspect whether the system is capable of parsing facial
+blend shapes by extending the slink:XrSystemProperties with
+slink:XrSystemFacialExpressionPropertiesML structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsFacialExpression, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateFacialExpressionClientML.
+
+include::{generated}/validity/structs/XrSystemFacialExpressionPropertiesML.adoc[]
+
+--
+
+==== Create a facial expression client handle
+
+[open,refpage='XrFacialExpressionClientML',type='handles',desc='Represents a client that queries for face blend shapes.']
+--
+The slink:XrFacialExpressionClientML handle represents the resources for
+parsing facial expressions.
+
+include::{generated}/api/handles/XrFacialExpressionClientML.adoc[]
+
+This handle is used to obtain blend shapes using the
+flink:xrGetFacialExpressionBlendShapePropertiesML function.
+
+--
+
+[open,refpage='xrCreateFacialExpressionClientML',type='protos',desc='Creates a face tracking handle.',xrefs='XrFacialExpressionClientCreateInfoML']
+--
+
+The flink:xrCreateFacialExpressionClientML function is defined as:
+
+include::{generated}/api/protos/xrCreateFacialExpressionClientML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the facial expression client
+  will be active.
+* pname:createInfo is a pointer to the
+  slink:XrFacialExpressionClientCreateInfoML used to specify the facial
+  expression client.
+* pname:facialExpressionClient is a pointer to the returned
+  slink:XrFacialExpressionClientML handle.
+****
+
+An application can: create an slink:XrFacialExpressionClientML handle using
+flink:xrCreateFacialExpressionClientML function.
+
+If the system does not support parsing facial expressions, the runtime must:
+return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateFacialExpressionClientML.
+In this case, the runtime must: also return ename:XR_FALSE for
+slink:XrSystemFacialExpressionPropertiesML::pname:supportsFacialExpression
+when the function flink:xrGetSystemProperties is called.
+
+include::{generated}/validity/protos/xrCreateFacialExpressionClientML.adoc[]
+
+--
+
+[open,refpage='XrFacialExpressionClientCreateInfoML',type='structs',desc='Information to create a facial expression handle',xrefs='xrCreateFacialExpressionClientML xrDestroyFacialExpressionClientML']
+--
+The slink:XrFacialExpressionClientCreateInfoML structure is defined as
+follows:
+
+include::{generated}/api/structs/XrFacialExpressionClientCreateInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestedCount is the size of the pname:requestedFacialBlendShapes
+  array
+* pname:requestedFacialBlendShapes is a pointer to an application defined
+  array containing the blend shapes for the runtime to target.
+****
+
+Note that although the naming convention for pname:requestedCount does not
+align with pname:requestedFacialBlendShapes, they are coupled together.
+
+The slink:XrFacialExpressionClientCreateInfoML structure describes the
+information to create an slink:XrFacialExpressionClientML handle.
+
+An application specifies the blend shapes they want to query by creating an
+array of type elink:XrFacialBlendShapeML and passing it to
+pname:requestedFacialBlendShapes along with the corresponding
+pname:requestedCount.
+
+The application can: also pass in code:NULL into
+pname:requestedFacialBlendShapes to capture the entirety of
+elink:XrFacialBlendShapeML.
+However, for performance reasons, it may: be better to be explicit about
+what blend shapes to query for performance reasons since some blend shapes
+may: be queried by the runtime at a greater frequency than other blend
+shapes.
+
+include::{generated}/validity/structs/XrFacialExpressionClientCreateInfoML.adoc[]
+--
+
+==== Destroy a facial expression client handle
+
+[open,refpage='xrDestroyFacialExpressionClientML',type='protos',desc='Destroys a facial expression client handle',xrefs='XrFacialExpressionClientML xrCreateFacialExpressionClientML']
+--
+The flink:xrDestroyFacialExpressionClientML function is defined as:
+
+include::{generated}/api/protos/xrDestroyFacialExpressionClientML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:facialExpressionClient is an slink:XrFacialExpressionClientML
+  previously created by flink:xrCreateFacialExpressionClientML.
+****
+
+The flink:xrDestroyFacialExpressionClientML function releases the
+pname:facialExpressionClient and the underlying resources.
+
+include::{generated}/validity/protos/xrDestroyFacialExpressionClientML.adoc[]
+--
+
+==== Obtain facial expression blend shapes
+
+[open,refpage='xrGetFacialExpressionBlendShapePropertiesML',type='protos',desc='Obtain blend shape of facial expression',xrefs='XrFacialExpressionClientCreateInfoML XrFacialExpressionBlendShapeGetInfoML XrFacialExpressionBlendShapePropertiesML']
+--
+The flink:xrGetFacialExpressionBlendShapePropertiesML function is defined
+as:
+
+include::{generated}/api/protos/xrGetFacialExpressionBlendShapePropertiesML.adoc[]
+
+.Parameter Descriptions
+****
+* pname:facialExpressionClient is an slink:XrFacialExpressionClientML
+  previously created by flink:xrCreateFacialExpressionClientML.
+* pname:blendShapeGetInfo is a pointer to
+  slink:XrFacialExpressionBlendShapeGetInfoML describing information to
+  obtain facial expression.
+* pname:blendShapeCount is a code:uint32_t specifying the size of the
+  pname:blendShapes array.
+* pname:blendShapes is an application allocated array of
+  slink:XrFacialExpressionBlendShapePropertiesML that contains the blend
+  shapes information.
+  This array acts as both input and output for this function.
+  The array may: be a subset of blend shapes.
+****
+
+slink:XrFacialExpressionBlendShapePropertiesML is better thought of as a
+mutable state rather than an immutable property.
+In general, OpenXR convention tries to keep property data types to be
+immutable.
+
+The flink:xrGetFacialExpressionBlendShapePropertiesML function returns the
+slink:XrFacialExpressionBlendShapePropertiesML of each blend shape requested
+in slink:XrFacialExpressionClientCreateInfoML
+
+Each slink:XrFacialExpressionBlendShapePropertiesML in pname:blendShapes
+must: have its ename:requestedFacialBlendShape member variable initialized
+before being passed into flink:xrGetFacialExpressionBlendShapePropertiesML.
+
+If a blend shape in pname:blendShapes is not enabled in
+flink:xrCreateFacialExpressionClientML, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+For unsupported blend shapes, the runtime must: clear
+slink:XrFacialExpressionBlendShapePropertiesML::pname:flags and the runtime
+must: also return ename:XR_SUCCESS.
+
+include::{generated}/validity/protos/xrGetFacialExpressionBlendShapePropertiesML.adoc[]
+--
+
+[open,refpage='XrFacialExpressionBlendShapeGetInfoML',type='structs',desc='Describes the information to obtain facial expression',xrefs='xrGetFacialExpressionBlendShapePropertiesML']
+--
+The slink:XrFacialExpressionBlendShapeGetInfoML structure is defined as:
+
+include::{generated}/api/structs/XrFacialExpressionBlendShapeGetInfoML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrFacialExpressionBlendShapeGetInfoML structure specifies
+properties about blend shapes desired by an application.
+It must: be passed into flink:xrGetFacialExpressionBlendShapePropertiesML
+and is currently empty for future extensibility.
+
+include::{generated}/validity/structs/XrFacialExpressionBlendShapeGetInfoML.adoc[]
+--
+
+[open,refpage='XrFacialExpressionBlendShapePropertiesML',type='structs',desc='Contains information of a blend shape',xrefs='xrGetFacialExpressionBlendShapePropertiesML xrCreateFacialExpressionClientML XrFacialExpressionBlendShapePropertiesFlagsML']
+--
+The slink:XrFacialExpressionBlendShapePropertiesML structure is defined as:
+
+include::{generated}/api/structs/XrFacialExpressionBlendShapePropertiesML.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestedFacialBlendShape is the type of elink:XrFacialBlendShapeML
+  to query the runtime for.
+* pname:weight is a code:float describing the weight of a facial
+  expression's blend shape.
+* pname:flags is an elink:XrFacialExpressionBlendShapePropertiesFlagsML
+  whose bits are specified in
+  elink:XrFacialExpressionBlendShapePropertiesFlagBitsML
+* pname:time is the basetype:XrTime that corresponds to the moment at which
+  the pname:requestedFacialBlendShape is captured.
+****
+
+slink:XrFacialExpressionBlendShapePropertiesML structure holds the facial
+expression.
+
+If pname:requestedFacialBlendShape does not correspond to any
+elink:XrFacialBlendShapeML passed into
+flink:xrCreateFacialExpressionClientML then the
+ename:XR_FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_VALID_BIT_ML and
+ename:XR_FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_TRACKED_BIT_ML of
+pname:flags must: be unset.
+If the pname:requestedFacialBlendShape is not available at sample time
+pname:time then
+ename:XR_FACIAL_EXPRESSION_BLEND_SHAPE_PROPERTIES_TRACKED_BIT_ML must: be
+set to false.
+
+The runtime must: populate pname:weight with the weight of the queried blend
+shape.
+
+include::{generated}/validity/structs/XrFacialExpressionBlendShapePropertiesML.adoc[]
+--
+
+==== Conventions of blend shapes
+
+This extension defines the following blend shapes for tracking facial
+expressions.
+
+[open,refpage='XrFacialBlendShapeML',type='enums',desc='The names of trackable blend shapes',xrefs='']
+--
+include::{generated}/api/enums/XrFacialBlendShapeML.adoc[]
+
+--
+
+[open,refpage='XrFacialExpressionBlendShapePropertiesFlagsML',type='flags',desc='Properties for facial blend shape',xrefs='XrFacialExpressionBlendShapePropertiesML XrFacialExpressionBlendShapePropertiesFlagBitsML']
+--
+The slink:XrFacialExpressionBlendShapePropertiesML::pname:flags member is of
+the following type, and contains a bitwise-OR of zero or more bits defined
+in elink:XrFacialExpressionBlendShapePropertiesFlagBitsML.
+
+include::{generated}/api/flags/XrFacialExpressionBlendShapePropertiesFlagsML.adoc[]
+--
+
+[open,refpage='XrFacialExpressionBlendShapePropertiesFlagBitsML',type='enums',desc='Flag bits for facial expression blend shape properties.'xrefs='XrFacialExpressionBlendShapePropertiesML XrFacialExpressionBlendShapePropertiesFlagsML']
+--
+Valid bits for elink:XrFacialExpressionBlendShapePropertiesFlagsML are
+defined by elink:XrFacialExpressionBlendShapePropertiesFlagBitsML and are
+specified as:
+
+include::{generated}/api/enums/XrFacialExpressionBlendShapePropertiesFlagBitsML.adoc[]
+
+The flag bits' meaning are described as below:
+
+include::{generated}/api/enums/XrFacialExpressionBlendShapePropertiesFlagBitsML.comments.adoc[]
+--
+
+==== Example code for obtaining facial expression information
+
+The following example code demonstrates how to obtain weights for facial
+expression blend shapes.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// Confirm face tracking system support.
+XrSystemFacialExpressionPropertiesML systemFacialExpressionClientProperties{
+    XR_TYPE_SYSTEM_FACIAL_EXPRESSION_PROPERTIES_ML};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &systemFacialExpressionClientProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!systemFacialExpressionClientProperties.supportsFacialExpression) {
+    // The system does not support face tracking
+    return;
+}
+
+// Get function pointer for xrCreateFacialExpressionClientML.
+PFN_xrCreateFacialExpressionClientML pfnCreateFacialExpressionClientML;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFacialExpressionClientML",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateFacialExpressionClientML)));
+
+// Create a client that queries for default set of facial expressions.
+XrFacialExpressionClientML facialExpressionClient = {};
+  XrFacialExpressionClientCreateInfoML createInfo{XR_TYPE_FACIAL_EXPRESSION_CLIENT_CREATE_INFO_ML};
+  CHK_XR(pfnCreateFacialExpressionClientML(session, &createInfo, &facialExpressionClient));
+
+// Allocate buffers to receive facial expression data before frame
+// loop starts.
+const uint32_t num_blend_shapes = 2;
+XrFacialExpressionBlendShapePropertiesML blendShapes[num_blend_shapes];
+// User must explicitly request what facial expression blend shape to query
+blendShapes[0].requestedFacialBlendShape = XR_FACIAL_BLEND_SHAPE_BROW_LOWERER_L_ML;
+blendShapes[1].requestedFacialBlendShape = XR_FACIAL_BLEND_SHAPE_BROW_LOWERER_R_ML;
+
+// Get function pointer for xrGetFacialExpressionBlendShapePropertiesML.
+PFN_xrGetFacialExpressionBlendShapePropertiesML pfnGetFacialExpressionBlendShapesML;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFacialExpressionBlendShapePropertiesML",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnGetFacialExpressionBlendShapesML)));
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrFacialExpressionBlendShapeGetInfoML expressionInfo{XR_TYPE_FACIAL_EXPRESSION_BLEND_SHAPE_GET_INFO_ML};
+
+    CHK_XR(pfnGetFacialExpressionBlendShapesML(facialExpressionClient, &expressionInfo, num_blend_shapes, blendShapes));
+
+    for (uint32_t i = 0; i < num_blend_shapes; ++i) {
+        // blendShapes[i] contains the properties of specific blend shape
+    }
+}
+----
+
+include::{generated}/interfaces/XR_ML_facial_expression.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2023-11-22 (Johannes Fung)
+** Initial extension description
