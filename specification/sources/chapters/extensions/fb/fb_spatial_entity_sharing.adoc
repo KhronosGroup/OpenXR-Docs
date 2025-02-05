@@ -70,7 +70,7 @@ more spatial entities with one or more users.
 include::{generated}/validity/structs/XrSpaceShareInfoFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceShareCompleteFB',type='structs',desc='Completion of request to share one or more spatial entities',xrefs='']
+[open,refpage='XrEventDataSpaceShareCompleteFB',type='structs',desc='Completion of request to share one or more spatial entities',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceShareCompleteFB structure is defined as:
 

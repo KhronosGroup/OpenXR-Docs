@@ -84,6 +84,10 @@ enabled by Meta Quest Touch Pro Controller profile exclusively):
 ** subpathname:/output/haptic_trigger_fb (new)
 ** subpathname:/output/haptic_thumb_fb (new)
 
+include::{config}/grip_surface_notice.adoc[]
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
 *New Identifiers*
 ****
 * *stylus_fb*: Meta Quest Touch Pro Controller adds an optional stylus tip

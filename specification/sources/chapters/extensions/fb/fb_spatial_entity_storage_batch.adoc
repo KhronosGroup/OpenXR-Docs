@@ -60,7 +60,7 @@ multiple spatial entities.
 include::{generated}/validity/structs/XrSpaceListSaveInfoFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceListSaveCompleteFB',type='structs',desc='Describes the completion of a save list operation',xrefs='']
+[open,refpage='XrEventDataSpaceListSaveCompleteFB',type='structs',desc='Describes the completion of a save list operation',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceListSaveCompleteFB structure is defined as:
 

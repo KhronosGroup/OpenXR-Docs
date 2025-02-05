@@ -375,10 +375,10 @@ event.
 include::{generated}/validity/protos/xrGetReferenceSpaceBoundsRect.adoc[]
 --
 
-[open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XrReferenceSpaceType']
+[open,refpage='XrEventDataReferenceSpaceChangePending',desc='Notifies the application that a reference space is changing',type='structs',xrefs='xrCreateReferenceSpace XrReferenceSpaceType xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
-The slink:XrEventDataReferenceSpaceChangePending event structure is defined
-as:
+
+The slink:XrEventDataReferenceSpaceChangePending structure is defined as:
 
 include::{generated}/api/structs/XrEventDataReferenceSpaceChangePending.adoc[]
 
@@ -427,6 +427,7 @@ flink:xrCreateReferenceSpace.
 If the runtime does not know the location of the space's new origin relative
 to its previous origin, pname:poseValid must: be false, and the position and
 orientation of pname:poseInPreviousSpace are undefined.
+
 include::{generated}/validity/structs/XrEventDataReferenceSpaceChangePending.adoc[]
 --
 
@@ -997,8 +998,8 @@ include::{generated}/api/structs/XrSpaceLocations.adoc[]
   chain, such as slink:XrSpaceVelocities.
 * pname:locationCount is a code:uint32_t specifying the count of elements in
   the pname:locations array.
-* pname:locations is an array of slink:XrSpaceLocations for the runtime to
-  populate with the locations of the specified spaces in the
+* pname:locations is an array of slink:XrSpaceLocationData structures for
+  the runtime to populate with the locations of the specified spaces in the
   slink:XrSpacesLocateInfo::pname:baseSpace at the specified
   slink:XrSpacesLocateInfo::pname:time.
 ****

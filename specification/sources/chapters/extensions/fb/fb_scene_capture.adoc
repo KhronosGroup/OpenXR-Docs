@@ -63,7 +63,7 @@ a default scene capture.
 include::{generated}/validity/structs/XrSceneCaptureRequestInfoFB.adoc[]
 --
 
-[open,refpage='XrEventDataSceneCaptureCompleteFB',type='structs',desc='Event which occurs after a scene capture operation completes',xrefs='']
+[open,refpage='XrEventDataSceneCaptureCompleteFB',type='structs',desc='Event which occurs after a scene capture operation completes',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSceneCaptureCompleteFB structure is defined as:
 

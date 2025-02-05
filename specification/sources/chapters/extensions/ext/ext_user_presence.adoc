@@ -148,8 +148,9 @@ XrInstance instance;  // previously initialized
 XrSystemId systemId;  // previously initialized
 XrSession session;  // previously initialized
 
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES};
 XrSystemUserPresencePropertiesEXT userPresenceProperties{XR_TYPE_SYSTEM_USER_PRESENCE_PROPERTIES_EXT};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &userPresenceProperties};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 bool supportsUserPresence = userPresenceProperties.supportsUserPresence;
 

@@ -1,0 +1,219 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_frame_synthesis.adoc[]
+
+*Contributors*::
+    Jian Zhang, Meta Platforms +
+    Neel Bedekar, Meta Platforms +
+    Xiang Wei, Meta Platforms +
+    Guodong Rong, Meta Platforms +
+    Trevor Dasch, Meta Platforms +
+    Rémi Arnaud, Varjo +
+    Paulo Gomes, Samsung Electronics +
+    Bryce Hutchings, Microsoft +
+    Rylie Pavlik, Collabora +
+    Shuai Liu, Bytedance +
+
+==== Overview
+
+This extension provides support to enable frame synthesis on applications
+based on additional application provided data.
+Application generated motion vector images and depth images may: be used by
+the runtime to do high quality frame extrapolation and reprojection to
+synthesize a new frame, providing a smooth experience even when the
+application is running below the FPS target.
+
+This extension is designed to be independent of
+apiext:XR_KHR_composition_layer_depth, and both may: be enabled and used at
+the same time, for different purposes.
+The slink:XrFrameSynthesisInfoEXT::pname:depthSubImage may: use depth data
+dedicated for frame synthesis, and its resolution may: be lower than
+slink:XrCompositionLayerDepthInfoKHR::pname:subImage.
+See slink:XrFrameSynthesisConfigViewEXT for the suggested resolution of
+pname:depthSubImage.
+
+
+==== Submit motion vector images and depth images
+
+[open,refpage='XrFrameSynthesisInfoEXT',type='structs',desc='Frame synthesis information structure',xrefs='XrCompositionLayerProjectionView XrCompositionLayerProjection XrCompositionLayerBaseHeader XrFrameEndInfo xrEndFrame']
+--
+The slink:XrFrameSynthesisInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrFrameSynthesisInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:layerFlags is a bitmask of elink:XrFrameSynthesisInfoFlagsEXT.
+* pname:motionVectorSubImage identifies the motion vector image
+  slink:XrSwapchainSubImage to be used for frame synthesis.
+* pname:motionVectorScale is an slink:XrVector4f which scales the
+  interpretation of the motion vector in pname:motionVectorSubImage.
+* pname:motionVectorOffset is an slink:XrVector4f which offsets the
+  interpretation of the motion vector in pname:motionVectorSubImage.
+* pname:appSpaceDeltaPose is the incremental application-applied transform,
+  if any, that affects the view since the previous frame.
+  Experiences of artificial locomotion (scripted movement, teleportation,
+  etc.) involve the application transforming the whole
+  slink:XrCompositionLayerProjection::pname:space from one application space
+  pose to another pose between frames, affecting the view by more than the
+  tracked movement between frames.
+  The pname:appSpaceDeltaPose must: be identity when there is no
+  slink:XrCompositionLayerProjection::pname:space transformation in the
+  application.
+  The slink:XrPosef::pname:position in pname:appSpaceDeltaPose must: be
+  relative to the current application
+  slink:XrCompositionLayerProjection::pname:space.
+* pname:depthSubImage identifies the depth image slink:XrSwapchainSubImage
+  to be used for frame synthesis.
+* pname:minDepth and pname:maxDepth are the range of depth values in the
+  pname:depthSubImage, and must: be in the range of [eq]#[0.0,1.0]#.
+  This is akin to min and max values of OpenGL's fname:glDepthRange, but
+  with the requirement here that [eq]#maxDepth {geq} minDepth#.
+* pname:nearZ is the positive distance in meters of the pname:minDepth value
+  in the depth swapchain.
+  Applications may: use a pname:nearZ that is greater than pname:farZ to
+  indicate depth values are reversed.
+  pname:nearZ may: be infinite.
+* pname:farZ is the positive distance in meters of the pname:maxDepth value
+  in the depth swapchain.
+  pname:farZ may: be infinite.
+  The runtime must: return error ename:XR_ERROR_VALIDATION_FAILURE if
+  pname:nearZ == pname:farZ
+****
+
+When submitting motion vector images and depth images along with projection
+layers, add an slink:XrFrameSynthesisInfoEXT structure to the
+slink:XrCompositionLayerProjectionView::pname:next chain, for each
+slink:XrCompositionLayerProjectionView structure in the given layer.
+
+The runtime must: interpret the motion vector data in the
+pname:motionVectorSubImage's RGB channels, modified by
+pname:motionVectorScale and pname:motionVectorOffset as follows:
+[eq]#motionVector = motionVectorSubImage~rgb~ * motionVectorScale~xyz~
+{plus} motionVectorOffset~xyz~#.
+The components [eq]#motionVectorSubImage~a~#, [eq]#motionVectorScale~w~# and
+[eq]#motionVectorOffset~w~# are ignored.
+
+The motion vector represents the movement of a pixel since the
+slink:XrFrameEndInfo::displayTime of the previous frame until the
+slink:XrFrameEndInfo::displayTime of the current frame.
+The runtime may: use this information to extrapolate the rendered frame into
+a future frame.
+
+The motion vector must: derived from normalized device coordinate (NDC)
+space, which in this context uses Vulkan-style conventions: the NDC range is
+defined as [-1, -1, 0] to [1, 1, 1], different from OpenGL's NDC range.
+However, the motion vector itself is not constrained to this range; its
+values depend on the pixel's movement and may extend beyond the boundaries
+of the NDC space.
+For example, given that a pixel's NDC in the previous frame is PrevNDC, and
+CurrNDC in current frame, and that there is no scale or offset, then the
+motion vector value is "[eq]#(CurrNDC - PrevNDC)~xyz~#".
+
+include::{generated}/validity/structs/XrFrameSynthesisInfoEXT.adoc[]
+--
+
+
+[NOTE]
+.Note
+====
+There are many different ways to generate pname:motionVectorSubImage and
+pname:depthSubImage.
+For example, the application may render them in a lower resolution dedicated
+motion vector pass (see slink:XrFrameSynthesisConfigViewEXT for recommended
+resolution), or render them in the main view pass with MRT (Multiple Render
+Targets).
+It is up to the application to decide the specific approach.
+Signed 16 bit float per pixel channel formats are recommended for
+pname:motionVectorSubImage.
+====
+
+==== Frame synthesis flags
+
+[open,refpage='XrFrameSynthesisInfoFlagsEXT',type='flags',desc='XrFrameSynthesisInfoFlagsEXT']
+--
+include::{generated}/api/flags/XrFrameSynthesisInfoFlagsEXT.adoc[]
+--
+
+[open,refpage='XrFrameSynthesisInfoFlagBitsEXT',type='enums',desc='XrFrameSynthesisInfoFlagBitsEXT',xrefs='XrFrameSynthesisInfoFlagsEXT']
+--
+
+include::{generated}/api/enums/XrFrameSynthesisInfoFlagBitsEXT.adoc[]
+
+.Flag Descriptions
+****
+* ename:XR_FRAME_SYNTHESIS_INFO_USE_2D_MOTION_VECTOR_BIT_EXT indicates 2D
+  motion vector data is used.
+* ename:XR_FRAME_SYNTHESIS_INFO_REQUEST_RELAXED_FRAME_INTERVAL_BIT_EXT
+  provides a hint to the runtime that the application prefers additional
+  time to render each frame, with the trade-off that more frames would be
+  synthesized by the runtime.
+  This may be useful for applications that prefer to conserve CPU and GPU
+  utilization (e.g. for increased battery life) or to increase the compute
+  budget of each frame.
+  The runtime may: request frames at any interval, regardless of the value
+  of this flag.
+****
+
+By default, 3D motion vector data is expected by the runtime, so
+[eq]#motionVectorSubImage~rgb~#, [eq]#motionVectorScale~xyz~# and
+[eq]#motionVectorOffset~xyz~# are used, as described in
+slink:XrFrameSynthesisInfoEXT.
+
+When ename:XR_FRAME_SYNTHESIS_INFO_USE_2D_MOTION_VECTOR_BIT_EXT is enabled
+on slink:XrFrameSynthesisInfoEXT pname:layerFlags, the runtime instead
+interprets the submitted motion vector image as 2D motion vector data,
+representing 2D pixel movement from the previous frame to the current frame.
+Pixels values are interpreted as follows for 2D motion vector data:
+[eq]#motionVector = motionVectorSubImage~rg~ * motionVectorScale~xy~ {plus}
+motionVectorOffset~xy~#.
+The components [eq]#motionVectorSubImage~ba~#, [eq]#motionVectorScale~zw~#
+and [eq]#motionVectorOffset~zw~# are ignored.
+Using 2D instead of 3D motion vector data may: decrease the quality of the
+synthesized frames.
+
+--
+
+==== Get recommended resolution
+
+[open,refpage='XrFrameSynthesisConfigViewEXT',type='structs',desc='Composition Layer Frame Synthesis structure',xrefs='XrViewConfigurationView']
+--
+The slink:XrFrameSynthesisConfigViewEXT structure is defined as:
+
+include::{generated}/api/structs/XrFrameSynthesisConfigViewEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:recommendedMotionVectorImageRectWidth: recommended motion vector and
+  depth image width.
+* pname:recommendedMotionVectorImageRectHeight: recommended motion vector
+  and depth image height.
+****
+
+When this extension is enabled, an application can: pass in an
+slink:XrFrameSynthesisConfigViewEXT structure in the
+slink:XrViewConfigurationView::pname:next chain when calling
+flink:xrEnumerateViewConfigurationViews to acquire information about the
+recommended motion vector image resolution.
+
+include::{generated}/validity/structs/XrFrameSynthesisConfigViewEXT.adoc[]
+--
+
+include::{generated}/interfaces/XR_EXT_frame_synthesis.adoc[leveloffset=1]
+
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2022-01-31 (Jian Zhang)
+** Initial extension description, converted from fb_space_warp
+** Collaborating with contributors to refine the extension interfaces.

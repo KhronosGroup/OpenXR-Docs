@@ -263,7 +263,7 @@ flink:xrRetrieveSpaceQueryResultsFB function to retrieve query results.
 include::{generated}/validity/structs/XrSpaceQueryResultsFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceQueryResultsAvailableFB',type='structs',desc='Event indicating a query has produced results',xrefs='']
+[open,refpage='XrEventDataSpaceQueryResultsAvailableFB',type='structs',desc='Event indicating a query has produced results',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceQueryResultsAvailableFB structure is defined as:
 
@@ -286,7 +286,7 @@ Call flink:xrRetrieveSpaceQueryResultsFB to retrieve those results.
 include::{generated}/validity/structs/XrEventDataSpaceQueryResultsAvailableFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceQueryCompleteFB',type='structs',desc='Event indicating a query has finished',xrefs='']
+[open,refpage='XrEventDataSpaceQueryCompleteFB',type='structs',desc='Event indicating a query has finished',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceQueryCompleteFB structure is defined as:
 

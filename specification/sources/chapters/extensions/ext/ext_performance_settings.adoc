@@ -355,8 +355,11 @@ the level enumerations.
 '''
 ===== [big]#XrEventDataPerformanceSettingsEXT#
 
-[open,refpage='XrEventDataPerfSettingsEXT',type='structs',desc='XrEventDataPerfSettingsEXT',xrefs='']
+[open,refpage='XrEventDataPerfSettingsEXT',type='structs',desc='XrEventDataPerfSettingsEXT',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
+
+The slink:XrEventDataPerfSettingsEXT structure is defined as:
+
 include::{generated}/api/structs/XrEventDataPerfSettingsEXT.adoc[]
 
 .Member Descriptions

@@ -17,6 +17,52 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.45 (2025-02-05)
+
+This release includes a new multi-vendor extension, a new vendor extension, and
+a number of cleanups to the specification and included sample code.
+
+Note that specification release 1.1.44 was skipped to keep up with a monthly
+cadence for patch releases.
+
+- Registry
+  - Extension reservation: Reserve 15 extensions for EpicGames.
+    ([internal MR 3649](https://gitlab.khronos.org/openxr/openxr/merge_requests/3649))
+  - Improvement: Clean up spacing in some functions, improving specification and
+    header output appearance.
+    ([internal MR 3660](https://gitlab.khronos.org/openxr/openxr/merge_requests/3660))
+  - New multi-vendor extension: `XR_EXT_frame_synthesis`
+    ([internal MR 2200](https://gitlab.khronos.org/openxr/openxr/merge_requests/2200),
+    [OpenXR-Docs PR 122](https://github.com/KhronosGroup/OpenXR-Docs/pull/122))
+  - New vendor extension: `XR_BD_body_tracking`
+    ([internal MR 2867](https://gitlab.khronos.org/openxr/openxr/merge_requests/2867))
+- Specification
+  - Fix: Correct type name mentioned as element type of
+    `XrSpaceLocations::locations` in prose so it matches the XML and header.
+    ([internal MR 3639](https://gitlab.khronos.org/openxr/openxr/merge_requests/3639))
+  - Fix: Add missing palm pose, grip surface, and hand interaction notices to
+    `XR_FB_touch_controller_pro` and `XR_META_touch_controller_plus`.
+    ([internal MR 3647](https://gitlab.khronos.org/openxr/openxr/merge_requests/3647))
+  - Fix: Correctly initialize a `XrSystemProperties` structure in
+    `XR_EXT_user_presence` specification sample code.
+    ([internal MR 3659](https://gitlab.khronos.org/openxr/openxr/merge_requests/3659))
+  - Fix: Correctly initialize a `XrSystemProperties` structure in
+    `XR_EXT_plane_detection` specification sample code.
+    ([internal MR 3659](https://gitlab.khronos.org/openxr/openxr/merge_requests/3659))
+  - Improvement: Style changes to specification of event structures, to improve
+    usability of generated ref pages.
+    ([internal MR 3136](https://gitlab.khronos.org/openxr/openxr/merge_requests/3136))
+  - Improvement: scripts: Fix extraction of sample code from specification for
+    compilation testing.
+    ([internal MR 3659](https://gitlab.khronos.org/openxr/openxr/merge_requests/3659))
+  - New multi-vendor extension specification: `XR_EXT_frame_synthesis` allows
+    submitting motion vector images to improve frame synthesis.
+    ([internal MR 2200](https://gitlab.khronos.org/openxr/openxr/merge_requests/2200),
+    [OpenXR-Docs PR 122](https://github.com/KhronosGroup/OpenXR-Docs/pull/122))
+  - New vendor extension: `XR_BD_body_tracking` allowing applications to receive
+    joint-based tracking data for a human body.
+    ([internal MR 2867](https://gitlab.khronos.org/openxr/openxr/merge_requests/2867))
+
 ## OpenXR Specification 1.1.43 (2024-11-27)
 
 This release has a few clarifications and fixes, as well as several new vendor

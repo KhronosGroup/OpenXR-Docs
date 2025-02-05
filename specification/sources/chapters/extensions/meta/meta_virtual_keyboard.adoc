@@ -737,7 +737,7 @@ include::{generated}/validity/structs/XrVirtualKeyboardTextContextChangeInfoMETA
 Each frame the application should: listen for the following events sent by
 the runtime that reflects the state of the keyboard.
 
-[open,refpage='XrEventDataVirtualKeyboardCommitTextMETA',type='structs',desc='Commit text event',xrefs='xrPollEvent']
+[open,refpage='XrEventDataVirtualKeyboardCommitTextMETA',type='structs',desc='Commit text event',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataVirtualKeyboardCommitTextMETA structure is defined as:
 
@@ -761,7 +761,7 @@ editing.
 include::{generated}/validity/structs/XrEventDataVirtualKeyboardCommitTextMETA.adoc[]
 --
 
-[open,refpage='XrEventDataVirtualKeyboardBackspaceMETA',type='structs',desc='Backspace key event',xrefs='xrPollEvent']
+[open,refpage='XrEventDataVirtualKeyboardBackspaceMETA',type='structs',desc='Backspace key event',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataVirtualKeyboardBackspaceMETA structure is defined as:
 
@@ -783,7 +783,7 @@ The application should: update the text field that the keyboard is editing.
 include::{generated}/validity/structs/XrEventDataVirtualKeyboardBackspaceMETA.adoc[]
 --
 
-[open,refpage='XrEventDataVirtualKeyboardEnterMETA',type='structs',desc='Enter key event',xrefs='xrPollEvent']
+[open,refpage='XrEventDataVirtualKeyboardEnterMETA',type='structs',desc='Enter key event',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataVirtualKeyboardEnterMETA structure is defined as:
 
@@ -805,7 +805,7 @@ The application should: respond accordingly (e.g. newline, accept, etc).
 include::{generated}/validity/structs/XrEventDataVirtualKeyboardEnterMETA.adoc[]
 --
 
-[open,refpage='XrEventDataVirtualKeyboardShownMETA',type='structs',desc='Keyboard shown event',xrefs='xrPollEvent']
+[open,refpage='XrEventDataVirtualKeyboardShownMETA',type='structs',desc='Keyboard shown event',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataVirtualKeyboardShownMETA structure is defined as:
 
@@ -828,7 +828,7 @@ simulation, etc).
 include::{generated}/validity/structs/XrEventDataVirtualKeyboardShownMETA.adoc[]
 --
 
-[open,refpage='XrEventDataVirtualKeyboardHiddenMETA',type='structs',desc='Keyboard hidden event',xrefs='xrPollEvent']
+[open,refpage='XrEventDataVirtualKeyboardHiddenMETA',type='structs',desc='Keyboard hidden event',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataVirtualKeyboardHiddenMETA structure is defined as:
 

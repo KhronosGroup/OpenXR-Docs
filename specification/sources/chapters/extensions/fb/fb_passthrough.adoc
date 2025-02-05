@@ -464,13 +464,11 @@ pname:next chain of slink:XrPassthroughStyleFB.
 include::{generated}/validity/structs/XrPassthroughBrightnessContrastSaturationFB.adoc[]
 --
 
-[open,refpage='XrEventDataPassthroughStateChangedFB',type='structs',desc='An event for passthrough state changes',xrefs='']
+[open,refpage='XrEventDataPassthroughStateChangedFB',type='structs',desc='An event for passthrough state changes',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataPassthroughStateChangedFB structure is defined as:
 
 include::{generated}/api/structs/XrEventDataPassthroughStateChangedFB.adoc[]
-
-It describes an event data for state changes return by flink:xrPollEvent.
 
 .Member Descriptions
 ****
@@ -481,6 +479,8 @@ It describes an event data for state changes return by flink:xrPollEvent.
 * pname:flags elink:XrPassthroughStateChangedFlagsFB that specify additional
   behavior.
 ****
+
+It describes event data for state changes returned by flink:xrPollEvent.
 
 include::{generated}/validity/structs/XrEventDataPassthroughStateChangedFB.adoc[]
 --

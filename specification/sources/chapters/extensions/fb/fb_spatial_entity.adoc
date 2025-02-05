@@ -220,7 +220,7 @@ handle of the newly created slink:XrSpace.
 include::{generated}/validity/structs/XrEventDataSpatialAnchorCreateCompleteFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceSetStatusCompleteFB',type='structs',desc='Result of request to enable or disable a component',xrefs='']
+[open,refpage='XrEventDataSpaceSetStatusCompleteFB',type='structs',desc='Result of request to enable or disable a component',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceSetStatusCompleteFB structure is defined as:
 

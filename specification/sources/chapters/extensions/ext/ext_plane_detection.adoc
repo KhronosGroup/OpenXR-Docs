@@ -616,11 +616,11 @@ PFN_xrGetPlaneDetectionsEXT xrGetPlaneDetectionsEXT; // previously initialized
 PFN_xrGetPlanePolygonBufferEXT xrGetPlanePolygonBufferEXT; // previously initialized
 
 
-XrSystemProperties properties{XR_TYPE_SYSTEM_PROPERTIES};
 XrSystemPlaneDetectionPropertiesEXT planeDetectionProperties{XR_TYPE_SYSTEM_PLANE_DETECTION_PROPERTIES_EXT};
-properties.next = &planeDetectionProperties;
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &planeDetectionProperties};
 
-CHK_XR(xrGetSystemProperties(instance, systemId, &properties));
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!(planeDetectionProperties.supportedFeatures & XR_PLANE_DETECTION_CAPABILITY_PLANE_DETECTION_BIT_EXT )) {
   // plane detection is not supported.
   return;

@@ -220,7 +220,7 @@ marker tracking is not available in the system.
 include::{generated}/validity/structs/XrSystemMarkerTrackingPropertiesVARJO.adoc[]
 --
 
-[open,refpage='XrEventDataMarkerTrackingUpdateVARJO',type='structs',desc='Structure representing marker tracking information',xrefs='xrPollEvent']
+[open,refpage='XrEventDataMarkerTrackingUpdateVARJO',type='structs',desc='Structure representing marker tracking information',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataMarkerTrackingUpdateVARJO structure is defined as:
 

@@ -1727,7 +1727,7 @@ include::{generated}/validity/protos/xrPollEvent.adoc[]
 
 --
 
-[open,refpage='XrEventDataBaseHeader',desc='Base header for an event',type='structs',xrefs='xrPollEvent']
+[open,refpage='XrEventDataBaseHeader',desc='Base header for an event',type='structs',xrefs='xrPollEvent XrEventDataBuffer']
 --
 The slink:XrEventDataBaseHeader structure is defined as:
 include::{generated}/api/structs/XrEventDataBaseHeader.adoc[]
@@ -1794,7 +1794,7 @@ slink:XrEventDataBuffer::pname:next members.
 
 ===== XrEventDataEventsLost
 
-[open,refpage='XrEventDataEventsLost',desc='Event indicating events were lost',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
+[open,refpage='XrEventDataEventsLost',desc='Event indicating events were lost',type='structs',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataEventsLost structure is defined as:

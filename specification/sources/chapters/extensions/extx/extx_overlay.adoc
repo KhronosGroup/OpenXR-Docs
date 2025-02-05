@@ -266,9 +266,24 @@ include::{generated}/validity/structs/XrSessionCreateInfoOverlayEXTX.adoc[]
 --
 
 
-[open,refpage='XrEventDataMainSessionVisibilityChangedEXTX',type='structs',desc='Event representing main session visibility change']
+[open,refpage='XrEventDataMainSessionVisibilityChangedEXTX',type='structs',desc='Event representing main session visibility change',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
+The slink:XrEventDataMainSessionVisibilityChangedEXTX structure is defined
+as:
+
 include::{generated}/api/structs/XrEventDataMainSessionVisibilityChangedEXTX.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:visible is an basetype:XrBool32 which indicates if the main session
+  is now visible or is not.
+* pname:flags is 0 or one or more elink:XrOverlayMainSessionFlagBitsEXTX
+  which indicates various state information for the main session.
+****
 
 Receiving the slink:XrEventDataMainSessionVisibilityChangedEXTX event
 structure indicates that the main session has gained or lost visibility.
@@ -282,18 +297,6 @@ Currently, the only flag value supplied is
 ename:XR_OVERLAY_MAIN_SESSION_ENABLED_COMPOSITION_LAYER_INFO_DEPTH_BIT_EXTX
 which indicates if the main session has enabled the
 apiext:XR_KHR_composition_layer_depth extension.
-
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR or this extension.
-* pname:visible is an basetype:XrBool32 which indicates if the main session
-  is now visible or is not.
-* pname:flags is 0 or one or more elink:XrOverlayMainSessionFlagBitsEXTX
-  which indicates various state information for the main session.
-****
 
 include::{generated}/validity/structs/XrEventDataMainSessionVisibilityChangedEXTX.adoc[]
 

@@ -452,7 +452,7 @@ These events are detailed below.
 
 ==== XrEventDataSessionStateChanged
 
-[open,refpage='XrEventDataSessionStateChanged',desc='Event indicating session state changed',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
+[open,refpage='XrEventDataSessionStateChanged',desc='Event indicating session state changed',type='structs',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataSessionStateChanged structure is defined as:

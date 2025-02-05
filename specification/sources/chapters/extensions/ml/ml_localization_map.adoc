@@ -68,7 +68,7 @@ changes by calling flink:xrPollEvent and handling the
 slink:XrEventDataLocalizationChangedML type.
 To enable these events call flink:xrEnableLocalizationEventsML.
 
-[open,refpage='XrEventDataLocalizationChangedML',type='structs',desc='Event containing the current localization map state.',xrefs='xrEnableLocalizationEventsML']
+[open,refpage='XrEventDataLocalizationChangedML',type='structs',desc='Event containing the current localization map state.',xrefs='xrEnableLocalizationEventsML xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataLocalizationChangedML structure is defined as:

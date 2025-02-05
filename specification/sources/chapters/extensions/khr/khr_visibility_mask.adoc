@@ -118,15 +118,9 @@ include::{generated}/api/structs/XrVisibilityMaskKHR.adoc[]
 include::{generated}/validity/structs/XrVisibilityMaskKHR.adoc[]
 --
 
-[open,refpage='XrEventDataVisibilityMaskChangedKHR',desc='Visibility Mask',type='structs']
+[open,refpage='XrEventDataVisibilityMaskChangedKHR',desc='Visibility Mask',type='structs',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
-The slink:XrEventDataVisibilityMaskChangedKHR structure specifies an event
-which indicates that a given view mask has changed.
-The application should: respond to the event by calling
-flink:xrGetVisibilityMaskKHR to retrieve the updated mask.
-This event is per-view, so if the masks for multiple views in a
-configuration change then multiple instances of this event will be sent to
-the application, one per view.
+The slink:XrEventDataVisibilityMaskChangedKHR structure is defined as:
 
 include::{generated}/api/structs/XrEventDataVisibilityMaskChangedKHR.adoc[]
 
@@ -142,6 +136,14 @@ include::{generated}/api/structs/XrEventDataVisibilityMaskChangedKHR.adoc[]
 * pname:viewIndex is the individual view within the view configuration to
   which the change refers.
 ****
+
+The slink:XrEventDataVisibilityMaskChangedKHR structure is queued to
+indicate that a given visibility mask has changed.
+The application should: respond to the event by calling
+flink:xrGetVisibilityMaskKHR to retrieve the updated mask.
+This event is per-view, so if the masks for multiple views in a
+configuration change then multiple instances of this event will be queued
+for the application, one per view.
 
 include::{generated}/validity/structs/XrEventDataVisibilityMaskChangedKHR.adoc[]
 --

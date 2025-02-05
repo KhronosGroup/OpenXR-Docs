@@ -74,7 +74,7 @@ slink:XrUserCalibrationEnableEventsInfoML::pname:enabled to true.
 Headset fit is evaluated continuously and the runtime must: post events
 anytime it detects a change in the headset fit state.
 
-[open,refpage='XrEventDataHeadsetFitChangedML',type='structs',desc='Event containing the latest headset fit state.',xrefs='xrEnableUserCalibrationEventsML']
+[open,refpage='XrEventDataHeadsetFitChangedML',type='structs',desc='Event containing the latest headset fit state.',xrefs='xrEnableUserCalibrationEventsML xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataHeadsetFitChangedML structure is defined as:
@@ -111,7 +111,7 @@ calibration.
 The user needs to calibrate the eyes using the system app provided for this.
 There is no support for in-app eye calibration in this extension.
 
-[open,refpage='XrEventDataEyeCalibrationChangedML',type='structs',desc='Event containing the latest eye calibration state.',xrefs='xrEnableUserCalibrationEventsML']
+[open,refpage='XrEventDataEyeCalibrationChangedML',type='structs',desc='Event containing the latest eye calibration state.',xrefs='xrEnableUserCalibrationEventsML xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataEyeCalibrationChangedML structure is defined as:

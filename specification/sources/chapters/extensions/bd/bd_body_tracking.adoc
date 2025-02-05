@@ -1,0 +1,410 @@
+// Copyright (c) 2023 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_body_tracking.adoc[]
+
+
+*Last Modified Date*::
+    2023-06-05
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Shanliang Xu, Bytedance +
+    Chenxi Bao, Bytedance +
+    Shuai Liu, Bytedance +
+    Jun Yan, Bytedance
+
+==== Overview
+
+This extension enables applications to locate the individual body joints
+that represent the position of the user.
+It enables applications to render the whole body in XR experiences.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemBodyTrackingPropertiesBD',type='structs',desc='System property for body tracking',xrefs='']
+--
+The slink:XrSystemBodyTrackingPropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemBodyTrackingPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsBodyTracking is an basetype:XrBool32, indicating if current
+  system is capable of receiving body tracking input.
+****
+
+An application can: inspect whether the system is capable of body tracking
+by extending the slink:XrSystemProperties with
+slink:XrSystemBodyTrackingPropertiesBD structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsBodyTracking, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateBodyTrackerBD.
+
+include::{generated}/validity/structs/XrSystemBodyTrackingPropertiesBD.adoc[]
+--
+
+==== Create a body tracker handle
+
+[open,refpage='XrBodyTrackerBD',type='handles',desc='Represents a tracker for a body joints.']
+--
+The slink:XrBodyTrackerBD handle represents the resources for body tracking.
+
+include::{generated}/api/handles/XrBodyTrackerBD.adoc[]
+
+This handle can: be used to locate body joints using
+flink:xrLocateBodyJointsBD function.
+
+A body tracker provides joint locations that track human body motion.
+
+--
+
+[open,refpage='xrCreateBodyTrackerBD',type='protos',desc='Create a body joints handle.',xrefs='']
+--
+The flink:xrCreateBodyTrackerBD function is defined as:
+
+include::{generated}/api/protos/xrCreateBodyTrackerBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the body tracker will be
+  active.
+* pname:createInfo is the slink:XrBodyTrackerCreateInfoBD used to specify
+  the body tracker.
+* pname:bodyTracker is the returned slink:XrBodyTrackerBD handle.
+****
+
+An application can: create an slink:XrBodyTrackerBD handle using
+flink:xrCreateBodyTrackerBD function.
+
+If the system does not support body tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateBodyTrackerBD.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemBodyTrackingPropertiesBD::pname:supportsBodyTracking when the
+function flink:xrGetSystemProperties is called, so that the application
+avoids creating a body tracker.
+
+If an invalid value of slink:XrBodyTrackerCreateInfoBD::pname:jointSet is
+passed in pname:createInfo, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+
+include::{generated}/validity/protos/xrCreateBodyTrackerBD.adoc[]
+--
+
+[open,refpage='XrBodyTrackerCreateInfoBD',type='structs',desc='Information to create a body joints handle',xrefs='']
+--
+The slink:XrBodyTrackerCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackerCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:jointSet is an elink:XrBodyJointSetBD that describes the set of body
+  joints to retrieve.
+****
+
+The slink:XrBodyTrackerCreateInfoBD structure describes the information to
+create an slink:XrBodyTrackerBD handle.
+
+include::{generated}/validity/structs/XrBodyTrackerCreateInfoBD.adoc[]
+--
+
+[open,refpage='XrBodyJointSetBD',type='enums',desc='The set of body joints to track.',xrefs='XrBodyTrackerCreateInfoBD']
+--
+The elink:XrBodyJointSetBD enum describes the set of body joints to track
+when creating an slink:XrBodyTrackerBD.
+
+include::{generated}/api/enums/XrBodyJointSetBD.adoc[]
+
+The joint sets have the following meaning.
+
+include::{generated}/api/enums/XrBodyJointSetBD.comments-box.adoc[]
+
+--
+
+[open,refpage='xrDestroyBodyTrackerBD',type='protos',desc='Destroy a body joints handle',xrefs='']
+--
+The flink:xrDestroyBodyTrackerBD function is defined as:
+
+include::{generated}/api/protos/xrDestroyBodyTrackerBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerBD previously created by
+  flink:xrCreateBodyTrackerBD.
+****
+
+flink:xrDestroyBodyTrackerBD function releases the pname:bodyTracker and the
+underlying resources when the body tracking experience is over.
+
+include::{generated}/validity/protos/xrDestroyBodyTrackerBD.adoc[]
+--
+
+==== Locate body joints
+
+[open,refpage='xrLocateBodyJointsBD',type='protos',desc='Locate body joint locations',xrefs='']
+--
+The flink:xrLocateBodyJointsBD function is defined as:
+
+include::{generated}/api/protos/xrLocateBodyJointsBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerBD previously created by
+  flink:xrCreateBodyTrackerBD.
+* pname:locateInfo is a pointer to slink:XrBodyJointsLocateInfoBD describing
+  information to locate body joints.
+* pname:locations is a pointer to slink:XrBodyJointLocationsBD receiving the
+  returned body joint locations.
+****
+
+The flink:xrLocateBodyJointsBD function locates an array of body joints
+relative to a base space at a given time.
+
+include::{generated}/validity/protos/xrLocateBodyJointsBD.adoc[]
+--
+
+[open,refpage='XrBodyJointsLocateInfoBD',type='structs',desc='Describes the information to locate body joints',xrefs='xrLocateBodyJointsBD']
+--
+The slink:XrBodyJointsLocateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyJointsLocateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is an slink:XrSpace within which the returned body joint
+  locations will be represented.
+* pname:time is an basetype:XrTime at which to locate the body joints.
+****
+
+The slink:XrBodyJointsLocateInfoBD structure describes the information to
+locate body joints.
+Callers should: request a time equal to the predicted display time for the
+rendered frame.
+The system will employ appropriate modeling to support body tracking at this
+time.
+
+include::{generated}/validity/structs/XrBodyJointsLocateInfoBD.adoc[]
+--
+
+[open,refpage='XrBodyJointLocationsBD',type='structs',desc='Returns the body joint locations',xrefs='xrLocateBodyJointsBD']
+--
+The slink:XrBodyJointLocationsBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyJointLocationsBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:allJointPosesTracked is an basetype:XrBool32 indicating if all joint
+  poses (position and orientation) are valid and tracked
+* pname:jointLocationCount is a code:uint32_t describing the count of
+  elements in pname:jointLocations array.
+* pname:jointLocations is an application-allocated array of
+  slink:XrBodyJointLocationBD that will be filled with joint locations.
+****
+
+slink:XrBodyJointLocationsBD structure returns the state of the body joint
+locations.
+
+The application must: allocate pname:jointLocations with enough elements for
+all joints of the chosen joint set, and set pname:jointLocationCount
+according.
+
+The runtime must: populate elements of the application-allocated
+pname:jointLocations array representing human body motion.
+
+The runtime must: populate the pname:jointLocations array with elements
+indexed using the corresponding body joint enumeration (e.g.
+elink:XrBodyJointBD).
+The index enumeration is determined by the elink:XrBodyJointSetBD value used
+when creating the slink:XrBodyTrackerBD.
+For example, when the slink:XrBodyTrackerBD is created with
+ename:XR_BODY_JOINT_SET_FULL_BODY_JOINTS_BD, the application must: set the
+pname:jointLocationCount to dlink:XR_BODY_JOINT_COUNT_BD, allocating at
+least that many elements in pname:jointLocations, and the runtime must:
+populate the pname:jointLocations array indexed by the elink:XrBodyJointBD
+enumeration.
+
+If the value of pname:jointLocationCount does not equal the joint count
+value associated with the elink:XrBodyJointSetBD value used when creating
+the slink:XrBodyTrackerBD, or if pname:jointLocations is code:NULL, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If the returned pname:allJointPosesTracked is true, the runtime must: return
+all joint locations with ename:XR_SPACE_LOCATION_POSITION_VALID_BIT,
+ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT,
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT,
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT set.
+
+If the returned pname:allJointPosesTracked is false, it indicates that for
+some joint(s), the body input is not detected or tracked.
+
+
+include::{generated}/validity/structs/XrBodyJointLocationsBD.adoc[]
+--
+
+[open,refpage='XrBodyJointLocationBD',type='structs',desc='Describes the location of a body joint',xrefs='XrBodyJointLocationsBD']
+--
+The slink:XrBodyJointLocationBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyJointLocationBD.adoc[]
+
+.Member Descriptions
+****
+* pname:locationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceLocationFlagBits, to indicate which members contain valid
+  data.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the origin of a body joint within the reference frame of the corresponding
+  slink:XrBodyJointsLocateInfoBD::pname:baseSpace.
+****
+
+slink:XrBodyJointLocationBD structure describes the position and orientation
+of a body joint.
+
+include::{generated}/validity/structs/XrBodyJointLocationBD.adoc[]
+--
+
+
+==== Example code for locating body joints
+
+The following example code demonstrates how to locate all body joints
+relative to a base space.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+XrSpace baseSpace;  // previously initialized, e.g. from
+                     // XR_REFERENCE_SPACE_TYPE_LOCAL
+
+// Inspect body tracking system properties
+XrSystemBodyTrackingPropertiesBD bodyTrackingSystemProperties{
+    XR_TYPE_SYSTEM_BODY_TRACKING_PROPERTIES_BD};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &bodyTrackingSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!bodyTrackingSystemProperties.supportsBodyTracking) {
+    // The system does not support body tracking
+    return;
+}
+
+// Get function pointer for xrCreateBodyTrackerBD
+PFN_xrCreateBodyTrackerBD pfnCreateBodyTrackerBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateBodyTrackerBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateBodyTrackerBD)));
+
+// Create a body tracker that tracks default set of body joints.
+XrBodyTrackerBD bodyTracker = {};
+{
+    XrBodyTrackerCreateInfoBD createInfo{XR_TYPE_BODY_TRACKER_CREATE_INFO_BD};
+    createInfo.jointSet = XR_BODY_JOINT_SET_FULL_BODY_JOINTS_BD;
+    CHK_XR(pfnCreateBodyTrackerBD(session, &createInfo, &bodyTracker));
+}
+
+// Allocate buffers to receive joint location data before frame
+// loop starts.
+XrBodyJointLocationBD jointLocations[XR_BODY_JOINT_COUNT_BD];
+XrBodyJointLocationsBD locations{XR_TYPE_BODY_JOINT_LOCATIONS_BD};
+locations.jointLocationCount = XR_BODY_JOINT_COUNT_BD;
+locations.jointLocations = jointLocations;
+
+// Get function pointer for xrLocateBodyJointsBD.
+PFN_xrLocateBodyJointsBD pfnLocateBodyJointsBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateBodyJointsBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnLocateBodyJointsBD)));
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrBodyJointsLocateInfoBD locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_BD};
+    locateInfo.baseSpace = baseSpace;
+    locateInfo.time = time;
+
+    CHK_XR(pfnLocateBodyJointsBD(bodyTracker, &locateInfo, &locations));
+
+    if (locations.allJointPosesTracked) {
+        // The returned joint location array is directly indexed with
+        // XrBodyJointBD enum.
+        const XrPosef pose = jointLocations[XR_BODY_JOINT_LEFT_HAND_BD].pose;
+    }
+}
+----
+
+==== Conventions of body joints
+
+[open,refpage='XrBodyJointBD',type='enums',desc='The names of trackable body joints for use as an index',xrefs='XR_BODY_JOINT_COUNT_BD']
+--
+This extension defines 24 body joints.
+The body joints are sorted starting from the ename:XR_BODY_JOINT_PELVIS_BD
+and then incrementing in a spiral manner.
+
+
+image::images/bd_body_tracking_joint_convention.png["Convention of body joints",width=1600]
+
+include::{generated}/api/enums/XrBodyJointBD.adoc[]
+
+Put body in a T-shape as above.
+The backward (+Z) direction is perpendicular to body surface and pointing
+towards the back of the body.
+The right (+X) direction points to the right side of the body.
+The Y direction is perpendicular to the X and Z directions and follows the
+right hand rule.
+--
+
+[open,refpage='XR_BODY_JOINT_COUNT_BD',type='defines',desc='The number of body joints defined in elink:XrBodyJointBD for ename:XR_BODY_JOINT_SET_FULL_BODY_JOINTS_BD',xrefs='XrBodyJointBD XrBodyJointSetBD']
+--
+include::{generated}/api/defines/XR_BODY_JOINT_COUNT_BD.adoc[]
+
+dlink:XR_BODY_JOINT_COUNT_BD defines the number of body joint enumerants
+defined in the full enumeration elink:XrBodyJointBD.
+This corresponds to the joint set
+ename:XR_BODY_JOINT_SET_FULL_BODY_JOINTS_BD (in elink:XrBodyJointSetBD).
+--
+
+[open,refpage='XR_BODY_JOINT_WITHOUT_ARM_COUNT_BD',type='defines',desc='The number of body joint in elink:XrBodyJointBD used for ename:XR_BODY_JOINT_SET_BODY_WITHOUT_ARM_BD',xrefs='XrBodyJointBD XrBodyJointSetBD']
+--
+include::{generated}/api/defines/XR_BODY_JOINT_WITHOUT_ARM_COUNT_BD.adoc[]
+
+dlink:XR_BODY_JOINT_WITHOUT_ARM_COUNT_BD defines the number of body joints
+in the joint set ename:XR_BODY_JOINT_SET_BODY_WITHOUT_ARM_BD (in
+elink:XrBodyJointSetBD), which excludes the arms.
+This count includes joints indexed by elink:XrBodyJointBD in the range
+ename:XR_BODY_JOINT_PELVIS_BD through ename:XR_BODY_JOINT_HEAD_BD inclusive.
+--
+
+
+include::{generated}/interfaces/XR_BD_body_tracking.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2023-06-05 (Shanliang Xu)
+
+** Initial extension description

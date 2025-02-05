@@ -54,7 +54,7 @@ elink:XrResult enumeration is extended with:
 
 *New Structures*
 
-[open,refpage='XrEventDataDisplayRefreshRateChangedFB',type='structs',desc='Event representing display refresh rate change',xrefs='xrGetDisplayRefreshRateFB']
+[open,refpage='XrEventDataDisplayRefreshRateChangedFB',type='structs',desc='Event representing display refresh rate change',xrefs='xrGetDisplayRefreshRateFB xrPollEvent']
 --
 Receiving the slink:XrEventDataDisplayRefreshRateChangedFB event structure
 indicates that the display refresh rate has changed.

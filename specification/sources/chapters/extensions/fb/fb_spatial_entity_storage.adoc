@@ -109,7 +109,7 @@ the spatial entity.
 include::{generated}/validity/structs/XrSpaceEraseInfoFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceSaveCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
+[open,refpage='XrEventDataSpaceSaveCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceSaveCompleteFB structure is defined as:
 
@@ -137,7 +137,7 @@ request ID from the initial calling function.
 include::{generated}/validity/structs/XrEventDataSpaceSaveCompleteFB.adoc[]
 --
 
-[open,refpage='XrEventDataSpaceEraseCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='']
+[open,refpage='XrEventDataSpaceEraseCompleteFB',type='structs',desc='Describes the result of a save operation',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 The slink:XrEventDataSpaceEraseCompleteFB structure is defined as:
 

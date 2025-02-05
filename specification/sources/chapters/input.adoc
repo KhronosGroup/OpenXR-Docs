@@ -739,7 +739,7 @@ include::{generated}/validity/structs/XrInteractionProfileState.adoc[]
 --
 
 
-[open,refpage='XrEventDataInteractionProfileChanged',desc='Notifies the application than the active interaction profile has changed',type='structs',xrefs='xrSuggestInteractionProfileBindings xrGetCurrentInteractionProfile']
+[open,refpage='XrEventDataInteractionProfileChanged',desc='Notifies the application than the active interaction profile has changed',type='structs',xrefs='xrSuggestInteractionProfileBindings xrGetCurrentInteractionProfile xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
 
 The slink:XrEventDataInteractionProfileChanged structure is defined as:

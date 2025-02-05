@@ -470,9 +470,21 @@ instance loss is detected.
 
 ==== XrEventDataInstanceLossPending
 
-[open,refpage='XrEventDataInstanceLossPending',desc='Event indicating instance loss will occur',type='structs',xrefs='xrPollEvent XrEventDataBaseHeader']
+[open,refpage='XrEventDataInstanceLossPending',desc='Event indicating instance loss will occur',type='structs',xrefs='xrPollEvent XrEventDataBuffer XrEventDataBaseHeader']
 --
+The slink:XrEventDataInstanceLossPending structure is defined as:
+
 include::{generated}/api/structs/XrEventDataInstanceLossPending.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR.
+* pname:lossTime is the absolute time at which the indicated instance will
+  be considered lost and become unusable.
+****
 
 Receiving the slink:XrEventDataInstanceLossPending event structure indicates
 that the application is about to lose the indicated slink:XrInstance at the
@@ -491,16 +503,6 @@ flink:xrCreateInstance as long as it is unable to create the instance.
 Once the runtime has returned and is able to continue, it must: resume
 returning ename:XR_SUCCESS from flink:xrCreateInstance if valid data is
 passed in.
-
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR.
-* pname:lossTime is the absolute time at which the indicated instance will
-  be considered lost and become unusable.
-****
 
 include::{generated}/validity/structs/XrEventDataInstanceLossPending.adoc[]
 --
