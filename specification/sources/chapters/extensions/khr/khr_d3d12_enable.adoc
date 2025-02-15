@@ -13,8 +13,7 @@ include::{generated}/meta/XR_KHR_D3D12_enable.adoc[]
     Paul Pedriana, Oculus +
     Mark Young, LunarG +
     Minmin Gong, Microsoft +
-    Dan Ginsburg, Valve +
-    Matthieu Bucchianeri, Microsoft
+    Dan Ginsburg, Valve
 
 *Overview*
 
@@ -280,5 +279,5 @@ include::{generated}/validity/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
 * Revision 8, 2021-09-09 (Bryce Hutchings)
 ** Document mapping for `XrSwapchainUsageFlags`
-* Revision 9, 2021-12-28 (Matthieu Bucchianeri)
+* Revision 9, 2021-12-28 (Microsoft)
 ** Added missing `XR_ERROR_GRAPHICS_DEVICE_INVALID` error condition
