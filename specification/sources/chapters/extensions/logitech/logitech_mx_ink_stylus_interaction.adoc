@@ -1,0 +1,253 @@
+// Copyright (c) 2023 Logitech
+// All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_LOGITECH_mx_ink_stylus_interaction.adoc[]
+
+*Last Modified Date*::
+    2024-06-02
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Mario Gutierrez, Logitech +
+    Aidan Kehoe, Logitech +
+    Fabien Zellweger, Logitech +
+
+*Overview*
+
+This extension defines a new interaction profile for the Logitech MX Ink, a
+6-DOF tracked stylus.
+
+==== Logitech MX Ink Stylus Interaction Profile
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/logitech/mx_ink_stylus_logitech
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile provides inputs and outputs for a 6-DOF tracked
+controller shaped as a stylus.
+This controller allows for writing/sketching on 2D surfaces using an analog
+force sensor at the tip.
+In addition to the tip, the controller has an input cluster composed of
+three buttons.
+The middle button features a force sensor.
+The front and back buttons provide two different inputs: click and double
+tap detection.
+Double tap events are treated as virtual buttons.
+The stylus also includes a system button, situated at the rear end of the
+device.
+
+Supported component paths:
+
+** subpathname:/input/system/click (may: not be available for application
+   use)
+** subpathname:/input/grip/pose
+** subpathname:/input/aim/pose
+** subpathname:/input/cluster_front_logitech/click
+** subpathname:/input/cluster_front_logitech/double_tap_logitech
+** subpathname:/input/cluster_middle_logitech/force
+** subpathname:/input/cluster_back_logitech/click
+** subpathname:/input/cluster_back_logitech/double_tap_logitech
+** subpathname:/input/dock_logitech/docked_logitech
+** subpathname:/input/tip_logitech/force
+** subpathname:/input/tip_logitech/pose
+** subpathname:/output/haptic
+
+==== New Identifiers and Components
+
+.New Identifiers
+****
+* *tip_logitech*: The Logitech MX Ink Stylus features a pressure-sensitive
+  tip.
+  Its usage is intended to be primarily drawing/writing applications, along
+  with other forms of close interaction.
+  This pose corresponds to the position and orientation of the stylus
+  **tip**.
+  The origin of the local coordinate system is the sharpest point of the
+  **tip**.
+  The Z axis aligns with the main axis of the stylus, with -Z extending
+  outward from the tip.
+  The X axis points to the right, while the direction of the Y axis aligns
+  with the surface normal of the input cluster.
+
+* *cluster_front_logitech*: This is the front button (closest to the stylus
+  tip) in the input cluster of the controller.
+  Its usage is intended to be similar to subpathname:/input/squeeze/click on
+  other controllers.
+
+* *cluster_middle_logitech*: The middle button in the input cluster measures
+  pressure/force levels.
+  Its usage is intended to be controlling in-air drawing (together with
+  "tip_logitech"), selection, and generic interactions, similar to the
+  trigger in other XR controllers.
+
+* *cluster_back_logitech*: This is the third button in the device input
+  cluster, furthest from the tip.
+  Usage of the click interaction with this button is intended to be similar
+  to the A button on other controllers.
+  Usage of the double tap input is intended to be similar to the B button on
+  other controllers.
+
+* *dock_logitech*: The Logitech MX Ink Stylus is associated with a docking
+  station for battery charging when not in use.
+  It is expected that users will frequently switch between the MX Ink stylus
+  and hand tracking or other controller.
+****
+
+.New Components
+****
+* *docked_logitech*: Boolean input component.
+  This component becomes true when placed in the dock, immediately before
+  the device becomes inactive and stops being tracked.
+  A recommended usage pattern is to monitor this component to become true,
+  then locate the device at the associated "last change" timestamp.
+  This allows retrieving the last known position for display purposes,
+  making it easier for the user to pick up again when needed.
+
+* *double_tap_logitech*: Boolean input component.
+  Double tap gesture detection intended for usage as a virtual button.
+  The three buttons in the input cluster have capacitive sensors.
+  However, to reduce complexity and standardize the UX, 'single' tap
+  gestures are not exposed in this interaction profile.
+  A tap event is when the user makes brief contact with the button surface
+  and lifts their finger within a predefined time window.
+  A double tap consists of two single taps performed in succession, where
+  the time interval between the two taps does not exceed a maximum
+  threshold.
+  Time intervals are user-defined and managed at the platform level.
+  The goal is to unify the UX and free developers from having to implement
+  their own double tap detection algorithm.
+****
+
+===== Types of Holds
+
+The device associated with this interaction profile is a stylus, and thus
+affords two basic ways to hold and use it.
+The device does **not** sense which hold is in use, but some pose input
+subpaths only make sense in the context of one of the two holds.
+Application developers should: consider which hold is expected in a given
+setting when designing suggested bindings.
+
+A "precise grip" is a pencil-like hold allowing precision control using the
+arm, wrist, hand, and fingers.
+A precise grip is the primary hold encouraged by the affordances of the
+device design.
+It provides fine control over close interaction.
+While the stylus shape allows several orientations of this hold about the
+major axis of the device, the design intent is for the control cluster
+buttons to be accessible to the index finger and/or thumb while maintaining
+a precise grip.
+
+A "power grip", by contrast, is a closed-fist hold, providing more coarse
+control using the arm and wrist.
+The control cluster buttons may: be inaccessible when a user is employing a
+power grip.
+This is a secondary method of using the device.
+Most other XR controllers with interaction profiles in this specification
+are designed primarily for a power grip, and the "grip"
+<<semantic-paths-standard-pose-identifiers,standard pose identifier>> is
+intended to be a power grip in all of those profiles.
+
+* subpathname:/input/tip_logitech/pose is intended for close selection,
+  interaction, and drawing.
+  This pose input subpath is referenced to the physical hardware rather than
+  an assumed or designed hold.
+  Therefore, its pose is meaningful in **both precise grip and power grip**.
+  However, it also serves as the primary interaction pose for close-range
+  use in the precise grip.
+
+* subpathname:/input/aim/pose is intended for selection and interaction at a
+  distance according to platform conventions.
+  When used with this interaction profile, the position and orientation of
+  this subpath relative to the device assumes a **precise grip**.
+  This pose input subpath is not necessarily suitable for use with a power
+  grip.
+
+* subpathname:/input/grip/pose in this interaction profile is for close,
+  coarse interaction while using a **power grip**, or virtual tool/object
+  holding in a power grip.
+  The relative pose of this subpath is based on the design intent for
+  holding in a power grip.
+  Be aware that due to the shape of the device, a user's actual power grip
+  may: easily vary from the design intent by a rotation about the Z axis, as
+  well as translation along it.
+  As such, inferring hand position and orientation from this pose is not
+  recommended.
+  Discouraged from use when a precise grip is anticipated, as this pose has
+  very little to no meaningful relationship to the device or the user's hand
+  in a precise grip.
+
+* subpathname:/input/grip_surface/pose (when available -- see
+  apiext:XR_KHR_maintenance1 or <<XR_VERSION_1_1>>) in this interaction
+  profile is established assuming a **power grip**, holding the stylus
+  against the palm in a closed fist.
+  The predecessor of this input subpath, subpathname:/input/palm_ext/pose,
+  is identically established, when available (see apiext:XR_EXT_palm_pose).
+  The descriptions of positions and axes in the "grip_surface"
+  <<semantic-paths-standard-pose-identifiers,standard pose identifier>>
+  definition are **not** valid when the device is held in a precise grip
+  rather than a power grip.
+
+* subpathname:/input/poke_ext/pose and subpathname:/input/pinch_ext/pose
+  (when available -- see apiext:XR_EXT_hand_interaction) in this interaction
+  profile are established assuming a **precise grip** interacting using the
+  stylus tip.
+  Discouraged from use when a power grip is anticipated.
+** NB: The device associated with this interaction profile also supports use
+   through the pathname:/interaction_profile/ext/hand_interaction
+   interaction profile provided by apiext:XR_EXT_hand_interaction.
+
+===== Designing Suggesting Bindings
+
+The table below provides recommended translations for suggested interaction
+bindings from other controllers to this interaction profile, serving as a
+starting point for development.
+
+As this controller is ambidextrous, the runtime should: provide a platform
+settings method to select the stylus handedness and map the input paths for
+the A/B and X/Y buttons according to the current handedness.
+
+The runtime may: provide a platform settings method to define on which
+button the double tap events will be detected, and which virtual button it
+is mapped to.
+It is recommended to suggest binding a single action to both double tap
+subpaths for consistent behavior regardless of user settings.
+
+[cols="1,1"]
+|===
+|Input subpath on common controller designs  |Recommended input subpath to suggest when using with pathname:/interaction_profiles/logitech/mx_ink_stylus_logitech
+
+| subpathname:/input/squeeze/click
+  | subpathname:/input/cluster_front_logitech/click
+
+| subpathname:/input/trigger/value
+  | subpathname:/input/cluster_middle_logitech/force
+
+| subpathname:/input/a/click
+  | subpathname:/input/cluster_back_logitech/click
+
+| subpathname:/input/b/click
+  | subpathname:/input/cluster_back_logitech/double_tap_logitech or subpathname:/input/cluster_front_logitech/double_tap_logitech
+
+| subpathname:/input/x/click
+  | subpathname:/input/cluster_back_logitech/click
+
+| subpathname:/input/y/click
+  | subpathname:/input/cluster_back_logitech/double_tap_logitech or subpathname:/input/cluster_front_logitech/double_tap_logitech
+|===
+
+include::{generated}/interfaces/XR_LOGITECH_mx_ink_stylus_interaction.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2024-06-02 (Mario Gutierrez, Aidan Kehoe)
+** Initial extension description
+

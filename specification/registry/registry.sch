@@ -18,7 +18,6 @@
         </sch:rule>
     </sch:pattern>
 
-
     <sch:pattern name="Extension uniqueness and basic requirements">
         <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#extensions -->
         <sch:rule context="extensions/extension">
@@ -125,6 +124,17 @@
             </sch:assert>
         </sch:rule>
     </sch:pattern>
+
+    <sch:pattern name="KHR must be ratified">
+        <!-- Verify that any KHR extensions have the ratified="openxr" attribute. -->
+        <sch:rule context="extensions/extension[@supported = 'openxr' and starts-with(@name, 'XR_KHR_')]">
+            <sch:let name="is_ratified" value="@ratified = 'openxr'"/>
+            <sch:assert test="$is_ratified" >
+                <sch:value-of select="@name"/> KHR extension must be ratified.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
 
     <sch:pattern name="Extensions extend valid enums">
         <sch:rule context="extensions/extension/require/enum[@extends]">

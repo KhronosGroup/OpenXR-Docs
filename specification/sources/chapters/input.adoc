@@ -121,17 +121,26 @@ include::{generated}/api/handles/XrActionSet.adoc[]
 Action sets are application-defined collections of actions.
 They are attached to a given slink:XrSession with a
 flink:xrAttachSessionActionSets call.
-They are enabled or disabled by the application via flink:xrSyncActions
+Enabled action sets are indicated by the application via flink:xrSyncActions
 depending on the current application context.
-For example, a game may have one set of actions that apply to controlling a
-character and another set for navigating a menu system.
-When these actions are grouped into two slink:XrActionSet handles they can
-be selectively enabled and disabled using a single function call.
+
+For example, consider using one collection of actions that apply to
+controlling a character and another collection for navigating a menu system.
+When these actions are structured as two slink:XrActionSet handles, the
+applicable action set is easy to specify according to application logic
+using a single function call.
+
+Further, suppose some actions only apply when operating a vehicle as a
+character.
+This is intended to be modeled as another separate action set.
+While the user is operating a vehicle, the application enables both the
+character-control and vehicle action sets simultaneously in each
+flink:xrSyncActions call.
 
 Actions are passed a handle to their slink:XrActionSet when they are
 created.
 
-Action sets are created by calling flink:xrCreateActionSet:
+Action sets are created by calling flink:xrCreateActionSet.
 --
 
 [open,refpage='xrCreateActionSet',desc='Creates an XrActionSet',type='protos',xrefs='XrActionSet XrActionSetCreateInfo xrDestroyActionSet']

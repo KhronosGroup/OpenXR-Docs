@@ -11,6 +11,7 @@
 #   -genpath path - directory for generated files and outputs
 #   -spec core - make a spec with no extensions (default)
 #   -spec khr - make a spec with all KHR extensions
+#   -spec ratified - make a spec with all ratified (KHR + some EXT) extensions
 #   -spec all - make a spec with all registered extensions
 #   -version {1.0 | 1.1} - make a spec with this core version
 #   -ext name - add specified extension and its dependencies
@@ -46,7 +47,7 @@ if __name__ == '__main__':
                         default='generated',
                         help='Path to directory containing generated files')
     parser.add_argument('-spec', action='store',
-                        choices=['core', 'khr', 'all'],
+                        choices=['core', 'khr', 'ratified', 'all'],
                         default='core',
                         help='Type of spec to generate')
     parser.add_argument('-version', action='store',
@@ -103,6 +104,9 @@ if __name__ == '__main__':
     elif results.spec == 'khr':
         title = 'with all KHR extensions'
         exts = set(deps.khrExtensions())
+    elif results.spec == 'ratified':
+        title = 'with all ratified extensions'
+        exts = set(deps.ratifiedExtensions())
     elif results.spec == 'all':
         title = 'with all registered extensions'
         exts = set(deps.allExtensions())

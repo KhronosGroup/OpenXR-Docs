@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# Copyright 2016-2025 The Khronos Group Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# makeRatified - invoke Makefile with the right options to build with all
+# ratified extensions included.
+
+# Usage: makeRatified targets
+
+set -e
+(
+    cd "$(dirname "$0")"
+    ./makeSpec -spec ratified $*
+)

@@ -397,6 +397,7 @@ Extension =
         attribute deprecatedby { text }?,
         attribute obsoletedby { text }?,
         attribute provisional { "true" }?,
+        attribute ratified { "openxr" }?,
         CommentAttr?,
         (element require {
              attribute api { text }?,

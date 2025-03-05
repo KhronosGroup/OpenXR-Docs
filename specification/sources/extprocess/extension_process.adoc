@@ -36,24 +36,43 @@ Every character of the *name* must: be in lower case.
 
 OpenXR extensions fall into three categories:
 
-* Khronos Extensions : Containing `KHR` in their name as the vendor.
+* Khronos ("KHR") Extensions : Containing `KHR` in their name as the vendor.
 ** Working group products, subject to ratification and under the IP
    framework, and thus requiring conformance tests.
+** Development or contribution of conformance tests to the OpenXR CTS is
+   required, to verify conformance with the ratified specification.
 ** The working group may choose to release an extension, developed within
    the Khronos OpenXR IP Zone, as "provisional" to seek feedback.
    Such an extension may be published with a different extension author
    (e.g. `KHX`) to clearly indicate the provisional status.
+* Multi-vendor ("EXT") Extensions : Containing `EXT` in their name as the
+  vendor.
+** These are vendor extensions that have contributions and agreement from
+   multiple vendors.
+** Just as with single-vendor extension, not a working group product.
+   Ratification is **optional** at the discretion of the working group.
+   Only ratified extensions are subject to the IP framework.
+** Contribution of conformance tests to the OpenXR CTS is only required for
+   ratified extensions, but is encouraged for all extensions.
+** May be developed outside of the working group: may be by Khronos member
+   companies or non-members.
+*** May be developed in the working group with an intent to ratify before
+    release, or as a separate process outside of the working group without
+    ratification.
+** If a multi-vendor extension is proposed as provisional, experimental, or
+   preview, its author/vendor identification is `EXTX`.
+** **Note:** Some level of working group notification and approval is
+   required before publication for naming review because `EXT` is a shared
+   namespace.
 * Vendor-specific Extensions : Contains some vendor name as an author prefix
 ** Not a working group product, not ratified, and not subject to the IP
    framework.
+** Contribution of conformance tests to the OpenXR CTS for single-vendor
+   extensions is encouraged but not required.
 ** Developed outside of the working group: may be by Khronos member
    companies or non-members.
 ** Vendor names must be registered author IDs and comply with the rules in
    the style guide.
-** Examples could include:
-*** ARM - `XR_ARM_...`
-*** Google - `XR_GOOGLE_...`
-*** Oculus - `XR_OCULUS_...`
 ** In general, vendor extensions have no explicit compatibility guidelines,
    guarantees, or availability.
    However, at their option, a vendor (or group of vendors, see below) may
@@ -64,17 +83,6 @@ OpenXR extensions fall into three categories:
    similar.
    A revision of an experimental extension has no requirements regarding
    compatibility with its earlier revisions.
-* Multi-vendor Extensions : Identified by the `EXT` vendor in their name
-** These are vendor extensions that have contributions and agreement from
-   multiple vendors.
-** Just as with single-vendor extension: not a working group product, not
-   ratified, and not subject to the IP framework.
-** Developed outside of the working group: may be by Khronos member
-   companies or non-members.
-** If a multi-vendor extension is proposed as provisional, experimental, or
-   preview, its author/vendor identification is `EXTX`.
-** **Note:** Working group approval is required before publication for
-   naming review because `EXT` is a shared namespace.
 
 [NOTE]
 .Note
@@ -134,10 +142,12 @@ period and ratification is still required.
 A provisional extension is encouraged to use a modified author prefix, such
 as `KHX`, to indicate the experimental and temporary status.
 
-A graphical view of the extension discussion flow can be seen in the
-following picture:
+// TODO(i/2473) Extension discussion flow diagram omitted while waiting for a replacement.
 
-image::../images/extension_discussion_flow.png["Extension Discussion Flow",width=1024]
+// A graphical view of the extension discussion flow can be seen in the
+// following picture:
+
+// image::../images/extension_discussion_flow.png["Extension Discussion Flow",width=1024]
 
 
 === Creating Extensions During Khronos Discussions

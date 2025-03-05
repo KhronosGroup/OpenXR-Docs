@@ -23,7 +23,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </feature>
 
     <extensions>
-        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr">
+        <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr" ratified="openxr">
             <require>
                 <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
                 <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
@@ -31,7 +31,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <require depends="XR_KHR_loader_init2">
             </require>
         </extension>
-        <extension name="XR_KHR_loader_init2" number="90" type="instance" supported="openxr">
+        <extension name="XR_KHR_loader_init2" number="90" type="instance" supported="openxr" ratified="openxr">
             <require>
                 <enum value="1" name="XR_KHR_loader_init2_SPEC_VERSION"/>
                 <enum value="&quot;XR_KHR_loader_init2&quot;" name="XR_KHR_LOADER_INIT2_EXTENSION_NAME"/>

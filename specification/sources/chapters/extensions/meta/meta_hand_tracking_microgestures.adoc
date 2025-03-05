@@ -1,0 +1,128 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_hand_tracking_microgestures.adoc[]
+
+*Last Modified Date*::
+    2024-09-03
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Matthew Langille, Meta +
+    Kenrick Kin, Meta +
+    Chengde Wan, Meta +
+    Ken Koh, Meta +
+    Necati Cihan Camgoz, Meta +
+    Shugao Ma, Meta +
+    Andrei Marin, Meta +
+    Eric Sauser, Meta +
+    Muzaffer Akbay, Meta +
+    Fengyang Zhang, Meta +
+    Jingming Dong, Meta +
+    Yujun Cai, Meta +
+    Matthew Longest, Meta +
+
+==== Overview
+
+Microgestures expand the capabilities of hand tracking by enabling
+low-calorie thumb tap and swipe motions to trigger discrete D-pad-like
+directional commands.
+
+The hand pose and motion of the thumb is as follows: initially, the user
+must: raise their thumb above their index finger (not touching the index
+finger).
+For best results, the user should: slightly curl the other fingers as in the
+following illustration; i.e. not too extended, nor completely curled into a
+fist.
+
+A **tap** is performed by touching the middle segment of the index finger
+with the thumb, and then lifting the thumb.
+
+The four directional thumb swipes performed on the surface of the index
+finger are:
+
+Left swipe:: a swipe towards the index fingertip on the right hand, and away
+from the index fingertip on the left hand.
+On the right hand for example, the motion is as follows: the thumb starts
+raised above the index finger, touches the middle segment of the index
+finger, slides towards the index fingertip, and lifts.
+
+Right swipe:: the same motion as the left swipe, but in the opposite
+direction.
+On the right hand for example, the thumb starts raised above the index
+finger, touches the middle segment of the index finger, slides away from the
+index fingertip, and lifts.
+
+Forward swipe:: the thumb starts raised above the index finger, touches the
+middle segment of the index finger, slides forward, and lifts.
+
+Backward swipe:: the thumb starts raised above the index finger, touches the
+middle segment of the index finger, slides backward/downward, and lifts.
+
+Note that the motions are performed at moderate to quick speeds, and are
+intended to be performed in one smooth motion.
+The detection of the gesture happens at the end of the motion, regardless of
+speed.
+
+image::images/microgestures.svg[align="center", title="Microgestures", inline]
+
+This extension exposes these discrete signals through the <<input, OpenXR
+action system>>.
+It augments apiext:XR_EXT_hand_interaction by adding a series of component
+paths to the interaction profile.
+
+==== Enabling Microgestures
+
+In order to use the binding paths defined in this extension in addition to
+those already present in apiext:XR_EXT_hand_interaction, applications must:
+enable **both** apiext:XR_EXT_hand_interaction and
+apiext:XR_META_hand_tracking_microgestures.
+
+If the application passes apiext:XR_META_hand_tracking_microgestures but
+does not pass apiext:XR_EXT_hand_interaction then flink:xrCreateInstance
+must: return ename:XR_ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED.
+
+==== Action paths for Microgestures
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/ext/hand_interaction_ext
+
+Valid for top level user path:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Additional supported component paths:
+
+* subpathname:/input/swipe_left_meta/click
+* subpathname:/input/swipe_right_meta/click
+* subpathname:/input/swipe_forward_meta/click
+* subpathname:/input/swipe_backward_meta/click
+* subpathname:/input/tap_thumb_meta/click
+
+All listed inputs are boolean that become ename:XR_TRUE once the
+corresponding gesture has been completed and recognized.
+
+Corresponding inputs are ename:XR_FALSE otherwise, even during the progress
+of a gesture.
+
+include::{generated}/interfaces/XR_META_hand_tracking_microgestures.adoc[leveloffset=1]
+
+
+==== Issues
+
+When the apiext:XR_EXT_hand_interaction and
+apiext:XR_META_hand_tracking_microgestures extensions are available and
+enabled, the runtime should: avoid interferences between the detection of
+pinches and microgestures, gestures that are similar in nature.
+Specifically, a swipe towards the tip of the index finger should: not be
+misclassified as a pinch.
+
+==== Version History
+
+* Revision 1, 2024-09-03 (Andrei Marin)
+** Initial API version

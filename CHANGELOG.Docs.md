@@ -17,6 +17,92 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.46 (2025-03-04)
+
+This release includes a new ratified Khronos extension, new vendor extensions,
+and the ratification of several existing multi-vendor extensions. (Ratification
+of `EXT` extensions primarily affects runtime developers; see the extension
+process link in the following changelogs for details.) This release also makes
+some small usability improvements to the generated components of the
+specification.
+
+- Registry
+  - Improvement: Ratify a list of shared vendor extensions as well as add support
+    for the 'ratified' attribute in XML and html generation. See
+    <https://registry.khronos.org/OpenXR/specs/1.1/extprocess.html> for more
+    information.
+    ([internal MR 3494](https://gitlab.khronos.org/openxr/openxr/merge_requests/3494),
+    [internal issue 2404](https://gitlab.khronos.org/openxr/openxr/issues/2404),
+    [internal MR 3677](https://gitlab.khronos.org/openxr/openxr/merge_requests/3677))
+  - New ratified Khronos extension: `XR_KHR_extended_struct_name_lengths`
+    ([internal MR 3254](https://gitlab.khronos.org/openxr/openxr/merge_requests/3254),
+    [internal issue 1664](https://gitlab.khronos.org/openxr/openxr/issues/1664))
+  - New vendor extension: `XR_LOGITECH_mx_ink_stylus_interaction`
+    ([internal MR 3242](https://gitlab.khronos.org/openxr/openxr/merge_requests/3242),
+    [internal MR 3583](https://gitlab.khronos.org/openxr/openxr/merge_requests/3583),
+    [internal MR 3584](https://gitlab.khronos.org/openxr/openxr/merge_requests/3584),
+    [internal MR 3585](https://gitlab.khronos.org/openxr/openxr/merge_requests/3585))
+  - New vendor extension: `XR_META_hand_tracking_microgestures`
+    ([internal MR 3433](https://gitlab.khronos.org/openxr/openxr/merge_requests/3433),
+    [internal MR 3725](https://gitlab.khronos.org/openxr/openxr/merge_requests/3725))
+  - Chore: Reserve extension numbers.
+    ([internal MR 3701](https://gitlab.khronos.org/openxr/openxr/merge_requests/3701),
+    [internal MR 3711](https://gitlab.khronos.org/openxr/openxr/merge_requests/3711),
+    [internal MR 3722](https://gitlab.khronos.org/openxr/openxr/merge_requests/3722))
+  - Chore: Register Sony author ID.
+    ([internal MR 3709](https://gitlab.khronos.org/openxr/openxr/merge_requests/3709))
+  - Fix: XML contained incorrect paths for dpad emulation bindings for
+    `.../bytedance/pico_neo3_controller`, `.../bytedance/pico4_controller`,
+    `.../bytedance/pico_g3_controller`, `.../yvr/touch_controller_yvr`, and
+    `.../microsoft/xbox_controller`.
+    ([internal MR 3674](https://gitlab.khronos.org/openxr/openxr/merge_requests/3674))
+- Specification
+  - Clarify: Improve usage examples provided in the `XrActionSet` specification.
+    ([internal MR 3653](https://gitlab.khronos.org/openxr/openxr/merge_requests/3653))
+  - Improvement: Add missing definition of `XR_MAX_RESULT_STRING_SIZE` and
+    `XR_MAX_STRUCTURE_NAME_SIZE` into the specification document.
+    ([internal MR 3254](https://gitlab.khronos.org/openxr/openxr/merge_requests/3254))
+  - Improvement: Show ratification status of each extension in the common metadata
+    block.
+    ([internal MR 3494](https://gitlab.khronos.org/openxr/openxr/merge_requests/3494),
+    [internal issue 2404](https://gitlab.khronos.org/openxr/openxr/issues/2404),
+    [internal MR 3677](https://gitlab.khronos.org/openxr/openxr/merge_requests/3677))
+  - Improvement: Update `xrconventions.py` to allow standalone headers to be produced
+    for protected extensions.
+    ([internal MR 3558](https://gitlab.khronos.org/openxr/openxr/merge_requests/3558),
+    [internal MR 3515](https://gitlab.khronos.org/openxr/openxr/merge_requests/3515))
+  - New ratified Khronos extension specification:
+    `XR_KHR_extended_struct_name_lengths`, providing the ability to retrieve
+    structure names longer than the current limit, and unblocking extensions using
+    longer structure names in order to conform with naming conventions.
+    ([internal MR 3254](https://gitlab.khronos.org/openxr/openxr/merge_requests/3254),
+    [internal issue 1664](https://gitlab.khronos.org/openxr/openxr/issues/1664))
+  - New vendor extension: `XR_META_hand_tracking_microgestures`, which extends the
+    `/interaction_profiles/ext/hand_interaction_ext` interaction profile with
+    additional gestures.
+    ([internal MR 3433](https://gitlab.khronos.org/openxr/openxr/merge_requests/3433),
+    [internal MR 3725](https://gitlab.khronos.org/openxr/openxr/merge_requests/3725))
+  - New vendor extension specification: `XR_LOGITECH_mx_ink_stylus_interaction`,
+    which adds an interaction profile for a tracked stylus input device.
+    ([internal MR 3242](https://gitlab.khronos.org/openxr/openxr/merge_requests/3242),
+    [internal MR 3583](https://gitlab.khronos.org/openxr/openxr/merge_requests/3583),
+    [internal MR 3584](https://gitlab.khronos.org/openxr/openxr/merge_requests/3584),
+    [internal MR 3585](https://gitlab.khronos.org/openxr/openxr/merge_requests/3585))
+  - Update: Revise the Extension Process document to reflect available ratification
+    of EXT extensions.
+    ([internal MR 3494](https://gitlab.khronos.org/openxr/openxr/merge_requests/3494),
+    [internal issue 2404](https://gitlab.khronos.org/openxr/openxr/issues/2404),
+    [internal MR 3677](https://gitlab.khronos.org/openxr/openxr/merge_requests/3677))
+  - scripts: Indicate deprecated enumerants in generated C code embedded in the
+    specification.
+    ([internal MR 3666](https://gitlab.khronos.org/openxr/openxr/merge_requests/3666))
+  - scripts: Indicate promotion status in extension TOC.
+    ([internal MR 3666](https://gitlab.khronos.org/openxr/openxr/merge_requests/3666))
+  - scripts: Removed usage of externally-hosted icon font in ref pages.
+    ([internal MR 3666](https://gitlab.khronos.org/openxr/openxr/merge_requests/3666))
+  - scripts: Partial synchronization of spec toolchain scripts with Vulkan.
+    ([internal MR 3666](https://gitlab.khronos.org/openxr/openxr/merge_requests/3666))
+
 ## OpenXR Specification 1.1.45 (2025-02-05)
 
 This release includes a new multi-vendor extension, a new vendor extension, and

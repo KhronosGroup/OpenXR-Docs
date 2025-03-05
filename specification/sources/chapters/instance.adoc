@@ -546,6 +546,16 @@ In all cases the returned string must: be one of:
 include::{generated}/validity/protos/xrResultToString.adoc[]
 --
 
+[open,refpage='XR_MAX_RESULT_STRING_SIZE',type='enums',desc='The buffer size of xrResultToString',xrefs='xrResultToString']
+--
+The ename:XR_MAX_RESULT_STRING_SIZE enumerant defines the size of the buffer
+passed to flink:xrResultToString.
+
+include::{generated}/api/enums/XR_MAX_RESULT_STRING_SIZE.adoc[]
+
+--
+
+
 [open,refpage='xrStructureTypeToString',desc='Converts an XrStructureType to a UTF-8 string',type='protos',xrefs='xrResultToString']
 --
 The flink:xrStructureTypeToString function is defined as:
@@ -575,4 +585,15 @@ In all cases the returned string must: be one of:
 ****
 
 include::{generated}/validity/protos/xrStructureTypeToString.adoc[]
+--
+
+
+
+[open,refpage='XR_MAX_STRUCTURE_NAME_SIZE',type='enums',desc='The buffer size of xrStructureTypeToString',xrefs='xrStructureTypeToString']
+--
+The ename:XR_MAX_STRUCTURE_NAME_SIZE enumerant defines the size of the
+buffer passed to flink:xrStructureTypeToString.
+
+include::{generated}/api/enums/XR_MAX_STRUCTURE_NAME_SIZE.adoc[]
+
 --

@@ -1,0 +1,96 @@
+// Copyright (c) 2024-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_KHR_extended_struct_name_lengths.adoc[]
+
+*Last Modified Date*::
+    2024-08-12
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Matthew Langille, Meta Platforms +
+    Andreas Selvik, Meta Platforms +
+    Rylie Pavlik, Collabora, Ltd. +
+
+
+==== Overview
+
+This extension extends the maximum struct name sizes and provides a new
+function to access these new extended names.
+
+flink:xrStructureTypeToString2KHR is provided to allow retrieving the string
+names of structure type enumerants with lengths that exceed the original
+limit of 63 bytes (64 bytes including the null terminator).
+flink:xrStructureTypeToString2KHR returns name strings for structure type
+enumerants up to 127 bytes in length (128 bytes including the null
+terminator).
+An application can: use flink:xrStructureTypeToString2KHR as a drop-in
+replacement for flink:xrStructureTypeToString, as it works with all
+structure type enumerants, regardless of string name length.
+
+
+==== Retrieving Structure Type Enumerant Strings
+
+If the original flink:xrStructureTypeToString is used to retrieve string
+names for structure type enumerants with name lengths in excess of 63 bytes,
+its behavior is clarified as follows.
+flink:xrStructureTypeToString must: populate the buffer with the correct
+name, except that the string must: be truncated at a codepoint boundary to
+fit within the available buffer.
+That is, the returned string must: always be valid UTF-8.
+
+
+[open,refpage='xrStructureTypeToString2KHR',type='protos',desc='Converts an XrStructureType to a UTF-8 string',xrefs='xrResultToString xrStructureTypeToString']
+--
+The flink:xrStructureTypeToString2KHR function is defined as:
+
+include::{generated}/api/protos/xrStructureTypeToString2KHR.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is the handle of the instance to ask for the string.
+* pname:value is the elink:XrStructureType value to turn into a string.
+* pname:buffer is the buffer that will be used to return the string in.
+****
+
+Returns the name of the provided elink:XrStructureType value by copying a
+valid null-terminated UTF-8 string into pname:buffer.
+
+In all cases the returned string must: be one of:
+
+.Structure Type String Output Values
+****
+* The literal string defined for the provided numeric value in the core
+  specification or extension.
+  (e.g. the value of ename:XR_TYPE_INSTANCE_CREATE_INFO results in the
+  string `XR_TYPE_INSTANCE_CREATE_INFO`)
+* `XR_UNKNOWN_STRUCTURE_TYPE_` concatenated with the structure type number
+  expressed as a decimal number.
+****
+
+For structure type enumerants whose names fit within the original size limit
+of 63 bytes, flink:xrStructureTypeToString2KHR must: return the same
+resultant string as flink:xrStructureTypeToString, up to the null
+terminator.
+
+include::{generated}/validity/protos/xrStructureTypeToString2KHR.adoc[]
+--
+
+[open,refpage='XR_MAX_STRUCTURE_NAME_SIZE_EXTENDED_KHR',type='enums',desc='The buffer size of xrStructureTypeToString2KHR',xrefs='xrStructureTypeToString2KHR']
+--
+The ename:XR_MAX_STRUCTURE_NAME_SIZE_EXTENDED_KHR enumerant defines the size
+of the buffer passed to flink:xrStructureTypeToString2KHR.
+
+include::{generated}/api/enums/XR_MAX_STRUCTURE_NAME_SIZE_EXTENDED_KHR.adoc[]
+
+--
+
+include::{generated}/interfaces/XR_KHR_extended_struct_name_lengths.adoc[leveloffset=1]
+
+*Version History*
+
+* Revision 1, 2024-02-29 (Matthew Langille)
+** Initial extension description
