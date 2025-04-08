@@ -1,0 +1,1803 @@
+// Copyright (c) 2024 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_sensing.adoc[]
+
+*Last Modified Date*::
+    2025-03-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zhipeng Liu, ByteDance +
+    Ya Huang, ByteDance +
+    Xiangxin Liu, ByteDance +
+    Zijian Wang, ByteDance +
+    Zhao Li, ByteDance +
+    Zhanrui Jia, ByteDance +
+    Xu Yang, ByteDance +
+    Jun Yan, ByteDance +
+    Jimmy Alamparambil, ByteDance +
+
+
+==== Overview
+
+This extension introduces a spatial sensing API framework which contains a
+set of common functions and data structures for various spatial sensing
+capabilities.
+In this extension, the EC (Entity-Component) pattern is used to denote the
+sensed object in the physical environment via spatial entity.
+
+A spatial entity may: be points of interest, physical plane surfaces,
+physical objects, mesh blocks, images, etc., and it may: have different
+_components_.
+Having different components indicates that different data are attached to
+the spatial entity and different operations can: be performed on it.
+Applications can: get the component types that a given spatial entity has as
+well as the information of a specific component.
+
+Different kinds of spatial sensing data are provided via different sense
+data providers.
+Applications can: get the sensed spatial entity details from sense data
+providers.
+
+The general workflow for applications to includes the following typical
+steps:
+
+1. Create an slink:XrSenseDataProviderBD with relevant configuration
+   information via flink:xrCreateSenseDataProviderBD.
+2. Start the slink:XrSenseDataProviderBD to let the runtime provide sensed
+   data for that provider via flink:xrStartSenseDataProviderAsyncBD.
+3. Get the state of slink:XrSenseDataProviderBD via
+   flink:xrGetSenseDataProviderStateBD, and make sure it is in the running
+   state.
+4. Initiate a query request to the slink:XrSenseDataProviderBD via
+   flink:xrQuerySenseDataAsyncBD after receiving an
+   slink:XrEventDataSenseDataUpdatedBD, and the runtime will produce an
+   slink:XrSenseDataSnapshotBD, which contains the most recent data
+   associated with this provider.
+5. Retrieve the spatial entity info as well as the detailed component data
+   from the slink:XrSenseDataSnapshotBD via flink:xrGetQueriedSenseDataBD
+   and flink:xrGetSpatialEntityComponentDataBD.
+6. Destroy the slink:XrSenseDataSnapshotBD after all the data infos are
+   retrieved via flink:xrDestroySenseDataSnapshotBD to release related
+   resources.
+   Applications can: repeat step 4-6 to get the updated sense data if
+   necessary.
+7. Stop the slink:XrSenseDataProviderBD via flink:xrStopSenseDataProviderBD.
+8. Destroy the slink:XrSenseDataProviderBD via
+   flink:xrDestroySenseDataProviderBD to release the system resources
+   associated with the provider.
+
+
+[NOTE]
+.Note
+====
+If any function returns an
+ename:XR_ERROR_SPATIAL_SENSING_SERVICE_UNAVAILABLE_BD, the service is unable
+to recover by itself, and the application should: destroy the current
+slink:XrInstance and create it again to use the service.
+====
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialSensingPropertiesBD',type='structs',desc='System property for spatial sensing',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+
+The slink:XrSystemSpatialSensingPropertiesBD structure is defined as:
+
+
+
+include::{generated}/api/structs/XrSystemSpatialSensingPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialSensing is an basetype:XrBool32, indicating if
+  current system is capable of spatial sensing.
+****
+
+An application can: inspect whether the system is capable of spatial sensing
+by chaining an slink:XrSystemSpatialSensingPropertiesBD structure to the
+slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialSensing, the
+system does not support spatial sensing, and the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateSenseDataProviderBD.
+
+If a runtime returns ename:XR_TRUE for pname:supportsSpatialSensing, the
+system supports spatial sensing.
+
+include::{generated}/validity/structs/XrSystemSpatialSensingPropertiesBD.adoc[]
+--
+
+
+==== Create Sense Data Provider
+
+[open,refpage='XrSenseDataProviderBD',type='handles',desc='Type referring to a sense data provider']
+--
+The slink:XrSenseDataProviderBD handle is defined as:
+
+include::{generated}/api/handles/XrSenseDataProviderBD.adoc[]
+
+slink:XrSenseDataProviderBD is a <<fundamentals-handles,handle>> which the
+application creates to do spatial sensing for the user's physical
+environment.
+
+--
+
+[open,refpage='xrCreateSenseDataProviderBD',type='protos',desc='Create a sense data provider',xrefs='']
+--
+The flink:xrCreateSenseDataProviderBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSenseDataProviderBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:createInfo is a pointer to a valid
+  slink:XrSenseDataProviderCreateInfoBD.
+* pname:provider is a pointer to the slink:XrSenseDataProviderBD that the
+  runtime created.
+****
+
+The application can: create a sense data provider using
+flink:xrCreateSenseDataProviderBD.
+Different providers are associated with different
+elink:XrSenseDataProviderTypeBD provider type values in
+slink:XrSenseDataProviderCreateInfoBD::pname:providerType.
+Some require additional parameters in structure types chained on to
+pname:createInfo.
+
+include::{generated}/validity/protos/xrCreateSenseDataProviderBD.adoc[]
+--
+
+[open,refpage='XrSenseDataProviderCreateInfoBD',type='structs',desc='Info of creating a sense data provider',xrefs='xrCreateSenseDataProviderBD']
+--
+The slink:XrSenseDataProviderCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataProviderCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:providerType is an elink:XrSenseDataProviderTypeBD indicating the
+  type of provider to create.
+****
+
+When the application creates an slink:XrSenseDataProviderBD, it must:
+specify the type of provider via pname:providerType.
+If the value of pname:providerType is not valid given the current enabled
+extensions, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+Some provider types have additional parameters passed via the
+slink:XrSenseDataProviderCreateInfoBD::pname:next chain.
+
+If a valid provider type is specified in pname:providerType but that type
+requires an additional configuration structure that is not provided in the
+pname:next chain, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+Note that in accordance with
+<<fundamentals-valid-usage-for-structure-pointer-chains>>, configuration
+structures in the pname:next chain for provider types other than the one
+indicated by pname:providerType are ignored.
+
+include::{generated}/validity/structs/XrSenseDataProviderCreateInfoBD.adoc[]
+--
+
+
+[open,refpage='XrSenseDataProviderTypeBD',type='enums',desc='Sense data provider types',xrefs='XrSenseDataProviderCreateInfoBD xrCreateSenseDataProviderBD']
+--
+The elink:XrSenseDataProviderTypeBD enumeration is defined as:
+
+
+include::{generated}/api/enums/XrSenseDataProviderTypeBD.adoc[]
+
+include::{generated}/api/enums/XrSenseDataProviderTypeBD.comments.adoc[]
+
+--
+
+
+==== Start Sense Data Provider
+
+[open,refpage='xrStartSenseDataProviderAsyncBD',type='protos',desc='Start a sense data provider',xrefs='']
+--
+The flink:xrStartSenseDataProviderAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrStartSenseDataProviderAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the sense data provider handle to be started.
+* pname:startInfo is a pointer to the slink:XrSenseDataProviderStartInfoBD.
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+
+The application can: start a previously created sense data provider using
+flink:xrStartSenseDataProviderAsyncBD when it is in either the
+ename:XR_SENSE_DATA_PROVIDER_STATE_INITIALIZED_BD or the
+ename:XR_SENSE_DATA_PROVIDER_STATE_STOPPED_BD state.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrStartSenseDataProviderCompleteBD, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure slink:XrFutureCompletionEXT.
+
+If the sense data provider is already in the
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD state, calling this function
+does not change the provider state.
+In this case, the runtime must: still set the return value of
+flink:xrStartSenseDataProviderAsyncBD to ename:XR_SUCCESS, and the future
+state will be ename:XR_FUTURE_STATE_READY_EXT immediately.
+The runtime must: set the corresponding future result returned by
+flink:xrStartSenseDataProviderCompleteBD to ename:XR_SUCCESS.
+
+Individual sense data provider types may: specify required a permission or
+permissions to use their capabilities on Android-based platforms.
+If the specified provider type requires a permission and that permission is
+not listed in the application's manifest, or the permission is listed but
+denied, the future state will be ename:XR_FUTURE_STATE_READY_EXT immediately
+and the runtime must: set the corresponding future result returned by
+flink:xrStartSenseDataProviderCompleteBD to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT.
+
+
+include::{generated}/validity/protos/xrStartSenseDataProviderAsyncBD.adoc[]
+--
+
+[open,refpage='XrSenseDataProviderStartInfoBD',type='structs',desc='Info of starting a sense data provider',xrefs='xrStartSenseDataProviderAsyncBD']
+--
+The slink:XrSenseDataProviderStartInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataProviderStartInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+This structure is defined for future extension.
+
+include::{generated}/validity/structs/XrSenseDataProviderStartInfoBD.adoc[]
+--
+
+[open,refpage='xrStartSenseDataProviderCompleteBD',type='protos',desc='Complete start a sense data provider',xrefs='']
+--
+The flink:xrStartSenseDataProviderCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrStartSenseDataProviderCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession.
+* pname:future is the basetype:XrFutureEXT previously returned by
+  flink:xrStartSenseDataProviderAsyncBD.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT.
+****
+
+The application can: obtain the sense data provider start result using
+flink:xrStartSenseDataProviderCompleteBD.
+
+This is the completion function corresponding to the operation started by
+flink:xrStartSenseDataProviderAsyncBD.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+The slink:XrFutureCompletionEXT structure is defined in
+apiext:XR_EXT_future.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_PERMISSION_INSUFFICIENT
+****
+
+Subsequent application operations using this handle must: not be performed
+unless the slink:XrFutureCompletionEXT::pname:futureResult is
+ename:XR_SUCCESS.
+For example, if the slink:XrFutureCompletionEXT::pname:futureResult is
+ename:XR_ERROR_PERMISSION_INSUFFICIENT, it indicates that the application
+does not have sufficient permissions and needs to apply for the
+corresponding permissions.
+
+include::{generated}/validity/protos/xrStartSenseDataProviderCompleteBD.adoc[]
+--
+
+==== Get Sense Data Provider State
+
+[open,refpage='xrGetSenseDataProviderStateBD',type='protos',desc='Get the state of a sense data provider',xrefs='']
+--
+
+The flink:xrGetSenseDataProviderStateBD function is defined as:
+
+include::{generated}/api/protos/xrGetSenseDataProviderStateBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD handle.
+* pname:state is a pointer to the elink:XrSenseDataProviderStateBD.
+****
+
+The application can: get a sense data provider's state by calling
+flink:xrGetSenseDataProviderStateBD.
+
+[[fig-BD_spatial_sensing-provider-state]]
+image::images/bd_spatial_sensing_provider_state.png[opts="inline", align="center", title="elink:XrSenseDataProviderStateBD"]
+
+include::{generated}/validity/protos/xrGetSenseDataProviderStateBD.adoc[]
+--
+
+[open,refpage='XrSenseDataProviderStateBD',type='enums',desc='Type of sense data provider state',xrefs='xrGetSenseDataProviderStateBD']
+--
+The elink:XrSenseDataProviderStateBD enumeration identifies the various
+states of the sense data provider.
+
+include::{generated}/api/enums/XrSenseDataProviderStateBD.adoc[]
+
+include::{generated}/api/enums/XrSenseDataProviderStateBD.comments.adoc[]
+--
+
+[open,refpage='XrEventDataSenseDataProviderStateChangedBD',type='structs',desc='Event data of a sense data provider state change',xrefs='']
+--
+The slink:XrEventDataSenseDataProviderStateChangedBD structure is defined
+as:
+
+include::{generated}/api/structs/XrEventDataSenseDataProviderStateChangedBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:provider is the slink:XrSenseDataProviderBD handle.
+* pname:newState is the new elink:XrSenseDataProviderStateBD of the
+  pname:provider.
+****
+This event indicates the state change of the sense data provider.
+The runtime must: queue an event of type
+ename:XR_TYPE_EVENT_DATA_SENSE_DATA_PROVIDER_STATE_CHANGED_BD when a
+specific sense data provider changes from one state to another state.
+When the application calls flink:xrCreateSenseDataProviderBD and the return
+code is ename:XR_SUCCESS, the runtime must: set the provider's state to
+ename:XR_SENSE_DATA_PROVIDER_STATE_INITIALIZED_BD without queuing an event
+of type ename:XR_TYPE_EVENT_DATA_SENSE_DATA_PROVIDER_STATE_CHANGED_BD.
+
+include::{generated}/validity/structs/XrEventDataSenseDataProviderStateChangedBD.adoc[]
+--
+
+
+==== Query Sense Data
+
+When a sense data provider is running, the application can: initiate a query
+that creates a snapshot of the sense data from the current sense data
+provider.
+
+
+
+[open,refpage='XrSenseDataSnapshotBD',type='handles',desc='The snapshot of sense data in a data provider']
+--
+The slink:XrSenseDataSnapshotBD handle is defined as:
+
+include::{generated}/api/handles/XrSenseDataSnapshotBD.adoc[]
+
+--
+
+[open,refpage='xrQuerySenseDataAsyncBD',type='protos',desc='Query a sense data provider',xrefs='']
+--
+The flink:xrQuerySenseDataAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrQuerySenseDataAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD handle to query.
+* pname:queryInfo is the slink:XrSenseDataQueryInfoBD.
+* pname:future is the pointer to the returned basetype:XrFutureEXT.
+****
+The application can: query a sense data provider by calling
+flink:xrQuerySenseDataAsyncBD.
+
+The application must: not call this function to initiate a query request for
+the spatial sense data unless the flink:xrStartSenseDataProviderCompleteBD
+has been called successfully, the future completed, and returned a future
+result of ename:XR_SUCCESS.
+Otherwise, the runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID.
+The query result is a snapshot of the sense data from the current sense data
+provider.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is flink:xrQuerySenseDataCompleteBD,
+usable when a future from this function is in the <<XrFutureStateEXT,READY>>
+state, with outputs populated by that function in the completion structure
+slink:XrSenseDataQueryCompletionBD.
+
+include::{generated}/validity/protos/xrQuerySenseDataAsyncBD.adoc[]
+--
+
+
+[open,refpage='XrSenseDataQueryInfoBD',type='structs',desc='Query info to a sense data provider',xrefs='xrQuerySenseDataAsyncBD']
+--
+The slink:XrSenseDataQueryInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataQueryInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+When the application initiates a query request, it can: chain a
+stext:XrSenseDataFilter* structure to
+slink:XrSenseDataQueryInfoBD::pname:next.
+Then all sense data that matches the criteria in the filter is included in
+the result returned.
+The runtime must: not include sense data that does not match the provided
+filter.
+
+If no stext:XrSenseDataFilter* structure is chained to
+slink:XrSenseDataQueryInfoBD::pname:next, it means no filter is applied, and
+runtime must: include all currently detected sense data of this provider in
+the result.
+
+
+[NOTE]
+.Note
+====
+Currently, only the first filter in the
+slink:XrSenseDataQueryInfoBD::pname:next chain takes effect.
+====
+
+include::{generated}/validity/structs/XrSenseDataQueryInfoBD.adoc[]
+--
+
+
+Some commonly used filters are defined in this extension.
+
+[open,refpage='XrSenseDataFilterUuidBD',type='structs',desc='Uuid filter',xrefs='']
+--
+The slink:XrSenseDataFilterUuidBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataFilterUuidBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:uuidCount is the count of slink:XrUuidEXT.
+* pname:uuids is a pointer to the slink:XrUuidEXT array.
+****
+
+The slink:XrSenseDataFilterUuidBD contains a list of UUIDs.
+When the application passes this filter, the query result will only contain
+entities with UUIDs that appear in this list.
+
+include::{generated}/validity/structs/XrSenseDataFilterUuidBD.adoc[]
+--
+
+[open,refpage='XrSenseDataFilterSemanticBD',type='structs',desc='Semantic label filter',xrefs='']
+--
+The slink:XrSenseDataFilterSemanticBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataFilterSemanticBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:labelCount is the number of elink:XrSemanticLabelBD elements in
+  pname:labels.
+* pname:labels is a pointer to the elink:XrSemanticLabelBD array.
+****
+The slink:XrSenseDataFilterSemanticBD contains a list of semantic labels.
+When the application passes this filter, the query result will only contain
+entities with semantic labels that appear in this list.
+
+include::{generated}/validity/structs/XrSenseDataFilterSemanticBD.adoc[]
+--
+
+[open,refpage='xrQuerySenseDataCompleteBD',type='protos',desc='Complete a sense data provider query',xrefs='xrQuerySenseDataAsyncBD']
+--
+The flink:xrQuerySenseDataCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrQuerySenseDataCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT previously returned by
+  flink:xrQuerySenseDataAsyncBD.
+* pname:completion is the slink:XrSenseDataQueryCompletionBD.
+****
+
+This is the completion function corresponding to
+flink:xrQuerySenseDataAsyncBD.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+include::{generated}/validity/protos/xrQuerySenseDataCompleteBD.adoc[]
+--
+
+
+[open,refpage='XrSenseDataQueryCompletionBD',type='structs',desc='Completion info of query a sense data provider',xrefs='xrQuerySenseDataCompleteBD']
+--
+
+The slink:XrSenseDataQueryCompletionBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataQueryCompletionBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:futureResult is the elink:XrResult of the future.
+* pname:snapshot is the slink:XrSenseDataSnapshotBD handle of the query
+  result.
+****
+
+If the pname:futureResult is not ename:XR_SUCCESS, the runtime must: set
+pname:snapshot to dlink:XR_NULL_HANDLE.
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+
+include::{generated}/validity/structs/XrSenseDataQueryCompletionBD.adoc[]
+--
+
+[open,refpage='xrDestroySenseDataSnapshotBD',type='protos',desc='Destroy a sense data snapshot',xrefs='']
+--
+The flink:xrDestroySenseDataSnapshotBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySenseDataSnapshotBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is the slink:XrSenseDataSnapshotBD to be destroyed.
+****
+The application can: destroy a sense data snapshot using
+flink:xrDestroySenseDataSnapshotBD.
+
+After all the spatial entity info are retrieved from the snapshot,
+application should: destroy the slink:XrSenseDataSnapshotBD handle to
+release related resources.
+The runtime may: have an upper limit on the number of snapshots it supports.
+When the application exceeds the runtime's limit, the runtime must: set
+slink:XrSenseDataQueryCompletionBD::pname:futureResult to
+ename:XR_ERROR_LIMIT_REACHED when flink:xrQuerySenseDataCompleteBD is
+called.
+To obtain new snapshots once the limit is reached, destroy at least one of
+the previously obtained snapshots.
+
+include::{generated}/validity/protos/xrDestroySenseDataSnapshotBD.adoc[]
+--
+
+==== Spatial Entity
+
+[open,refpage='XrSpatialEntityIdBD',type='basetypes',desc='Type referring to a spatial entity']
+--
+The basetype:XrSpatialEntityIdBD atom is defined as:
+
+include::{generated}/api/basetypes/XrSpatialEntityIdBD.adoc[]
+
+The basetype:XrSpatialEntityIdBD is used to represent the spatial entities
+that are sensed by the runtime in the user's physical environment.
+The application can: obtain spatial entity information from the
+slink:XrSenseDataSnapshotBD.
+This atom is retrieved from slink:XrSenseDataSnapshotBD and shares its
+lifetime.
+The application must: not use an basetype:XrSpatialEntityIdBD with a
+snapshot it was not retrieved from.
+The same numerical value of ID may: be reused between different snapshots
+for different entities.
+See flink:xrGetSpatialEntityUuidBD for a more stable ID.
+--
+
+==== Spatial Entity UUID
+
+An slink:XrUuidEXT is generated by the runtime when it creates a spatial
+entity, and the runtime must: guarantee the UUID refers to the same spatial
+entity for the whole life of the spatial entity.
+For spatial entities that are persisted, the runtime must: guarantee the
+UUID remain unchanged across application sessions.
+
+[open,refpage='xrGetSpatialEntityUuidBD',desc='Gets an spatial entity's UUID',type='protos',xrefs='']
+--
+The flink:xrGetSpatialEntityUuidBD function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialEntityUuidBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is the slink:XrSenseDataSnapshotBD handle.
+* pname:entityId is the basetype:XrSpatialEntityIdBD of a spatial entity.
+* pname:uuid is an output parameter slink:XrUuidEXT pointer to the spatial
+  entity's UUID.
+****
+Applications can: get the UUID for a given spatial entity by calling
+flink:xrGetSpatialEntityUuidBD.
+
+include::{generated}/validity/protos/xrGetSpatialEntityUuidBD.adoc[]
+--
+
+
+==== Get Sense Data Info
+
+[open,refpage='xrGetQueriedSenseDataBD',type='protos',desc='Get queried sense data',xrefs='']
+--
+The flink:xrGetQueriedSenseDataBD function is defined as:
+
+include::{generated}/api/protos/xrGetQueriedSenseDataBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is the slink:XrSenseDataSnapshotBD.
+* pname:getInfo is a pointer to the slink:XrQueriedSenseDataGetInfoBD.
+* pname:queriedSenseData is a pointer to the slink:XrQueriedSenseDataBD.
+****
+The application can: get queried sense data from the
+slink:XrSenseDataSnapshotBD using flink:xrGetQueriedSenseDataBD.
+pname:queriedSenseData contains an application-allocated array that is
+populated by the runtime, after capacity negotiation using the
+<<fundaments-buffer-size,two-call idiom>>, with entity ID, UUID, and last
+update times for each entity in the snapshot.
+
+include::{generated}/validity/protos/xrGetQueriedSenseDataBD.adoc[]
+--
+
+
+[open,refpage='XrQueriedSenseDataGetInfoBD',type='structs',desc='Info of getting queried sense data',xrefs='xrGetQueriedSenseDataBD']
+--
+The slink:XrQueriedSenseDataGetInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrQueriedSenseDataGetInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+include::{generated}/validity/structs/XrQueriedSenseDataGetInfoBD.adoc[]
+--
+
+[open,refpage='XrQueriedSenseDataBD',type='structs',desc='Info of queried sense data',xrefs='xrGetQueriedSenseDataBD']
+--
+The slink:XrQueriedSenseDataBD structure is defined as:
+
+include::{generated}/api/structs/XrQueriedSenseDataBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:stateCapacityInput is the capacity of the pname:states array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:stateCountOutput is a pointer to the count of pname:states written,
+  or a pointer to the required capacity in the case that
+  pname:stateCapacityInput is insufficient.
+* pname:states is an array of slink:XrSpatialEntityStateBD filled in by the
+  runtime, specifying the spatial entities in the snapshot.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required pname:states
+  size.
+****
+
+include::{generated}/validity/structs/XrQueriedSenseDataBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityStateBD',type='structs',desc='Info of spatial entities',xrefs='xrGetQueriedSenseDataBD']
+--
+The slink:XrSpatialEntityStateBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityStateBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:entityId is the basetype:XrSpatialEntityIdBD of a spatial entity.
+* pname:lastUpdateTime is the last basetype:XrTime timestamp at which any of
+  the spatial entity's component data was updated.
+* pname:uuid is the slink:XrUuidEXT of the spatial entity.
+****
+The slink:XrSpatialEntityStateBD contains the general info of the spatial
+entity.
+
+include::{generated}/validity/structs/XrSpatialEntityStateBD.adoc[]
+--
+
+==== Spatial Entity Component Type
+
+A spatial entity may: have several components which provide different data
+for the entity.
+
+[open,refpage='xrEnumerateSpatialEntityComponentTypesBD',type='protos',desc='Enumerate components that a spatial entity has',xrefs='']
+--
+The flink:xrEnumerateSpatialEntityComponentTypesBD function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSpatialEntityComponentTypesBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is the slink:XrSenseDataSnapshotBD handle.
+* pname:entityId is the basetype:XrSpatialEntityIdBD whose spatial entity
+  component types will be enumerated.
+* pname:componentTypeCapacityInput is the capacity of the
+  pname:componentTypes array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:componentTypeCountOutput is the number of component types, or the
+  required capacity in the case that pname:componentTypeCapacityInput is
+  insufficient.
+* pname:componentTypes is an array of elink:XrSpatialEntityComponentTypeBD.
+  It can: be code:NULL if pname:componentTypeCapacityInput is 0.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required
+  pname:componentTypes size.
+****
+The application inspects the component types for a given
+basetype:XrSpatialEntityIdBD using
+flink:xrEnumerateSpatialEntityComponentTypesBD.
+The application may: skip enumerating component types and proceed directly
+to attempting to access component data.
+
+include::{generated}/validity/protos/xrEnumerateSpatialEntityComponentTypesBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentTypeBD',type='enums',desc='Type of components',xrefs='xrEnumerateSpatialEntityComponentTypesBD']
+--
+The elink:XrSpatialEntityComponentTypeBD enumeration identifies the
+different types of components that spatial entities may: support.
+
+include::{generated}/api/enums/XrSpatialEntityComponentTypeBD.adoc[]
+include::{generated}/api/enums/XrSpatialEntityComponentTypeBD.comments.adoc[]
+--
+
+
+==== Get Spatial Entity Component Data
+
+Applications can: get the spatial entity component data of a given spatial
+entity.
+
+[open,refpage='xrGetSpatialEntityComponentDataBD',type='protos',desc='Get the component data of a spatial entity',xrefs='']
+--
+The flink:xrGetSpatialEntityComponentDataBD function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialEntityComponentDataBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is the slink:XrSenseDataSnapshotBD handle.
+* pname:getInfo is a pointer to the slink:XrSpatialEntityComponentGetInfoBD
+  identifying the component data to retrieve.
+* pname:componentData is a pointer to a valid structure based on
+  slink:XrSpatialEntityComponentDataBaseHeaderBD.
+****
+
+The application can: use flink:xrGetSpatialEntityComponentDataBD to get the
+component data of a spatial entity.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the component
+type is not present on a given entity.
+
+The slink:XrSpatialEntityComponentGetInfoBD::pname:componentType must: match
+the type of the output stext:XrSpatialEntityComponentData* structure passed
+as pname:componentData when querying certain component data with
+flink:xrGetSpatialEntityComponentDataBD.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetSpatialEntityComponentDataBD.
+
+If a given component type requires passing additional input through the
+slink:XrSpatialEntityComponentGetInfoBD::pname:next chain, but that input is
+not present, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+Some component data types (types passed to pname:componentData) use the
+<<fundamentals-buffer-size-parameters,structure form of the two call idiom>>
+to populate buffers of variable sizes.
+
+The runtime must: not change the component data in the snapshot until the
+snapshot is destroyed.
+
+include::{generated}/validity/protos/xrGetSpatialEntityComponentDataBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentGetInfoBD',type='structs',desc='Spatial entity component get information',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentGetInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentGetInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:entityId is the basetype:XrSpatialEntityIdBD to get the component
+  info.
+* pname:componentType is the elink:XrSpatialEntityComponentTypeBD to get.
+****
+
+The slink:XrSpatialEntityComponentGetInfoBD is a common structure that is
+used to get component data for a given component type.
+For some component types, applications may: need to chain additional
+`getInfo` structures on the
+slink:XrSpatialEntityComponentGetInfoBD::pname:next chain, when passing it
+to the flink:xrGetSpatialEntityComponentDataBD function.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentGetInfoBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataBaseHeaderBD',type='structs',desc='Spatial entity component data information',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataBaseHeaderBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataBaseHeaderBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrSpatialEntityComponentDataBaseHeaderBD is a base structure that
+is not intended to be directly used, but forms a basis for specific
+component info types.
+All component info structures begin with the elements described in the
+slink:XrSpatialEntityComponentDataBaseHeaderBD, and a component info pointer
+must: be cast to a pointer to slink:XrSpatialEntityComponentDataBaseHeaderBD
+when passing it to the flink:xrGetSpatialEntityComponentDataBD function.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataBaseHeaderBD.adoc[]
+--
+
+There are some commonly used component data structures defined in this
+extension which provide access to different spatial sensing features.
+
+
+[open,refpage='XrSpatialEntityLocationGetInfoBD',type='structs',desc='Spatial entity location component get information',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityLocationGetInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityLocationGetInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is an slink:XrSpace within which the spatial entity will
+  be located.
+****
+
+Chaining this struct to slink:XrSpatialEntityComponentGetInfoBD::pname:next
+is required when querying certain component data with
+flink:xrGetSpatialEntityComponentDataBD.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetSpatialEntityComponentDataBD.
+See the stext:XrSpatialEntityComponentData* struct details for more
+information which components require this struct to be chained.
+
+include::{generated}/validity/structs/XrSpatialEntityLocationGetInfoBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataLocationBD',desc='Spatial entity location component data information',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataLocationBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataLocationBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:location is the slink:XrSpaceLocation structure.
+****
+
+The slink:XrSpatialEntityComponentDataLocationBD is an output struct for
+getting the location component data from the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD.
+The application must: chain slink:XrSpatialEntityLocationGetInfoBD to
+slink:XrSpatialEntityComponentGetInfoBD::pname:next when querying
+slink:XrSpatialEntityComponentDataLocationBD.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetSpatialEntityComponentDataBD.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataLocationBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataSemanticBD',desc='Spatial entity semantic component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataSemanticBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataSemanticBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:labelCapacityInput is the capacity of the pname:labels array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:labelCountOutput is the number of semantic labels, or the required
+  capacity in the case that pname:labelCapacityInput is insufficient.
+* pname:labels is an array of elink:XrSemanticLabelBD.
+  It can: be code:NULL if pname:labelCapacityInput is 0.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required pname:labels
+  size.
+****
+The slink:XrSpatialEntityComponentDataSemanticBD is an output struct for
+getting the semantic labels component data from an entity in the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_SEMANTIC_BD.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataSemanticBD.adoc[]
+--
+
+[open,refpage='XrSemanticLabelBD',desc='Semantic label type',type='enums']
+--
+
+Specify the semantic labels of spatial entity.
+
+include::{generated}/api/enums/XrSemanticLabelBD.adoc[]
+
+include::{generated}/api/enums/XrSemanticLabelBD.comments.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataBoundingBox2DBD',desc='Spatial entity bounding box 2D component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataBoundingBox2DBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataBoundingBox2DBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:boundingBox2D is an slink:XrRect2Df defining the offset and extent
+  of the bounding box along the x-axis (width) and y-axis (height).
+****
+The slink:XrSpatialEntityComponentDataBoundingBox2DBD is an output struct
+for getting the bounding box 2D component data from the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD.
+
+The x-axis and y-axis that describe pname:boundingBox2D are defined by the
+spatial entity's coordinate space.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataBoundingBox2DBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataPolygonBD',desc='Spatial entity polygon component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataPolygonBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataPolygonBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:vertexCapacityInput is the capacity of the pname:vertices array, or
+  0 to indicate a request to retrieve the required capacity.
+* pname:vertexCountOutput is the number of elements populated in the
+  pname:vertices array, or the required capacity in the case that
+  pname:vertexCapacityInput is insufficient.
+* pname:vertices is an array of slink:XrVector2f.
+  It can: be code:NULL if pname:vertexCapacityInput is 0.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required
+  pname:vertices size.
+****
+The slink:XrSpatialEntityComponentDataPolygonBD is an output struct for
+getting the polygon component data from an entity in the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_POLYGON_BD.
+
+The pname:vertices is a list of vertices described on the XY plane, which is
+defined by the spatial entity's coordinate space.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataPolygonBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataBoundingBox3DBD',desc='Spatial entity bounding box 3D component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataBoundingBox3DBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataBoundingBox3DBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:boundingBox3D is an slink:XrBoxf defining the center position and
+  orientation and the extent of a bounding box 3D relative to its spatial
+  entity's location.
+****
+The slink:XrSpatialEntityComponentDataBoundingBox3DBD is an output struct
+for getting the bounding box 3D component data from an entity in the
+snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_3D_BD.
+
+The x-axis, y-axis, and z-axis that describe pname:boundingBox3D are defined
+by the spatial entity's coordinate space.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataBoundingBox3DBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataTriangleMeshBD',desc='Spatial entity triangle mesh component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataTriangleMeshBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataTriangleMeshBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:vertexCapacityInput is the capacity of the pname:vertices array, or
+  0 to indicate a request to retrieve the required capacity.
+* pname:vertexCountOutput is the number of elements populated in the
+  pname:vertices array, or the required capacity in the case that
+  pname:vertexCapacityInput is insufficient.
+* pname:vertices is an array of slink:XrVector3f.
+  It can: be code:NULL if pname:vertexCapacityInput is 0.
+* pname:indexCapacityInput is the capacity of the pname:indices array, or 0
+  to indicate a request to retrieve the required capacity.
+* pname:indexCountOutput is the number of elements in the pname:indices
+  array, or the required capacity in the case that pname:indexCapacityInput
+  is insufficient.
+* pname:indices is an array of indices.
+  It can: be code:NULL if pname:indexCapacityInput is 0.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required
+  pname:vertices and pname:indices size.
+****
+The slink:XrSpatialEntityComponentDataTriangleMeshBD is an output struct for
+getting the triangle mesh component data from the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD.
+
+The pname:vertices array is a list of vertices described by the spatial
+entity's coordinate space.
+The triangle vertices are in counter-clockwise order as viewed from the user
+perspective.
+
+The pname:indices array defines the topology of the triangle mesh.
+Each triplet of consecutive elements points to three vertices in the
+pname:vertices array and thus form a triangle.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataTriangleMeshBD.adoc[]
+--
+
+
+==== Get Sense Data Update Event
+
+[open,refpage='XrEventDataSenseDataUpdatedBD',type='structs',desc='Event data of a sense data provider data change',xrefs='']
+--
+The slink:XrEventDataSenseDataUpdatedBD structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSenseDataUpdatedBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:provider is the slink:XrSenseDataProviderBD in which the sense data
+  updated.
+****
+When the application receives this event, it means one of the sense data
+providers has updated sense data, and the application can: initiate a new
+query request to this sense data provider to get the latest sense data, as a
+new slink:XrSenseDataSnapshotBD.
+This is the recommended way to get updated data.
+The application may: initiate a new query request even without receiving
+this event, but the sense data provider may: not have acquired new data and
+therefore the contents of the snapshot may: be functionally identical.
+
+include::{generated}/validity/structs/XrEventDataSenseDataUpdatedBD.adoc[]
+--
+
+
+==== Stop Sense Data Provider
+
+[open,refpage='xrStopSenseDataProviderBD',type='protos',desc='Stop a sense data provider',xrefs='']
+--
+The flink:xrStopSenseDataProviderBD function is defined as:
+
+include::{generated}/api/protos/xrStopSenseDataProviderBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD to stop.
+****
+
+The application can: stop a sense data provider using
+flink:xrStopSenseDataProviderBD if it no longer needs to obtain new sense
+data from the sense data provider.
+Stopping the provider must: not affect the usage of existing valid
+slink:XrSenseDataSnapshotBD handles and their corresponding entity IDs.
+
+include::{generated}/validity/protos/xrStopSenseDataProviderBD.adoc[]
+--
+
+==== Destroy Sense Data Provider
+
+[open,refpage='xrDestroySenseDataProviderBD',type='protos',desc='Destroy a sense data provider',xrefs='']
+--
+The flink:xrDestroySenseDataProviderBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySenseDataProviderBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD to destroy.
+****
+
+The application should: destroy a sense data provider using
+flink:xrDestroySenseDataProviderBD to release the resources related to it.
+
+include::{generated}/validity/protos/xrDestroySenseDataProviderBD.adoc[]
+--
+
+
+==== Anchor
+
+[open,refpage='XrAnchorBD',type='handles',desc='Type refer an anchor',xrefs='']
+--
+The slink:XrAnchorBD handle is defined as:
+
+include::{generated}/api/handles/XrAnchorBD.adoc[].adoc[]
+
+An anchor is bound to a point in the real physical world, or to a spatial
+entity.
+
+The slink:XrAnchorBD handle is alive until it is explicitly destroyed or the
+slink:XrSenseDataProviderBD is destroyed.
+--
+
+===== Create an Anchor from a Spatial Entity
+
+[open,refpage='xrCreateSpatialEntityAnchorBD',type='protos',desc='Create spatial entity anchor',xrefs='']
+--
+The flink:xrCreateSpatialEntityAnchorBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialEntityAnchorBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:createInfo is a pointer to the
+  slink:XrSpatialEntityAnchorCreateInfoBD.
+* pname:anchor is a pointer to the created slink:XrAnchorBD handle.
+****
+
+Some spatial entities may: have frequently changing poses, requiring
+real-time acquisition of their poses.
+The application can: create the slink:XrAnchorBD handle bound to the spatial
+entity through flink:xrCreateSpatialEntityAnchorBD, and then create the
+slink:XrSpace from it using flink:xrCreateAnchorSpaceBD, so that the
+application can: obtain its latest pose in real time through
+flink:xrLocateSpace or flink:xrLocateSpaces.
+
+This function is not supported for all types of sense data providers.
+Whether this is supported in a type of sense data provider will be explained
+in the extension that defines the specific type of sense data provider.
+Otherwise, the runtime must: return
+ename:XR_ERROR_ANCHOR_NOT_SUPPORTED_FOR_ENTITY_BD.
+
+This handle and associated handles continue to be valid and usable even if
+the slink:XrSenseDataSnapshotBD used at its creation has since been
+destroyed.
+
+
+include::{generated}/validity/protos/xrCreateSpatialEntityAnchorBD.adoc[]
+--
+
+[open,refpage='XrSpatialEntityAnchorCreateInfoBD',type='structs',desc='Info of creating an anchor from a spatial entity',xrefs='xrCreateSpatialEntityAnchorBD']
+--
+The slink:XrSpatialEntityAnchorCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityAnchorCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:snapshot is the slink:XrSenseDataSnapshotBD handle.
+* pname:entityId is the basetype:XrSpatialEntityIdBD to create from.
+****
+include::{generated}/validity/structs/XrSpatialEntityAnchorCreateInfoBD.adoc[]
+--
+
+==== Get Anchor UUID
+
+[open,refpage='xrGetAnchorUuidBD',type='protos',desc='Get spatial entity anchor UUID',xrefs='']
+--
+The flink:xrGetAnchorUuidBD function is defined as:
+
+include::{generated}/api/protos/xrGetAnchorUuidBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:anchor is the slink:XrAnchorBD handle.
+* pname:uuid is a pointer to the slink:XrUuid.
+****
+
+The application can: get the anchor UUID using flink:xrGetAnchorUuidBD.
+If the slink:XrAnchorBD is created from a spatial entity, the anchor's UUID
+is the same as the spatial entity's UUID.
+include::{generated}/validity/protos/xrGetAnchorUuidBD.adoc[]
+--
+
+==== Locate an Anchor with Anchor Spaces
+
+Locating an anchor relative to a base space is performed similarly to
+locating other spatial objects: through use of an slink:XrSpace handle and
+functions like flink:xrLocateSpace and flink:xrLocateSpaces.
+To locate an anchor in a base space, first create an slink:XrSpace handle
+for that anchor using flink:xrCreateAnchorSpaceBD.
+
+
+[open,refpage='xrCreateAnchorSpaceBD',type='protos',desc='Create a space handle for a spatial entity anchor',xrefs='xrLocateSpace xrLocateSpaces']
+--
+The flink:xrCreateAnchorSpaceBD function is defined as:
+
+include::{generated}/api/protos/xrCreateAnchorSpaceBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to the parent slink:XrSession.
+* pname:createInfo is a pointer to an slink:XrAnchorSpaceCreateInfoBD
+  structure containing information about how to create the anchor.
+* pname:space is a pointer to a handle in which the created slink:XrSpace is
+  returned.
+****
+
+The application can: create an slink:XrSpace for an anchor using
+flink:xrCreateAnchorSpaceBD.
+Using this handle, the application can: use calls like flink:xrLocateSpace
+and flink:xrLocateSpaces to locate the anchor in a given base space at a
+given time.
+The pname:createInfo parameter contains the slink:XrAnchorBD as well as a
+pose offset to apply.
+
+Multiple slink:XrSpace handles for a given slink:XrAnchorBD may: exist
+simultaneously, up to some limit imposed by the runtime.
+The slink:XrSpace handle must: be eventually freed via the
+flink:xrDestroySpace function or by destroying the parent slink:XrSession
+handle.
+
+As the parent of all slink:XrSpace handles, including those created with
+this function, is an slink:XrSession handle, an anchor space may: outlive
+the slink:XrAnchorBD handle used to create it.
+Additionally, the ability to locate anchor spaces depends on spatial sensing
+being active.
+A valid slink:XrSpace handle created for an slink:XrAnchorBD must: be
+unlocatable unless the associated slink:XrSenseDataProviderBD has been
+started without since being stopped.
+
+Such an unlocatable anchor space behaves the same as an unlocatable action
+space as discussed in <<spaces-action-spaces-lifetime>>.
+
+Note that destroying the slink:XrAnchorBD used in creating an anchor space
+does not itself make the anchor space unlocatable; it only prevents creation
+of additional anchor spaces from that anchor.
+This mirrors the behavior of action spaces and destruction of their
+corresponding pose actions.
+
+include::{generated}/validity/protos/xrCreateAnchorSpaceBD.adoc[]
+--
+
+[open,refpage='XrAnchorSpaceCreateInfoBD',type='structs',desc='Info for creating an anchor space, for locating an anchor',xrefs='xrCreateAnchorSpaceBD']
+--
+The slink:XrAnchorSpaceCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrAnchorSpaceCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:anchor is a handle to an slink:XrAnchorBD.
+* pname:poseInAnchorSpace is an slink:XrPosef describing the pose of the new
+  space's origin relative to the pose of the anchor.
+****
+
+include::{generated}/validity/structs/XrAnchorSpaceCreateInfoBD.adoc[]
+--
+
+
+==== Destroy an Anchor
+
+[open,refpage='xrDestroyAnchorBD',type='protos',desc='Destroy spatial entity anchor',xrefs='']
+--
+The flink:xrDestroyAnchorBD function is defined as:
+
+include::{generated}/api/protos/xrDestroyAnchorBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:anchor is the slink:XrAnchorBD handle.
+****
+
+The application can: destroy an anchor using flink:xrDestroyAnchorBD.
+
+include::{generated}/validity/protos/xrDestroyAnchorBD.adoc[]
+--
+
+include::{generated}/interfaces/XR_BD_spatial_sensing.adoc[leveloffset=1]
+
+
+==== Sample Code
+
+===== Create sense data provider & query component data
+
+The following example code demonstrates how to create and start spatial
+sense data provider for capability "Foo", as well as how to query its
+component "Bar" data.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateSenseDataProviderBD xrCreateSenseDataProviderBD;                           // previously initialized
+PFN_xrStartSenseDataProviderAsyncBD xrStartSenseDataProviderAsyncBD;                   // previously initialized
+PFN_xrStartSenseDataProviderCompleteBD xrStartSenseDataProviderCompleteBD;             // previously initialized
+PFN_xrStopSenseDataProviderBD xrStopSenseDataProviderBD;                               // previously initialized
+PFN_xrDestroySenseDataProviderBD xrDestroySenseDataProviderBD;                         // previously initialized
+PFN_xrQuerySenseDataAsyncBD xrQuerySenseDataAsyncBD;                                   // previously initialized
+PFN_xrQuerySenseDataCompleteBD xrQuerySenseDataCompleteBD;                             // previously initialized
+PFN_xrGetSenseDataProviderStateBD xrGetSenseDataProviderStateBD;                       // previously initialized
+PFN_xrGetQueriedSenseDataBD xrGetQueriedSenseDataBD;                                   // previously initialized
+PFN_xrEnumerateSpatialEntityComponentTypesBD xrEnumerateSpatialEntityComponentTypesBD; // previously initialized
+PFN_xrGetSpatialEntityComponentDataBD xrGetSpatialEntityComponentDataBD;               // previously initialized
+PFN_xrDestroySenseDataSnapshotBD xrDestroySenseDataSnapshotBD;                         // previously initialized
+PFN_xrPollFutureEXT xrPollFutureEXT;                                                   // previously initialized
+
+// Define structure to create data provider for spatial sensing capability foo
+#define XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_FOO_BD ((XrStructureType)1000389000U)
+
+// Derives from XrSenseDataProviderCreateInfoBD
+typedef struct XrSenseDataProviderCreateInfoFooBD
+{
+    XrStructureType type;
+    const void *XR_MAY_ALIAS next;
+} XrSenseDataProviderCreateInfoFooBD;
+
+// Define type for component bar and data structure to get component bar data
+#define XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD ((XrSpatialEntityComponentTypeBD)1000389001U)
+#define XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BAR_BD ((XrStructureType)1000389002U)
+
+// Derives from XrSpatialEntityComponentDataBaseHeaderBD
+typedef struct XrSpatialEntityComponentDataBarBD
+{
+    XrStructureType type;
+    const void *XR_MAY_ALIAS next;
+    uint32_t barData;
+} XrSpatialEntityComponentDataBarBD;
+
+// Create data provider for spatial sensing capability foo
+XrSenseDataProviderBD fooProvider;
+XrFutureEXT providerCreateFuture;
+
+XrSenseDataProviderCreateInfoFooBD providerCreateInfoFoo{XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_FOO_BD};
+XrSenseDataProviderCreateInfoBD
+    providerCreateInfo{XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_BD, &providerCreateInfoFoo};
+
+CHK_XR(xrCreateSenseDataProviderBD(session, &providerCreateInfo, &fooProvider));
+
+auto waitUntilFutureReady = [&](XrFutureEXT future)
+{
+    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+    pollInfo.future = future;
+    do
+    {
+        // sleep(1);
+        CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+    } while (pollResult.state != XR_FUTURE_STATE_READY_EXT);
+};
+
+// Start foo provider
+XrFutureEXT providerStartFuture;
+XrSenseDataProviderStartInfoBD startInfo{XR_TYPE_SENSE_DATA_PROVIDER_START_INFO_BD};
+CHK_XR(xrStartSenseDataProviderAsyncBD(fooProvider, &startInfo, &providerStartFuture));
+
+waitUntilFutureReady(providerStartFuture);
+
+XrFutureCompletionEXT completion{XR_TYPE_FUTURE_COMPLETION_EXT};
+
+XrResult result = xrStartSenseDataProviderCompleteBD(session, providerStartFuture, &completion);
+CHK_XR(result); // Result of the complete function
+CHK_XR(completion.futureResult);
+
+// Check the provider state.
+XrSenseDataProviderStateBD providerState;
+CHK_XR(xrGetSenseDataProviderStateBD(fooProvider, &providerState));
+if (providerState != XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD)
+{
+    // Provider not running, handle the case: start the provider again, or quit
+    // ...
+    return;
+}
+
+// Query foo spatial entities
+auto queryFooSpatialEntities = [&]()
+{
+    XrSenseDataSnapshotBD querySnapshotHandle{XR_NULL_HANDLE};
+
+    XrFutureEXT queryFuture;
+    XrSenseDataQueryInfoBD queryInfo{XR_TYPE_SENSE_DATA_QUERY_INFO_BD};
+
+    CHK_XR(xrQuerySenseDataAsyncBD(fooProvider, &queryInfo, &queryFuture));
+
+    waitUntilFutureReady(queryFuture);
+
+    XrSenseDataQueryCompletionBD completion{XR_TYPE_SENSE_DATA_QUERY_COMPLETION_BD};
+
+    result = xrQuerySenseDataCompleteBD(fooProvider, queryFuture, &completion);
+    CHK_XR(result); // Result of the complete function
+    CHK_XR(completion.futureResult);
+
+    querySnapshotHandle = completion.snapshot;
+
+    // Retrieve queried sense data
+    XrQueriedSenseDataGetInfoBD queriedDataGetInfo{XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD};
+
+    XrQueriedSenseDataBD queriedSenseData{XR_TYPE_QUERIED_SENSE_DATA_BD,
+                                          nullptr,
+                                          0,
+                                          0,
+                                          nullptr};
+
+    // First call to get spatial entity count
+    CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
+
+    if (queriedSenseData.stateCountOutput > 0)
+    {
+        std::vector<XrSpatialEntityStateBD> queriedFooStates(queriedSenseData.stateCountOutput);
+        queriedSenseData.stateCapacityInput = queriedSenseData.stateCountOutput;
+        queriedSenseData.states = queriedFooStates.data();
+
+        // Second call to get the spatial entities in the provider's query result
+        CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
+
+        // Process the data
+        for (int i = 0; i < queriedSenseData.stateCountOutput; ++i)
+        {
+            // Process the spatial entities, and get spatial entity component data
+            XrSpatialEntityIdBD entityId = queriedFooStates[i].entityId;
+            XrUuidEXT uuid = queriedFooStates[i].uuid;
+
+            // Enumerate the component types of the entity
+            uint32_t componentTypeCountOutput = 0;
+            CHK_XR(xrEnumerateSpatialEntityComponentTypesBD(querySnapshotHandle, entityId, 0, &componentTypeCountOutput, nullptr));
+
+            if (componentTypeCountOutput > 0)
+            {
+                std::vector<XrSpatialEntityComponentTypeBD> entityComponentTypes(componentTypeCountOutput);
+                uint32_t componentTypeCapacityInput = componentTypeCountOutput;
+                CHK_XR(xrEnumerateSpatialEntityComponentTypesBD(querySnapshotHandle, entityId, componentTypeCapacityInput,
+                                                                &componentTypeCountOutput, entityComponentTypes.data()));
+
+                // Check the entity component types and get the bar component data
+                for (int j = 0; j < componentTypeCountOutput; ++j)
+                {
+                    if (entityComponentTypes[j] == XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD)
+                    {
+                        XrSpatialEntityComponentGetInfoBD componentBarGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+                                                                              nullptr,
+                                                                              entityId,
+                                                                              XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD};
+                        XrSpatialEntityComponentDataBarBD componentBarData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BAR_BD};
+
+                        CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentBarGetInfo,
+                                                                 reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentBarData)));
+                        // Component bar data now in componentBarData
+                        // ...
+                    }
+                }
+            }
+        }
+    }
+    // Destroy query result
+    CHK_XR(xrDestroySenseDataSnapshotBD(querySnapshotHandle));
+};
+
+auto processSenseDataEvent = [&]()
+{
+    while (true)
+    {
+        XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+        XrResult result = xrPollEvent(instance, &event);
+        if (result == XR_EVENT_UNAVAILABLE)
+        {
+            // No event available, quit the loop.
+            break;
+        }
+
+        if (result == XR_SUCCESS)
+        {
+            // Process the event
+            switch (event.type)
+            {
+            case XR_TYPE_EVENT_DATA_SENSE_DATA_UPDATED_BD:
+            {
+                const XrEventDataSenseDataUpdatedBD &senseDataUpdatedEvent =
+                    *reinterpret_cast<XrEventDataSenseDataUpdatedBD *>(&event);
+                if (senseDataUpdatedEvent.provider == fooProvider)
+                {
+                    // Sense data update in foo provider
+                    queryFooSpatialEntities();
+                }
+                break;
+            }
+
+            default:
+                break;
+            }
+        }
+    }
+};
+
+//////////////////////////////////////
+// Per-frame work                   //
+//////////////////////////////////////
+while (1)
+{
+    //...
+    processSenseDataEvent();
+    //...
+
+    // ...
+    // Finish loop
+    // ...
+}
+
+// Stop and destroy the provider
+CHK_XR(xrStopSenseDataProviderBD(fooProvider));
+CHK_XR(xrDestroySenseDataProviderBD(fooProvider));
+----
+
+===== Get location component data and other component data coordinate with location
+
+The following example code demonstrates how to get location component data
+from a snapshot, and how to get the bounding box 2D component data as well
+as the triangle mesh component data that are defined in the spatial entity's
+location component data's coordinate system.
+
+[source,C++]
+----
+XrSenseDataProviderBD provider;             // previously returned from xrCreateSenseDataProviderBD
+XrSenseDataSnapshotBD querySnapshotHandle;  // previously returned from xrQuerySenseDataCompleteBD
+XrSpace localSpace;                         // previously initialized, e.g. from XR_REFERENCE_SPACE_TYPE_LOCAL
+XrFrameState frameState;                    // previously returned from xrWaitFrame
+
+PFN_xrGetQueriedSenseDataBD xrGetQueriedSenseDataBD;                                   // previously initialized
+PFN_xrEnumerateSpatialEntityComponentTypesBD xrEnumerateSpatialEntityComponentTypesBD; // previously initialized
+PFN_xrGetSpatialEntityComponentDataBD xrGetSpatialEntityComponentDataBD;               // previously initialized
+
+auto hasComponentType = [&](std::vector<XrSpatialEntityComponentTypeBD>& typeList, XrSpatialEntityComponentTypeBD type)->bool
+{
+    if(typeList.empty())
+    {
+        return false;
+    }
+
+    for(int i = 0; i < typeList.size(); i++)
+    {
+        if(typeList[i] == type)
+        {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+XrQueriedSenseDataGetInfoBD queriedDataGetInfo{XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD};
+
+XrQueriedSenseDataBD queriedSenseData{XR_TYPE_QUERIED_SENSE_DATA_BD};
+
+// First call to get spatial entity count
+CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
+
+if (queriedSenseData.stateCountOutput > 0)
+{
+    std::vector<XrSpatialEntityStateBD> queriedEntityStates(queriedSenseData.stateCountOutput);
+    queriedSenseData.stateCapacityInput = queriedSenseData.stateCountOutput;
+    queriedSenseData.states = queriedEntityStates.data();
+
+    // Second call to get the spatial entities in the provider's query result
+    CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
+
+    // Process the data
+    for (int i = 0; i < queriedSenseData.stateCountOutput; ++i)
+    {
+        // Process the spatial entities, and get spatial entity component data
+        XrSpatialEntityIdBD entityId = queriedEntityStates[i].entityId;
+        XrUuidEXT uuid = queriedEntityStates[i].uuid;
+
+        // Enumerate the component types of the entity
+        uint32_t componentTypeCountOutput = 0;
+        CHK_XR(xrEnumerateSpatialEntityComponentTypesBD(querySnapshotHandle, entityId, 0, &componentTypeCountOutput, nullptr));
+
+        if (componentTypeCountOutput > 0)
+        {
+            std::vector<XrSpatialEntityComponentTypeBD> entityComponentTypes(componentTypeCountOutput);
+            uint32_t componentTypeCapacityInput = componentTypeCountOutput;
+            CHK_XR(xrEnumerateSpatialEntityComponentTypesBD(querySnapshotHandle, entityId, componentTypeCapacityInput,
+                                                            &componentTypeCountOutput, entityComponentTypes.data()));
+
+            // Check the entity component types and get the location component data
+            if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD))
+            {
+                XrSpatialEntityLocationGetInfoBD locationGetInfo{XR_TYPE_SPATIAL_ENTITY_LOCATION_GET_INFO_BD};
+                locationGetInfo.baseSpace = localSpace;
+
+                // Chain the XrSpatialEntityLocationGetInfoBD struct to XrSpatialEntityComponentGetInfoBD when getting location component data.
+                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
+                componentGetInfo.next = &locationGetInfo;
+                componentGetInfo.entityId = entityId;
+                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD;
+
+                XrSpatialEntityComponentDataLocationBD componentLocationData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_LOCATION_BD};
+
+                CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
+                                                            reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentLocationData)));
+                // The location data now in componentLocationData
+                // ...
+            }
+
+            // Check the entity component types and get the bounding box 2D component data
+            if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD))
+            {
+                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
+                componentGetInfo.next = nullptr;
+                componentGetInfo.entityId = entityId;
+                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD;
+
+                XrSpatialEntityComponentDataBoundingBox2DBD componentBoundingBox2DData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_2D_BD};
+
+                CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
+                                                            reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentBoundingBox2DData)));
+                // The bounding box 2D data now in componentBoundingBox2DData
+                // The bounding box 2D data is an XrRect2Df defining the offset and extent along the x-axis (width) and y-axis (height).
+                // The x-axis and y-axis are defined by the spatial entity's location component data
+
+            }
+
+            // Check the entity component types and get the triangle mesh component data
+            if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD))
+            {
+                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
+                componentGetInfo.next = nullptr;
+                componentGetInfo.entityId = entityId;
+                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD;
+
+                XrSpatialEntityComponentDataTriangleMeshBD componentTriangleMeshData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_TRIANGLE_MESH_BD};
+                componentTriangleMeshData.next = nullptr;
+                componentTriangleMeshData.vertexCapacityInput = 0;
+                componentTriangleMeshData.indexCapacityInput = 0;
+
+                // First call to get vertex and index counts.
+                CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
+                                                            reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentTriangleMeshData)));
+
+                if(componentTriangleMeshData.vertexCountOutput > 0 && componentTriangleMeshData.indexCountOutput > 0)
+                {
+                    std::vector<XrVector3f> vertices(componentTriangleMeshData.vertexCountOutput);
+                    std::vector<uint16_t> indices(componentTriangleMeshData.indexCountOutput);
+
+                    componentTriangleMeshData.vertexCapacityInput = componentTriangleMeshData.vertexCountOutput;
+                    componentTriangleMeshData.vertices = vertices.data();
+                    componentTriangleMeshData.indexCapacityInput = componentTriangleMeshData.indexCountOutput;
+                    componentTriangleMeshData.indices = indices.data();
+
+                    // Second call to get vertices and indices .
+                    CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
+                                                            reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentTriangleMeshData)));
+
+                    // The triangle mesh data now in componentTriangleMeshData
+                    // The vertices are XrVector3f structs defining the positions along the x-axis, y-axis and z-axis.
+                    // The x-axis, y-axis and z-axis are defined by the spatial entity's location component data.
+                    // ...
+
+                }
+
+            }
+        }
+    }
+}
+
+----
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-05-06 (Zhipeng Liu)
+
+** Initial extension description
+

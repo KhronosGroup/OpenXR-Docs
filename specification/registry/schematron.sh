@@ -32,6 +32,9 @@ runSchematron() {
         if grep -q "failed-assert>" "$1.srvl" > /dev/null; then
             return 1
         fi
+        if grep -q "invalid" "$1.srvl" > /dev/null; then
+            return 1
+        fi
     else
         echo "**** ERROR Invalid XML file: $1" 1>&2
         exit 1
@@ -74,9 +77,18 @@ ensureSchXslt() {
         fi
 
         echo "Checking hash of schxslt cli jar"
-        if ! (echo "$SCHEMATRON_SHA1SUM $SCHXSLT_CLI" | sha1sum --check); then
-            echo "Verification of download failed."
-            return 1
+        echo "$SCHEMATRON_SHA1SUM $SCHXSLT_CLI" > $SCHXSLT_CLI.sha1sum
+        if [ "$(uname)" == "Darwin" ]; then
+            if ! (sha1sum -c $SCHXSLT_CLI.sha1sum | grep -q OK); then
+                echo "Verification of download failed."
+                return 1;
+            fi
+        else
+            if ! (sha1sum --check $SCHXSLT_CLI.sha1sum); then
+                echo "Verification of download failed."
+                return 1
+            fi
         fi
+        rm $SCHXSLT_CLI.sha1sum
     )
 }

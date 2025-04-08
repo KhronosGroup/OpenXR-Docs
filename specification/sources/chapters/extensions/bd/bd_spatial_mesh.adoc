@@ -1,0 +1,245 @@
+// Copyright (c) 2024 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_mesh.adoc[]
+
+*Last Modified Date*::
+    2025-03-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zhipeng Liu, ByteDance +
+    Zhanrui Jia, ByteDance +
+    Xu Yang, ByteDance +
+    Jun Yan, ByteDance +
+    Jimmy Alamparambil, ByteDance +
+
+
+==== Overview
+
+This extension allows applications to request the runtime to detect and
+track spatial scene meshes of the physical environment.
+
+This extension requires apiext:XR_BD_spatial_sensing to be enabled.
+
+
+==== Permission
+
+A runtime on an Android-based platform must: verify that applications have
+the `com.picovr.permission.SPATIAL_DATA` permission both listed in their
+manifest and granted to use spatial mesh functionality.
+Without it, runtime must: set
+slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
+flink:xrStartSenseDataProviderCompleteBD is called.
+
+This is an auto-requested permission: if it is listed in the manifest but
+not yet granted or denied, the runtime must: prompt the user to grant or
+deny the permission when flink:xrCreateSenseDataProviderBD is called with a
+provider type that requires it.
+
+ifdef::XR_BD_spatial_anchor[]
+This permission is also used by apiext:XR_BD_spatial_anchor.
+endif::XR_BD_spatial_anchor[]
+
+
+ifdef::XR_BD_spatial_scene[]
+This permission is also used by apiext:XR_BD_spatial_scene.
+endif::XR_BD_spatial_scene[]
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialMeshPropertiesBD',type='structs',desc='System property for spatial mesh.',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpatialMeshPropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemSpatialMeshPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialMesh is an basetype:XrBool32, indicating if current
+  system is capable of spatial mesh functionality.
+****
+
+An application can: inspect whether the system is capable of spatial mesh
+functionality by chaining an slink:XrSystemSpatialMeshPropertiesBD structure
+to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialMesh, the
+system does not support spatial mesh functionality, and the runtime must:
+return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateSenseDataProviderBD when called with
+ename:XR_SENSE_DATA_PROVIDER_TYPE_MESH_BD.
+The application should: avoid using spatial mesh functionality when
+pname:supportsSpatialMesh is ename:XR_FALSE.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsSpatialMesh must: also be ename:XR_FALSE.
+
+
+If a runtime returns ename:XR_TRUE for pname:supportsSpatialMesh, the system
+supports spatial mesh functionality.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing must:
+also be ename:XR_TRUE.
+
+Note that pname:supportsSpatialMesh may: be ename:XR_TRUE even if running on
+an Android-based platform and the application does not have the required
+reflink:com.picovr.permission.SPATIAL_DATA permission both declared in the
+manifest and granted at runtime.
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemSpatialMeshPropertiesBD.adoc[]
+--
+
+
+==== Create Spatial Mesh Provider
+
+[open,refpage='XrSenseDataProviderCreateInfoSpatialMeshBD',type='structs',desc='Info of creating a spatial mesh data provider',xrefs='xrCreateSenseDataProviderBD']
+--
+The slink:XrSenseDataProviderCreateInfoSpatialMeshBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSenseDataProviderCreateInfoSpatialMeshBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:configFlags is the elink:XrSpatialMeshConfigFlagBitsBD of the
+  configurations.
+* pname:lod is the elink:XrSpatialMeshLodBD which represent spatial mesh
+  level.
+****
+
+An application creates an slink:XrSenseDataProviderBD handle representing a
+a spatial mesh provider by calling flink:xrCreateSenseDataProviderBD,
+setting slink:XrSenseDataProviderCreateInfoBD::pname:providerType equal to
+the elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_MESH_BD, and chaining
+slink:XrSenseDataProviderCreateInfoSpatialMeshBD to
+slink:XrSenseDataProviderCreateInfoBD::pname:next.
+Both the elink:XrSenseDataProviderTypeBD value and the chained
+slink:XrSenseDataProviderCreateInfoSpatialMeshBD structure are required.
+If slink:XrSenseDataProviderCreateInfoBD::pname:providerType is equal to
+ename:XR_SENSE_DATA_PROVIDER_TYPE_MESH_BD but
+slink:XrSenseDataProviderCreateInfoSpatialMeshBD is not in the pname:next
+chain, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+
+An application uses such a provider to obtain the spatial mesh info that is
+detected and tracked by the runtime.
+This data generally consists of spatial entities with at least a
+slink:XrSpatialEntityComponentDataTriangleMeshBD component.
+
+include::{generated}/validity/structs/XrSenseDataProviderCreateInfoSpatialMeshBD.adoc[]
+--
+
+[open,refpage='XrSpatialMeshConfigFlagsBD',type='flags',desc='XrSpatialMeshConfigFlagsBD',xrefs='XrSpatialMeshConfigFlagBitsBD']
+--
+The enumeration elink:XrSpatialMeshConfigFlagsBD is defined as:
+
+include::{generated}/api/flags/XrSpatialMeshConfigFlagsBD.adoc[]
+
+The slink:XrSenseDataProviderCreateInfoSpatialMeshBD::pname:configFlags
+member is of the type elink:XrSpatialMeshConfigFlagsBD, and contains a
+bitwise-OR of zero or more of the bits defined in
+elink:XrSpatialMeshConfigFlagBitsBD.
+
+--
+
+[open,refpage='XrSpatialMeshConfigFlagBitsBD',type='enums',desc='XrSpatialMeshConfigFlagBitsBD',xrefs='XrSpatialMeshConfigFlagsBD XrSenseDataProviderCreateInfoSpatialMeshBD']
+--
+Valid bits for elink:XrSpatialMeshConfigFlagsBD are defined by
+elink:XrSpatialMeshConfigFlagBitsBD, which is specified as:
+
+include::{generated}/api/enums/XrSpatialMeshConfigFlagBitsBD.adoc[]
+include::{generated}/api/enums/XrSpatialMeshConfigFlagBitsBD.comments.adoc[]
+
+If ename:XR_SPATIAL_MESH_CONFIG_SEMANTIC_BIT_BD is not set, the
+ename:XR_SPATIAL_MESH_CONFIG_ALIGN_SEMANTIC_WITH_VERTEX_BIT_BD takes no
+effect.
+If ename:XR_SPATIAL_MESH_CONFIG_ALIGN_SEMANTIC_WITH_VERTEX_BIT_BD is not
+set, each semantic label corresponds to each vertex.
+If ename:XR_SPATIAL_MESH_CONFIG_ALIGN_SEMANTIC_WITH_VERTEX_BIT_BD is set,
+each semantic label corresponds to three indices.
+
+--
+
+[open,refpage='XrSpatialMeshLodBD',type='enums',desc='LOD of the spatial mesh',xrefs='XrSenseDataProviderCreateInfoSpatialMeshBD']
+--
+The elink:XrSpatialMeshLodBD enumeration identifies the different LOD
+levels.
+include::{generated}/api/enums/XrSpatialMeshLodBD.adoc[]
+include::{generated}/api/enums/XrSpatialMeshLodBD.comments.adoc[]
+--
+
+
+==== Start Spatial Mesh Provider
+
+Applications start the spatial mesh data provider by calling
+flink:xrStartSenseDataProviderAsyncBD after it is successfully created.
+To check the data provider state, call flink:xrGetSenseDataProviderStateBD.
+
+Subsequent application operations using this handle must: not be performed
+unless the pname:futureResult is ename:XR_SUCCESS.
+If the pname:futureResult returns an error code and the application needs to
+use the provider, the application must: take appropriate action and try to
+call flink:xrStartSenseDataProviderAsyncBD again before using the handle.
+
+Detailed definitions and usage details are described in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Get Spatial Mesh Data
+
+Applications query the latest detected spatial meshes from the spatial mesh
+data provider by calling flink:xrQuerySenseDataAsyncBD.
+The runtime generates a snapshot of the spatial mesh information, from which
+the application can: obtain detailed spatial mesh information.
+The mesh information is presented in the form of spatial entities which the
+application queries by calling flink:xrGetQueriedSenseDataBD.
+Use flink:xrEnumerateSpatialEntityComponentTypesBD to get the types of
+components contained within these entities, such as location, semantics, and
+mesh vertices and indices.
+To further retrieve component data information, call
+flink:xrGetSpatialEntityComponentDataBD.
+
+When the spatial mesh information changes, the runtime must: queue an
+slink:XrEventDataSenseDataUpdatedBD event with the handle of the spatial
+mesh provider.
+
+When the application receives this event, it means the sense data provider
+has updated mesh data.
+A new query request for this sense data provider will get the latest,
+updated mesh data.
+This is the recommended way to get updated data.
+
+Alternatively, the application may: query the latest spatial mesh
+information at a time that suits its needs, independent of the update
+events.
+
+All the functions to get spatial mesh info are defined in
+apiext:XR_BD_spatial_sensing.
+
+include::{generated}/interfaces/XR_BD_spatial_mesh.adoc[leveloffset=1]
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-05-06 (Zhipeng Liu)
+
+** Initial extension description
+

@@ -98,11 +98,12 @@ It is incorporated here by reference, with the following changes.
 * Modify section 19 ("Required and Removed Interfaces (`require` and
   `remove` tags)")
 // Some new sections are listed here, if they are direct children of `require` tags.
-** In "Contents of `require` and `remove` tags", add:
-   <<xml-require-interaction-profile,`interaction_profile` Tags>>
-** In "Contents of `require` and `remove` tags", add:
-   <<xml-require-extend-interaction-profile,`extend` Tags for interaction
-   profiles>>
+** In "Contents of `require` and `remove` tags", add the following:
+*** <<xml-require-interaction-profile,`interaction_profile` Tags>>
+*** <<xml-require-extend-interaction-profile,`extend` Tags for interaction
+    profiles>>
+*** <<xml-require-extend-interaction-profile-predicate,`extend` Tags for
+    interaction profiles matching a predicate>>
 // end require tag children
 * Ignore sections 20, 21, 22, and 23 ("Formats (`formats` tag)", "Image
   Format (`format` tag)", "Format Components (`component` tag)", "Format
@@ -121,6 +122,8 @@ It is incorporated here by reference, with the following changes.
 ** <<xml-interaction-profile>>
 ** <<xml-interaction-profile-user-path>>
 ** <<xml-interaction-profile-component>>
+** <<xml-extend-interaction-profile-user_path>>
+** <<xml-extend-interaction-profile-predicate-condition>>
 
 [[xml-interaction-profiles]]
 === Interaction Profiles Blocks (`interaction_profiles` tag)
@@ -262,3 +265,101 @@ Identified as `ExtendInteractionProfileElt` in the Relax-NG schema.
 
 One or more <<xml-interaction-profile-component,`component`>> tags, in the
 same schema used directly within an `interaction_profile` block.
+
+
+[[xml-require-extend-interaction-profile-predicate]]
+=== Contents of `require`: `extend` Tags for interaction profiles matching a predicate
+
+Specifies additional component paths to accept in all interaction profiles
+that match the provided predicate and that are previously included in the
+specification by a dependency of this block's parent.
+Valid only in `require` blocks.
+
+Identified as `ExtendPredicateInteractionProfileElt` in the Relax-NG schema.
+
+==== Attributes of interaction profile `extend` tags in `require` blocks
+
+* `interaction_profile_predicate` - required.
+  Value must be `"true"`.
+
+==== Contents of interaction profile predicate `extend` tags in `require` blocks
+
+One or more
+<<xml-extend-interaction-profile-predicate-condition,`condition`>> tags, at
+least one of which must be matched by a given interaction profile for the
+modification to apply.
+
+Zero or more <<xml-extend-interaction-profile-user_path,`user_path`>> tags,
+indicating additional top level pathname:/user paths to add to matching
+interaction profiles and how they interact with component sub-paths limited
+to select user paths.
+
+Zero or more <<xml-interaction-profile-component,`component`>> tags, in the
+same schema used directly within an `interaction_profile` block, indicating
+additional components to add to matching interaction profiles.
+
+
+[[xml-extend-interaction-profile-predicate-condition]]
+=== Contents of interaction profile predicate `extend`: `condition` Tags
+
+Specifies a collection of user paths and component sub-paths to check on a
+candidate interaction profile.
+If all tags within a given `condition` tag match an interaction profile, the
+condition is said to be matched.
+
+Valid only in `extend` blocks marked with
+`interaction_profile_predicate="true"`.
+
+Identified as `ExtendPredicateInteractionProfileElt` in the Relax-NG schema.
+
+==== Attributes of `condition` tags in interaction profile predicate `extend` blocks
+
+None.
+
+==== Contents of `condition` tags in interaction profile predicate `extend` blocks
+
+One or more elements, of which each may be either of the following:
+
+* A <<xml-interaction-profile-user-path,`user_path`>> tag, in the same
+  schema used directly within an `interaction_profile` block.
+  For each such tag, the tag is considered "matched" iff a given interaction
+  profile contains a `user_path` tag with a matching `path` attribute, or if
+  one is effectively added by another `extend` block.
+
+* A <<xml-interaction-profile-component,`component`>> tag, in the same
+  schema used directly within an `interaction_profile` block, except that
+  the `system` and `user_path` attributes are omitted and forbidden.
+  same schema used directly within an `interaction_profile` block.
+  For each such tag, the tag is considered "matched" iff a given interaction
+  profile contains a `component` tag with matching `subpath` and `type`
+  attributes, or if one is effectively added by another `extend` block.
+
+
+[[xml-extend-interaction-profile-user_path]]
+=== Contents of interaction profile `extend`: `user_path` Tags
+
+Specifies a user path to add to the interaction profile or profiles being
+extended.
+
+Valid only in `extend` blocks.
+
+Identified as `ExtendInteractionProfileUserPathElt` in the Relax-NG schema.
+
+==== Attributes of `user_path` tags in interaction profile `extend` blocks
+
+* `path` - required.
+  Full top-level pathname:/user path (starting with pathname:/user/)
+
+* `inherit` - optional.
+  If provided, must be a full top-level pathname:/user path (starting with
+  pathname:/user/).
+  Each `component` with the indicated user path in its `user_path` attribute
+  will be treated as if the component's `user_path` attribute **also**
+  listed the `path` attribute of this tag.
+  That is, if a component is limited to only being present on some subset of
+  user paths including the indicated user path, it will instead be limited
+  to the subset plus the `path` attribute named by this tag.
+
+==== Contents of `user_path` tags in interaction profile `extend` blocks
+
+None.

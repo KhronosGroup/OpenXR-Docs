@@ -1,0 +1,274 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_detached_controllers.adoc[]
+
+*Contributors*::
+    Matthew Langille, Meta Platforms +
+    Andreas Selvik, Meta Platforms +
+    John Kearney, Meta Platforms
+
+
+==== Overview
+
+On platforms which support both hand tracking and controller input
+concurrently, application developers have various use cases that require the
+ability to track controllers when they are not being held.
+
+* Controllers that are "not held" can have some meaning in-application, for
+  example the ability to act as some sort of marker or anchor.
+* In cases when neither controller is currently held, access to pose data
+  for the not-held controllers allows the application to render them for the
+  user to locate, without removing the headset or remembering their physical
+  location in the real world.
+* Asymmetric multi-user applications could be created where the user with
+  the immersive display is not holding the controller, but a second person
+  manipulates it.
+* In applications that support a tracked hand in combination with a single
+  held controller, a not-held controller might remain relevant to
+  interaction for the application.
+
+A runtime may: require the app to enable
+`XR_META_simultaneous_hands_and_controllers` in order to fully enable the
+functionality exposed by this extension.
+If that extension is not enabled, the runtime must: still accept the
+bindings, but may: choose to not report any current interaction profile for
+pathname:/user/detached_controller_meta paths and not provide action data
+accordingly.
+
+==== New Paths
+
+This extension defines two new <<semantic-paths-user,top level
+pathname:/user paths>>:
+
+* pathname:/user/detached_controller_meta/left
+* pathname:/user/detached_controller_meta/right
+
+Interaction profiles are extended as follows:
+
+* For any interaction profile valid for pathname:/user/hand/left for which
+  subpathname:/input/grip/pose is a valid binding sub-path, the runtime
+  must: accept the same input/output source subpaths on
+  pathname:/user/detached_controller_meta/left in suggested bindings.
+* For any interaction profile valid for pathname:/user/hand/right for which
+  subpathname:/input/grip/pose is a valid binding sub-path, the runtime
+  must: accept the same input/output source subpaths on
+  pathname:/user/detached_controller_meta/right in suggested bindings.
+
+==== Beginning Detached Controller Interaction
+
+In-hand detection is left to the implementing runtime.
+The runtime may: use proximity data, orientation data, or any other data for
+both hands and both controllers for in-hand detection.
+Controllers with handedness should: be considered "in hand" **only** when
+held by their corresponding hand (a left controller held in the right hand
+should: be considered detached, as should a right controller held in the
+left hand).
+
+The same interaction profile may: be used to suggest bindings for top level
+pathname:/user paths beginning with both pathname:/user/hand and
+pathname:/user/detached_controller_meta paths, but the runtime must: only
+report any given interaction profile as current for **at most one** of these
+paired top level pathname:/user paths at any given time.
+That is, if a given interaction profile is reported as current for
+pathname:/user/detached_controller_meta/left, that same profile must: not be
+current for pathname:/user/hand/left (and vice versa), and similarly for
+pathname:/user/detached_controller_meta/right and pathname:/user/hand/right.
+
+This is done individually such that any combination of held or not-held
+controllers is representable (both or neither controller held, or one
+controller held in one hand for left or right controllers).
+
+==== Ending Detached Controller Interaction
+
+If an interaction profile previously current on a detached path becomes
+current on the corresponding hand, the current interaction profile of the
+detached path must: become dlink:XR_NULL_PATH.
+
+However, if a (controller) interaction profile becomes current on a
+"detached" top level pathname:/user path, a hand-related interaction profile
+should: become current on the corresponding pathname:/user/hand/ path if the
+application has submitted a suggested binding for the corresponding
+pathname:/user/hand/ top level path.
+
+An application may: use the
+ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED and change in output
+value from flink:xrGetCurrentInteractionProfile to determine when the user
+put down or picked up a controller.
+
+==== Changes to Action Space Behavior
+
+In some cases, this extension modifies the behavior specified in
+<<input-multiple>>.
+Specifically, given the following:
+
+* A pose action with both a path under
+  pathname:/user/detached_controller_meta as a sub-action path, as well as
+  the corresponding path under pathname:/user/hand,
+* Suggested bindings for that pose action for a single interaction profile
+  on both a binding path under pathname:/user/detached_controller_meta/ path
+  and the corresponding binding path under pathname:/user/hand/ (e.g.
+  pathname:/user/detached_controller_meta/right/input/grip/pose and
+  pathname:/user/hand/right/input/grip/pose),
+* And an action space created for the pose action **without** specifying a
+  sub-action path,
+
+the runtime should: associate the action space with the appropriate pose on
+the **controller**, whether it is in-hand or detached.
+That is, such an action space "follows" the controller.
+The core specification does not specify any particular behavior for action
+spaces created without a sub-action path on actions created with sub-action
+paths, other than not changing the association between calls to
+flink:xrSyncActions.
+
+A more common practice of defining a pose action with both
+pathname:/user/hand/left and pathname:/user/hand/right as sub-action paths
+does **not** change behavior with this extension.
+That is, if the application creates an action space from such a pose action,
+without passing a sub-action path to flink:xrCreateActionSpace, the runtime
+must: choose a single pose source.
+However, it usually does not make sense to create an action space without
+specifying a sub-action path for such an action.
+
+==== Example Usage
+
+Detecting hand/controller modality change per hand:
+
+[source,c++]
+----
+
+const int NUM_HANDS = 2; // previously defined
+XrInstance instance;  // previously initialized
+XrSession session;  // previously initialized
+XrPath path;  // previously initialized for path in question
+XrInteractionProfileState currentState[NUM_HANDS];  // previously initialized for NUM_HANDS
+
+// In event polling code
+
+// Initialize an event buffer to hold the output.
+XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrResult result = xrPollEvent(instance, &event);
+if (result == XR_SUCCESS) {
+
+  // ...
+
+  switch (event.type) {
+    case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED: {
+      for (int handIndex = 0; handIndex < NUM_HANDS; ++handIndex) {
+        XrInteractionProfileState profileState;
+        CHK_XR(xrGetCurrentInteractionProfile(session, path, &profileState));
+
+        // Inspect profileState to understand if this hand is now holding a
+        // controller, or if the controller has been placed somewhere
+        if (currentState[handIndex].interactionProfile != profileState.interactionProfile) {
+
+            // Log state change, etc
+            // LOG_OUT("Detected state change in {} from {} to {}", handIndex,
+            //         currentState[handIndex].interactionProfile,
+            //         profileState.interactionProfile);
+
+            // Do whatever processing is required when this state has changed
+        }
+      }
+
+      break;
+    }
+  }
+}
+----
+
+
+Accessing data is effectively the same as existing hands and controllers
+input code, except that we no longer make the (invalid) assumption that both
+pathname:/user/hand/left and pathname:/user/hand/right are the same
+modality.
+
+[NOTE]
+.Detecting controller locations when not in hands
+====
+Suggest interaction profile bindings for the use cases your app cares about.
+For an app that cares about detached controllers, you can set up bindings
+for either of the in-hand case or detached case, or both together.
+
+For example, for many controllers you might suggest the following bindings
+with slink:XrInteractionProfileSuggestedBinding:
+
+* actionname:LeftControllerPose -> pathname:/user/hand/left/grip/pose
+* actionname:LeftControllerPose ->
+  pathname:/user/detached_controller_meta/left/grip/pose
+* actionname:LeftControllerDetachedOnly ->
+  pathname:/user/detached_controller_meta/left/grip/pose
+
+[source,c++,suppress-build]
+----
+XrSpace leftControllerSpace = XR_NULL_HANDLE;
+XrSpace detachedLeftControllerSpace = XR_NULL_HANDLE;
+XrActionSpaceCreateInfo asci{XR_TYPE_ACTION_SPACE_CREATE_INFO};
+asci.action = LeftControllerPose;
+CHK_XR(xrCreateActionSpace(session,
+  &asci, &leftControllerSpace));
+asci.action = LeftControllerDetachedOnly;
+CHK_XR(xrCreateActionSpace(session,
+  &asci, &detachedLeftControllerSpace));
+
+// Will follow controller whether in hand or detached
+CHK_XR(xrLocateSpace(leftControllerSpace, /* ... */));
+
+// Only valid data when controller is detached:
+CHK_XR(xrLocateSpace(detachedLeftControllerSpace, /* ... */));
+
+// Note that any bindings that work on /user/hand/left will work
+// for /user/detached_controller_meta/left, and they can be
+// combined by the app on an action to action basis.
+----
+====
+
+
+[NOTE]
+.Using the same controller pose when in hand as when detached with hands
+====
+The two extensions can be brought together to have a controller pose that
+follows the controller when detached, and a hand pose that flips from
+tracking the controller to tracking the hand when the controller is put down
+
+For example, suggest bindings for
+pathname:/interaction_profiles/oculus/touch_controller as follows with
+flink:xrSuggestInteractionProfileBindings:
+
+* actionname:LeftControllerPose -> pathname:/user/hand/left/grip/pose
+* actionname:LeftControllerPose ->
+  pathname:/user/detached_controller_meta/left/grip/pose
+* actionname:LeftHandPose -> pathname:/user/hand/left/grip/pose
+
+Further, suggest bindings for
+pathname:/interaction_profiles/ext/hand_interaction as follows with
+flink:xrSuggestInteractionProfileBindings:
+
+* actionname:LeftHandPose -> pathname:/user/hand/left/grip/pose
+
+Proceed with usage similar to above.
+When controllers are in hand, the binding source for
+pathname:/user/hand/left/grip/pose path provides controller-based data to
+both actionname:LeftControllerPose and actionname:LeftHandPose.
+
+When controllers are placed on a surface, the application will receive the
+ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED event.
+From this point on, actionname:LeftHandPose will be powered by hand data
+bound to pathname:/user/hand/left/grip/pose, and the
+actionname:LeftControllerPose will still be powered by controller data bound
+to pathname:/user/detached_controller_meta/left/grip/pose
+
+Note that the same can be done for actions; actionname:ButtonClickAction
+could seamlessly transition from a controller trigger to a finger pinch when
+you put down the controllers, for example.
+====
+
+include::{generated}/interfaces/XR_META_detached_controllers.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2023-05-25 (Matthew Langille)
+** Initial extension description

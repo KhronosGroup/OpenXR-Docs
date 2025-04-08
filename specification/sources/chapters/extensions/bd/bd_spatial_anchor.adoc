@@ -1,0 +1,551 @@
+// Copyright (c) 2024 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_anchor.adoc[]
+
+*Last Modified Date*::
+    2025-03-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zhipeng Liu, ByteDance +
+    Zijian Wang, ByteDance +
+    Zhao Li, ByteDance +
+    Jun Yan, ByteDance +
+    Jimmy Alamparambil, ByteDance +
+
+
+==== Overview
+
+This extension allows an application to create and destroy a spatial anchor,
+representing an arbitrary point of interest in the user's physical
+environment.
+The position and orientation of each spatial anchor will be tracked by the
+runtime over time.
+The runtime adjusts the position and orientation of the spatial anchor over
+time as needed, to ensure that it maintains its original mapping to the real
+world.
+
+This extension also allows an application to persist or unpersist spatial
+anchors.
+Persisting a spatial anchor means saving it to persistent storage, and the
+runtime can: reload and locate it in a subsequent session.
+Unpersisting an anchor means erasing it from persistent storage, which
+causes it to not appear in snapshots or queried data in subsequent sessions,
+but it still appears in snapshots and queried data in the same session.
+Both the persisting and unpersisting operations must: not affect the
+existing spatial anchor handles in the same session.
+This allows spatial anchors to be shared and localized across application
+sessions on the device for the same application.
+This extension requires apiext:XR_BD_spatial_sensing to be enabled.
+
+
+==== Permission
+
+[open,refpage='com.picovr.permission.SPATIAL_DATA',type='freeform',desc='Android permission for spatial anchor.',xrefs='xrGetSystemProperties XrSystemSpatialAnchorPropertiesBD']
+--
+A runtime on an Android-based platform must: verify that applications have
+the `com.picovr.permission.SPATIAL_DATA` permission both listed in their
+manifest and granted to use apiext:XR_BD_spatial_anchor functionality.
+Without it, the runtime must: set
+slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
+flink:xrStartSenseDataProviderCompleteBD is called.
+
+This is an auto-requested permission: if it is listed in the manifest but
+not yet granted or denied, the runtime must: prompt the user to grant or
+deny the permission when flink:xrCreateSenseDataProviderBD is called with a
+provider type that requires it.
+
+
+ifdef::XR_BD_spatial_mesh[]
+This permission is also used by apiext:XR_BD_spatial_mesh.
+endif::XR_BD_spatial_mesh[]
+
+
+ifdef::XR_BD_spatial_scene[]
+This permission is also used by apiext:XR_BD_spatial_scene.
+endif::XR_BD_spatial_scene[]
+
+--
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialAnchorPropertiesBD',type='structs',desc='System property for spatial anchor',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpatialAnchorPropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemSpatialAnchorPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialAnchor is an basetype:XrBool32, indicating if the
+  current system is capable of creating and storing arbitrary spatial
+  anchors.
+****
+
+An application can: inspect whether the system is capable of application
+created spatial anchor by chaining an
+slink:XrSystemSpatialAnchorPropertiesBD structure to the
+slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialAnchor, the
+system does not support creating arbitrary spatial anchors, and must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateSpatialAnchorAsyncBD,
+as well as from flink:xrCreateSenseDataProviderBD when passing the
+elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_ANCHOR_BD.
+
+The application should: avoid using spatial anchor functionality when
+pname:supportsSpatialAnchor is ename:XR_FALSE.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsSpatialAnchor must: also be
+ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsSpatialAnchor, the
+system supports creating and storing arbitrary spatial anchors.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing must:
+also be ename:XR_TRUE.
+
+Note that pname:supportsSpatialAnchor may: be ename:XR_TRUE even if running
+on an Android-based platform and the application does not have the required
+reflink:com.picovr.permission.SPATIAL_DATA permission both declared in the
+manifest and granted at runtime.
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemSpatialAnchorPropertiesBD.adoc[]
+--
+
+
+[[bd_spatial_anchor-create-provider]]
+==== Create Spatial Anchor Provider
+
+An application creates an slink:XrSenseDataProviderBD handle representing a
+spatial anchor provider by calling flink:xrCreateSenseDataProviderBD and
+setting slink:XrSenseDataProviderCreateInfoBD::pname:providerType equal to
+the elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_ANCHOR_BD.
+
+An application uses such a provider to create or query spatial anchors.
+
+This provider type does not define any configuration and does not require a
+chained structure.
+
+==== Start Spatial Anchor Provider
+
+Applications start the spatial anchor data provider by calling
+flink:xrStartSenseDataProviderAsyncBD after it is successfully created.
+To check the data provider state, call flink:xrGetSenseDataProviderStateBD.
+
+Subsequent application operations using this provider handle must: not be
+performed unless the data provider state is
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD.
+If the data provider state is not
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD and the application needs to
+use the provider, the application must: take appropriate action and try to
+call flink:xrStartSenseDataProviderAsyncBD again before using the handle.
+
+Detailed definitions and usage details are described in
+apiext:XR_BD_spatial_sensing.
+
+Upon start, the provider immediately begins trying to load and locate any
+previously persisted spatial anchors.
+See <<bd_spatial_anchor-query>> and flink:xrPersistSpatialAnchorAsyncBD for
+information on how to work with previously-persisted anchors.
+
+
+==== Create Spatial Anchor
+
+[open,refpage='xrCreateSpatialAnchorAsyncBD',type='protos',desc='Create a spatial anchor',xrefs='']
+--
+The flink:xrCreateSpatialAnchorAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously created slink:XrSenseDataProviderBD for
+  spatial anchor.
+* pname:info is a pointer to the slink:XrSpatialAnchorCreateInfoBD .
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+An application creates a spatial anchor by calling this function.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrCreateSpatialAnchorCompleteBD, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure
+slink:XrSpatialAnchorCreateCompletionBD.
+
+
+If the pname:provider was not created with the
+elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_ANCHOR_BD, the function
+flink:xrCreateSpatialAnchorAsyncBD must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorAsyncBD.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorCreateInfoBD',type='structs',desc='Info of creating a spatial anchor',xrefs='xrCreateSpatialAnchorAsyncBD']
+--
+The slink:XrSpatialAnchorCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:space is a handle to the slink:XrSpace in which pname:pose is
+  specified.
+* pname:pose is the slink:XrPosef within pname:space at pname:time that
+  specifies the point in the real world to create the new spatial anchor.
+* pname:time is the basetype:XrTime at which pname:pose will be evaluated
+  within pname:space.
+****
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoBD.adoc[]
+--
+
+[open,refpage='xrCreateSpatialAnchorCompleteBD',type='protos',desc='Get the completion of creating a spatial anchor',xrefs='']
+--
+The flink:xrCreateSpatialAnchorCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the
+  slink:XrSpatialAnchorCreateCompletionBD.
+****
+
+The application obtains the spatial anchor create result using
+flink:xrCreateSpatialAnchorCompleteBD, after the future is ready.
+
+This is the completion function corresponding to
+flink:xrCreateSpatialAnchorAsyncBD.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorCompleteBD.adoc[]
+--
+
+
+[open,refpage='XrSpatialAnchorCreateCompletionBD',type='structs',desc='Completion info of creating a spatial anchor',xrefs='xrCreateSpatialAnchorCompleteBD']
+--
+The slink:XrSpatialAnchorCreateCompletionBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorCreateCompletionBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:futureResult is the result of the future.
+* pname:anchor is the handle of the created spatial anchor.
+* pname:uuid is the slink:XrUuidEXT of the created anchor.
+****
+
+This is the completion data structure associated with the asynchronous
+operation started by flink:xrCreateSpatialAnchorAsyncBD and completed by
+flink:xrCreateSpatialAnchorCompleteBD.
+
+It is populated by a valid call to flink:xrCreateSpatialAnchorCompleteBD on
+a corresponding, <<XrFutureStateEXT,READY>> future.
+
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorCreateCompletionBD.adoc[]
+--
+
+
+==== Locate Spatial Anchor
+
+Locating an anchor relative to a base space is performed similarly to
+locating other spatial objects: through use of an slink:XrSpace handle and
+functions like flink:xrLocateSpace and flink:xrLocateSpaces.
+To locate an anchor in a base space, first create an slink:XrSpace handle
+for that anchor using flink:xrCreateAnchorSpaceBD.
+The function and related behaviors are defined in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Persist Spatial Anchor
+
+[open,refpage='xrPersistSpatialAnchorAsyncBD',type='protos',desc='Persist a spatial anchor',xrefs='xrPersistSpatialAnchorCompleteBD']
+--
+The flink:xrPersistSpatialAnchorAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrPersistSpatialAnchorAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously created slink:XrSenseDataProviderBD for
+  spatial anchor.
+* pname:info is a pointer to the slink:XrSpatialAnchorPersistInfoBD.
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+To persist a spatial anchor, call flink:xrPersistSpatialAnchorAsyncBD.
+
+Persisting a spatial anchor means storing it to a persistent storage,
+allowing it to be reloaded and located in subsequent sessions by the same
+application.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrPersistSpatialAnchorCompleteBD, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure slink:XrFutureCompletionEXT.
+
+If a previously persisted spatial anchor is successfully loaded and located
+by the runtime after starting a spatial anchor provider, the runtime must:
+queue an slink:XrEventDataSenseDataUpdatedBD event.
+
+In subsequent sessions, to retrieve the previously persisted spatial anchor
+or anchors, after receiving the slink:XrEventDataSenseDataUpdatedBD event,
+use the normal practice of creating a snapshot and getting the queried sense
+data (call flink:xrQuerySenseDataAsyncBD, flink:xrQuerySenseDataCompleteBD,
+flink:xrGetQueriedSenseDataBD per the specification).
+Tracking data is accessible by calling flink:xrCreateSpatialEntityAnchorBD
+and flink:xrCreateAnchorSpaceBD as specified.
+All of these functions are defined in apiext:XR_BD_spatial_sensing.
+
+If the slink:XrAnchorBD is already persisted, calling this function does not
+change the persistence status.
+In this case, the runtime must: still set the return value of
+flink:xrPersistSpatialAnchorAsyncBD to ename:XR_SUCCESS.
+The runtime must: set the corresponding future result returned by
+flink:xrPersistSpatialAnchorCompleteBD to ename:XR_SUCCESS.
+
+include::{generated}/validity/protos/xrPersistSpatialAnchorAsyncBD.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorPersistInfoBD',type='structs',desc='Info of persisting a spatial anchor',xrefs='xrPersistSpatialAnchorAsyncBD']
+--
+The slink:XrSpatialAnchorPersistInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorPersistInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:location is the elink:XrPersistenceLocationBD to persist the spatial
+  anchor.
+* pname:anchor is the slink:XrAnchorBD handle of the spatial anchor.
+****
+include::{generated}/validity/structs/XrSpatialAnchorPersistInfoBD.adoc[]
+--
+
+[open,refpage='XrPersistenceLocationBD',type='enums',desc='Location of persistence',xrefs='']
+--
+The elink:XrPersistenceLocationBD enumeration identifies the different
+persistence locations.
+
+include::{generated}/api/enums/XrPersistenceLocationBD.adoc[]
+include::{generated}/api/enums/XrPersistenceLocationBD.comments.adoc[]
+--
+
+
+[open,refpage='xrPersistSpatialAnchorCompleteBD',type='protos',desc='Get the completion of persisting a spatial anchor',xrefs='xrPersistSpatialAnchorAsyncBD']
+--
+The flink:xrPersistSpatialAnchorCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrPersistSpatialAnchorCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT to
+  populate.
+****
+
+To complete persisting an anchor and retrieve the result, call
+flink:xrPersistSpatialAnchorCompleteBD.
+
+This is the completion function corresponding to
+flink:xrPersistSpatialAnchorAsyncBD.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+include::{generated}/validity/protos/xrPersistSpatialAnchorCompleteBD.adoc[]
+--
+
+
+==== Unpersist Spatial Anchor
+
+[open,refpage='xrUnpersistSpatialAnchorAsyncBD',type='protos',desc='Unpersist a spatial anchor',xrefs='']
+--
+The flink:xrUnpersistSpatialAnchorAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrUnpersistSpatialAnchorAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously persisted slink:XrSenseDataProviderBD for
+  spatial anchor.
+* pname:info is a pointer to the slink:XrSpatialAnchorUnpersistInfoBD.
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+
+To unpersist a spatial anchor, call flink:xrUnpersistSpatialAnchorAsyncBD.
+
+Unpersisting an anchor means erasing it from persistent storage, which
+causes it to not appear in snapshots or queried data in subsequent sessions.
+However, it must: still appear in snapshots and queried data in the same
+session.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrUnpersistSpatialAnchorCompleteBD, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure slink:XrFutureCompletionEXT.
+
+include::{generated}/validity/protos/xrUnpersistSpatialAnchorAsyncBD.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorUnpersistInfoBD',type='structs',desc='Info of unpersisting a spatial anchor',xrefs='xrUnpersistSpatialAnchorAsyncBD']
+--
+The slink:XrSpatialAnchorUnpersistInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorUnpersistInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:location is the elink:XrPersistenceLocationBD to unpersist the
+  spatial anchor.
+* pname:anchor is the handle:XrAnchorBD handle of the spatial anchor.
+****
+include::{generated}/validity/structs/XrSpatialAnchorUnpersistInfoBD.adoc[]
+--
+
+[open,refpage='xrUnpersistSpatialAnchorCompleteBD',type='protos',desc='Get the completion of unpersisting a spatial anchor.',xrefs='']
+--
+The flink:xrUnpersistSpatialAnchorCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrUnpersistSpatialAnchorCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT.
+****
+
+The application obtains the spatial anchor unpersist result using
+flink:xrUnpersistSpatialAnchorCompleteBD.
+
+This is the completion function corresponding to
+flink:xrUnpersistSpatialAnchorAsyncBD.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD
+****
+
+The runtime must: set slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_SPATIAL_ANCHOR_NOT_FOUND_BD if the spatial anchor is not
+found in slink:XrSpatialAnchorUnpersistInfoBD::pname:location.
+
+
+include::{generated}/validity/protos/xrUnpersistSpatialAnchorCompleteBD.adoc[]
+--
+
+[[bd_spatial_anchor-query]]
+==== Query Spatial Anchor
+
+If spatial anchors were previously persisted, they may: be detected and
+located again by the runtime when the user is in the same physical space
+where they are persisted.
+For details on operations made available by persisting an anchor, see
+flink:xrPersistSpatialAnchorAsyncBD.
+
+include::{generated}/interfaces/XR_BD_spatial_anchor.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-05-06 (Zhipeng Liu)
+
+** Initial extension description
+

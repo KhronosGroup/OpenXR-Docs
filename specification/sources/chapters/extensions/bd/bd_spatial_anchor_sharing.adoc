@@ -1,0 +1,302 @@
+// Copyright (c) 2024 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_anchor_sharing.adoc[]
+
+*Last Modified Date*::
+    2025-03-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zhipeng Liu, ByteDance +
+    Ya Huang, ByteDance +
+    Xiangxin Liu, ByteDance +
+    Jun Yan, ByteDance +
+    Jimmy Alamparambil, ByteDance +
+
+
+==== Overview
+
+This extension extends apiext:XR_BD_spatial_anchor and allows applications
+to share spatial anchors between different sessions on different devices.
+This extension requires apiext:XR_BD_spatial_anchor to be enabled.
+
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialAnchorSharingPropertiesBD',type='structs',desc='System property for spatial anchor sharing.',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+
+include::{generated}/api/structs/XrSystemSpatialAnchorSharingPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialAnchorSharing is an basetype:XrBool32, indicating if
+  the current system is capable of spatial anchor sharing.
+****
+
+An application can: inspect whether the system is capable of spatial anchor
+sharing by chaining an slink:XrSystemSpatialAnchorSharingPropertiesBD
+structure to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialAnchorSharing,
+the system does not support spatial anchor sharing.
+The application should: avoid using spatial anchor sharing functionality
+when pname:supportsSpatialAnchorSharing is ename:XR_FALSE.
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsSpatialAnchorSharing must: also be
+ename:XR_FALSE.
+Similarly, if
+slink:XrSystemSpatialAnchorPropertiesBD::pname:supportsSpatialAnchor is
+ename:XR_FALSE, then pname:supportsSpatialAnchorSharing must: also be
+ename:XR_FALSE.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialAnchorSharing,
+the runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for all the
+functions defined in this extension.
+
+If a runtime returns ename:XR_TRUE for pname:supportsSpatialAnchorSharing,
+the system supports spatial anchor sharing.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing and
+slink:XrSystemSpatialAnchorPropertiesBD::pname:supportsSpatialAnchor must:
+also be also ename:XR_TRUE.
+
+include::{generated}/validity/structs/XrSystemSpatialAnchorSharingPropertiesBD.adoc[]
+--
+
+==== Create Spatial Anchor Provider
+
+See <<bd_spatial_anchor-create-provider>> in apiext:XR_BD_spatial_anchor for
+information on creating a provider.
+
+
+==== Share Spatial Anchor
+
+[open,refpage='xrShareSpatialAnchorAsyncBD',type='protos',desc='Share a spatial anchor',xrefs='']
+--
+The flink:xrShareSpatialAnchorAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrShareSpatialAnchorAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously created slink:XrSenseDataProviderBD for
+  spatial anchor.
+* pname:info is a pointer to the slink:XrSpatialAnchorShareInfoBD .
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+To share a spatial anchor, call flink:xrShareSpatialAnchorAsyncBD.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrShareSpatialAnchorCompleteBD, usable when a future from this
+function is in the READY state, with outputs populated by that function in
+the completion structure slink:XrFutureCompletionEXT.
+
+Shared spatial anchors are shared with other sessions and devices using a
+runtime defined method such as a cloud storage.
+
+include::{generated}/validity/protos/xrShareSpatialAnchorAsyncBD.adoc[]
+--
+
+
+[open,refpage='XrSpatialAnchorShareInfoBD',type='structs',desc='Info of sharing a spatial anchor',xrefs='xrShareSpatialAnchorAsyncBD']
+--
+The slink:XrSpatialAnchorShareInfoBD structure is defined as:
+include::{generated}/api/structs/XrSpatialAnchorShareInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:anchor is the slink:XrAnchorBD handle of the spatial anchor to be
+  shared.
+****
+include::{generated}/validity/structs/XrSpatialAnchorShareInfoBD.adoc[]
+--
+
+[open,refpage='xrShareSpatialAnchorCompleteBD',type='protos',desc='Get the completion of sharing a spatial anchor.',xrefs='']
+--
+The flink:xrShareSpatialAnchorCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrShareSpatialAnchorCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT.
+****
+The application obtains the spatial anchor sharing result using
+flink:xrShareSpatialAnchorCompleteBD.
+
+This is the completion function corresponding to the operation started by
+flink:xrShareSpatialAnchorAsyncBD.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+The slink:XrFutureCompletionEXT structure is defined in
+apiext:XR_EXT_future.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_PERMISSION_INSUFFICIENT
+****
+
+include::{generated}/validity/protos/xrShareSpatialAnchorCompleteBD.adoc[]
+--
+
+
+==== Download Shared Spatial Anchor
+
+[open,refpage='xrDownloadSharedSpatialAnchorAsyncBD',type='protos',desc='Downlad a shared spatial anchor',xrefs='']
+--
+The flink:xrDownloadSharedSpatialAnchorAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrDownloadSharedSpatialAnchorAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously created slink:XrSenseDataProviderBD for
+  spatial anchor.
+* pname:info is a pointer to the slink:XrSharedSpatialAnchorDownloadInfoBD .
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+
+In order to access the shared spatial anchor, the application first
+downloads the anchor.
+To download a shared spatial anchor, call
+flink:xrDownloadSharedSpatialAnchorAsyncBD.
+
+The spatial anchor will be downloaded to the local device and runtime will
+then locate it.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrDownloadSharedSpatialAnchorCompleteBD, usable when a future from
+this function is in the <<XrFutureStateEXT,READY>> state, with outputs
+populated by that function in the completion structure
+slink:XrFutureCompletionEXT.
+
+include::{generated}/validity/protos/xrDownloadSharedSpatialAnchorAsyncBD.adoc[]
+--
+
+[open,refpage='XrSharedSpatialAnchorDownloadInfoBD',type='structs',desc='Info of downloading a shared spatial anchor',xrefs='xrDownloadSharedSpatialAnchorAsyncBD']
+--
+The slink:XrSharedSpatialAnchorDownloadInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSharedSpatialAnchorDownloadInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:uuid is the slink:XrUuidEXT of the spatial anchor to be downloaded.
+****
+include::{generated}/validity/structs/XrSharedSpatialAnchorDownloadInfoBD.adoc[]
+--
+
+[open,refpage='xrDownloadSharedSpatialAnchorCompleteBD',type='protos',desc='Get the completion of downloading a shared spatial anchor',xrefs='']
+--
+The flink:xrDownloadSharedSpatialAnchorCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrDownloadSharedSpatialAnchorCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT.
+****
+The application obtains the spatial anchor download result using
+flink:xrDownloadSharedSpatialAnchorCompleteBD.
+
+This is the completion function corresponding to the operation started by
+flink:xrDownloadSharedSpatialAnchorAsyncBD.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+The slink:XrFutureCompletionEXT structure is defined in
+apiext:XR_EXT_future.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_PERMISSION_INSUFFICIENT
+****
+
+If the spatial anchor is downloaded to the local device, the runtime must:
+set the slink:XrFutureCompletionEXT::pname:futureResult value to
+ename:XR_SUCCESS.
+This indicates that the spatial anchor has been successfully downloaded to
+the local device.
+Subsequently, the runtime will locate the downloaded spatial anchor again.
+Once the runtime has successfully located the downloaded spatial anchor
+again, it must: queue an slink:XrEventDataSenseDataUpdatedBD event.
+Upon receiving this event, to obtain the spatial anchors from the spatial
+anchor data provider, call flink:xrQuerySenseDataAsyncBD,
+flink:xrQuerySenseDataCompleteBD, flink:xrGetQueriedSenseDataBD, and
+flink:xrCreateSpatialEntityAnchorBD.
+All of these functions are defined in apiext:XR_BD_spatial_sensing.
+
+[NOTE]
+.Note
+====
+It is implementation defined whether the runtime implements permission
+controls, in which case it may: set
+slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT when attempting to download an anchor
+without permission.
+====
+
+include::{generated}/validity/protos/xrDownloadSharedSpatialAnchorCompleteBD.adoc[]
+--
+
+include::{generated}/interfaces/XR_BD_spatial_anchor_sharing.adoc[leveloffset=1]
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-05-06 (Zhipeng Liu)
+
+** Initial extension description
+

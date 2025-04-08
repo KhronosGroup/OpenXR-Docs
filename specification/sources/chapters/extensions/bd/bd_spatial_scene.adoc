@@ -1,0 +1,315 @@
+// Copyright (c) 2024 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_scene.adoc[]
+
+*Last Modified Date*::
+    2025-03-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zhipeng Liu, ByteDance +
+    Zhao Li, ByteDance +
+    Zijian Wang, ByteDance +
+    Jun Yan, ByteDance +
+    Jimmy Alamparambil, ByteDance
+
+
+==== Overview
+
+This extension allows applications to request the runtime to start capturing
+spatial scene information from the physical environment and query the
+information that the system has captured and stored.
+
+Different objects in the scene are be represented by different component
+data.
+For example, 2D bounding boxes or polygons might be associated with walls,
+floors, ceilings, doors, and windows; 3D bounding boxes might be associated
+with tables, chairs and beds.
+
+The general workflow for applications to use the scene capture process
+includes the following typical steps:
+
+1. Initiate the scene capture process by invoking
+   flink:xrCaptureSceneAsyncBD.
+   Once the call to flink:xrCaptureSceneAsyncBD is successful, poll the
+   returned future by using flink:xrPollFutureEXT.
+2. Typically, upon successful initiation of the scene capture process, the
+   current application will be sent to the background.
+   Therefore, the application should: call flink:xrEndSession to stop the
+   current session upon receiving the slink:XrEventDataSessionStateChanged
+   event with slink:XrEventDataSessionStateChanged::pname:state set to
+   ename:XR_SESSION_STATE_STOPPING.
+3. After the scene capture process is completed, the application will be
+   brought back to the foreground.
+   At this point, the application should: call flink:xrBeginSession to
+   resume the session, when it receives the
+   slink:XrEventDataSessionStateChanged event with
+   slink:XrEventDataSessionStateChanged::pname:state set to
+   ename:XR_SESSION_STATE_READY.
+4. Generally, the future will be ready once the session has been restarted.
+   If an error occurs during the scene capture process, the future result is
+   an error code.
+   For instance, if the scene capture process exits abnormally, an
+   ename:XR_ERROR_SCENE_CAPTURE_FAILURE_BD future result will be returned.
+5. After receiving an slink:XrEventDataSenseDataUpdatedBD, query the updated
+   spatial scene data by calling flink:xrQuerySenseDataAsyncBD.
+   Subsequently, the application can: obtain the updated data by following
+   the steps outlined in apiext:XR_BD_spatial_sensing.
+
+This extension requires apiext:XR_BD_spatial_sensing to also be enabled.
+
+
+==== Permission
+
+A runtime on an Android-based platform must: verify that applications have
+the `com.picovr.permission.SPATIAL_DATA` permission both listed in their
+manifest and granted to use spatial scene capture.
+Without it, runtime must: set
+slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
+flink:xrStartSenseDataProviderCompleteBD is called.
+
+This is an auto-requested permission: if it is listed in the manifest but
+not yet granted or denied, the runtime must: prompt the user to grant or
+deny the permission when flink:xrCreateSenseDataProviderBD is called with a
+provider type that requires it.
+
+ifdef::XR_BD_spatial_anchor[]
+This permission is also used by apiext:XR_BD_spatial_anchor.
+endif::XR_BD_spatial_anchor[]
+
+
+ifdef::XR_BD_spatial_mesh[]
+This permission is also used by apiext:XR_BD_spatial_mesh.
+endif::XR_BD_spatial_mesh[]
+
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialScenePropertiesBD',type='structs',desc='System property for spatial scene',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpatialScenePropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemSpatialScenePropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialScene is an basetype:XrBool32, indicating if the
+  current system is capable of spatial scene functionality.
+****
+
+An application can: inspect whether the system is capable of spatial scene
+functionality by chaining an slink:XrSystemSpatialScenePropertiesBD
+structure to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialScene, the
+system does not support spatial scene functionality, and must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateSenseDataProviderBD
+when passing the elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_SCENE_BD.
+
+The application should: avoid using spatial scene functionality when
+pname:supportsSpatialScene is ename:XR_FALSE.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsSpatialScene must: also be
+ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsSpatialScene, the
+system supports spatial scene functionality.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing must:
+also be ename:XR_TRUE.
+
+Note that pname:supportsSpatialScene may: be ename:XR_TRUE even if running
+on an Android-based platform and the application does not have the required
+reflink:com.picovr.permission.SPATIAL_DATA permission both declared in the
+manifest and granted at runtime.
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemSpatialScenePropertiesBD.adoc[]
+--
+
+
+==== Create Spatial Scene Provider
+
+An application creates an slink:XrSenseDataProviderBD handle representing a
+spatial scene data provider by calling flink:xrCreateSenseDataProviderBD
+after setting slink:XrSenseDataProviderCreateInfoBD::pname:providerType
+equal to the elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_SCENE_BD.
+
+An application uses such a provider to obtain the spatial scene info that is
+captured and stored by the system scene capture process.
+
+This provider type does not define any configuration and does not require a
+chained structure.
+
+==== Start Spatial Scene Provider
+
+Applications start the spatial scene data provider by calling
+flink:xrStartSenseDataProviderAsyncBD after it is successfully created.
+To check the data provider state, call flink:xrGetSenseDataProviderStateBD.
+
+Subsequent application operations using this provider handle must: not be
+performed unless the data provider state is
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD.
+If the data provider state is not
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD and the application needs to
+use the provider, the application must: take appropriate action and try to
+call flink:xrStartSenseDataProviderAsyncBD again before using the handle.
+
+Detailed definitions and usage details are described in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Get Captured Scene Info
+
+Applications query the latest captured scene information from the spatial
+scene data provider by calling flink:xrQuerySenseDataAsyncBD.
+The runtime generates a snapshot of the spatial scene information, from
+which the application can: obtain detailed scene information.
+The scene information is presented in the form of spatial entities which the
+application queries by calling flink:xrGetQueriedSenseDataBD.
+Use flink:xrEnumerateSpatialEntityComponentTypesBD to get the types of
+components contained within these entities, such as location, semantics, and
+bounding boxes.
+To further retrieve component information, call
+flink:xrGetSpatialEntityComponentDataBD
+
+When the scene information changes, the runtime must: queue an
+slink:XrEventDataSenseDataUpdatedBD event with the handle of the spatial
+scene provider.
+
+When the application receives this event, it means the sense data provider
+has updated scene data.
+A new query request for this sense data provider will get the latest,
+updated scene data.
+This is the recommended way to get updated data.
+Without receiving this event, the application also may: initiate a new query
+request at any time, but the queried data may: be unmodified.
+
+All the functions to get captured scene info are defined in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Start Scene Capture
+
+[open,refpage='xrCaptureSceneAsyncBD',type='protos',desc='Start a scene capture process',xrefs='']
+--
+The flink:xrCaptureSceneAsyncBD function is defined as:
+
+include::{generated}/api/protos/xrCaptureSceneAsyncBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the previously created slink:XrSenseDataProviderBD for
+  spatial scene.
+* pname:info is a pointer to the slink:XrSceneCaptureInfoBD.
+* pname:future is a pointer to the basetype:XrFutureEXT.
+****
+
+The application starts the scene capture process, which guides the user to
+capture the scene of the physical environment, by calling
+flink:xrCaptureSceneAsyncBD.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrStartSenseDataProviderCompleteBD, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure slink:XrFutureCompletionEXT.
+
+Note that scene capture may: involve interaction by the user with system
+user interfaces.
+After calling this function, the system may: switch the current application
+to the scene capture process.
+Accordingly, the runtime may: emit an slink:XrEventDataSessionStateChanged
+event with slink:XrEventDataSessionStateChanged::pname:state set to
+ename:XR_SESSION_STATE_STOPPING, for the application to handle as usual,
+before scene capture results arrive.
+
+include::{generated}/validity/protos/xrCaptureSceneAsyncBD.adoc[]
+--
+
+[open,refpage='XrSceneCaptureInfoBD',type='structs',desc='Info of starting the scene capture process',xrefs='xrCaptureSceneAsyncBD']
+--
+The slink:XrSceneCaptureInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSceneCaptureInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+This structure is defined for future extension.
+
+include::{generated}/validity/structs/XrSceneCaptureInfoBD.adoc[]
+--
+
+[open,refpage='xrCaptureSceneCompleteBD',type='protos',desc='Get the completion of starting scene capture process',xrefs='xrCaptureSceneAsyncBD']
+--
+The flink:xrCaptureSceneCompleteBD function is defined as:
+
+include::{generated}/api/protos/xrCaptureSceneCompleteBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:provider is the slink:XrSenseDataProviderBD.
+* pname:future is the basetype:XrFutureEXT.
+* pname:completion is a pointer to the slink:XrFutureCompletionEXT.
+****
+The application obtains the scene capture starting result using
+flink:xrCaptureSceneCompleteBD.
+
+This is the completion function corresponding to the operation started by
+flink:xrCaptureSceneAsyncBD.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+The slink:XrFutureCompletionEXT structure is defined in
+apiext:XR_EXT_future.
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_SCENE_CAPTURE_FAILURE_BD
+****
+
+include::{generated}/validity/protos/xrCaptureSceneCompleteBD.adoc[]
+--
+
+include::{generated}/interfaces/XR_BD_spatial_scene.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-05-06 (Zhipeng Liu)
+
+** Initial extension description
+

@@ -1030,22 +1030,25 @@ If no layers are provided then the display must: be cleared.
 
 ename:XR_ERROR_LAYER_INVALID must: be returned if an unknown, unsupported
 layer type, or code:NULL pointer is passed as one of the
-slink:XrFrameEndInfo::layers.
+slink:XrFrameEndInfo::pname:layers.
 
 ename:XR_ERROR_LAYER_INVALID must: be returned if a layer references a
 swapchain that has no released swapchain image.
 
 ename:XR_ERROR_LAYER_LIMIT_EXCEEDED must: be returned if
-slink:XrFrameEndInfo::layerCount exceeds
+slink:XrFrameEndInfo::pname:layerCount exceeds
 slink:XrSystemGraphicsProperties::maxLayerCount or if the runtime is unable
 to composite the specified layers due to resource constraints.
 
 ename:XR_ERROR_SWAPCHAIN_RECT_INVALID must: be returned if
-slink:XrFrameEndInfo::layers contains a composition layer which references
-pixels outside of the associated swapchain image or if negatively sized.
+slink:XrFrameEndInfo::pname:layers contains a composition layer which
+references pixels outside of the associated swapchain image or if negatively
+sized.
 
-ename:XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED must: be returned if
-slink:XrFrameEndInfo::environmentBlendMode is not supported.
+ename:XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED must: be returned if and
+only if the slink:XrFrameEndInfo::pname:environmentBlendMode was not
+enumerated by flink:xrEnumerateEnvironmentBlendModes for the
+slink:XrInstance and basetype:XrSystemId used to create pname:session.
 
 ename:XR_ERROR_SESSION_NOT_RUNNING must: be returned if the pname:session
 <<session-not-running, is not running>>.

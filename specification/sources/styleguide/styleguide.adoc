@@ -178,3 +178,6 @@ include::schema.adoc[]
   convention no longer used by Vulkan.
 * 2024-09-27 - Correct some errors in the text schema related to interaction
   profiles, and make other improvements in the schema chapter.
+* 2025-04-08 - Update the XML schema used for extending interaction
+  profiles, providing a way to extend all interaction profiles that match a
+  predicate.

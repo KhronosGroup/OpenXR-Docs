@@ -689,7 +689,7 @@ include::{config}/grip_surface_notice.adoc[]
 include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
-==== Bytedance PICO Neo 3 controller Profile
+==== ByteDance PICO Neo 3 controller Profile
 (Provided by `XR_VERSION_1_1`)
 
 Path: pathname:/interaction_profiles/bytedance/pico_neo3_controller
@@ -700,7 +700,7 @@ Valid for user paths:
 * pathname:/user/hand/right
 
 This interaction profile represents the input sources and haptics on the
-Bytedance PICO Neo3 Controller.
+ByteDance PICO Neo3 Controller.
 
 * On /user/hand/left only:
 ** subpathname:/input/x/click
@@ -732,7 +732,7 @@ include::{config}/grip_surface_notice.adoc[]
 include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
-==== Bytedance PICO 4 controller Profile
+==== ByteDance PICO 4 controller Profile
 (Provided by `XR_VERSION_1_1`)
 
 Path: pathname:/interaction_profiles/bytedance/pico4_controller
@@ -743,7 +743,7 @@ Valid for user paths:
 * pathname:/user/hand/right
 
 This interaction profile represents the input sources and haptics on the
-Bytedance PICO 4 Controller.
+ByteDance PICO 4 Controller.
 
 * On /user/hand/left only:
 ** subpathname:/input/x/click
@@ -775,7 +775,7 @@ include::{config}/grip_surface_notice.adoc[]
 include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
-==== Bytedance PICO G3 controller Profile
+==== ByteDance PICO G3 controller Profile
 (Provided by `XR_VERSION_1_1`)
 
 Path: pathname:/interaction_profiles/bytedance/pico_g3_controller
@@ -786,7 +786,7 @@ Valid for user paths:
 * pathname:/user/hand/right
 
 This interaction profile represents the input sources and haptics on the
-Bytedance PICO G3 Controller.
+ByteDance PICO G3 Controller.
 
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value

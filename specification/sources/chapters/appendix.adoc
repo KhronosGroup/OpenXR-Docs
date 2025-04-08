@@ -134,9 +134,8 @@ macros that are described below.
 ===== Version Number Macros
 
 Three version numbers are defined in `openxr.h`.
-Each is packed into a 32-bit integer as described in
-<<appendix-api-version-number-macros,API Version Number Function-like
-Macros>>.
+Each is packed into a 64-bit integer as described in
+<<appendix-api-version-number-macros>>.
 
 
 [open,refpage='XR_CURRENT_API_VERSION',type='defines',desc='Version of the OpenXR API',xrefs='XR_MAKE_VERSION XR_API_VERSION_1_0 XR_API_VERSION_1_1']
@@ -618,7 +617,7 @@ the time of their most recent contribution, are listed below.
 * Armelle Laine, Qualcomm Technologies (version 1.0)
 * Attila Maczak, CTRL-labs (version 1.0)
 * David Fields, Microsoft (version 1.1)
-* Baolin Fu, Bytedance (version 1.1)
+* Baolin Fu, ByteDance (version 1.1)
 * Blake Taylor, Magic Leap (version 1.0)
 * Brad Grantham, Google (version 1.0)
 * Brandon Jones, Google (version 1.0)
@@ -709,7 +708,7 @@ the time of their most recent contribution, are listed below.
 * Sam Martin, Arm (version 1.0)
 * Satish Salian, NVIDIA (version 1.0)
 * Scott Flynn, Unity Technologies (version 1.0)
-* Shanliang Xu, Bytedance (version 1.1)
+* Shanliang Xu, ByteDance (version 1.1)
 * Sean Payne, CTRL-labs (version 1.0)
 * Sophia Baldonado, PlutoVR (version 1.0)
 * Steve Smith, Epic Games (version 1.0)
@@ -722,5 +721,5 @@ the time of their most recent contribution, are listed below.
 * Xiang Wei, Meta Platforms (version 1.1)
 * Yin Li, Microsoft (versions 1.0, 1.1)
 * Yuval Boger, Sensics (version 1.0)
-* Zhanrui Jia, Bytedance (version 1.1)
+* Zhanrui Jia, ByteDance (version 1.1)
 * Zheng Qin, Microsoft (version 1.0)

@@ -17,6 +17,91 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.47 (2025-04-08)
+
+This release features several new vendor extensions, one of which required a
+modification to the XML schema for extending interaction profiles to represent
+accurate. There are also a few minor fixes and clarifications.
+
+- Registry
+  - Addition to XML registry schema: Specify interaction profile additions by
+    constructing a predicate, and allow adding new top level /user paths to
+    existing profiles. See SDK changelog and style guide for details.
+    ([internal MR 2467](https://gitlab.khronos.org/openxr/openxr/merge_requests/2467))
+  - Chore: Reserve extension numbers.
+    ([internal MR 3729](https://gitlab.khronos.org/openxr/openxr/merge_requests/3729),
+    [internal MR 3744](https://gitlab.khronos.org/openxr/openxr/merge_requests/3744),
+    [internal MR 3745](https://gitlab.khronos.org/openxr/openxr/merge_requests/3745))
+  - Fix: Reflect requirement of `XR_META_hand_tracking_microgestures` for
+    `XR_EXT_hand_interaction` in `xr.xml`.
+    ([internal MR 3741](https://gitlab.khronos.org/openxr/openxr/merge_requests/3741))
+  - Fix: Added missing comment on `XR_EYE_POSITION_COUNT_FB` to remove warning
+    during build.
+    ([internal MR 3748](https://gitlab.khronos.org/openxr/openxr/merge_requests/3748))
+  - Fix: typo in the documentation of `XR_ERROR_SPACE_GROUP_NOT_FOUND_META`
+    ([internal MR 3749](https://gitlab.khronos.org/openxr/openxr/merge_requests/3749))
+  - Improvement: Fix schematron runner on Mac.
+    ([internal MR 3759](https://gitlab.khronos.org/openxr/openxr/merge_requests/3759))
+  - New vendor extension: `XR_META_detached_controllers`
+    ([internal MR 2467](https://gitlab.khronos.org/openxr/openxr/merge_requests/2467))
+  - New vendor extension: `XR_BD_spatial_sensing`
+    ([internal MR 3429](https://gitlab.khronos.org/openxr/openxr/merge_requests/3429))
+  - New vendor extension: `XR_BD_spatial_anchor`
+    ([internal MR 3435](https://gitlab.khronos.org/openxr/openxr/merge_requests/3435))
+  - New vendor extension: `XR_BD_spatial_anchor_sharing`
+    ([internal MR 3436](https://gitlab.khronos.org/openxr/openxr/merge_requests/3436))
+  - New vendor extension: `XR_BD_spatial_scene`
+    ([internal MR 3438](https://gitlab.khronos.org/openxr/openxr/merge_requests/3438))
+  - New vendor extension: `XR_BD_spatial_mesh`
+    ([internal MR 3439](https://gitlab.khronos.org/openxr/openxr/merge_requests/3439))
+  - schema: Allow aliases of function pointers, primarily for use in extension
+    promotion.
+    ([internal MR 2989](https://gitlab.khronos.org/openxr/openxr/merge_requests/2989))
+- Specification
+  - Addition to XML registry schema: Specify interaction profile additions by
+    constructing a predicate, and allow adding new top level /user paths to
+    existing profiles. Recommend using the Python module
+    `src/scripts/interaction_profile_processor.py` for interpreting this data, if
+    you maintain scripts that process the interaction profiles in XML.
+    ([internal MR 2467](https://gitlab.khronos.org/openxr/openxr/merge_requests/2467))
+  - Fix: inconsistent typo, versions are packed into 64 bits, not 32.
+    ([internal MR 3764](https://gitlab.khronos.org/openxr/openxr/merge_requests/3764),
+    [internal issue 2478](https://gitlab.khronos.org/openxr/openxr/issues/2478),
+    [OpenXR-Docs issue 184](https://github.com/KhronosGroup/OpenXR-Docs/issues/184))
+  - Improvement: Clarify that if an environment blend mode is enumerated by
+    `xrEnumerateEnvironmentBlendModes`, the runtime must not return
+    `XR_ERROR_ENVIRONMENT_BLEND_MODE_UNSUPPORTED` from `xrEndFrame` using that
+    blend mode.
+    ([internal MR 3761](https://gitlab.khronos.org/openxr/openxr/merge_requests/3761))
+  - Improvement: Minor formatting fixes.
+    ([internal MR 3763](https://gitlab.khronos.org/openxr/openxr/merge_requests/3763))
+  - New vendor extension specification: `XR_META_detached_controllers` allows use
+    of controllers even when the user is not holding them.
+    ([internal MR 2467](https://gitlab.khronos.org/openxr/openxr/merge_requests/2467))
+  - New vendor extension specification: `XR_BD_spatial_sensing` providing the base
+    of spatial entities capabilities on ByteDance devices.
+    ([internal MR 3429](https://gitlab.khronos.org/openxr/openxr/merge_requests/3429),
+    [internal MR 3776](https://gitlab.khronos.org/openxr/openxr/merge_requests/3776))
+  - New vendor extension specification: `XR_BD_spatial_anchor` providing the
+    ability to define arbitrary anchors on ByteDance devices.
+    ([internal MR 3435](https://gitlab.khronos.org/openxr/openxr/merge_requests/3435),
+    [internal MR 3769](https://gitlab.khronos.org/openxr/openxr/merge_requests/3769),
+    [internal MR 3770](https://gitlab.khronos.org/openxr/openxr/merge_requests/3770),
+    [internal MR 3776](https://gitlab.khronos.org/openxr/openxr/merge_requests/3776))
+  - New vendor extension specification: Add `XR_BD_spatial_anchor_sharing` allowing
+    created spatial anchors to be shared on ByteDance devices.
+    ([internal MR 3436](https://gitlab.khronos.org/openxr/openxr/merge_requests/3436))
+  - New vendor extension specification: `XR_BD_spatial_scene` providing access to
+    scene scanning on ByteDance devices.
+    ([internal MR 3438](https://gitlab.khronos.org/openxr/openxr/merge_requests/3438),
+    [internal MR 3769](https://gitlab.khronos.org/openxr/openxr/merge_requests/3769),
+    [internal MR 3770](https://gitlab.khronos.org/openxr/openxr/merge_requests/3770))
+  - New vendor extension specification: `XR_BD_spatial_mesh` providing access to
+    meshes on ByteDance devices.
+    ([internal MR 3439](https://gitlab.khronos.org/openxr/openxr/merge_requests/3439),
+    [internal MR 3770](https://gitlab.khronos.org/openxr/openxr/merge_requests/3770),
+    [internal MR 3776](https://gitlab.khronos.org/openxr/openxr/merge_requests/3776))
+
 ## OpenXR Specification 1.1.46 (2025-03-04)
 
 This release includes a new ratified Khronos extension, new vendor extensions,

@@ -213,16 +213,19 @@ StructGeneralMember =
 #             const <type>XrDebugUtilsMessengerCallbackDataEXT</type>*      callbackData,
 #             <type>void</type>*                                            userData);
 #         </type>
+# <type category="funcpointer" name="PFN_xrEglGetProcAddressMNDX" alias="PFN_xrEglGetProcAddressKHR"/>
 TypeFuncpointer =
-    attribute category { "funcpointer" },
-    # Not checking if struct mentioned is known, due to limitations in xsd:IDREF
-    attribute requires { XrEntityName_t }?,
-    text,
-    element name { XrPFNName_t },
-    text,
-    (element type { xsd:NCName },
-     text)*
-
+    (attribute category { "funcpointer" },
+     # Not checking if struct mentioned is known, due to limitations in xsd:IDREF
+     attribute requires { XrEntityName_t }?,
+     text,
+     element name { XrPFNName_t },
+     text,
+     (element type { xsd:NCName },
+      text)*)
+    | (attribute category { "funcpointer" },
+       attribute name { XrEntityName_t },
+       attribute alias { XrEntityName_t })
 # <enums> elements immediately inside the <registry> may be either bitmask or enum
 Enums = EnumEnums | BitmaskEnums
 
@@ -359,6 +362,27 @@ ExtendInteractionProfileElt =
         InteractionProfileComponentElt*
     }
 
+ExtendInteractionProfileUserPathElt =
+    element user_path {
+        attribute path { XrPathString_t },
+        attribute inherit { XrPathString_t }?
+    }
+
+ExtendPredicateInteractionProfileElt =
+    element extend {
+        attribute interaction_profile_predicate { "true" },
+
+        element condition {
+            # Schema for component is technically incorrect, we do not look at `system` or `user_path` attributes.
+            (InteractionProfileUserPathElt
+             | InteractionProfileComponentElt)+
+        }+,
+
+        ExtendInteractionProfileUserPathElt*,
+
+        InteractionProfileComponentElt*
+    }
+
 # Each <feature> defines the interface of an API version.
 Feature =
     element feature {
@@ -372,7 +396,8 @@ Feature =
              CommentAttr?,
              (InterfaceElement
               | CommentElt
-              | ExtendInteractionProfileElt)*
+              | ExtendInteractionProfileElt
+              | ExtendPredicateInteractionProfileElt)*
          }
          | element remove {
                CommentAttr?, (InterfaceElement | CommentElt)*
@@ -406,7 +431,8 @@ Extension =
              CommentAttr?,
              (InterfaceElement
               | CommentElt
-              | ExtendInteractionProfileElt)*
+              | ExtendInteractionProfileElt
+              | ExtendPredicateInteractionProfileElt)*
          }
          | element remove {
                attribute api { text }?,
