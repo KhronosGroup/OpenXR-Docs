@@ -223,14 +223,14 @@ The runtime must: determine if it supports the loader's request.
 The runtime does not support the loader's request if either of the following
 is true:
 
-* the runtime does not support the interface versions supported by the
-  loader as specified by the parameters
-  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion
-* the runtime does not support the API versions supported by the loader as
-  specified by the parameters
-  slink:XrNegotiateLoaderInfo::pname:minApiVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
+* The runtime does not support any of the interface versions supported by
+  the loader, as specified by the range
+  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion inclusive.
+* The runtime does not support any of the API versions supported by the
+  loader, ignoring "patch" version components, as specified by the range
+  slink:XrNegotiateLoaderInfo::pname:minApiVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxApiVersion inclusive.
 
 The runtime must: return ename:XR_ERROR_INITIALIZATION_FAILED if it does not
 support the loader's request.
@@ -239,15 +239,15 @@ If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:runtimeInterfaceVersion with the
 runtime interface version it desires to support.
 The slink:XrNegotiateRuntimeRequest::pname:runtimeInterfaceVersion set must:
-be between slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion.
+be in the range slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion
+through slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion inclusive.
 
 If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:runtimeApiVersion with the API
 version of OpenXR it will execute under.
-The slink:XrNegotiateRuntimeRequest::pname:runtimeApiVersion set must: be
-between slink:XrNegotiateLoaderInfo::pname:minApiVersion and
-slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
+The slink:XrNegotiateRuntimeRequest::pname:runtimeApiVersion set must: be in
+the range slink:XrNegotiateLoaderInfo::pname:minApiVersion through
+slink:XrNegotiateLoaderInfo::pname:maxApiVersion inclusive.
 
 If the function succeeds, the runtime must: set the
 slink:XrNegotiateRuntimeRequest::pname:getInstanceProcAddr with a valid
@@ -359,9 +359,9 @@ include::{generated}/api/structs/XrNegotiateRuntimeRequest.adoc[]
   structure (i.e. `sizeof(slink:XrNegotiateRuntimeRequest)`)
 * pname:runtimeInterfaceVersion is the version of the runtime interface
   version being requested by the runtime.
-  Must: not be outside of the bounds of the
-  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion values (inclusive).
+  Must: not be outside of the bounds of the range
+  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion (inclusive).
 * pname:runtimeApiVersion is the version of the OpenXR API supported by this
   runtime as formatted by dlink:XR_MAKE_VERSION.
   Patch is ignored.
@@ -458,14 +458,14 @@ The API layer must: determine if it supports the loader's request.
 The API layer does not support the loader's request if either of the
 following is true:
 
-* the API layer does not support the interface versions supported by the
-  loader as specified by the parameters
-  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion
-* the API layer does not support the API versions supported by the loader as
-  specified by the parameters
-  slink:XrNegotiateLoaderInfo::pname:minApiVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
+* The API layer does not support the interface versions supported by the
+  loader, as specified by the range
+  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion inclusive.
+* The API layer does not support the API versions supported by the loader,
+  ignoring "patch" version components, as specified by the range
+  slink:XrNegotiateLoaderInfo::pname:minApiVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxApiVersion inclusive.
 
 The API layer must: return ename:XR_ERROR_INITIALIZATION_FAILED if it does
 not support the loader's request.
@@ -474,15 +474,15 @@ If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:layerInterfaceVersion with the API
 layer interface version it desires to support.
 The slink:XrNegotiateApiLayerRequest::pname:layerInterfaceVersion set must:
-be between slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion.
+be in the range slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion
+through slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion inclusive.
 
 If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:layerApiVersion with the API version
 of OpenXR it will execute under.
-The slink:XrNegotiateApiLayerRequest::pname:layerApiVersion set must: be
-between slink:XrNegotiateLoaderInfo::pname:minApiVersion and
-slink:XrNegotiateLoaderInfo::pname:maxApiVersion.
+The slink:XrNegotiateApiLayerRequest::pname:layerApiVersion set must: be in
+the range slink:XrNegotiateLoaderInfo::pname:minApiVersion through
+slink:XrNegotiateLoaderInfo::pname:maxApiVersion inclusive.
 
 If the function succeeds, the API layer must: set the
 slink:XrNegotiateApiLayerRequest::pname:getInstanceProcAddr with a valid
@@ -525,9 +525,9 @@ include::{generated}/api/structs/XrNegotiateApiLayerRequest.adoc[]
   structure (i.e. `sizeof(slink:XrNegotiateApiLayerRequest)`).
 * pname:layerInterfaceVersion is the version of the API layer interface
   version being requested by the API layer.
-  Should not be outside of the bounds of the
-  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion and
-  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion values (inclusive).
+  Should not be outside of the bounds of the range
+  slink:XrNegotiateLoaderInfo::pname:minInterfaceVersion through
+  slink:XrNegotiateLoaderInfo::pname:maxInterfaceVersion (inclusive).
 * pname:layerApiVersion is the version of the OpenXR API supported by this
   API layer as formatted by dlink:XR_MAKE_VERSION.
   Patch is ignored.

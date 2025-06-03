@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
 
 *Last Modified Date*::
-    2020-05-04
+    2025-03-07
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -23,9 +23,9 @@ include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
 ==== Overview
 
 This extension enables the use of the Vulkan graphics API in an OpenXR
-runtime.
-Without this extension, the OpenXR runtime may not be able to use any Vulkan
-swapchain images.
+application.
+Without this extension, an OpenXR application may: not be able to use any
+Vulkan swapchain images.
 
 This extension provides the mechanisms necessary for an application to
 generate a valid slink:XrGraphicsBindingVulkan2KHR structure in order to
@@ -35,9 +35,11 @@ This extension also provides mechanisms for the application to interact with
 images acquired by calling flink:xrEnumerateSwapchainImages.
 
 In order to expose the structures, types, and functions of this extension,
-you must: define dlink:XR_USE_GRAPHICS_API_VULKAN before including the
-OpenXR platform header `openxr_platform.h`, in all portions of your library
-or application that include it.
+the application source code must: define dlink:XR_USE_GRAPHICS_API_VULKAN
+before including the OpenXR platform header `openxr_platform.h`, in all
+portions of the library or application that interact with the types, values,
+and functions it defines.
+
 
 [NOTE]
 .Note
@@ -440,7 +442,7 @@ include::{generated}/api/structs/XrSwapchainImageVulkan2KHR.adoc[]
 ****
 
 If a given session was created with slink:XrGraphicsBindingVulkan2KHR, the
-following conditions must: apply.
+following conditions apply.
 
 * Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
   session must: return an array of slink:XrSwapchainImageVulkan2KHR
@@ -504,39 +506,39 @@ be used as if they were created with at least the specified
 [cols=2*,options=header]
 |===
 | elink:XrSwapchainUsageFlagBits
-| Corresponding Vulkan flag bit
+  | Corresponding Vulkan flag bit
 
 | ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
-| `VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT`
+  | `VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-| `VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT`
+  | `VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
-| `VK_IMAGE_USAGE_STORAGE_BIT`
+  | `VK_IMAGE_USAGE_STORAGE_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
-| `VK_IMAGE_USAGE_TRANSFER_SRC_BIT`
+  | `VK_IMAGE_USAGE_TRANSFER_SRC_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
-| `VK_IMAGE_USAGE_TRANSFER_DST_BIT`
+  | `VK_IMAGE_USAGE_TRANSFER_DST_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT
-| `VK_IMAGE_USAGE_SAMPLED_BIT`
+  | `VK_IMAGE_USAGE_SAMPLED_BIT`
 
 | ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
-| `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT`
+  | `VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT`
 
 ifdef::XR_KHR_swapchain_usage_input_attachment_bit[]
 | ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
   (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
-| `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
+  | `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
 endif::XR_KHR_swapchain_usage_input_attachment_bit[]
 
 ifdef::XR_MND_swapchain_usage_input_attachment_bit[]
 | ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_MND
   (Added by the now deprecated apiext:XR_MND_swapchain_usage_input_attachment_bit extension and only available when that extension is enabled)
-| `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
+  | `VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT`
 endif::XR_MND_swapchain_usage_input_attachment_bit[]
 
 |===
@@ -593,3 +595,5 @@ elink:XrStructureType enumeration is extended with:
 ** Initial draft
 * Revision 2, 2021-01-21 (Rylie Pavlik, Collabora, Ltd.)
 ** Document mapping for `XrSwapchainUsageFlags`
+* Revision 3, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
+** Clarify and make more uniform with other graphics binding extensions.

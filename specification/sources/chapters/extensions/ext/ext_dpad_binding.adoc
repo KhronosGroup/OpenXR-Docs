@@ -32,12 +32,12 @@ extension that this builds on top of.
 
 When this extension is enabled, a runtime must: accept otherwise-valid
 suggested bindings that refer to the following component paths added to
-certain existing input source paths.
+certain existing input subpaths.
 
 * For a given interaction profile,
-** For each <<semantic-paths-input,input source path>> valid in that
-   interaction profile that has identifier _trackpad_ but without a
-   component specified (i.e. subpathname:/input/trackpad or
+** For each <<semantic-paths-input,input subpath>> valid in that interaction
+   profile that has identifier _trackpad_ but without a component specified
+   (i.e. subpathname:/input/trackpad or
    subpathname:/input/trackpad_<location>), a runtime must: accept the
    following components appended to that path in a suggested binding:
 *** subpathname:/dpad_up
@@ -45,9 +45,9 @@ certain existing input source paths.
 *** subpathname:/dpad_left
 *** subpathname:/dpad_right
 *** subpathname:/dpad_center
-** For each <<semantic-paths-input,input source path>> valid in that
-   interaction profile that has identifier _thumbstick_ but without a
-   component specified (i.e. subpathname:/input/thumbstick or
+** For each <<semantic-paths-input,input subpath>> valid in that interaction
+   profile that has identifier _thumbstick_ but without a component
+   specified (i.e. subpathname:/input/thumbstick or
    subpathname:/input/thumbstick_<location>), a runtime must: accept the
    following components appended to that path in a suggested binding:
 *** subpathname:/dpad_up
@@ -67,8 +67,8 @@ case that suggested bindings are being obeyed, and to provide remapping
 hints in other cases.
 If no slink:XrInteractionProfileDpadBindingEXT structure is present in
 slink:XrBindingModificationsKHR::pname:bindingModifications for a given
-action set and component-less input source path, the runtime must: behave as
-if one were passed with the following values:
+action set and component-less input subpath, the runtime must: behave as if
+one were passed with the following values:
 
 * pname:forceThreshold = 0.5
 * pname:forceThresholdReleased = 0.4

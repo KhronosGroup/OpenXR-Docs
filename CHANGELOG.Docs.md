@@ -17,6 +17,76 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.48 (2025-06-03)
+
+This release contains a substantial amount of clarification and cleanup to the
+specification that does not change its normative content, but makes it clearer
+and easier to understand for both runtime and application developers. It also
+includes several new vendor extensions.
+
+- Specification
+  - Change: Update spec language for `xrDownloadSharedSpatialAnchorCompleteBD` in
+    `XR_BD_spatial_anchor_sharing`, incrementing the revision.
+    ([internal MR 3855](https://gitlab.khronos.org/openxr/openxr/merge_requests/3855))
+  - Clarify: More precisely specify the ranges used in the loader API interfaces.
+    ([internal MR 3118](https://gitlab.khronos.org/openxr/openxr/merge_requests/3118))
+  - Clarify: Device disconnected does not necessarily imply `XR_NULL_PATH` as
+    current interaction profile.
+    ([internal MR 3180](https://gitlab.khronos.org/openxr/openxr/merge_requests/3180))
+  - Clarify: Improve the distinction between an input/interaction subpath (part of
+    a binding path, is appended to a top level /user path) and an "input source"
+    which is a logical entity at the runtime level not accessible directly through
+    the API.
+    ([internal MR 3198](https://gitlab.khronos.org/openxr/openxr/merge_requests/3198))
+  - Fix: Minor markup errors and typos in `XR_EXT_performance_settings`.
+    ([internal MR 3825](https://gitlab.khronos.org/openxr/openxr/merge_requests/3825))
+  - Fix: Remove outdated, incorrect mention of 'elements' in
+    `XrViewConfigurationProperties`.
+    ([internal MR 3846](https://gitlab.khronos.org/openxr/openxr/merge_requests/3846))
+  - Improvement: Document the `XR_USE_PLATFORM_EGL` preprocessor symbol.
+    ([internal MR 2986](https://gitlab.khronos.org/openxr/openxr/merge_requests/2986))
+  - Improvement: Normalize, cleanup, and re-organize the graphics binding
+    extensions, improving usability and readability of the specification without
+    making normative changes.
+    ([internal MR 3028](https://gitlab.khronos.org/openxr/openxr/merge_requests/3028),
+    [internal MR 3742](https://gitlab.khronos.org/openxr/openxr/merge_requests/3742))
+  - Improvement: Clarify and correct references to sRGB: the specification is
+    referring primarily to the sRGB non-linear encoding in the relevant section,
+    not technically the color space of the same name.
+    ([internal MR 3663](https://gitlab.khronos.org/openxr/openxr/merge_requests/3663))
+  - New vendor extension specification:
+    `XR_META_simultaneous_hands_and_controllers` allows application feedback on
+    whether the runtime should continue to track controllers when not held.
+    ([internal MR 2755](https://gitlab.khronos.org/openxr/openxr/merge_requests/2755))
+  - New vendor extension specification: `XR_META_body_tracking_full_body` defining
+    a new joint set including the legs for the corresponding vendor body tracking
+    base extension.
+    ([internal MR 2961](https://gitlab.khronos.org/openxr/openxr/merge_requests/2961))
+  - New vendor extension specification: `XR_BD_future_progress` provides access to
+    progress of incomplete async operations.
+    ([internal MR 3724](https://gitlab.khronos.org/openxr/openxr/merge_requests/3724))
+- Registry
+  - Change: Increment the revision of `XR_BD_spatial_anchor_sharing`.
+    ([internal MR 3855](https://gitlab.khronos.org/openxr/openxr/merge_requests/3855))
+  - Chore: Reserve extension numbers.
+    ([internal MR 3696](https://gitlab.khronos.org/openxr/openxr/merge_requests/3696),
+    [internal MR 3797](https://gitlab.khronos.org/openxr/openxr/merge_requests/3797),
+    [internal MR 3815](https://gitlab.khronos.org/openxr/openxr/merge_requests/3815),
+    [internal MR 3827](https://gitlab.khronos.org/openxr/openxr/merge_requests/3827))
+  - Fix: Explicitly list the "x" and "y" thumbstick components on
+    "pico_g3_controller" in the XML.
+    ([internal MR 3851](https://gitlab.khronos.org/openxr/openxr/merge_requests/3851))
+  - Increment graphics binding extension revision numbers due to
+    rephrase/reorganization.
+    ([internal MR 3028](https://gitlab.khronos.org/openxr/openxr/merge_requests/3028),
+    [internal MR 3742](https://gitlab.khronos.org/openxr/openxr/merge_requests/3742))
+  - New vendor extension: `XR_META_simultaneous_hands_and_controllers`
+    ([internal MR 2755](https://gitlab.khronos.org/openxr/openxr/merge_requests/2755))
+  - New vendor extension: `XR_META_body_tracking_full_body`
+    ([internal MR 2961](https://gitlab.khronos.org/openxr/openxr/merge_requests/2961))
+  - New vendor extension: `XR_BD_future_progress`
+    ([internal MR 3724](https://gitlab.khronos.org/openxr/openxr/merge_requests/3724))
+
 ## OpenXR Specification 1.1.47 (2025-04-08)
 
 This release features several new vendor extensions, one of which required a

@@ -36,8 +36,7 @@ This extension requires the apiext:XR_MSFT_secondary_view_configuration
 extension to also be enabled.
 
 ename:XR_VIEW_CONFIGURATION_TYPE_SECONDARY_MONO_FIRST_PERSON_OBSERVER_MSFT
-requires one element in slink:XrViewConfigurationProperties and one
-projection in each slink:XrCompositionLayerProjection layer.
+requires one projection in each slink:XrCompositionLayerProjection layer.
 
 Runtimes should: only make this view configuration active when the user or
 the application activates a runtime feature that will make use of the

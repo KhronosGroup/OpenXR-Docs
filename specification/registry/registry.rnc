@@ -466,7 +466,7 @@ InterfaceElement =
           (# the name define
            attribute name {
                xsd:NCName {
-                   pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+_EXTENSION_NAME"
+                   pattern = "XR_[A-Z]+(X[1-9])?(_[A-Za-z0-9]+)+_EXTENSION_NAME"
                }
            },
            attribute value { ExtensionNameDefineVal_t }?)
@@ -517,7 +517,7 @@ XrUpperSnakeCase_t =
 XrDefineOrEnumName_t =
     XrUpperSnakeCase_t
     | xsd:NCName {
-          pattern = "XR_[A-Z]+(_([A-Za-z0-9]+))+_SPEC_VERSION"
+          pattern = "XR_[A-Z]+(X[1-9])?(_([A-Za-z0-9]+))+_SPEC_VERSION"
       }
 XrFuncName_t = xsd:NCName { pattern = "xr([A-Z]+[a-z0-9]*)+" }
 XrPFNName_t = xsd:NCName { pattern = "PFN_xr([A-Z]+[a-z0-9]*)+" }
@@ -529,11 +529,11 @@ XrTypeNameListRef_t =
         pattern = "Xr([A-Z]+[a-z0-9]*)+(,Xr([A-Z]+[a-z0-9]*)+)*"
     }
 
-XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(_[A-Za-z0-9]+)+" }
+XrExtName_t = xsd:NCName { pattern = "XR_[A-Z]+(X[1-9])?(_[A-Za-z0-9]+)+" }
 XrExtNameExpression_t =
     xsd:token {
         pattern =
-            "XR_[A-Z]+(_[A-Za-z0-9]+)+([+,]XR_[A-Z]+(_[A-Za-z0-9]+)+)*"
+            "XR_[A-Z]+(X[1-9])?(_[A-Za-z0-9]+)+([+,]XR_[A-Z]+(X[1-9])?(_[A-Za-z0-9]+)+)*"
     }
 
 XrPathString_t = xsd:token { pattern = "/[a-z0-9_\-]+(/[a-z0-9_\-]+)*" }
@@ -542,12 +542,12 @@ XrInteractionComponentType_t =
 
 ReturnCodes_t =
     xsd:token {
-        pattern = "XR_([A-Z]+)(_[A-Z]+)*(,XR_([A-Z]+)(_[A-Z]+)*)*"
+        pattern = "XR_([A-Z]+)(_[A-Z]+(X[1-9])?)*(,XR_([A-Z]+)(_[A-Z]+(X[1-9])?)*)*"
     }
 ExtensionNameDefineVal_t =
     xsd:token {
         # For the name define
-        pattern = '"XR_[A-Z]+((_([A-Z0-9]+|[a-z0-9]+))*)"'
+        pattern = '"XR_[A-Z]+(X[1-9])?((_([A-Z0-9]+|[a-z0-9]+))*)"'
     }
 XrEntityName_t =
     XrUpperSnakeCase_t | XrFuncName_t | XrPFNName_t | XrTypeName_t

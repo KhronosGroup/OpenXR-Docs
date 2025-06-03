@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_D3D12_enable.adoc[]
 
 *Last Modified Date*::
-   2020-03-18
+    2025-03-07
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -15,12 +15,12 @@ include::{generated}/meta/XR_KHR_D3D12_enable.adoc[]
     Minmin Gong, Microsoft +
     Dan Ginsburg, Valve
 
-*Overview*
+==== Overview
 
-This extension enables the use of the D3D12 graphics API in an OpenXR
-runtime.
-Without this extension, the OpenXR runtime may not be able to use any D3D12
-swapchain images.
+This extension enables the use of the Direct3D 12 (D3D12) graphics API in an
+OpenXR application.
+Without this extension, an OpenXR application may: not be able to use any
+D3D12 swapchain images.
 
 This extension provides the mechanisms necessary for an application to
 generate a valid slink:XrGraphicsBindingD3D12KHR structure in order to
@@ -28,108 +28,85 @@ create a D3D12-based slink:XrSession.
 Note that during this process the application is responsible for creating
 all the required D3D12 objects, including a graphics device and queue to be
 used for rendering.
-
-This extension also provides mechanisms for the application to interact with
-images acquired by calling flink:xrEnumerateSwapchainImages.
+However, the runtime provides the D3D12 images to render into.
+This extension provides mechanisms for the application to interact with
+those images by calling flink:xrEnumerateSwapchainImages and providing
+slink:XrSwapchainImageD3D12KHR structures to populate.
 
 In order to expose the structures, types, and functions of this extension,
-you must: define dlink:XR_USE_GRAPHICS_API_D3D12 before including the OpenXR
-platform header `openxr_platform.h`, in all portions of your library or
-application that include it.
+the application source code must: define dlink:XR_USE_GRAPHICS_API_D3D12
+before including the OpenXR platform header `openxr_platform.h`, in all
+portions of the library or application that interact with the types, values,
+and functions it defines.
 
-*Swapchain Image Resource State*
 
-If an application waits on a swapchain image by calling
-flink:xrWaitSwapchainImage in a session created using
-slink:XrGraphicsBindingD3D12KHR, and that call returns ename:XR_SUCCESS or
-ename:XR_SESSION_LOSS_PENDING, then the OpenXR runtime must: guarantee that
-the following conditions are true:
+==== Get Graphics Requirements
 
-* The color rendering target image has a resource state match with
-  ename:D3D12_RESOURCE_STATE_RENDER_TARGET
-* The depth rendering target image has a resource state match with
-  ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
-* The sname:ID3D12CommandQueue specified in slink:XrGraphicsBindingD3D12KHR
-  can write to the image.
+Some computer systems have multiple graphics devices, each of which may:
+have independent external display outputs.
+XR systems that connect to such computer systems are typically connected to
+a single graphics device.
+Applications need to know the graphics device associated with the XR system,
+so that rendering takes place on the correct graphics device.
 
-When an application releases a swapchain image by calling
-flink:xrReleaseSwapchainImage, in a session created using
-slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: interpret the
-image as:
+[open,refpage='xrGetD3D12GraphicsRequirementsKHR',type='protos',desc='Retrieve the D3D12 feature level and graphics device requirements for an instance and system',xrefs='XrGraphicsRequirementsD3D12KHR xrCreateSession']
+--
+The flink:xrGetD3D12GraphicsRequirementsKHR function is defined as:
 
-* Having a resource state match with
-  ename:D3D12_RESOURCE_STATE_RENDER_TARGET if the image is a color rendering
-  target
-* Having a resource state match with ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
-  if the image is a depth rendering target
-* Being available for read/write on the sname:ID3D12CommandQueue specified
-  in slink:XrGraphicsBindingD3D12KHR.
+include::{generated}/api/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
 
-The application is responsible for transitioning the swapchain image back to
-the resource state and queue availability that the OpenXR runtime requires.
-If the image is not in a resource state match with the above specifications
-the runtime may: exhibit undefined behavior.
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:graphicsRequirements is the slink:XrGraphicsRequirementsD3D12KHR
+  output structure.
+****
 
-All elink:XrSwapchainUsageFlags values passed in a session created using
-slink:XrGraphicsBindingD3D12KHR must: be interpreted as follows by the
-runtime, so that the returned swapchain images used by the application may
-be used as if they were created with the corresponding D3D12_BIND_FLAG flags
-and heap type.
-The runtime may: set additional resource flags but must: not restrict usage.
+This call retrieves the D3D12 feature level and graphics device for an
+instance and system.
+The flink:xrGetD3D12GraphicsRequirementsKHR function identifies to the
+application the graphics device (Windows LUID) to be used and the minimum
+feature level to use.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if flink:xrGetD3D12GraphicsRequirementsKHR
+has not been called for the same pname:instance and pname:systemId.
 
-[cols=2*,options=header]
-|===
-| elink:XrSwapchainUsageFlagBits
-| Corresponding D3D12 resource flag bits
+The LUID and feature level that flink:xrGetD3D12GraphicsRequirementsKHR
+returns must: be used to create the sname:ID3D12Device that the application
+passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D12KHR.
 
-| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
-| `D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET`
+include::{generated}/validity/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
+--
 
-| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-| `D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL`
+[open,refpage='XrGraphicsRequirementsD3D12KHR',type='structs',desc='D3D12 feature level and LUID requirements',xrefs='xrGetD3D12GraphicsRequirementsKHR']
+--
+The slink:XrGraphicsRequirementsD3D12KHR structure is defined as:
 
-| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
-| `D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS`
+include::{generated}/api/structs/XrGraphicsRequirementsD3D12KHR.adoc[]
 
-| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
-| _ignored_
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:adapterLuid identifies what graphics device needs to be used.
+* pname:minFeatureLevel is the minimum feature level for which to initialize
+  the D3D12 device.
+****
 
-| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
-| _ignored_
+slink:XrGraphicsRequirementsD3D12KHR is populated by
+flink:xrGetD3D12GraphicsRequirementsKHR with the runtime's D3D12 API feature
+level and adapter requirements.
 
-| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT *omitted*
-| `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
+include::{generated}/validity/structs/XrGraphicsRequirementsD3D12KHR.adoc[]
+--
 
-| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
-| _ignored_
-
-| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
-  (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
-| _ignored_
-
-|===
-
-All D3D12 swapchain textures are created with D3D12_HEAP_TYPE_DEFAULT usage.
-
-*New Object Types*
-
-*New Flag Types*
-
-*New Enum Constants*
-
-elink:XrStructureType enumeration is extended with:
-
-* ename:XR_TYPE_GRAPHICS_REQUIREMENTS_D3D12_KHR
-* ename:XR_TYPE_GRAPHICS_BINDING_D3D12_KHR
-* ename:XR_TYPE_SWAPCHAIN_IMAGE_D3D12_KHR
-
-*New Enums*
-
-*New Structures*
-
-The following structures are provided to supply supporting runtimes the
-necessary information required to work with the D3D12 API executing on
-certain operating systems.
+==== Graphics Binding Structure
 
 [open,refpage='XrGraphicsBindingD3D12KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use D3D12',xrefs='xrCreateSession']
 --
@@ -147,17 +124,24 @@ include::{generated}/api/structs/XrGraphicsBindingD3D12KHR.adoc[]
 * pname:queue is a pointer to a valid sname:ID3D12CommandQueue to use.
 ****
 
-When creating a D3D12-backed slink:XrSession, the application will provide a
-pointer to an slink:XrGraphicsBindingD3D12KHR in the
-slink:XrSessionCreateInfo::pname:next field of structure passed to
+To create a D3D12-backed slink:XrSession, the application provides a pointer
+to an slink:XrGraphicsBindingD3D12KHR structure in the
+slink:XrSessionCreateInfo::pname:next chain when calling
 flink:xrCreateSession.
 The D3D12 device specified in slink:XrGraphicsBindingD3D12KHR::pname:device
 must: be created in accordance with the requirements retrieved through
 flink:xrGetD3D12GraphicsRequirementsKHR, otherwise flink:xrCreateSession
 must: return ename:XR_ERROR_GRAPHICS_DEVICE_INVALID.
 
+Creating a session using this structure triggers several requirements on the
+runtime regarding swapchain images.
+See the specification of slink:XrSwapchainImageD3D12KHR for details.
+
 include::{generated}/validity/structs/XrGraphicsBindingD3D12KHR.adoc[]
 --
+
+
+==== Swapchain Images
 
 [open,refpage='XrSwapchainImageD3D12KHR',type='structs',desc='D3D12-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
@@ -175,7 +159,7 @@ include::{generated}/api/structs/XrSwapchainImageD3D12KHR.adoc[]
 ****
 
 If a given session was created with slink:XrGraphicsBindingD3D12KHR, the
-following conditions must: apply.
+following conditions apply.
 
 * Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
   session must: return an array of slink:XrSwapchainImageD3D12KHR
@@ -191,75 +175,108 @@ functionality.
 The OpenXR runtime must: interpret the swapchain images in a clip space of
 positive Y pointing up, near Z plane at 0, and far Z plane at 1.
 
+The OpenXR runtime must: return a texture created in accordance with
+<<khr_d3d12_enable-flags>>.
+
+The OpenXR runtime must: manage image resource state in accordance with
+<<khr_d3d12_enable-state>>.
+
+
 include::{generated}/validity/structs/XrSwapchainImageD3D12KHR.adoc[]
 --
 
-[open,refpage='XrGraphicsRequirementsD3D12KHR',type='structs',desc='D3D12 feature level and LUID requirements',xrefs='xrGetD3D12GraphicsRequirementsKHR']
+[[khr_d3d12_enable-flags]]
+==== D3D12 Swapchain Flag Bits
+
+[open,refpage='XR_KHR_D3D12_enable-swapchain-flags',type='freeform',anchor='khr_d3d12_enable-flags',desc='Meaning of elink:XrSwapchainUsageFlags values in a D3D12-based slink:XrSession.']
 --
-The slink:XrGraphicsRequirementsD3D12KHR structure is defined as:
+All valid elink:XrSwapchainUsageFlags values passed in a session created
+using slink:XrGraphicsBindingD3D12KHR must: be interpreted as follows by the
+runtime, so that the returned swapchain images used by the application may:
+be used as if they were created with the corresponding
+`D3D12_RESOURCE_FLAGS` flags and heap type.
+The runtime may: set additional resource flags but must: not restrict usage.
 
-include::{generated}/api/structs/XrGraphicsRequirementsD3D12KHR.adoc[]
+[cols=2*,options=header]
+|===
+| elink:XrSwapchainUsageFlagBits
+  | Corresponding D3D12 resource flag bits
 
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR or this extension.
-* pname:adapterLuid identifies what graphics device needs to be used.
-* pname:minFeatureLevel is the minimum feature level that the D3D12 device
-  must be initialized with.
-****
+| ename:XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT
+  | `D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET`
 
-slink:XrGraphicsRequirementsD3D12KHR is populated by
-flink:xrGetD3D12GraphicsRequirementsKHR.
+| ename:XR_SWAPCHAIN_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+  | `D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL`
 
-include::{generated}/validity/structs/XrGraphicsRequirementsD3D12KHR.adoc[]
---
+| ename:XR_SWAPCHAIN_USAGE_UNORDERED_ACCESS_BIT
+  | `D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS`
 
-*New Functions*
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT
+  | _ignored_
 
-Some computer systems may have multiple graphics devices, each of which may
-have independent external display outputs.
-XR systems that connect to such graphics devices are typically connected to
-a single device.
-Applications need to know what graphics device the XR system is connected to
-so that they can use that graphics device to generate XR images.
+| ename:XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT
+  | _ignored_
 
-[open,refpage='xrGetD3D12GraphicsRequirementsKHR',type='protos',desc='Retrieve the D3D12 feature level and graphics device requirements for an instance and system',xrefs='XrGraphicsRequirementsD3D12KHR xrCreateSession']
---
-To retrieve the D3D12 feature level and graphics device for an instance and
-system, call:
+| ename:XR_SWAPCHAIN_USAGE_SAMPLED_BIT *omitted*
+  | `D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE`
 
-include::{generated}/api/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
+| ename:XR_SWAPCHAIN_USAGE_MUTABLE_FORMAT_BIT
+  | _ignored_
 
-.Parameter Descriptions
-****
-* pname:instance is an slink:XrInstance handle previously created with
-  flink:xrCreateInstance.
-* pname:systemId is an basetype:XrSystemId handle for the system which will
-  be used to create a session.
-* pname:graphicsRequirements is the slink:XrGraphicsRequirementsD3D12KHR
-  output structure.
-****
+| ename:XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+  (Added by apiext:XR_KHR_swapchain_usage_input_attachment_bit and only available when that extension is enabled)
+  | _ignored_
 
-The flink:xrGetD3D12GraphicsRequirementsKHR function identifies to the
-application what graphics device (Windows LUID) needs to be used and the
-minimum feature level to use.
-The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
-(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
-on calls to flink:xrCreateSession if flink:xrGetD3D12GraphicsRequirementsKHR
-has not been called for the same pname:instance and pname:systemId.
-The LUID and feature level that flink:xrGetD3D12GraphicsRequirementsKHR
-returns must: be used to create the sname:ID3D12Device that the application
-passes to flink:xrCreateSession in the slink:XrGraphicsBindingD3D12KHR.
+|===
 
-include::{generated}/validity/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
+All D3D12 swapchain textures are created with `D3D12_HEAP_TYPE_DEFAULT` heap
+type.
+
 --
 
-*Issues*
+[[khr_d3d12_enable-state]]
+==== D3D12 Swapchain Image Resource State
 
-*Version History*
+
+[open,refpage='XR_KHR_D3D12_enable-swapchain-image-state',type='freeform',anchor='khr_d3d12_enable-state',desc='Swapchain image resource state in a D3D12-based slink:XrSession.',xrefs='XrGraphicsBindingD3D12KHR XrSwapchainImageD3D12KHR xrWaitSwapchainImage xrReleaseSwapchainImage']
+--
+If an application waits on a swapchain image by calling
+flink:xrWaitSwapchainImage in a session created using
+slink:XrGraphicsBindingD3D12KHR, and that call returns ename:XR_SUCCESS or
+ename:XR_SESSION_LOSS_PENDING, then the OpenXR runtime must: guarantee that
+the following conditions are true:
+
+* The color rendering target image has a resource state match with
+  ename:D3D12_RESOURCE_STATE_RENDER_TARGET
+* The depth rendering target image has a resource state match with
+  ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
+* The sname:ID3D12CommandQueue specified in slink:XrGraphicsBindingD3D12KHR
+  is able to write to the image.
+
+When an application releases a swapchain image by calling
+flink:xrReleaseSwapchainImage in a session created using
+slink:XrGraphicsBindingD3D12KHR, the OpenXR runtime must: interpret the
+image as:
+
+* Having a resource state match with
+  ename:D3D12_RESOURCE_STATE_RENDER_TARGET if the image is a color rendering
+  target
+* Having a resource state match with ename:D3D12_RESOURCE_STATE_DEPTH_WRITE
+  if the image is a depth rendering target
+* Being available for read/write on the sname:ID3D12CommandQueue specified
+  in slink:XrGraphicsBindingD3D12KHR.
+
+The application is responsible for transitioning the swapchain image back to
+the resource state and queue availability that the OpenXR runtime requires.
+If the image is not in a resource state match with the above specifications
+the runtime may: exhibit undefined behavior.
+
+--
+
+include::{generated}/interfaces/XR_KHR_D3D12_enable.adoc[leveloffset=1]
+
+
+==== Version History
 
 * Revision 1, 2018-05-07 (Mark Young)
 ** Initial draft
@@ -281,3 +298,7 @@ include::{generated}/validity/protos/xrGetD3D12GraphicsRequirementsKHR.adoc[]
 ** Document mapping for `XrSwapchainUsageFlags`
 * Revision 9, 2021-12-28 (Microsoft)
 ** Added missing `XR_ERROR_GRAPHICS_DEVICE_INVALID` error condition
+* Revision 10, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
+** Re-organize, clarify, and make more uniform with other graphics binding
+   extensions.
+

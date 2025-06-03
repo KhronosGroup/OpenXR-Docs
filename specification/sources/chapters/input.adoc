@@ -560,10 +560,10 @@ bindings contain paths that do not follow the format defined in
 <<semantic-paths-input>> (further described in
 slink:XrActionSuggestedBinding), the runtime must: return
 ename:XR_ERROR_PATH_UNSUPPORTED.
-If the interaction profile or input source for any of the suggested bindings
-does not exist in the allowlist defined in
-<<semantic-paths-interaction-profiles, Interaction Profile Paths>>, the
-runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED.
+If the interaction profile path or binding path (top level pathname:/user
+path plus input subpath) for any of the suggested bindings does not exist in
+the allowlist defined in <<semantic-paths-interaction-profiles, Interaction
+Profile Paths>>, the runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED.
 A runtime must: accept every valid binding in the allowlist though it is
 free to ignore any of them.
 
@@ -703,8 +703,13 @@ The runtime may: return interaction profiles that do not represent
 physically present hardware, for example if the runtime is using a known
 interaction profile to bind to hardware that the application is not aware
 of.
-The runtime may: return the last-known interaction profile in the event that
-no controllers are active.
+The runtime may: return an anticipated interaction profile, from the list of
+interaction profiles with suggested bindings (as supplied by the application
+through flink:xrSuggestInteractionProfileBindings) for this top level
+pathname:/user path, in the event that no controllers are active.
+Whether the runtime reports an interaction profile path or
+dlink:XR_NULL_PATH does *not* provide any signal to the application
+regarding presence or absence of a controller or other interaction method.
 
 If flink:xrAttachSessionActionSets has not yet been called for the
 pname:session, the runtime must: return

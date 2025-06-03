@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_opengl_enable.adoc[]
 
 *Last Modified Date*::
-    2019-07-02
+    2025-03-07
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -17,30 +17,29 @@ include::{generated}/meta/XR_KHR_opengl_enable.adoc[]
     Jakob Bornecrantz, Collabora +
     Paulo Gomes, Samsung Electronics
 
-*Overview*
+==== Overview
 
 This extension enables the use of the OpenGL graphics API in an OpenXR
-runtime.
-Without this extension, the OpenXR runtime may: not be able to provide any
+application.
+Without this extension, an OpenXR application may: not be able to use any
 OpenGL swapchain images.
 
 This extension provides the mechanisms necessary for an application to
 generate a valid stext:XrGraphicsBindingOpenGL*KHR structure in order to
 create an OpenGL-based slink:XrSession.
-Note that during this process the application is responsible for creating an
-OpenGL context to be used for rendering.
-The runtime however will provide the OpenGL textures to render into in the
-form of a swapchain.
-
+Note that the application is responsible for creating an OpenGL context to
+be used for rendering.
+However, the runtime provides the OpenGL textures to render into.
 This extension provides mechanisms for the application to interact with
-images acquired by calling flink:xrEnumerateSwapchainImages.
+those textures by calling flink:xrEnumerateSwapchainImages and providing
+slink:XrSwapchainImageOpenGLKHR structures to populate.
 
 In order to expose the structures, types, and functions of this extension,
-the application must: define dlink:XR_USE_GRAPHICS_API_OPENGL, as well as an
-appropriate <<appendix-window-system-header-control,window system define>>
-supported by this extension, before including the OpenXR platform header
-`openxr_platform.h`, in all portions of the library or application that
-include it.
+the application source code must: define dlink:XR_USE_GRAPHICS_API_OPENGL,
+as well as an appropriate <<window-system-header-control,window system
+define>> supported by this extension, before including the OpenXR platform
+header `openxr_platform.h`, in all portions of the library or application
+that interact with the types, values, and functions it defines.
 The window system defines currently supported by this extension are:
 
 * dlink:XR_USE_PLATFORM_WIN32
@@ -49,66 +48,104 @@ The window system defines currently supported by this extension are:
 * dlink:XR_USE_PLATFORM_WAYLAND
 
 Note that a runtime implementation of this extension is only required to
-support the structs introduced by this extension which belong to the
+support the structures introduced by this extension which correspond to the
 platform it is running on.
 
-Note that the OpenGL context given to the call flink:xrCreateSession must:
-not be bound in another thread when calling the functions:
-flink:xrCreateSession, flink:xrDestroySession, flink:xrBeginFrame,
-flink:xrEndFrame, flink:xrCreateSwapchain, flink:xrDestroySwapchain,
-flink:xrEnumerateSwapchainImages, flink:xrAcquireSwapchainImage,
-flink:xrWaitSwapchainImage and flink:xrReleaseSwapchainImage.
-It may: be bound in the thread calling those functions.
+[[khr_opengl_enable-threading]]
+==== OpenGL Context and Threading
+
+[open,refpage='XR_KHR_opengl_enable-threading',type='freeform',anchor='khr_opengl_enable-threading',desc='Threading rqeuirements involved in a session created with apiext:XR_KHR_opengl_enable',xrefs='xrCreateSession xrWaitFrame']
+--
+
+Note that the OpenGL context given to the call to flink:xrCreateSession
+must: not be bound in _another_ thread by the application when calling the
+functions:
+
+* flink:xrCreateSession
+* flink:xrDestroySession
+* flink:xrBeginFrame
+* flink:xrEndFrame
+* flink:xrCreateSwapchain
+* flink:xrDestroySwapchain
+* flink:xrEnumerateSwapchainImages
+* flink:xrAcquireSwapchainImage
+* flink:xrWaitSwapchainImage
+* flink:xrReleaseSwapchainImage
+
+However, it may: be bound in the thread calling one of those functions.
 The runtime must: not access the context from any other function.
-In particular the application must be able to call flink:xrWaitFrame from a
+In particular the application must: be able to call flink:xrWaitFrame from a
 different thread than the rendering thread.
 
-*Swapchain Flag Bits*
+--
 
-All elink:XrSwapchainUsageFlags valid values passed in a session created
-using slink:XrGraphicsBindingOpenGLWin32KHR,
-slink:XrGraphicsBindingOpenGLXlibKHR, slink:XrGraphicsBindingOpenGLXcbKHR or
-slink:XrGraphicsBindingOpenGLWaylandKHR should: be ignored as there is no
-mapping to OpenGL texture settings.
+==== Get Graphics Requirements
 
-[NOTE]
-.Note
-====
+[open,refpage='xrGetOpenGLGraphicsRequirementsKHR',type='protos',desc='Retrieve the OpenGL version requirements for an instance and system',xrefs='XrGraphicsRequirementsOpenGLKHR']
+--
+The flink:xrGetOpenGLGraphicsRequirementsKHR function is defined as:
 
-In such a session, a runtime may: use a supporting graphics API, such as
-Vulkan, to allocate images that are intended to alias with OpenGL textures,
-and be part of an slink:XrSwapchain.
-A runtime which allocates the texture with a different graphics API may:
-need to enable several usage flags on the underlying native texture resource
-to ensure compatibility with OpenGL.
+include::{generated}/api/protos/xrGetOpenGLGraphicsRequirementsKHR.adoc[]
 
-====
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:systemId is an basetype:XrSystemId handle for the system which will
+  be used to create a session.
+* pname:graphicsRequirements is the slink:XrGraphicsRequirementsOpenGLKHR
+  output structure.
+****
 
-*New Object Types*
+This call queries OpenGL API version requirements for an instance and
+system.
+The flink:xrGetOpenGLGraphicsRequirementsKHR function identifies to the
+application the minimum OpenGL version requirement and the highest known
+tested OpenGL version.
+The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
+(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
+on calls to flink:xrCreateSession if
+flink:xrGetOpenGLGraphicsRequirementsKHR has not been called for the same
+pname:instance and pname:systemId.
 
-*New Flag Types*
+include::{generated}/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.adoc[]
+--
 
-*New Enum Constants*
+[open,refpage='XrGraphicsRequirementsOpenGLKHR',type='structs',desc='OpenGL API version requirements',xrefs='xrGetOpenGLGraphicsRequirementsKHR']
+--
+The slink:XrGraphicsRequirementsOpenGLKHR structure is defined as:
 
-elink:XrStructureType enumeration is extended with:
+include::{generated}/api/structs/XrGraphicsRequirementsOpenGLKHR.adoc[]
 
-* ename:XR_TYPE_GRAPHICS_REQUIREMENTS_OPENGL_KHR
-* ename:XR_TYPE_GRAPHICS_BINDING_OPENGL_WIN32_KHR
-* ename:XR_TYPE_GRAPHICS_BINDING_OPENGL_XLIB_KHR
-* ename:XR_TYPE_GRAPHICS_BINDING_OPENGL_XCB_KHR
-* ename:XR_TYPE_GRAPHICS_BINDING_OPENGL_WAYLAND_KHR
-* ename:XR_TYPE_SWAPCHAIN_IMAGE_OPENGL_KHR
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:minApiVersionSupported is the minimum version of OpenGL that the
+  runtime supports.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
+* pname:maxApiVersionSupported is the maximum version of OpenGL that the
+  runtime has been tested on and is known to support.
+  Newer OpenGL versions may: work if they are compatible.
+  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
+  patch version component.
+****
 
-*New Enums*
+slink:XrGraphicsRequirementsOpenGLKHR is populated by
+flink:xrGetOpenGLGraphicsRequirementsKHR with the runtime's OpenGL API
+version requirements.
 
-*New Structures*
+include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLKHR.adoc[]
+--
 
-The following structures are provided to supply supporting runtimes the
-necessary information required to work with the OpenGL API executing on
-certain operating systems.
+==== Graphics Binding Structure
 
 These structures are only available when the corresponding
-`XR_USE_PLATFORM_` macro is defined before including `openxr_platform.h`.
+`XR_USE_PLATFORM_` <<window-system-header-control,window system/platform
+macro>> is defined before including `openxr_platform.h`.
 
 [open,refpage='XrGraphicsBindingOpenGLWin32KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use OpenGL on Windows',xrefs='xrCreateSession']
 --
@@ -126,16 +163,25 @@ include::{generated}/api/structs/XrGraphicsBindingOpenGLWin32KHR.adoc[]
 * pname:hGLRC is a valid Windows OpenGL rendering context handle.
 ****
 
-When creating an OpenGL-backed slink:XrSession on Microsoft Windows, the
-application will provide a pointer to an
-slink:XrGraphicsBindingOpenGLWin32KHR in the `next` chain of the
-slink:XrSessionCreateInfo.
+To create an OpenGL-backed slink:XrSession on Microsoft Windows, the
+application provides a pointer to an slink:XrGraphicsBindingOpenGLWin32KHR
+structure in the slink:XrSessionCreateInfo::pname:next chain when calling
+flink:xrCreateSession.
 As no standardized way exists for OpenGL to create the graphics context on a
 specific GPU, the runtime must: assume that the application uses the
-operating systems default GPU.
+operating system's default GPU when this structure is supplied.
 If the GPU used by the runtime does not match the GPU on which the OpenGL
-context of the application got created, flink:xrCreateSession must: return
+context of the application was created, flink:xrCreateSession must: return
 ename:XR_ERROR_GRAPHICS_DEVICE_INVALID.
+
+Creating a session using this structure triggers several requirements on the
+runtime regarding swapchain images.
+See the specification of slink:XrSwapchainImageOpenGLKHR for details.
+
+By providing a context as pname:hGLRC, the application becomes subject to
+restrictions on use of that context which effectively introduces additional
+external synchronization requirements on some OpenXR calls.
+See <<khr_opengl_enable-threading>> for details.
 
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_WIN32.
@@ -162,10 +208,20 @@ include::{generated}/api/structs/XrGraphicsBindingOpenGLXlibKHR.adoc[]
 * pname:glxContext is a valid X11 OpenGL GLX sname:GLXContext.
 ****
 
-When creating an OpenGL-backed slink:XrSession on any Linux/Unix platform
-that utilizes X11 and GLX, via the Xlib library, the application will
-provide a pointer to an slink:XrGraphicsBindingOpenGLXlibKHR in the `next`
-chain of the slink:XrSessionCreateInfo.
+To create an OpenGL-backed slink:XrSession on any Linux/Unix platform that
+utilizes X11 and GLX, via the Xlib library, the application provides a
+pointer to an slink:XrGraphicsBindingOpenGLXlibKHR in the
+slink:XrSessionCreateInfo::pname:next chain when calling
+flink:xrCreateSession.
+
+Creating a session using this structure triggers several requirements on the
+runtime regarding swapchain images.
+See the specification of slink:XrSwapchainImageOpenGLKHR for details.
+
+By providing a GLX context as pname:glxContext, the application becomes
+subject to restrictions on use of that context which effectively introduces
+additional external synchronization requirements on some OpenXR calls.
+See <<khr_opengl_enable-threading>> for details.
 
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_XLIB.
@@ -187,18 +243,27 @@ include::{generated}/api/structs/XrGraphicsBindingOpenGLXcbKHR.adoc[]
   chain.
   No such structures are defined in core OpenXR or this extension.
 * pname:connection is a valid sname:xcb_connection_t.
-* pname:screenNumber is an index indicating which screen should be used for
-  rendering.
+* pname:screenNumber is an index indicating the screen to for rendering.
 * pname:fbconfigid is a valid XCB OpenGL GLX sname:xcb_glx_fbconfig_t.
 * pname:visualid is a valid XCB OpenGL GLX sname:xcb_visualid_t.
 * pname:glxDrawable is a valid XCB OpenGL GLX sname:xcb_glx_drawable_t.
 * pname:glxContext is a valid XCB OpenGL GLX sname:xcb_glx_context_t.
 ****
 
-When creating an OpenGL-backed slink:XrSession on any Linux/Unix platform
-that utilizes X11 and GLX, via the Xlib library, the application will
-provide a pointer to an slink:XrGraphicsBindingOpenGLXcbKHR in the `next`
-chain of the slink:XrSessionCreateInfo.
+To create an OpenGL-backed slink:XrSession on any Linux/Unix platform that
+utilizes X11 and GLX, via the Xlib library, the application provides a
+pointer to an slink:XrGraphicsBindingOpenGLXcbKHR in the
+slink:XrSessionCreateInfo::pname:next chain when calling
+flink:xrCreateSession.
+
+Creating a session using this structure triggers several requirements on the
+runtime regarding swapchain images.
+See the specification of slink:XrSwapchainImageOpenGLKHR for details.
+
+By providing a GLX context as pname:glxContext, the application becomes
+subject to restrictions on use of that context which effectively introduces
+additional external synchronization requirements on some OpenXR calls.
+See <<khr_opengl_enable-threading>> for details.
 
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_XCB.
@@ -221,16 +286,23 @@ include::{generated}/api/structs/XrGraphicsBindingOpenGLWaylandKHR.adoc[]
 * pname:display is a valid Wayland sname:wl_display.
 ****
 
-When creating an OpenGL-backed slink:XrSession on any Linux/Unix platform
-that utilizes the Wayland protocol with its compositor, the application will
-provide a pointer to an slink:XrGraphicsBindingOpenGLWaylandKHR in the
-`next` chain of the slink:XrSessionCreateInfo.
+To create an OpenGL-backed slink:XrSession on any Linux/Unix platform that
+utilizes the Wayland protocol with its compositor, the application provides
+a pointer to an slink:XrGraphicsBindingOpenGLWaylandKHR in the
+slink:XrSessionCreateInfo::pname:next chain when calling
+flink:xrCreateSession.
+
+Creating a session using this structure triggers several requirements on the
+runtime regarding swapchain images.
+See the specification of slink:XrSwapchainImageOpenGLKHR for details.
 
 The required window system configuration define to expose this structure
 type is dlink:XR_USE_PLATFORM_WAYLAND.
 
 include::{generated}/validity/structs/XrGraphicsBindingOpenGLWaylandKHR.adoc[]
 --
+
+==== Swapchain Images
 
 [open,refpage='XrSwapchainImageOpenGLKHR',type='structs',desc='OpenGL-specific swapchain image structure',xrefs='XrSwapchainImageBaseHeader']
 --
@@ -248,8 +320,8 @@ include::{generated}/api/structs/XrSwapchainImageOpenGLKHR.adoc[]
   image.
 ****
 
-If a given session was created with a stext:XrGraphicsBindingOpenGL*KHR, the
-following conditions must: apply.
+If a given session was created with some stext:XrGraphicsBindingOpenGL*KHR
+graphics binding structure, the following conditions apply.
 
 * Calls to flink:xrEnumerateSwapchainImages on an slink:XrSwapchain in that
   session must: return an array of slink:XrSwapchainImageOpenGLKHR
@@ -268,69 +340,32 @@ positive Y pointing up, near Z plane at -1, and far Z plane at 1.
 include::{generated}/validity/structs/XrSwapchainImageOpenGLKHR.adoc[]
 --
 
-[open,refpage='XrGraphicsRequirementsOpenGLKHR',type='structs',desc='OpenGL API version requirements',xrefs='xrGetOpenGLGraphicsRequirementsKHR']
---
-The slink:XrGraphicsRequirementsOpenGLKHR structure is defined as:
+==== OpenGL Swapchain Flag Bits
 
-include::{generated}/api/structs/XrGraphicsRequirementsOpenGLKHR.adoc[]
+All valid elink:XrSwapchainUsageFlags values passed in a session created
+using slink:XrGraphicsBindingOpenGLWin32KHR,
+slink:XrGraphicsBindingOpenGLXlibKHR, slink:XrGraphicsBindingOpenGLXcbKHR,
+or slink:XrGraphicsBindingOpenGLWaylandKHR should: be ignored as there is no
+mapping to OpenGL texture settings.
 
-.Member Descriptions
-****
-* pname:type is the elink:XrStructureType of this structure.
-* pname:next is code:NULL or a pointer to the next structure in a structure
-  chain.
-  No such structures are defined in core OpenXR or this extension.
-* pname:minApiVersionSupported is the minimum version of OpenGL that the
-  runtime supports.
-  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
-  patch version component.
-* pname:maxApiVersionSupported is the maximum version of OpenGL that the
-  runtime has been tested on and is known to support.
-  Newer OpenGL versions might work if they are compatible.
-  Uses dlink:XR_MAKE_VERSION on major and minor API version, ignoring any
-  patch version component.
-****
+[NOTE]
+.Note
+====
 
-slink:XrGraphicsRequirementsOpenGLKHR is populated by
-flink:xrGetOpenGLGraphicsRequirementsKHR with the runtime's OpenGL API
-version requirements.
+In such a session, a runtime may: use a supporting graphics API, such as
+Vulkan, to allocate images that are intended to alias with OpenGL textures,
+and be part of an slink:XrSwapchain.
+A runtime which allocates the texture with a different graphics API may:
+need to enable several usage flags on the underlying native texture resource
+to ensure compatibility with OpenGL.
 
-include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLKHR.adoc[]
---
+====
 
-*New Functions*
 
-[open,refpage='xrGetOpenGLGraphicsRequirementsKHR',type='protos',desc='Retrieve the OpenGL version requirements for an instance and system',xrefs='XrGraphicsRequirementsOpenGLKHR']
---
-To query OpenGL API version requirements for an instance and system, call:
+include::{generated}/interfaces/XR_KHR_opengl_enable.adoc[leveloffset=1]
 
-include::{generated}/api/protos/xrGetOpenGLGraphicsRequirementsKHR.adoc[]
 
-.Parameter Descriptions
-****
-* pname:instance is an slink:XrInstance handle previously created with
-  flink:xrCreateInstance.
-* pname:systemId is an basetype:XrSystemId handle for the system which will
-  be used to create a session.
-* pname:graphicsRequirements is the slink:XrGraphicsRequirementsOpenGLKHR
-  output structure.
-****
-
-The flink:xrGetOpenGLGraphicsRequirementsKHR function identifies to the
-application the minimum OpenGL version requirement and the highest known
-tested OpenGL version.
-The runtime must: return ename:XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING
-(ename:XR_ERROR_VALIDATION_FAILURE may: be returned due to legacy behavior)
-on calls to flink:xrCreateSession if
-flink:xrGetOpenGLGraphicsRequirementsKHR has not been called for the same
-pname:instance and pname:systemId.
-
-include::{generated}/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.adoc[]
---
-
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2018-05-07 (Mark Young)
 ** Initial draft
@@ -352,3 +387,7 @@ include::{generated}/validity/protos/xrGetOpenGLGraphicsRequirementsKHR.adoc[]
 ** Added new `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error code
 * Revision 10, 2021-08-31 (Paulo F. Gomes)
 ** Document handling of `XrSwapchainUsageFlags`
+* Revision 11, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
+** Re-organize, clarify, and make more uniform with other graphics binding
+   extensions.
+

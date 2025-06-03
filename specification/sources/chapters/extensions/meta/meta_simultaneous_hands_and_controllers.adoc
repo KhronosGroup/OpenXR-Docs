@@ -1,0 +1,221 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_simultaneous_hands_and_controllers.adoc[]
+
+*Last Modified Date*::
+    2025-05-07
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Matthew Langille, Meta Platforms +
+
+==== Overview
+
+Some XR systems have the ability to track both hands and controllers
+simultaneously (commonly referred to as multimodal hands and controllers
+input), but this may consume additional power and system resources.
+This extension defines two new functions that applications can: use to
+control when the simultaneous hands and controller tracking is activated.
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSimultaneousHandsAndControllersPropertiesMETA',type='structs',desc='System property for XR_META_simultaneous_hands_and_controllers',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSimultaneousHandsAndControllersPropertiesMETA structure is
+defined as:
+
+include::{generated}/api/structs/XrSystemSimultaneousHandsAndControllersPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsSimultaneousHandsAndControllers is an basetype:XrBool32,
+  indicating if current system is capable of simultaneous hands and
+  controller tracking.
+****
+
+An application can: inspect whether the system is capable of enabling
+simultaneous hands and controller tracking by extending the
+slink:XrSystemProperties with
+slink:XrSystemSimultaneousHandsAndControllersPropertiesMETA structure when
+calling flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsSimultaneousHandsAndControllers, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrResumeSimultaneousHandsAndControllersTrackingMETA and
+flink:xrPauseSimultaneousHandsAndControllersTrackingMETA.
+
+include::{generated}/validity/structs/XrSystemSimultaneousHandsAndControllersPropertiesMETA.adoc[]
+--
+
+==== Enable Simultaneous Tracking
+
+[open,refpage='xrResumeSimultaneousHandsAndControllersTrackingMETA',desc='Resume simultaneous tracking of hands and controllers',type='protos',xrefs='xrGetCurrentInteractionProfile']
+--
+
+The flink:xrResumeSimultaneousHandsAndControllersTrackingMETA function is
+defined as:
+
+include::{generated}/api/protos/xrResumeSimultaneousHandsAndControllersTrackingMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession
+* pname:resumeInfo is a pointer to an instance of the
+  slink:XrSimultaneousHandsAndControllersTrackingResumeInfoMETA structure
+  containing parameters affecting how the simultaneous hands and controllers
+  mode is enabled
+****
+
+An application can: call
+flink:xrResumeSimultaneousHandsAndControllersTrackingMETA to enable
+simultaneous hands and controller tracking.
+
+Runtimes must: initialize the simultaneous tracking feature in a paused
+state, so applications call the resume function for the simultaneous
+tracking to start.
+
+If flink:xrResumeSimultaneousHandsAndControllersTrackingMETA is called when
+the feature is already in a resumed state, the runtime must: return
+ename:XR_SUCCESS.
+
+If a system supports detection of whether a controller is currently held by
+the user, the runtime should: represent this transition by switching the
+active interaction profile in the relevant hand from the active controller
+interaction profile to an interaction profile representing hands if
+available.
+
+For example, the returned interaction from
+flink:xrGetCurrentInteractionProfile on pathname:/user/hand/left might
+change from pathname:/interaction_profiles/facebook/touch_controller_pro to
+pathname:/interaction_profiles/ext/hand_interaction_ext, generating an
+ename:XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED
+(slink:XrEventDataInteractionProfileChanged) event, assuming that bindings
+were suggested for both of those interaction profiles on that path.
+
+This would indicate that the user put down the controller and is no longer
+holding a controller in their left hand.
+Note that in this example, if the user is holding a controller in their
+right hand, flink:xrGetCurrentInteractionProfile on
+pathname:/user/hand/right still returns
+pathname:/interaction_profiles/facebook/touch_controller_pro.
+
+Also note that if the apiext:XR_META_detached_controllers extension is used
+alongside apiext:XR_META_simultaneous_hands_and_controllers, then when a
+controller leaves the hand, it may: report that interaction profile as
+current for the corresponding pathname:/user/detached_controller_meta path
+if bindings have been suggested for that path.
+See apiext:XR_META_simultaneous_hands_and_controllers for details.
+
+When simultaneous tracking is resumed, runtimes should: allow
+flink:xrGetCurrentInteractionProfile to return different interaction
+profiles for different top level pathname:/user paths (e.g.
+pathname:/user/hand/left and pathname:/user/hand/right).
+Note that this behavior is already allowed by the specification, even
+without this extension, but runtimes exposing this extension may: choose to
+not expose different interaction profiles for different top level
+pathname:/user paths unless it is enabled.
+
+When a held controller transitions to an unheld state, the current
+interaction profile for the relevant top level path must: change to an
+interaction profile representing hand tracking, if available.
+
+include::{generated}/validity/protos/xrResumeSimultaneousHandsAndControllersTrackingMETA.adoc[]
+
+--
+
+[open,refpage='XrSimultaneousHandsAndControllersTrackingResumeInfoMETA',type='structs',desc='Input parameter to the xrResumeSimultaneousHandsAndControllersTrackingMETA function',xrefs='xrResumeSimultaneousHandsAndControllersTrackingMETA']
+--
+The slink:XrSimultaneousHandsAndControllersTrackingResumeInfoMETA structure
+is defined as:
+
+include::{generated}/api/structs/XrSimultaneousHandsAndControllersTrackingResumeInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+This structure only exists to point to future extension structures.
+
+include::{generated}/validity/structs/XrSimultaneousHandsAndControllersTrackingResumeInfoMETA.adoc[]
+--
+
+
+==== Disable Simultaneous Tracking
+
+[open,refpage='xrPauseSimultaneousHandsAndControllersTrackingMETA',desc='Resume simultaneous tracking of hands and controllers',type='protos',xrefs='xrGetCurrentInteractionProfile']
+--
+
+The flink:xrPauseSimultaneousHandsAndControllersTrackingMETA function is
+defined as:
+
+include::{generated}/api/protos/xrPauseSimultaneousHandsAndControllersTrackingMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession
+* pname:pauseInfo is a pointer to an instance of the
+  slink:XrSimultaneousHandsAndControllersTrackingPauseInfoMETA structure
+  containing parameters affecting how the simultaneous hands and controllers
+  mode is to be paused
+****
+
+An application can: call
+flink:xrPauseSimultaneousHandsAndControllersTrackingMETA to disable
+simultaneous hands and controller tracking.
+
+If flink:xrPauseSimultaneousHandsAndControllersTrackingMETA is called when
+the feature is not running, the runtime must: return ename:XR_SUCCESS.
+
+Tracking systems consume system resources and it is desirable to be able to
+stop them when they are not in use; a strong motivation for this extension
+is that it provides the ability for clients to dynamically switch to a
+multiple tracking system operating mode only as needed, thus preserving
+system resources and improving battery performance.
+
+include::{generated}/validity/protos/xrPauseSimultaneousHandsAndControllersTrackingMETA.adoc[]
+
+--
+
+[open,refpage='XrSimultaneousHandsAndControllersTrackingPauseInfoMETA',type='structs',desc='Input parameter to the xrPauseSimultaneousHandsAndControllersTrackingMETA function',xrefs='xrPauseSimultaneousHandsAndControllersTrackingMETA']
+--
+The slink:XrSimultaneousHandsAndControllersTrackingPauseInfoMETA structure
+is defined as:
+
+include::{generated}/api/structs/XrSimultaneousHandsAndControllersTrackingPauseInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+This structure only exists to point to future extension structures.
+
+include::{generated}/validity/structs/XrSimultaneousHandsAndControllersTrackingPauseInfoMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_simultaneous_hands_and_controllers.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-05-07 (Matthew Langille)
+** Initial extension description

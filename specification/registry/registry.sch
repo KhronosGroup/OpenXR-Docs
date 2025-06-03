@@ -370,7 +370,7 @@
     <!-- XR_EXT_future struct naming -->
     <sch:pattern>
         <sch:rule context="types/type[@category = 'struct' and @parentstruct = 'XrFutureCompletionBaseHeaderEXT']">
-            <sch:assert test="matches(current()/@name, 'Completion([A-Z]+)?$')">
+            <sch:assert test="matches(current()/@name, 'Completion([A-Z]+(X[1-9])?)?$')">
                 <sch:value-of select="current()/@name"/> name should contain Completion at the end because it is a XrFutureEXT Completion, for example XrFooCreateCompletionEXT.
             </sch:assert>
         </sch:rule>
@@ -382,7 +382,7 @@
             <sch:let name="command_name" value="current()/proto/name/text()"/>
             <sch:let name="is_exception" value="$command_name = ('xrPollFutureEXT', 'xrCancelFutureEXT')"/>
 
-            <sch:assert test="matches($command_name, '^xr([A-Z][a-z]+)+(Async|Complete)([A-Z]+)?$') or $is_exception">
+            <sch:assert test="matches($command_name, '^xr([A-Z][a-z]+)+(Async|Complete)([A-Z]+(X[1-9])?)?$') or $is_exception">
                 <sch:value-of select="$command_name"/> has a XrFutureEXT parameter. Its name must contain Async or Complete at the end, for example xrCreateFooAsyncEXT.
             </sch:assert>
         </sch:rule>
@@ -426,7 +426,7 @@
                 <sch:value-of select="$command_name"/>: The XrFutureEXT parameter must be named 'future' not '<sch:value-of select="$one_to_last_param_name"/>'.
             </sch:assert>
 
-            <sch:assert test="matches($last_param, 'Completion([A-Z]+)?$') or $is_exception">
+            <sch:assert test="matches($last_param, 'Completion([A-Z]+(X[1-9])?)?$') or $is_exception">
                 <sch:value-of select="$command_name"/>'s last parameter type name must end with 'Completion' or 'CompletionVENDOR', currently it is <sch:value-of select="$last_param"/>
             </sch:assert>
 

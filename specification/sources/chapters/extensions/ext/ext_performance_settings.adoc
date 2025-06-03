@@ -97,7 +97,7 @@ as the default hint if the application does not provide any.
 The function to call for setting performance level hints is
 flink:xrPerfSettingsSetPerformanceLevelEXT.
 
-include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.adoc[]]
+include::{generated}/api/protos/xrPerfSettingsSetPerformanceLevelEXT.no-xref.adoc[]
 
 ===== Example of using the short-term boost level hint
 
@@ -241,6 +241,7 @@ allowing the application to take mitigation actions.
 The levels are defined as follows:
 
 include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.no-xref.adoc[]
+
 * ename:XR_PERF_SETTINGS_NOTIF_LEVEL_NORMAL_EXT notifies that the sub-domain
   has reached a level where no further actions other than currently applied
   are necessary.
@@ -323,11 +324,11 @@ transitions are specified below:
 ** For the thermal sub-domain,
    ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that the
    *underlying* *system is taking measures, such as thermal throttling* to
-   reduce the temperature, impacting the XR experience.​
+   reduce the temperature, impacting the XR experience..
 
 Leaving ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that any
 mitigating actions by the runtime (e.g. down-clocking the device to stay
-within thermal limits) have ended.​
+within thermal limits) have ended.
 
 [performance-settings-api]
 ==== Performance Settings API Reference

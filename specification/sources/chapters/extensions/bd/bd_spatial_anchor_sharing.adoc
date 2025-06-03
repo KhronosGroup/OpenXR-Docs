@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_BD_spatial_anchor_sharing.adoc[]
 
 *Last Modified Date*::
-    2025-03-26
+    2025-06-02
 
 *IP Status*::
     No known IP claims.
@@ -266,14 +266,10 @@ If the spatial anchor is downloaded to the local device, the runtime must:
 set the slink:XrFutureCompletionEXT::pname:futureResult value to
 ename:XR_SUCCESS.
 This indicates that the spatial anchor has been successfully downloaded to
-the local device.
-Subsequently, the runtime will locate the downloaded spatial anchor again.
-Once the runtime has successfully located the downloaded spatial anchor
-again, it must: queue an slink:XrEventDataSenseDataUpdatedBD event.
-Upon receiving this event, to obtain the spatial anchors from the spatial
-anchor data provider, call flink:xrQuerySenseDataAsyncBD,
-flink:xrQuerySenseDataCompleteBD, flink:xrGetQueriedSenseDataBD, and
-flink:xrCreateSpatialEntityAnchorBD.
+the local device and located.
+To obtain the spatial anchors from the spatial anchor data provider, call
+flink:xrQuerySenseDataAsyncBD, flink:xrQuerySenseDataCompleteBD,
+flink:xrGetQueriedSenseDataBD, and flink:xrCreateSpatialEntityAnchorBD.
 All of these functions are defined in apiext:XR_BD_spatial_sensing.
 
 [NOTE]
@@ -299,4 +295,10 @@ include::{generated}/interfaces/XR_BD_spatial_anchor_sharing.adoc[leveloffset=1]
 * Revision 1, 2024-05-06 (Zhipeng Liu)
 
 ** Initial extension description
+
+* Revision 2, 2025-06-02 (Zhipeng Liu)
+
+** Update specification of `xrDownloadSharedSpatialAnchorCompleteBD`.
+
+
 

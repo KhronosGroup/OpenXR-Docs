@@ -1,0 +1,139 @@
+// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_body_tracking_full_body.adoc[]
+
+*Last Modified Date*::
+    2024-08-26
+
+*IP Status*::
+    No known IP claims.
+
+ *Contributors*::
+    Giancarlo Di Biase, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta +
+    Bill Orr, Meta
+
+
+==== Overview
+
+This extends body tracking to support the full body including the lower
+body.
+
+This extension builds on top of the apiext:XR_FB_body_tracking extension,
+which only exposed the upper body, torso, and hands.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemPropertiesBodyTrackingFullBodyMETA',type='structs',desc='System property for full body tracking',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemPropertiesBodyTrackingFullBodyMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrSystemPropertiesBodyTrackingFullBodyMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsFullBodyTracking is an basetype:XrBool32, indicating if
+  current system is capable of locating the full body tracking jointset.
+****
+
+An application can: inspect whether the system is capable of full body
+tracking by extending the slink:XrSystemProperties with
+slink:XrSystemPropertiesBodyTrackingFullBodyMETA structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsFullBodyTracking, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateBodyTrackerFB when trying to create a body tracker for full
+body tracking using the joint set ename:XR_BODY_JOINT_SET_FULL_BODY_META.
+
+include::{generated}/validity/structs/XrSystemPropertiesBodyTrackingFullBodyMETA.adoc[]
+
+--
+
+==== Creating body tracker for full body tracking
+
+[open,refpage='XrFullBodyJointMETA',type='enums',desc='Create a full body tracker.',xrefs='']
+--
+The elink:XrBodyJointSetFB enum is extended with a new joint set
+ename:XR_BODY_JOINT_SET_FULL_BODY_META, which can be set as the joint set in
+the slink:XrBodyTrackerCreateInfoFB info parameter to
+flink:xrCreateBodyTrackerFB.
+
+include::{generated}/api/enums/XrFullBodyJointMETA.adoc[]
+
+These joint enumeration values index into the array returned by body
+tracking when the joint set ename:XR_BODY_JOINT_SET_FULL_BODY_META is used.
+There are a total of ename:XR_FULL_BODY_JOINT_COUNT_META joints in this set.
+
+The joint indices shared with elink:XrBodyJointFB have the same semantic
+meaning.
+The meaning of joint index 0 through ename:XR_BODY_JOINT_COUNT_FB - 1 (69)
+matches the corresponding index in elink:XrBodyJointFB.
+--
+
+==== Example code for setting full body tracking
+
+The following example code demonstrates how to create a body tracker with
+full body joint set.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+PFN_xrCreateBodyTrackerFB pfnCreateBodyTrackerFB; // previously initialized
+PFN_xrLocateBodyJointsFB pfnLocateBodyJointsFB; // previously initialized
+XrSpace stageSpace; // previously initialized
+
+// Confirm full body tracking system support.
+XrSystemPropertiesBodyTrackingFullBodyMETA bodyTrackingFullBodySystemProperties{
+    XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FULL_BODY_META};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &bodyTrackingFullBodySystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!bodyTrackingFullBodySystemProperties.supportsFullBodyTracking) {
+  // The system does not support full body tracking.
+  return;
+}
+
+
+XrBodyTrackerCreateInfoFB createInfo{XR_TYPE_BODY_TRACKER_CREATE_INFO_FB};
+createInfo.bodyJointSet = XR_BODY_JOINT_SET_FULL_BODY_META;
+XrBodyTrackerFB bodyTracker = XR_NULL_HANDLE;
+pfnCreateBodyTrackerFB(session, &createInfo, &bodyTracker);
+
+while (1) {
+  // ...
+  // For every frame in the frame loop
+  // ...
+  XrFrameState frameState; // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
+  locateInfo.baseSpace = stageSpace;
+  locateInfo.time = time;
+  XrBodyJointLocationsFB bodyLocations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
+  bodyLocations.jointCount = XR_FULL_BODY_JOINT_COUNT_META;
+  XrBodyJointLocationFB jointLocations[XR_FULL_BODY_JOINT_COUNT_META];
+  bodyLocations.jointLocations = jointLocations;
+
+  CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &bodyLocations));
+}
+----
+
+include::{generated}/interfaces/XR_META_body_tracking_full_body.adoc[leveloffset=1]
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2024-08-26 (Bill Orr)
+** Initial extension description

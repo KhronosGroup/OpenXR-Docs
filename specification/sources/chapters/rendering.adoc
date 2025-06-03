@@ -25,10 +25,11 @@ Swapchain images can: be 2D or 2D Array.
 
 Rendering operations involving composition of submitted layers are assumed
 to be internally performed by the runtime in linear color space.
-Images submitted in sRGB color space must: be created using an API-specific
-sRGB format (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-ename:GL_SRGB8_ALPHA8, ename:VK_FORMAT_R8G8B8A8_SRGB) to apply automatic
-sRGB-to-linear conversion when read by the runtime.
+Images intended to be interpreted as being non-linear-encoded ("sRGB") must:
+be created using an API-specific "sRGB" format (e.g.
+ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, ename:GL_SRGB8_ALPHA8,
+ename:VK_FORMAT_R8G8B8A8_SRGB) to signal the need for sRGB-to-linear
+conversion (whether automatic or manual) when sampled by the runtime.
 All other formats will be treated as linear values.
 
 [NOTE]

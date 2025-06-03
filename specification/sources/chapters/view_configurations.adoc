@@ -48,14 +48,12 @@ The predefined primary view configuration types are:
 * ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_MONO.
   One view representing the form factor's one primary display.
   For example, an AR phone's screen.
-  This configuration requires one element in
-  slink:XrViewConfigurationProperties and one projection in each
+  This configuration requires one projection in each
   slink:XrCompositionLayerProjection layer.
 * ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO.
   Two views representing the form factor's two primary displays, which map
   to a left-eye and right-eye view.
-  This configuration requires two views in
-  slink:XrViewConfigurationProperties and two views in each
+  This configuration requires two views in each
   slink:XrCompositionLayerProjection layer.
   View index 0 must: represent the left eye and view index 1 must: represent
   the right eye.

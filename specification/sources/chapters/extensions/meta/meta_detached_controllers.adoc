@@ -30,8 +30,8 @@ ability to track controllers when they are not being held.
   interaction for the application.
 
 A runtime may: require the app to enable
-`XR_META_simultaneous_hands_and_controllers` in order to fully enable the
-functionality exposed by this extension.
+apiext:XR_META_simultaneous_hands_and_controllers in order to fully enable
+the functionality exposed by this extension.
 If that extension is not enabled, the runtime must: still accept the
 bindings, but may: choose to not report any current interaction profile for
 pathname:/user/detached_controller_meta paths and not provide action data

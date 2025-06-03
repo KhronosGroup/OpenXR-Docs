@@ -1,0 +1,86 @@
+// Copyright (c) 2025 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_future_progress.adoc[]
+
+*Last Modified Date*::
+    2025-02-25
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+ Zhipeng Liu, Bytedance +
+ Ya Huang, Bytedance +
+
+==== Overview
+
+Asynchronous operations may: take a long time.
+If some progress hints can be provided before the asynchronous operation is
+completed, it will significantly improve the user experience.
+This extension allows an application to get the rough progress percentage of
+an asynchronous operation before it is completed.
+This extension requires apiext:XR_EXT_future to be enabled.
+
+==== Get Future Progress
+
+[open,refpage='XrFuturePollResultProgressBD',type='structs',desc='Progress of a future',xrefs='xrPollFutureEXT XrFuturePollResultEXT']
+--
+
+The slink:XrFuturePollResultProgressBD structure is defined as:
+
+include::{generated}/api/structs/XrFuturePollResultProgressBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:isSupported is a boolean value indicating whether reporting progress
+  is supported for this future.
+* pname:progressPercentage is the progress percentage of the future.
+****
+
+As defined in apiext:XR_EXT_future, an basetype:XrFutureEXT is returned by a
+successful call to an asynchronous function.
+
+Applications can: use flink:xrPollFutureEXT to check the current state of a
+future, typically while waiting for the async operation to complete and the
+future to become "ready" to complete.
+An slink:XrFuturePollResultEXT structure is used to return the result of
+flink:xrPollFutureEXT.
+
+With this extension, the application can: chain an
+slink:XrFuturePollResultProgressBD to
+slink:XrFuturePollResultEXT::pname:next to get a rough progress percentage
+of the asynchronous operation.
+
+If the runtime does not support reporting progress for a specific future, it
+must: set pname:isSupported to false.
+And in this case, the application should: ignore the value of
+pname:progressPercentage.
+If the runtime supports reporting progress for the specific future, it must:
+set pname:isSupported to true.
+The pname:progressPercentage is only valid when the future is in either the
+ename:XR_FUTURE_STATE_PENDING_EXT or ename:XR_FUTURE_STATE_READY_EXT state.
+
+The runtime must: not set pname:progressPercentage to a value less than 0 or
+greater than 100.
+The runtime must: set pname:progressPercentage to 100 if the future is in
+the state ename:XR_FUTURE_STATE_READY_EXT.
+
+include::{generated}/validity/structs/XrFuturePollResultProgressBD.adoc[]
+--
+
+include::{generated}/interfaces/XR_BD_future_progress.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-02-25 (Zhipeng Liu)
+
+** Initial extension description
+
