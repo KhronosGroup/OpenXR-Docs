@@ -1,0 +1,393 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_anchor.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and allows
+applications to create spatial anchors, which are arbitrary points in the
+user's physical environment that will then be tracked by the runtime.
+The runtime should: then adjust the position and orientation of the anchor's
+origin over time as needed, independent of all other spaces & anchors, to
+ensure that it maintains its original mapping to the real world.
+
+An anchor that tracks a given position and orientation within an
+slink:XrSpatialContextEXT is represented as a spatial entity with (or "that
+has") the ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT component.
+
+==== Benefit of using anchors
+
+As the runtime's understanding of the user's physical environment updates
+throughout the lifetime of an slink:XrSpatialContextEXT, virtual objects
+may: appear to drift away from where they were placed by the application,
+which impacts the application's realism and the quality of the user's
+experience.
+By creating an anchor close to where a virtual object is placed, and then
+always rendering that virtual object relative to its anchor, an application
+can: ensure that each virtual object appears to stay at the same position
+and orientation in the physical environment.
+Also, unlike certain reference spaces, anchors are unaffected by
+system-level recentering.
+
+==== Runtime support
+
+If the runtime supports spatial anchors, it must: indicate this by
+enumerating ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT in
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+[[ext_spatial_anchor_config]]
+==== Configuration
+
+[open,refpage='XrSpatialCapabilityConfigurationAnchorEXT',type='structs',desc='Config structure for the anchoring capability',xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationAnchorEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationAnchorEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+****
+
+Applications can: enable the ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT spatial
+capability by including a pointer to an
+slink:XrSpatialCapabilityConfigurationAnchorEXT structure in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:capability is not ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationAnchorEXT.adoc[]
+--
+
+==== Guaranteed Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT must: provide
+the following spatial components as guaranteed components of all entities
+created or discovered by this capability and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT
+
+===== Anchor Component
+
+====== Component Data
+
+The ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT uses slink:XrPosef for its
+data which provides the position and orientation of the anchor.
+
+====== Component List Structure to Query Data
+
+[open,refpage='XrSpatialComponentAnchorListEXT',type='structs',desc='List structure for the anchor component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentAnchorListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentAnchorListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:locationCount is a code:uint32_t describing the count of elements in
+  the pname:locations array.
+* pname:locations is an array of slink:XrPosef.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentAnchorListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:locationCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentAnchorListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+==== Creating a Spatial Anchor
+
+[open,refpage='xrCreateSpatialAnchorEXT',type='protos',desc='Create spatial anchor.',xrefs='xrDestroySpatialEntityEXT xrCreateSpatialUpdateSnapshotEXT']
+--
+The flink:xrCreateSpatialAnchorEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to an slink:XrSpatialAnchorCreateInfoEXT.
+* pname:anchorEntityId is a pointer to an basetype:XrSpatialEntityIdEXT in
+  which the anchor entity's ID is returned.
+* pname:anchorEntity is a pointer to an slink:XrSpatialEntityEXT in which
+  the anchor entity's handle is returned.
+****
+The application can: create a spatial anchor by using
+flink:xrCreateSpatialAnchorEXT.
+
+To get updated component data for an anchor, pass the value populated in
+pname:anchorEntity into the
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:entities when creating a
+snapshot.
+The application can: use pname:anchorEntityId to uniquely identify this
+anchor in the slink:XrSpatialComponentDataQueryResultEXT::pname:entityIds
+array when using flink:xrQuerySpatialComponentDataEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateSpatialAnchorEXT if ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT was
+not configured for pname:spatialContext.
+See <<ext_spatial_anchor_config>> for how to configure an
+slink:XrSpatialContextEXT for the ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT
+capability.
+
+The anchor represented by pname:anchorEntity is only valid for the lifetime
+of pname:spatialContext, or until the application calls
+flink:xrDestroySpatialEntityEXT on it, whichever comes first.
+Other extensions may: offer functions to persist this newly created anchor
+across multiple slink:XrSession or to share it across process boundaries
+with other applications.
+
+A newly created anchor, until destroyed, must: be discoverable in its parent
+spatial context.
+This means that the runtime must: include pname:anchorEntityId in the
+snapshot created using flink:xrCreateSpatialDiscoverySnapshotAsyncEXT for
+pname:spatialContext if the anchor matches the discovery criteria set in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT.
+The newly created anchor may: also be discoverable in other spatial contexts
+configured with ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT, although with a
+different basetype:XrSpatialEntityIdEXT since a particular
+basetype:XrSpatialEntityIdEXT is unique to its slink:XrSpatialContextEXT.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorEXT.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorCreateInfoEXT',type='structs',desc='Create structure for anchor',xrefs='xrCreateSpatialAnchorEXT']
+--
+The slink:XrSpatialAnchorCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAnchorCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace is the slink:XrSpace in which pname:pose is applied.
+* pname:time is the basetype:XrTime at which pname:baseSpace is located (and
+  pname:pose is applied).
+* pname:pose is the location for the anchor entity.
+****
+
+include::{generated}/validity/structs/XrSpatialAnchorCreateInfoEXT.adoc[]
+--
+
+==== Query Anchor Pose
+
+After the anchor is created, the runtime should: then adjust its position
+and orientation over time relative to other spaces in order to maintain the
+best possible alignment to its original real-world location, even if that
+changes the anchor's relationship to the original
+slink:XrSpatialAnchorCreateInfoEXT::pname:baseSpace used to initialize it.
+
+The application can: use flink:xrCreateSpatialUpdateSnapshotEXT with the
+anchor's slink:XrSpatialEntityEXT to create a new slink:XrSpatialSnapshotEXT
+and then query the ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT component from
+that snapshot using flink:xrQuerySpatialComponentDataEXT.
+The application can: add slink:XrSpatialComponentAnchorListEXT to
+slink:XrSpatialComponentDataQueryResultEXT::pname:next to retrieve the
+latest location data for the anchors.
+
+The runtime may: set the tracking state of a newly created anchor to
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT.
+The application must: only read the anchor entity's state provided in
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityStates and the
+entity's anchor component data if the tracking state is
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT.
+
+==== Guidelines For Using Anchors
+
+* Each anchor's pose adjusts independent of any other anchor or space.
+  Separately anchored virtual objects may: shift or rotate relative to each
+  other, breaking the spatial hierarchy in cases where these virtual objects
+  are expected to stay in place relative to each other.
+  For such cases, the application should: reuse the same anchor for all
+  virtual objects that do not move relative to each other.
+* Application should: destroy any slink:XrSpatialEntityEXT handles for
+  anchors that are no longer being used in order to free up the resources
+  the runtime may: be using to track those anchors.
+
+==== Example Code
+
+===== Configure Anchor Capability
+
+The following example demonstrates how to configure the anchor capability
+when creating a spatial context.
+
+[source,C++]
+----
+// Create a spatial spatial context
+XrSpatialContextEXT spatialContext{};
+{
+
+  std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+    XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT,
+  };
+
+  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT};
+  anchorConfig.capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT;
+  anchorConfig.enabledComponentCount = enabledComponents.size();
+  anchorConfig.enabledComponents = enabledComponents.data();
+
+  std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+    reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&anchorConfig),
+  };
+
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+  XrFutureEXT createContextFuture;
+  CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+  waitUntilReady(createContextFuture);
+
+  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+  if (completion.futureResult != XR_SUCCESS) {
+    return;
+  }
+
+  spatialContext = completion.spatialContext;
+}
+
+// ...
+// Create spatial anchors and get their latest pose in the frame loop.
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Create Spatial Anchor & Get Its Location
+
+The following example demonstrates how to create a spatial anchor & gets its
+pose every frame.
+
+[source,C++]
+----
+XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
+createInfo.baseSpace = localSpace;
+createInfo.time = predictedDisplayTime;
+createInfo.pose = {{0, 0, 0, 1}, {1, 1, 1}};
+
+XrSpatialEntityIdEXT spatialAnchorEntityId;
+XrSpatialEntityEXT spatialAnchorEntity;
+CHK_XR(xrCreateSpatialAnchorEXT(spatialContext, &createInfo, &spatialAnchorEntityId, &spatialAnchorEntity));
+
+auto updateAnchorLocation = [&](XrTime time) {
+  // We want to get updated data for all components of the entities, so skip specifying componentTypes.
+  XrSpatialUpdateSnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.entityCount = 1;
+  snapshotCreateInfo.entities = &spatialAnchorEntity;
+  snapshotCreateInfo.baseSpace = localSpace;
+  snapshotCreateInfo.time = time;
+
+  XrSpatialSnapshotEXT snapshot;
+  CHK_XR(xrCreateSpatialUpdateSnapshotEXT(spatialContext, &snapshotCreateInfo, &snapshot));
+
+  // Query for the entities that have the anchor component on them.
+  std::array<XrSpatialComponentTypeEXT, 1> componentsToQuery {XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT};
+  XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+  queryCond.componentTypeCount = componentsToQuery.size();
+  queryCond.componentTypes = componentsToQuery.data();
+
+  XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+  CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+
+  std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+  std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+  queryResult.entityIdCapacityInput = entityIds.size();
+  queryResult.entityIds = entityIds.data();
+  queryResult.entityStateCapacityInput = entityStates.size();
+  queryResult.entityStates = entityStates.data();
+
+  // query for the pose data
+  std::vector<XrPosef> locations(queryResult.entityIdCountOutput);
+  XrSpatialComponentAnchorListEXT locationList{XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT};
+  locationList.locationCount = locations.size();
+  locationList.locations = locations.data();
+  queryResult.next = &locationList;
+
+  CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+
+  for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+    if (entityStates[i] == XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+      // Pose for entity entityIds[i] is locations[i].
+    }
+  }
+
+  CHK_XR(xrDestroySpatialSnapshotEXT(snapshot));
+};
+
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  updateAnchorLocation(time);
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+
+CHK_XR(xrDestroySpatialEntityEXT(spatialAnchorEntity));
+----
+
+include::{generated}/interfaces/XR_EXT_spatial_anchor.adoc[leveloffset=1]
+
+==== Issues
+
+
+==== Version History
+
+* Revision 1, 2024-07-10 (Nihav Jain, Google)
+** Initial extension description

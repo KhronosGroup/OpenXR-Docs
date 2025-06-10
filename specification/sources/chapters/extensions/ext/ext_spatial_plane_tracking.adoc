@@ -1,0 +1,598 @@
+// Copyright (c) 2017-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_plane_tracking.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and defines the plane
+tracking spatial capability for the spatial entity framework.
+
+==== Runtime Support
+
+If the runtime supports plane tracking, it must: indicate this by
+enumerating ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT in
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+==== Configuration
+
+[open,refpage='XrSpatialCapabilityConfigurationPlaneTrackingEXT',type='structs',desc='Config structure for the plane tracking capability',xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationPlaneTrackingEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationPlaneTrackingEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT and must: be
+  ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+****
+
+Applications can: enable the ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT
+spatial capability by including a pointer to an
+slink:XrSpatialCapabilityConfigurationPlaneTrackingEXT structure in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:capability is not ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationPlaneTrackingEXT.adoc[]
+--
+
+[[ext_spatial_plane_tracking_guaranteed_components]]
+==== Guaranteed Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT must:
+provide the following spatial components as guaranteed components of all
+entities discovered by this capability and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+* ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT
+
+===== Bounded 2D Component
+
+The bounded 2D component provides the center and extents of the plane
+represented by the entity it is on.
+See <<ext_spatial_entity_bounded2D_component>> for more details.
+
+===== Plane Alignment Component
+
+====== Component data
+
+[open,refpage='XrSpatialPlaneAlignmentEXT',type='enums',desc='Plane Alignment',xrefs='XrSpatialComponentPlaneAlignmentListEXT']
+--
+include::{generated}/api/enums/XrSpatialPlaneAlignmentEXT.adoc[]
+
+The elink:XrSpatialPlaneAlignmentEXT enumeration describes the alignment of
+the plane associated with the spatial entity with an
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT component.
+
+The enumeration values have the following meanings:
+
+include::{generated}/api/enums/XrSpatialPlaneAlignmentEXT.comments.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentPlaneAlignmentListEXT',type='structs',desc='List structure for the plane alignment component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+
+The slink:XrSpatialComponentPlaneAlignmentListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentPlaneAlignmentListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:planeAlignmentCount is a code:uint32_t describing the count of
+  elements in the pname:planeAlignments array.
+* pname:planeAlignments is an array of elink:XrSpatialPlaneAlignmentEXT.
+****
+
+To query the plane alignment component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentPlaneAlignmentListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentPlaneAlignmentListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:planeAlignmentCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentPlaneAlignmentListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+==== Optional Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT may:
+support other spatial components in addition to the ones listed in the
+<<ext_spatial_plane_tracking_guaranteed_components>> section.
+An application uses flink:xrEnumerateSpatialCapabilityComponentTypesEXT to
+get the full list of components that a runtime supports, then configures the
+ones it is interested in when creating the spatial context.
+
+===== Mesh 2D Component
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_2D_EXT uses the
+slink:XrSpatialMeshDataEXT structure for its data.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMesh2DListEXT',type='structs',desc='List structure for the mesh 2D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialMeshDataEXT']
+--
+
+The slink:XrSpatialComponentMesh2DListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMesh2DListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:meshCount is a code:uint32_t describing the count of elements in the
+  pname:meshes array.
+* pname:meshes is an array of slink:XrSpatialMeshDataEXT.
+****
+
+To query the mesh 2D component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_2D_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentMesh2DListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMesh2DListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_2D_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:meshCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+For the slink:XrSpatialMeshDataEXT populated by the runtime in the
+pname:meshes array, the slink:XrSpatialBufferEXT::pname:bufferType for
+slink:XrSpatialMeshDataEXT::pname:vertexBuffer must: be
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT and
+slink:XrSpatialBufferEXT::pname:bufferType for
+slink:XrSpatialMeshDataEXT::pname:indexBuffer must: be
+ename:XR_SPATIAL_BUFFER_TYPE_UINT16_EXT.
+
+include::{generated}/validity/structs/XrSpatialComponentMesh2DListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MESH_2D_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+===== Polygon 2D Component
+
+====== Component Data
+
+[open,refpage='XrSpatialPolygon2DDataEXT',type='structs',desc='Structure containing the data for a polygon 2D component',xrefs='XrSpatialComponentMesh2DListEXT xrQuerySpatialComponentDataEXT']
+--
+
+The slink:XrSpatialPolygon2DDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialPolygon2DDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:origin is an slink:XrPosef defining the origin of the polygon.
+  All vertices of the polygon are relative to this origin in the X-Y plane.
+* pname:vertexBuffer is an slink:XrSpatialBufferEXT that provides the ID for
+  a buffer of type ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT and represents
+  the vertex buffer of the entity this component is on.
+  The vertices must: be returned in counter-clockwise order.
+  The polygon represented by these vertices must: not be self-intersecting
+  and may: be concave.
+****
+
+slink:XrSpatialBufferEXT::pname:bufferType for pname:vertexBuffer must: be
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT.
+
+include::{generated}/validity/structs/XrSpatialPolygon2DDataEXT.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentPolygon2DListEXT',type='structs',desc='List structure for the polygon 2D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialPolygon2DDataEXT']
+--
+
+The slink:XrSpatialComponentPolygon2DListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentPolygon2DListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:polygonCount is a code:uint32_t describing the count of elements in
+  the pname:polygons array.
+* pname:polygons is an array of slink:XrSpatialPolygon2DDataEXT.
+****
+
+To query the polygon 2D component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentPolygon2DListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentPolygon2DListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:polygonCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentPolygon2DListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+[[ext_spatial_plane_semanticlabel_component]]
+===== Plane Semantic Label
+
+====== Component Data
+
+[open,refpage='XrSpatialPlaneSemanticLabelEXT',type='enums',desc='Plane semantic labels',xrefs='']
+--
+include::{generated}/api/enums/XrSpatialPlaneSemanticLabelEXT.adoc[]
+
+The elink:XrSpatialPlaneSemanticLabelEXT enumeration describes a set of
+semantic labels for planes.
+
+include::{generated}/api/enums/XrSpatialPlaneSemanticLabelEXT.comments.adoc[]
+--
+
+====== Component List Structure to Query Data
+
+[open,refpage='XrSpatialComponentPlaneSemanticLabelListEXT',type='structs',desc='List structure for the plane semantic label component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentPlaneSemanticLabelListEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialComponentPlaneSemanticLabelListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialPlaneSemanticLabelEXT.
+****
+
+To query the plane semantic label component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentPlaneSemanticLabelListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentPlaneSemanticLabelListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentPlaneSemanticLabelListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+==== Example Code
+
+===== Configure Plane Tracking Capability
+
+The following example code demonstrates how to configure plane tracking
+capability when creating a spatial context.
+
+[source,C++]
+----
+// Check if plane tracking capability is supported
+uint32_t capabilityCount;
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
+std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
+
+if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT) == capabilities.end()) {
+  return;
+}
+
+// Enumerate supported components for plane tracking capability
+XrSpatialCapabilityComponentTypesEXT planeComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
+std::vector<XrSpatialComponentTypeEXT> planeCapabilityComponents(planeComponents.componentTypeCountOutput);
+planeComponents.componentTypeCapacityInput = planeCapabilityComponents.size();
+planeComponents.componentTypes = planeCapabilityComponents.data();
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
+
+// Check if polygon 2D and plane semantic labels optional components are supported
+const auto supportsComponent = [&planeCapabilityComponents](XrSpatialComponentTypeEXT component) {
+  return std::find(planeCapabilityComponents.begin(), planeCapabilityComponents.end(), component) != planeCapabilityComponents.end();
+};
+
+const bool supportsPolygon2DComponent = supportsComponent(XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT);
+const bool supportsSemanticLabelComponent = supportsComponent(XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT);
+
+// Create a spatial context
+XrSpatialContextEXT spatialContext{};
+
+// Enable the 2 guaranteed components of the plane tracking capability
+std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT,
+};
+// Optionally enable polygon2D if it is supported
+if (supportsPolygon2DComponent) {
+  enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT);
+}
+// Optionally enable semantic labels if it is supported
+if (supportsSemanticLabelComponent) {
+  enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT);
+}
+
+XrSpatialCapabilityConfigurationPlaneTrackingEXT planeConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_PLANE_TRACKING_EXT};
+planeConfig.capability = XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT;
+planeConfig.enabledComponentCount = enabledComponents.size();
+planeConfig.enabledComponents = enabledComponents.data();
+
+std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+  reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&planeConfig),
+};
+
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+XrFutureEXT createContextFuture;
+CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+waitUntilReady(createContextFuture);
+
+XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+if (completion.futureResult != XR_SUCCESS) {
+  return;
+}
+
+spatialContext = completion.spatialContext;
+
+// ...
+// Discover entities with the spatial context
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Discover Spatial Entities & Query Component Data
+
+The following example code demonstrates how to discover spatial entities for
+a context configured with ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT and
+query its component data.
+
+[source,C++]
+----
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT,
+};
+if (supportsPolygon2DComponent) {
+  snapshotComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_POLYGON_2D_EXT);
+}
+if (supportsSemanticLabelComponent) {
+  snapshotComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT);
+}
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the semantic label component data
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypeCount = snapshotComponents.size();
+    queryCond.componentTypes = snapshotComponents.data();
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrSpatialBounded2DDataEXT> bounded2D(queryResult.entityIdCountOutput);
+    XrSpatialComponentBounded2DListEXT bounded2DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
+    bounded2DList.boundCount = bounded2D.size();
+    bounded2DList.bounds = bounded2D.data();
+    queryResult.next = &bounded2DList;
+
+    std::vector<XrSpatialPolygon2DDataEXT> polygons;
+    XrSpatialComponentPolygon2DListEXT polygonList{XR_TYPE_SPATIAL_COMPONENT_POLYGON_2D_LIST_EXT};
+    if (supportsPolygon2DComponent) {
+      polygons.resize(queryResult.entityIdCountOutput);
+      polygonList.polygonCount = polygons.size();
+      polygonList.polygons = polygons.data();
+      polygonList.next = queryResult.next;
+      queryResult.next = &polygonList;
+    }
+
+    std::vector<XrSpatialPlaneSemanticLabelEXT> semanticLabels;
+    XrSpatialComponentPlaneSemanticLabelListEXT semanticLabelsList{XR_TYPE_SPATIAL_COMPONENT_PLANE_SEMANTIC_LABEL_LIST_EXT};
+    if (supportsSemanticLabelComponent) {
+      semanticLabels.resize(queryResult.entityIdCountOutput);
+      semanticLabelsList.semanticLabelCount = semanticLabels.size();
+      semanticLabelsList.semanticLabels = semanticLabels.data();
+      semanticLabelsList.next = queryResult.next;
+      queryResult.next = &semanticLabelsList;
+    }
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (entityStates[i] != XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+        continue;
+      }
+
+      // 2D bounds for entity entityIds[i] is bounded2D[i].extents centered on bounded2D[i].center.
+
+      if (supportsPolygon2DComponent) {
+        // 2D polygon for entity entityIds[i] is the buffer represented by polygons[i].bufferId.
+        // Application uses flink:xrGetSpatialBufferVector2fEXT to get the buffer data.
+      }
+
+      if (supportsSemanticLabelComponent) {
+        // semantic label for entity entityIds[i] is semanticLabels[i].
+      }
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we received the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+include::{generated}/interfaces/XR_EXT_spatial_plane_tracking.adoc[leveloffset=1]
+
+==== Issues
+
+
+==== Version History
+
+* Revision 1, 2024-07-02 (Nihav Jain, Google)
+** Initial extension description
+

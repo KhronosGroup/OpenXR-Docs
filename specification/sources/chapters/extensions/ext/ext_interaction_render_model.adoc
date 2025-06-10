@@ -1,0 +1,960 @@
+// Copyright (c) 2018-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_interaction_render_model.adoc[]
+
+*Contributors*::
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Rylie Pavlik, Collabora +
+    Joe Ludwig, Valve +
+    Nathan Nuber, Valve +
+    Dan Willmott, Valve +
+    Jakob Bornecrantz, Collabora +
+    Leonard Tsai, Meta Platforms +
+    Paulo Gomes, Samsung Electronics +
+    Lachlan Ford, Google +
+    Wenlin Mao, Meta Platforms +
+    Bastiaan Olij, Godot Engine +
+
+==== Overview
+
+This extension allows an application to render realistic models representing
+the device or devices used by the user to interact.
+It is a generalized version of functionality that has been known elsewhere
+as "controller models", made generic by enumerating interaction-related
+render models without filtering them, and allowing association with a
+subaction path as a second lookup step.
+
+
+// Non-normative note: should not contain any normative macros
+[NOTE]
+.Note
+****
+This extension is used for showing __the exact devices in use__.
+It returns models that may not have been available at the time of
+application creation, and thus not included in the suggested bindings.
+However, models returned from this extension must conform to the
+requirements in this spec, and thus are usable in a generic fashion.
+If you need to customize the models or otherwise _not_ show the model as
+provided, please choose assets of your own to show based on the output of
+flink:xrGetCurrentInteractionProfile rather than using this extension.
+
+* **Do not** attempt to choose a model shipped with your software based on
+  model ID or UUID from this extension.
+* **Do not** attempt to detect the current hardware based on render model ID
+  or UUID.
+* The output must be considered fully dynamic, conforming only to the
+  interface explicitly described in the specification.
+  Failing to do so **will** result in compatibility problems for your
+  application.
+  The example code in this extension demonstrates intended generic
+  application behavior and should be followed closely.
+****
+// End of non-normative note: normative macros may resume
+
+==== Getting Models
+
+The design intent of this extension is to allow enumerating models _early_
+and keep enumerating them as long as their future use is possible.
+This is so that applications have time to load models, transcode textures,
+and otherwise prepare for rendering early in the session, and so that
+applications do not discard the results of that processing if it will be
+needed again.
+This large scope is only for enumerating the models in the first place,
+however: when those models are intended to be shown is more narrowly scoped
+and tightly specified, since it is less likely to be associated with a high
+computational startup cost.
+
+The base apiext:XR_EXT_render_model extension delegates several design
+choices to dependent extensions, as described in
+<<ext_render_model-choices>>.
+For models associated with this apiext:XR_EXT_interaction_render_model
+extension, the apiext:XR_EXT_render_model extension is specialized in the
+following ways, addressing those delegated choices and other important
+distinctions:
+
+glTF extension behavior::: For any render model ID retrieved from this
+  extension, the runtime must: support a glTF model without any required
+  glTF extensions.
+  Thus, the runtime must: not return
+  ename:XR_ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT from
+  flink:xrCreateRenderModelEXT for any render model ID retrieved from this
+  extension.
+Alpha blending::: Due to the difficulty and potential performance impact of
+  implementing alpha blending correctly for multiple overlapping objects,
+  applications are unlikely to be able to correctly render a model using
+  alpha blending everywhere an interaction render model may appear.
+  As such, the runtime should: not set `alphaMode` to `BLEND` for any
+  material in a render model associated with this extension.
+  Materials with `alphaMode` set to `MASK` do not pose the same challenges
+  of implementation and so are suitable for use if needed.
+Animation::: For any asset associated with this extension, the simple
+  node-pose-visibility mechanism defined by apiext:XR_EXT_render_model in
+  <<ext_render_model-animate>> is used for animation.
+External references::: For any render model associated with this extension,
+  the runtime must: provide a glTF asset without any references to external
+  buffers and textures outside of the GLB container.
+  That is, all binary data must: be embedded in the GLB binary chunk or as a
+  Base64 `data:` URI.
+Scenes::: For any render model associated with this extension, the runtime
+  must: provide a glTF asset that contains 1 or more scene and defines the
+  `scene` property to identify which scene to render.
+Complexity and Optimization::: The runtime should: provide a glTF model
+  optimized for real-time rendering use, with the expectation that the
+  application may: render all interaction render models every frame.
+  Describing such optimization is beyond the scope of this specification.
+Space location::: Render models are located by a render model space, which
+  does *not* correspond directly to any named pose.
+
+.Warning
+****
+The runtime may: provide a lower quality glTF asset on some platforms when
+certain glTF extensions are not supported.
+Please consult platform specific documentation for best practices.
+****
+
+[open,refpage='xrEnumerateInteractionRenderModelIdsEXT',type='protos',desc='Enumerate render models for devices associated with interaction devices',xrefs='XrRenderModelEXT']
+--
+The flink:xrEnumerateInteractionRenderModelIdsEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateInteractionRenderModelIdsEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the render model will be
+  valid.
+* pname:getInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrInteractionRenderModelIdsEnumerateInfoEXT
+  structure.
+* pname:renderModelIdCapacityInput is the capacity of the
+  pname:renderModelIds array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:renderModelIdCountOutput is a pointer to the count of
+  pname:renderModelIds written, or a pointer to the required capacity in the
+  case that pname:renderModelIdCapacityInput is insufficient.
+* pname:renderModelIds is an array of basetype:XrRenderModelIdEXT that will
+  be populated with IDs for devices that are associated with actions.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:renderModelIds size.
+****
+
+This function returns render model IDs associated with any device associated
+with actions, in any action set attached with pname:session by
+flink:xrAttachSessionActionSets.
+There is no specific meaning for array position.
+A runtime may: return values in any order, although the enumerated array
+must: remain constant between calls to flink:xrSyncActions.
+An application should: not assume any meaning based on array order.
+Note that a runtime may: shuffle the order of IDs returned each time that
+the list changes, to aid application developers in avoiding accidental
+dependence on enumeration order.
+
+An application must: not assume any given size of this array based on
+suggested bindings: compatibility and user preference may: result in more
+models being associated with actions than described in the suggested
+bindings.
+The runtime may: return more models than the number of top level user paths
+in the suggested bindings due to user configuration and compatibility
+rebinding.
+The runtime should: continue to return model IDs corresponding to any
+devices that has recently become inactive or disconnected, if they are
+reasonably expected to be used again soon, to minimize the need for
+applications to re-enumerate models and load assets.
+Similarly, the runtime may: return model IDs for devices expected to be
+used, even if they are not yet connected or active.
+
+The runtime must: return render model IDs reflecting the actual hardware
+used, which must: be independent of the currently active interaction
+profile.
+Accordingly, as long as the same actions within an slink:XrInstance have
+suggested bindings, changing suggested bindings by adding or removing
+suggested bindings for an interaction profile must: not change the
+underlying assets.
+Furthermore, provided that identical actions within an slink:XrInstance are
+associated with suggested bindings for a specified list of glTF extensions,
+the runtime must: return an identical collection of render model asset
+UUIDs.
+
+The application can: monitor for the
+slink:XrEventDataInteractionRenderModelsChangedEXT event to get notified
+when interaction render models need to be re-enumerated.
+
+Changes to the collection of models enumerated (for example, due to device
+change) must: only occur during a call to flink:xrSyncActions.
+If the collection of models changes, the
+slink:XrEventDataInteractionRenderModelsChangedEXT event must: be queued
+during that call to flink:xrSyncActions to signal the need for
+re-enumeration.
+This implies that a runtime must: enumerate *no* models prior to the first
+call to flink:xrSyncActions in a session.
+
+Note that the UUIDs associated with the enumerated render model IDs for a
+given system and list of glTF extensions may: change between instances due
+to runtime changes.
+Additionally, as with all atom types like basetype:XrRenderModelIdEXT, the
+enumerated render model ID values associated with a logical device may:
+change between sessions as render model ID atoms inherently only have
+meaning within the single slink:XrSession they are enumerated from.
+
+If an basetype:XrRenderModelIdEXT was enumerated during a call to
+flink:xrEnumerateInteractionRenderModelIdsEXT during the current session,
+but the set of interaction render models has now changed and that
+basetype:XrRenderModelIdEXT would not enumerated by a call to
+flink:xrEnumerateInteractionRenderModelIdsEXT after that change, a call to
+flink:xrCreateRenderModelEXT with that basetype:XrRenderModelIdEXT must:
+return ename:XR_ERROR_RENDER_MODEL_ID_INVALID_EXT.
+(Note that a change in the set of interaction render models only occurs
+during calls to flink:xrSyncActions, and queues an
+slink:XrEventDataInteractionRenderModelsChangedEXT event if it occurs.) That
+is, if an ID was previously enumerated with this function during the current
+session, but is no longer enumerated due to a change in interaction render
+models during an flink:xrSyncActions call, it is no longer valid to create a
+slink:XrRenderModelEXT from that basetype:XrRenderModelIdEXT.
+
+Existing slink:XrRenderModelEXT handles already created from an ID that is
+no longer enumerated remain valid, but "inactive" and effectively useless.
+
+* Locating an associated render model space must: report
+  untracked/unlocatable, and therefore the model is not to be rendered.
+* Calls to flink:xrGetRenderModelStateEXT may: stop providing updated data,
+  as they are assumed to not be rendered and thus the model state is
+  irrelevant.
+* The runtime may: return ename:XR_ERROR_RENDER_MODEL_ASSET_UNAVAILABLE_EXT
+  from flink:xrCreateRenderModelAssetEXT if called with the cache UUID of
+  that render model, if no other active render model uses the same asset
+  UUID.
+
+Runtimes must: not enumerate a render model ID that they previously
+enumerated, then no longer enumerated.
+That is, if a render model ID is made inactive, it will never again become
+active.
+If the associated device returns, it will use a new render model ID.
+
+A render model slink:XrRenderModelEXT created from an
+basetype:XrRenderModelIdEXT enumerated by this function must: not be
+visible/locatable when located by flink:xrCreateRenderModelSpaceEXT if the
+session state is not ename:XR_SESSION_STATE_FOCUSED, to ensure render models
+are only being rendered once per frame.
+
+If the session is not running, the runtime must: return
+ename:XR_ERROR_SESSION_NOT_RUNNING.
+
+A render model slink:XrRenderModelEXT created from an
+basetype:XrRenderModelIdEXT enumerated by this function must: be locatable
+and visible if the corresponding device is locatable and there exists some
+action in any action set with which the render model is associated.
+This avoids having interaction render models disappear during corner cases
+of application interaction, e.g. when a "menu" button present on only one
+controller is the only active input.
+If an application wishes to only show models for which there are active
+actions, use the output of flink:xrEnumerateRenderModelSubactionPathsEXT
+which enumerates subaction paths per model for the active action sets only.
+
+include::{generated}/validity/protos/xrEnumerateInteractionRenderModelIdsEXT.adoc[]
+--
+
+
+[open,refpage='XrInteractionRenderModelIdsEnumerateInfoEXT',desc='The information to enumerate interaction render models',type='structs',xrefs='xrEnumerateInteractionRenderModelIdsEXT']
+--
+The slink:XrInteractionRenderModelIdsEnumerateInfoEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrInteractionRenderModelIdsEnumerateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+slink:XrInteractionRenderModelIdsEnumerateInfoEXT is an input structure for
+the flink:xrEnumerateInteractionRenderModelIdsEXT function.
+slink:XrInteractionRenderModelIdsEnumerateInfoEXT exists for future
+extensibility.
+
+include::{generated}/validity/structs/XrInteractionRenderModelIdsEnumerateInfoEXT.adoc[]
+--
+
+[open,refpage='XrEventDataInteractionRenderModelsChangedEXT',desc='Indicates when the result of enumerating interaction render models changes',type='structs',xrefs='xrEnumerateInteractionRenderModelIdsEXT']
+--
+The slink:XrEventDataInteractionRenderModelsChangedEXT structure is an event
+defined as:
+
+include::{generated}/api/structs/XrEventDataInteractionRenderModelsChangedEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+Receiving this event from flink:xrPollEvent indicates that that the app
+should: enumerate interaction render models (or re-enumerate them) using
+flink:xrEnumerateInteractionRenderModelIdsEXT and the two-call idiom,
+because the list of IDs enumerated by it has changed.
+This event must: only be queued by a call to flink:xrSyncActions.
+For clarity, if an application has enabled this extension, this event must:
+be emitted during the first flink:xrSyncActions call if
+flink:xrEnumerateInteractionRenderModelIdsEXT will enumerate any models,
+because it enumerates no models prior to the first flink:xrSyncActions call.
+
+include::{generated}/validity/structs/XrEventDataInteractionRenderModelsChangedEXT.adoc[]
+--
+
+
+
+==== Associating Models with Active Action Set Subaction Paths
+
+An application might wish to know which models are associated with a
+subaction path as used in suggested bindings, for example to adjust the
+shading to highlight a controller to use in user instructions.
+This operation is structured as enumerating the subaction paths for each
+render model to encourage application logic that treats this data fully
+generally and handles common and less common configurations uniformly.
+
+
+[open,refpage='xrEnumerateRenderModelSubactionPathsEXT',type='protos',desc='Enumerate subaction paths for devices associated with bound input',xrefs='XrRenderModelEXT xrGetRenderModelPoseTopLevelUserPathEXT']
+--
+The flink:xrEnumerateRenderModelSubactionPathsEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateRenderModelSubactionPathsEXT.adoc[]
+
+
+.Parameter Description
+****
+* pname:renderModel is a render model handle created from an
+  basetype:XrRenderModelIdEXT value retrieved from this extension.
+* pname:info exists for extensibility purposes, it is code:NULL or a pointer
+  to a valid slink:XrInteractionRenderModelSubactionPathInfoEXT structure.
+* pname:pathCapacityInput is the capacity of the pname:paths array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:pathCountOutput is a pointer to the count of pname:paths written, or
+  a pointer to the required capacity in the case that
+  pname:pathCapacityInput is insufficient.
+* pname:paths is a pointer to an array of basetype:XrPath atoms, but can: be
+  code:NULL if pname:pathCapacityInput is 0.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:paths size.
+****
+
+flink:xrEnumerateRenderModelSubactionPathsEXT allows the application to
+associate an interaction-related render model with the associated subaction
+paths according to the exposed current interaction profile and active action
+sets.
+
+If pname:renderModel is valid but was not created from a render model ID
+from a call to flink:xrEnumerateInteractionRenderModelIdsEXT earlier in the
+current session, the runtime must: return
+ename:XR_ERROR_NOT_INTERACTION_RENDER_MODEL_EXT.
+
+The array enumerated by this function for a given render model must: not
+change except during calls to flink:xrSyncActions.
+
+// these are the key conditions
+A given subaction path must: be reported for a model if and only if both of
+the following are true:
+
+* That path appears in the corresponding
+  slink:XrActionCreateInfo::pname:subactionPaths for some action or actions
+  associated with it in the active action sets.
+* That path is used as a top-level user path for some suggested binding of
+  at least one such action in the current interaction profile.
+
+This paragraph describes implications and clarifications of the preceding
+requirement.
+If a given path is used as a top-level user path for a suggested binding to
+an action with no subaction paths specified, or without that specific
+subaction path specified, it is not sufficient to require enumerating that
+path.
+The runtime must: only enumerate subaction paths that are included in the
+reported current interaction profile and mentioned in the corresponding
+suggested bindings, even if one of the models is logically better described
+by a path not used by the application.
+For example, a treadmill-like interaction device with its input mapped to
+actions suggested for left and right hands enumerates the paths
+pathname:/user/hand/left and pathname:/user/hand/right even though
+pathname:/user/treadmill is defined in the specification.
+This also implies that a runtime must: return no subaction paths prior to
+the first call to flink:xrSyncActions in a session, or when the most recent
+call to flink:xrSyncActions did not specify any active action sets.
+Additionally, the runtime must: return no subaction paths when a given
+render model provides input only for actions that do not have a list of
+subaction paths specified in slink:XrActionCreateInfo::pname:subactionPaths.
+
+This function is intended for identifying models currently associated with
+any actions in an active action set, as well as identifying the subaction
+paths associated with the bound input.
+To identify which top-level pathname:/user path is most closely associated
+with the overall pose of any given interaction render model, see
+flink:xrGetRenderModelPoseTopLevelUserPathEXT.
+The description of that function contains a further discussion of the
+differences with this function.
+
+**Important**: The order of values returned from this function is **not**
+meaningful, and the entire array should: be iterated and treated uniformly
+by the application.
+An application should: always be prepared for this function to return a list
+of any length, up to the total number of subaction paths used in suggested
+bindings.
+Most functionality in OpenXR is defined to operate as if the hardware
+corresponding to the current interaction profile were in use according to
+the suggested bindings.
+However, this function, and this extension in general, allows the
+application to access aspects of the user's actual input configuration, to
+provide accurate and realistic feedback to the user.
+Special care is required to ensure that application code using this function
+is maximally general.
+
+
+include::{generated}/validity/protos/xrEnumerateRenderModelSubactionPathsEXT.adoc[]
+--
+
+
+[open,refpage='XrInteractionRenderModelSubactionPathInfoEXT',desc='The information to enumerate subaction paths associated with an interaction render model',type='structs',xrefs='xrEnumerateRenderModelSubactionPathsEXT']
+--
+The slink:XrInteractionRenderModelSubactionPathInfoEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrInteractionRenderModelSubactionPathInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+slink:XrInteractionRenderModelSubactionPathInfoEXT exists for future
+extensibility.
+
+include::{generated}/validity/structs/XrInteractionRenderModelSubactionPathInfoEXT.adoc[]
+--
+
+==== Query Pose-Related Top Level pathname:/user Path for Model
+
+Some applications need to know the top-level pathname:/user path most
+closely associated with the overall pose of an interaction render model.
+This allows an application to adjust positioning of the render model where a
+render model retains its relative position to related poses and/or hand
+models.
+
+An example use case is when rendering the controller, hand model, and
+elements related to poses for the player's right or left hand, while the
+player has moved their hand through a virtual wall.
+An application may: choose to not render these elements at their tracked
+location but instead prevent movement through this obstruction.
+The application will want to adjust the position of these elements in equal
+measure.
+
+[open,refpage='xrGetRenderModelPoseTopLevelUserPathEXT',type='protos',desc='Obtain the top level pathname:/user path associated with a render model id',xrefs='xrEnumerateRenderModelSubactionPathsEXT XrInteractionRenderModelIdsEnumerateInfoEXT']
+--
+The flink:xrGetRenderModelPoseTopLevelUserPathEXT function is defined as:
+
+include::{generated}/api/protos/xrGetRenderModelPoseTopLevelUserPathEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderModel is an slink:XrRenderModelEXT retrieved using the
+  basetype:XrRenderModelIdEXT obtained through this extension.
+* pname:info is parameters affecting the results of this function, including
+  an array of top-level pathname:/user paths to limit results to.
+* pname:topLevelUserPath is a pointer to an basetype:XrPath to which the top
+  level pathname:/user path will be written.
+****
+
+This function returns the top level pathname:/user path most closely
+associated with the pose of a given render model, if any, and if that path
+is present in the list passed in pname:info.
+
+A runtime must: return:
+* the top level pathname:/user path from the list in pname:info that is
+  *most closely* associated with the model pose as a physical reality (e.g.
+  a device currently held in the user's left hand returns
+  pathname:/user/hand/left), if one exists.
+  Note that this requirement does provide fallback behavior.
+  That is, if a model pose is related to more than one top level
+  pathname:/user path, the runtime returns the path from pname:info with the
+  closest association, even if it is less closely related than some other
+  path *not* included in pname:info.
+* dlink:XR_NULL_PATH if no such path can be determined (e.g. the
+  corresponding device is currently not held by or attached to the user, or
+  no path associated with the model pose was provided in pname:info).
+
+**Note** that unlike flink:xrGetCurrentInteractionProfile, more than one
+model may: report being most closely associated with a given top level
+pathname:/user path.
+For example, a runtime may: represent a single controller as two render
+models, or a user may: have both a handheld device and a wrist-mounted
+tracker.
+
+Changes to the top level pathname:/user path state of each render model
+must: only occur during a call to flink:xrSyncActions.
+
+If pname:renderModel is valid but was not retrieved from a call to
+flink:xrEnumerateInteractionRenderModelIdsEXT earlier in the current
+session, the runtime must: return
+ename:XR_ERROR_NOT_INTERACTION_RENDER_MODEL_EXT.
+
+This function differs from flink:xrEnumerateRenderModelSubactionPathsEXT by
+emphasizing poses and being broadly distinct from actions.
+flink:xrGetRenderModelPoseTopLevelUserPathEXT focuses solely on poses
+related to a top level pathname:/user path and returning only most
+applicable result.
+Contrast with flink:xrEnumerateRenderModelSubactionPathsEXT, which reports
+all top level pathname:/user paths **being used as subaction paths** that
+are associated with **actions in an active action set**.
+That function is meant more for e.g. highlighting models providing input,
+especially non-pose input, associated with a subaction path.
+For example, the right hand might have a pie menu related action set active,
+and an application could show the devices that can interact with that menu
+in a highlighted way, while dimming the other models.
+
+**Important**: An application should: always be prepared for this function
+to return any top-level pathname:/user path in their list or
+dlink:XR_NULL_PATH for any of the interaction render models.
+Many systems will not report dlink:XR_NULL_PATH for any models, provided
+that both pathname:/user/hand/left and pathname:/user/hand/right are
+included on the list in pname:info, but application code must: be prepared
+to handle this and that code path should: be tested manually.
+Most functionality in OpenXR is defined to operate as if the hardware
+corresponding to the current interaction profile were in use according to
+the suggested bindings.
+However, this function, and this extension in general, allows the
+application to access aspects of the user's actual input configuration, to
+provide accurate and realistic feedback to the user.
+Special care is required to ensure that application code using this function
+is maximally general.
+
+
+include::{generated}/validity/protos/xrGetRenderModelPoseTopLevelUserPathEXT.adoc[]
+--
+
+
+[open,refpage='XrInteractionRenderModelTopLevelUserPathGetInfoEXT',desc='The information to enumerate top-level /user paths associated with an interaction render model',type='structs',xrefs='xrGetRenderModelPoseTopLevelUserPathEXT']
+--
+The slink:XrInteractionRenderModelTopLevelUserPathGetInfoEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrInteractionRenderModelTopLevelUserPathGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:topLevelUserPathCount is the number of elements in
+  pname:topLevelUserPaths.
+* pname:topLevelUserPaths is an array of unique basetype:XrPath values that
+  correspond to valid <<semantic-paths-user,top-level pathname:/user
+  paths>>.
+
+****
+
+If any elements in pname:topLevelUserPaths are duplicated, the runtime must:
+return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetRenderModelPoseTopLevelUserPathEXT.
+
+If any elements in pname:topLevelUserPaths are not valid <<top-level
+pathname:/user paths,semantic-paths-user>>, the runtime must: return
+ename:XR_ERROR_PATH_INVALID from
+flink:xrGetRenderModelPoseTopLevelUserPathEXT.
+
+
+
+include::{generated}/validity/structs/XrInteractionRenderModelTopLevelUserPathGetInfoEXT.adoc[]
+--
+
+==== Example
+
+[source,c++]
+----
+// previously initialized
+extern XrInstance instance;
+extern XrSession session;
+extern XrSpace baseSpace;
+
+// Get the function pointers for the extension's functions.
+
+PFN_xrEnumerateInteractionRenderModelIdsEXT
+    pfnEnumerateInteractionRenderModelIdsEXT;
+CHK_XR(xrGetInstanceProcAddr(instance,
+                             "xrEnumerateInteractionRenderModelIdsEXT",
+                             reinterpret_cast<PFN_xrVoidFunction *>(
+                                 &pfnEnumerateInteractionRenderModelIdsEXT)));
+
+// And the XR_EXT_render_model functions
+PFN_xrCreateRenderModelEXT pfnCreateRenderModelEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelEXT)));
+
+PFN_xrDestroyRenderModelEXT pfnDestroyRenderModelEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrDestroyRenderModelEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnDestroyRenderModelEXT)));
+
+PFN_xrGetRenderModelPropertiesEXT pfnGetRenderModelPropertiesEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelPropertiesEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelPropertiesEXT)));
+
+PFN_xrCreateRenderModelSpaceEXT pfnCreateRenderModelSpaceEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelSpaceEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelSpaceEXT)));
+
+PFN_xrCreateRenderModelAssetEXT pfnCreateRenderModelAssetEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelAssetEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelAssetEXT)));
+
+PFN_xrDestroyRenderModelAssetEXT pfnDestroyRenderModelAssetEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrDestroyRenderModelAssetEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnDestroyRenderModelAssetEXT)));
+
+PFN_xrGetRenderModelAssetDataEXT pfnGetRenderModelAssetDataEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelAssetDataEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelAssetDataEXT)));
+
+PFN_xrGetRenderModelAssetPropertiesEXT pfnGetRenderModelAssetPropertiesEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetRenderModelAssetPropertiesEXT",
+                             reinterpret_cast<PFN_xrVoidFunction *>(
+                                 &pfnGetRenderModelAssetPropertiesEXT)));
+
+PFN_xrGetRenderModelStateEXT pfnGetRenderModelStateEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelStateEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelStateEXT)));
+
+XrPath rightHandPath;
+CHK_XR(xrStringToPath(instance, "/user/hand/right", &rightHandPath));
+
+// Enumerate the render model IDs
+XrInteractionRenderModelIdsEnumerateInfoEXT renderModelGetInfo{
+    XR_TYPE_INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT};
+
+uint32_t numModels{0};
+CHK_XR(pfnEnumerateInteractionRenderModelIdsEXT(session, NULL, 0, &numModels,
+                                                NULL));
+std::vector<XrRenderModelIdEXT> interactionModelIds{XR_NULL_PATH, numModels};
+CHK_XR(pfnEnumerateInteractionRenderModelIdsEXT(session, NULL, numModels,
+                                                &numModels,
+                                                interactionModelIds.data()));
+
+// Create render model handles
+// The names of glTF extensions that the application is capable of supporting.
+// The returned glTF model may have any or all of these extensions listed in
+// the "extensionsRequired" array.
+// Pass only the extensions that your app/engine are capable of supporting.
+std::vector<const char *> appSupportedGltfExtensions{"KHR_texture_basisu",
+                                                     "KHR_materials_specular"};
+
+std::vector<XrRenderModelEXT> interactionModels;
+for (XrRenderModelIdEXT id : interactionModelIds) {
+  XrRenderModelEXT renderModel;
+  XrRenderModelCreateInfoEXT renderModelCreateInfo{
+      XR_TYPE_RENDER_MODEL_CREATE_INFO_EXT};
+  renderModelCreateInfo.renderModelId = id;
+  renderModelCreateInfo.gltfExtensionCount =
+      (uint32_t)appSupportedGltfExtensions.size();
+  renderModelCreateInfo.gltfExtensions = appSupportedGltfExtensions.data();
+  CHK_XR(
+      pfnCreateRenderModelEXT(session, &renderModelCreateInfo, &renderModel));
+  interactionModels.push_back(renderModel);
+}
+
+std::vector<XrSpace> modelSpaces;
+std::vector<XrRenderModelPropertiesEXT> modelProperties;
+for (XrRenderModelEXT renderModel : interactionModels) {
+  // Create a space for locating the render model.
+  XrRenderModelSpaceCreateInfoEXT spaceCreateInfo{
+      XR_TYPE_RENDER_MODEL_SPACE_CREATE_INFO_EXT};
+  spaceCreateInfo.renderModel = renderModel;
+  XrSpace modelSpace;
+  CHK_XR(pfnCreateRenderModelSpaceEXT(session, &spaceCreateInfo, &modelSpace));
+  modelSpaces.push_back(modelSpace);
+
+  // Get the model properties: UUID and number of animatable nodes
+  XrRenderModelPropertiesGetInfoEXT propertiesGetInfo{
+      XR_TYPE_RENDER_MODEL_PROPERTIES_GET_INFO_EXT};
+  XrRenderModelPropertiesEXT properties{XR_TYPE_RENDER_MODEL_PROPERTIES_EXT};
+  CHK_XR(pfnGetRenderModelPropertiesEXT(renderModel, &propertiesGetInfo,
+                                        &properties));
+
+  modelProperties.push_back(properties);
+  {
+    // Create the asset handle to request the data.
+    XrRenderModelAssetCreateInfoEXT assetCreateInfo{
+        XR_TYPE_RENDER_MODEL_ASSET_CREATE_INFO_EXT};
+    assetCreateInfo.cacheId = properties.cacheId;
+    XrRenderModelAssetEXT asset;
+    CHK_XR(pfnCreateRenderModelAssetEXT(session, &assetCreateInfo, &asset));
+
+    // Copy the binary glTF (GLB) asset data using two-call idiom.
+    XrRenderModelAssetDataGetInfoEXT assetGetInfo{
+        XR_TYPE_RENDER_MODEL_ASSET_DATA_GET_INFO_EXT};
+    XrRenderModelAssetDataEXT assetData{
+        XR_TYPE_RENDER_MODEL_ASSET_DATA_EXT};
+    CHK_XR(pfnGetRenderModelAssetDataEXT(asset, &assetGetInfo, &assetData));
+    std::vector<uint8_t> glbData(assetData.bufferCountOutput);
+    assetData.bufferCapacityInput = (uint32_t)glbData.size();
+    assetData.buffer = glbData.data();
+    CHK_XR(pfnGetRenderModelAssetDataEXT(asset, &assetGetInfo, &assetData));
+
+    // Parsing the binary glTF data is outside the scope of this extension,
+    // but do it here.
+
+  // Get the unique names of the animatable nodes
+    XrRenderModelAssetPropertiesGetInfoEXT assetPropertiesGetInfo{
+        XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT};
+    XrRenderModelAssetPropertiesEXT assetProperties{
+        XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_EXT};
+    std::vector<XrRenderModelAssetNodePropertiesEXT> nodeProperties(
+        properties.animatableNodeCount);
+    assetProperties.nodePropertyCount = (uint32_t)nodeProperties.size();
+    assetProperties.nodeProperties = nodeProperties.data();
+    CHK_XR(pfnGetRenderModelAssetPropertiesEXT(asset, &assetPropertiesGetInfo,
+                                               &assetProperties));
+
+    // Once the glTF data has been handled, we no longer need the
+    // XrRenderModelAssetEXT handle.
+    CHK_XR(pfnDestroyRenderModelAssetEXT(asset));
+
+    // Save the list of nodes for rendering. The order of the array matters.
+    // The application will store some sort of "reference" to a node for
+    // each element, using the node name (in nodeProperties) to find it here.
+    // This code is not shown because it will depend on how your
+    // application represents glTF assets, so add your own here.
+  }
+}
+
+
+// Each frame the application's work for each model includes
+// reading the state of the animatable nodes
+// and then adjusting the pose or visibility of the node.
+
+// Initialized from xrWaitFrame output
+XrTime predictedDisplayTime;
+
+for (size_t modelIndex = 0; modelIndex < interactionModels.size();
+     ++modelIndex) {
+  XrRenderModelEXT renderModel = interactionModels[modelIndex];
+  const XrRenderModelPropertiesEXT& properties = modelProperties[modelIndex];
+  XrSpace modelSpace = modelSpaces[modelIndex];
+
+  // Use xrLocateSpace to locate the model's space
+  XrSpaceLocation modelLocation{XR_TYPE_SPACE_LOCATION};
+  CHK_XR(xrLocateSpace(modelSpace, baseSpace, predictedDisplayTime, &modelLocation));
+
+  bool orientationTracked = (modelLocation.locationFlags &
+      XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT) != 0;
+  bool positionTracked = (modelLocation.locationFlags &
+      XR_SPACE_LOCATION_POSITION_TRACKED_BIT) != 0;
+
+  if (!orientationTracked || !positionTracked) {
+    // Only render if the model space is tracked,
+    // and if the session state is appropriate, if applicable.
+    // (e.g. interaction models are only to be rendered when FOCUSED)
+
+    // Flag this model as not-rendered-this-frame in your app-specific way here.
+
+    continue;
+  }
+
+  XrRenderModelStateGetInfoEXT stateGetInfo{
+      XR_TYPE_RENDER_MODEL_STATE_GET_INFO_EXT};
+  stateGetInfo.displayTime = predictedDisplayTime;
+
+  // In practice, you do not want to re-allocate this array of
+  // node state every frame, but it is clearer for illustration.
+  // We know the number of elements from the model properties,
+  // and we used the names from the asset handle to find and retain
+  // our app-specific references to those nodes in the model.
+  std::vector<XrRenderModelNodeStateEXT> nodeStates(
+      properties.animatableNodeCount);
+  XrRenderModelStateEXT state{XR_TYPE_RENDER_MODEL_STATE_EXT};
+  state.nodeStateCount = (uint32_t)nodeStates.size();
+  state.nodeStates = nodeStates.data();
+  // xrGetRenderModelStateEXT does not use the two-call idiom. The size is
+  // determined by xrGetRenderModelAssetPropertiesEXT.
+  CHK_XR(pfnGetRenderModelStateEXT(renderModel, &stateGetInfo, &state));
+
+  for (size_t i = 0; i < nodeStates.size(); ++i) {
+    // Use nodeStates[i].isVisible and nodeStates[i].nodePose to update the
+    // node's visibility or pose.
+    // nodeStates[i] refers to the node identified by name in nodeProperties[i]
+  }
+
+  // Your app now has the overall transform and all node transforms/status here.
+}
+----
+
+As a demonstration of flink:xrEnumerateRenderModelSubactionPathsEXT, the
+following additional code assumes that the application would like to modify
+rendering (e.g. highlight) for devices that provide input to a given
+subaction path, such as to emphasize which device is controlling a
+currently-active teleport targeting.
+
+[source,c++]
+----
+// previously initialized
+extern XrInstance instance;
+
+// as populated in the preceding sample
+std::vector<XrRenderModelEXT> interactionModels;
+
+// Get the function pointers for the extension's functions.
+PFN_xrEnumerateRenderModelSubactionPathsEXT
+    pfnEnumerateRenderModelSubactionPathsEXT;
+CHK_XR(xrGetInstanceProcAddr(instance,
+                             "xrEnumerateRenderModelSubactionPathsEXT",
+                             reinterpret_cast<PFN_xrVoidFunction *>(
+                                 &pfnEnumerateRenderModelSubactionPathsEXT)));
+
+// During each frame when an application wishes to treat render models
+// associated with some subaction path differently, it performs the following.
+
+// Previously initialized
+XrPath subactionPathToHighlight;
+
+// Re-used for each model because results are temporary
+std::vector<XrPath> paths;
+for (size_t modelIndex = 0; modelIndex < interactionModels.size();
+     ++modelIndex) {
+  XrRenderModelEXT renderModel = interactionModels[modelIndex];
+
+  // Two-call idiom for subaction paths
+  uint32_t count;
+  CHK_XR(pfnEnumerateRenderModelSubactionPathsEXT(renderModel, nullptr,
+                                                  0, &count, nullptr));
+  paths.resize(count, XR_NULL_PATH);
+  CHK_XR(pfnEnumerateRenderModelSubactionPathsEXT(renderModel, nullptr,
+                                                  (uint32_t)paths.size(),
+                                                  &count, paths.data()));
+
+  // Determine if our desired subaction path is in the collection.
+  bool foundHighlightPath = (paths.end() !=
+                             std::find(paths.begin(),
+                                       paths.end(),
+                                       subactionPathToHighlight));
+  if (foundHighlightPath) {
+    // Highlight this model: it is providing input for
+    // actions on subactionPathToHighlight
+  } else {
+    // Render normally: no input from this model is
+    // associated with subactionPathToHighlight
+  }
+}
+----
+
+include::{generated}/interfaces/XR_EXT_interaction_render_model.adoc[leveloffset=1]
+
+==== Issues
+
+* Should we enumerate models per subaction path? per action? or overall?
+** We enumerate all models to normalize looping over an array of models of
+   arbitrary length, to avoid fragility when more than one device is
+   providing input for a single subaction path due to rebinding.
+   (Application authors are likely to assume one model per subaction path
+   unless the API is structured to avoid that assumption.)
+* Given enumeration of models first, what action-related data is safe to
+  expose to the application without introducing untested code paths used
+  only in case of rebinding?
+** Enumerating subaction paths for a model is not a problem: the runtime
+   only returns subaction paths submitted by the app (so no untested code
+   paths), and the mistaken assumption that only one subaction path is
+   returned is less dangerous than assuming a number of models: the
+   association with subaction paths is likely primarily for highlighting,
+   etc.
+   Incorrect processing of this data by the application produces a
+   less-optimal experience, but does not result in any crash or
+   incompatibility.
+* Can the application associate individual actions with models or nodes in
+  them?
+** This is out of scope for this extension and will be provided in a
+   follow-up.
+   It requires more design work to achieve the working group goals.
+* Should the main function only enumerate models associated with
+  currently-bound and active actions?
+** No, this will change for each active action set change, requiring
+   frequent re-enumeration of models.
+   If an application wants to display only models associated with a bound
+   and active action, it can: use the results of
+   flink:xrEnumerateRenderModelSubactionPathsEXT to identify them, and no
+   event is needed as the application controls calling flink:xrSyncActions.
+   The current design instead enumerates models associated with the union of
+   all actions attached to the session.
+* Does the asset corresponding to a render model ID change when the user
+  switches devices, or should it trigger an event prompting the runtime to
+  enumerate a new render model ID for the new device?
+** An event triggers fresh enumeration retrieving a new render model ID, to
+   keep one render model ID closely associated with a physical device rather
+   than with a role or the inputs driven by it.
+   A different type of controller is a new model ID and not just an updated
+   asset for an existing one.
+   Additionally, the UUID and asset for a given render model ID and list of
+   extensions in a session is now defined to be immutable.
+* Does flink:xrEnumerateRenderModelSubactionPathsEXT enumerate subaction
+  paths in any specific order?
+** No, the order is explicitly defined to have no meaning.
+   An application that uses flink:xrEnumerateRenderModelSubactionPathsEXT
+   should: assume there may be multiple values in this list, even though
+   there may: be only one in some cases, and treat the list returned from
+   flink:xrEnumerateRenderModelSubactionPathsEXT as a set.
+   An application should: process all values in that list equally: e.g. if
+   looking to highlight "right hand" devices, apply a highlight shader to
+   all render models that contain pathname:/user/hand/right in their list
+   from flink:xrEnumerateRenderModelSubactionPathsEXT no matter where it
+   appears in the output.
+* Can the active assets for hardware change between sessions or only
+  instances?
+** Assets for devices must remain fixed within a given instance.
+   This is primarily unneeded implementation freedom that is restricted so
+   that the conformance test suite can enforce the requirement that
+   suggested bindings for additional interaction profiles, as long as they
+   do not change the collection of bound actions, do not change the assets.
+   It is very important for the purpose and usability of this extension that
+   it returns assets related to the real hardware in use, which means it
+   must: be unaffected by the interaction profile system.
+   We cannot test automatically whether the hardware looks like the model,
+   but if we require that the underlying assets are fixed across sessions
+   within an instance, we can check that the UUID does not change based on
+   the suggested bindings for a given session.
+* What device render models are enumerated? Options include A: only devices
+  for actions in the active action sets, B: devices associated with any
+  action in any action set, C: any devices the user may interact with even
+  if they do not have an associated action
+** Option B is selected.
+   Option A (only devices for the currently active action sets) may mean
+   that the set of enumerated devices changes frequently, if not all action
+   sets contain actions being supplied by every device.
+   This could lead applications to have a more robust lifecycle for
+   interaction render models, and well tested code paths for setup and
+   teardown, but it also could result in a lot of extra overhead from this
+   setup and teardown.
+   Option B would enumerate a larger group of models, though not all of them
+   would necessarily be applicable at all times.
+   (The runtime could report not-applicable ones as not locatable when no
+   actions are active.) Option C would show devices that are not necessarily
+   intended for interaction (things like cameras and base stations), which
+   was determined to be out of scope for this extension, though may be added
+   by additional extensions with chained structure modifying this
+   functionality.
+* Should interaction render models remain locatable even when they do not
+  have any active actions associated with them?
+** Yes.
+   If applications want to further filter which models to display, this is
+   possible by enumerating subaction paths in the active action set for each
+   model, and omitting those that enumerate no subaction paths.
+
+==== Version History
+
+* Revision 1, 2021-12-21 (Yin Li)
+** Initial extension description

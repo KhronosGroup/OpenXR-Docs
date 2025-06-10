@@ -540,7 +540,12 @@
                                                   or contains($member_name, 'max')
                                                   or contains($member_name, 'recommended')
                                                   or $member_name = 'skeletonChangedCount'
-                                                  or $struct_name = ('XrSwapchainCreateInfo', 'XrSpaceQueryInfoFB', 'XrEventDataEventsLost', 'XrPlaneDetectorLocationEXT')"/>
+                                                  or $struct_name = (
+                                                    'XrSwapchainCreateInfo',
+                                                    'XrSpaceQueryInfoFB',
+                                                    'XrEventDataEventsLost',
+                                                    'XrPlaneDetectorLocationEXT',
+                                                    'XrRenderModelPropertiesEXT')"/>
             <!-- TODO these are registry errors left in place for now, fix them-->
             <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
 
@@ -731,6 +736,8 @@
                         concat(substring($basename, 1, $basename_len - 1), 'ies')
                         else if (ends-with($basename, 'ex')) then
                         concat(substring($basename, 1, $basename_len - 2), 'ices')
+                        else if (ends-with($basename, 'child')) then
+                        concat($basename, 'ren')
                         else
                         concat($basename, 's')
                         " />
@@ -806,6 +813,8 @@
                         concat(substring($basename, 1, $basename_len - 1), 'ies')
                         else if (ends-with($basename, 'ex')) then
                         concat(substring($basename, 1, $basename_len - 2), 'ices')
+                        else if (ends-with($basename, 'child')) then
+                        concat($basename, 'ren')
                         else
                         concat($basename, 's')
                         " />

@@ -1,0 +1,825 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_persistence.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Jared Finder, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension allows applications to discover and correlate spatial
+entities across application sessions, OpenXR sessions and multiple OpenXR
+spatial contexts within a session.
+The apiext:XR_EXT_spatial_entity extension established that an entity within
+an slink:XrSpatialContextEXT is represented by an
+basetype:XrSpatialEntityIdEXT.
+This extension extends on that concept by establishing that an entity, if
+persisted, is represented by an slink:XrUuid across application and OpenXR
+sessions i.e. an application can: use the slink:XrUuid provided by this
+extension to identify an entity across sessions.
+This extension also provides useful overlaps with the
+apiext:XR_EXT_spatial_entity extension to discover persisted entities in the
+user's environment and the ability to query their component data.
+
+==== Spatial Persistence Context
+
+===== Create a spatial persistence context
+
+[open,refpage='XrSpatialPersistenceContextEXT',type='handles',desc='Represents a spatial persistence context.']
+--
+include::{generated}/api/handles/XrSpatialPersistenceContextEXT.adoc[]
+
+The slink:XrSpatialPersistenceContextEXT handle represents the connection to
+a persistent spatial entity storage.
+--
+
+[open,refpage='xrCreateSpatialPersistenceContextAsyncEXT',type='protos',desc='Create a spatial persistence context handle.',xrefs='XrSpatialPersistenceContextCreateInfoEXT xrCreateSpatialPersistenceContextCompleteEXT XrSpatialPersistenceContextEXT xrDestroySpatialPersistenceContextEXT']
+--
+The flink:xrCreateSpatialPersistenceContextAsyncEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialPersistenceContextAsyncEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the spatial persistence
+  context will be active.
+* pname:createInfo is the slink:XrSpatialPersistenceContextCreateInfoEXT
+  used to specify the spatial persistence context parameters.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+An application can: create an slink:XrSpatialPersistenceContextEXT handle
+using the flink:xrCreateSpatialPersistenceContextAsyncEXT function and
+configure the scope of the persistence context in pname:createInfo.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_PERSISTENCE_SCOPE_UNSUPPORTED_EXT if
+slink:XrSpatialPersistenceContextCreateInfoEXT::pname:scope is not
+enumerated by flink:xrEnumerateSpatialPersistenceScopesEXT.
+
+If a runtime enforces a permission system to control application access to
+the persistence storage represented by slink:XrSpatialPersistenceContextEXT,
+then the runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if
+those permissions have not been granted to this application.
+
+include::{generated}/validity/protos/xrCreateSpatialPersistenceContextAsyncEXT.adoc[]
+--
+
+[open,refpage='XrSpatialPersistenceContextCreateInfoEXT',type='structs',desc='Information to create a spatial persistence context handle',xrefs='xrCreateSpatialPersistenceContextAsyncEXT']
+--
+The slink:XrSpatialPersistenceContextCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialPersistenceContextCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:scope is an elink:XrSpatialPersistenceScopeEXT defining the storage
+  scope of the persistence context.
+****
+
+The slink:XrSpatialPersistenceContextCreateInfoEXT structure describes the
+information to create an slink:XrSpatialPersistenceContextEXT handle.
+
+include::{generated}/validity/structs/XrSpatialPersistenceContextCreateInfoEXT.adoc[]
+--
+
+[open,refpage='XrSpatialPersistenceScopeEXT',type='enums',desc='Spatial persistence scopes',xrefs='xrEnumerateSpatialPersistenceScopesEXT XrSpatialPersistenceContextCreateInfoEXT']
+--
+include::{generated}/api/enums/XrSpatialPersistenceScopeEXT.adoc[]
+
+The elink:XrSpatialPersistenceScopeEXT enumeration identifies the different
+types of persistence context scopes.
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrSpatialPersistenceScopeEXT.comments.adoc[]
+--
+
+[open,refpage='xrEnumerateSpatialPersistenceScopesEXT',type='protos',desc='Enumerate supported spatial persistence scopes in the selected system.',xrefs='XrSpatialPersistenceScopeEXT XrSpatialPersistenceContextCreateInfoEXT']
+--
+The flink:xrEnumerateSpatialPersistenceScopesEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSpatialPersistenceScopesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance.
+* pname:systemId is the basetype:XrSystemId whose spatial persistence scopes
+  will be enumerated.
+* pname:persistenceScopeCapacityInput is the capacity of the
+  pname:persistenceScopes array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:persistenceScopeCountOutput is the number of persistence scopes, or
+  the required capacity in the case that pname:persistenceScopeCapacityInput
+  is insufficient.
+* pname:persistenceScopes is an array of elink:XrSpatialPersistenceScopeEXT.
+  It can: be code:NULL if pname:persistenceScopeCapacityInput is 0.
+* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
+  detailed description of retrieving the required pname:persistenceScopes
+  size.
+****
+
+The application can: enumerate the list of spatial persistence scopes
+supported by a given basetype:XrSystemId using
+flink:xrEnumerateSpatialPersistenceScopesEXT.
+
+include::{generated}/validity/protos/xrEnumerateSpatialPersistenceScopesEXT.adoc[]
+--
+
+[open,refpage='xrCreateSpatialPersistenceContextCompleteEXT',type='protos',desc='Complete the spatial persistence context creation async request',xrefs='xrCreateSpatialPersistenceContextAsyncEXT XrSpatialPersistenceContextEXT']
+--
+The flink:xrCreateSpatialPersistenceContextCompleteEXT function is defined
+as:
+
+include::{generated}/api/protos/xrCreateSpatialPersistenceContextCompleteEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession previously passed to
+  flink:xrCreateSpatialPersistenceContextAsyncEXT::pname:session.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrCreateSpatialPersistenceContextAsyncEXT.
+* pname:completion is a pointer to an
+  slink:XrCreateSpatialPersistenceContextCompletionEXT.
+****
+
+flink:xrCreateSpatialPersistenceContextCompleteEXT completes the
+asynchronous operation started by
+flink:xrCreateSpatialPersistenceContextAsyncEXT.
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if pname:future
+is not in ready state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if pname:future
+has already been completed or cancelled.
+
+include::{generated}/validity/protos/xrCreateSpatialPersistenceContextCompleteEXT.adoc[]
+--
+
+[open,refpage='XrCreateSpatialPersistenceContextCompletionEXT',type='structs',desc='Completion structure to retrieve the spatial persistence context handle.',xrefs='xrCreateSpatialPersistenceContextCompleteEXT xrCreateSpatialPersistenceContextAsyncEXT']
+--
+The slink:XrCreateSpatialPersistenceContextCompletionEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrCreateSpatialPersistenceContextCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the spatial persistence
+  context creation operation.
+* pname:createResult is the elink:XrSpatialPersistenceContextResultEXT of
+  the spatial persistence context creation operation.
+* pname:persistenceContext is an slink:XrSpatialPersistenceContextEXT
+  created using the data and configuration in
+  flink:xrCreateSpatialPersistenceContextAsyncEXT::pname:createInfo.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_PERMISSION_INSUFFICIENT
+****
+
+If pname:futureResult and pname:createResult are both success codes,
+pname:persistenceContext must: be valid.
+If pname:persistenceContext is valid, it must: remain so within the
+lifecycle of flink:xrCreateSpatialPersistenceContextAsyncEXT::pname:session
+or until the application uses flink:xrDestroySpatialPersistenceContextEXT
+with pname:persistenceContext, whichever comes first.
+
+The runtime must: set pname:createResult only if pname:futureResult is a
+success code.
+
+include::{generated}/validity/structs/XrCreateSpatialPersistenceContextCompletionEXT.adoc[]
+--
+
+[open,refpage='XrSpatialPersistenceContextResultEXT',type='enums',desc='Spatial persistence results',xrefs='XrCreateSpatialPersistenceContextCompletionEXT']
+--
+include::{generated}/api/enums/XrSpatialPersistenceContextResultEXT.adoc[]
+
+The elink:XrSpatialPersistenceContextResultEXT enumeration identifies the
+different types of result codes for a persistence operation.
+Failures during persistence operations are not always in control of the
+application and this enumeration is used for conveying such cases.
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrSpatialPersistenceContextResultEXT.comments.adoc[]
+--
+
+===== Destroy the spatial persistence context
+
+[open,refpage='xrDestroySpatialPersistenceContextEXT',type='protos',desc='Destroy a spatial context handle',xrefs='xrCreateSpatialPersistenceContextAsyncEXT XrSpatialContextEXT']
+--
+The flink:xrDestroySpatialPersistenceContextEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialPersistenceContextEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:persistenceContext is an slink:XrSpatialPersistenceContextEXT
+  previously created by flink:xrCreateSpatialPersistenceContextAsyncEXT.
+****
+
+The application can: use flink:xrDestroySpatialPersistenceContextEXT to
+release the pname:persistenceContext handle when it is finished with spatial
+persistence tasks.
+
+The runtime must: not destroy the underlying resources for
+pname:persistenceContext when flink:xrDestroySpatialPersistenceContextEXT is
+called if there are any valid slink:XrSpatialContextEXT handles that
+pname:persistenceContext was linked to via
+slink:XrSpatialContextPersistenceConfigEXT.
+This is because the persistence context's resources are still used by the
+spatial context for discovering persisted entities.
+Destroying the persistence context handle in such a situation only removes
+the application's access to these resources.
+
+The resources for a destroyed slink:XrSpatialPersistenceContextEXT must: be
+freed when all the slink:XrSpatialContextEXT handles the persistence context
+was linked to are destroyed.
+
+include::{generated}/validity/protos/xrDestroySpatialPersistenceContextEXT.adoc[]
+--
+
+==== Discover persisted entities
+
+[[ext_spatial_persistence_component]]
+===== Persistence component
+
+Persisted spatial entities have the persistence component on them which the
+runtime must: include in the discovery and update snapshots if
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT is enabled during the
+creation of slink:XrSpatialContextEXT and included in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes or
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes.
+
+====== Component Data
+
+[open,refpage='XrSpatialPersistenceDataEXT',type='structs',desc='Data provided by the spatial persistence component',xrefs='XrSpatialComponentPersistenceListEXT']
+--
+The slink:XrSpatialPersistenceDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialPersistenceDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:persistUuid is an slink:XrUuid.
+* pname:persistState is an elink:XrSpatialPersistenceStateEXT representing
+  the persistence state of pname:persistUuid
+****
+
+include::{generated}/validity/structs/XrSpatialPersistenceDataEXT.adoc[]
+--
+
+[open,refpage='XrSpatialPersistenceStateEXT',type='enums',desc='Spatial persistence states',xrefs='XrSpatialPersistenceDataEXT xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+include::{generated}/api/enums/XrSpatialPersistenceStateEXT.adoc[]
+
+The elink:XrSpatialPersistenceStateEXT enumeration identifies the different
+states of the persisted uuid.
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrSpatialPersistenceStateEXT.comments.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentPersistenceListEXT',type='structs',desc='List structure for the persistence component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialPersistenceDataEXT']
+--
+The slink:XrSpatialComponentPersistenceListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentPersistenceListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:persistDataCount is a code:uint32_t describing the count of elements
+  in the pname:persistData array.
+* pname:persistData is an array of slink:XrSpatialPersistenceDataEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentPersistenceListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:persistDataCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+Unlike the other components, the runtime must: set the data for
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT regardless of the
+elink:XrSpatialEntityTrackingStateEXT.
+
+include::{generated}/validity/structs/XrSpatialComponentPersistenceListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+If the application is including
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT in the enabled component
+list, it must: also include slink:XrSpatialContextPersistenceConfigEXT in
+the next chain of slink:XrSpatialContextCreateInfoEXT otherwise the runtime
+must: return ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT
+from flink:xrCreateSpatialContextAsyncEXT.
+
+===== Configure spatial context with persistence contexts
+
+[open,refpage='XrSpatialContextPersistenceConfigEXT',type='structs',desc='Configure a spatial context with persistence contexts',xrefs='xrCreateSpatialContextAsyncEXT XrSpatialContextCreateInfoEXT']
+--
+The slink:XrSpatialContextPersistenceConfigEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialContextPersistenceConfigEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:persistenceContextCount is a code:uint32_t describing the count of
+  elements in the pname:persistenceContexts array.
+* pname:persistenceContexts is an an array of
+  slink:XrSpatialPersistenceContextEXT.
+****
+
+An application can: add slink:XrSpatialContextPersistenceConfigEXT to the
+next chain of slink:XrSpatialContextCreateInfoEXT.
+This will configure the created slink:XrSpatialContextEXT with
+pname:persistenceContexts and allow the application to discover the spatial
+entities persisted in the storage represented by the
+slink:XrSpatialPersistenceContextEXT handles in pname:persistenceContexts.
+
+include::{generated}/validity/structs/XrSpatialContextPersistenceConfigEXT.adoc[]
+--
+
+[[ext_spatial_persistence_discover_entities]]
+===== Create discovery snapshot
+
+====== Discover entities with specific UUIDs
+
+[open,refpage='XrSpatialDiscoveryPersistenceUuidFilterEXT',type='structs',desc='Discover only the entities identified with the given uuids',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT XrSpatialDiscoverySnapshotCreateInfoEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryConditionEXT']
+--
+The slink:XrSpatialDiscoveryPersistenceUuidFilterEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialDiscoveryPersistenceUuidFilterEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:persistedUuidCount is a code:uint32_t describing the count of
+  elements in the pname:persistedUuids array
+* pname:persistedUuids is an array of slink:XrUuid.
+****
+
+The application can: use slink:XrSpatialDiscoveryPersistenceUuidFilterEXT in
+the next chain of slink:XrSpatialDiscoverySnapshotCreateInfoEXT to scope the
+discovery operation to just the entities whose persisted UUIDs are in the
+set of the UUIDs provided in pname:persistedUuids.
+
+If the application adds slink:XrSpatialDiscoveryPersistenceUuidFilterEXT in
+the next chain of slink:XrSpatialDiscoverySnapshotCreateInfoEXT but the
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT::pname:spatialContext was not
+configured with any slink:XrSpatialPersistenceContextEXT using
+slink:XrSpatialContextPersistenceConfigEXT, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT.
+
+The runtime must: treat the slink:XrSpatialDiscoveryPersistenceUuidFilterEXT
+filter as an 'AND' condition with any other filters provided in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT or its next chain.
+The runtime must: treat the pname:persistedUuids array itself as an 'OR'
+condition i.e. filter for entities that have any of the UUIDs provided in
+that array.
+
+The runtime must: include one entry in the created snapshot for each of the
+UUIDs in pname:persistedUuids for which it was able to determine the
+elink:XrSpatialPersistenceStateEXT state at this time.
+
+* If the runtime has successfully found the UUID in its storage, then -
+** The runtime must: set the elink:XrSpatialPersistenceStateEXT in the
+   slink:XrSpatialPersistenceDataEXT of this entity to
+   ename:XR_SPATIAL_PERSISTENCE_STATE_LOADED_EXT.
+** The runtime must: include a valid basetype:XrSpatialEntityIdEXT for this
+   entity in the created snapshot.
+** The runtime must: set the elink:XrSpatialEntityTrackingStateEXT of that
+   entity to ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT if it is
+   actively tracking the entity and has valid data for its components.
+   Otherwise, the runtime must: set the
+   elink:XrSpatialEntityTrackingStateEXT to
+   ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT.
+* If the runtime has determined that the UUID is not present in its storage
+  (regardless of whether that UUID was never in the storage or has was
+  present once but has since been unpersisted), then -
+** The runtime must: set the elink:XrSpatialPersistenceStateEXT in the
+   slink:XrSpatialPersistenceDataEXT of this entity to
+   ename:XR_SPATIAL_PERSISTENCE_STATE_NOT_FOUND_EXT to indicate to the
+   application that this UUID is no longer present in the storage.
+** The runtime must: set the basetype:XrSpatialEntityIdEXT for this entity
+   in the created snapshot to dlink:XR_NULL_SPATIAL_ENTITY_ID_EXT.
+** The runtime must: set the elink:XrSpatialEntityTrackingStateEXT of that
+   entity to ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT to indicate
+   to the application that this entity will never be tracked.
+* If the runtime was not able to determine if the UUID is present in its
+  storage or not, it must: not include it in the snapshot.
+
+The application can: also use
+slink:XrSpatialDiscoveryPersistenceUuidFilterEXT in the next chain of
+slink:XrSpatialComponentDataQueryConditionEXT to query for entities of
+specific UUIDs in existing snapshots.
+When used with slink:XrSpatialComponentDataQueryConditionEXT, if
+slink:XrSpatialDiscoveryPersistenceUuidFilterEXT::pname:persistedUuids
+contains any slink:XrUuid that is not in the slink:XrSpatialSnapshotEXT, the
+runtime must: not include an entry for that slink:XrUuid in the query
+result.
+Also, the order (sequence) of entities in the query result may: not match
+the order of UUIDs provided in
+slink:XrSpatialDiscoveryPersistenceUuidFilterEXT::pname:persistedUuids.
+Application should: include ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT
+in slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+slink:XrSpatialComponentPersistenceListEXT in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT and then check the
+slink:XrSpatialPersistenceDataEXT::pname:persistUuid of the each query
+result index to understand which UUID the current result index corresponds
+to.
+
+include::{generated}/validity/structs/XrSpatialDiscoveryPersistenceUuidFilterEXT.adoc[]
+--
+
+====== Discover all persisted entities
+
+If the application uses flink:xrCreateSpatialDiscoverySnapshotAsyncEXT
+without slink:XrSpatialDiscoveryPersistenceUuidFilterEXT and with an
+slink:XrSpatialContextEXT which has been configured with an
+slink:XrSpatialPersistenceContextEXT, then the runtime must: include those
+entities in the created snapshot that are persisted in the storage
+represented by slink:XrSpatialPersistenceContextEXT and satisfy the filters
+provided in slink:XrSpatialDiscoverySnapshotCreateInfoEXT.
+For those entities -
+
+* The runtime must: set the elink:XrSpatialPersistenceStateEXT in the
+  slink:XrSpatialPersistenceDataEXT of this entity to
+  ename:XR_SPATIAL_PERSISTENCE_STATE_LOADED_EXT.
+* The runtime must: include a valid basetype:XrSpatialEntityIdEXT for this
+  entity in the created snapshot.
+* The runtime must: set the elink:XrSpatialEntityTrackingStateEXT of that
+  entity to ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT if it is
+  actively tracking the entity and has valid data for its components.
+  Otherwise, the runtime must: set the elink:XrSpatialEntityTrackingStateEXT
+  to ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT.
+
+include::{generated}/interfaces/XR_EXT_spatial_persistence.adoc[leveloffset=1]
+
+==== Example Code
+
+===== Create Persistence Context
+
+[source,C++]
+----
+// Check if the required persistence scope supported
+uint32_t scopeCount;
+CHK_XR(xrEnumerateSpatialPersistenceScopesEXT(instance, systemId, 0, &scopeCount, nullptr));
+std::vector<XrSpatialPersistenceScopeEXT> persistenceScopes(scopeCount);
+CHK_XR(xrEnumerateSpatialPersistenceScopesEXT(instance, systemId, scopeCount, &scopeCount, persistenceScopes.data()));
+
+if (std::find(persistenceScopes.begin(), persistenceScopes.end(), XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT) == persistenceScopes.end()) {
+  return;
+}
+
+XrSpatialPersistenceContextEXT persistenceContext{};
+
+XrSpatialPersistenceContextCreateInfoEXT persistenceContextCreateInfo{XR_TYPE_SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT};
+persistenceContextCreateInfo.scope = XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT;
+XrFutureEXT createContextFuture;
+CHK_XR(xrCreateSpatialPersistenceContextAsyncEXT(session, &persistenceContextCreateInfo, &createContextFuture));
+
+waitUntilReady(createContextFuture);
+
+XrCreateSpatialPersistenceContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT};
+CHK_XR(xrCreateSpatialPersistenceContextCompleteEXT(session, createContextFuture, &completion));
+if (completion.futureResult != XR_SUCCESS || completion.createResult != XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_SUCCESS_EXT) {
+  return;
+}
+
+persistenceContext = completion.persistenceContext;
+
+// ...
+// Connect persistence context to a spatial context and discover persisted entities.
+// ...
+
+CHK_XR(xrDestroySpatialPersistenceContextEXT(persistenceContext));
+----
+
+===== Connect Persistence Context to a Spatial Context
+
+[source,C++]
+----
+// Note: Anchor capability is just used as an example here. Persistence can be
+// supported by other capabilities too. xrEnumerateSpatialCapabilityComponentTypesEXT() can
+// be used to check if a certain capability supports persistence.
+if (!isSpatialCapabilitySupported(instance, systemId, XR_SPATIAL_CAPABILITY_ANCHOR_EXT)) {
+  return;
+}
+
+const bool supportsPersistenceComponent = isSpatialComponentSupported(instance, systemId, XR_SPATIAL_CAPABILITY_ANCHOR_EXT, XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT);
+
+// Create a spatial spatial context
+XrSpatialContextEXT spatialContext{};
+{
+
+  std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+    XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT,
+  };
+
+  if (supportsPersistenceComponent) {
+    enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT);
+  }
+
+  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT};
+  anchorConfig.capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT;
+  anchorConfig.enabledComponentCount = enabledComponents.size();
+  anchorConfig.enabledComponents = enabledComponents.data();
+
+  std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+    reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&anchorConfig),
+  };
+
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+
+  XrSpatialContextPersistenceConfigEXT persistenceConfig{XR_TYPE_SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT};
+  persistenceConfig.persistenceContextCount = 1;
+  persistenceConfig.persistenceContexts = &persistenceContext;
+
+  if (supportsPersistenceComponent) {
+    spatialContextCreateInfo.next = &persistenceConfig;
+  }
+
+  XrFutureEXT createContextFuture;
+  CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+  waitUntilReady(createContextFuture);
+
+  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+  if (completion.futureResult != XR_SUCCESS) {
+    return;
+  }
+
+  spatialContext = completion.spatialContext;
+}
+
+// ...
+// Discover persisted anchors.
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Discover all persisted entities
+
+[source,C++]
+----
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT,
+};
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the semantic label component data
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypeCount = snapshotComponents.size();
+    queryCond.componentTypes = snapshotComponents.data();
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrSpatialPersistenceDataEXT> persistenceData(queryResult.entityIdCountOutput);
+    XrSpatialComponentPersistenceListEXT persistenceDataList{XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT};
+    persistenceDataList.persistDataCount = persistenceData.size();
+    persistenceDataList.persistData = persistenceData.data();
+    queryResult.next = &persistenceDataList;
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      // persistenceData[i].persistUuid is the UUID of the persisted entity whose entity ID is entityIds[i].
+      // The persistenceData array is essentially the uuids persisted in the scope that the current
+      // XrSpatialPersistenceContextEXT is configured with.
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we received the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+===== Discover entities with specific UUIDs
+
+[source,C++]
+----
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+
+// Load up the uuids that the app has stored on its own i.e. the uuids it is interested in.
+std::vector<XrUuid> uuidsStoredByApp = loadPersistedUuids();
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT,
+};
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoveryPersistenceUuidFilterEXT persistenceFilter{XR_TYPE_SPATIAL_DISCOVERY_PERSISTENCE_UUID_FILTER_EXT};
+  persistenceFilter.persistedUuidCount = uuidsStoredByApp.size();
+  persistenceFilter.persistedUuids = uuidsStoredByApp.data();
+
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  snapshotCreateInfo.next = &persistenceFilter;
+
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the semantic label component data
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypeCount = snapshotComponents.size();
+    queryCond.componentTypes = snapshotComponents.data();
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrSpatialPersistenceDataEXT> persistenceData(queryResult.entityIdCountOutput);
+    XrSpatialComponentPersistenceListEXT persistenceDataList{XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT};
+    persistenceDataList.persistDataCount = persistenceData.size();
+    persistenceDataList.persistData = persistenceData.data();
+    queryResult.next = &persistenceDataList;
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (persistenceData[i].persistState == XR_SPATIAL_PERSISTENCE_STATE_LOADED_EXT) {
+        // persistenceData[i].persistUuid, requested by the app, is present in the persistence scope
+        // and its corresponding entity ID and state are entityIds[i] & entityStates[i] respectively.
+      } else if (persistenceData[i].persistState == XR_SPATIAL_PERSISTENCE_STATE_NOT_FOUND_EXT) {
+        // persistenceData[i].persistUuid, requested by the app, is NOT present in the persistence scope
+        // and its corresponding entity ID (entityIds[i]) would be XR_NULL_SPATIAL_ENTITY_ID_EXT
+        // and tracking state (entityStates[i]) would be XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT.
+      }
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we received the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+==== Issues
+
+
+==== Version History
+
+* Revision 1, 2024-08-29 (Nihav Jain, Google)
+** Initial extension description

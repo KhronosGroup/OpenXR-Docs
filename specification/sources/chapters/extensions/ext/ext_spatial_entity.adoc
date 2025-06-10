@@ -1,0 +1,2388 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_entity.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Jared Finder, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Karthik Kadappan, Magic Leap +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension introduces the concepts and foundations for scene
+understanding and spatial reasoning in OpenXR.
+This unifies several related but distinct areas of functionality, which are
+enumerated, configured, and interacted with in a broadly uniform way as
+defined by this extension.
+As this extension lacks concrete definitions of any one of these functional
+areas, the formal specification text tends to be somewhat abstract.
+Examples included in this extension specification text refers at times to
+functionality defined in a forthcoming or hypothetical related extension for
+the purpose of illustration, without inherently limiting or specifying such
+additional functionality.
+
+The broad pieces of this extension are the following:
+
+* <<ext_spatial_entity_entity,Spatial entities>>: The functionality is
+  centered around _entities_, which provide very little functionality on
+  their own.
+* <<ext_spatial_entity_common_components,Spatial components>>: These
+  entities have _components_ associated with them that provide data and
+  behaviors.
+* <<ext_spatial_entity_component_types,Spatial component types>>: Each
+  spatial component is of a specific _component type_, and any given
+  _entity_ has at most a single _component_ of any given _component type_.
+* <<ext_spatial_entity_context,Spatial context>>: All spatial entity
+  interaction occurs in a _context_ after an initialization and
+  configuration phase.
+* <<ext_spatial_entity_capabilities_setup,Spatial capabilities>>: Spatial
+  entity manipulation is broadly provided by _capabilities_.
+  A capability is some unit of functionality, for example (without
+  limitation) application-defined anchors, plane detection, or image
+  tracking.
+  Each _capability_ is typically defined in a separate extension (enabled at
+  instance creation as usual) and is enabled for a specific _context_ at the
+  time of creation.
+* Each _capability_ is associated with a set of _component types_ for which
+  _components_ are present on every entity exposed by that _capability_.
+  The extension defining a _capability_ specifies which _component types_
+  are mandatory for the capability ("guaranteed"), while that same extension
+  or others may: specify optional: _component types_ provided by some
+  potential implementations.
+  Any number of _capabilities_ might provide entities with components of a
+  given _component type_, which are uniformly usable no matter the
+  _capability_ that produced it.
+* <<ext_spatial_entity_capability_features,Spatial capability features>>:
+  Further, some capabilities require configuration, and thus are
+  parameterized by _capability features_.
+
+
+This extension provides a mechanism for enumerating the _components_
+provided by each _capability_ supported on the current system, both the
+mandatory and any optional: _components_.
+
+As some implementations may: require different degrees of parameterization
+for _capabilities_, this extension provides a mechanism for enumerating the
+supported _capability features_ associated with a given _capability_ in the
+current system.
+
+This extension also defines several common _components_ expected to be used
+across a wide range of _capabilities_.
+
+[[ext_spatial_entity_entity]]
+==== Spatial Entity
+
+Spatial entities are entities that exist in some space, that have various
+associated data organized into components.
+They may: be any of the following:
+
+* Physical (e.g. planar surfaces like walls and floors, objects like chairs
+  and bookcases, etc.)
+* Virtual (e.g. content placed and shared by another application or user),
+* App-defined (e.g. application marking an area as the "living room" or
+  "kitchen", or marking a point as the location to place the TV etc.)
+
+Things which are exposed via the action system, like controllers or eye
+gaze, are not intended to be modeled as spatial entities.
+
+Spatial entities in OpenXR are modeled as an _Entity-Component system_.
+Each spatial entity has a set of components, and each component provides a
+unique set of data and behaviors for that entity.
+
+Spatial entities are represented by either an basetype:XrSpatialEntityIdEXT
+atom or an slink:XrSpatialEntityEXT handle, details of which are provided in
+the <<ext_spatial_entity_representations>> section.
+
+[[ext_spatial_entity_component_types]]
+==== Spatial Component Types
+
+A spatial entity has one or more components which provide data or behaviors
+for that entity.
+See <<ext_spatial_entity_common_components>> for some common components
+defined by this extension.
+
+[open,refpage='XrSpatialComponentTypeEXT',type='enums',desc='Type of components',xrefs='xrEnumerateSpatialCapabilityComponentTypesEXT']
+--
+include::{generated}/api/enums/XrSpatialComponentTypeEXT.adoc[]
+
+The elink:XrSpatialComponentTypeEXT enumeration identifies the different
+types of components that the runtime may: support.
+
+Not all component types listed are provided by this extension on its own:
+some require additional extensions to be enabled at instance creation time,
+as documented.
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrSpatialComponentTypeEXT.comments.adoc[]
+--
+
+[[ext_spatial_entity_capabilities_setup]]
+==== Spatial Capabilities and Setup
+
+Spatial capabilities define a runtime's abilities to discover entities that
+have a guaranteed set of components on them.
+Applications enable the components of a spatial capability when creating the
+slink:XrSpatialContextEXT, and the runtime in turn must: provide only the
+enabled components on discovered entities.
+e.g. If a runtime reports that one of the components for a given capability
+is "semantic labels", it means the application can: enable semantic labels
+via the configuration for that capability and the runtime must: only provide
+the semantic label component if it is configured.
+
+[open,refpage='XrSpatialCapabilityEXT',type='enums',desc='Type of spatial capabilities',xrefs='xrEnumerateSpatialCapabilitiesEXT']
+--
+include::{generated}/api/enums/XrSpatialCapabilityEXT.adoc[]
+
+The elink:XrSpatialCapabilityEXT enumeration identifies the different types
+of capabilities that the runtime may: support.
+--
+
+[open,refpage='xrEnumerateSpatialCapabilitiesEXT',type='protos',desc='Enumerate supported spatial capabilities in the selected system.',xrefs='']
+--
+The flink:xrEnumerateSpatialCapabilitiesEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSpatialCapabilitiesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance.
+* pname:systemId is the basetype:XrSystemId whose spatial capabilities will
+  be enumerated.
+* pname:capabilityCapacityInput is the capacity of the pname:capabilities
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:capabilityCountOutput is the number of capabilities, or the required
+  capacity in the case that pname:capabilityCapacityInput is insufficient.
+* pname:capabilities is an array of elink:XrSpatialCapabilityEXT.
+  It can: be code:NULL if pname:capabilityCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:capabilities size.
+****
+
+The application can: enumerate the list of spatial capabilities supported by
+a given basetype:XrSystemId using flink:xrEnumerateSpatialCapabilitiesEXT.
+
+The runtime must: not enumerate the spatial capabilities whose extension is
+not enabled for pname:instance.
+
+include::{generated}/validity/protos/xrEnumerateSpatialCapabilitiesEXT.adoc[]
+--
+
+[open,refpage='xrEnumerateSpatialCapabilityComponentTypesEXT',type='protos',desc='Enumerate supported spatial components for a capability.',xrefs='xrEnumerateSpatialCapabilitiesEXT XrSpatialCapabilityEXT XrSpatialComponentTypeEXT']
+--
+The flink:xrEnumerateSpatialCapabilityComponentTypesEXT function is defined
+as:
+
+include::{generated}/api/protos/xrEnumerateSpatialCapabilityComponentTypesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance.
+* pname:systemId is the basetype:XrSystemId whose spatial capability
+  components will be enumerated.
+* pname:capability is the elink:XrSpatialCapabilityEXT for which the
+  components will be enumerated.
+* pname:capabilityComponents is a pointer to an
+  slink:XrSpatialCapabilityComponentTypesEXT, which is an input/output
+  structure in which an application-allocated array is populated.
+****
+
+This function enumerates the component types that the given capability
+provides on its entities in the system as configured.
+
+The application can: use the component types enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes to
+understand the full set of components that the pname:systemId supports for
+pname:capability and can: use this list to determine what a valid
+configuration for pname:capability is when creating an
+slink:XrSpatialContextEXT for it.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+if pname:capability is not enumerated by
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+The runtime must: not enumerate the spatial component types whose extension
+is not enabled for pname:instance.
+
+include::{generated}/validity/protos/xrEnumerateSpatialCapabilityComponentTypesEXT.adoc[]
+--
+
+[open,refpage='XrSpatialCapabilityComponentTypesEXT',type='structs',desc='Supported components of a spatial capability',xrefs='xrEnumerateSpatialCapabilityComponentTypesEXT']
+--
+The slink:XrSpatialCapabilityComponentTypesEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityComponentTypesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:componentTypeCapacityInput is the capacity of the array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:componentTypeCountOutput is the number of component types, or the
+  required capacity in the case that pname:componentTypeCapacityInput is
+  insufficient.
+* pname:componentTypes is an array of elink:XrSpatialComponentTypeEXT.
+  It can: be code:NULL if pname:componentTypeCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:componentTypes size.
+****
+
+include::{generated}/validity/structs/XrSpatialCapabilityComponentTypesEXT.adoc[]
+--
+
+[open,refpage='XrSpatialCapabilityFeatureEXT',type='enums',desc='Type of spatial capability features',xrefs='xrEnumerateSpatialCapabilityFeaturesEXT']
+--
+include::{generated}/api/enums/XrSpatialCapabilityFeatureEXT.adoc[]
+
+Some capabilities have parameters exposed to the application to configure
+how the component data is computed by the runtime.
+These dimensions of parameterization/configurability are known as capability
+features.
+E.g. for an image tracking capability, a runtime may: support a feature for
+the application to specify whether the tracked images are stationary or not.
+
+Providing this information to the runtime via a configuration structure
+must: not change the set of component types present on the associated
+entities, e.g. on the tracked image.
+However, the runtime may: be able to optimize e.g. the tracking abilities of
+the image tracking capability and provide a better experience to the
+application.
+
+Such features are represented by elink:XrSpatialCapabilityFeatureEXT and the
+application enumerates them by using
+flink:xrEnumerateSpatialCapabilityFeaturesEXT.
+
+Each capability feature has a corresponding configuration structure to
+enable it.
+Such configuration structures must: be chained to
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next of the
+corresponding capability.
+--
+
+[open,refpage='xrEnumerateSpatialCapabilityFeaturesEXT',type='protos',desc='Enumerate supported features for a capability.',xrefs='xrEnumerateSpatialCapabilitiesEXT XrSpatialCapabilityEXT XrSpatialCapabilityFeatureEXT']
+--
+The flink:xrEnumerateSpatialCapabilityFeaturesEXT function is defines as:
+
+include::{generated}/api/protos/xrEnumerateSpatialCapabilityFeaturesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is a handle to an slink:XrInstance.
+* pname:systemId is the basetype:XrSystemId whose spatial capability
+  components will be enumerated.
+* pname:capability is the elink:XrSpatialCapabilityEXT for which the
+  features will be enumerated.
+* pname:capabilityFeatureCapacityInput is the capacity of the array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:capabilityFeatureCountOutput is the number of features, or the
+  required capacity in the case that pname:capabilityFeatureCapacityInput is
+  insufficient.
+* pname:capabilityFeatures is an array of
+  elink:XrSpatialCapabilityFeatureEXT.
+  It can: be code:NULL if pname:capabilityFeatureCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:capabilityFeatures size.
+****
+The application discovers the features supported by a given system for a
+elink:XrSpatialCapabilityEXT by using
+flink:xrEnumerateSpatialCapabilityFeaturesEXT.
+
+For capabilities that have features exposed, the application selects the
+feature or features to enable and provides the corresponding configuration
+structure in the next chain of the capability configuration structures in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+If pname:capability is not a capability enumerated by
+flink:xrEnumerateSpatialCapabilitiesEXT, the runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT.
+
+The runtime must: not enumerate the spatial capability features whose
+extension is not enabled for pname:instance.
+
+include::{generated}/validity/protos/xrEnumerateSpatialCapabilityFeaturesEXT.adoc[]
+--
+
+[[ext_spatial_entity_context]]
+==== Spatial Context
+
+===== Create a spatial context
+
+[open,refpage='XrSpatialContextEXT',type='handles',desc='Represents a spatial context.']
+--
+include::{generated}/api/handles/XrSpatialContextEXT.adoc[]
+
+The slink:XrSpatialContextEXT handle represents the resources for
+discovering and updating some number of spatial entities in the environment
+of the user.
+Application can: use this handle to discover and update spatial entities
+using other functions in this extension.
+--
+
+[open,refpage='xrCreateSpatialContextAsyncEXT',type='protos',desc='Create a spatial context handle.',xrefs='XrSpatialContextCreateInfoEXT xrCreateSpatialContextCompleteEXT XrSpatialContextEXT xrDestroySpatialContextEXT']
+--
+The flink:xrCreateSpatialContextAsyncEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialContextAsyncEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the spatial context will be
+  active.
+* pname:createInfo is the slink:XrSpatialContextCreateInfoEXT used to
+  specify the spatial context parameters.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+
+The application can: create an slink:XrSpatialContextEXT handle by:
+
+* Providing slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+  structures in slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs
+  to enable capabilities and enable components for that capability.
+* Configuring the capabilities themselves with the corresponding
+  configuration structures of its elink:XrSpatialCapabilityFeatureEXT.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT if
+slink:XrSpatialContextCreateInfoEXT::capabilityConfigCount is 0.
+A spatial context handle needs at least one capability.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+if any capability in the
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs array is not
+enumerated by flink:xrEnumerateSpatialCapabilitiesEXT.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT if any
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponentCount
+in slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs is 0.
+A capability configuration is incomplete without a list of component types
+to enable for that capability.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_COMPONENT_UNSUPPORTED_FOR_CAPABILITY_EXT if any
+component type listed in
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+is not enumerated for
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:capability in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT.
+
+If any of the structures in the next chain of
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs corresponds to
+an elink:XrSpatialCapabilityFeatureEXT that is not enumerated for that
+capability in flink:xrEnumerateSpatialCapabilityFeaturesEXT, the runtime
+must: ignore that elink:XrSpatialCapabilityFeatureEXT structure.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT if
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs contains
+multiple structures with the same
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:capability.
+
+To ensure optimal use of system resources, the runtime may: use the
+configurations provided in slink:XrSpatialContextCreateInfoEXT array to
+prepare itself for spatial requests to come in.
+For example, a runtime that supports plane tracking capability may: only
+begin its plane tracking pipeline if a spatial context handle containing the
+plane tracking capability is created by the application.
+If the configured capabilities have a long warm-up time, calls to
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT may: result in an empty
+snapshot.
+Application can: wait for slink:XrEventDataSpatialDiscoveryRecommendedEXT
+before using flink:xrCreateSpatialDiscoverySnapshotAsyncEXT to be sure that
+the underlying tracking services have warmed up.
+
+If a runtime enforces a permission system to control application access to
+the spatial capabilities being configured for the slink:XrSpatialContextEXT,
+then the runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if
+those permissions have not been granted to this application.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrCreateSpatialContextCompleteEXT, usable when a future from this
+function is in the READY state, with outputs populated by that function in
+the completion structure slink:XrCreateSpatialContextCompletionEXT.
+
+include::{generated}/validity/protos/xrCreateSpatialContextAsyncEXT.adoc[]
+--
+
+[open,refpage='XrSpatialContextCreateInfoEXT',type='structs',desc='Information to create a spatial context handle',xrefs='xrCreateSpatialContextAsyncEXT']
+--
+The slink:XrSpatialContextCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialContextCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:capabilityConfigCount is a code:uint32_t describing the count of
+  elements in the pname:capabilityConfigs array.
+* pname:capabilityConfigs is a pointer to an array of
+  slink:XrSpatialCapabilityConfigurationBaseHeaderEXT pointers.
+****
+
+The slink:XrSpatialContextCreateInfoEXT structure describes the information
+to create an slink:XrSpatialContextEXT handle.
+
+include::{generated}/validity/structs/XrSpatialContextCreateInfoEXT.adoc[]
+--
+
+[open,refpage='XrSpatialCapabilityConfigurationBaseHeaderEXT',type='structs',desc='Base structure used to provide information to configure a spatial component',xrefs='xrCreateSpatialContextAsyncEXT XrSpatialContextCreateInfoEXT XrSpatialCapabilityEXT']
+--
+The slink:XrSpatialCapabilityConfigurationBaseHeaderEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationBaseHeaderEXT.adoc[]
+
+This structure is not directly used in the API but instead its child
+structures can: be used with slink:XrSpatialContextCreateInfoEXT to
+configure spatial capabilities.
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+****
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+if pname:capability is not enumerated by
+flink:xrEnumerateSpatialCapabilitiesEXT.
+The runtime must: return
+ename:XR_ERROR_SPATIAL_COMPONENT_UNSUPPORTED_FOR_CAPABILITY_EXT if any
+component type listed in pname:enabledComponents is not enumerated for
+pname:capability in flink:xrEnumerateSpatialCapabilityComponentTypesEXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationBaseHeaderEXT.adoc[]
+--
+
+[open,refpage='xrCreateSpatialContextCompleteEXT',type='protos',desc='Complete the spatial context creation async request',xrefs='xrCreateSpatialContextAsyncEXT XrSpatialContextEXT']
+--
+The flink:xrCreateSpatialContextCompleteEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialContextCompleteEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession previously passed to
+  flink:xrCreateSpatialContextAsyncEXT::pname:session.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrCreateSpatialContextAsyncEXT.
+* pname:completion is a pointer to an
+  slink:XrCreateSpatialContextCompletionEXT.
+****
+
+flink:xrCreateSpatialContextCompleteEXT completes the asynchronous operation
+started by flink:xrCreateSpatialContextAsyncEXT.
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if pname:future
+is not in ready state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if pname:future
+has already been completed or cancelled.
+
+include::{generated}/validity/protos/xrCreateSpatialContextCompleteEXT.adoc[]
+--
+
+[open,refpage='XrCreateSpatialContextCompletionEXT',type='structs',desc='Completion structure to retrieve the spatial context handle.',xrefs='xrCreateSpatialContextCompleteEXT xrCreateSpatialContextAsyncEXT']
+--
+The slink:XrCreateSpatialContextCompletionEXT structure is defined as:
+
+include::{generated}/api/structs/XrCreateSpatialContextCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the spatial context creation
+  operation.
+* pname:spatialContext is an slink:XrSpatialContextEXT created using the
+  data and configuration in
+  flink:xrCreateSpatialContextAsyncEXT::pname:createInfo.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+* ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT
+****
+
+If pname:futureResult is a success code, pname:spatialContext must: be
+valid.
+If pname:spatialContext is valid, it remains so only within the lifecycle of
+flink:xrCreateSpatialContextAsyncEXT::pname:session or until the application
+destroys the pname:spatialContext with flink:xrDestroySpatialContextEXT,
+whichever comes first.
+
+include::{generated}/validity/structs/XrCreateSpatialContextCompletionEXT.adoc[]
+--
+
+===== Destroy the spatial context
+
+[open,refpage='xrDestroySpatialContextEXT',type='protos',desc='Destroy a spatial context handle',xrefs='xrCreateSpatialContextAsyncEXT XrSpatialContextEXT']
+--
+The flink:xrDestroySpatialContextEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialContextEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created by
+  flink:xrCreateSpatialContextAsyncEXT.
+****
+
+The application can: call flink:xrDestroySpatialContextEXT function to
+release the pname:spatialContext handle and the underlying resources when
+finished with spatial entity discovery and update tasks.
+If there is no other valid slink:XrSpatialContextEXT that was created with
+the same spatial capabilities as pname:spatialContext, this call serves as a
+suggestion to the runtime to disable the tracking services required for
+those capabilities to save system resources.
+
+include::{generated}/validity/protos/xrDestroySpatialContextEXT.adoc[]
+--
+
+[[ext_spatial_entity_representations]]
+==== Spatial Entity Representations
+
+===== Spatial Entity ID
+
+[open,refpage='XrSpatialEntityIdEXT',type='basetypes',desc='ID referring to a spatial entity']
+--
+include::{generated}/api/basetypes/XrSpatialEntityIdEXT.adoc[]
+
+basetype:XrSpatialEntityIdEXT is used to represent any kind of entity
+discovered by the runtime in the spatial environment of the user.
+An basetype:XrSpatialEntityIdEXT is valid for the slink:XrSpatialContextEXT
+in which it is discovered, and the runtime must: not reuse the same
+basetype:XrSpatialEntityIdEXT for different entities within the same
+slink:XrSpatialContextEXT.
+Also, the runtime must: not reuse the same basetype:XrSpatialEntityIdEXT
+across multiple slink:XrSpatialContextEXT within the same slink:XrSession
+regardless of whether it represents the same entity or different ones.
+--
+
+[open,refpage='XR_NULL_SPATIAL_ENTITY_ID_EXT',desc='Invalid spatial entity ID',type='defines',xrefs='XrSpatialEntityIdEXT']
+--
+include::{generated}/api/defines/XR_NULL_SPATIAL_ENTITY_ID_EXT.adoc[]
+
+dlink:XR_NULL_SPATIAL_ENTITY_ID_EXT is a reserved value representing an
+invalid basetype:XrSpatialEntityIdEXT.
+It may: be passed to and returned from API functions only when specifically
+allowed.
+--
+
+===== Spatial Entity Handle
+
+[open,refpage='XrSpatialEntityEXT',type='handles',desc='Represents a spatial entity.']
+--
+include::{generated}/api/handles/XrSpatialEntityEXT.adoc[]
+
+The slink:XrSpatialEntityEXT handle represents a spatial entity.
+An application can: create such a handle to express its interest in a
+specific entity to the runtime.
+--
+
+===== Create Spatial Entity Handle from ID
+
+[open,refpage='xrCreateSpatialEntityFromIdEXT',type='protos',desc='Create a spatial entity handle.',xrefs='xrDestroySpatialEntityEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The flink:xrCreateSpatialEntityFromIdEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialEntityFromIdEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to slink:XrSpatialEntityFromIdCreateInfoEXT
+  structure.
+* pname:spatialEntity is the returned slink:XrSpatialEntityEXT handle.
+****
+
+The application can: use flink:xrCreateSpatialEntityFromIdEXT to create an
+slink:XrSpatialEntityEXT handle which is a reference to an entity that
+exists in the user's environment.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_ENTITY_ID_INVALID_EXT if
+slink:XrSpatialEntityFromIdCreateInfoEXT::pname:entityId is not a valid ID
+for pname:spatialContext.
+
+include::{generated}/validity/protos/xrCreateSpatialEntityFromIdEXT.adoc[]
+--
+
+[open,refpage='XrSpatialEntityFromIdCreateInfoEXT',type='structs',desc='Information to create a spatial entity handle',xrefs='xrCreateSpatialEntityFromIdEXT XrSpatialEntityIdEXT XrSpatialEntityEXT']
+--
+The slink:XrSpatialEntityFromIdCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityFromIdCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:entityId is the basetype:XrSpatialEntityIdEXT of the entity that the
+  application wants to create a handle for.
+****
+
+include::{generated}/validity/structs/XrSpatialEntityFromIdCreateInfoEXT.adoc[]
+--
+
+===== Destroy Spatial Entity Handle
+
+[open,refpage='xrDestroySpatialEntityEXT',type='protos',desc='Destroy a spatial entity handle.',xrefs='xrCreateSpatialEntityFromIdEXT']
+--
+The flink:xrDestroySpatialEntityEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialEntityEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialEntity is the returned slink:XrSpatialEntityEXT handle.
+****
+
+The application can: use flink:xrDestroySpatialEntityEXT to release the
+pname:spatialEntity handle when it is no longer interested in the entity
+referenced by this handle.
+
+include::{generated}/validity/protos/xrDestroySpatialEntityEXT.adoc[]
+--
+
+==== Spatial Snapshot
+
+[open,refpage='XrSpatialSnapshotEXT',type='handles',desc='Represents a spatial snapshot.',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+include::{generated}/api/handles/XrSpatialSnapshotEXT.adoc[]
+
+The application can: create spatial snapshots for the purpose of discovering
+spatial entities or for updating its information about known spatial
+entities.
+The slink:XrSpatialSnapshotEXT handle represents the immutable data for the
+discovered or updated spatial entities and a subset of their components as
+selected by the application.
+The spatial snapshot represents a coherent view of the entities and their
+component data.
+Once a snapshot is created, the snapshot's data must: remain constant while
+the snapshot is valid.
+
+The application can: create any number of snapshots it wants but must: be
+mindful of the memory being allocated for each new snapshot and must:
+destroy the snapshots once it no longer needs them.
+--
+
+===== Create discovery snapshot
+
+[open,refpage='xrCreateSpatialDiscoverySnapshotAsyncEXT',type='protos',desc='Create a discovery snapshot',xrefs='xrCreateSpatialDiscoverySnapshotCompleteEXT XrSpatialDiscoverySnapshotCreateInfoEXT XrFutureEXT']
+--
+The flink:xrCreateSpatialDiscoverySnapshotAsyncEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialDiscoverySnapshotAsyncEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created by
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialDiscoverySnapshotCreateInfoEXT.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+
+The application can: discover spatial entities by creating a discovery
+snapshot by using flink:xrCreateSpatialDiscoverySnapshotAsyncEXT.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrCreateSpatialDiscoverySnapshotCompleteEXT, usable when a future from
+this function is in the READY state, with outputs populated by that function
+in the completion structure
+slink:XrCreateSpatialDiscoverySnapshotCompletionEXT.
+
+The application can: submit multiple discovery snapshot creation requests
+without needing to wait for the previous one to be completed.
+The runtime may: process and complete the snapshot creation in any order.
+The runtime may: delay the completion of the discovery snapshot creation to
+throttle the application if it needs to reduce the use of system resources
+due to power, thermal or other policies of the device.
+
+The application can: use
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes to
+filter the list of entities and the components whose data the runtime must:
+include in the snapshot.
+If the application provides a valid list of spatial component types in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes, then
+the runtime must: only include spatial entities in the snapshot that have at
+least one of the components provided in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes.
+Also, the runtime must: only include data for only those components in the
+snapshot.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT if
+any of the elink:XrSpatialComponentTypeEXT in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes are not
+enabled for the spatial capabilities passed to
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when creating
+pname:spatialContext.
+
+If the application does not provide a list of spatial component types in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes, the
+runtime must: include all the spatial entities in the snapshot that have the
+set of components which are enumerated in
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::enabledComponents for
+the capabilities configured for pname:spatialContext.
+The runtime must: include the data for all the enabled components of the
+capabilities configured for pname:spatialContext.
+
+If slink:XrEventDataReferenceSpaceChangePending is queued before the
+completion of pname:future, and
+slink:XrEventDataReferenceSpaceChangePending::pname:poseValid is false, then
+the runtime may: either create an slink:XrSpatialSnapshotEXT that has no
+entities in it or set the elink:XrSpatialEntityTrackingStateEXT of the
+entities that are no longer locatable in
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:baseSpace at
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:time to
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT or
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT.
+The runtime must: not set
+slink:XrCreateSpatialContextCompletionEXT::pname:futureResult to an error
+code because of slink:XrEventDataReferenceSpaceChangePending.
+
+include::{generated}/validity/protos/xrCreateSpatialDiscoverySnapshotAsyncEXT.adoc[]
+--
+
+[open,refpage='XrSpatialDiscoverySnapshotCreateInfoEXT',type='structs',desc='Information to create a spatial discovery snapshot handle',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+The slink:XrSpatialDiscoverySnapshotCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialDiscoverySnapshotCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:componentTypeCount is a code:uint32_t describing the count of
+  elements in the pname:componentTypes array.
+* pname:componentTypes is an array of elink:XrSpatialComponentTypeEXT.
+****
+
+The slink:XrSpatialDiscoverySnapshotCreateInfoEXT structure describes the
+information to create an slink:XrSpatialSnapshotEXT handle when discovering
+spatial entities.
+
+include::{generated}/validity/structs/XrSpatialDiscoverySnapshotCreateInfoEXT.adoc[]
+--
+
+[open,refpage='xrCreateSpatialDiscoverySnapshotCompleteEXT',type='protos',desc='Complete the discovery snapshot creation async request',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT XrSpatialSnapshotEXT']
+--
+The flink:xrCreateSpatialDiscoverySnapshotCompleteEXT function is defined
+as:
+
+include::{generated}/api/protos/xrCreateSpatialDiscoverySnapshotCompleteEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is the slink:XrSpatialContextEXT previously passed to
+  flink:xrCreateSpatialDiscoverySnapshotAsyncEXT::pname:spatialContext.
+* pname:createSnapshotCompletionInfo is a pointer to an
+  slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT which provides
+  info about the discovery snapshot creation request completion.
+* pname:completion is a pointer to an
+  slink:XrCreateSpatialDiscoverySnapshotCompletionEXT.
+****
+
+flink:xrCreateSpatialDiscoverySnapshotCompleteEXT completes the asynchronous
+operation started by flink:xrCreateSpatialDiscoverySnapshotAsyncEXT.
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:future is not
+in ready state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:future has
+already been completed or cancelled.
+
+include::{generated}/validity/protos/xrCreateSpatialDiscoverySnapshotCompleteEXT.adoc[]
+--
+
+[open,refpage='XrCreateSpatialDiscoverySnapshotCompletionInfoEXT',type='structs',desc='Info for the completion of the discovery snapshot creation request.',xrefs='xrCreateSpatialDiscoverySnapshotCompleteEXT xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+The slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrCreateSpatialDiscoverySnapshotCompletionInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:baseSpace is the slink:XrSpace in which all the locations of the
+  discovery slink:XrSpatialSnapshotEXT will be located.
+* pname:time is the basetype:XrTime at which all the locations of the
+  discovery slink:XrSpatialSnapshotEXT will be located.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrCreateSpatialDiscoverySnapshotAsyncEXT
+****
+
+The locations in the various component data included in the created snapshot
+will be represented in pname:baseSpace, located at pname:time.
+
+include::{generated}/validity/structs/XrCreateSpatialDiscoverySnapshotCompletionInfoEXT.adoc[]
+--
+
+[open,refpage='XrCreateSpatialDiscoverySnapshotCompletionEXT',type='structs',desc='Completion structure to retrieve the discovery snapshot handle.',xrefs='xrCreateSpatialDiscoverySnapshotCompleteEXT xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+The slink:XrCreateSpatialDiscoverySnapshotCompletionEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrCreateSpatialDiscoverySnapshotCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the spatial discovery snapshot
+  creation operation.
+* pname:snapshot is an slink:XrSpatialSnapshotEXT which can: be used to
+  query the component data of the discovered spatial entities.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+include::{generated}/validity/structs/XrCreateSpatialDiscoverySnapshotCompletionEXT.adoc[]
+--
+
+===== Discovery Recommendation Event
+
+[open,refpage='XrEventDataSpatialDiscoveryRecommendedEXT',type='structs',desc='Event notifying a recommendation from the system to discover spatial entities.',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT XrSpatialContextEXT xrPollEvent']
+--
+The slink:XrEventDataSpatialDiscoveryRecommendedEXT structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpatialDiscoveryRecommendedEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:spatialContext is the slink:XrSpatialContextEXT for which discovery
+  is being recommended by the runtime.
+****
+
+The application can: retrieve this event by using flink:xrPollEvent.
+The application can: avoid excessive calls to
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT to discover spatial entities
+by waiting for this event.
+If the application creates multiple discovery snapshots with the same
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT between two
+slink:XrEventDataSpatialDiscoveryRecommendedEXT events, the resultant
+snapshots may: contain the same entities and therefore the snapshot creation
+and data queries would be wasteful.
+
+Waiting for this event to create a new discovery snapshot ensures that the
+application is not overloading the system with discovery requests for which
+the runtime may: not return any new data and helps avoid the risk of
+overusing the system resources, and getting throttled due to power or
+thermal policies of the device.
+This also helps create parity between runtimes that are discovering spatial
+entities on the fly with live tracking and runtimes which are providing
+spatial entities off of a previously recorded state (where the runtime may:
+queue the discovery recommendation event only once for each
+slink:XrSpatialContextEXT).
+
+The runtime must: not queue this event for notifying the application about
+changes or adjustments made to the component data of existing spatial
+entities.
+The application can: use the flink:xrCreateSpatialUpdateSnapshotEXT to keep
+track of component data updates for the spatial entities it is interested
+in.
+
+A runtime may: queue a discovery recommendation event without waiting for
+the application to first call
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT.
+For example, a runtime may: base the decision of queueing the discovery
+recommendation event on the configuration of the slink:XrSpatialContextEXT,
+its own understanding of the environment around the user (discovery of new
+entities or loss of existing ones), or for hinting an appropriate discovery
+request cadence to the application so as not to overload the system
+resources.
+The runtime may: choose to never queue this event for an
+slink:XrSpatialContextEXT if no entities are found in the user's environment
+throughout the lifetime of that slink:XrSpatialContextEXT.
+
+The runtime must: not queue this event for a given pname:spatialContext
+until the application completes its creation by using
+flink:xrCreateSpatialContextCompleteEXT.
+
+After the application calls flink:xrDestroySpatialContextEXT, the runtime
+must: not queue any more discovery recommendation events for that spatial
+context nor return any such events for that context from flink:xrPollEvent.
+
+include::{generated}/validity/structs/XrEventDataSpatialDiscoveryRecommendedEXT.adoc[]
+--
+
+===== Query Component Data
+
+[open,refpage='xrQuerySpatialComponentDataEXT',type='protos',desc='Query component data from a snapshot',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT xrCreateSpatialUpdateSnapshotEXT XrSpatialSnapshotEXT xrDestroySpatialSnapshotEXT']
+--
+The flink:xrQuerySpatialComponentDataEXT function is defined as:
+
+include::{generated}/api/protos/xrQuerySpatialComponentDataEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is an slink:XrSpatialSnapshotEXT previously provided by
+  flink:xrCreateSpatialDiscoverySnapshotCompleteEXT or
+  flink:xrCreateSpatialUpdateSnapshotEXT.
+* pname:queryCondition is a pointer to an
+  slink:XrSpatialComponentDataQueryConditionEXT structure.
+* pname:queryResult is a pointer to an
+  slink:XrSpatialComponentDataQueryResultEXT structure.
+****
+
+The application can: use flink:xrQuerySpatialComponentDataEXT to query the
+component data of the entities in the snapshot by attaching a list structure
+to slink:XrSpatialComponentDataQueryResultEXT::pname:next corresponding to
+each elink:XrSpatialComponentTypeEXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+If the application attaches a list structure to
+slink:XrSpatialComponentDataQueryResultEXT::pname:next that does not
+correspond to any of the components listed in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The application can: choose to attach the list structures corresponding to
+only a subset of components listed in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+The application can: choose to omit the list structures altogether if it
+only wishes to know the ids and tracking state of the spatial entities that
+satisfy the pname:queryCondition.
+The runtime must: not treat the absence of list structures from the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain as a failure.
+
+If slink:XrEventDataReferenceSpaceChangePending is queued and
+slink:XrEventDataReferenceSpaceChangePending::pname:changeTime elapsed while
+the application is querying component data from an
+slink:XrSpatialSnapshotEXT, the application may: use the event data to
+adjusted poses accordingly.
+
+The runtime must: populate
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIds only with
+entities that have all the components specified in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+If slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount
+is 0, the runtime must: populate pname:queryResult with all the entities
+(and their tracking states) that are in the snapshot.
+If additional query conditions are added to
+slink:XrSpatialComponentDataQueryConditionEXT::pname:next, the runtime must:
+treat those as an "AND" with the component types availability i.e. the
+runtime must: populate slink:XrSpatialComponentDataQueryResultEXT::entityIds
+only with entities that satisfy all of the provided conditions.
+The runtime must: populate the component data in the list structures in the
+same order as the entities in
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIds i.e. the
+component data at a given index in the list structure array must: correspond
+to the entity at the same index.
+
+If the tracking state for an entity is not
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT, the runtime must: not
+change the data at the index corresponding to that entity in the array
+contained in the list structures attached to
+slink:XrSpatialComponentDataQueryResultEXT.
+
+include::{generated}/validity/protos/xrQuerySpatialComponentDataEXT.adoc[]
+
+As an example the application creates an slink:XrSpatialSnapshotEXT which
+contains 5 entities, where -
+
+* Entity 1 and 2 have components
+  ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT and
+  ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT
+* Entity 3 and 4 have components
+  ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT and
+  ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT
+* Entity 5 has components ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT and
+  ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT.
+
+[[fig-EXT_spatial_entity-query-snapshot-01]]
+image::images/ext_spatial_entity_query_snapshot_01.svg[opts="inline", align="center", title="Example snapshot"]
+
+flink:xrQuerySpatialComponentDataEXT on the above snapshot with
+ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT listed in the query condition
+will result in entity #1, #2, and #5 being returned to the application and
+the application can: attach an array of slink:XrSpatialBounded2DDataEXT as
+part of the slink:XrSpatialComponentBounded2DListEXT structure to the next
+chain of slink:XrSpatialComponentDataQueryResultEXT to get the bounded2D
+data.
+
+[[fig-EXT_spatial_entity-query-snapshot-02]]
+image::images/ext_spatial_entity_query_snapshot_02.svg[opts="inline", align="center", title="Example query result"]
+
+flink:xrQuerySpatialComponentDataEXT on the above snapshot with
+ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT components listed in the query
+condition will result in entity #3 and #4 being returned to the application
+and the application can: attach arrays of slink:XrBoxf and
+slink:XrSpatialMeshDataEXT as part of the
+slink:XrSpatialComponentBounded3DListEXT and
+slink:XrSpatialComponentMesh3DListEXT structures respectively to the next
+chain of slink:XrSpatialComponentDataQueryResultEXT to get the component
+data.
+
+[[fig-EXT_spatial_entity-query-snapshot-03]]
+image::images/ext_spatial_entity_query_snapshot_03.svg[opts="inline", align="center", title="Example query result"]
+
+--
+
+[open,refpage='XrSpatialComponentDataQueryConditionEXT',type='structs',desc='Structure used to get the discovered spatial entities by component type.',xrefs='xrQuerySpatialComponentDataEXT XrSpatialComponentTypeEXT']
+--
+The slink:XrSpatialComponentDataQueryConditionEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentDataQueryConditionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:componentTypeCount is a code:uint32_t describing the count of
+  elements in the pname:componentTypes array.
+* pname:componentTypes is an array of elink:XrSpatialComponentTypeEXT for
+  which to get the data from the snapshot.
+****
+
+include::{generated}/validity/structs/XrSpatialComponentDataQueryConditionEXT.adoc[]
+--
+
+[open,refpage='XrSpatialComponentDataQueryResultEXT',type='structs',desc='Structure containing the snapshot query result.',xrefs='xrQuerySpatialComponentDataEXT']
+--
+The slink:XrSpatialComponentDataQueryResultEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentDataQueryResultEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:entityIdCapacityInput is the capacity of the array, or 0 to indicate
+  a request to retrieve the required capacity.
+* pname:entityIdCountOutput is the number of basetype:XrSpatialEntityIdEXT,
+  or the required capacity in the case that pname:entityIdCapacityInput is
+  insufficient.
+* pname:entityIds is an array of basetype:XrSpatialEntityIdEXT.
+  It can: be code:NULL if pname:entityIdCapacityInput is 0.
+* pname:entityStateCapacityInput is the capacity of the array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:entityStates is an array of elink:XrSpatialEntityTrackingStateEXT.
+  It can: be code:NULL if pname:entityStateCapacityInput is 0.
+* pname:entityStateCountOutput is the number of
+  basetype:XrSpatialEntityIdEXT, or the required capacity in the case that
+  pname:entityIdCapacityInput is insufficient and must: be the same as
+  pname:entityIdCountOutput.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:entityIds size.
+****
+
+An application can: use the pname:entityIds with
+flink:xrCreateSpatialEntityFromIdEXT to create slink:XrSpatialEntityEXT
+handles for the entities it is interested in getting regular updates for.
+The application can: then use these slink:XrSpatialEntityEXT handles with
+flink:xrCreateSpatialUpdateSnapshotEXT to create an update snapshot that has
+the runtime's latest known data of the components for the provided entities.
+
+include::{generated}/validity/structs/XrSpatialComponentDataQueryResultEXT.adoc[]
+--
+
+[open,refpage='XrSpatialEntityTrackingStateEXT',type='enums',desc='Spatial entity tracking states',xrefs='XrSpatialEntityEXT']
+--
+include::{generated}/api/enums/XrSpatialEntityTrackingStateEXT.adoc[]
+
+The elink:XrSpatialEntityTrackingStateEXT enumerates the possible spatial
+entity tracking states:
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrSpatialEntityTrackingStateEXT.comments.adoc[]
+
+[[fig-EXT_spatial_entity-tracking-states]]
+image::images/ext_spatial_entity_tracking_states.svg[opts="inline", align="center", title="elink:XrSpatialEntityTrackingStateEXT"]
+
+* The runtime may: change the state of the spatial entity from
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT to
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT if it suspends the
+  tracking of that spatial entity but has the possibility of resuming its
+  tracking in the future.
+  Some examples of when the runtime may: do this include (but not limited
+  to) if the application loses input focus; or if the given spatial entity
+  is too far from the user to be accurately tracked; or if there are too
+  many entities being tracked and the runtime wants to reduce the cost of
+  tracking.
+  elink:XrSpatialEntityTrackingStateEXT helps the application insulate
+  itself from the different tracking policies of each runtime.
+* The runtime may: change the state of an entity from
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT to
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT or
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT.
+* The runtime must: change the state of the spatial entity from
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT or
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT to
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT if the spatial entity
+  is lost and its tracking will never be recovered or resumed.
+  An example of such a case would be if the device loses tracking, restarts
+  its tracking session but is unable to relocalize in its environment, and
+  therefore treats discovered entities of this tracking session as new
+  entities.
+* Once the tracking state of an entity is set to
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT, the runtime must:
+  never change it any other state.
+* When querying the component data of a spatial entity using
+  flink:xrQuerySpatialComponentDataEXT, the runtime must: set valid data in
+  the contents of the buffers provided by the application in the next chain
+  of slink:XrSpatialComponentDataQueryResultEXT if the entity state is
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT.
+  If the entity state is ename:XR_SPATIAL_ENTITY_TRACKING_STATE_STOPPED_EXT
+  or ename:XR_SPATIAL_ENTITY_TRACKING_STATE_PAUSED_EXT, the runtime must:
+  not change the content of the buffers.
+--
+
+[[ext_spatial_entity_two_call_component_data]]
+===== Two-call idiom for component data
+
+[open,refpage='XrSpatialBufferEXT',type='structs',desc='Spatial buffer',xrefs='XrSpatialBufferIdEXT XrSpatialBufferTypeEXT']
+--
+The slink:XrSpatialBufferEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBufferEXT.adoc[]
+.Member Descriptions
+****
+* pname:bufferId the basetype:XrSpatialBufferIdEXT of the buffer data.
+* pname:bufferType is the elink:XrSpatialBufferTypeEXT to indicate the type
+  of data in pname:bufferId.
+  The application can: use pname:bufferType to determine which function to
+  use to retrieve the actual data of the buffer.
+****
+Some spatial components have variable-sized data and therefore require using
+<<the two-call idiom,fundamentals-buffer-size-parameters>> to retrieve their
+data.
+In such cases, the spatial component data structure provides an
+slink:XrSpatialBufferEXT for each variable sized buffer needed in that
+component's data.
+
+For the same pname:bufferId, the runtime must: provide the same data from
+one component data query to another, even across one snapshot to another.
+A different pname:bufferId between component data query calls indicates to
+the application that the data for that component may: have changed.
+
+include::{generated}/validity/structs/XrSpatialBufferEXT.adoc[]
+--
+
+[open,refpage='XrSpatialBufferIdEXT',type='basetypes',desc='ID referring to a spatial buffer']
+--
+include::{generated}/api/basetypes/XrSpatialBufferIdEXT.adoc[]
+
+basetype:XrSpatialBufferIdEXT is used to represent any kind of variable
+sized data for a spatial component.
+
+The runtime must: keep the basetype:XrSpatialBufferIdEXT and its data in
+memory for at least the lifecycle of the slink:XrSpatialSnapshotEXT that
+contains it.
+The runtime may: keep the basetype:XrSpatialBufferIdEXT and its data in
+memory for longer than the lifecycle of the slink:XrSpatialSnapshotEXT in
+order to return the same ID as part of snapshots created later on by the
+application.
+For the same basetype:XrSpatialBufferIdEXT, the runtime must: always return
+the same data via the appropriate ftext:xrGetSpatialBuffer* function.
+--
+
+[open,refpage='XrSpatialBufferTypeEXT',type='enums',desc='Spatial buffer type',xrefs='XrSpatialBufferEXT XrSpatialBufferIdEXT']
+--
+include::{generated}/api/enums/XrSpatialBufferTypeEXT.adoc[]
+
+The elink:XrSpatialBufferTypeEXT enumeration identifies the different data
+types of the buffer represented basetype:XrSpatialBufferIdEXT.
+
+.Enumerant Descriptions
+****
+* ename:XR_SPATIAL_BUFFER_TYPE_STRING_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferStringEXT to retrieve a string buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferUint8EXT to retrieve a code:uint8_t buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_UINT16_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferUint16EXT to retrieve a code:uint16_t buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_UINT32_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferUint32EXT to retrieve a code:uint32_t buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_FLOAT_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferFloatEXT to retrieve a code:float buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferVector2fEXT to retrieve an slink:XrVector2f
+  buffer.
+* ename:XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT.
+  The basetype:XrSpatialBufferIdEXT can: be passed to
+  flink:xrGetSpatialBufferVector3fEXT to retrieve an slink:XrVector3f
+  buffer.
+****
+--
+
+[open,refpage='xrGetSpatialBufferStringEXT',type='protos',desc='Get string data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferStringEXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferStringEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of code:char.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_STRING_EXT by using
+flink:xrGetSpatialBufferStringEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_STRING_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+pname:buffer filled by the runtime must: be a null-terminated UTF-8 string.
+
+include::{generated}/validity/protos/xrGetSpatialBufferStringEXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferUint8EXT',type='protos',desc='Get uint8_t data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferUint8EXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferUint8EXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of code:uint8_t.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT by using
+flink:xrGetSpatialBufferUint8EXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferUint8EXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferUint16EXT',type='protos',desc='Get uint16_t data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferUint16EXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferUint16EXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of code:uint16_t.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_UINT16_EXT by using
+flink:xrGetSpatialBufferUint16EXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_UINT16_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferUint16EXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferUint32EXT',type='protos',desc='Get uint32_t data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferUint32EXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferUint32EXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of code:uint32_t.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_UINT32_EXT by using
+flink:xrGetSpatialBufferUint32EXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_UINT32_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferUint32EXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferFloatEXT',type='protos',desc='Get float data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferFloatEXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferFloatEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of code:float.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_FLOAT_EXT by using
+flink:xrGetSpatialBufferFloatEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_FLOAT_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferFloatEXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferVector2fEXT',type='protos',desc='Get XrVector2f data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferVector2fEXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferVector2fEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of slink:XrVector2f.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT by using
+flink:xrGetSpatialBufferVector2fEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR2F_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferVector2fEXT.adoc[]
+--
+
+[open,refpage='xrGetSpatialBufferVector3fEXT',type='protos',desc='Get XrVector3f data of a component',xrefs='xrQuerySpatialComponentDataEXT XrSpatialBufferEXT']
+--
+The flink:xrGetSpatialBufferVector3fEXT function is defined as:
+
+include::{generated}/api/protos/xrGetSpatialBufferVector3fEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:info holds the information on the buffer to query.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the number of characters, or the required
+  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:buffer is an array of slink:XrVector3f.
+  It can: be code:NULL if pname:bufferCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+The application can: get the data for an slink:XrSpatialBufferEXT provided
+by a component, where slink:XrSpatialBufferEXT::pname:bufferType is
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT by using
+flink:xrGetSpatialBufferVector3fEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+elink:XrSpatialBufferTypeEXT for
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId is not
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_BUFFER_ID_INVALID_EXT if
+slink:XrSpatialBufferGetInfoEXT::pname:bufferId does not belong to
+pname:snapshot.
+
+include::{generated}/validity/protos/xrGetSpatialBufferVector3fEXT.adoc[]
+--
+
+[open,refpage='XrSpatialBufferGetInfoEXT',type='structs',desc='Data required to get the data for a spatial buffer.',xrefs='XrSpatialBufferIdEXT xrGetSpatialBufferStringEXT']
+--
+The slink:XrSpatialBufferGetInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBufferGetInfoEXT.adoc[]
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:bufferId an basetype:XrSpatialBufferIdEXT for the buffer whose data
+  to retrieve.
+****
+
+include::{generated}/validity/structs/XrSpatialBufferGetInfoEXT.adoc[]
+--
+
+[open,refpage='XR_NULL_SPATIAL_BUFFER_ID_EXT',desc='Invalid spatial buffer ID',type='defines',xrefs='XrSpatialBufferIdEXT']
+--
+include::{generated}/api/defines/XR_NULL_SPATIAL_BUFFER_ID_EXT.adoc[]
+
+dlink:XR_NULL_SPATIAL_BUFFER_ID_EXT is a reserved value representing an
+invalid basetype:XrSpatialBufferIdEXT.
+It may: be passed to and returned from API functions only when specifically
+allowed.
+--
+
+===== Create Update Snapshot
+
+[open,refpage='xrCreateSpatialUpdateSnapshotEXT',type='protos',desc='Create update snapshot.',xrefs='xrQuerySpatialComponentDataEXT xrDestroySpatialSnapshotEXT xrCreateSpatialDiscoverySnapshotAsyncEXT']
+--
+The flink:xrCreateSpatialUpdateSnapshotEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialUpdateSnapshotEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialUpdateSnapshotCreateInfoEXT.
+* pname:snapshot is a pointer to the result slink:XrSpatialSnapshotEXT.
+****
+
+The application can: use flink:xrCreateSpatialUpdateSnapshotEXT to create a
+snapshot and get the latest component data for specific entities as known by
+the runtime.
+Applications can: provide the slink:XrSpatialEntityEXT handles and the
+component types they are interested in when creating the snapshot.
+
+The application can: use
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes to filter
+the list of components whose data must: be included in the snapshot.
+If the application provides a valid list of spatial component types in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes, then the
+runtime must: only include spatial entities in the snapshot that have at
+least one of the components provided in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes.
+Also, the runtime must: only include data for those components in the
+snapshot.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT if
+any of the elink:XrSpatialComponentTypeEXT in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes are not
+enabled for the spatial capabilities passed to
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when creating
+pname:spatialContext.
+
+If the application does not provide a list of spatial component types in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes, the
+runtime must: include all the spatial entities listed in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:entities in the snapshot
+and it must: include the data for all the enabled components of the
+capabilities configured for pname:spatialContext.
+
+The application can: create any number of snapshots it wants but must: be
+mindful of the memory being allocated for each new snapshot and must:
+destroy the snapshots once it no longer needs them.
+
+include::{generated}/validity/protos/xrCreateSpatialUpdateSnapshotEXT.adoc[]
+--
+
+[open,refpage='XrSpatialUpdateSnapshotCreateInfoEXT',type='structs',desc='Information to create an update snapshot',xrefs='xrCreateSpatialUpdateSnapshotEXT']
+--
+The slink:XrSpatialUpdateSnapshotCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialUpdateSnapshotCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:entityCount is a code:uint32_t describing the count of elements in
+  the pname:entities array.
+* pname:entities is an array of slink:XrSpatialEntityEXT for which the
+  runtime must: include the component data in the snapshot.
+* pname:componentTypeCount is a code:uint32_t describing the count of
+  elements in the pname:componentTypes array.
+* pname:componentTypes is an array of elink:XrSpatialComponentTypeEXT for
+  which the runtime must: include the data in the snapshot.
+* pname:baseSpace is the slink:XrSpace relative to which all the locations
+  of the update slink:XrSpatialSnapshotEXT will be located.
+* pname:time is the basetype:XrTime at which all the locations of the update
+  slink:XrSpatialSnapshotEXT will be located.
+****
+
+include::{generated}/validity/structs/XrSpatialUpdateSnapshotCreateInfoEXT.adoc[]
+--
+
+===== Destroy snapshot
+
+[open,refpage='xrDestroySpatialSnapshotEXT',type='protos',desc='Destroy the snapshot',xrefs='xrCreateSpatialDiscoverySnapshotCompleteEXT xrCreateSpatialUpdateSnapshotEXT XrSpatialSnapshotEXT']
+--
+The flink:xrDestroySpatialSnapshotEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialSnapshotEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is an slink:XrSpatialSnapshotEXT previously provided by
+  flink:xrCreateSpatialDiscoverySnapshotCompleteEXT or
+  flink:xrCreateSpatialUpdateSnapshotEXT.
+****
+
+The application can: call flink:xrDestroySpatialSnapshotEXT to destroy the
+slink:XrSpatialSnapshotEXT handle and the resources associated with it.
+
+include::{generated}/validity/protos/xrDestroySpatialSnapshotEXT.adoc[]
+--
+
+[[ext_spatial_entity_common_components]]
+==== Common Components
+
+[[ext_spatial_entity_bounded2D_component]]
+===== Bounded 2D
+
+====== Component data
+
+[open,refpage='XrSpatialBounded2DDataEXT',type='structs',desc='Bounded 2D component data',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialComponentBounded2DListEXT']
+--
+The slink:XrSpatialBounded2DDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBounded2DDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:center is an slink:XrPosef defining the geometric center of the
+  bounded 2D component.
+* pname:extents is extents of the bounded 2D component along the x-axis
+  (extents.width), y-axis (extents.height), centered on pname:center.
+****
+
+The pname:extents of the ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+refer to the entity's size in the [eq]#x-y# plane of the plane's coordinate
+system.
+A plane with a position of {0, 0, 0}, rotation of {0, 0, 0, 1} (no
+rotation), and an extent of {1, 1} refers to a 1 meter x 1 meter plane
+centered at {0, 0, 0} with its front face normal vector pointing towards the
++Z direction in the component's space.
+
+[[fig-EXT_spatial_entity-bounded2D-coordinate-system]]
+image::images/xr_msft_scene_understanding_plane_coordinate_system.svg[opts="inline", align="center", title="Bounded2D Component Coordinate System"]
+
+[NOTE]
+.Note
+====
+OpenXR uses an X-Y plane with +Z as the plane normal but other APIs may: use
+an X-Z plane with +Y as the plane normal.
+The X-Y plane can: be converted to an X-Z plane by rotating [eq]#-{pi}/2#
+radians around the +X axis.
+====
+
+include::{generated}/validity/structs/XrSpatialBounded2DDataEXT.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentBounded2DListEXT',type='structs',desc='List structure for the bounded 2D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialBounded2DDataEXT']
+--
+The slink:XrSpatialComponentBounded2DListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentBounded2DListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:boundCount is a code:uint32_t describing the count of elements in
+  the pname:bounds array.
+* pname:bounds is an array of slink:XrSpatialBounded2DDataEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentBounded2DListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero and ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:boundCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+If flink:xrQuerySpatialComponentDataEXT::pname:snapshot was created from
+flink:xrCreateSpatialDiscoverySnapshotCompleteEXT, then the runtime must:
+provide slink:XrSpatialBounded2DDataEXT::pname:center in
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:baseSpace and
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:time.
+
+If flink:xrQuerySpatialComponentDataEXT::pname:snapshot was created from
+flink:xrCreateSpatialUpdateSnapshotEXT, then the runtime must: provide
+slink:XrSpatialBounded2DDataEXT::pname:center in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:baseSpace and
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:time.
+
+include::{generated}/validity/structs/XrSpatialComponentBounded2DListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum value in
+the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+
+[[ext_spatial_entity_bounded3D_component]]
+===== Bounded 3D
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT uses slink:XrBoxf for its
+data.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentBounded3DListEXT',type='structs',desc='List structure for the bounded 3D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrBoxf']
+--
+The slink:XrSpatialComponentBounded3DListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentBounded3DListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:boundCount is a code:uint32_t describing the count of elements in
+  the pname:bounds array.
+* pname:bounds is an array of slink:XrBoxf.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentBounded3DListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero and ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:boundCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+If flink:xrQuerySpatialComponentDataEXT::pname:snapshot was created from
+flink:xrCreateSpatialDiscoverySnapshotCompleteEXT, then the runtime must:
+provide slink:XrBoxf::pname:center in
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:baseSpace at
+slink:XrCreateSpatialDiscoverySnapshotCompletionInfoEXT::pname:time.
+
+If flink:xrQuerySpatialComponentDataEXT::pname:snapshot was created from
+flink:xrCreateSpatialUpdateSnapshotEXT, then the runtime must: provide
+slink:XrBoxf::pname:center in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:baseSpace at
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:time.
+
+include::{generated}/validity/structs/XrSpatialComponentBounded3DListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+
+[[ext_spatial_entity_parent_component]]
+===== Parent
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT uses
+basetype:XrSpatialEntityIdEXT for its data.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentParentListEXT',type='structs',desc='List structure for the parent component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentParentListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentParentListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:parentCount is a code:uint32_t describing the count of elements in
+  the pname:parents array.
+* pname:parents is an array of basetype:XrSpatialEntityIdEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentParentListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero and ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:parentCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentParentListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+
+[[ext_spatial_entity_mesh3d_component]]
+====== Component data
+
+[open,refpage='XrSpatialMeshDataEXT',type='structs',desc='structure containing the data for a mesh 3D component',xrefs='XrSpatialComponentMesh3DListEXT xrQuerySpatialComponentDataEXT']
+--
+
+The slink:XrSpatialMeshDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialMeshDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:origin is an slink:XrPosef defining the origin of the mesh.
+  All vertices of the mesh must: be relative to this origin.
+* pname:vertexBuffer is an slink:XrSpatialBufferEXT that provides the ID for
+  a buffer that represents the vertex buffer of the entity this component is
+  on.
+  The position of vertices must: be relative to pname:origin.
+* pname:indexBuffer is an slink:XrSpatialBufferEXT that provides the ID for
+  a buffer that represents an array of triangle indices, specifying the
+  indices of the mesh vertices in the pname:vertexBuffer.
+  The triangle indices must: be returned in counter-clockwise order and
+  three indices denote one triangle.
+****
+
+The component type using slink:XrSpatialMeshDataEXT must: specify the
+elink:XrSpatialBufferTypeEXT of the pname:vertexBuffer and
+pname:indexBuffer.
+
+include::{generated}/validity/structs/XrSpatialMeshDataEXT.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMesh3DListEXT',type='structs',desc='List structure for the mesh 3D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialMeshDataEXT']
+--
+The slink:XrSpatialComponentMesh3DListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMesh3DListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:meshCount is a code:uint32_t describing the count of elements in the
+  pname:meshes array.
+* pname:meshes is an array of slink:XrSpatialMeshDataEXT.
+****
+
+The application can: query the mesh 3D component of the spatial entities in
+an slink:XrSpatialSnapshotEXT by adding
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+adding slink:XrSpatialComponentMesh3DListEXT to the next pointer chain of
+slink:XrSpatialComponentDataQueryResultEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMesh3DListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero and ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:meshCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+For the slink:XrSpatialMeshDataEXT filled out by the runtime in the
+pname:meshes array, the slink:XrSpatialBufferEXT::pname:bufferType for
+slink:XrSpatialMeshDataEXT::pname:vertexBuffer must: be
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT and
+slink:XrSpatialBufferEXT::pname:bufferType for
+slink:XrSpatialMeshDataEXT::pname:indexBuffer must: be
+ename:XR_SPATIAL_BUFFER_TYPE_UINT32_EXT.
+
+include::{generated}/validity/structs/XrSpatialComponentMesh3DListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+
+==== Tracking state filters
+
+[open,refpage='XrSpatialFilterTrackingStateEXT',type='structs',desc='List structure for the mesh 3D component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialMeshDataEXT']
+--
+The slink:XrSpatialFilterTrackingStateEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialFilterTrackingStateEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:trackingState is the elink:XrSpatialEntityTrackingStateEXT for which
+  the application wants to apply the filter.
+****
+
+The application can: use slink:XrSpatialFilterTrackingStateEXT in the next
+chain of slink:XrSpatialDiscoverySnapshotCreateInfoEXT to scope the
+discovery to only those entities whose tracking state is
+pname:trackingState.
+
+The application can: use slink:XrSpatialFilterTrackingStateEXT in the next
+chain of slink:XrSpatialComponentDataQueryConditionEXT to scope the
+component data query from a snapshot only to entities whose tracking state
+is pname:trackingState.
+
+include::{generated}/validity/structs/XrSpatialFilterTrackingStateEXT.adoc[]
+--
+
+==== Example code
+
+===== Application Usage
+
+Applications typically use the spatial entity extension in the following
+pattern:
+
+* An application first enumerates the spatial capabilities of the system
+  using flink:xrEnumerateSpatialCapabilitiesEXT.
+  It then inspects the returned array of elink:XrSpatialCapabilityEXT and
+  enumerates the components and features supported for each of those
+  capabilities by using flink:xrEnumerateSpatialCapabilityComponentTypesEXT
+  and flink:xrEnumerateSpatialCapabilityFeaturesEXT respectively.
+  This gives the application a full picture of the components that it can:
+  enable and the configurations the capability accepts.
+
+* The application then creates one or many slink:XrSpatialContextEXT handles
+  with specific spatial capability configurations, wherein the
+  configurations enable & configure a specific capability in the spatial
+  context, and enable & configure components for those capabilities.
+
+* For each slink:XrSpatialContextEXT, the application waits to receive
+  slink:XrEventDataSpatialDiscoveryRecommendedEXT events for that
+  slink:XrSpatialContextEXT before using
+  flink:xrCreateSpatialDiscoverySnapshotAsyncEXT to discover spatial
+  entities.
+  Once this async operation is complete, the application receives a
+  slink:XrSpatialSnapshotEXT handle.
+
+* The application queries for the entities and the component data included
+  in this slink:XrSpatialSnapshotEXT by using
+  flink:xrQuerySpatialComponentDataEXT.
+  The application reads the latest component data of the queried entities
+  from structures attached to the next chain of
+  slink:XrSpatialComponentDataQueryResultEXT if the entity state is
+  ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT.
+
+* If there are specific entities that the application identifies as
+  interesting and wants to get updates for over time, it creates
+  slink:XrSpatialEntityEXT handles for those entities by using
+  flink:xrCreateSpatialEntityFromIdEXT.
+  The application gets updates for such interesting entities by using
+  flink:xrCreateSpatialUpdateSnapshotEXT and use the same
+  flink:xrQuerySpatialComponentDataEXT function on the newly created
+  slink:XrSpatialSnapshotEXT to get the latest component data for those
+  entities.
+
+===== Discover spatial entities & query component data
+
+The following example code demonstrates how to discover spatial entities for
+capability "Foo" query its component data.
+
+[source,C++]
+----
+/****************************/
+/* Capability definition    */
+/****************************/
+// Foo capability has the following components -
+// - XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+#define XR_SPATIAL_CAPABILITY_FOO ((XrSpatialCapabilityEXT)1000740000U)
+
+#define XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_FOO_EXT ((XrStructureType)1000740000U)
+// Derives from XrSpatialCapabilityConfigurationBaseHeaderEXT
+typedef struct XrSpatialCapabilityConfigurationFooEXT {
+  XrStructureType                     type;
+  const void* XR_MAY_ALIAS            next;
+  XrSpatialCapabilityEXT              capability;
+  uint32_t                            enabledComponentCount;
+  const XrSpatialComponentTypeEXT*    enabledComponents;
+} XrSpatialCapabilityConfigurationFooEXT;
+
+/******************************/
+/* End capability definition  */
+/******************************/
+
+auto waitUntilReady = [](XrFutureEXT future) {
+  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+  pollInfo.future = future;
+  do {
+    // sleep(1);
+    CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+  } while (pollResult.state != XR_FUTURE_STATE_READY_EXT);
+};
+
+// Create a spatial spatial context
+XrSpatialContextEXT spatialContext{};
+{
+  const std::array<XrSpatialComponentTypeEXT, 1> enabledComponents = {
+    XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  };
+
+  // Configure Foo capability for the spatial context
+  XrSpatialCapabilityConfigurationFooEXT fooConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_FOO_EXT};
+  fooConfig.capability = XR_SPATIAL_CAPABILITY_FOO;
+  fooConfig.enabledComponentCount = enabledComponents.size();
+  fooConfig.enabledComponents = enabledComponents.data();
+
+  std::vector<XrSpatialCapabilityConfigurationBaseHeaderEXT*> capabilityConfigs;
+  capabilityConfigs.push_back(reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&fooConfig));
+
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+  XrFutureEXT createContextFuture;
+  CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+  waitUntilReady(createContextFuture);
+
+  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+  if (completion.futureResult != XR_SUCCESS) {
+    return;
+  }
+
+  spatialContext = completion.spatialContext;
+}
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  // We want to look for entities that have the following components.
+  std::array<XrSpatialComponentTypeEXT, 1> snapshotComponents {XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT};
+
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  XrFutureEXT future = XR_NULL_FUTURE_EXT;
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+    // Query for the bounded2d component data
+    XrSpatialComponentTypeEXT componentToQuery = XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT;
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypes = &componentToQuery;
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    queryResult.entityIdCapacityInput = 0;
+    queryResult.entityIds = nullptr;
+    queryResult.entityStateCapacityInput = 0;
+    queryResult.entityStates = nullptr;
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityStateCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrSpatialBounded2DDataEXT> bounded2d(queryResult.entityIdCountOutput);
+    XrSpatialComponentBounded2DListEXT boundsList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
+    boundsList.boundCount = bounded2d.size();
+    boundsList.bounds = bounded2d.data();
+    queryResult.next = &boundsList;
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (entityStates[i] == XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+        // 2D extents for entity entityIds[i] is bounded2d[i].extents.
+      }
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we recceived the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Query buffer data
+
+The following example code demonstrates how to get the data of a component
+that provides an slink:XrSpatialBufferEXT.
+
+[source,C++]
+----
+/****************************/
+/* Component definition     */
+/****************************/
+// Foo component that provides an XrVector3f buffer
+#define XR_SPATIAL_COMPONENT_TYPE_FOO_EXT ((XrSpatialComponentTypeEXT)1000740000U)
+
+#define XR_TYPE_SPATIAL_COMPONENT_FOO_LIST_EXT ((XrStructureType)1000740000U)
+
+// XrSpatialComponentFooListEXT extends XrSpatialComponentDataQueryResultEXT
+typedef struct XrSpatialComponentFooListEXT {
+    XrStructureType                   type;
+    void* XR_MAY_ALIAS                next;
+    uint32_t                          fooCount;
+    XrSpatialBufferEXT*               foo;
+} XrSpatialComponentFooListEXT;
+
+/******************************/
+/* End Component definition  */
+/******************************/
+
+// Query for the foo component data
+XrSpatialComponentTypeEXT componentToQuery = XR_SPATIAL_COMPONENT_TYPE_FOO_EXT;
+XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+queryCond.componentTypeCount = 1;
+queryCond.componentTypes = &componentToQuery;
+
+XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+
+std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+queryResult.entityIdCapacityInput = entityIds.size();
+queryResult.entityIds = entityIds.data();
+
+std::vector<XrSpatialBufferEXT> fooBuffers(queryResult.entityIdCountOutput);
+XrSpatialComponentFooListEXT fooList{XR_TYPE_SPATIAL_COMPONENT_FOO_LIST_EXT};
+fooList.fooCount = fooBuffers.size();
+fooList.foo = fooBuffers.data();
+queryResult.next = &fooList;
+
+CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+
+for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+  // foo component data for entity entityIds[i]
+  if (fooBuffers[i].bufferType == XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT) {
+    XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
+    getInfo.bufferId = fooBuffers[i].bufferId;
+    uint32_t bufferCountOutput;
+    CHK_XR(xrGetSpatialBufferVector3fEXT(snapshot, &getInfo, 0, &bufferCountOutput, nullptr));
+    std::vector<XrVector3f> vertexBuffer(bufferCountOutput);
+    CHK_XR(xrGetSpatialBufferVector3fEXT(snapshot, &getInfo, bufferCountOutput, &bufferCountOutput, vertexBuffer.data()));
+
+    // XrVertex3f buffer for entity entityIds[i] is now available in vertexBuffer vector.
+  }
+}
+
+----
+
+[[ext_spatial_entity_extension_guidelines]]
+==== Extension guidelines
+
+* If an extension is defining a new elink:XrSpatialComponentTypeEXT which
+  provides additional data about a spatial entity,
+** the extension must: also define a list structure for that component which
+   allows the application to pass an array to the runtime to fill out with
+   the data for each of the spatial entities that satisfy
+   flink:xrQuerySpatialComponentDataEXT::pname:queryCondition.
+   Some examples of such list structures are
+   slink:XrSpatialComponentParentListEXT and
+   slink:XrSpatialComponentBounded2DListEXT.
+   If the component data size is variable and requires the application to
+   use <<the two-call idiom,fundamentals-buffer-size-parameters>> to query
+   it, the component data should: provide an slink:XrSpatialBufferEXT for
+   each variable-sized data in the list structure and it must: specify the
+   elink:XrSpatialBufferTypeEXT for each buffer.
+   Application can: then query the buffer data using functions defined in
+   <<ext_spatial_entity_two_call_component_data>>.
+   An example of such a structure is slink:XrSpatialMeshDataEXT which is
+   included slink:XrSpatialComponentMesh3DListEXT.
+** The extension can: also provide structures that the application can:
+   chain to slink:XrSpatialComponentDataQueryConditionEXT::pname:next to
+   provide additional filters for the query pertaining to the data of this
+   component.
+* Extensions can: define structures that extend
+  slink:XrSpatialDiscoverySnapshotCreateInfoEXT to provide additional
+  filters for discovery.
+  The filters for creating the snapshot must: not affect the configuration
+  of the spatial context, but instead are to be used to provide hints to the
+  runtime on what entities and data are to be included in the snapshot as
+  tracked by the current configuration of the spatial context (and therefore
+  the current configuration of the underlying services).
+* If an extension defines a new elink:XrSpatialCapabilityEXT,
+** it should: also specify the list of elink:XrSpatialComponentTypeEXT that
+   the runtimes must: provide on entities for that capability.
+** it must: also provide structures derived from
+   slink:XrSpatialCapabilityConfigurationBaseHeaderEXT that will allow the
+   configuration of that capability.
+* If an extension defines a new elink:XrSpatialCapabilityFeatureEXT, it
+  must: also define a corresponding configuration structure that can: be
+  chained to the next pointer of
+  slink:XrSpatialCapabilityConfigurationBaseHeaderEXT, that the application
+  can: use to enable the feature when creating an slink:XrSpatialContextEXT.
+* An extension defining a new elink:XrSpatialCapabilityEXT should: follow
+  this template for the specification -
+** Overview
+** Runtime support
+** Configuration
+** Guaranteed components
+** Example Code
+* An extension defining a new elink:XrSpatialComponentTypeEXT should: follow
+  this template for the specification -
+** Component data
+** Component list structure to query data
+** Configuration
+* When writing an api that provides the application with a
+  basetype:XrSpatialBufferIdEXT, it must: be accompanied with a
+  elink:XrSpatialBufferTypeEXT to inform the application what the data type
+  of the buffer is and the application can: use an appropriate
+  ftext:xrGetSpatialBuffer* function to retrieve the actual contents of the
+  buffer.
+
+include::{generated}/interfaces/XR_EXT_spatial_entity.adoc[leveloffset=1]
+
+==== Issues
+
+* Does a single entity always derive from solely a single capability?
+** Resolved
+** Answer: No.
+   It is completely upto the runtime based on its own tracking capabilities
+   and how it wants to represent a detected entity.
+   The spec does not prescribe any particular representation of spatial
+   entity except for the guaranteed components of a given capability to set
+   a minimum expectation.
+   A runtime may: be able to merge entities detected by separate
+   capabilities and represent them as a single entity with the guaranteed
+   components of all the capabilities that helped identify it.
+   An example of this could be that tables can be detected by both a plane
+   tracking capability and an object tracking capability, with plane
+   tracking providing the ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+   component on the entity and object tracking providing
+   ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT.
+   A certain runtime may: provide the table as 2 separate entities, each
+   with their own set of guaranteed components, while certain runtimes may:
+   provide just 1 entity to represent the table, and have both
+   ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT and
+   ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT on the same entity.
+   What is important to note here is that a given spatial entity can have at
+   most a single _component_ of any given _component type_.
+   Therefore, if the component data produced by the different capabilities
+   conflicts for a certain entity, the runtime must: represent them as 2
+   separate entities.
+
+==== Version History
+
+* Revision 1, 2024-04-12 (Nihav Jain, Google)
+** Initial extension description

@@ -17,6 +17,84 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.49 (2025-06-10)
+
+This release includes a collection of ratified multi-vendor extensions related
+to "spatial entities." See the article on the Khronos web site for more. It also
+includes multi-vendor extensions to work with interaction render models, as well
+as a new vendor extension.
+
+- Specification
+  - New ratified multi-vendor extension specification: `XR_EXT_spatial_entity`
+    provides foundational functionality for representing and interacting with
+    spatial elements in the user's environment.
+    ([internal MR 3030](https://gitlab.khronos.org/openxr/openxr/merge_requests/3030))
+  - New ratified multi-vendor extension specification: `XR_EXT_spatial_anchor`
+    enables precise positioning of virtual content relative to real-world
+    locations.
+    ([internal MR 3286](https://gitlab.khronos.org/openxr/openxr/merge_requests/3286))
+  - New ratified multi-vendor extension specification:
+    `XR_EXT_spatial_plane_tracking` provides for detection and spatial tracking of
+    real-world surfaces.
+    ([internal MR 3402](https://gitlab.khronos.org/openxr/openxr/merge_requests/3402))
+  - New ratified multi-vendor extension specification:
+    `XR_EXT_spatial_marker_tracking` provides 6 DOF (Degree of Freedom) tracking of
+    visual markers such as QR codes in the environment.
+    ([internal MR 3414](https://gitlab.khronos.org/openxr/openxr/merge_requests/3414))
+  - New ratified multi-vendor extension specification: `XR_EXT_spatial_persistence`
+    allows spatial context to persist across application sessions.
+    ([internal MR 3533](https://gitlab.khronos.org/openxr/openxr/merge_requests/3533))
+  - New ratified multi-vendor extension specification:
+    `XR_EXT_spatial_persistence_operations` provides for advanced management of
+    persistent spatial data.
+    ([internal MR 3606](https://gitlab.khronos.org/openxr/openxr/merge_requests/3606))
+  - New multi-vendor extension specification: `XR_EXT_render_model`, providing a
+    uniform way to obtain, locate, and animate glTF models supplied by the runtime.
+    ([internal MR 2464](https://gitlab.khronos.org/openxr/openxr/merge_requests/2464),
+    [internal MR 2095](https://gitlab.khronos.org/openxr/openxr/merge_requests/2095),
+    [internal MR 3225](https://gitlab.khronos.org/openxr/openxr/merge_requests/3225),
+    [internal MR 3617](https://gitlab.khronos.org/openxr/openxr/merge_requests/3617))
+  - New multi-vendor extension specification: `XR_EXT_interaction_render_models`,
+    providing a way to render and animate the exact hardware the user is
+    interacting with (often called "controller models"), built on top of the core
+    functionality of `XR_EXT_render_models`.
+    ([internal MR 2615](https://gitlab.khronos.org/openxr/openxr/merge_requests/2615),
+    [internal issue 2353](https://gitlab.khronos.org/openxr/openxr/issues/2353),
+    [internal MR 3551](https://gitlab.khronos.org/openxr/openxr/merge_requests/3551),
+    [internal MR 3629](https://gitlab.khronos.org/openxr/openxr/merge_requests/3629),
+    [internal MR 3710](https://gitlab.khronos.org/openxr/openxr/merge_requests/3710))
+  - New vendor extension specification: `XR_BD_spatial_plane` provides discovery of
+    planes in the environment in conjunction with `XR_BD_spatial_sensing`.
+    ([internal MR 3777](https://gitlab.khronos.org/openxr/openxr/merge_requests/3777))
+- Registry
+  - New ratified multi-vendor extension: `XR_EXT_spatial_entity`
+    ([internal MR 3030](https://gitlab.khronos.org/openxr/openxr/merge_requests/3030),
+    [internal MR 3874](https://gitlab.khronos.org/openxr/openxr/merge_requests/3874))
+  - New ratified multi-vendor extension: `XR_EXT_spatial_anchor`
+    ([internal MR 3286](https://gitlab.khronos.org/openxr/openxr/merge_requests/3286),
+    [internal MR 3874](https://gitlab.khronos.org/openxr/openxr/merge_requests/3874))
+  - New ratified multi-vendor extension: `XR_EXT_spatial_plane_tracking`
+    ([internal MR 3402](https://gitlab.khronos.org/openxr/openxr/merge_requests/3402))
+  - New ratified multi-vendor extension: `XR_EXT_spatial_marker_tracking`
+    ([internal MR 3414](https://gitlab.khronos.org/openxr/openxr/merge_requests/3414))
+  - New ratified multi-vendor extension: `XR_EXT_spatial_persistence`
+    ([internal MR 3533](https://gitlab.khronos.org/openxr/openxr/merge_requests/3533),
+    [internal MR 3874](https://gitlab.khronos.org/openxr/openxr/merge_requests/3874))
+  - New ratified multi-vendor extension: `XR_EXT_spatial_persistence_operations`
+    ([internal MR 3606](https://gitlab.khronos.org/openxr/openxr/merge_requests/3606))
+  - New multi-vendor extension: `XR_EXT_render_model`
+    ([internal MR 2464](https://gitlab.khronos.org/openxr/openxr/merge_requests/2464),
+    [internal MR 2095](https://gitlab.khronos.org/openxr/openxr/merge_requests/2095),
+    [internal MR 3225](https://gitlab.khronos.org/openxr/openxr/merge_requests/3225))
+  - New multi-vendor extension: `XR_EXT_interaction_render_models`
+    ([internal MR 2615](https://gitlab.khronos.org/openxr/openxr/merge_requests/2615),
+    [internal issue 2353](https://gitlab.khronos.org/openxr/openxr/issues/2353),
+    [internal MR 3551](https://gitlab.khronos.org/openxr/openxr/merge_requests/3551),
+    [internal MR 3629](https://gitlab.khronos.org/openxr/openxr/merge_requests/3629),
+    [internal MR 3710](https://gitlab.khronos.org/openxr/openxr/merge_requests/3710))
+  - New vendor extension: `XR_BD_spatial_plane`
+    ([internal MR 3777](https://gitlab.khronos.org/openxr/openxr/merge_requests/3777))
+
 ## OpenXR Specification 1.1.48 (2025-06-03)
 
 This release contains a substantial amount of clarification and cleanup to the

@@ -1,0 +1,402 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_persistence_operations.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Jared Finder, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+While apiext:XR_EXT_spatial_persistence allows applications to discover
+persisted entities, this extension allows applications to persist and
+unpersist spatial entities.
+
+==== Persist spatial entities
+
+[open,refpage='xrPersistSpatialEntityAsyncEXT',type='protos',desc='Persist a spatial entity.',xrefs='XrSpatialEntityPersistInfoEXT xrPersistSpatialEntityCompleteEXT XrSpatialPersistenceContextEXT XrSpatialContextEXT XrSpatialEntityIdEXT']
+--
+The flink:xrPersistSpatialEntityAsyncEXT function is defined as:
+
+include::{generated}/api/protos/xrPersistSpatialEntityAsyncEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:persistenceContext is an slink:XrSpatialPersistenceContextEXT
+  previously created using flink:xrCreateSpatialPersistenceContextAsyncEXT.
+* pname:persistInfo is the slink:XrSpatialEntityPersistInfoEXT used to
+  specify the persist operation parameters.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+An application can: persist a spatial entity using the
+flink:xrPersistSpatialEntityAsyncEXT function.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_ENTITY_ID_INVALID_EXT if
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId does not belong
+to slink:XrSpatialEntityPersistInfoEXT::pname:spatialContext.
+
+The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if the
+elink:XrSpatialPersistenceScopeEXT that pname:persistenceContext was
+configured with is a read-only scope and does not allow applications to
+modify the storage represented by it.
+An example of this would be if pname:persistenceContext was created with
+ename:XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT and the application
+uses flink:xrPersistSpatialEntityAsyncEXT with that
+pname:persistenceContext.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT if the
+elink:XrSpatialPersistenceScopeEXT that pname:persistenceContext was
+configured does allow the application to persist entities of its choice in
+the storage but slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId
+is not covered in the configured scope.
+An example of this would be if the persistence context scope is set to
+ename:XR_SPATIAL_PERSISTENCE_SCOPE_LOCAL_ANCHORS_EXT, and
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId does not
+represent an anchor.
+
+The runtime must: not return an error if
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialContext was not configured
+with pname:persistenceContext using
+slink:XrSpatialContextPersistenceConfigEXT.
+Using flink:xrPersistSpatialEntityAsyncEXT does not require that
+pname:persistenceContext be connected with the spatial context.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrPersistSpatialEntityCompleteEXT, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure
+slink:XrPersistSpatialEntityCompletionEXT.
+
+If the elink:XrSpatialEntityTrackingStateEXT of
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId is not
+ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT when
+flink:xrPersistSpatialEntityAsyncEXT is called, the runtime must: not return
+an error from this function or set
+slink:XrPersistSpatialEntityCompletionEXT::pname:futureResult to an error
+code to indicate this.
+The runtime may: either set pname:future to the <<XrFutureStateEXT,READY>>
+state immediately and set
+slink:XrPersistSpatialEntityCompletionEXT::pname:persistResult to
+ename:XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_ENTITY_NOT_TRACKING_EXT to
+indicate the lack of tracking state, or wait for the entity to get into
+tracking state as part of the async operation and set
+slink:XrPersistSpatialEntityCompletionEXT::pname:persistResult to
+ename:XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_ENTITY_NOT_TRACKING_EXT if the
+entity does not get into tracking state until a runtime determined timeout.
+A common usage pattern of applications is to create a spatial anchor using
+flink:xrCreateSpatialAnchorEXT and then immediately request to persist the
+newly created spatial anchor using flink:xrPersistSpatialEntityAsyncEXT.
+apiext:XR_EXT_spatial_anchor states that the tracking state of an anchor
+may: not be ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT immediately
+upon its creation.
+For such cases, the runtime should: wait for the anchor to get into tracking
+state as part of the persist async operation instead of immediately setting
+pname:future to the <<XrFutureStateEXT,READY>> state and fail the operation
+with ename:XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_ENTITY_NOT_TRACKING_EXT
+only if the anchor does not get into tracking state within a runtime
+determined timeout.
+
+If the spatial entity represented by
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId has already been
+persisted in the scope associated with pname:persistenceContext, the runtime
+must: not treat that as an error but instead complete the async operation
+successfully and provide the appropriate persist UUID to the application.
+
+include::{generated}/validity/protos/xrPersistSpatialEntityAsyncEXT.adoc[]
+--
+
+[open,refpage='XrSpatialEntityPersistInfoEXT',type='structs',desc='Information to persist a spatial entity',xrefs='xrPersistSpatialEntityAsyncEXT']
+--
+The slink:XrSpatialEntityPersistInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityPersistInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:spatialContext is an slink:XrSpatialContextEXT to which
+  pname:spatialEntityId belongs.
+* pname:spatialEntityId is an basetype:XrSpatialEntityIdEXT of the spatial
+  entity that is to be persisted.
+****
+
+The slink:XrSpatialEntityPersistInfoEXT structure describes the information
+to persist a spatial entity represented by pname:spatialEntityId in an
+slink:XrSpatialPersistenceContextEXT.
+
+include::{generated}/validity/structs/XrSpatialEntityPersistInfoEXT.adoc[]
+--
+
+[open,refpage='xrPersistSpatialEntityCompleteEXT',type='protos',desc='Complete the spatial entity persist async request',xrefs='xrPersistSpatialEntityAsyncEXT XrPersistSpatialEntityCompletionEXT XrSpatialPersistenceContextEXT']
+--
+The flink:xrPersistSpatialEntityCompleteEXT function is defined as:
+
+include::{generated}/api/protos/xrPersistSpatialEntityCompleteEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:persistenceContext is the slink:XrSpatialPersistenceContextEXT
+  previously passed to
+  flink:xrPersistSpatialEntityAsyncEXT::pname:persistenceContext.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrPersistSpatialEntityAsyncEXT.
+* pname:completion is a pointer to an
+  slink:XrPersistSpatialEntityCompletionEXT.
+****
+
+flink:xrPersistSpatialEntityCompleteEXT completes the asynchronous operation
+started by flink:xrPersistSpatialEntityAsyncEXT.
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if pname:future
+is not in <<XrFutureStateEXT,READY>> state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if pname:future
+has already been completed or cancelled.
+
+This is the completion function corresponding to the operation started by
+flink:xrPersistSpatialEntityAsyncEXT.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+If slink:XrPersistSpatialEntityCompletionEXT::pname:persistUuid is a UUID
+that has already been provided to the application either via a previous
+successful completion of flink:xrPersistSpatialEntityAsyncEXT or by
+discovering existing persisted entities, then the
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId must: represent
+the same entity as the one the UUID was originally provided for.
+
+include::{generated}/validity/protos/xrPersistSpatialEntityCompleteEXT.adoc[]
+--
+
+[open,refpage='XrPersistSpatialEntityCompletionEXT',type='structs',desc='Completion structure to retrieve the spatial entity persist result.',xrefs='xrPersistSpatialEntityAsyncEXT xrPersistSpatialEntityCompleteEXT XrSpatialPersistenceContextResultEXT']
+--
+The slink:XrPersistSpatialEntityCompletionEXT structure is defined as:
+
+include::{generated}/api/structs/XrPersistSpatialEntityCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the spatial persistence
+  context creation operation.
+* pname:persistResult is the elink:XrSpatialPersistenceContextResultEXT of
+  the spatial entity persist operation.
+* pname:persistUuid is an slink:XrUuid that the application can: use to
+  identify the persisted spatial entity across sessions.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+If pname:futureResult and pname:persistResult are both success codes,
+pname:persistUuid must: be valid and the application can: use it to identify
+the persisted spatial entity across sessions.
+
+The runtime must: set pname:persistResult to
+ename:XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_ENTITY_NOT_TRACKING_EXT if it
+lost tracking of the entity represented by
+slink:XrSpatialEntityPersistInfoEXT::pname:spatialEntityId before it could
+be successfully persisted.
+
+The runtime must: set pname:persistResult only if pname:futureResult is a
+success code.
+
+include::{generated}/validity/structs/XrPersistSpatialEntityCompletionEXT.adoc[]
+--
+
+==== Unpersist spatial entities
+
+[open,refpage='xrUnpersistSpatialEntityAsyncEXT',type='protos',desc='Persist a spatial entity.',xrefs='XrSpatialEntityUnpersistInfoEXT xrUnpersistSpatialEntityCompleteEXT XrSpatialPersistenceContextEXT']
+--
+The flink:xrUnpersistSpatialEntityAsyncEXT function is defined as:
+
+include::{generated}/api/protos/xrUnpersistSpatialEntityAsyncEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:persistenceContext is an slink:XrSpatialPersistenceContextEXT
+  previously created using flink:xrCreateSpatialPersistenceContextAsyncEXT.
+* pname:unpersistInfo is the slink:XrSpatialEntityUnpersistInfoEXT used to
+  specify the unpersist operation parameters.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+An application can: unpersist a spatial entity using the
+flink:xrUnpersistSpatialEntityAsyncEXT function.
+
+The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if the
+elink:XrSpatialPersistenceScopeEXT that pname:persistenceContext was
+configured with is a read-only scope and does not allow applications to
+modify the storage represented by it.
+An example of this would be if pname:persistenceContext was created with
+ename:XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT and application uses
+flink:xrUnpersistSpatialEntityAsyncEXT with that pname:persistenceContext.
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrUnpersistSpatialEntityCompleteEXT, usable when a future from this
+function is in the <<XrFutureStateEXT,READY>> state, with outputs populated
+by that function in the completion structure
+slink:XrUnpersistSpatialEntityCompletionEXT.
+
+include::{generated}/validity/protos/xrUnpersistSpatialEntityAsyncEXT.adoc[]
+--
+
+[open,refpage='XrSpatialEntityUnpersistInfoEXT',type='structs',desc='Information to unpersist a previously persisted spatial entity',xrefs='xrUnpersistSpatialEntityAsyncEXT']
+--
+The slink:XrSpatialEntityUnpersistInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialEntityUnpersistInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:persistUuid is an slink:XrUuid prepresting the spatial entity that
+  is to be unpersisted.
+****
+
+The slink:XrSpatialEntityUnpersistInfoEXT structure describes the
+information to unpersist a spatial entity previously persisted using
+flink:xrPersistSpatialEntityAsyncEXT.
+
+include::{generated}/validity/structs/XrSpatialEntityUnpersistInfoEXT.adoc[]
+--
+
+[open,refpage='xrUnpersistSpatialEntityCompleteEXT',type='protos',desc='Complete the spatial entity persist async request',xrefs='xrUnpersistSpatialEntityAsyncEXT XrUnpersistSpatialEntityCompletionEXT XrSpatialPersistenceContextEXT']
+--
+The flink:xrUnpersistSpatialEntityCompleteEXT function is defined as:
+
+include::{generated}/api/protos/xrUnpersistSpatialEntityCompleteEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:persistenceContext is the slink:XrSpatialPersistenceContextEXT
+  previously passed to
+  flink:xrUnpersistSpatialEntityAsyncEXT::pname:persistenceContext.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrUnpersistSpatialEntityAsyncEXT.
+* pname:completion is a pointer to an
+  slink:XrUnpersistSpatialEntityCompletionEXT.
+****
+
+flink:xrUnpersistSpatialEntityCompleteEXT completes the asynchronous
+operation started by flink:xrUnpersistSpatialEntityAsyncEXT.
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if pname:future
+is not in <<XrFutureStateEXT,READY>> state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if pname:future
+has already been completed or cancelled.
+
+This is the completion function corresponding to
+flink:xrUnpersistSpatialEntityAsyncEXT.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+include::{generated}/validity/protos/xrUnpersistSpatialEntityCompleteEXT.adoc[]
+--
+
+[open,refpage='XrUnpersistSpatialEntityCompletionEXT',type='structs',desc='Completion structure to retrieve the spatial entity unpersist result.',xrefs='xrUnpersistSpatialEntityAsyncEXT xrUnpersistSpatialEntityCompleteEXT XrSpatialPersistenceContextResultEXT']
+--
+The slink:XrUnpersistSpatialEntityCompletionEXT structure is defined as:
+
+include::{generated}/api/structs/XrUnpersistSpatialEntityCompletionEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the spatial entity unpersist
+  operation.
+* pname:unpersistResult is the elink:XrSpatialPersistenceContextResultEXT of
+  the spatial entity unpersist operation.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+The runtime must: set pname:unpersistResult only if pname:futureResult is a
+success code.
+
+If slink:XrSpatialEntityUnpersistInfoEXT::pname:persistUuid is not found in
+the storage represented by
+flink:xrUnpersistSpatialEntityCompleteEXT::pname:persistenceContext, then
+the runtime must: set pname:unpersistResult to
+ename:XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_PERSIST_UUID_NOT_FOUND_EXT.
+
+include::{generated}/validity/structs/XrUnpersistSpatialEntityCompletionEXT.adoc[]
+--
+
+==== Anchor Persistence Local Scope
+
+If the runtime supports persistence for spatial anchors, and stores them on
+the same device, for the same user and application that originally created
+it, it must: indicate this by enumerating
+ename:XR_SPATIAL_PERSISTENCE_SCOPE_LOCAL_ANCHORS_EXT in
+flink:xrEnumerateSpatialPersistenceScopesEXT.
+
+If a runtime enumerates ename:XR_SPATIAL_PERSISTENCE_SCOPE_LOCAL_ANCHORS_EXT
+in flink:xrEnumerateSpatialPersistenceScopesEXT, the runtime must: also
+enumerate ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT in
+flink:xrEnumerateSpatialCapabilitiesEXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT for
+ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT.
+
+include::{generated}/interfaces/XR_EXT_spatial_persistence_operations.adoc[leveloffset=1]
+
+==== Issues
+
+
+==== Version History
+
+* Revision 1, 2024-08-29 (Nihav Jain, Google)
+** Initial extension description

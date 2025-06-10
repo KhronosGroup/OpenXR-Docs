@@ -1,0 +1,649 @@
+// Copyright (c) 2017-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_marker_tracking.adoc[]
+
+*Contributors*::
+    Ron Bessems, Meta +
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and allows
+applications to detect and track markers in their environment.
+Markers are 2D codes which may: include QR Codes, Micro QR Codes, ArUco
+markers, or AprilTags.
+
+A tracked marker is represented as a spatial entity with (or "that has") the
+following components:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+
+==== Runtime support
+
+A runtime must: advertise its support for the various marker tracking
+capabilities using flink:xrEnumerateSpatialCapabilitiesEXT by listing any of
+the following capabilities:
+
+* ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT
+* ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE_EXT
+* ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_ARUCO_MARKER_EXT
+* ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_APRIL_TAG_EXT
+
+==== Configuration
+
+To enable detection of a marker type the application must: pass the
+corresponding configuration structure to
+flink:xrCreateSpatialContextAsyncEXT.
+
+===== Marker Type Configurations
+
+====== QR codes
+
+[open,refpage='XrSpatialCapabilityConfigurationQrCodeEXT',type='structs',desc='QR Code configuration',xrefs=xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationQrCodeEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationQrCodeEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability must: be
+  ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT.
+* pname:enabledComponentCount is a code:uint32_t with the number of elements
+  in pname:enabledComponents.
+* pname:enabledComponents is a pointer to an array of components to enable
+  for this capability.
+****
+
+If QR codes are supported, the runtime must: enable QR Code tracking when an
+slink:XrSpatialCapabilityConfigurationQrCodeEXT structure is passed in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when calling
+flink:xrCreateSpatialContextAsyncEXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+if ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT is not enumerated
+by flink:xrEnumerateSpatialCapabilitiesEXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationQrCodeEXT.adoc[]
+--
+
+====== Micro QR codes
+
+[open,refpage='XrSpatialCapabilityConfigurationMicroQrCodeEXT',type='structs',desc='Micro QR Code configuration',xrefs=xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationMicroQrCodeEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationMicroQrCodeEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability must: be
+  ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE_EXT.
+* pname:enabledComponentCount is a code:uint32_t with the number of elements
+  in pname:enabledComponents.
+* pname:enabledComponents is a pointer to an array of components to enable
+  for this capability.
+****
+
+If Micro QR codes are supported, the runtime must: enable Micro QR Code
+tracking when an slink:XrSpatialCapabilityConfigurationMicroQrCodeEXT
+structure is passed in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when calling
+flink:xrCreateSpatialContextAsyncEXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+if ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE_EXT is not
+enumerated by flink:xrEnumerateSpatialCapabilitiesEXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationMicroQrCodeEXT.adoc[]
+--
+
+====== ArUco Markers
+
+[open,refpage='XrSpatialCapabilityConfigurationArucoMarkerEXT',type='structs',desc='ArUco marker configuration',xrefs=xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationArucoMarkerEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationArucoMarkerEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability must: be
+  ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_ARUCO_MARKER_EXT.
+* pname:enabledComponentCount is a code:uint32_t with the number of elements
+  in pname:enabledComponents.
+* pname:enabledComponents is a pointer to an array of components to enable
+  for this capability.
+* pname:arUcoDict is the marker dictionary to detect.
+****
+
+If ArUco markers are supported, the runtime must: enable ArUco marker
+tracking when an slink:XrSpatialCapabilityConfigurationArucoMarkerEXT
+structure is passed in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when calling
+flink:xrCreateSpatialContextAsyncEXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+from flink:xrCreateSpatialContextAsyncEXT if an
+slink:XrSpatialCapabilityConfigurationArucoMarkerEXT structure is in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs but
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_ARUCO_MARKER_EXT is not
+enumerated by flink:xrEnumerateSpatialCapabilitiesEXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationArucoMarkerEXT.adoc[]
+--
+
+[open,refpage='XrSpatialMarkerArucoDictEXT',desc='ArUco dictionaries',type='enums']
+--
+The elink:XrSpatialMarkerArucoDictEXT enumeration is defined as:
+
+include::{generated}/api/enums/XrSpatialMarkerArucoDictEXT.adoc[]
+
+Supported predefined ArUco dictionary:
+
+include::{generated}/api/enums/XrSpatialMarkerArucoDictEXT.comments-box.adoc[]
+--
+
+====== AprilTags
+
+[open,refpage='XrSpatialCapabilityConfigurationAprilTagEXT',type='structs',desc='AprilTags configuration',xrefs=xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationAprilTagEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationAprilTagEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability must: be
+  ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_APRIL_TAG_EXT.
+* pname:enabledComponentCount is a code:uint32_t with the number of elements
+  in pname:enabledComponents.
+* pname:enabledComponents is a pointer to an array of components to enable
+  for this capability.
+* pname:aprilDict is the marker dictionary to detect.
+****
+
+If AprilTags are supported, the runtime must: enable AprilTag tracking when
+an slink:XrSpatialCapabilityConfigurationAprilTagEXT structure is passed in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs when calling
+flink:xrCreateSpatialContextAsyncEXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_CAPABILITY_UNSUPPORTED_EXT
+from flink:xrCreateSpatialContextAsyncEXT if an
+slink:XrSpatialCapabilityConfigurationAprilTagEXT structure is in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs but
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_APRIL_TAG_EXT is not enumerated
+by flink:xrEnumerateSpatialCapabilitiesEXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationAprilTagEXT.adoc[]
+--
+
+[open,refpage='XrSpatialMarkerAprilTagDictEXT',desc='AprilTag dictionaries',type='enums']
+--
+The elink:XrSpatialMarkerAprilTagDictEXT enumeration is defined as:
+
+include::{generated}/api/enums/XrSpatialMarkerAprilTagDictEXT.adoc[]
+
+Supported predefined AprilTag dictionary:
+
+include::{generated}/api/enums/XrSpatialMarkerAprilTagDictEXT.comments-box.adoc[]
+--
+
+===== Optional Marker Configurations
+
+Applications should: call flink:xrEnumerateSpatialCapabilityFeaturesEXT to
+get the list of supported optional features.
+
+See elink:XrSpatialCapabilityFeatureEXT for a complete list of all spatial
+capability features supported by any extension.
+
+====== Marker Size
+
+[open,refpage='XrSpatialMarkerSizeEXT',type='structs',desc='Provide expected marker size to runtime',xrefs=xrefs='']
+--
+
+The slink:XrSpatialMarkerSizeEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialMarkerSizeEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:markerSideLength is the size in meters of all markers.
+****
+
+If
+ename:XR_SPATIAL_CAPABILITY_FEATURE_MARKER_TRACKING_FIXED_SIZE_MARKERS_EXT
+is enumerated by flink:xrEnumerateSpatialCapabilityFeaturesEXT for a certain
+capability, and if the application chains slink:XrSpatialMarkerSizeEXT to
+the corresponding configuration structure of that capability, the runtime
+must: assume that all markers detected have width and height of
+pname:markerSideLength.
+Providing this information to the runtime allows the runtime to return a
+more accurate pose and size.
+This structure must: be linked into the pname:next chain of
+slink:XrSpatialCapabilityConfigurationQrCodeEXT,
+slink:XrSpatialCapabilityConfigurationMicroQrCodeEXT,
+slink:XrSpatialCapabilityConfigurationArucoMarkerEXT, or
+slink:XrSpatialCapabilityConfigurationAprilTagEXT.
+
+include::{generated}/validity/structs/XrSpatialMarkerSizeEXT.adoc[]
+--
+
+====== Static Marker Optimization
+
+[open,refpage='XrSpatialMarkerStaticOptimizationEXT',type='structs',desc='Provide information that markers do not move',xrefs=xrefs='']
+--
+
+The slink:XrSpatialMarkerStaticOptimizationEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialMarkerStaticOptimizationEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:optimizeForStaticMarker indicates if all markers in the space are
+  expected to not move.
+****
+
+If ename:XR_SPATIAL_CAPABILITY_FEATURE_MARKER_TRACKING_STATIC_MARKERS_EXT is
+enumerated by flink:xrEnumerateSpatialCapabilityFeaturesEXT for a certain
+capability, and if the application chains
+slink:XrSpatialMarkerStaticOptimizationEXT to the corresponding
+configuration structure of that capability, the runtime must: assume that
+all markers detected are static if pname:optimizeForStaticMarker is set to
+ename:XR_TRUE.
+This allows the runtime to generate a more accurate pose and size.
+This structure must: be linked into the pname:next chain of
+slink:XrSpatialCapabilityConfigurationQrCodeEXT,
+slink:XrSpatialCapabilityConfigurationMicroQrCodeEXT,
+slink:XrSpatialCapabilityConfigurationArucoMarkerEXT, or
+slink:XrSpatialCapabilityConfigurationAprilTagEXT.
+
+include::{generated}/validity/structs/XrSpatialMarkerStaticOptimizationEXT.adoc[]
+--
+
+==== Guaranteed Components
+
+A runtime that supports
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT,
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE_EXT,
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_ARUCO_MARKER_EXT, or
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_APRIL_TAG_EXT must: provide the
+following spatial components as guaranteed components of all entities
+discovered by those capabilities, and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT
+
+===== Marker Component
+
+====== Component data
+
+[open,refpage='XrSpatialMarkerDataEXT',type='structs',desc='Marker Information',xrefs='XrSpatialComponentMarkerListEXT']
+--
+
+The slink:XrSpatialMarkerDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialMarkerDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:capability is the elink:XrSpatialCapabilityEXT that detected the
+  marker.
+* pname:markerId is the encoded identifier from the marker.
+  For ArUco markers and AprilTag this field must: be valid and filled with
+  the encoded ID.
+  For QR codes this field must: be zero.
+* pname:data is the buffer ID and type of additional information contained
+  in the marker.
+****
+
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT and
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE_EXT support extra
+data.
+If pname:capability is one of these -
+
+* If the runtime has successfully decoded the data for the marker, it must:
+  set the pname:data buffer type to either
+  ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT or
+  ename:XR_SPATIAL_BUFFER_TYPE_STRING_EXT, depending on the data in the
+  marker.
+  The runtime must: also set a valid buffer ID in pname:data which the
+  application can: use with the appropriate ftext:xrGetSpatialBuffer*
+  function to get the data.
+* If the runtime has not yet decoded the data of the marker, it must: set
+  pname:data buffer ID to dlink:XR_NULL_SPATIAL_BUFFER_ID_EXT and the buffer
+  type to ename:XR_SPATIAL_BUFFER_TYPE_UNKNOWN_EXT.
+
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_ARUCO_MARKER_EXT and
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_APRIL_TAG_EXT do not support
+extra data and the runtime must: set the buffer ID of pname:data to
+dlink:XR_NULL_SPATIAL_BUFFER_ID_EXT.
+
+include::{generated}/validity/structs/XrSpatialMarkerDataEXT.adoc[]
+--
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMarkerListEXT',type='structs',desc='List structure for the marker component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentMarkerListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMarkerListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:markerCount is the number of elements in the pname:markers member.
+* pname:markers is an array of slink:XrSpatialMarkerDataEXT.
+****
+
+The application can: query the marker component of the spatial entities in
+an slink:XrSpatialSnapshotEXT by adding
+ename:XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+adding slink:XrSpatialComponentMarkerListEXT to the next pointer chain of
+slink:XrSpatialComponentDataQueryResultEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMarkerListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+ename:XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:markerCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentMarkerListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+===== Bounded 2D Component
+
+The bounded 2D component provides the center and extents of the marker
+represented by the entity it is on.
+See <<ext_spatial_entity_bounded2D_component>> for more details about the
+bounded 2D component.
+
+The slink:XrSpatialBounded2DDataEXT::pname:center must: point to the center
+of the marker.
+When looking at the front face of the marker, the X-axis must: point to the
+right, and the Y-axis must: point to the top of the marker.
+The runtime must: follow the right-handed coordinate system convention thus
+the Z-axis comes out of the front face of the marker.
+This means that a marker with a position of {0, 0, 0}, rotation of {0, 0, 0,
+1} (no rotation), and an extent of {1, 1} refers to a 1 meter x 1 meter
+marker centered at {0, 0, 0} with its front face normal vector pointing
+towards the +Z direction in the component's space.
+
+A representation of the orientation of the marker is shown below.
+
+image::images/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
+
+==== Test Codes
+
+The following codes must: have their X-Y plane inside the document and the
+Z-axis pointing at the viewer.
+The axis origin must: appear at the center of each marker.
+The X-axis must: point to the right, the Y-axis must: point to the top of
+the document.
+
+image::images/ext_marker_tracking_qr.svg[align="center", title="QR code with text 'OpenXR'"]
+
+image::images/ext_marker_tracking_apriltag.svg[align="center", title="AprilTag ename:XR_SPATIAL_MARKER_APRIL_TAG_DICT_36H11_EXT with ID 42"]
+
+image::images/ext_marker_tracking_aruco.svg[align="center", title="ArUco marker ename:XR_SPATIAL_MARKER_ARUCO_DICT_5X5_50_EXT with ID 43"]
+
+==== Example Code
+
+===== Configure QR Code Tracking Capability
+
+The following example code demonstrates how to configure the QR code
+tracking capability when creating a spatial context.
+
+[source,C++]
+----
+// Check if marker tracking capability is supported
+uint32_t capabilityCount;
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
+std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
+
+if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT) == capabilities.end()) {
+  return;
+}
+
+uint32_t featureCount = 0;
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT, 0, &featureCount, nullptr));
+std::vector<XrSpatialCapabilityFeatureEXT> capabilityFeatures(featureCount);
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT, featureCount, &featureCount, capabilityFeatures.data()));
+
+bool supportsFixedMarkerSize = std::find(capabilityFeatures.begin(), capabilityFeatures.end(), XR_SPATIAL_CAPABILITY_FEATURE_MARKER_TRACKING_FIXED_SIZE_MARKERS_EXT) != capabilityFeatures.end();
+
+// Create a spatial context
+XrSpatialContextEXT spatialContext{};
+
+// Enable the 2 guaranteed components of the qr code tracking capability
+std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT,
+};
+XrSpatialCapabilityConfigurationQrCodeEXT markerConfiguration{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_QR_CODE_EXT};
+markerConfiguration.capability = XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT;
+markerConfiguration.enabledComponentCount = static_cast<uint32_t>(enabledComponents.size());
+markerConfiguration.enabledComponents = enabledComponents.data();
+
+// only chained if features.markerSideLength is true.
+XrSpatialMarkerSizeEXT markerSize{XR_TYPE_SPATIAL_MARKER_SIZE_EXT};
+markerSize.markerSideLength = 0.10f;
+if (supportsFixedMarkerSize) {
+  markerConfiguration.next = &markerSize;
+}
+
+
+std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+  reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&markerConfiguration),
+};
+
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+XrFutureEXT createContextFuture;
+CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+waitUntilReady(createContextFuture);
+
+XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+if (completion.futureResult != XR_SUCCESS) {
+  return;
+}
+
+spatialContext = completion.spatialContext;
+
+// ...
+// Discovery entities with the spatial context
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Discover Spatial Entities & Query Component Data
+
+The following example code demonstrates how to discover spatial entities for
+a context configured with
+ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT and query its
+component data.
+
+[source,C++]
+----
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT,
+};
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the bounded2D and marker component data
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypeCount = snapshotComponents.size();
+    queryCond.componentTypes = snapshotComponents.data();
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrSpatialBounded2DDataEXT> bounded2D(queryResult.entityIdCountOutput);
+    XrSpatialComponentBounded2DListEXT bounded2DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
+    bounded2DList.boundCount = bounded2D.size();
+    bounded2DList.bounds = bounded2D.data();
+    queryResult.next = &bounded2DList;
+
+    std::vector<XrSpatialMarkerDataEXT> markers;
+    XrSpatialComponentMarkerListEXT markerList{XR_TYPE_SPATIAL_COMPONENT_MARKER_LIST_EXT};
+    markers.resize(queryResult.entityIdCountOutput);
+    markerList.markerCount = markers.size();
+    markerList.markers = markers.data();
+    bounded2DList.next = &markerList;
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (entityStates[i] != XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+        continue;
+      }
+
+      // 2D bounds for entity entityIds[i] is bounded2D[i].extents centered on bounded2D[i].center.
+
+      if (markers[i].capability == XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT) {
+        // Check if marker data has been decoded.
+        if (markers[i].data.bufferId != XR_NULL_SPATIAL_BUFFER_ID_EXT) {
+          if (markers[i].data.bufferType == XR_SPATIAL_BUFFER_TYPE_STRING_EXT) {
+            // Qr Code data can be queried using
+            // XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
+            // info.bufferId = markers[i].data.bufferId;
+            // xrGetSpatialBufferStringEXT(completion.snapshot, &getInfo, ...)
+          } else if (markers[i].data.bufferType == XR_SPATIAL_BUFFER_TYPE_UINT8_EXT) {
+            // Qr Code data can be queried using
+            // XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
+            // info.bufferId = markers[i].data.bufferId;
+            // xrGetSpatialBufferUint8(completion.snapshot, &getInfo, ...)
+          }
+        }
+      }
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we received the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+include::{generated}/interfaces/XR_EXT_spatial_marker_tracking.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2024-07-29 (Ron Bessems, Meta)
+** Initial extension description

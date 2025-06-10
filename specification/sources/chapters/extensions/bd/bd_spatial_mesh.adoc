@@ -50,6 +50,11 @@ ifdef::XR_BD_spatial_scene[]
 This permission is also used by apiext:XR_BD_spatial_scene.
 endif::XR_BD_spatial_scene[]
 
+ifdef::XR_BD_spatial_plane[]
+This permission is also used by apiext:XR_BD_spatial_plane.
+endif::XR_BD_spatial_plane[]
+
+
 ==== Inspect System Capability
 
 [open,refpage='XrSystemSpatialMeshPropertiesBD',type='structs',desc='System property for spatial mesh.',xrefs='XrSystemProperties xrGetSystemProperties']

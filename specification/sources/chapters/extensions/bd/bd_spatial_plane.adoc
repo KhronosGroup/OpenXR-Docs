@@ -1,0 +1,249 @@
+// Copyright (c) 2024 ByteDance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_plane.adoc[]
+
+*Last Modified Date*::
+    2025-03-31
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Xu Yang, ByteDance +
+    Zhipeng Liu, ByteDance
+
+
+==== Overview
+
+This extension allows applications to request the runtime to detect and
+track planes in the physical environment.
+This extension requires apiext:XR_BD_spatial_sensing to be enabled.
+
+
+==== Permission
+
+A runtime on an Android-based platform must: verify that applications have
+the reflink:com.picovr.permission.SPATIAL_DATA permission both listed in
+their manifest and granted to use spatial plane functionality.
+Without it, runtime must: set
+slink:XrFutureCompletionEXT::pname:futureResult to
+ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
+flink:xrStartSenseDataProviderCompleteBD function is called.
+
+This is an auto-requested permission: if it is listed in the manifest but
+not yet granted or denied, the runtime must: prompt the user to grant or
+deny the permission when flink:xrCreateSenseDataProviderBD is called with a
+provider type that requires it.
+
+ifdef::XR_BD_spatial_anchor[]
+This permission is also used by apiext:XR_BD_spatial_anchor.
+endif::XR_BD_spatial_anchor[]
+
+
+ifdef::XR_BD_spatial_mesh[]
+This permission is also used by apiext:XR_BD_spatial_mesh.
+endif::XR_BD_spatial_mesh[]
+
+
+ifdef::XR_BD_spatial_scene[]
+This permission is also used by apiext:XR_BD_spatial_scene.
+endif::XR_BD_spatial_scene[]
+
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpatialPlanePropertiesBD',type='structs',desc='System property for spatial plane.',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpatialPlanePropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemSpatialPlanePropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsSpatialPlane is an basetype:XrBool32, indicating if the
+  current system is capable of spatial plane functionality.
+****
+
+An application can: inspect whether the system is capable of spatial plane
+functionality by chaining an slink:XrSystemSpatialPlanePropertiesBD
+structure to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsSpatialPlane, the
+system does not support spatial plane functionality, and the runtime must:
+return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateSenseDataProviderBD when called with
+ename:XR_SENSE_DATA_PROVIDER_TYPE_PLANE_BD.
+
+The application should: avoid using spatial plane functionality when
+pname:supportsSpatialPlane is ename:XR_FALSE.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsSpatialPlane must: also be
+ename:XR_FALSE.
+
+If the runtime returns ename:XR_TRUE for pname:supportsSpatialPlane, the
+system supports spatial plane functionality.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing must:
+also be ename:XR_TRUE.
+
+Note that pname:supportsSpatialPlane may: be ename:XR_TRUE even if running
+on an Android-based platform and the application does not have the required
+reflink:com.picovr.permission.SPATIAL_DATA permission both declared in the
+manifest and granted at runtime.
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemSpatialPlanePropertiesBD.adoc[]
+--
+
+
+==== Create Spatial Plane Provider
+
+Applications create an slink:XrSenseDataProviderBD handle representing a
+spatial plane provider by calling flink:xrCreateSenseDataProviderBD, and
+setting slink:XrSenseDataProviderCreateInfoBD::pname:providerType to the
+elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_PLANE_BD.
+
+Applications use this provider handle to obtain information about spatial
+planes that are detected and tracked by the runtime.
+This data generally consists of spatial entities with at least a plane
+orientation component which corresponds to an
+elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_PLANE_ORIENTATION_BD and a triangle
+mesh component which corresponds to an elink:XrSpatialEntityComponentTypeBD
+value of ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD.
+
+This provider type does not define any configuration and does not require a
+chained structure.
+
+==== Start Spatial Plane Provider
+
+Applications start the spatial plane data provider by calling
+flink:xrStartSenseDataProviderAsyncBD after it has been successfully
+created.
+To check the data provider state, call flink:xrGetSenseDataProviderStateBD.
+
+Subsequent application operations using this provider handle must: not be
+performed unless the data provider state is
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD.
+If the data provider state is not
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD and the application intends to
+use the provider, the application must: take appropriate action and call
+flink:xrStartSenseDataProviderAsyncBD again before using the handle.
+
+Detailed definitions and usage details are described in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Get Spatial Plane Data
+
+Applications query the latest detected spatial planes from the spatial plane
+data provider by calling flink:xrQuerySenseDataAsyncBD.
+The runtime generates a snapshot of the spatial plane information, from
+which the application can: obtain detailed spatial plane information.
+The plane information is presented in the form of spatial entities which the
+application queries by calling flink:xrGetQueriedSenseDataBD.
+Use flink:xrEnumerateSpatialEntityComponentTypesBD to get the types of
+components contained within these entities, such as location, semantics,
+vertices and indices.
+To further retrieve component data information, call
+flink:xrGetSpatialEntityComponentDataBD.
+
+When the runtime's understanding of the detected spatial planes changes, the
+runtime must: queue an slink:XrEventDataSenseDataUpdatedBD event with the
+handle of the spatial plane provider.
+
+Receiving this event signals to the application that updated plane data is
+available to query from the sense data provider.
+A new query request for this sense data provider will get the latest,
+updated plane data.
+This is the recommended way to get updated data.
+
+The application may: also initiate a new query request at any time without
+receiving this event, but the queried data may: be unmodified.
+
+All the functions to get spatial plane info are defined in
+apiext:XR_BD_spatial_sensing.
+
+
+==== Acquire Plane Orientation
+
+[open,refpage='XrPlaneOrientationBD',type='enums',desc='orientation of the spatial plane.',xrefs='XrSpatialEntityComponentDataPlaneOrientationBD']
+--
+The elink:XrPlaneOrientationBD enumeration identifies the different
+orientation of a spatial plane.
+include::{generated}/api/enums/XrPlaneOrientationBD.adoc[]
+include::{generated}/api/enums/XrPlaneOrientationBD.comments.adoc[]
+--
+
+[open,refpage='XrSpatialEntityComponentDataPlaneOrientationBD',desc='Spatial entity plane orientation component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
+--
+The slink:XrSpatialEntityComponentDataPlaneOrientationBD structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataPlaneOrientationBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:orientation is the pointer to elink:XrPlaneOrientationBD.
+****
+
+slink:XrSpatialEntityComponentDataPlaneOrientationBD is an output structure
+for getting the plane orientation component data from a snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_PLANE_ORIENTATION_BD.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataPlaneOrientationBD.adoc[]
+--
+
+
+==== Spatial Plane Component Orientation Filter
+
+[open,refpage='XrSenseDataFilterPlaneOrientationBD',type='structs',desc='Plane orientation filter',xrefs='']
+--
+The slink:XrSenseDataFilterPlaneOrientationBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataFilterPlaneOrientationBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:orientationCount is the count of elink:XrPlaneOrientationBD.
+* pname:orientations is a pointer to the elink:XrPlaneOrientationBD array.
+****
+
+The slink:XrSenseDataFilterPlaneOrientationBD structure contains a list of
+plane orientations.
+When the application passes this filter, all sense data that matches the
+criteria in the filter is included in the result returned.
+The runtime must: not include sense data that does not match the provided
+filter.
+
+include::{generated}/validity/structs/XrSenseDataFilterPlaneOrientationBD.adoc[]
+--
+
+
+include::{generated}/interfaces/XR_BD_spatial_plane.adoc[leveloffset=1]
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-03-31 (Xu Yang)
+
+** Initial extension description
+

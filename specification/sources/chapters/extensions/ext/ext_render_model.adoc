@@ -1,0 +1,1251 @@
+// Copyright (c) 2018-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_render_model.adoc[]
+
+*Contributors*::
+    Darryl Gough, Microsoft +
+    Yin Li, Microsoft +
+    Bryce Hutchings, Microsoft +
+    Joe Ludwig, Valve +
+    Nathan Nuber, Valve +
+    Rylie Pavlik, Collabora +
+    Wenlin Mao, Meta Platforms +
+    Dan Willmott, Valve +
+    Jakob Bornecrantz, Collabora +
+    Leonard Tsai, Meta Platforms +
+    Paulo Gomes, Samsung Electronics +
+    Lachlan Ford, Google +
+
+
+==== Overview
+
+This extension enables the application to retrieve a {uri-gltf2}[glTF 2.0
+render model asset] from a runtime and animate parts of the model.
+Other extensions depending on this one specify how to obtain a render model
+ID, and may: specify further restrictions on glTF assets associated with IDs
+they produce.
+
+// Non-normative note: should not contain any normative macros
+[NOTE]
+.Note
+====
+An OpenXR application typically uses a render model as follows:
+
+1. Obtain an basetype:XrRenderModelIdEXT, valid for an slink:XrSession, from
+   the runtime using another extension.
+
+2. Create an slink:XrRenderModelEXT handle using the render model ID and the
+   corresponding session, using flink:xrCreateRenderModelEXT.
+
+3. Retrieve the UUID of the model asset data from the render model handle
+   using the flink:xrGetRenderModelPropertiesEXT function.
+
+4. Create an slink:XrRenderModelAssetEXT handle using the UUID, to request
+   that the runtime make the asset data available.
+
+   * Reading and processing the glTF asset data can be a slow operation,
+     possibly involving storage or network access, and the application
+     should avoid doing the work in latency sensitive threads.
+     The slink:XrRenderModelPropertiesEXT::pname:cacheId is an
+     slink:XrUuidEXT type to identify the asset data, and the application
+     can use this UUID as a key to cache the glTF, node names, and processed
+     data within or across multiple XR sessions.
+     This cache can be kept locally but is not be distributed with an
+     application.
+
+5. Use the two-call idiom function flink:xrGetRenderModelAssetDataEXT to get
+   the glTF asset, and get the names of animatable nodes with
+   flink:xrGetRenderModelAssetPropertiesEXT.
+   Once this is complete, flink:xrDestroyRenderModelAssetEXT can be called.
+
+6. Process the glTF asset as your application requires, and populate an
+   array of references to nodes in the glTF tree by finding the nodes with
+   the names returned from flink:xrGetRenderModelAssetPropertiesEXT.
+
+7. Create an slink:XrSpace to locate the model, using
+   flink:xrCreateRenderModelSpaceEXT.
+
+8. During the render loop, repeatedly do the following:
+
+   * Use the flink:xrLocateSpace function on the render model space, to know
+     where to render the origin of the glTF model and whether to render it
+     at all.
+     Do not render a given render model if position and orientation are not
+     tracked.
+
+   * Use flink:xrGetRenderModelPropertiesEXT to retrieve the pose and
+     visibility of each animatable node on the glTF asset, which were found
+     in the asset in step 6.
+     This results in animating the render model according to
+     runtime-provided parameters, such as physical state like the tilt of a
+     thumbstick on a controller.
+====
+// End of non-normative note: normative macros may resume
+
+[[ext_render_model-choices]]
+==== Choices Delegated to Related Extensions
+
+This extension is permissive in its design to accommodate a variety of use
+cases for runtime-provided, application-rendered glTF assets.
+Extensions that build on this one are encouraged to further specify render
+model properties for render models associated with them.
+Be aware that the required behavior of functions in this extension depend on
+the extension from which a given basetype:XrRenderModelIdEXT was retrieved.
+Some aspects for other extensions to specify include:
+
+[[ext_render_model-choice-gltf-exts, Delegated Choice: glTF Extension Behavior]]
+glTF Extension Behavior::: Whether a runtime must: support providing an
+  asset with no required glTF extensions (and thus not return
+  ename:XR_ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT from
+  flink:xrCreateRenderModelAssetEXT for its models), or whether the runtime
+  may: return ename:XR_ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT if
+  specific glTF extensions are not supported.
+  (If possible, indicate which extensions may: be considered mandatory.)
+
+[[ext_render_model-choice-alpha, Delegated Choice: Alpha Blending]]
+Alpha Blending::: What values for `alphaMode` are permissible in materials
+  used by a render model asset.
+  Some use cases are highly interactive and thus must: not use alpha mode of
+  `BLEND` to avoid mandating order independent transparency processing
+  between application content and render models.
+
+[[ext_render_model-choice-animation, Delegated Choice: Animation]]
+Animation::: How any animation is performed: whether the simple
+  node-pose-visibility mechanism described in this extension is used for
+  animation, and/or whether and how standard glTF animations are used.
+
+[[ext_render_model-choice-ext-refs, Delegated Choice: External References]]
+External References::: Whether external references for buffers and textures
+  are permitted.
+
+[[ext_render_model-choice-scenes, Delegated Choice: Scenes]]
+Scenes::: Whether the asset may: contain more than one scene without
+  specifying a default `scene`, and if so, how to select the scene to
+  render.
+  Alternately, the number of scenes the asset may: contain, and that the
+  property value for default `scene` must: be defined.
+  (An extension is encouraged to require the presence of the `scene`
+  property except in cases where the extension provides a way to explicitly
+  compute which scene to use.)
+
+[[ext_render_model-choice-complexity, Delegated Choice: Complexity and Optimization]]
+Complexity and Optimization::: What hard limits exist for models associated
+  with an extension, if any; any guidelines for asset size, complexity, and
+  feature usage; and what type of usage to optimize assets for.
+
+
+==== Render Model ID Atom and Handle
+
+
+[open,refpage='XrRenderModelIdEXT',desc='An atom representing a logical render model',type='basetypes',xrefs='XrRenderModelEXT']
+--
+include::{generated}/api/basetypes/XrRenderModelIdEXT.adoc[]
+
+The render model ID is used to create an slink:XrRenderModelEXT handle.
+Like other atom types in OpenXR, the ID should: not correspond to consuming
+noticeable resources in the runtime, it has no explicit lifetime of its own,
+and it has no persistence nor identity beyond the lifetime of the
+slink:XrSession handle it is retrieved from.
+Once the slink:XrRenderModelEXT handle is created from the ID, the runtime
+may: start to consume resources to load and track the state of the render
+model.
+
+The application can: use a valid basetype:XrRenderModelIdEXT to create an
+slink:XrRenderModelEXT handle.
+
+The value ename:XR_NULL_RENDER_MODEL_ID_EXT, equal to `0`, is defined to be
+an invalid basetype:XrRenderModelIdEXT value.
+
+The application can: use a valid basetype:XrRenderModelIdEXT to create an
+slink:XrRenderModelEXT handle.
+
+This apiext:XR_EXT_render_model extension does not specify how to obtain a
+valid basetype:XrRenderModelIdEXT.
+The application can: obtain a valid ID through other extensions that depend
+on this one.
+
+**Be aware** that there is a potential pitfall when creating a dependent
+extension, if the set of render models it enumerates has any in common with
+the set of render models enumerated by another (existing) dependent
+extension.
+To avoid unexpected application behavior when the same
+basetype:XrRenderModelIdEXT is enumerated from two separate functions, it is
+recommended to do one of the following:
+
+* **Extend the existing enumeration function** through extending an input
+  structure chain, rather than creating a new enumeration function.
+* **Forbid simultaneous use** of those two extensions in your new extension.
+--
+
+[open,refpage='XR_NULL_RENDER_MODEL_ID_EXT',desc='The ID represents a class of render model',type='enums',xrefs='XrRenderModelIdEXT']
+--
+include::{generated}/api/enums/XR_NULL_RENDER_MODEL_ID_EXT.adoc[]
+
+The ID ename:XR_NULL_RENDER_MODEL_ID_EXT cannot: be used to create an
+slink:XrRenderModelEXT handle, and is considered by definition to be an
+invalid render model ID.
+--
+
+
+[open,refpage='XrRenderModelEXT',type='handles',desc='Represents a render model provided by the runtime',xrefs='xrCreateRenderModelEXT XrRenderModelAssetEXT']
+--
+include::{generated}/api/handles/XrRenderModelEXT.adoc[]
+
+The slink:XrRenderModelEXT handle represents the resources to load and track
+the state of a render model, states of animatable parts, and a set of glTF
+extensions that the application is prepared to handle in a corresponding
+asset.
+
+It does not directly represent the model's data, however.
+See slink:XrRenderModelAssetEXT for the handle representing the data for a
+render model asset, including names of animatable nodes.
+
+--
+
+[open,refpage='xrCreateRenderModelEXT',type='protos',desc='Create a render model handle',xrefs='XrRenderModelEXT']
+--
+An application can: create an slink:XrRenderModelEXT handle using the
+flink:xrCreateRenderModelEXT function.
+
+include::{generated}/api/protos/xrCreateRenderModelEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the render model handle will
+  be valid.
+* pname:createInfo is the slink:XrRenderModelCreateInfoEXT used to specify
+  the render model.
+* pname:renderModel is the returned slink:XrRenderModelEXT handle.
+****
+
+If, when attempting to create the handle, the session does not support any
+render model of the given render model ID requiring only glTF extensions
+from the supplied glTF extension list (in
+slink:XrRenderModelCreateInfoEXT::pname:gltfExtensions), the runtime must:
+return ename:XR_ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT.
+
+include::{generated}/validity/protos/xrCreateRenderModelEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelCreateInfoEXT',type='structs',desc='Information necessary to create a render model handle',xrefs='xrCreateRenderModelEXT']
+--
+The slink:XrRenderModelCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:renderModelId is an basetype:XrRenderModelIdEXT to identify the
+  render model to be created.
+* pname:gltfExtensionCount is the count of strings in the
+  pname:gltfExtensions array.
+  It must: be code:0 if pname:gltfExtensions is code:NULL.
+* pname:gltfExtensions is an optional: array of strings that represents a
+  list of glTF extensions the application supports.
+****
+
+The slink:XrRenderModelCreateInfoEXT structure describes the information
+necessary to create an slink:XrRenderModelEXT handle.
+
+The input pname:renderModelId value must: be obtained from the same
+slink:XrSession used in flink:xrCreateRenderModelEXT.
+If the pname:renderModelId value does not match one retrieved from the
+relevant slink:XrSession, the runtime must: return error
+ename:XR_ERROR_RENDER_MODEL_ID_INVALID_EXT.
+
+Note: There is a chance that a pname:renderModelId value incorrectly
+retained from another session may: have the same numerical value as one
+retrieved from the current slink:XrSession.
+In such instances, the runtime is unable to distinguish between the two IDs.
+As a result, the runtime may: mistakenly accept the ID and return a success
+code, even though it represents an invalid usage.
+Applications should: be prepared to handle unexpected behaviors or outcomes
+stemming from this scenario.
+
+The application can: create multiple slink:XrRenderModelEXT handles using
+the same ID.
+The runtime must: return the same render model states and asset UUID to
+these handles if they also share the same list of extensions, since they are
+sharing the same underlying render model ID.
+If the list of extensions differs, the runtime may: expose a different
+number of animatable nodes, different asset data and UUID, etc.
+
+The runtime must: return
+ename:XR_ERROR_RENDER_MODEL_GLTF_EXTENSION_REQUIRED_EXT if the runtime is
+unable to return a glTF asset that only requires extensions found in the
+application's list of supported glTF extensions.
+
+Related extensions may: require the application to support certain glTF
+extensions, in which case this error code indicates a failure to satisfy the
+requirement.
+
+Alternately, related extensions may: require the runtime to support
+providing base glTF assets without any required glTF extensions, in which
+case this error must: not be returned by flink:xrCreateRenderModelEXT in
+association with render model IDs retrieved from such extensions.
+See <<ext_render_model-choice-gltf-exts>>.
+
+The order of pname:gltfExtensions array represents the preferences from the
+application when multiple extensions are specified.
+The runtime may: select or modify the retrieved glTF assets based on this
+array of extensions to optimize the glTF asset for this application.
+
+Successful creation of this handle implies that the runtime is ready to
+report a fixed number and sequence of animatable node states for an asset
+satisfying the application's criteria, and that asset data, with node names,
+meeting the criteria may: be available during this session.
+The asset data and node names may: still be unavailable at the time the
+slink:XrRenderModelEXT handle is returned.
+
+include::{generated}/validity/structs/XrRenderModelCreateInfoEXT.adoc[]
+
+--
+
+[open,refpage='xrDestroyRenderModelEXT',type='protos',desc='Destroy a render model handle',xrefs='XrRenderModelEXT']
+--
+The flink:xrDestroyRenderModelEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroyRenderModelEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderModel is an slink:XrRenderModelEXT previously created by
+  flink:xrCreateRenderModelEXT.
+****
+
+flink:xrDestroyRenderModelEXT function releases the slink:XrRenderModelEXT
+handle and the underlying resources when finished with the render model
+tracking and animation.
+
+Although any associated slink:XrSpace handles created by
+flink:xrCreateRenderModelSpaceEXT are not destroyed upon calling
+flink:xrDestroyRenderModelEXT because the space is a child of the session
+handle, any render model spaces created from a now-destroyed render model
+handle must: no longer return any elink:XrSpaceLocationFlagBits or
+elink:XrSpaceVelocityFlagBits set in
+slink:XrSpaceLocation::pname:locationFlags or
+slink:XrSpaceVelocity::pname:velocityFlags, respectively.
+That is, a space created from a render model handle that is now destroyed
+becomes no longer locatable.
+
+include::{generated}/validity/protos/xrDestroyRenderModelEXT.adoc[]
+--
+
+==== Get Render Model Properties
+
+[open,refpage='xrGetRenderModelPropertiesEXT',type='protos',desc='Gets the render model properties',xrefs='XrRenderModelPropertiesGetInfoEXT XrRenderModelPropertiesEXT XrRenderModelEXT']
+--
+The flink:xrGetRenderModelPropertiesEXT function is defined as:
+
+include::{generated}/api/protos/xrGetRenderModelPropertiesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderModel is an slink:XrRenderModelEXT previously created by
+  flink:xrCreateRenderModelEXT.
+* pname:getInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrRenderModelPropertiesGetInfoEXT.
+* pname:properties is a pointer to an slink:XrRenderModelPropertiesEXT
+  structure.
+****
+
+The properties of an slink:XrRenderModelEXT handle are immutable and must:
+not change for the lifetime of the handle.
+
+include::{generated}/validity/protos/xrGetRenderModelPropertiesEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelPropertiesGetInfoEXT',desc='The information to get the render model properties',type='structs',xrefs='xrGetRenderModelPropertiesEXT']
+--
+slink:XrRenderModelPropertiesGetInfoEXT is an input structure for
+flink:xrGetRenderModelPropertiesEXT.
+
+include::{generated}/api/structs/XrRenderModelPropertiesGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::{generated}/validity/structs/XrRenderModelPropertiesGetInfoEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelPropertiesEXT',desc='The outputted render model properties',type='structs',xrefs='xrGetRenderModelPropertiesEXT']
+--
+The slink:XrRenderModelPropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:cacheId is an slink:XrUuidEXT to uniquely identify a render model
+  asset using only extensions listed by the application at
+  slink:XrRenderModelEXT creation.
+* pname:animatableNodeCount is the number of uniquely-named nodes that are
+  animated using state tracked by the slink:XrRenderModelEXT.
+****
+
+The slink:XrRenderModelPropertiesEXT structure is an output structure for
+flink:xrGetRenderModelPropertiesEXT.
+
+Applications may: use pname:cacheId to avoid loading the exact same render
+model asset twice when two or more slink:XrRenderModelEXT handles use the
+same glTF asset.
+Applications may: also use pname:cacheId to cache preprocessed render model
+asset data (and the associated pname:animatableNodeCount node names) between
+sessions: it is a persistent UUID, unlike the associated
+slink:XrRenderModelEXT handle or basetype:XrRenderModelIdEXT atom.
+Note that runtimes may: return a different UUID for a given logical entity
+(e.g. hardware) in another session.
+
+Within the corresponding slink:XrSession, the association between an
+basetype:XrRenderModelIdEXT value, the glTF extensions required by the
+underlying model based on the contents of the
+slink:XrRenderModelCreateInfoEXT::pname:gltfExtensions array, and the
+pname:cacheId, is constant.
+A UUID pname:cacheId corresponds to a unique binary asset, with a constant
+pname:animatableNodeCount, and is a function of the render model ID and the
+required glTF extensions selected based on the supported glTF extension
+contents reported by the application.
+The runtime must: set pname:cacheId to a valid UUID value and subsequent
+valid calls to flink:xrGetRenderModelPropertiesEXT with the same
+slink:XrRenderModelEXT and slink:XrRenderModelPropertiesGetInfoEXT values
+must: return the same values for pname:cacheId while that ID remains valid
+to use.
+
+include::{generated}/validity/structs/XrRenderModelPropertiesEXT.adoc[]
+--
+
+==== Locate a Render Model in Space
+
+The application can: locate a render model by first creating an
+slink:XrSpace handle from an slink:XrRenderModelEXT handle.
+
+[open,refpage='xrCreateRenderModelSpaceEXT',type='protos',desc='Create an slink:XrSpace from an slink:XrRenderModelEXT',xrefs='XrRenderModelSpaceCreateInfoEXT XrRenderModelEXT']
+--
+The flink:xrCreateRenderModelSpaceEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateRenderModelSpaceEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the parent slink:XrSession handle of your
+  slink:XrRenderModelEXT handle, which will become the parent of the created
+  slink:XrSpace handle as well.
+* pname:createInfo is the slink:XrRenderModelSpaceCreateInfoEXT used to
+  specify the space.
+* pname:space is the returned slink:XrSpace handle of the new render model
+  space.
+****
+
+The application can: create an slink:XrSpace handle that tracks a render
+model using flink:xrCreateRenderModelSpaceEXT.
+
+The origin of the underlying render model space is defined to be the origin
+of the glTF model.
+
+Applications can: use flink:xrLocateSpace to locate the space created this
+way in a desired base space, as with all other varieties of slink:XrSpace
+handles.
+Unless otherwise specified by a related extension, the pose and locatability
+of a render model space have no fixed relationship with any other object or
+space, and should: be used only to transform the associated model for
+rendering.
+If a render model space is not both position and orientation `TRACKED` when
+location is queried for a time equal to the intended display time, this
+indicates that the application is intended to __not__ render that model in
+that frame, unless otherwise specified by a related extension.
+This is used in lieu of an explicit visibility state flag.
+
+include::{generated}/validity/protos/xrCreateRenderModelSpaceEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelSpaceCreateInfoEXT',desc='The information to create an slink:XrRenderModelEXT',type='structs',xrefs='xrCreateRenderModelSpaceEXT']
+--
+The slink:XrRenderModelSpaceCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelSpaceCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:renderModel is an slink:XrRenderModelEXT previously created by
+  flink:xrCreateRenderModelEXT.
+****
+
+slink:XrRenderModelSpaceCreateInfoEXT is an input structure for
+flink:xrCreateRenderModelSpaceEXT.
+
+include::{generated}/validity/structs/XrRenderModelSpaceCreateInfoEXT.adoc[]
+--
+
+
+==== Create Render Model Asset Handle
+
+
+[open,refpage='XrRenderModelAssetEXT',type='handles',desc='Represents a glTF asset provided by the runtime', xrefs='xrCreateRenderModelAssetEXT']
+--
+include::{generated}/api/handles/XrRenderModelAssetEXT.adoc[]
+
+The slink:XrRenderModelAssetEXT handle represents the in-runtime memory
+buffer for a glTF 2.0 render model asset, and the node names in that asset
+that correspond to the state array elements tracked by
+slink:XrRenderModelEXT.
+The application may: destroy the asset handle when it has finished
+retrieving the binary data and name array into its own memory, that is,
+after successful application of the two-call idiom with two calls to
+flink:xrGetRenderModelAssetDataEXT.
+
+--
+
+[open,refpage='xrCreateRenderModelAssetEXT',type='protos',desc='Create a render model asset handle',xrefs='XrRenderModelAssetEXT']
+--
+The flink:xrCreateRenderModelAssetEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateRenderModelAssetEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle from which a render model ID
+  and its corresponding UUID have been retrieved.
+* pname:createInfo is a pointer to an slink:XrRenderModelAssetCreateInfoEXT
+  structure.
+* pname:asset is the returned slink:XrRenderModelAssetEXT handle.
+****
+
+An application can: create an slink:XrRenderModelAssetEXT handle using the
+flink:xrCreateRenderModelAssetEXT function.
+The application must: only call flink:xrCreateRenderModelAssetEXT with a
+UUID specified by parameter pname:createInfo member
+slink:XrRenderModelAssetCreateInfoEXT::pname:cacheId that has been retrieved
+by calling flink:xrGetRenderModelPropertiesEXT on a render model associated
+with the current pname:session.
+If the application passes a UUID not retrieved in this way (for example,
+passing a UUID received from a previous session), the runtime must: return
+ename:XR_ERROR_RENDER_MODEL_ASSET_UNAVAILABLE_EXT.
+This implies that the runtime must: track which UUIDs it has returned to the
+application in a given session to validate the input to this function.
+If this function returns successfully, the runtime must: have the asset data
+and node names in memory for immediate return to the application in a
+subsequent use of flink:xrGetRenderModelAssetDataEXT.
+
+The runtime may: return ename:XR_ERROR_RENDER_MODEL_ASSET_UNAVAILABLE_EXT if
+the asset data has become unavailable for external reasons after the
+creation of the relevant slink:XrRenderModelEXT.
+
+A valid asset handle enables the application to retrieve the data for the
+glTF asset of the render model and the names of animatable nodes.
+For a valid slink:XrRenderModelPropertiesEXT::pname:cacheId, the runtime
+must: return the same glTF asset data, even between different sessions, if
+the cache ID is returned from both sessions.
+Therefore, the application may: rely on the
+slink:XrRenderModelPropertiesEXT::pname:cacheId to cache the glTF asset data
+and the processed derived data from the asset, as well as the names of
+animatable nodes, for reuse across sessions.
+An application may: choose to use the UUID as a key to cache data associated
+with the asset, but is not the asset data itself, however it is invalid to
+call flink:xrCreateRenderModelAssetEXT using a cached UUID before it is
+available from the current session.
+An application must: not use a cached UUID to retrieve asset data from the
+runtime without ensuring it is retrievable from the current session (and
+identifying the semantic use of the model) by calling
+flink:xrGetRenderModelPropertiesEXT.
+
+include::{generated}/validity/protos/xrCreateRenderModelAssetEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelAssetCreateInfoEXT',type='structs',desc='The information to create a render model asset handle',xrefs='xrCreateRenderModelAssetEXT']
+--
+The slink:XrRenderModelAssetCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:cacheId is an slink:XrUuidEXT to uniquely identify a render model
+  asset.
+****
+
+The slink:XrRenderModelAssetCreateInfoEXT structure contains the information
+to create an slink:XrRenderModelAssetEXT handle.
+
+The UUID pname:cacheId must: match the
+slink:XrRenderModelPropertiesEXT::pname:cacheId from some previous call to
+flink:xrGetRenderModelPropertiesEXT in the current session.
+
+include::{generated}/validity/structs/XrRenderModelAssetCreateInfoEXT.adoc[]
+
+--
+
+[open,refpage='xrDestroyRenderModelAssetEXT',type='protos',desc='Destroy a render model asset handle',xrefs='XrRenderModelAssetEXT']
+--
+The flink:xrDestroyRenderModelAssetEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroyRenderModelAssetEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:asset is an slink:XrRenderModelAssetEXT previously created by
+  flink:xrCreateRenderModelAssetEXT.
+****
+
+The flink:xrDestroyRenderModelAssetEXT function releases the
+slink:XrRenderModelAssetEXT handle and the underlying resources for the glTF
+asset data and names of animatable nodes.
+
+For clarity, a call to flink:xrDestroyRenderModelAssetEXT does __not__ stop
+the ability to locate a render model space, nor the ability to retrieve
+animatable node states.
+The asset handle refers only to the asset data and list of animatable node
+names in memory for transfer to the application.
+
+include::{generated}/validity/protos/xrDestroyRenderModelAssetEXT.adoc[]
+--
+
+
+==== Retrieve Render Model Asset Data
+
+[open,refpage='xrGetRenderModelAssetDataEXT',type='protos',desc='Copies the render model asset data and names of animatable nodes into application allocated memory',xrefs='XrRenderModelAssetDataGetInfoEXT XrRenderModelAssetDataEXT']
+--
+The flink:xrGetRenderModelAssetDataEXT function is defined as:
+
+include::{generated}/api/protos/xrGetRenderModelAssetDataEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:asset is an slink:XrRenderModelAssetEXT previously created by
+  flink:xrCreateRenderModelAssetEXT.
+* pname:getInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrRenderModelAssetDataGetInfoEXT.
+* pname:buffer is a pointer to an slink:XrRenderModelAssetDataEXT structure
+  for retrieving the glTF binary data.
+****
+
+The application can: use the flink:xrGetRenderModelAssetDataEXT function to
+populate application-allocated memory with the glTF 2.0 binary data and
+animatable node names of a render model asset.
+The application uses a <<buffer-size-parameters, two-call idiom>> with
+flink:xrGetRenderModelAssetDataEXT to allocate the memory required for the
+binary asset data.
+
+The binary data copied by the flink:xrGetRenderModelAssetDataEXT function
+must: conform to the {uri-gltf2-glb}[glTF 2.0 binary format (GLB)] and must:
+contain a valid glTF 2.0 asset that passes validation.
+
+.Note
+****
+Runtimes are strongly encouraged to use a tool such as
+{uri-gltf-validator}[glTF Validator] to help detect issues that make their
+models invalid, and thus make their implementation of this extension
+non-conformant.
+Passing validation with such a tool is _necessary_, but not _sufficient_, to
+prove that an asset is valid in the context of this extension.
+****
+
+The glTF asset data returned from this function must: not change during the
+lifetime of the corresponding slink:XrRenderModelAssetEXT handle.
+Further, the runtime must: return the same glTF binary data for any
+slink:XrRenderModelAssetEXT handles created using the same slink:XrUuidEXT
+slink:XrRenderModelPropertiesEXT::pname:cacheId.
+
+The application may: call flink:xrDestroyRenderModelAssetEXT after
+successfully populating the buffer with this call, and similar successful
+use of flink:xrGetRenderModelAssetPropertiesEXT, as the only purpose of this
+handle is to manage the lifetime of the loaded glTF asset (copied into
+application-allocated memory by this call) and animatable node names (copied
+into application-allocated memory by
+flink:xrGetRenderModelAssetPropertiesEXT) within the runtime.
+
+include::{generated}/validity/protos/xrGetRenderModelAssetDataEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelAssetDataGetInfoEXT',desc='The information to load a render model asset's data',type='structs',xrefs='xrGetRenderModelAssetDataEXT']
+--
+The slink:XrRenderModelAssetDataGetInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetDataGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+slink:XrRenderModelAssetDataGetInfoEXT is an input structure for
+flink:xrGetRenderModelAssetDataEXT, defined for the purpose of future
+extension.
+
+include::{generated}/validity/structs/XrRenderModelAssetDataGetInfoEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelAssetDataEXT',desc='Render model asset buffer',type='structs',xrefs='xrGetRenderModelAssetDataEXT']
+--
+The slink:XrRenderModelAssetDataEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetDataEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:bufferCountOutput is the count of code:uint8_t written to
+  pname:buffer, or the required capacity in the case that
+  pname:bufferCapacityInput is 0.
+* pname:buffer is a pointer to an application-allocated byte array that will
+  be filled with the render model asset binary data.
+* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
+  detailed description of retrieving the required pname:buffer size.
+****
+
+slink:XrRenderModelAssetDataEXT is an input/output structure for
+flink:xrGetRenderModelAssetDataEXT.
+
+include::{generated}/validity/structs/XrRenderModelAssetDataEXT.adoc[]
+--
+
+[[ext_render_model-animate]]
+==== Animate Parts of a Render Model
+
+The application can: animate parts of the glTF model using data from the
+runtime by retrieving and updating the slink:XrPosef offset and visibility
+state of certain glTF nodes identified by unique names.
+The requirements for interpretation of the pose and visibility state in an
+application renderer are described in slink:XrRenderModelNodeStateEXT.
+
+The number of animatable nodes is a property of the slink:XrRenderModelEXT,
+and are retrieved with flink:xrGetRenderModelPropertiesEXT as previously
+described.
+The identities of those animatable nodes are properties of the render model
+asset, and are retrieved with flink:xrGetRenderModelAssetPropertiesEXT.
+
+[open,refpage='xrGetRenderModelAssetPropertiesEXT',type='protos',desc='Gets render model asset properties',xrefs='XrRenderModelAssetPropertiesGetInfoEXT XrRenderModelAssetPropertiesEXT XrRenderModelAssetEXT']
+--
+The flink:xrGetRenderModelAssetPropertiesEXT function is defined as:
+
+include::{generated}/api/protos/xrGetRenderModelAssetPropertiesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:asset is an slink:XrRenderModelAssetEXT previously created by
+  flink:xrCreateRenderModelAssetEXT.
+* pname:getInfo exists for extensibility purposes, it is code:NULL or a
+  pointer to a valid slink:XrRenderModelAssetPropertiesGetInfoEXT.
+* pname:properties is a pointer to an slink:XrRenderModelAssetPropertiesEXT
+  structure for the render model asset properties.
+****
+
+The application can: use the flink:xrGetRenderModelAssetPropertiesEXT
+function to get the array of animatable node names in the glTF asset.
+
+The runtime must: return node names in pname:properties member
+slink:XrRenderModelAssetPropertiesEXT::pname:nodeProperties that are unique
+within the corresponding glTF asset.
+
+The application must: allocate an array of
+slink:XrRenderModelAssetNodePropertiesEXT within pname:properties, of size
+slink:XrRenderModelAssetPropertiesEXT::pname:nodePropertyCount, which must:
+be equal to slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount.
+If slink:XrRenderModelAssetPropertiesEXT::pname:nodePropertyCount is not
+equal to slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount as
+populated by flink:xrGetRenderModelPropertiesEXT, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetRenderModelAssetPropertiesEXT.
+Because the number of animatable nodes is fixed per render model handle and
+retrievable with flink:xrGetRenderModelPropertiesEXT, the two-call idiom for
+buffer sizing and allocation is not needed in this case.
+
+The application may: call flink:xrDestroyRenderModelAssetEXT after
+successfully populating the buffer with this call, and similar successful
+use of flink:xrGetRenderModelAssetDataEXT, as the only purpose of this
+handle is to manage the lifetime of the animatable node names (copied into
+application-allocated memory by this call) the loaded glTF asset (copied
+into application-allocated memory by flink:xrGetRenderModelAssetDataEXT)
+within the runtime.
+
+include::{generated}/validity/protos/xrGetRenderModelAssetPropertiesEXT.adoc[]
+--
+
+The flink:xrGetRenderModelAssetPropertiesEXT call takes an optional:
+pname:getInfo parameter for extensibility.
+
+[open,refpage='XrRenderModelAssetPropertiesGetInfoEXT',desc='Input structure to get the render model asset properties',type='structs',xrefs='xrGetRenderModelAssetPropertiesEXT']
+--
+The slink:XrRenderModelAssetPropertiesGetInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetPropertiesGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+This structure exists for extensibility purposes.
+
+include::{generated}/validity/structs/XrRenderModelAssetPropertiesGetInfoEXT.adoc[]
+--
+
+
+The flink:xrGetRenderModelAssetPropertiesEXT call populates a
+slink:XrRenderModelAssetPropertiesEXT supplied by the application, including
+an application-allocated array for the animatable node properties.
+
+
+[open,refpage='XrRenderModelAssetPropertiesEXT',desc='The outputted render model asset properties',type='structs',xrefs='xrGetRenderModelAssetPropertiesEXT']
+--
+The slink:XrRenderModelAssetPropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:nodePropertyCount is the number of elements in pname:nodeProperties.
+* pname:nodeProperties is a pointer to an application-allocated array of
+  slink:XrRenderModelAssetNodePropertiesEXT that will be filled with the
+  render model asset node properties.
+****
+
+The count slink:XrRenderModelAssetPropertiesEXT::pname:nodePropertyCount
+must: be equal to
+slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount.
+If slink:XrRenderModelAssetPropertiesEXT::pname:nodePropertyCount is not
+equal to slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount as
+populated by flink:xrGetRenderModelPropertiesEXT, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrGetRenderModelAssetPropertiesEXT.
+
+The node names in the pname:nodeProperties array define the identities of
+the animatable nodes.
+Order is significant, in that node states retrieved repeatedly during
+rendering form a parallel associated array.
+
+Because the number of animatable nodes is fixed per render model handle and
+retrievable with flink:xrGetRenderModelPropertiesEXT, the two-call idiom for
+buffer sizing and allocation is not needed in this case.
+
+
+include::{generated}/validity/structs/XrRenderModelAssetPropertiesEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelAssetNodePropertiesEXT',desc='Render model asset node properties',type='structs',xrefs='XrRenderModelAssetPropertiesEXT']
+--
+The slink:XrRenderModelAssetNodePropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelAssetNodePropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:uniqueName is a unique string name of a node in the glTF asset.
+****
+
+The string returned in pname:uniqueName must: be the name of exactly one
+node in the glTF asset.
+Any given name must: appear no more than once in the
+slink:XrRenderModelAssetPropertiesEXT::pname:nodeProperties for a given
+slink:XrRenderModelAssetEXT.
+
+include::{generated}/validity/structs/XrRenderModelAssetNodePropertiesEXT.adoc[]
+--
+
+[open,refpage='xrGetRenderModelStateEXT',type='protos',desc='Gets the states of the animatable nodes in the render model',xrefs='XrRenderModelStateGetInfoEXT XrRenderModelStateEXT XrRenderModelEXT']
+--
+The flink:xrGetRenderModelStateEXT function reads the current state of the
+animatable nodes in the render model.
+
+include::{generated}/api/protos/xrGetRenderModelStateEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderModel is an slink:XrRenderModelEXT previously created by
+  flink:xrCreateRenderModelEXT.
+* pname:getInfo is a pointer to a valid slink:XrRenderModelStateGetInfoEXT
+  specifying parameters affecting the state to retrieve.
+* pname:state is a pointer to an slink:XrRenderModelStateEXT structure.
+****
+
+The order of the elements in slink:XrRenderModelStateEXT::pname:nodeStates
+in pname:state is the same as the order of node names returned by the
+flink:xrGetRenderModelAssetPropertiesEXT function.
+The corresponding index in slink:XrRenderModelStateEXT::pname:nodeStates is
+the same as the index in
+slink:XrRenderModelAssetPropertiesEXT::pname:nodeProperties.
+The number of states is
+slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+slink:XrRenderModelStateEXT::pname:nodeStateCount is not equal to
+slink:XrRenderModelPropertiesEXT::pname:animatableNodeCount.
+
+include::{generated}/validity/protos/xrGetRenderModelStateEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelStateGetInfoEXT',desc='The information to get the render model states',type='structs',xrefs='xrGetRenderModelStateEXT']
+--
+The slink:XrRenderModelStateGetInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelStateGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:displayTime is the anticipated basetype:XrTime to query state for,
+  and for which the model will be rendered and displayed.
+****
+
+When retrieving model state for a given frame, pname:displayTime should: be
+set to the time value intended to be passed as
+slink:XrFrameEndInfo::pname:displayTime.
+See flink:xrEndFrame for information on how to compute this value.
+
+include::{generated}/validity/structs/XrRenderModelStateGetInfoEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelStateEXT',desc='The render model states',type='structs',xrefs='xrGetRenderModelStateEXT']
+--
+The slink:XrRenderModelStateEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelStateEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:nodeStateCount is the count of slink:XrRenderModelNodeStateEXT
+  structures in the pname:nodeStates array.
+* pname:nodeStates is a pointer to an application-allocated array of
+  slink:XrRenderModelNodeStateEXT structures that will be filled with the
+  states of the nodes.
+****
+
+include::{generated}/validity/structs/XrRenderModelStateEXT.adoc[]
+--
+
+[open,refpage='XrRenderModelNodeStateEXT',desc='The state of a render model node',type='structs',xrefs='XrRenderModelStateEXT']
+--
+The slink:XrRenderModelNodeStateEXT structure is defined as:
+
+include::{generated}/api/structs/XrRenderModelNodeStateEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:nodePose is an slink:XrPosef of the node in its parent node space.
+* pname:isVisible is an basetype:XrBool32 which indicates if the node is
+  visible or not.
+****
+
+This structure is populated with state for a single animatable node in an
+slink:XrRenderModelEXT.
+
+For any animatable node _N_, if an ancestor node _M_ is also animatable, and
+pname:isVisible is ename:XR_FALSE for node _M_, then pname:isVisible must:
+be ename:XR_FALSE for node _N_ as well.
+That is, being not-visible is recursive.
+An application should: interpret all descendant nodes of an animatable node
+with pname:isVisible = ename:XR_FALSE to also not be visible (to similarly
+interpret being not-visible as recursive).
+
+The pose pname:nodePose locates the associated animatable node, and all
+descendants, relative to that animatable node's parent, replacing the
+animatable node's transform, if any was supplied as `matrix` or
+`translation`/`rotation`/`scale` properties in the glTF asset.
+The application should: apply this pname:nodePose to the associated node, as
+well as to all descendant nodes per the glTF specification.
+That is, the pname:nodePose replaces, instead of composes with, the
+asset-specified transform.
+
+Where one animatable node _M_ is a descendant of another animatable node
+_N_, the application should: transform the descendant node _M_ and its
+descendants by the composition of the pname:nodePose for both _M_ and _N_.
+That is, pname:nodePose should: be interpreted by the application to respect
+the hierarchy in the glTF asset, and compose with other animatable node
+poses, as well as transformations supplied in the glTF asset on
+non-animatable nodes.
+
+For clarity, given a model for which the runtime returns a pname:nodePose
+equal to the original transform in the asset for all animatable nodes, the
+resulting rendered model should: be rendered the same as the unmodified glTF
+asset.
+This implies that for ease of use, runtimes may: consider structuring their
+assets such that animatable nodes have no (or identity) transformation
+specified in the glTF asset, such that pname:nodePose of identity for all
+animatable nodes produces an rendered model in its neutral, original state.
+
+include::{generated}/validity/structs/XrRenderModelNodeStateEXT.adoc[]
+--
+
+==== Example
+
+[source,c++]
+----
+// previously initialized
+extern XrInstance instance;
+extern XrSession session;
+extern XrSpace baseSpace;
+
+// retrieved from another extension that builds on this one
+extern XrRenderModelIdEXT renderModelId;
+
+// Get the function pointers for the extension's functions.
+PFN_xrCreateRenderModelEXT pfnCreateRenderModelEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelEXT)));
+
+PFN_xrDestroyRenderModelEXT pfnDestroyRenderModelEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrDestroyRenderModelEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnDestroyRenderModelEXT)));
+
+PFN_xrGetRenderModelPropertiesEXT pfnGetRenderModelPropertiesEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelPropertiesEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelPropertiesEXT)));
+
+PFN_xrCreateRenderModelSpaceEXT pfnCreateRenderModelSpaceEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelSpaceEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelSpaceEXT)));
+
+PFN_xrCreateRenderModelAssetEXT pfnCreateRenderModelAssetEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrCreateRenderModelAssetEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnCreateRenderModelAssetEXT)));
+
+PFN_xrDestroyRenderModelAssetEXT pfnDestroyRenderModelAssetEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrDestroyRenderModelAssetEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnDestroyRenderModelAssetEXT)));
+
+PFN_xrGetRenderModelAssetDataEXT pfnGetRenderModelAssetDataEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelAssetDataEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelAssetDataEXT)));
+
+PFN_xrGetRenderModelAssetPropertiesEXT pfnGetRenderModelAssetPropertiesEXT;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetRenderModelAssetPropertiesEXT",
+                             reinterpret_cast<PFN_xrVoidFunction *>(
+                                 &pfnGetRenderModelAssetPropertiesEXT)));
+
+PFN_xrGetRenderModelStateEXT pfnGetRenderModelStateEXT;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrGetRenderModelStateEXT",
+    reinterpret_cast<PFN_xrVoidFunction *>(&pfnGetRenderModelStateEXT)));
+
+// Create render model handles
+// The names of glTF extensions that the application is capable of supporting.
+// The returned glTF model is allowed to have have any or all of these extensions
+// listed in the "extensionsRequired" array.
+// Pass only the extensions that your app/engine are capable of supporting.
+std::vector<const char *> appSupportedGltfExtensions{"KHR_texture_basisu",
+                                                     "KHR_materials_specular"};
+
+XrRenderModelEXT renderModel = XR_NULL_HANDLE;
+XrRenderModelCreateInfoEXT renderModelCreateInfo{
+    XR_TYPE_RENDER_MODEL_CREATE_INFO_EXT};
+renderModelCreateInfo.renderModelId = renderModelId;
+renderModelCreateInfo.gltfExtensionCount =
+    (uint32_t)appSupportedGltfExtensions.size();
+renderModelCreateInfo.gltfExtensions = appSupportedGltfExtensions.data();
+CHK_XR(
+    pfnCreateRenderModelEXT(session, &renderModelCreateInfo, &renderModel));
+
+
+// Create a space for locating the render model.
+XrRenderModelSpaceCreateInfoEXT spaceCreateInfo{
+    XR_TYPE_RENDER_MODEL_SPACE_CREATE_INFO_EXT};
+spaceCreateInfo.renderModel = renderModel;
+XrSpace modelSpace;
+CHK_XR(pfnCreateRenderModelSpaceEXT(session, &spaceCreateInfo, &modelSpace));
+
+// Get the model properties: UUID and number of animatable nodes
+XrRenderModelPropertiesGetInfoEXT propertiesGetInfo{
+    XR_TYPE_RENDER_MODEL_PROPERTIES_GET_INFO_EXT};
+XrRenderModelPropertiesEXT properties{XR_TYPE_RENDER_MODEL_PROPERTIES_EXT};
+CHK_XR(pfnGetRenderModelPropertiesEXT(renderModel, &propertiesGetInfo,
+                                      &properties));
+
+{
+  // Create the asset handle to request the data.
+  XrRenderModelAssetCreateInfoEXT assetCreateInfo{
+      XR_TYPE_RENDER_MODEL_ASSET_CREATE_INFO_EXT};
+  assetCreateInfo.cacheId = properties.cacheId;
+  XrRenderModelAssetEXT asset;
+  CHK_XR(pfnCreateRenderModelAssetEXT(session, &assetCreateInfo, &asset));
+
+  // Copy the binary glTF (GLB) asset data using two-call idiom.
+  XrRenderModelAssetDataGetInfoEXT assetGetInfo{
+      XR_TYPE_RENDER_MODEL_ASSET_DATA_GET_INFO_EXT};
+  XrRenderModelAssetDataEXT assetData{
+      XR_TYPE_RENDER_MODEL_ASSET_DATA_EXT};
+  CHK_XR(pfnGetRenderModelAssetDataEXT(asset, &assetGetInfo, &assetData));
+  std::vector<uint8_t> glbData(assetData.bufferCountOutput);
+  assetData.bufferCapacityInput = (uint32_t)glbData.size();
+  assetData.buffer = glbData.data();
+  CHK_XR(pfnGetRenderModelAssetDataEXT(asset, &assetGetInfo, &assetData));
+
+  // Parsing the binary glTF data is outside the scope of this extension,
+  // but do it here.
+
+  // Get the unique names of the animatable nodes
+  XrRenderModelAssetPropertiesGetInfoEXT assetPropertiesGetInfo{
+      XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT};
+  XrRenderModelAssetPropertiesEXT assetProperties{
+      XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_EXT};
+  std::vector<XrRenderModelAssetNodePropertiesEXT> nodeProperties(
+      properties.animatableNodeCount);
+  assetProperties.nodePropertyCount = (uint32_t)nodeProperties.size();
+  assetProperties.nodeProperties = nodeProperties.data();
+  CHK_XR(pfnGetRenderModelAssetPropertiesEXT(asset, &assetPropertiesGetInfo,
+                                              &assetProperties));
+
+  // Once the glTF data has been handled, we no longer need the
+  // XrRenderModelAssetEXT handle.
+  CHK_XR(pfnDestroyRenderModelAssetEXT(asset));
+
+
+  // Save the list of nodes for rendering. The order of the array matters.
+  // The application will store some sort of "reference" to a node for
+  // each element, using the node name (in nodeProperties) to find it here.
+  // This code is not shown because it will depend on how your
+  // application represents glTF assets, so add your own here.
+}
+
+
+// Each frame the application's work for each model includes
+// reading the state of the animatable nodes
+// and then adjusting the pose or visibility of the node.
+
+// Initialized from xrWaitFrame output
+XrTime predictedDisplayTime;
+
+// Use xrLocateSpace to locate the model's space
+XrSpaceLocation modelLocation{XR_TYPE_SPACE_LOCATION};
+CHK_XR(xrLocateSpace(modelSpace, baseSpace, predictedDisplayTime, &modelLocation));
+
+bool orientationTracked = (modelLocation.locationFlags &
+    XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT) != 0;
+bool positionTracked = (modelLocation.locationFlags &
+    XR_SPACE_LOCATION_POSITION_TRACKED_BIT) != 0;
+
+if (orientationTracked && positionTracked) {
+  // Only render if the model space is tracked,
+  // and if the session state is appropriate, if applicable.
+  // (e.g. interaction models are only to be rendered when FOCUSED)
+
+  XrRenderModelStateGetInfoEXT stateGetInfo{
+      XR_TYPE_RENDER_MODEL_STATE_GET_INFO_EXT};
+  stateGetInfo.displayTime = predictedDisplayTime;
+
+  // In practice, you do not want to re-allocate this array of
+  // node state every frame, but it is clearer for illustration.
+  // We know the number of elements from the model properties,
+  // and we used the names from the asset handle to find and retain
+  // our app-specific references to those nodes in the model.
+  std::vector<XrRenderModelNodeStateEXT> nodeStates(
+      properties.animatableNodeCount);
+  XrRenderModelStateEXT state{XR_TYPE_RENDER_MODEL_STATE_EXT};
+  state.nodeStateCount = (uint32_t)nodeStates.size();
+  state.nodeStates = nodeStates.data();
+  // xrGetRenderModelStateEXT does not use the two-call idiom. The size is
+  // determined by xrGetRenderModelAssetPropertiesEXT.
+  CHK_XR(pfnGetRenderModelStateEXT(renderModel, &stateGetInfo, &state));
+
+  for (size_t i = 0; i < nodeStates.size(); ++i) {
+    // Use nodeStates[i].isVisible and nodeStates[i].nodePose to update the
+    // node's visibility or pose.
+    // nodeStates[i] refers to the node identified by name in nodeProperties[i]
+  }
+} else {
+  // do not render any of the model if the space not locatable
+}
+----
+
+include::{generated}/interfaces/XR_EXT_render_model.adoc[leveloffset=1]
+
+==== Issues
+
+* Is there any restriction on unique node names in a retrieved asset?
+** **Resolved.** **Yes**: any node name intended by the runtime to be used
+   by the application, such as through the transform/visibility animation
+   capability in this extension, must: be unique in that glTF file: see
+   slink:XrRenderModelAssetNodePropertiesEXT.
+   The working group has verified that this is the intended way for glTF
+   nodes to be referred to, not by index or any other method.
+   Node names not for use by the application do not need to be unique.
+   Node names used for animation must: also fit in the fixed size buffer in
+   slink:XrRenderModelAssetNodePropertiesEXT
+* Is visibility of nodes in the provided animation system recursive?
+** **Resolved.** **Partially recursive**: If an animatable node is not
+  visible, and it is the ancestor of another animatable node, its descendant
+  node is also reported as not visible.
+  The base glTF specification does not have a concept of visibility in this
+  way, so the semantics of it are left for this specification to define.
+  See slink:XrRenderModelNodeStateEXT for detail.
+* What values are valid for
+  slink:XrRenderModelStateGetInfoEXT::pname:displayTime?
+** **Not fully resolved**.
+   It must: be valid to use the
+   slink:XrFrameState::pname:predictedDisplayTime returned from the most
+   recent flink:xrWaitFrame call.
+   For the sake of pipelined rendering engines,
+   [eq]#slink:XrFrameState::pname:predictedDisplayTime +
+   slink:XrFrameState::pname:predictedDisplayPeriod# must: also be
+   considered valid.
+   Because the purpose of these calls is solely for rendering, it is unclear
+   if any time earlier than the most recent predicted display time makes
+   sense to support.
+   It is also unclear how far in the future runtimes support.
+   Additionally, depending on the purpose of a given render model, the
+   runtime may: not have any useful method to predict future states beyond
+   using the most recently measured physical state.
+* Do animation transforms replace transforms provided in the glTF file, or
+  compose with them? If they compose, in what order do they compose?
+** **Resolved.** **They replace the transforms.** For simplicity and
+   performance, the node state transforms are specified to replace any
+   transformation as supplied as `matrix` or
+   `translation`/`rotation`/`scale` properties in the glTF asset.
+   Composing automatically gives the useful property that having all node
+   states contain identity is equivalent to rendering without any animation
+   ability at all, providing a way to check rendering.
+   However, if "compose" were selected as the specified behavior, and some
+   runtimes "baked" transforms into their node vertices (producing an asset
+   with no transforms) while others did not, this would have presented a
+   trap for application developers who might not realize they are supposed
+   to honor both the glTF-provided transform as well as the node state
+   transform.
+   Additionally, consensus among the Working Group appeared to be strongly
+   in favor of the "replace" option.
+
+
+==== Version History
+
+* Revision 1, 2025-06-06 (Yin Li et al)
+** Initial extension description

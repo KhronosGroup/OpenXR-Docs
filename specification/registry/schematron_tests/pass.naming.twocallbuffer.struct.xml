@@ -60,11 +60,38 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <member optional="true"><type>uint32_t</type> <name>numberCountOutput</name></member>
             <member optional="true" len="numberCapacityInput"><type>uint32_t</type>* <name>numbers</name></member>
         </type>
+
+        <type category="struct" name="XrStructY" returnedonly="true">
+            <member values="XR_TYPE_STRUCT_Y"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+            <member optional="true"><type>uint32_t</type> <name>velocityCapacityInput</name></member>
+            <member optional="true"><type>uint32_t</type> <name>velocityCountOutput</name></member>
+            <member optional="true" len="velocityCapacityInput"><type>uint32_t</type>* <name>velocities</name></member>
+        </type>
+
+        <type category="struct" name="XrStructEx" returnedonly="true">
+            <member values="XR_TYPE_STRUCT_EX"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+            <member optional="true"><type>uint32_t</type> <name>vertexCapacityInput</name></member>
+            <member optional="true"><type>uint32_t</type> <name>vertexCountOutput</name></member>
+            <member optional="true" len="vertexCapacityInput"><type>uint32_t</type>* <name>vertices</name></member>
+        </type>
+
+        <type category="struct" name="XrStructChild" returnedonly="true">
+            <member values="XR_TYPE_STRUCT_CHILD"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+            <member optional="true"><type>uint32_t</type> <name>childCapacityInput</name></member>
+            <member optional="true"><type>uint32_t</type> <name>childCountOutput</name></member>
+            <member optional="true" len="childCapacityInput"><type>uint32_t</type>* <name>children</name></member>
+        </type>
     </types>
 
     <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
         <enum value="0"    name="XR_TYPE_UNKNOWN"/>
         <enum value="1"    name="XR_TYPE_STRUCT_BUFFER"/>
         <enum value="2"    name="XR_TYPE_STRUCT_NUM"/>
+        <enum value="3"    name="XR_TYPE_STRUCT_Y"/>
+        <enum value="4"    name="XR_TYPE_STRUCT_EX"/>
+        <enum value="5"    name="XR_TYPE_STRUCT_CHILD"/>
     </enums>
 </registry>
