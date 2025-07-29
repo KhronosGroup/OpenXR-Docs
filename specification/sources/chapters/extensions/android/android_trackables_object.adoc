@@ -1,0 +1,240 @@
+// Copyright (c) 2017-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_trackables_object.adoc[]
+
+*Last Modified Date*::
+    2025-07-21
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Diego Tipaldi, Google +
+    David Joseph Tan, Google +
+    Levana Chen, Google +
+    Spencer Quin, Google +
+    Jared Finder, Google +
+    Kenny Vercaemer, Google +
+
+==== Overview
+
+This extension enables physical object tracking such as keyboards, mice, and
+other objects in the environment.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Tracking objects
+
+To track objects, the application creates an slink:XrTrackableTrackerANDROID
+by calling flink:xrCreateTrackableTrackerANDROID and specifying the
+ename:XR_TRACKABLE_TYPE_OBJECT_ANDROID enumerant added to
+elink:XrTrackableTypeANDROID by this extension as the trackable type in
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType.
+
+[open,refpage='XrTrackableObjectConfigurationANDROID',type='structs',desc='Configure object tracking.',xrefs='xrCreateTrackableTrackerANDROID']
+--
+The slink:XrTrackableObjectConfigurationANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableObjectConfigurationANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:labelCount is the count of pname:activeLabels.
+* pname:activeLabels is a pointer to the array of elink:XrObjectLabelANDROID
+  indicating the active objects in tracking.
+****
+
+* The application can: configure the slink:XrTrackableTrackerANDROID to
+  track only a subset of supported objects by adding a
+  slink:XrTrackableObjectConfigurationANDROID structure to the
+  slink:XrTrackableTrackerCreateInfoANDROID::pname:next chain.
+* The runtime must: filter the output from flink:xrGetAllTrackablesANDROID
+  to match any of the pname:activeLabels.
+
+If the application does not add slink:XrTrackableObjectConfigurationANDROID
+to the slink:XrTrackableTrackerCreateInfoANDROID::pname:next chain, the
+runtime must: track all objects that the system has identified.
+
+include::{generated}/validity/structs/XrTrackableObjectConfigurationANDROID.adoc[]
+--
+
+[open,refpage='XrObjectLabelANDROID',type='enums',desc='The type of object that the system has identified.',xrefs='']
+--
+The elink:XrObjectLabelANDROID enum describes the type of object that the
+system has identified.
+
+include::{generated}/api/enums/XrObjectLabelANDROID.adoc[]
+--
+
+==== Get trackable object
+
+[open,refpage='xrGetTrackableObjectANDROID',type='protos',desc='Get trackable object.',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID XrTrackableGetInfoANDROID']
+--
+The flink:xrGetTrackableObjectANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetTrackableObjectANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:getInfo is the slink:XrTrackableGetInfoANDROID with the information
+  used to get the trackable object.
+* pname:objectOutput is a pointer to the slink:XrTrackableObjectANDROID
+  structure in which the trackable object is returned.
+****
+
+The runtime must: return ename:XR_ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+if the trackable type of the basetype:XrTrackableANDROID is not
+ename:XR_TRACKABLE_TYPE_OBJECT_ANDROID, or if the trackable type of the
+slink:XrTrackableTrackerANDROID is not
+ename:XR_TRACKABLE_TYPE_OBJECT_ANDROID.
+
+include::{generated}/validity/protos/xrGetTrackableObjectANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableObjectANDROID',type='structs',desc='Trackable object information.',xrefs='']
+--
+The slink:XrTrackableObjectANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableObjectANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingState is the elink:XrTrackingStateANDROID of the object.
+* pname:centerPose is the slink:XrPosef of the object located in
+  slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+* pname:extents is the slink:XrExtent3DfEXT dimension of the object.
+* pname:objectLabel is the elink:XrObjectLabelANDROID that the runtime has
+  determined for this object.
+* pname:lastUpdatedTime is the basetype:XrTime of the last update of the
+  object.
+****
+
+The runtime must: only return objects that it successfully identified.
+I.e. slink:XrTrackableObjectANDROID::pname:objectLabel must: not be
+ename:XR_OBJECT_LABEL_UNKNOWN_ANDROID.
+
+include::{generated}/validity/structs/XrTrackableObjectANDROID.adoc[]
+--
+
+==== Trackable object orientation
+
+The orientation of the objects is shown in the
+<<fig-ANDROID_trackables_object-orientation, following image>> (with xyz =
+rgb) originating at the bottom center of the objects.
+
+The 3D orientation of the mouse is aligned to the 3D orientation of the
+supporting plane.
+The extents enclose the keyboard and mouse completely and the base of the
+laptop.
+
+[[fig-ANDROID_trackables_object-orientation]]
+image::images/XR_ANDROID_trackables_object_orientation.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example object orientation."]
+
+==== Example code for getting trackable objects
+
+The following example code demonstrates how to get trackable objects.
+
+[source,C++]
+----
+XrSession session; // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID; // previously initialized
+PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID; // previously initialized
+PFN_xrGetTrackableObjectANDROID xrGetTrackableObjectANDROID; // previously initialized
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previously initialized
+
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace; // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+
+XrTrackableTrackerCreateInfoANDROID
+  createInfo{XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID};
+createInfo.trackableType = XR_TRACKABLE_TYPE_OBJECT_ANDROID;
+XrTrackableTrackerANDROID objectTrackableTracker;
+XrResult result = xrCreateTrackableTrackerANDROID(
+  session,
+  &createInfo,
+  &objectTrackableTracker);
+if (result != XR_SUCCESS) { /* Handle failures. */ }
+
+uint32_t trackableCountOutput = 0;
+std::vector<XrTrackableANDROID> allObjectTrackables;
+
+// Query the number of trackables available.
+result = xrGetAllTrackablesANDROID(
+  objectTrackableTracker,
+  0,
+  &trackableCountOutput,
+  nullptr
+);
+
+if (result == XR_SUCCESS) {
+  allObjectTrackables.resize(trackableCountOutput, XR_NULL_TRACKABLE_ANDROID);
+
+  // Fetch the actual trackable handles in the appropriately resized array.
+  result = xrGetAllTrackablesANDROID(
+    objectTrackableTracker,
+    trackableCountOutput,
+    &trackableCountOutput,
+    allObjectTrackables.data());
+
+  if (result == XR_SUCCESS) {
+    for (XrTrackableANDROID trackable : allObjectTrackables) {
+
+      // Object trackable query information
+      XrTrackableGetInfoANDROID objectGetInfo;
+      objectGetInfo.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID;
+      objectGetInfo.next = nullptr;
+      objectGetInfo.trackable = trackable;
+      objectGetInfo.baseSpace = appSpace;
+      objectGetInfo.time = updateTime;
+
+      // Get the object trackable. Note that the tracker only returns object types.
+      XrTrackableObjectANDROID object = { XR_TYPE_TRACKABLE_OBJECT_ANDROID };
+      result = xrGetTrackableObjectANDROID(
+        objectTrackableTracker,
+        &objectGetInfo,
+        &object
+      );
+
+      if (result == XR_SUCCESS) {
+        /** Do Stuff with the object */
+      }
+    }
+  }
+}
+
+// Release trackable tracker.
+result = xrDestroyTrackableTrackerANDROID(objectTrackableTracker);
+----
+
+include::{generated}/interfaces/XR_ANDROID_trackables_object.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-21 (Kenny Vercaemer)
+** Initial extension description.

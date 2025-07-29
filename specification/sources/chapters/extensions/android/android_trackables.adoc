@@ -1,0 +1,696 @@
+// Copyright (c) 2017-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_trackables.adoc[]
+
+*Last Modified Date*::
+    2025-07-21
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Spencer Quin, Google +
+    Nihav Jain, Google +
+    John Pursey, Google +
+    Jared Finder, Google +
+    Levana Chen, Google +
+    Kenny Vercaemer, Google +
+
+==== Overview
+
+This extension allows the application to access trackables from the physical
+environment, and create anchors attached to a trackable.
+It also allows applications to create world-locked spatial anchors.
+
+A trackable is something that is tracked in the physical environment:
+
+* a plane (e.g. wall, floor, ceiling, table)
+* an object (e.g. keyboard, mouse, laptop)
+
+See also elink:XrTrackableTypeANDROID.
+
+This extension defines plane trackables.
+
+Additional trackable types are added by other extensions.
+For example, apiext:XR_ANDROID_trackables_object adds object trackables, and
+apiext:XR_ANDROID_raycast adds depth trackables that allow raycasting to
+arbitrary points in the environment.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateTrackableTrackerANDROID
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemTrackablesPropertiesANDROID',type='structs',desc='System property for trackables',xrefs='']
+--
+The slink:XrSystemTrackablesPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemTrackablesPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsAnchor is an basetype:XrBool32 indicating if current system
+  supports anchor creation via flink:xrCreateAnchorSpaceANDROID for spatial
+  anchors.
+* pname:maxAnchors is the total maximum number of anchors supported by the
+  runtime to be created via flink:xrCreateAnchorSpaceANDROID of all types
+  combined at any given time.
+****
+
+To inspect whether the system is capable of creating spatial anchors an
+application calls flink:xrCreateAnchorSpaceANDROID by extending the
+slink:XrSystemProperties with slink:XrSystemTrackablesPropertiesANDROID
+structure when calling flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for spatial
+anchor creation if and only if pname:supportsAnchor is false.
+
+If a runtime supports anchors, it must: support pname:maxAnchors active
+anchors at any given time.
+
+To determine which trackable types are supported by the runtime for tracking
+and for anchor creation respectively an application calls
+flink:xrEnumerateSupportedTrackableTypesANDROID and
+flink:xrEnumerateSupportedAnchorTrackableTypesANDROID.
+
+include::{generated}/validity/structs/XrSystemTrackablesPropertiesANDROID.adoc[]
+--
+
+[open,refpage='xrEnumerateSupportedTrackableTypesANDROID',desc='Enumerates the types of trackables supported',type='protos',xrefs='XrTrackableTypeANDROID']
+--
+The flink:xrEnumerateSupportedTrackableTypesANDROID function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSupportedTrackableTypesANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance that enumerates the supported
+  trackable types.
+* pname:systemId is the basetype:XrSystemId of the system to query.
+* pname:trackableTypeCapacityInput is the capacity of the
+  pname:trackableTypes, or 0 to retrieve the required capacity.
+* pname:trackableTypeCountOutput is a pointer to the count of code:uint64_t
+  pname:trackableTypes written, or a pointer to the required capacity in the
+  case that pname:trackableTypeCapacityInput is insufficient.
+* pname:trackableTypes is a pointer to an array of
+  elink:XrTrackableTypeANDROID, but can: be code:NULL if
+  pname:trackableTypeCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:trackableTypes size.
+****
+
+flink:xrEnumerateSupportedTrackableTypesANDROID enumerates the trackable
+types supported by the runtime for flink:xrCreateTrackableTrackerANDROID.
+
+If and only if a trackable type X is not returned by
+flink:xrEnumerateSupportedTrackableTypesANDROID, then the runtime must:
+return ename:XR_ERROR_FEATURE_UNSUPPORTED when calling
+flink:xrCreateTrackableTrackerANDROID with X as the trackable type.
+
+include::{generated}/validity/protos/xrEnumerateSupportedTrackableTypesANDROID.adoc[]
+--
+
+[open,refpage='xrEnumerateSupportedAnchorTrackableTypesANDROID',desc='Enumerates the types of anchor trackables supported',type='protos',xrefs='XrTrackableTypeANDROID']
+--
+The flink:xrEnumerateSupportedAnchorTrackableTypesANDROID function is
+defined as:
+
+include::{generated}/api/protos/xrEnumerateSupportedAnchorTrackableTypesANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance that enumerates the supported
+  anchor trackable types.
+* pname:systemId is the basetype:XrSystemId of the system to query.
+* pname:trackableTypeCapacityInput is the capacity of the
+  pname:trackableTypes, or 0 to retrieve the required capacity.
+* pname:trackableTypeCountOutput is a pointer to the count of code:uint64_t
+  pname:trackableTypes written, or a pointer to the required capacity in the
+  case that pname:trackableTypeCapacityInput is insufficient.
+* pname:trackableTypes is a pointer to an array of
+  elink:XrTrackableTypeANDROID, but can: be code:NULL if
+  pname:trackableTypeCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:trackableTypes size.
+****
+
+flink:xrEnumerateSupportedAnchorTrackableTypesANDROID enumerates the
+trackable types supported by the runtime for anchor creation.
+
+If and only if a trackable type X is not returned by
+flink:xrEnumerateSupportedAnchorTrackableTypesANDROID, then the runtime
+must: return ename:XR_ERROR_FEATURE_UNSUPPORTED when calling
+flink:xrCreateAnchorSpaceANDROID with X as the trackable type.
+
+include::{generated}/validity/protos/xrEnumerateSupportedAnchorTrackableTypesANDROID.adoc[]
+--
+
+==== Creating a trackable tracker
+
+[open,refpage='XrTrackableTrackerANDROID',type='handles',desc='Trackable tracker handle',xrefs='xrCreateTrackableTrackerANDROID XrTrackableTrackerCreateInfoANDROID xrGetAllTrackablesANDROID xrGetTrackablePlaneANDROID xrDestroyTrackableTrackerANDROID']
+--
+An slink:XrTrackableTrackerANDROID is a handle that represents the resources
+required to discover and update trackables of a given
+elink:XrTrackableTypeANDROID in the environment.
+
+include::{generated}/api/handles/XrTrackableTrackerANDROID.adoc[]
+--
+
+[open,refpage='xrCreateTrackableTrackerANDROID',type='protos',desc='Creates a trackable tracker',xrefs='XrTrackableTrackerANDROID XrTrackableTrackerCreateInfoANDROID']
+--
+The flink:xrCreateTrackableTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateTrackableTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that creates the tracker.
+* pname:createInfo is a pointer to an
+  slink:XrTrackableTrackerCreateInfoANDROID structure containing parameters
+  to be used to create the tracker.
+* pname:trackableTracker is a pointer to a handle in which the created
+  slink:XrTrackableTrackerANDROID is returned.
+****
+
+The application creates trackable trackers with
+flink:xrCreateTrackableTrackerANDROID.
+
+* The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if the system
+  does not support trackables of the specified
+  slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType as returned
+  by flink:xrEnumerateSupportedTrackableTypesANDROID.
+* The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if the
+  required permissions have not been granted to the calling app.
+
+The slink:XrTrackableTrackerANDROID handle must: be eventually freed via the
+flink:xrDestroyTrackableTrackerANDROID function or by destroying the parent
+slink:XrSession handle.
+
+The runtime may: use the creation of an slink:XrTrackableTrackerANDROID to
+prepare itself for discovering trackables of the selected
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType.
+For example, the runtime may: only begin its plane tracking system when a
+trackable tracker handle for ename:XR_TRACKABLE_TYPE_PLANE_ANDROID is
+created by the application.
+
+include::{generated}/validity/protos/xrCreateTrackableTrackerANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableTrackerCreateInfoANDROID',type='structs',desc='Information to create a trackable tracker',xrefs='XrTrackableTrackerANDROID xrCreateTrackableTrackerANDROID']
+--
+The slink:XrTrackableTrackerCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableTrackerCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackableType is the elink:XrTrackableTypeANDROID that the tracker
+  will track.
+****
+
+The slink:XrTrackableTrackerCreateInfoANDROID structure is passed to
+flink:xrCreateTrackableTrackerANDROID and provides creation options for the
+slink:XrTrackableTrackerANDROID.
+
+Extensions may: define structures to be provided in the
+slinkXrTrackableTrackerCreateInfoANDROID::pname:next chain to allow
+additional configuration for the trackable trackers.
+
+include::{generated}/validity/structs/XrTrackableTrackerCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableTypeANDROID',type='enums',desc='Type of trackable',xrefs='XrTrackableTrackerCreateInfoANDROID']
+--
+The elink:XrTrackableTypeANDROID enum is defined as:
+
+include::{generated}/api/enums/XrTrackableTypeANDROID.adoc[]
+include::{generated}/api/enums/XrTrackableTypeANDROID.comments.adoc[]
+--
+
+[open,refpage='xrDestroyTrackableTrackerANDROID',type='protos',desc='Destroys the trackable tracker and frees all memory and resources',xrefs='XrTrackableTrackerANDROID']
+--
+The flink:xrDestroyTrackableTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyTrackableTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:trackableTracker is an slink:XrTrackableTrackerANDROID handle
+  previously created by flink:xrCreateTrackableTrackerANDROID.
+****
+
+The flink:xrDestroyTrackableTrackerANDROID function destroys the trackable
+tracker.
+After this call the runtime may: free all related memory and resources.
+
+If there is no other valid slink:XrTrackableTrackerANDROID that was created
+with the same elink:XrTrackableTypeANDROID, the runtime may: disable the
+tracking services required for that trackable type to save system resources.
+
+include::{generated}/validity/protos/xrDestroyTrackableTrackerANDROID.adoc[]
+--
+
+==== Get all trackables
+
+[open,refpage='XrTrackableANDROID',type='basetypes',desc='A trackable',xrefs='xrGetAllTrackablesANDROID xrGetTrackablePlaneANDROID']
+--
+The basetype:XrTrackableANDROID atom is defined as:
+
+include::{generated}/api/basetypes/XrTrackableANDROID.adoc[]
+
+basetype:XrTrackableANDROID is used to represent a single trackable and is
+valid only within the lifecycle of its associated
+slink:XrTrackableTrackerANDROID.
+The runtime must: not reuse the same basetype:XrTrackableANDROID for
+different trackables within the same slink:XrTrackableTrackerANDROID.
+--
+
+[open,refpage='xrGetAllTrackablesANDROID',type='protos',desc='Gets all trackables of a given type',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID']
+--
+The flink:xrGetAllTrackablesANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetAllTrackablesANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:trackableTracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:trackableCapacityInput is the capacity of the pname:trackables
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:trackableCountOutput is a pointer to the count of pname:trackables
+  written, or a pointer to the required capacity in the case that
+  pname:trackables is insufficient.
+* pname:trackables is a pointer to an array of basetype:XrTrackableANDROID.
+  It can: be ename:NULL if pname:trackableCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:trackables size.
+****
+
+flink:xrGetAllTrackablesANDROID fills an array of
+basetype:XrTrackableANDROID representing the trackables found in the
+environment.
+The elink:XrTrackableTypeANDROID of the returned pname:trackables must:
+match the elink:XrTrackableTypeANDROID of the pname:trackableTracker.
+--
+
+==== Get trackable plane
+
+[open,refpage='xrGetTrackablePlaneANDROID',type='protos',desc='Get trackable plane',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID XrTrackableGetInfoANDROID']
+--
+The flink:xrGetTrackablePlaneANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetTrackablePlaneANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:trackableTracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:getInfo is the slink:XrTrackableGetInfoANDROID with the information
+  used to get the trackable plane.
+* pname:planeOutput is a pointer to the slink:XrTrackablePlaneANDROID
+  structure in which the trackable plane is returned.
+****
+
+The flink:xrGetTrackablePlaneANDROID function returns details about the
+trackable plane — such as its geometry, orientation, and tracking state — at
+a given point in time.
+
+The plane information returned is a best effort approximation of its state
+at the given slink:XrTrackableGetInfoANDROID::pname:time, relative to the
+slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+
+The runtime must: return ename:XR_ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+if the trackable type of the
+slink:XrTrackableGetInfoANDROID::pname:trackable is not
+ename:XR_TRACKABLE_TYPE_PLANE_ANDROID.
+
+include::{generated}/validity/protos/xrGetTrackablePlaneANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableGetInfoANDROID',type='structs',desc='Information to get trackable plane',xrefs='xrGetTrackablePlaneANDROID XrSpace XrTime']
+--
+The slink:XrTrackableGetInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableGetInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackable is the basetype:XrTrackableANDROID plane to query.
+* pname:baseSpace the plane pose will be relative to this slink:XrSpace at
+  pname:time.
+* pname:time is the basetype:XrTime at which to evaluate the coordinates
+  relative to the pname:baseSpace.
+****
+
+The slink:XrTrackableGetInfoANDROID structure provides query options when
+passed to flink:xrGetTrackablePlaneANDROID.
+The pname:trackable must: correspond to the pname:trackable used in
+flink:xrGetTrackablePlaneANDROID.
+
+include::{generated}/validity/structs/XrTrackableGetInfoANDROID.adoc[]
+--
+
+[open,refpage='XrTrackablePlaneANDROID',type='structs',desc='Trackable plane information',xrefs='']
+--
+The slink:XrTrackablePlaneANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackablePlaneANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingState is the elink:XrTrackingStateANDROID of the plane.
+* pname:centerPose is an slink:XrPosef defining the position and orientation
+  of the plane within the reference frame of the corresponding
+  slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+  An identity orientation here represents a set of axes with +Y parallel to
+  the plane's normal.
+* pname:extents is the slink:XrExtent2Df dimension of the plane.
+* pname:planeType is the elink:XrPlaneTypeANDROID that the runtime has
+  determined for this plane.
+* pname:planeLabel is the elink:XrPlaneLabelANDROID that the runtime has
+  determined for this plane.
+* pname:subsumedByPlane is the basetype:XrTrackableANDROID of the plane that
+  subsumes this plane (dlink:XR_NULL_TRACKABLE_ANDROID if none exists).
+* pname:lastUpdatedTime is the basetype:XrTime of the last update of the
+  plane, meaning any of its properties may: be different, e.g.
+  pname:planeLabel.
+* pname:vertexCapacityInput is the capacity of the pname:vertices array, or
+  0 to indicate a request to retrieve the required capacity.
+* pname:vertexCountOutput is the count of pname:vertices written, or the
+  required capacity in the case that pname:vertices is insufficient.
+* pname:vertices is a pointer to an array of slink:XrVector2f.
+  It can: be ename:NULL if pname:vertexCapacityInput is 0.
+  The vertices are in counter-clockwise order.
+  The polygon may: be concave and must: not be self-intersecting.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:vertices size.
+****
+
+When the runtime has acquired enough environment information to detect that
+2 tracked planes are actually the same plane, it must: set the
+slink:XrTrackablePlaneANDROID::pname:subsumedByPlane of one of the planes to
+the handle of the other.
+When this happens, the plane information returned in both of the associated
+planes must: be identical.
+The application should: stop querying for information about planes that have
+been reported as subsumed.
+
+include::{generated}/validity/structs/XrTrackablePlaneANDROID.adoc[]
+--
+
+[open,refpage='XrTrackingStateANDROID',type='enums',desc='The tracking state of a trackable',xrefs='']
+--
+The elink:XrTrackingStateANDROID enum describes the tracking state of an
+basetype:XrTrackableANDROID.
+
+include::{generated}/api/enums/XrTrackingStateANDROID.adoc[]
+
+include::{generated}/api/enums/XrTrackingStateANDROID.comments.adoc[]
+--
+
+[open,refpage='XrPlaneTypeANDROID',type='enums',desc='The plane type of a trackable',xrefs='']
+--
+The elink:XrPlaneTypeANDROID enum is the type of an
+basetype:XrTrackableANDROID plane.
+
+include::{generated}/api/enums/XrPlaneTypeANDROID.adoc[]
+include::{generated}/api/enums/XrPlaneTypeANDROID.comments.adoc[]
+--
+
+[open,refpage='XrPlaneLabelANDROID',type='enums',desc='The plane label of a trackable',xrefs='']
+--
+The elink:XrPlaneLabelANDROID enum is a label for an
+basetype:XrTrackableANDROID plane.
+
+include::{generated}/api/enums/XrPlaneLabelANDROID.adoc[]
+include::{generated}/api/enums/XrPlaneLabelANDROID.comments.adoc[]
+--
+
+==== Create anchor space
+
+[open,refpage='xrCreateAnchorSpaceANDROID',desc='Create anchor space attached to trackable',type='protos',xrefs='']
+--
+The flink:xrCreateAnchorSpaceANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateAnchorSpaceANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that creates the anchor space.
+* pname:createInfo is a pointer to an slink:XrAnchorSpaceCreateInfoANDROID
+  structure containing parameters to be used to create the anchor space.
+* pname:anchorOutput is a pointer to a handle in which the created
+  slink:XrSpace is returned.
+****
+
+At any point in time both the position and direction of the anchor is
+tracked or untracked together.
+This means that the runtime must: either set both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT or clear both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT when the application calls
+flink:xrLocateSpace or flink:xrLocateSpaces for pname:anchorOutput.
+
+The application must: eventually free the returned slink:XrSpace via
+flink:xrDestroySpace.
+
+* The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if the runtime
+  does not support anchors.
+* The runtime must: return
+  ename:XR_ERROR_TRACKABLE_TYPE_NOT_SUPPORTED_ANDROID if the specific anchor
+  attachment is not supported for the type of the passed
+  slink:XrAnchorSpaceCreateInfoANDROID::pname:trackable as returned by
+  flink:xrEnumerateSupportedAnchorTrackableTypesANDROID.
+
+include::{generated}/validity/protos/xrCreateAnchorSpaceANDROID.adoc[]
+--
+
+[open,refpage='XrAnchorSpaceCreateInfoANDROID',type='structs',desc='Information to create an anchor space',xrefs='']
+--
+The slink:XrAnchorSpaceCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrAnchorSpaceCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:space is the slink:XrSpace on which the anchor will be created.
+* pname:time is the basetype:XrTime at which pname:pose is evaluated in
+  pname:space.
+* pname:pose is the slink:XrPosef of the anchor.
+* pname:trackable is the basetype:XrTrackableANDROID on which the anchor
+  will be attached.
+  It may: be dlink:XR_NULL_TRACKABLE_ANDROID to create a spatial anchor.
+****
+
+include::{generated}/validity/structs/XrAnchorSpaceCreateInfoANDROID.adoc[]
+--
+
+===== Example code for getting all trackables
+
+The following example code demonstrates how to get all trackables of a given
+type.
+
+[source,C++]
+----
+XrSession session; // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID; // previously initialized
+PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID; // previously initialized
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previously initialized
+
+XrTrackableTrackerCreateInfoANDROID createInfo{XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID};
+createInfo.trackableType = XR_TRACKABLE_TYPE_PLANE_ANDROID;
+XrTrackableTrackerANDROID planeTrackableTracker;
+XrResult result = xrCreateTrackableTrackerANDROID(
+  session,
+  &createInfo,
+  &planeTrackableTracker);
+if (result != XR_SUCCESS) { /* Handle failures. */ }
+
+uint32_t trackableCountOutput = 0;
+std::vector<XrTrackableANDROID> allPlaneTrackables;
+
+// Query the number of trackables available.
+result = xrGetAllTrackablesANDROID(
+  planeTrackableTracker,
+  0,
+  &trackableCountOutput,
+  nullptr
+);
+
+if (result == XR_SUCCESS) {
+  allPlaneTrackables.resize(trackableCountOutput, XR_NULL_TRACKABLE_ANDROID);
+
+  // Fetch the actual trackable handles in the appropriately resized array.
+  result = xrGetAllTrackablesANDROID(
+    planeTrackableTracker,
+    trackableCountOutput,
+    &trackableCountOutput,
+    allPlaneTrackables.data());
+
+  if (result == XR_SUCCESS) {
+    for (XrTrackableANDROID trackable : allPlaneTrackables) {
+      // You now have all trackables of the specified type.
+    }
+  }
+}
+
+// Release trackable tracker.
+result = xrDestroyTrackableTrackerANDROID(planeTrackableTracker);
+----
+
+===== Example code for getting trackable plane
+
+The following example code demonstrates how to get a trackable plane from an
+existing basetype:XrTrackableANDROID, obtained from a hit result
+(apiext:XR_ANDROID_raycast) or flink:xrGetAllTrackablesANDROID.
+
+[source,C++]
+----
+XrTrackableTrackerANDROID planeTracker; // previously created
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrGetTrackablePlaneANDROID xrGetTrackablePlaneANDROID; // previously initialized
+
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace; // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+XrTrackableANDROID planeTrackable; // Acquired from a hit result or xrGetAllTrackablesANDROID().
+
+XrTrackableGetInfoANDROID planeGetInfo;
+planeGetInfo.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID;
+planeGetInfo.next = nullptr;
+planeGetInfo.trackable = planeTrackable;
+planeGetInfo.baseSpace = appSpace;
+planeGetInfo.time = updateTime;
+
+XrTrackablePlaneANDROID plane = { XR_TYPE_TRACKABLE_PLANE_ANDROID };
+XrResult result = xrGetTrackablePlaneANDROID(
+  planeTracker,
+  &planeGetInfo,
+  &plane
+);
+
+if (result == XR_SUCCESS) {
+  // Plane tracking state, center pose, extents, type now available in plane.
+}
+----
+
+===== Example code for creating anchor space
+
+The following example code demonstrates how to create an anchor space
+attached to a trackable.
+
+[source,C++]
+----
+XrSession session; // Created at app startup.
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace; // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+XrTrackableANDROID planeTrackable; // Acquired from a hit result or xrGetAllTrackablesANDROID().
+
+PFN_xrCreateAnchorSpaceANDROID xrCreateAnchorSpaceANDROID; // Previously initialized.
+
+// Create an anchor at (2, 2, 2) world-coordinates.
+XrAnchorSpaceCreateInfoANDROID spatialAnchorCreateInfo;
+spatialAnchorCreateInfo.type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID;
+spatialAnchorCreateInfo.next = nullptr;
+spatialAnchorCreateInfo.space = appSpace;
+spatialAnchorCreateInfo.time = updateTime;
+spatialAnchorCreateInfo.pose = { { 0, 0, 0, 1 }, { 2, 2, 2 } };
+
+XrSpace spatialAnchor = XR_NULL_HANDLE;
+XrResult result = xrCreateAnchorSpaceANDROID(
+  session,
+  &spatialAnchorCreateInfo,
+  &spatialAnchor
+);
+
+// Create an anchor attached to a trackable.
+XrTrackablePlaneANDROID plane;
+XrAnchorSpaceCreateInfoANDROID trackableAnchorCreateInfo;
+trackableAnchorCreateInfo.type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID;
+trackableAnchorCreateInfo.next = nullptr;
+trackableAnchorCreateInfo.space = appSpace;
+trackableAnchorCreateInfo.pose = plane.centerPose;
+trackableAnchorCreateInfo.trackable = planeTrackable;
+
+XrSpace trackableAnchor = XR_NULL_HANDLE;
+result = xrCreateAnchorSpaceANDROID(
+  session,
+  &trackableAnchorCreateInfo,
+  &trackableAnchor
+);
+
+
+while (true) {
+  // app update loop
+  // ...
+
+  // Get the current location of the anchor's space w.r.t the world.
+  XrSpaceLocation anchorLocation = { XR_TYPE_SPACE_LOCATION };
+  result = xrLocateSpace(trackableAnchor, appSpace, updateTime, &anchorLocation);
+
+  if (plane.trackingState == XR_TRACKING_STATE_TRACKING_ANDROID) {
+    // Update anchor pose.
+    /* doDrawingForAnchor(anchorLocation.pose); */
+  } else {
+    // ...
+  }
+}
+
+// Cleanup - destroy the space, detach the anchor so its no longer tracked by the
+// runtime and then release all resources held by it.
+xrDestroySpace(spatialAnchor);
+xrDestroySpace(trackableAnchor);
+----
+
+*New Defines*
+
+[open,refpage='XR_NULL_TRACKABLE_ANDROID',type='defines',desc='The value representing an invalid trackable tracker',xrefs='XrTrackableANDROID']
+--
+include::{generated}/api/defines/XR_NULL_TRACKABLE_ANDROID.adoc[]
+
+dlink:XR_NULL_TRACKABLE_ANDROID defines an invalid trackable atom.
+--
+
+include::{generated}/interfaces/XR_ANDROID_trackables.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-21 (Kenny Vercaemer)
+** Initial extension description.

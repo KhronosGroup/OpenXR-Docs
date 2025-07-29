@@ -1,0 +1,284 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_raycast.adoc[]
+
+*Last Modified Date*::
+    2025-07-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Spencer Quin, Google +
+    Nihav Jain, Google +
+    John Pursey, Google +
+    Jared Finder, Google +
+    Levana Chen, Google +
+    Kenny Vercaemer, Google +
+
+==== Overview
+
+This extension allows the application to perform raycasts against trackables
+in the environment.
+
+Raycasts are useful for detecting objects in the environment that are in the
+trajectory of a ray from a given origin.
+For example:
+
+* To determine where a floating object will fall when dropped, by using a
+  vertical raycast.
+* To determine where a user is looking, by using a forward-facing raycast.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Query supported raycast capabilities
+
+[open,refpage='xrEnumerateRaycastSupportedTrackableTypesANDROID',type='protos',desc='Enumerates trackables that support raycasting.',xrefs='XrTrackableTypeANDROID']
+--
+The flink:xrEnumerateRaycastSupportedTrackableTypesANDROID function is
+defined as:
+
+include::{generated}/api/protos/xrEnumerateRaycastSupportedTrackableTypesANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance from which pname:systemId was
+  retrieved.
+* pname:systemId is the basetype:XrSystemId whose supported trackable types
+  for raycasting are being enumerated.
+* pname:trackableTypeCapacityInput is the capacity of the
+  pname:trackableTypes, or 0 to retrieve the required capacity.
+* pname:trackableTypeCountOutput is a pointer to the count of the array, or
+  a pointer to the required capacity in the case that
+  pname:trackableTypeCapacityInput is insufficient.
+* pname:trackableTypes is a pointer to an array of
+  elink:XrTrackableTypeANDROID, but can: be code:NULL if
+  pname:trackableTypeCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:trackableTypes size.
+****
+
+flink:xrEnumerateRaycastSupportedTrackableTypesANDROID enumerates which
+trackable types the runtime supports raycasting for.
+
+include::{generated}/validity/protos/xrEnumerateRaycastSupportedTrackableTypesANDROID.adoc[]
+--
+
+==== Performing a raycast
+
+[open,refpage='xrRaycastANDROID',type='protos',desc='Perform a raycast.',xrefs='']
+--
+The flink:xrRaycastANDROID function is defined as:
+
+include::{generated}/api/protos/xrRaycastANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that the raycast is performed in.
+* pname:rayInfo is the slink:XrRaycastInfoANDROID that describes the ray to
+  cast.
+* pname:results is a pointer to the slink:XrRaycastHitResultsANDROID that
+  receives the results of the raycast.
+****
+
+To perform raycasts, the application calls flink:xrRaycastANDROID.
+
+* If a raycast intersects more trackables than
+  slink:XrRaycastInfoANDROID::pname:maxResults, the runtime must: return the
+  hit results that are closest to the
+  slink:XrRaycastInfoANDROID::pname:origin of the ray.
+* If a raycast intersects a trackable of type
+  ename:XR_TRACKABLE_TYPE_PLANE_ANDROID, that is subsumed by another plane,
+  the runtime must: return the hit result for the subsuming plane only.
+* The runtime must: return the hit results in closest-to-farthest order from
+  slink:XrRaycastInfoANDROID::pname:origin along the
+  slink:XrRaycastInfoANDROID::pname:trajectory vector.
+* The runtime must: return
+  ename:XR_ERROR_TRACKABLE_TYPE_NOT_SUPPORTED_ANDROID if the trackable type
+  corresponding to the slink:XrTrackableTrackerANDROID handles in
+  slink:XrRaycastInfoANDROID::pname:trackers are not enumerated by
+  flink:xrEnumerateRaycastSupportedTrackableTypesANDROID.
+
+include::{generated}/validity/protos/xrRaycastANDROID.adoc[]
+--
+
+[open,refpage='XrRaycastInfoANDROID',type='structs',desc='Information to perform a raycast.',xrefs='xrRaycastANDROID']
+--
+The slink:XrRaycastInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrRaycastInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:maxResults is the code:uint32_t maximum number of results to return.
+* pname:trackerCount is the code:uint32_t count of the pname:trackers array.
+* pname:trackers is the array of slink:XrTrackableTrackerANDROID that the
+  casted ray should: be tested against.
+* pname:origin is the slink:XrVector3f that the ray is cast from.
+* pname:trajectory is the slink:XrVector3f that the ray is targeted at.
+* pname:space is the slink:XrSpace that the ray is cast in.
+* pname:time is the basetype:XrTime the ray is cast at.
+****
+
+The slink:XrRaycastInfoANDROID structure describes the ray to cast.
+
+* The slink:XrRaycastInfoANDROID::pname:trackers array may: contain trackers
+  of different types.
+* The slink:XrRaycastInfoANDROID::pname:trackers array must: not contain
+  multiple trackers of the same type, otherwise the runtime must: return
+  ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrRaycastInfoANDROID.adoc[]
+--
+
+[open,refpage='XrRaycastHitResultsANDROID',type='structs',desc='The results from performing a raycast.',xrefs='xrRaycastANDROID']
+--
+The slink:XrRaycastHitResultsANDROID structure is defined as:
+
+include::{generated}/api/structs/XrRaycastHitResultsANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:resultsCapacityInput is the capacity of the pname:results array, or
+  0 to indicate a request to retrieve the required capacity.
+* pname:resultsCountOutput is a pointer to the count of pname:results
+  written, or a pointer to the required capacity in the case that
+  pname:resultsCapacityInput is insufficient.
+* pname:results is a pointer to an array of slink:XrRaycastHitResultANDROID
+  structures.
+  It can: be ename:NULL if pname:resultsCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:results size.
+****
+
+The slink:XrRaycastHitResultsANDROID contains the array of hits of a
+raycast.
+
+The runtime must: set pname:resultsCountOutput to be less than or equal to
+slink:XrRaycastInfoANDROID::pname:maxResults.
+
+include::{generated}/validity/structs/XrRaycastHitResultsANDROID.adoc[]
+--
+
+
+[open,refpage='XrRaycastHitResultANDROID',type='structs',desc='Raycast hit information.',xrefs='xrRaycastANDROID']
+--
+The slink:XrRaycastHitResultANDROID structure is defined as:
+
+include::{generated}/api/structs/XrRaycastHitResultANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrTrackableTypeANDROID of the trackable that the
+  raycast hit.
+* pname:trackable is the basetype:XrTrackableANDROID that the raycast hit,
+  or dlink:XR_NULL_TRACKABLE_ANDROID if the trackable pname:type was
+  ename:XR_TRACKABLE_TYPE_DEPTH_ANDROID.
+* pname:pose is the slink:XrPosef that the raycast hit.
+****
+
+The slink:XrRaycastHitResultANDROID contains the details of a raycast hit.
+
+The slink:XrRaycastHitResultANDROID::pname:pose for a plane hit must: be
+such that X+ is perpendicular to the cast ray and parallel to the physical
+surface centered around the hit, Y+ points along the estimated surface
+normal, and Z+ points roughly toward the ray origin.
+
+The slink:XrRaycastHitResultANDROID::pname:pose for a depth hit is analogous
+to a plane hit, using an estimated surface normal.
+X+ is perpendicular to the cast ray and parallel to the physical surface
+centered around the hit, Y+ points along the estimated surface normal, and
+Z+ points roughly toward the ray origin.
+
+[[fig-ANDROID_raycast-orientation]]
+image::images/XR_ANDROID_raycast_orientation.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example raycast hit orientation."]
+
+[options='header']
+|====
+| Type of trackable hit | Description
+| ename:XR_TRACKABLE_TYPE_PLANE_ANDROID
+  | Hits horizontal and/or vertical surfaces to determine a point's correct
+    depth and orientation.
+| ename:XR_TRACKABLE_TYPE_DEPTH_ANDROID
+  | Uses depth information from the entire scene to determine a point's correct
+    depth and orientation.
+|====
+
+Other extensions may: implement raycasting for other types of trackables.
+
+include::{generated}/validity/structs/XrRaycastHitResultANDROID.adoc[]
+--
+
+==== Example code for raycasting
+
+The following example code demonstrates how to perform raycasts.
+
+[source,C++]
+----
+XrSession session; // previously initialized
+XrTime updateTime; // previously initialized
+XrSpace appSpace;  // space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+XrPosef headPose;  // latest pose of the HMD.
+XrTrackableTrackerANDROID planeTracker; // tracker for plane trackables.
+XrTrackableTrackerANDROID depthTracker; // tracker for depth trackables.
+
+PFN_xrRaycastANDROID xrRaycastANDROID; // previously initialized
+XrVector3f CalculateForwardDirectionFromHeadPose(XrPosef); // defined elsewhere
+
+// Perform a raycast against multiple trackers.
+constexpr uint32_t NUM_DESIRED_RESULTS = 2;
+XrTrackableTrackerANDROID trackers[] = {
+  planeTracker,
+  depthTracker,
+};
+XrRaycastInfoANDROID rayInfo = {XR_TYPE_RAYCAST_INFO_ANDROID};
+rayInfo.trackerCount = sizeof(trackers) / sizeof(XrTrackableTrackerANDROID);
+rayInfo.trackers = trackers;
+rayInfo.origin = headPose.position;
+rayInfo.trajectory = CalculateForwardDirectionFromHeadPose(headPose);
+rayInfo.space = appSpace;
+rayInfo.time = updateTime;
+rayInfo.maxResults = NUM_DESIRED_RESULTS;
+
+uint32_t totalHitResults = 0;
+XrRaycastHitResultANDROID hitResult[NUM_DESIRED_RESULTS];
+XrRaycastHitResultsANDROID hitResults = {XR_TYPE_RAYCAST_HIT_RESULTS_ANDROID};
+hitResults.resultsCapacityInput = NUM_DESIRED_RESULTS;
+hitResults.results = hitResult;
+XrResult result = xrRaycastANDROID(session, &rayInfo, &hitResults);
+
+if (result == XR_SUCCESS && hitResults.resultsCountOutput >= 1) {
+  // Hit results are returned in closest-to-farthest order in
+  // hitResults.results[0] .. hitResults.results[hitResults.resultsCountOutput - 1]
+}
+----
+
+include::{generated}/interfaces/XR_ANDROID_raycast.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Kenny Vercaemer)
+** Initial extension description

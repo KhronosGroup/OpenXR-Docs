@@ -872,9 +872,15 @@ relationships in the core specification:
 [[fundamentals-buffer-size-parameters]]
 === Buffer Size Parameters
 
-Functions with input/output buffer parameters take on either parameter form
-or structure form, as in one of the following examples, with the element
-type being code:float in this case:
+Functions with buffer or array parameters passed as pointers, rather than
+declared with a static array size, follow different conventions depending on
+whether the buffer size is known to the application or variable per call.
+
+==== Variable size buffer parameters
+
+Functions with variable size output buffer parameters take on either
+parameter form or structure form, as in one of the following examples, with
+the element type being code:float in this case:
 
 Parameter form:
 
@@ -951,9 +957,9 @@ and its size parameters:
 * If the pname:elementCapacityInput is non-zero and the function returns
   successfully, the function sets pname:elementCountOutput to the count of
   the elements that have been written to pname:elements.
-* If the function fails for reasons unrelated to the element array capacity,
-  the contents of the values of (or pointed to by) pname:elementCountOutput
-  and pname:elements are undefined.
+* If the function returns any etext:XR_ERROR_* result other than
+  ename:XR_ERROR_SIZE_INSUFFICIENT, the contents of the values of (or
+  pointed to by) pname:elementCountOutput and pname:elements are undefined.
 * For clarity, if the element array refers to a string (pname:element is of
   type code:char*), pname:elementCapacityInput and pname:elementCountOutput
   refer to the string code:strlen plus code:1 for a code:NULL terminator.
@@ -963,7 +969,7 @@ Some functions have a given pname:elementCapacityInput and
 pname:elementCountOutput associated with more than one element array (i.e.
 parallel arrays).
 In this case, the capacity/count and all its associated arrays will share a
-common prefix.
+common name prefix.
 All of the preceding general requirements continue to apply.
 
 Some functions fill multiple element arrays of varying sizes in one call.
@@ -980,7 +986,72 @@ these additional requirements:
   insufficient to fit all elements of its corresponding array, the runtime
   must: return ename:XR_ERROR_SIZE_INSUFFICIENT.
   As in the case of the single array, the data in all arrays is undefined
-  when ename:XR_ERROR_SIZE_INSUFFICIENT is returned.
+  when the function returns any etext:XR_ERROR_* result.
+
+[[fundamentals-known-buffer-size-parameters]]
+==== Known size buffer parameters
+
+Functions with known size input and/or output buffer parameters, or buffer
+parameters of an application-chosen size, take a slightly different approach
+than variable size buffer parameters.
+Such functions also take on either parameter form or structure form, as in
+the following examples:
+
+Parameter form:
+
+[source,listing]
+----
+XrResult xrFunction(uint32_t elementCount, float* elements);
+----
+
+Structure form:
+
+[source,listing]
+----
+XrResult xrFunction(XrBuffer* buffer);
+
+struct XrBuffer {
+    uint32_t              elementCount;
+    float*                elements;
+};
+----
+
+Unlike for variable size buffer parameters, only a single "count" is
+specified per buffer/array.
+Functions following this convention have the following behavior with respect
+to the array/buffer and its count parameters:
+
+.Buffer Size Parameter Behavior
+****
+* The pname:elementCount argument precedes the array to which it refers, in
+  argument order.
+* pname:elementCount specifies the number of elements passed as input, or
+  both the capacity in number of elements of the buffer to be written and
+  the exact number of elements expected.
+* pname:elements must: be at least pname:elementCount elements in size.
+* If the array is used as output or input/output and pname:elementCount is
+  not equal to the exact number of elements expected, the function must:
+  return ename:XR_ERROR_VALIDATION_FAILURE.
+* If the array is used as output or input/output and the function returns
+  any etext:XR_ERROR_*, including ename:XR_ERROR_VALIDATION_FAILURE, the
+  contents of the data in the array pname:elements is undefined.
+* If the array is used as input, all pname:elementCount elements of
+  pname:elements must: be valid unless otherwise specified.
+****
+
+Some functions have a given pname:elementCount associated with more than one
+element array (i.e. parallel arrays).
+In this case, the count and all its associated arrays will share a common
+name prefix.
+All of the preceding general requirements continue to apply.
+
+Some functions operate on multiple element arrays of known sizes in one
+call.
+For these functions, the pname:elementCount, and pname:elements array
+parameters or fields are repeated with different prefixes.
+As in the case of the single array, the data in all arrays is undefined when
+the function returns any etext:XR_ERROR_* result.
+All of the preceding general requirements continue to apply.
 
 [[fundamentals-time]]
 === Time

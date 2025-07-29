@@ -271,7 +271,7 @@ include::{generated}/api/protos/xrGetControllerModelStateMSFT.adoc[]
 * pname:session is the specified slink:XrSession.
 * pname:modelKey is the model key corresponding to the controller model
   being queried.
-* pname:state is a pointer to slink:XrControllerModelNodeStateMSFT returns
+* pname:state is a pointer to slink:XrControllerModelStateMSFT and returns
   the current controller model state.
 ****
 

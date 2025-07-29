@@ -1,0 +1,446 @@
+// Copyright (c) 2015-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+[[design]]
+= API Design Principles
+
+This chapter of the document is not inherently binding, but it captures some
+principles applied by the Working Group when designing new APIs.
+Contravening its principles will likely lead to resistance to your proposed
+API by the working group and/or specification editor, and makes your API
+less "OpenXR-like".
+
+[[design-goals-for-app-dev]]
+== Goals for Application Developers
+
+A version of this list was originally published on
+link:https://github.com/KhronosGroup/OpenXR-Guide/blob/main/chapters/goals_design_philosophy.md[the
+Goals and Design Philosophy document] in the OpenXR-Guide, focused on
+interaction.
+However, as included here, they apply more broadly to the overall design of
+OpenXR APIs.
+These are goals kept in mind by the Working Group regarding API usage by
+applications and engines: "we"/"our" refers to the working group in the
+design process, while "you" refers to the developer of an application or
+game.
+The goals have been assigned shorthand titles/mnemonics to make them easy to
+reference in subsequent discussion.
+
+[[design-goals-customize,CUSTOMIZE]]
+CUSTOMIZE::
+We want you to be able to customize how your software works on the devices
+you are focused on and testing most, and we want it to work the way you
+expect/intend on those devices by default.
+
+[[design-goals-compatibility,COMPATIBILITY]]
+COMPATIBILITY::
+At least within the scope of the OpenXR standard, we want to enable you to
+create applications that function seamlessly across hardware and runtimes
+you have not tested, as well as hardware that has not been invented yet.
+For feature differences, design for progressive enhancement by default, such
+as through extensions.
+
+[[design-goals-specified,ONLY-DEPEND-ON-SPEC]]
+ONLY-DEPEND-ON-SPEC::
+We want your software to depend only on the specified, documented behavior,
+so that <<design-goals-compatibility>> is possible, and so that
+compatibility with your software does not constrain the design space of
+future XR systems.
+
+[[design-goals-avoid-appcompat,AVOID-APPCOMPAT]]
+AVOID-APPCOMPAT::
+We want to avoid writing compatibility code in runtimes to work around a bug
+in your software (or alternately, having to choose to simply let your
+software be unusable).
+
+[[design-goals-avoid-untested,AVOID-UNTESTED-PATHS]]
+AVOID-UNTESTED-PATHS::
+As a consequence of <<design-goals-avoid-appcompat>>, we want to avoid
+encouraging or relying on untested code paths in your software: hardware you
+have not tested should use the same code paths that you use for hardware you
+did test.
+
+[[design-goals-avoid-permitted-surprises,AVOID-PERMITTED-SURPRISES]]
+AVOID-PERMITTED-SURPRISES::
+As a consequence of <<design-goals-avoid-appcompat>> and corollary of
+<<design-goals-avoid-untested>>, we want to avoid "surprising" your software
+with behavior permitted by the spec but not tested in your development
+process.
+
+[[design-goals-pit-of-success,PIT-OF-SUCCESS]]
+PIT-OF-SUCCESS::
+We want the common tasks to be as easy as possible without constraining
+future potential, so the natural choice is the right one or the best
+practice in most cases.
+
+[[design-goals-maybe-make-the-complicated-possible,MAYBE-MAKE-THE-COMPLICATED-POSSIBLE]]
+MAYBE-MAKE-THE-COMPLICATED-POSSIBLE::
+We want complicated and uncommon things to be possible, but **not** at the
+expense of making the common ones more error-prone.
+If it is possible for a given rare, complicated use to be implemented with
+the specification as-is, we are unlikely to add to the spec to make it
+easier if it might pose a trap for the more common use cases.
+
+
+[[design-considerations]]
+== General Design Considerations
+
+The following design considerations are worth keeping in mind when composing
+new API for OpenXR (typically in the form of extensions.)
+
+[[design-considerations-app-modularity]]
+=== Keep in Mind App Modularity
+
+Applications may consist of components, such as an engine, plugins/addons,
+and application code itself, all of which might be compiled separately and
+against different versions of OpenXR headers.
+Often, the header and loader used by an engine is older (perhaps
+substantially) than the application code, and the ability of the application
+to affect how the engine creates an instance may be limited, for a concrete
+example.
+From this flows:
+
+* Just enabling an extension should: not change behavior
+** Behavior changes should: be controlled by a local opt-in via extension
+   structure or different function name.
+   Separate components should: not have their assumptions broken because
+   another component wants to use new features.
+
+
+[[design-considerations-negotiation]]
+=== Use App/Runtime Negotiation to Avoid Per-App Compatibility Workarounds
+
+This principle is primarily demonstrated in the interaction system, but is
+applicable elsewhere.
+
+See also <<design-goals-avoid-appcompat>> for the app-facing goal related to
+this consideration.
+
+In brief, if an API has an open-ended return value for an application to
+handle, realistically only those values available to test by the developers
+will actually be tested.
+To avoid unexpected behavior then, appcompat code per-application is
+required to define the list of values that can be returned to an app without
+it exhibiting undesired behavior.
+This is not a scalable solution.
+
+Alternately, the application can declare to the runtime which values it is
+aware of, sometimes with a priority if it makes sense.
+Such a call carries the assertion that the application has been tested with
+all the suggested values.
+The runtime can then select the best value or values from those affimatively
+identified by the application.
+
+In the action system, this is the suggested bindings and interaction
+profiles.
+
+If this pattern is applied, it is important to identify the limits of
+emulating the behavior of the reported value.
+There are some parts of the interaction system that are insufficiently or
+unclearly specified with regards to whether they are limited to behaviors
+observable with the archetypical device of the current interaction profile,
+or whether they are not so limited.
+
+
+[[design-considerations-avoid-ub]]
+=== Avoid Undefined Behavior
+
+OpenXR has borrowed many design principles from Vulkan, but compared to
+Vulkan, OpenXR is a relatively "low-frequency" API.
+The performance cost of verifying valid usage is broadly acceptable, though
+not uniformly required.
+However, in new API, prefer normative statements like "If value is outside
+of range XYZ, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE"
+(or a more specific applicable error) over statements like "the application
+must: submit a value in XYZ".
+It is acceptable to include both, with the app "must:" first, and the
+runtime "must:" second.
+
+
+[[design-considerations-avoid-may-should]]
+=== Avoid may: and should:
+
+These provide flexibility for the runtime, but they do not usually add very
+much to the utility of the specification, since you cannot conformance-test
+them, and developers cannot rely on that behavior.
+Try to establish a "must:".
+
+
+[[design-considerations-consider-layer-implementation]]
+=== Consider Implementation as an API Layer
+
+Considering whether a given piece of functionality might be suitable for
+implementation in an API layer can be a useful step in drafting OpenXR
+functionality/extensions.
+If functionality is suitable for implementation in an API layer, verify that
+the proposed API is feasible to implement this way.
+
+Not all functionality makes sense to implement in an API layer.
+Interactions and action system related functionality in particular is
+painful to implement in an API layer, by design.
+(There is data not exposed to the application API to avoid compatibility
+problems.) In addition, maintaining an API layer is substantial work as it
+often must be updated on every spec release for maximum compatibility, and
+can serve as a fragile link in the runtime environment.
+
+However, some functionality is suitable for API layer implementation.
+In particular, this can be helpful in compatibility (implement old
+functionality in terms of newer API, typically), as well as functionality
+that has limited interaction with other parts of OpenXR, such as
+platform-focused performance and thermal extensions.
+They can also be used to support added hardware, although the fragility
+concerns still apply, and not all platforms currently support
+field-installable API layers.
+
+
+[[design-considerations-middleware]]
+=== Consider How Middleware Will Expose The Functionality
+
+Many developers using OpenXR never interact directly with OpenXR API.
+Instead they interact only with the interface exposed by some middleware (a
+preferred game engine or abstraction layer) based on the OpenXR API.
+Make sure to consider how your functionality will fit into middleware and
+how they might expose it.
+If your API introduces a way of interacting with capabilities typically
+exposed in a different way in existing abstraction layers and engines, you
+may need to include engine and middleware vendors in the drafting and
+release process.
+Otherwise, it will likely be wrapped to expose a more conventional
+interface.
+
+
+[[design-considerations-consistency]]
+=== Consistency
+
+People often understand new concepts by relating them to what they already
+know.
+Developers will assume that your API works in broadly the same way as other
+functionality in OpenXR, so avoid deviating from the overall conventions and
+"feel" of OpenXR in your design.
+Specifically, a few points:
+
+* Create new uses for handles and atoms sparingly, as they add complexity.
+  Carefully consider the hierarchy of handles, as this controls handle
+  lifetime, and also helps developers to construct a mental model about the
+  problem space.
+  Use handles when the application needs the runtime to obtain or allocate
+  resources, and atoms when referring to entities logically within an
+  existing handle.
+  Atoms are often obtained and used, with a parent handle, to selectively
+  create a new handle.
+
+* Do not define new values that are "similar but not" handles or atoms.
+  Between handles, atoms, and UUIDs (which have no implicit lifetime), find
+  the closest fit and accept all the parts of it.
+  Developers will try to make your entity into one of those if you define
+  your own anyway.
+
+** Relatedly: If you use UUIDs, be precise about the lifetime, and know that
+   they are often assumed to exist beyond the bounds of a session or
+   instance.
+   If a UUID is transient, recommend including something to that effect in
+   the name of the field or parameter.
+
+* Use the units and types (meters, radians, coordinate systems,
+  sname:XrTime, sname:XrDuration) that are typical to the rest of the
+  specification.
+
+
+[[design-considerations-runtime-variety]]
+=== Design for Runtime Variety
+
+There are many types of OpenXR runtimes, and they have different
+requirements and constraints.
+Examples of some runtime types that we know about today:
+
+* Some runtimes work on a desktop fixed spatial display.
+* Some runtimes are for AR or MR devices rather than VR devices.
+* Some runtimes are for desktop use, while others are for all-in-one
+  untethered usage.
+* Some runtimes are layered on top of another runtime.
+  Often the same runtimes as those satisfying the next point.
+* Some runtimes are remote/streaming, over connections with a variety of
+  latencies and bandwidths.
+  (Wired USB, WiFi to a local machine, WiFi to a cloud server, cellular data
+  to an edge/cloud server) Generally it is best if the application does not
+  need to care about this detail, but there may be some optional awareness
+  that might affect how the application sets up the interaction.
+** Be aware of what latencies are easily hidden and which are not.
+   Head motion graphical latency is relatively easily hidden through widely
+   understood techniques, but the latency of e.g. bringing up a menu on a
+   button press is harder to hide.
+
+
+[[design-considerations-universal-access]]
+=== Design for Universal Accessibility
+
+Not all individuals are able to or even want to use an application exactly
+as it was designed.
+In most cases, we emphasize the autonomy and control of the individual in
+the XR experience.
+(The main conflict is, at which point does interaction customization become
+cheating, for potentially competitive applications.)
+
+Design so that the runtime can allow the individual to customize how they
+interact with an application without breaking the app or hitting
+<<design-goals-avoid-untested,untested code paths>>.
+For a specific example, design such that no matter how many devices are used
+to feed input into an application, the same code path is used to show
+renderable controller models.
+If there is a separate code path for the "uncommon" case of input remapping,
+that produces essentially an untested code path.
+
+If providing spatial input for the purpose of interaction, consider if there
+is a way to expose it such that it can be simulated or remapped according to
+individual preference or needs.
+
+
+[[design-considerations-privacy]]
+=== Design for Privacy
+
+XR technologies often acquire or use very detailed information that can be
+private and/or identifying.
+For example, even basic mouse input data can be used to infer medical
+conditions footnote:[White, R.W., Doraiswamy, P.M.
+& Horvitz, E. Detecting neurodegenerative disorders from web search signals.
+_npj Digital Med_ 1, 8 (2018).
+https://doi.org/10.1038/s41746-018-0016-6], and XR motion tracking is higher
+dimension and typically higher frequency than mouse input.
+
+Always consider the privacy impact of exposing functionality.
+This may mean only providing high level functionality instead of raw data,
+e.g. environment blend modes for video passthrough, rather than exposing
+camera images for the application to render.
+
+
+[[design-considerations-individual-control]]
+=== Design for Individual Control
+
+The application author specifies desired default behavior, where it is
+tested.
+The runtime attempts to provide a quality experience based on that
+demonstrated intent and the environment.
+The individual in control of the experience can choose, however, to
+configure the runtime (and application) to behave in a different way, even a
+non-conformant way.
+If such control breaks the app, it is that individual's problem, although it
+is best to design the API to avoid breaking applications if possible.
+It is most visible in the interaction spec, where many of the requirements
+include the phrase "when obeying suggested bindings".
+The degree of individual control offered may vary between runtimes.
+Note that there is ample evidence that a subset of application users will go
+to dramatic lengths to restore their individual control if it is not
+preserved by the API and runtime, so designing with this control in mind can
+improve the experience quality.
+
+
+[[design-considerations-misc]]
+=== Miscellaneous Design Advice
+
+* Will an application make a big series of `if` statements (or a big
+  `switch` block) to use this? This is broadly considered an anti-pattern
+  and may indicate a less than ideal API.
+** Can it be avoided by making a more declarative API?
+** Can it be avoided by making the API higher-level and delegating more work
+   to the runtime?
+** If the app will put in a big `switch` statement, make sure that it only
+   gets values back out that it has affirmatively specified.
+   See <<design-goals-avoid-permitted-surprises>>.
+* Beware of API shapes where runtimes may want to return the "best" or
+  "better" value of an enum, even though it does not strictly describe the
+  environment, because that makes it functionally useless.
+* Similarly, if providing a non-binary output (whether enumerants, integers,
+  or floats), be sure the "transfer function" is specified, relating the
+  value to a real-world property.
+  If specifying the transfer function is difficult or prone to
+  mis-interpretation, consider recommending a limited scope of use.
+  (Note however that any outputs **will** eventually be used for whatever
+  purpose a developer deems useful, even if it is discouraged by the
+  specification.)
+* Always consider the impact of functionality on the broader ecosystem of
+  applications and runtimes.
+* If code will need to be updated, favor putting it in the runtime.
+  As an OpenXR WG member representative once said, "eventually all software
+  becomes legacy software", and this happens quite quickly with many apps in
+  the game industry.
+  A developer may disband a team, leave the XR industry, or otherwise not
+  update an application for newer runtimes, so prefer to design APIs that
+  can make the runtime handle any compatibility burden.
+  (Though keep in mind <<design-goals-avoid-appcompat>>.)
+
+
+[[design-idioms]]
+== Existing Idioms
+
+Other parts of OpenXR demonstrate some solution patterns or idioms that may
+be useful in solving API design problems you encounter.
+The first place to start when designing an API for OpenXR is the
+Fundamentals chapter of the specification.
+It covers many applicable idioms widely used in OpenXR.
+Some specific idioms are called out in the following list for easy
+reference.
+Using these is a way to apply the design consideration of
+<<design-considerations-consistency>>.
+
+* Negotiate starting with a application - for details see
+  <<design-considerations-negotiation>>.
+* Polymorphic properties for a uniform object type with otherwise uniform
+  operations - see slink:XrSwapchain and flink:xrEnumerateSwapchainImages.
+* Two-call idiom for buffer sizes, including associated arrays with
+  different sizes using the structure type (e.g. vector and index arrays in
+  apiext:XR_KHR_visibility_mask)
+* Arrays of output data, with indices in an enum.
+  (Hand joints and joint sets)
+* Hand tracking "data source" (or use case) rather than "quality"
+* Hand tracking "motion range" (obstructed vs unobstructed - controllers
+  simulate unobstructed from obstructed.)
+
+
+[[design-polymorphism]]
+== Modeling Polymorphism
+
+We have two ways of having polymorphic inputs and outputs.
+The most frequently used one is the `next` chain, adapted from the Vulkan
+`pNext` chain.
+It is documented conceptually in the specification:
+link:{uri-openxr-ratified-spec}#fundamentals-valid-usage-for-structure-pointer-chains[Valid
+Usage for Structure Pointer Chains].
+
+The less common one is using a `BaseHeader` type and reinterpret-casting.
+This is used only a few places in the specification and does not have a
+section in Fundamentals.
+Except in legacy cases, **do not** use both on a single type.
+
+* Consider if you need polymorphism at that level at all: multiple functions
+  create `XrSpace` handles from a variety of inputs, rather than a single
+  `xrCreateSpace` with polymorphic inputs.
+* If you do actually need polymorphism, strongly prefer `next` chain by
+  default.
+  They are more common, more familiar, and can be used without
+  dangerous-looking code (`reinterpret_cast`) on the application side.
+* If all the polymorphic structs share some initial members, this suggests
+  `BaseHeader` might be suitable.
+  (If they do not share initial members beyond `type` and `next`, this
+  suggests not to use `BaseHeader`!) E.g. slink:XrCompositionLayerBaseHeader
+  composition layers work this way because they all are submitted with
+  `flags` and in a `space`.
+* If you need to have a heterogeneous array of one or more items of any
+  given type, then use an array of pointers to `BaseHeader`.
+  (Composition layers, for example)
+* But, if you only need at most one of each type, use the `next` chain.
+* If it doesn't make sense without something chained into the `next` chain,
+  that is a weak indication toward `BaseHeader`.
+  It is weak because a lot of times we just put an empty struct in there and
+  say, this is for extension.
+  See e.g. slink:XrFrameWaitInfo
+* Typically `Info` (input parameters) included in function declarations are
+  not `BaseHeaders`.
+* Existing, good applications of `BaseHeader` type structures:
+** composition layers - this is the ideal usage.
+** swapchain images
+*** However, the API there is awkward, would be better to enumerate one at a
+    time or an array of pointers to `BaseHeader`.
+** Filters and query parameters in a variety of extensions.
+*** However, if these do not need to have more than one structure of each
+    type, these are better as `next` chains.

@@ -17,6 +17,101 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.50 (2025-07-24)
+
+This release features a new API design principles section in the Style Guide, a
+new loader extension, and several new vendor extensions, among other changes.
+
+- Specification
+  - Addition: Add an informative chapter on OpenXR API design principles to the
+    Style Guide.
+    ([internal MR 3335](https://gitlab.khronos.org/openxr/openxr/merge_requests/3335))
+  - Change: In `XR_BD_spatial_anchor`, change the
+    `XrSpatialAnchorCreateCompletionBD` structure to make the last element be the
+    created handle.
+    ([internal MR 3876](https://gitlab.khronos.org/openxr/openxr/merge_requests/3876))
+  - Fix: Show correct parentage of `XrEventData...` structures.
+    ([internal MR 3871](https://gitlab.khronos.org/openxr/openxr/merge_requests/3871))
+  - Fix: Incorrect parameter description for `xrGetControllerModelStateMSFT`
+    (parameter is `XrControllerModelStateMSFT`, but parameter description
+    referenced `XrControllerModelNodeStateMSFT`)
+    ([internal MR 3890](https://gitlab.khronos.org/openxr/openxr/merge_requests/3890))
+  - Fix: Clarify parameters for `xrDestroySpatialEntityEXT`,
+    `xrGetSpatialBuffer...`, and `XrSpatialComponentDataQueryResultEXT`.
+    ([internal MR 3897](https://gitlab.khronos.org/openxr/openxr/merge_requests/3897))
+  - Improvement: Add spec language for fixed size input / output arrays.
+    ([internal MR 3754](https://gitlab.khronos.org/openxr/openxr/merge_requests/3754))
+  - New multi-vendor extension specification: `XR_EXT_loader_init_properties` is
+    intended for limited, specialized use cases mainly in automation and testing,
+    and is primarily expected to be used via a loader-provided implementation.
+    ([internal MR 2454](https://gitlab.khronos.org/openxr/openxr/merge_requests/2454))
+  - New vendor extension specification: `XR_META_body_tracking_calibration` allows
+    an application using `XR_FB_body_tracking` to explicitly override body height
+    used for that tracking.
+    ([internal MR 2963](https://gitlab.khronos.org/openxr/openxr/merge_requests/2963))
+  - New vendor extension specification: `XR_ANDROID_passthrough_camera_state`,
+    providing information about the passthrough camera used with non-opaque
+    environment blend modes.
+    ([internal MR 3614](https://gitlab.khronos.org/openxr/openxr/merge_requests/3614))
+  - New vendor extension specification: `XR_ANDROID_trackables` providing access to
+    trackable planes in the environment.
+    ([internal MR 3615](https://gitlab.khronos.org/openxr/openxr/merge_requests/3615))
+  - New vendor extension specification: `XR_ANDROID_raycast` allowing ray-
+    intersection tests with trackables in the environment, building on
+    `XR_ANDROID_trackables`.
+    ([internal MR 3620](https://gitlab.khronos.org/openxr/openxr/merge_requests/3620))
+  - New vendor extension specification: `XR_ANDROID_trackables_object` extends the
+    capabilities of `XR_ANDROID_trackables` to other objects in the environment.
+    ([internal MR 3623](https://gitlab.khronos.org/openxr/openxr/merge_requests/3623))
+  - New vendor extension specification: `XR_ANDROID_device_anchor_persistence`
+    allows the application to
+    persist, retrieve, and unpersist anchors across device sessions, building on
+    `XR_ANDROID_trackables`.
+    ([internal MR 3626](https://gitlab.khronos.org/openxr/openxr/merge_requests/3626))
+  - New vendor extension specification: `XR_ANDROID_anchor_sharing_export`.
+    ([internal MR 3627](https://gitlab.khronos.org/openxr/openxr/merge_requests/3627))
+  - New vendor extension specification: `XR_ANDROID_trackables_marker` extends
+    `XR_ANDROID_trackables` to support ArUco and AprilTag markers.
+    ([internal MR 3774](https://gitlab.khronos.org/openxr/openxr/merge_requests/3774))
+- Registry
+  - Change: Update the `XrSpatialAnchorCreateCompletionBD` structure, and increment
+    the revision of `XR_BD_spatial_anchor`.
+    ([internal MR 3876](https://gitlab.khronos.org/openxr/openxr/merge_requests/3876))
+  - Fix: Remove `XR_EXT_palm_pose` paths from `XR_HTCX_vive_tracker_interaction`,
+    as the /user/hand/left|right paths are not valid paths for Vive Trackers.
+    ([internal MR 3844](https://gitlab.khronos.org/openxr/openxr/merge_requests/3844))
+  - Fix: Include `XR_ERROR_SESSION_NOT_RUNNING` in list of errors
+    `xrEnumerateInteractionRenderModelIdsEXT` can return. (Already in specification
+    prose.)
+    ([internal MR 3889](https://gitlab.khronos.org/openxr/openxr/merge_requests/3889))
+  - Fix: Typo in comment for `XR_ERROR_SPATIAL_PERSISTENCE_SCOPE_INCOMPATIBLE_EXT`.
+    ([internal MR 3897](https://gitlab.khronos.org/openxr/openxr/merge_requests/3897))
+  - Fix: Add explicit dependency to `XR_ML_compat` for
+    `XrCoordinateSpaceCreateInfoML`.
+    ([internal MR 3907](https://gitlab.khronos.org/openxr/openxr/merge_requests/3907))
+  - Improvement: Add comments for the `XrResult` values added by
+    `XR_BD_spatial_anchor` and `XR_BD_spatial_anchor_sharing`.
+    ([internal MR 3861](https://gitlab.khronos.org/openxr/openxr/merge_requests/3861),
+    [internal issue 2535](https://gitlab.khronos.org/openxr/openxr/issues/2535))
+  - New multi-vendor extension: `XR_EXT_loader_init_properties`
+    ([internal MR 2454](https://gitlab.khronos.org/openxr/openxr/merge_requests/2454))
+  - New vendor extension: `XR_META_body_tracking_calibration`.
+    ([internal MR 2963](https://gitlab.khronos.org/openxr/openxr/merge_requests/2963))
+  - New vendor extension: `XR_ANDROID_passthrough_camera_state`.
+    ([internal MR 3614](https://gitlab.khronos.org/openxr/openxr/merge_requests/3614))
+  - New vendor extension: `XR_ANDROID_trackables`.
+    ([internal MR 3615](https://gitlab.khronos.org/openxr/openxr/merge_requests/3615))
+  - New vendor extension: `XR_ANDROID_raycast`.
+    ([internal MR 3620](https://gitlab.khronos.org/openxr/openxr/merge_requests/3620))
+  - New vendor extension: `XR_ANDROID_trackables_object`.
+    ([internal MR 3623](https://gitlab.khronos.org/openxr/openxr/merge_requests/3623))
+  - New vendor extension: `XR_ANDROID_device_anchor_persistence`.
+    ([internal MR 3626](https://gitlab.khronos.org/openxr/openxr/merge_requests/3626))
+  - New vendor extension: `XR_ANDROID_anchor_sharing_export`.
+    ([internal MR 3627](https://gitlab.khronos.org/openxr/openxr/merge_requests/3627))
+  - New vendor extension: `XR_ANDROID_trackables_marker`.
+    ([internal MR 3774](https://gitlab.khronos.org/openxr/openxr/merge_requests/3774))
+
 ## OpenXR Specification 1.1.49 (2025-06-10)
 
 This release includes a collection of ratified multi-vendor extensions related

@@ -673,7 +673,8 @@ include::{generated}/api/protos/xrDestroySpatialEntityEXT.adoc[]
 
 .Parameter Descriptions
 ****
-* pname:spatialEntity is the returned slink:XrSpatialEntityEXT handle.
+* pname:spatialEntity is a handle to an slink:XrSpatialEntityEXT previously
+  created by a function such as flink:xrCreateSpatialEntityFromIdEXT.
 ****
 
 The application can: use flink:xrDestroySpatialEntityEXT to release the
@@ -1119,21 +1120,22 @@ include::{generated}/api/structs/XrSpatialComponentDataQueryResultEXT.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
-* pname:entityIdCapacityInput is the capacity of the array, or 0 to indicate
-  a request to retrieve the required capacity.
-* pname:entityIdCountOutput is the number of basetype:XrSpatialEntityIdEXT,
-  or the required capacity in the case that pname:entityIdCapacityInput is
-  insufficient.
+* pname:entityIdCapacityInput is the capacity of the pname:entityIds array,
+  or 0 to indicate a request to retrieve the required capacity.
+* pname:entityIdCountOutput is the number of basetype:XrSpatialEntityIdEXT
+  in pname:entityIds, or the required capacity in the case that
+  pname:entityIdCapacityInput is insufficient.
 * pname:entityIds is an array of basetype:XrSpatialEntityIdEXT.
   It can: be code:NULL if pname:entityIdCapacityInput is 0.
-* pname:entityStateCapacityInput is the capacity of the array, or 0 to
-  indicate a request to retrieve the required capacity.
+* pname:entityStateCapacityInput is the capacity of the pname:entityStates
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:entityStateCountOutput is the number of
+  elink:XrSpatialEntityTrackingStateEXT in pname:entityStates, or the
+  required capacity in the case that pname:entityStateCapacityInput is
+  insufficient.
+  This must: always be the same as pname:entityIdCountOutput.
 * pname:entityStates is an array of elink:XrSpatialEntityTrackingStateEXT.
   It can: be code:NULL if pname:entityStateCapacityInput is 0.
-* pname:entityStateCountOutput is the number of
-  basetype:XrSpatialEntityIdEXT, or the required capacity in the case that
-  pname:entityIdCapacityInput is insufficient and must: be the same as
-  pname:entityIdCountOutput.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
   description of retrieving the required pname:entityIds size.
 ****
@@ -1335,8 +1337,9 @@ include::{generated}/api/protos/xrGetSpatialBufferUint8EXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of code:uint8_t.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
@@ -1372,8 +1375,9 @@ include::{generated}/api/protos/xrGetSpatialBufferUint16EXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of code:uint16_t.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
@@ -1409,8 +1413,9 @@ include::{generated}/api/protos/xrGetSpatialBufferUint32EXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of code:uint32_t.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
@@ -1446,8 +1451,9 @@ include::{generated}/api/protos/xrGetSpatialBufferFloatEXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of code:float.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
@@ -1483,8 +1489,9 @@ include::{generated}/api/protos/xrGetSpatialBufferVector2fEXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of slink:XrVector2f.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
@@ -1520,8 +1527,9 @@ include::{generated}/api/protos/xrGetSpatialBufferVector3fEXT.adoc[]
 * pname:info holds the information on the buffer to query.
 * pname:bufferCapacityInput is the capacity of the array, or 0 to indicate a
   request to retrieve the required capacity.
-* pname:bufferCountOutput is the number of characters, or the required
-  capacity in the case that pname:bufferCapacityInput is insufficient.
+* pname:bufferCountOutput is the number of elements in the pname:buffer
+  array, or the required capacity in the case that pname:bufferCapacityInput
+  is insufficient.
 * pname:buffer is an array of slink:XrVector3f.
   It can: be code:NULL if pname:bufferCapacityInput is 0.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed

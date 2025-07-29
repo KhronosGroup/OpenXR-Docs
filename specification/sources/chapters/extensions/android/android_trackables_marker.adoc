@@ -1,0 +1,348 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_trackables_marker.adoc[]
+
+*Last Modified Date*::
+    2025-07-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Christopher Doer, Google +
+    Diego Tipaldi, Google +
+    Levana Chen, Google +
+    Jared Finder, Google +
+    Spencer Quin, Google +
+    Nihav Jain, Google +
+    Ken Mackay, Google +
+    Daniel Guttenberg, Qualcomm +
+
+==== Overview
+
+This extension enables physical marker tracking, and enables applications to
+attach XR content to physical markers in an efficient way.
+
+The extension supports well known marker types, specifically ArUco and April
+Tags.
+It enables runtimes to optionally support marker size estimation.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission i.e. applications must: explicitly request the
+permission.
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemMarkerTrackingPropertiesANDROID',type='structs',desc='System property for marker tracking',xrefs='']
+--
+The slink:XrSystemMarkerTrackingPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemMarkerTrackingPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsMarkerTracking is an basetype:XrBool32 indicating if the
+  current system provides marker tracking capability.
+* pname:supportsMarkerSizeEstimation is an basetype:XrBool32 indicating if
+  the current system provides marker size estimation.
+* pname:maxMarkerCount is the maximum number of markers that the runtime is
+  able to track at the same time.
+****
+
+An application can: inspect whether the system is capable of marker tracking
+by extending the slink:XrSystemProperties with
+slink:XrSystemMarkerTrackingPropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for marker
+tracker creation if and only if pname:supportsMarkerTracking is
+ename:XR_FALSE.
+
+If a runtime supports marker tracking, pname:maxMarkerCount must: be at
+least 1.
+
+include::{generated}/validity/structs/XrSystemMarkerTrackingPropertiesANDROID.adoc[]
+--
+
+==== Tracking markers
+
+This extension adds ename:XR_TRACKABLE_TYPE_MARKER_ANDROID to
+elink:XrTrackableTypeANDROID.
+
+The application creates an slink:XrTrackableTrackerANDROID by calling
+flink:xrCreateTrackableTrackerANDROID and specifying
+ename:XR_TRACKABLE_TYPE_MARKER_ANDROID as the trackable type in
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType as well as
+setting a setting a valid configuration by adding a
+slink:XrTrackableMarkerConfigurationANDROID to the next chain of
+slink:XrTrackableTrackerCreateInfoANDROID.
+
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType is
+ename:XR_TRACKABLE_TYPE_MARKER_ANDROID and
+slink:XrSystemMarkerTrackingPropertiesANDROID::pname:supportsMarkerTracking
+returns ename:XR_FALSE via flink:xrGetSystemProperties.
+
+[open,refpage='XrTrackableMarkerConfigurationANDROID',type='structs',desc='Configure marker tracking.',xrefs='xrCreateTrackableTrackerANDROID']
+--
+The slink:XrTrackableMarkerConfigurationANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableMarkerConfigurationANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:trackingMode is an elink:XrTrackableMarkerTrackingModeANDROID
+  indicating the desired mode for tracking.
+* pname:databaseCount is a code:uint32_t describing the count of elements in
+  the pname:databases array.
+* pname:databases is a pointer to an array of
+  slink:XrTrackableMarkerDatabaseANDROID, each of which contains the desired
+  markers from a given dictionary to track.
+****
+
+The application must: set a valid configuration by adding a
+slink:XrTrackableMarkerConfigurationANDROID to the
+slink:XrTrackableTrackerCreateInfoANDROID::pname:next chain when calling
+flink:xrCreateTrackableTrackerANDROID with
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType set to
+ename:XR_TRACKABLE_TYPE_MARKER_ANDROID.
+Otherwise, if the tracker type is set as above but the configuration
+structure is not present or not valid, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If a runtime supports marker size estimation, the application can: set
+slink:XrTrackableMarkerDatabaseEntryANDROID::pname:edgeSize to `0` in
+slink:XrTrackableMarkerDatabaseANDROID::pname:entries to indicate the usage
+of size estimation.
+Otherwise, the application must: set
+slink:XrTrackableMarkerDatabaseEntryANDROID::pname:edgeSize to a positive
+value or the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: filter the output from flink:xrGetAllTrackablesANDROID to
+match the pname:trackingMode and
+slink:XrTrackableMarkerDatabaseEntryANDROID::pname:edgeSize.
+
+include::{generated}/validity/structs/XrTrackableMarkerConfigurationANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableMarkerTrackingModeANDROID',type='enums',desc='The supported tracking modes of markers.',xrefs='']
+--
+The elink:XrTrackableMarkerTrackingModeANDROID enum describes the supported
+tracking modes of markers.
+
+include::{generated}/api/enums/XrTrackableMarkerTrackingModeANDROID.adoc[]
+
+include::{generated}/api/enums/XrTrackableMarkerTrackingModeANDROID.comments-box.adoc[]
+--
+
+[open,refpage='XrTrackableMarkerDatabaseANDROID',type='structs',desc='A database of markers to track.',xrefs='']
+--
+The slink:XrTrackableMarkerDatabaseANDROID structure defines a dictionary
+and corresponding marker ids to be tracked.
+
+include::{generated}/api/structs/XrTrackableMarkerDatabaseANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:dictionary is the elink:XrTrackableMarkerDictionaryANDROID that all
+  pname:entries belong to.
+* pname:entryCount is a uint32_t describing the count of elements in the
+  pname:entries array.
+  The application can: set pname:entryCount `0` to track all markers in the
+  pname:dictionary.
+* pname:entries is a pointer to an array of
+  slink:XrTrackableMarkerDatabaseEntryANDROID, each of which contains the
+  configuration of a marker to track.
+****
+
+include::{generated}/validity/structs/XrTrackableMarkerDatabaseANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableMarkerDictionaryANDROID',type='enums',desc='The supported marker dictionaries.',xrefs='']
+--
+The elink:XrTrackableMarkerDictionaryANDROID enum describes the supported
+marker dictionaries.
+
+include::{generated}/api/enums/XrTrackableMarkerDictionaryANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableMarkerDatabaseEntryANDROID',type='structs',desc='An entry of markers',xrefs='']
+--
+The slink:XrTrackableMarkerDatabaseEntryANDROID structure configures a
+single marker id of a dictionary.
+
+include::{generated}/api/structs/XrTrackableMarkerDatabaseEntryANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:id is the marker id as given in the dictionary.
+* pname:edgeSize represents the size of marker edge in meters.
+  If the runtime supports marker size estimation, the application can: set
+  this to zero and the marker size will be estimated online.
+  If this is set to zero but the runtime does not support marker size
+  estimation, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+****
+
+include::{generated}/validity/structs/XrTrackableMarkerDatabaseEntryANDROID.adoc[]
+--
+
+==== Get markers
+
+[open,refpage='xrGetTrackableMarkerANDROID',type='protos',desc='Get a marker.',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID XrTrackableGetInfoANDROID']
+--
+The flink:xrGetTrackableMarkerANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetTrackableMarkerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:getInfo is the slink:XrTrackableGetInfoANDROID with the information
+  used to get the trackable marker.
+* pname:markerOutput is a pointer to the slink:XrTrackableMarkerANDROID
+  structure in which the trackable marker is returned.
+****
+
+The runtime must: return ename:XR_ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+if the trackable type of the basetype:XrTrackableANDROID is not
+ename:XR_TRACKABLE_TYPE_MARKER_ANDROID, or if the trackable type of the
+slink:XrTrackableTrackerANDROID is not
+ename:XR_TRACKABLE_TYPE_MARKER_ANDROID.
+
+include::{generated}/validity/protos/xrGetTrackableMarkerANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableMarkerANDROID',type='structs',desc='Trackable marker information.',xrefs='xrGetTrackableMarkerANDROID']
+--
+The slink:XrTrackableMarkerANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableMarkerANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingState is the elink:XrTrackingStateANDROID of the marker.
+* pname:lastUpdatedTime is the basetype:XrTime of the last update of the
+  marker.
+* pname:dictionary is the elink:XrTrackableMarkerDictionaryANDROID of the
+  marker.
+* pname:markerId is the marker id as given in the dictionary.
+* pname:centerPose is the slink:XrPosef of the marker located in
+  slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+  The marker lies in the XZ plane with X pointing to the right of the marker
+  and Z pointing to its bottom and Y coming out of the marker as the normal.
+* pname:extents is the slink:XrExtent2Df dimensions of the marker.
+  The boundary of the bounding box is at points: pname:centerPose +/-
+  (pname:extents / 2).
+****
+
+include::{generated}/validity/structs/XrTrackableMarkerANDROID.adoc[]
+--
+
+==== Example code for getting trackable markers
+
+The following example code demonstrates how to get trackable markers.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrGetSystemProperties xrGetSystemProperties;                       // previously initialized
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID;   // previously initialized
+PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID;               // previously initialized
+PFN_xrGetTrackableMarkerANDROID xrGetTrackableMarkerANDROID;           // previously initialized
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previously initialized
+
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+
+// Inspect system capability
+XrSystemMarkerTrackingPropertiesANDROID markerProperty =
+        {.type = XR_TYPE_SYSTEM_MARKER_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
+XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
+                                       .next = &markerProperty};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!markerProperty.supportsMarkerTracking) {
+    // Marker tracking is not supported.
+    return;
+}
+
+// Create a trackable tracker for marker tracking.
+// If the runtime does not support size estimation, configures marker edge size of 0.1m.
+XrTrackableMarkerDatabaseEntryANDROID markerEntries =
+        {.id = 0, .edgeSize = markerProperty.supportsMarkerSizeEstimation ? 0.0f : 0.1f};
+XrTrackableMarkerDatabaseANDROID markerDatabases =
+        {.dictionary = XR_TRACKABLE_MARKER_DICTIONARY_ARUCO_4X4_50_ANDROID,
+         .entryCount = 1,
+         .entries = &markerEntries};
+XrTrackableMarkerConfigurationANDROID configuration =
+        {.type = XR_TYPE_TRACKABLE_MARKER_CONFIGURATION_ANDROID,
+         .next = nullptr,
+         .trackingMode = XR_TRACKABLE_MARKER_TRACKING_MODE_DYNAMIC_ANDROID,
+         .databaseCount = 1,
+         .databases = &markerDatabases};
+XrTrackableTrackerCreateInfoANDROID createInfo =
+        {.type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+         .next = &configuration,
+         .trackableType = XR_TRACKABLE_TYPE_MARKER_ANDROID};
+XrTrackableTrackerANDROID markerTracker;
+auto res = xrCreateTrackableTrackerANDROID(session, &createInfo, &markerTracker);
+if (res == XR_ERROR_PERMISSION_INSUFFICIENT) {
+    // Handle permission requests.
+}
+CHK_XR(res);
+
+// Get markers.
+std::vector<XrTrackableANDROID> trackables(markerProperty.maxMarkerCount);
+std::vector<XrTrackableMarkerANDROID> markers(markerProperty.maxMarkerCount);
+uint32_t markerSize = 0;
+CHK_XR(xrGetAllTrackablesANDROID(markerTracker, markerProperty.maxMarkerCount, &markerSize,
+                                 trackables.data()));
+for (int i = 0; i < markerSize; i++) {
+    markers[i].type = XR_TYPE_TRACKABLE_MARKER_ANDROID;
+    markers[i].next = nullptr;
+    XrTrackableGetInfoANDROID getInfo = {.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+                                         .next = nullptr,
+                                         .trackable = trackables[i],
+                                         .baseSpace = appSpace,
+                                         .time = updateTime};
+    CHK_XR(xrGetTrackableMarkerANDROID(markerTracker, &getInfo, &markers[i]));
+    // Handle markers.
+}
+
+// Release trackable tracker.
+CHK_XR(xrDestroyTrackableTrackerANDROID(markerTracker));
+----
+
+include::{generated}/interfaces/XR_ANDROID_trackables_marker.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Levana Chen)
+** Initial extension description.

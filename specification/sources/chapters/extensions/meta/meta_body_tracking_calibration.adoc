@@ -1,0 +1,188 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_body_tracking_calibration.adoc[]
+
+*Last Modified Date*::
+    2025-07-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Giancarlo Di Biase, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta +
+    Bill Orr, Meta +
+    Alexey Sidnev, Meta +
+    Alexandra Movsesyan, Meta +
+
+==== Overview
+
+This extension enables applications utilizing apiext:XR_FB_body_tracking to
+override automatic calibration, and to determine the current calibration
+status for automatic calibration.
+
+Applications can: call the
+flink:xrSuggestBodyTrackingCalibrationOverrideMETA function to override
+calibration on request, for example, when the user indicates it is desired
+through an in-app UI.
+
+Typical times to calibrate are during app startup (when body tracking is
+first initialized), on user request, when calibration is detected to be low
+quality, and on user switch.
+
+Manual calibration is validated, with applications providing accurate values
+to the runtime.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemPropertiesBodyTrackingCalibrationMETA',type='structs',desc='System property for body tracking calibration',xrefs='']
+--
+The slink:XrSystemPropertiesBodyTrackingCalibrationMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrSystemPropertiesBodyTrackingCalibrationMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsHeightOverride is an basetype:XrBool32, indicating if the
+  current system is capable of supporting body tracking calibration height
+  override.
+****
+
+An application can: inspect whether the system supports body tracking and
+body calibration by extending the slink:XrSystemProperties with
+slink:XrSystemPropertiesBodyTrackingCalibrationMETA structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsHeightOverride, the
+runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrSuggestBodyTrackingCalibrationOverrideMETA and from
+flink:xrResetBodyTrackingCalibrationMETA.
+
+include::{generated}/validity/structs/XrSystemPropertiesBodyTrackingCalibrationMETA.adoc[]
+
+--
+
+==== Overriding the user height
+
+[open,refpage='xrSuggestBodyTrackingCalibrationOverrideMETA',type='protos',desc='Set the calibration user's height for the specified body tracker',xrefs='']
+--
+The flink:xrSuggestBodyTrackingCalibrationOverrideMETA function is defined
+as:
+
+include::{generated}/api/protos/xrSuggestBodyTrackingCalibrationOverrideMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
+  flink:xrCreateBodyTrackerFB.
+* pname:calibrationInfo is an slink:XrBodyTrackingCalibrationInfoMETA
+  specifying the calibration parameters.
+****
+
+Applications can: choose to call
+flink:xrSuggestBodyTrackingCalibrationOverrideMETA on app startup, or
+implement a UI to allow users to specify when it should be called.
+
+Runtimes must: return ename:XR_ERROR_VALIDATION_FAILURE if the specified
+height falls outside the range (0.5 meters, 3 meters).
+
+Runtimes should: use the provided calibration data as an input to calibrate
+any body tracking algorithms.
+
+include::{generated}/validity/protos/xrSuggestBodyTrackingCalibrationOverrideMETA.adoc[]
+--
+
+[open,refpage='XrBodyTrackingCalibrationInfoMETA',type='structs',desc='Application-provided calibration data.',xrefs='xrSuggestBodyTrackingCalibrationOverrideMETA']
+--
+The slink:XrBodyTrackingCalibrationInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackingCalibrationInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:bodyHeight is a code:float value specifying the height of the user
+  to use for calibration (in meters).
+****
+
+The slink:XrBodyTrackingCalibrationInfoMETA structure contains the user's
+height that the runtime should: use to calibrate body tracking.
+
+include::{generated}/validity/structs/XrBodyTrackingCalibrationInfoMETA.adoc[]
+--
+
+==== Reset body tracking calibration.
+
+[open,refpage='xrResetBodyTrackingCalibrationMETA',type='protos',desc='Resets the calibration for the specified body tracker',xrefs='']
+--
+The flink:xrResetBodyTrackingCalibrationMETA function is defined as:
+
+include::{generated}/api/protos/xrResetBodyTrackingCalibrationMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB previously created by
+  flink:xrCreateBodyTrackerFB.
+****
+
+This function removes any height override previously set by
+flink:xrSuggestBodyTrackingCalibrationOverrideMETA and allows the runtime to
+return to automatic calibration.
+
+include::{generated}/validity/protos/xrResetBodyTrackingCalibrationMETA.adoc[]
+
+--
+
+==== Body Tracking Calibration Status
+
+[open,refpage='XrBodyTrackingCalibrationStateMETA',type='enums',desc='The current calibration state.',xrefs='XrBodyTrackingCalibrationStatusMETA']
+--
+The elink:XrBodyTrackingCalibrationStateMETA enum describes the current
+calibration state.
+
+include::{generated}/api/enums/XrBodyTrackingCalibrationStateMETA.adoc[]
+include::{generated}/api/enums/XrBodyTrackingCalibrationStateMETA.comments.adoc[]
+--
+
+[open,refpage='XrBodyTrackingCalibrationStatusMETA',type='structs',desc='The current calibration status info.',xrefs='XrBodyTrackingCalibrationStateMETA']
+--
+The slink:XrBodyTrackingCalibrationStatusMETA structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackingCalibrationStatusMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:status is one of elink:XrBodyTrackingCalibrationStateMETA indicating
+  the current calibration status.
+****
+
+The slink:XrBodyTrackingCalibrationStatusMETA structure contains a
+elink:XrBodyTrackingCalibrationStateMETA that describes the current
+calibration status.
+
+The application can: obtain the calibration status by adding
+slink:XrBodyTrackingCalibrationStatusMETA to the
+slink:XrBodyJointLocationsFB::pname:next chain when calling
+flink:xrLocateBodyJointsFB.
+
+include::{generated}/validity/structs/XrBodyTrackingCalibrationStatusMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_body_tracking_calibration.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Bill Orr)
+** Initial extension description

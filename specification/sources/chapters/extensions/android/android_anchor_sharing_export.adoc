@@ -1,0 +1,244 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_anchor_sharing_export.adoc[]
+
+*Last Modified Date*::
+    2025-07-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Nihav Jain, Google +
+    Levana Chen, Google +
+    Spencer Quin, Google +
+    Kenny Vercaemer, Google +
+
+==== Overview
+
+Anchors created by an application via apiext:XR_ANDROID_trackables are tied
+to a specific session and are thus not visible to other applications.
+This extension allows applications to share anchors with other running
+applications.
+
+This extension does not define any functions that make use of shared
+anchors.
+Other extensions may: define such functions.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemAnchorSharingExportPropertiesANDROID',type='structs',desc='System property for anchor sharing export',xrefs='']
+--
+The slink:XrSystemAnchorSharingExportPropertiesANDROID structure is defined
+as:
+
+include::{generated}/api/structs/XrSystemAnchorSharingExportPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsAnchorSharingExport is an basetype:XrBool32 indicating if
+  current system supports anchor sharing.
+****
+
+An application can: inspect whether the system is capable of sharing anchors
+by chaining an slink:XrSystemAnchorSharingExportPropertiesANDROID structure
+to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsAnchorSharingExport, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrShareAnchorANDROID and
+flink:xrUnshareAnchorANDROID.
+
+include::{generated}/validity/structs/XrSystemAnchorSharingExportPropertiesANDROID.adoc[]
+--
+
+==== Share an anchor
+
+[open,refpage='xrShareAnchorANDROID',type='protos',desc='Share anchor',xrefs='XrAnchorSharingInfoANDROID']
+--
+The flink:xrShareAnchorANDROID function is defined as:
+
+include::{generated}/api/protos/xrShareAnchorANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that owns the anchor.
+* pname:sharingInfo is the slink:XrAnchorSharingInfoANDROID with the
+  information about the anchor to share.
+* pname:anchorToken is a pointer to the slink:XrAnchorSharingTokenANDROID in
+  which the runtime returns the anchor sharing token.
+****
+
+The flink:xrShareAnchorANDROID function returns a share token to the
+application.
+The application can: share this token with other applications to give them
+access to the pose data of slink:XrAnchorSharingInfoANDROID::pname:anchor.
+
+The runtime must: return ename:XR_ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID
+if slink:XrAnchorSharingInfoANDROID::pname:anchor was not originally created
+by the application that calls flink:xrShareAnchorANDROID.
+
+If the application calls flink:xrShareAnchorANDROID for the same
+slink:XrAnchorSharingInfoANDROID::pname:anchor multiple times without
+unsharing it first, the runtime must: return the same share token each time.
+
+If the application calls flink:xrShareAnchorANDROID for an anchor that was
+previously shared but then unshared, the runtime may: return a share token
+that is different from the previous sharing scope.
+The lifetime of the pname:anchorToken share token is limited to the
+application controlled share-unshare scope.
+
+include::{generated}/validity/protos/xrShareAnchorANDROID.adoc[]
+--
+
+[open,refpage='XrAnchorSharingInfoANDROID',type='structs',desc='Information to share an anchor',xrefs='xrShareAnchorANDROID']
+--
+The slink:XrAnchorSharingInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrAnchorSharingInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:anchor is the slink:XrSpace of the anchor to share.
+****
+
+slink:XrAnchorSharingInfoANDROID::pname:anchor must: be a valid
+slink:XrSpace created previously by calling flink:xrCreateAnchorSpaceANDROID
+or flink:xrCreatePersistedAnchorSpaceANDROID.
+
+include::{generated}/validity/structs/XrAnchorSharingInfoANDROID.adoc[]
+--
+
+[open,refpage='XrAnchorSharingTokenANDROID',type='structs',desc='Anchor sharing token',xrefs='xrShareAnchorANDROID']
+--
+The slink:XrAnchorSharingTokenANDROID structure is defined as:
+
+include::{generated}/api/structs/XrAnchorSharingTokenANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:token is the Android binder reference that the runtime returns to
+  the application.
+****
+
+Other extensions may: define functions that use the
+slink:XrAnchorSharingTokenANDROID::pname:token to access the anchor from
+other sessions.
+
+include::{generated}/validity/structs/XrAnchorSharingTokenANDROID.adoc[]
+--
+
+==== Unshare an anchor
+
+[open,refpage='xrUnshareAnchorANDROID',type='protos',desc='Unshare anchor',xrefs='']
+--
+The flink:xrUnshareAnchorANDROID function is defined as:
+
+include::{generated}/api/protos/xrUnshareAnchorANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that owns the anchor.
+* pname:anchor is the slink:XrSpace of the anchor to unshare.
+****
+
+The flink:xrUnshareAnchorANDROID function invalidates previously shared
+anchors.
+This means that future uses of the anchor sharing token obtained when
+flink:xrShareAnchorANDROID was called must: fail until the anchor is shared
+again via flink:xrShareAnchorANDROID.
+The runtime must: also invalidate previous imports of the anchor sharing
+token and must: not set ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT or
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT for the imported anchor's
+slink:XrSpace.
+This means that a previously imported anchor must: stop tracking if the
+original anchor is unshared by its parent session.
+
+The runtime must: return ename:XR_ERROR_ANCHOR_NOT_OWNED_BY_CALLER_ANDROID
+if the anchor is not owned by the same slink:XrSession that is the parent of
+slink:XrAnchorSharingInfoANDROID::pname:anchor.
+
+An anchor that is not unshared explicitly by calling
+flink:xrUnshareAnchorANDROID must: be implicitly unshared by the runtime
+when the anchor is destroyed via flink:xrDestroySpace, or when the parent
+slink:XrSession is destroyed, including when the application that shared the
+anchor quits.
+
+include::{generated}/validity/protos/xrUnshareAnchorANDROID.adoc[]
+--
+
+==== Example code for anchor sharing export
+
+The following example code demonstrates how to share and unshare an anchor
+with other applications.
+
+[source,C++]
+----
+#if defined(XR_USE_PLATFORM_ANDROID)
+XrSession session; // previously initialized
+XrSpace anchor; // created via xrCreateAnchorSpaceANDROID() or xrCreatePersistedAnchorSpaceANDROID()
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrShareAnchorANDROID xrShareAnchorANDROID; // previously initialized
+PFN_xrUnshareAnchorANDROID xrUnshareAnchorANDROID; // previously initialized
+
+XrAnchorSharingInfoANDROID sharingInfo = {
+	.type = XR_TYPE_ANCHOR_SHARING_INFO_ANDROID,
+	.next = nullptr,
+	.anchor = anchor,
+};
+
+AIBinder* anchorToken;
+CHK_XR(xrShareAnchorANDROID(
+	session,
+  &sharingInfo,
+  &anchorToken
+));
+
+// ... share anchorToken with other processes ...
+
+// Once app no longer wants to share the anchor
+CHK_XR(xrUnshareAnchorANDROID(session, anchor));
+
+// Once app is done using the anchor. This will also unshare
+// the anchor if the anchor has not been unshared explicitly before.
+CHK_XR(xrDestroySpace(anchor));
+#endif
+----
+
+include::{generated}/interfaces/XR_ANDROID_anchor_sharing_export.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Kenny Vercaemer)
+** Initial extension description

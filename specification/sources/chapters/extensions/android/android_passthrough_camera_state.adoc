@@ -1,0 +1,111 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_passthrough_camera_state.adoc[]
+
+
+*Last Modified Date*::
+    2025-07-23
+
+*Contributors*::
+    Spencer Quin, Google +
+    Jared Finder, Google +
+    Kevin Moule, Google +
+    Nihav Jain, Google +
+
+
+==== Overview
+
+Passthrough cameras may: take time to start up and are not immediately
+available.
+This extension lets applications know the current state of the passthrough
+camera.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemPassthroughCameraStatePropertiesANDROID',type='structs',desc='System property for passthrough camera state',xrefs='']
+--
+The slink:XrSystemPassthroughCameraStatePropertiesANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrSystemPassthroughCameraStatePropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsPassthroughCameraState is an basetype:XrBool32 indicating if
+  current system supports passthrough camera state.
+****
+
+Applications inspect whether the system is capable of querying the
+passthrough camera state by extending the slink:XrSystemProperties with an
+slink:XrSystemPassthroughCameraStatePropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsPassthroughCameraState, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrGetPassthroughCameraStateANDROID.
+
+include::{generated}/validity/structs/XrSystemPassthroughCameraStatePropertiesANDROID.adoc[]
+--
+
+==== Get the current passthrough camera state
+
+[open,refpage='xrGetPassthroughCameraStateANDROID',desc='Camera State Info',type='protos']
+--
+
+include::{generated}/api/protos/xrGetPassthroughCameraStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:getInfo is any info that will affect how camera state is determined.
+* pname:cameraStateOutput is the current state of the camera.
+****
+
+flink:xrGetPassthroughCameraStateANDROID retrieves the current state of the
+passthrough camera.
+
+include::{generated}/validity/protos/xrGetPassthroughCameraStateANDROID.adoc[]
+--
+
+[open,refpage='XrPassthroughCameraStateGetInfoANDROID',type='structs', desc='Camera state query parameter info', xrefs='xrGetPassthroughCameraStateANDROID']
+--
+The slink:XrPassthroughCameraStateGetInfoANDROID structure is an input
+struct which specifies the camera state request parameters.
+
+include::{generated}/api/structs/XrPassthroughCameraStateGetInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::{generated}/validity/structs/XrPassthroughCameraStateGetInfoANDROID.adoc[]
+--
+
+[open,refpage='XrPassthroughCameraStateANDROID',type='enums',desc='Current state of the passthrough camera.', xrefs='xrGetPassthroughCameraStateANDROID']
+--
+The elink:XrPassthroughCameraStateANDROID enumeration identifies the
+different possible states of the passthrough camera.
+
+include::{generated}/api/enums/XrPassthroughCameraStateANDROID.adoc[]
+include::{generated}/api/enums/XrPassthroughCameraStateANDROID.comments.adoc[]
+--
+
+include::{generated}/interfaces/XR_ANDROID_passthrough_camera_state.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Spencer Quin)
+** Initial version.

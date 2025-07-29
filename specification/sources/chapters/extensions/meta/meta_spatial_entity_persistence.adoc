@@ -1,0 +1,375 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_persistence.adoc[]
+
+*Last Modified Date*::
+    2024-11-09
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Natalie Fleury, Meta Platforms +
+    Abhishek Shrivastava, Meta Platforms +
+
+
+==== Overview
+
+apiext:XR_META_spatial_entity_persistence enables saving and erasing Spatial
+Entities, allowing them to be retrieved and tracked across different
+sessions and over time.
+
+===== Technical overview
+
+apiext:XR_META_spatial_entity_persistence is the next generation of Meta
+spatial entity storage management, following the previous generation offered
+through apiext:XR_FB_spatial_entity_storage and
+apiext:XR_FB_spatial_entity_storage_batch which are now obsolete.
+
+If the ename:XR_SPACE_COMPONENT_TYPE_STORABLE_FB component is enabled on a
+space, as defined in apiext:XR_FB_spatial_entity, application developers
+may: save and erase app-created slink:XrSpace corresponding to Meta spatial
+entities.
+apiext:XR_META_spatial_entity_persistence is expected to be used alongside
+apiext:XR_META_spatial_entity_discovery for spatial entity discovery/loading
+and retrieval.
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpacePersistencePropertiesMETA',type='structs',desc='System property for space persistence',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpacePersistencePropertiesMETA structure is defined as:
+
+
+include::{generated}/api/structs/XrSystemSpacePersistencePropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsSpacePersistence is an basetype:XrBool32, indicating if
+  current system supports space persistence.
+****
+
+An application can: inspect whether the system is capable of supporting
+space persistence by extending the slink:XrSystemProperties with
+slink:XrSystemSpacePersistencePropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsSpacePersistence, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrSaveSpacesMETA and
+flink:xrEraseSpacesMETA.
+
+include::{generated}/validity/structs/XrSystemSpacePersistencePropertiesMETA.adoc[]
+
+--
+
+===== Save Spaces
+
+
+[open,refpage='xrSaveSpacesMETA',desc='Saves space(s) to persistent storage',type='protos',xrefs='xrEraseSpacesMETA']
+--
+The flink:xrSaveSpacesMETA function is defined as:
+
+include::{generated}/api/protos/xrSaveSpacesMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the input struct slink:XrSpacesSaveInfoMETA for the
+  save operation.
+* pname:requestId is a pointer to an basetype:XrAsyncRequestIdFB value and
+  is an output parameter.
+  The variable it points to is populated with the ID of this asynchronous
+  request.
+****
+
+The flink:xrSaveSpacesMETA function persists the space(s) provided.
+The scope of the save operation is same-user, same-device, same-app.
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataSpacesSaveResultMETA.
+
+The runtime must: return ename:XR_ERROR_HANDLE_INVALID from
+flink:xrSaveSpacesMETA if any of the
+slink:XrSpacesSaveInfoMETA::pname:spaces are dlink:XR_NULL_HANDLE or
+otherwise invalid (e.g. not a Meta Spatial Entity slink:XrSpace).
+Note that saving an entity which has already been saved previously is valid
+and a no-op.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrSaveSpacesMETA if either one of the following is true:
+
+* The slink:XrSpacesSaveInfoMETA::pname:spaces is code:NULL.
+* The slink:XrSpacesSaveInfoMETA::pname:spaceCount is 0.
+
+The length of the array slink:XrSpacesSaveInfoMETA::pname:spaces must: have
+a size of at least slink:XrSpacesSaveInfoMETA::pname:spaceCount.
+
+When initiated unsuccessfully (i.e. the immediate return value of the
+flink:xrSaveSpacesMETA call is an error), the save operation terminates
+without saving any entities, and no save result event is queued.
+
+When initiated successfully (i.e. the immediate return value of the
+flink:xrSaveSpacesMETA call is not an error), the full save operation is
+asynchronous.
+The runtime must: queue an slink:XrEventDataSpacesSaveResultMETA event when
+the save operation completes, either successfully, qualified success
+(warning), or with an error.
+See the slink:XrEventDataSpacesSaveResultMETA for which elink:XrResult
+enumerants may: be returned in the event.
+
+Note that if the slink:XrEventDataSpacesSaveResultMETA::pname:result is an
+error, it is possible that any subset of the Spatial Entity Spaces were
+saved.
+
+include::{generated}/validity/protos/xrSaveSpacesMETA.adoc[]
+--
+
+[open,refpage='XrSpacesSaveInfoMETA',type='structs',desc='Parameters for a save operation',xrefs='']
+--
+The slink:XrSpacesSaveInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpacesSaveInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:spaceCount is the number of spaces in the spaces array.
+* pname:spaces is the slink:XrSpace array (pointer to first element) of
+  spaces to be saved.
+****
+
+The slink:XrSpacesSaveInfoMETA structure contains information used to save
+one or more spaces with flink:xrSaveSpacesMETA.
+
+include::{generated}/validity/structs/XrSpacesSaveInfoMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataSpacesSaveResultMETA',type='structs',desc='Describes the result of a save operation',xrefs='']
+--
+The slink:XrEventDataSpacesSaveResultMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpacesSaveResultMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the basetype:XrAsyncRequestIdFB of the asynchronous
+  request to save spaces.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded, had any warnings, or if an error occurred.
+****
+
+This event conveys the results of the asynchronous operation started by
+flink:xrSaveSpacesMETA.
+
+The slink:XrEventDataSpacesSaveResultMETA event contains the result of the
+save/write operation, as well as the basetype:XrAsyncRequestIdFB of the
+operation.
+
+Potential slink:XrEventDataSpacesSaveResultMETA::pname:result values include
+the following elink:XrResult enumerants:
+
+.Async Return Codes
+****
+slink:XrEventDataSpacesSaveResultMETA::pname:result values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_SPACE_INSUFFICIENT_RESOURCES_META
+* ename:XR_ERROR_SPACE_STORAGE_AT_CAPACITY_META
+* ename:XR_ERROR_SPACE_INSUFFICIENT_VIEW_META
+* ename:XR_ERROR_SPACE_PERMISSION_INSUFFICIENT_META
+* ename:XR_ERROR_SPACE_RATE_LIMITED_META
+* ename:XR_ERROR_HANDLE_INVALID
+* ename:XR_ERROR_SPACE_RATE_LIMITED_META
+* ename:XR_ERROR_VALIDATION_FAILURE
+****
+
+
+include::{generated}/validity/structs/XrEventDataSpacesSaveResultMETA.adoc[]
+--
+
+
+===== Erase Spaces
+
+
+[open,refpage='xrEraseSpacesMETA',desc='Erases space(s) from persistent storage',type='protos',xrefs='xrSaveSpacesMETA']
+--
+The flink:xrEraseSpacesMETA function is defined as:
+
+include::{generated}/api/protos/xrEraseSpacesMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the input struct slink:XrSpacesEraseInfoMETA for the
+  erase operation.
+* pname:requestId is a pointer to an basetype:XrAsyncRequestIdFB value and
+  is an output parameter.
+  The variable it points to is populated with the ID of this asynchronous
+  request.
+****
+
+The flink:xrEraseSpacesMETA function erases space(s) from storage.
+The scope of the erase operation is same-user, same-device, same-app.
+After a successful erase operation, the slink:XrSpace remains valid in the
+current session until the application destroys the space handle or its
+parent, the session handle.
+That is, this does not destroy spaces from tracking, but if erase is
+successful, the spaces must: be ephemeral again (undiscoverable across
+sessions).
+
+This is an asynchronous operation.
+Completion results are conveyed in the event
+slink:XrEventDataSpacesEraseResultMETA.
+
+The runtime must: return ename:XR_ERROR_HANDLE_INVALID from
+flink:xrEraseSpacesMETA if any of the
+slink:XrSpacesEraseInfoMETA::pname:spaces are dlink:XR_NULL_HANDLE or
+otherwise invalid (e.g. not a Meta Spatial Entity slink:XrSpace).
+Note that it is valid for a Meta Spatial Entity space that has not
+previously been saved to be included in an erase operation; that portion of
+the operation is a no-op.
+
+At least one of slink:XrSpacesEraseInfoMETA::pname:uuids or
+slink:XrSpacesEraseInfoMETA::pname:spaces must: be populated.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrEraseSpacesMETA if either of the following are true:
+
+* The slink:XrSpacesEraseInfoMETA::pname:spaces are code:NULL and the
+  slink:XrSpacesEraseInfoMETA::pname:uuids are code:NULL.
+* The slink:XrSpacesEraseInfoMETA::pname:spaceCount is 0 and the
+  slink:XrSpacesEraseInfoMETA::pname:uuidCount is 0.
+
+The lengths of the arrays must: equal the corresponding counts (e.g.
+`spaceCount` must: equal the length of the `spaces` array).
+
+When initiated unsuccessfully (i.e. the immediate return value of the
+flink:xrEraseSpacesMETA call is an error), the erase operation terminates
+without erasing any Spatial Entities, and no erase result event is queued.
+
+When initiated successfully (i.e. the immediate return value of the
+flink:xrEraseSpacesMETA call is not an error), the full erase operation is
+asynchronous.
+The runtime must: queue an slink:XrEventDataSpacesEraseResultMETA event when
+the erase operation completes, either successfully, qualified success
+(warning), or with an error.
+See the slink:XrEventDataSpacesEraseResultMETA for which elink:XrResult
+enumerants may: be returned in the event.
+
+Note that if the slink:XrEventDataSpacesEraseResultMETA::pname:result is an
+error, it is possible that any subset of the Spatial Entity Spaces were
+erased.
+
+
+include::{generated}/validity/protos/xrEraseSpacesMETA.adoc[]
+--
+
+[open,refpage='XrSpacesEraseInfoMETA',type='structs',desc='Parameters for an erase operation when erasing by XrSpace',xrefs='xrEraseSpacesMETA']
+--
+The slink:XrSpacesEraseInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpacesEraseInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:spaceCount is the number of spaces in the pname:spaces array.
+* pname:spaces is the slink:XrSpace array (pointer to first element) of
+  spaces to be erased.
+* pname:uuidCount is the number of UUIDs in the pname:uuids array.
+* pname:uuids is the slink:XrUuidEXT array (pointer to first element) of
+  spaces to be erased.
+****
+
+The slink:XrSpacesEraseInfoMETA structure contains information used to erase
+one or more spaces with flink:xrEraseSpacesMETA.
+Both the pname:spaces and pname:uuids arrays are optional, but at least one
+of them must contain at least one element.
+See flink:xrEraseSpacesMETA for required validation behavior by the runtime.
+
+include::{generated}/validity/structs/XrSpacesEraseInfoMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataSpacesEraseResultMETA',type='structs',desc='Describes the result of an erase operation',xrefs='']
+--
+The slink:XrEventDataSpacesEraseResultMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpacesEraseResultMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the basetype:XrAsyncRequestIdFB of the asynchronous
+  request to erase spaces.
+* pname:result is an elink:XrResult that describes whether the request
+  succeeded, had any warnings, or if an error occurred.
+****
+
+The slink:XrEventDataSpacesEraseResultMETA event contains the result of the
+erase/write operation, as well as the basetype:XrAsyncRequestIdFB of the
+operation.
+
+Potential slink:XrEventDataSpacesEraseResultMETA::pname:result values
+include the following elink:XrResult enumerants:
+
+.Async Return Codes
+****
+slink:XrEventDataSpacesEraseResultMETA::pname:result values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_SPACE_INSUFFICIENT_RESOURCES_META
+* ename:XR_ERROR_SPACE_PERMISSION_INSUFFICIENT_META
+* ename:XR_ERROR_SPACE_RATE_LIMITED_META
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_HANDLE_INVALID
+* ename:XR_ERROR_SPACE_RATE_LIMITED_META
+* ename:XR_ERROR_VALIDATION_FAILURE
+****
+
+
+include::{generated}/validity/structs/XrEventDataSpacesEraseResultMETA.adoc[]
+--
+
+
+include::{generated}/interfaces/XR_META_spatial_entity_persistence.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-11-09 (Natalie Fleury)
+** Initial draft

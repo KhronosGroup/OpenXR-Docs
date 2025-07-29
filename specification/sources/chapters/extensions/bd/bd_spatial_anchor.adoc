@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_BD_spatial_anchor.adoc[]
 
 *Last Modified Date*::
-    2025-03-26
+    2025-06-10
 
 *IP Status*::
     No known IP claims.
@@ -267,8 +267,8 @@ include::{generated}/api/structs/XrSpatialAnchorCreateCompletionBD.adoc[]
   chain.
   No such structures are defined in core OpenXR or this extension.
 * pname:futureResult is the result of the future.
-* pname:anchor is the handle of the created spatial anchor.
 * pname:uuid is the slink:XrUuidEXT of the created anchor.
+* pname:anchor is the handle of the created spatial anchor.
 ****
 
 This is the completion data structure associated with the asynchronous
@@ -552,4 +552,9 @@ include::{generated}/interfaces/XR_BD_spatial_anchor.adoc[leveloffset=1]
 * Revision 1, 2024-05-06 (Zhipeng Liu)
 
 ** Initial extension description
+
+* Revision 2, 2025-06-10 (Zhipeng Liu)
+
+** Move pname:anchor to the last parameter of
+   slink:XrSpatialAnchorCreateCompletionBD.
 

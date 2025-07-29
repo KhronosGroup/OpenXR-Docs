@@ -88,6 +88,8 @@ The style guide is broken into five sections:
   fine-grained structure and conventions, normative language use, API naming
   conventions, common words and phrases to use and to avoid, linking and
   cross-referencing, etc.
+* <<design>> - an informative discussion of API design principles encouraged
+  by the Specification Editor and the broader Working Group.
 * <<schema>> - a brief description of the XML registry format as well as the
   declarative schemas and tools available to assist in verification of
   changes.
@@ -130,6 +132,8 @@ and times_, http://www.iso.org/iso/catalogue_detail?csnumber=40874,
 Also see https://www.w3.org/QA/Tips/iso-date for colloquial examples.
 
 // Chapters of the text are included below
+
+include::design.adoc[]
 
 include::naming.adoc[]
 
@@ -181,3 +185,4 @@ include::schema.adoc[]
 * 2025-04-08 - Update the XML schema used for extending interaction
   profiles, providing a way to extend all interaction profiles that match a
   predicate.
+* 2025-06-30 - Add an informative chapter on API design principles.

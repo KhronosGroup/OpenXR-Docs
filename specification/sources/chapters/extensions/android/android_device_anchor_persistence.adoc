@@ -1,0 +1,541 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_device_anchor_persistence.adoc[]
+
+
+*Last Modified Date*::
+    2025-07-23
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Nihav Jain, Google +
+    Levana Chen, Google +
+    Spencer Quin, Google +
+    Kenny Vercaemer, Google +
+
+==== Overview
+
+This extension allows the application to persist, retrieve, and unpersist
+anchors on the current device for the current user, across application and
+device sessions.
+The anchors are persisted per app, as identified by their Android package
+name.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateDeviceAnchorPersistenceANDROID
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemDeviceAnchorPersistencePropertiesANDROID',type='structs',desc='System property for anchor persistence',xrefs='']
+--
+The slink:XrSystemDeviceAnchorPersistencePropertiesANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrSystemDeviceAnchorPersistencePropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsAnchorPersistence is an basetype:XrBool32 indicating if the
+  current system supports anchor persistence for spatial anchors.
+****
+
+An application inspects whether the system is capable of persisting spatial
+anchors (see flink:xrCreateAnchorSpaceANDROID) by extending the
+slink:XrSystemProperties with
+slink:XrSystemDeviceAnchorPersistencePropertiesANDROID structure when
+calling flink:xrGetSystemProperties.
+
+To query the supported types for the supported trackable anchors an
+application calls flink:xrEnumerateSupportedPersistenceAnchorTypesANDROID.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsAnchorPersistence, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from device anchor persistence functions
+that operate on a spatial anchor.
+
+include::{generated}/validity/structs/XrSystemDeviceAnchorPersistencePropertiesANDROID.adoc[]
+--
+
+[open,refpage='xrEnumerateSupportedPersistenceAnchorTypesANDROID',desc='Enumerate supported anchor types for persistence',type='protos',xrefs='XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrEnumerateSupportedPersistenceAnchorTypesANDROID function is
+defined as:
+
+include::{generated}/api/protos/xrEnumerateSupportedPersistenceAnchorTypesANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is the slink:XrInstance that creates the
+  slink:XrDeviceAnchorPersistenceANDROID.
+* pname:systemId is the basetype:XrSystemId that is enumerated for supported
+  types.
+* pname:trackableTypeCapacityInput is the capacity of the
+  pname:trackableTypes, or 0 to retrieve the required capacity.
+* pname:trackableTypeCountOutput is a pointer to the count of
+  pname:trackableTypes written, or a pointer to the required capacity in the
+  case that pname:trackableTypeCapacityInput is insufficient.
+* pname:trackableTypes is a pointer to an array of
+  elink:XrTrackableTypeANDROID, but can: be code:NULL if
+  pname:trackableTypeCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:trackableTypes size.
+****
+
+To check for support of anchor persistence on other
+elink:XrTrackableTypeANDROID trackables the application calls
+flink:xrEnumerateSupportedPersistenceAnchorTypesANDROID.
+
+If and only if a runtime does not return a given
+elink:XrTrackableTypeANDROID in the pname:trackableTypes array, the runtime
+must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from device anchor
+persistence functions that operate on an anchor of that type.
+
+include::{generated}/validity/protos/xrEnumerateSupportedPersistenceAnchorTypesANDROID.adoc[]
+--
+
+==== Create a device anchor persistence handle
+
+[open,refpage='XrDeviceAnchorPersistenceANDROID',type='handles',desc='Anchor persistence handle',xrefs='xrCreateDeviceAnchorPersistenceANDROID']
+--
+An slink:XrDeviceAnchorPersistenceANDROID is a handle that represents the
+resources required to persist anchors.
+
+include::{generated}/api/handles/XrDeviceAnchorPersistenceANDROID.adoc[]
+--
+
+[open,refpage='xrCreateDeviceAnchorPersistenceANDROID',desc='Create anchor persistence handle',type='protos',xrefs='XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrCreateDeviceAnchorPersistenceANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateDeviceAnchorPersistenceANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that creates the
+  slink:XrDeviceAnchorPersistenceANDROID.
+* pname:createInfo is the slink:XrDeviceAnchorPersistenceCreateInfoANDROID
+  containing parameters for the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:outHandle is a pointer to a handle in which the created
+  slink:XrDeviceAnchorPersistenceANDROID is returned.
+****
+
+An application creates an slink:XrDeviceAnchorPersistenceANDROID handle by
+calling flink:xrCreateDeviceAnchorPersistenceANDROID.
+
+This function starts off an asynchronous loading of the application's
+persisted data.
+All functions of this extensions, except
+flink:xrDestroyDeviceAnchorPersistenceANDROID, must: return
+ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID if the data loading is not
+complete.
+The application retries those functions at a later time.
+
+The slink:XrDeviceAnchorPersistenceANDROID handle must: be eventually freed
+via the flink:xrDestroyDeviceAnchorPersistenceANDROID function or by
+destroying the parent slink:XrSession handle.
+
+include::{generated}/validity/protos/xrCreateDeviceAnchorPersistenceANDROID.adoc[]
+--
+
+[open,refpage='XrDeviceAnchorPersistenceCreateInfoANDROID',type='structs',desc='Information to create a device anchor persistence handle',xrefs='xrCreateDeviceAnchorPersistenceANDROID']
+--
+The slink:XrDeviceAnchorPersistenceCreateInfoANDROID structure is defined
+as:
+
+include::{generated}/api/structs/XrDeviceAnchorPersistenceCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrDeviceAnchorPersistenceCreateInfoANDROID structure provides
+creation options for the slink:XrDeviceAnchorPersistenceANDROID when passed
+to flink:xrCreateDeviceAnchorPersistenceANDROID.
+
+include::{generated}/validity/structs/XrDeviceAnchorPersistenceCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyDeviceAnchorPersistenceANDROID',desc='Destroys the device anchor persistence handle',type='protos',xrefs='xrCreateDeviceAnchorPersistenceANDROID XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrDestroyDeviceAnchorPersistenceANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyDeviceAnchorPersistenceANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is an slink:XrDeviceAnchorPersistenceANDROID handle
+  previously created by flink:xrCreateDeviceAnchorPersistenceANDROID.
+****
+
+The flink:xrDestroyDeviceAnchorPersistenceANDROID function destroys the
+device anchor persistence handle.
+After this call the runtime may: free all related memory and resources.
+
+include::{generated}/validity/protos/xrDestroyDeviceAnchorPersistenceANDROID.adoc[]
+--
+
+==== Persist an anchor
+
+[open,refpage='xrPersistAnchorANDROID',desc='Create anchor persistence handle',type='protos',xrefs='XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrPersistAnchorANDROID function is defined as:
+
+include::{generated}/api/protos/xrPersistAnchorANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:persistedInfo is the slink:XrPersistedAnchorSpaceInfoANDROID
+  containing parameters for the anchor persistence.
+* pname:anchorIdOutput is a pointer to an slink:XrUuidEXT in which the UUID
+  of the persisted anchor is returned.
+****
+
+The application requests anchors to be persisted by calling
+flink:xrPersistAnchorANDROID.
+The application must: not assume a success return value means the anchor is
+immediately persisted.
+The application should: use flink:xrGetAnchorPersistStateANDROID to check
+the persist state of the anchor using the returned anchor slink:XrUuidEXT.
+
+* The runtime must: return ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID
+  if the persisted data loading for pname:handle is not yet complete.
+* The runtime must: return ename:XR_SUCCESS once the anchor has been queued
+  for persistence.
+
+To unpersist the anchor, the application calls
+flink:xrUnpersistAnchorANDROID.
+
+include::{generated}/validity/protos/xrPersistAnchorANDROID.adoc[]
+--
+
+[open,refpage='XrPersistedAnchorSpaceInfoANDROID',type='structs',desc='Information to persist an anchor',xrefs='xrPersistAnchorANDROID']
+--
+The slink:XrPersistedAnchorSpaceInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPersistedAnchorSpaceInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:anchor is an anchor slink:XrSpace previously created by
+  flink:xrCreateAnchorSpaceANDROID to persist.
+****
+
+include::{generated}/validity/structs/XrPersistedAnchorSpaceInfoANDROID.adoc[]
+--
+
+[open,refpage='xrGetAnchorPersistStateANDROID',desc='Get anchor persistence state',type='protos',xrefs='xrPersistAnchorANDROID XrAnchorPersistStateANDROID']
+--
+The flink:xrGetAnchorPersistStateANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetAnchorPersistStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:anchorId is the slink:XrUuidEXT of the anchor.
+* pname:persistState is a pointer to an elink:XrAnchorPersistStateANDROID in
+  which the state of the anchor is returned.
+****
+
+* The runtime must: set pname:persistState to
+  ename:XR_ANCHOR_PERSIST_STATE_PERSIST_NOT_REQUESTED_ANDROID if the anchor
+  slink:XrUuidEXT has not been requested for persistence.
+* The runtime must: return ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID
+  if the persisted data of pname:anchorId is not ready.
+
+include::{generated}/validity/protos/xrGetAnchorPersistStateANDROID.adoc[]
+--
+
+[open,refpage='XrAnchorPersistStateANDROID',desc='Anchor persistence state',type='enums',xrefs='xrGetAnchorPersistStateANDROID']
+--
+The elink:XrAnchorPersistStateANDROID enum is defined as:
+
+include::{generated}/api/enums/XrAnchorPersistStateANDROID.adoc[]
+
+include::{generated}/api/enums/XrAnchorPersistStateANDROID.comments.adoc[]
+--
+
+==== Enumerate persisted anchors
+
+[open,refpage='xrEnumeratePersistedAnchorsANDROID',desc='Enumerate persisted anchors',type='protos',xrefs='XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrEnumeratePersistedAnchorsANDROID function is defined as:
+
+include::{generated}/api/protos/xrEnumeratePersistedAnchorsANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:anchorIdCapacityInput is the capacity of the pname:anchorIds array,
+  or 0 to indicate a request to retrieve the required capacity.
+* pname:anchorIdCountOutput is a pointer to the count of pname:anchorIds
+  written, or a pointer to the required capacity in the case that
+  pname:anchorIdCapacityInput is insufficient.
+* pname:anchorIds is a pointer to an array of slink:XrUuidEXT structures.
+  It can: be ename:NULL if pname:anchorIdCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:anchorIds size.
+****
+
+To enumerate all current persisted anchors, the application calls
+flink:xrEnumeratePersistedAnchorsANDROID.
+pname:anchorIds will hold the UUIDs of the persisted anchors up to the
+capacity of the array.
+Since anchors are persisted asynchronously, the count of persisted anchors
+may: change in between calls, causing pname:anchorIdCountOutput to differ as
+well.
+If the capacity is insufficient, the runtime must: truncate the values to
+fit the output array and makes no guarantees about which anchors are
+returned.
+The runtime must: return ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID if
+the persisted data loading for pname:handle is not yet complete.
+
+include::{generated}/validity/protos/xrEnumeratePersistedAnchorsANDROID.adoc[]
+--
+
+==== Create an anchor from persisted data
+
+[open,refpage='xrCreatePersistedAnchorSpaceANDROID',desc='Create anchor from persisted data',type='protos',xrefs='XrDeviceAnchorPersistenceCreateInfoANDROID']
+--
+The flink:xrCreatePersistedAnchorSpaceANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreatePersistedAnchorSpaceANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:createInfo is the slink:XrPersistedAnchorSpaceCreateInfoANDROID
+  containing parameters for the anchor creation.
+* pname:anchorOutput is a pointer to an slink:XrSpace in which the new
+  anchor space is returned.
+****
+
+The application creates an slink:XrSpace anchor from a previously persisted
+anchor by calling flink:xrCreatePersistedAnchorSpaceANDROID with the same
+slink:XrUuidEXT.
+This is another way of creating anchors as defined in
+apiext:XR_ANDROID_trackables.
+
+* The runtime must: return ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID
+  if the persisted data loading for pname:handle is not yet complete.
+* The runtime must: return ename:XR_ERROR_ANCHOR_ID_NOT_FOUND_ANDROID if the
+  anchor slink:XrUuidEXT is not found.
+* If the slink:XrUuidEXT refers to an anchor that has not reached the
+  ename:XR_ANCHOR_PERSIST_STATE_PERSISTED_ANDROID state yet, the runtime
+  must: return ename:XR_ERROR_ANCHOR_ID_NOT_FOUND_ANDROID.
+* Despite the first parameter of this function being an
+  slink:XrDeviceAnchorPersistenceANDROID, the parent of the created
+  slink:XrSpace is the slink:XrSession that is the parent of pname:handle.
+  The runtime must: track the anchor until pname:anchorOutput is destroyed.
+
+include::{generated}/validity/protos/xrCreatePersistedAnchorSpaceANDROID.adoc[]
+--
+
+[open,refpage='XrPersistedAnchorSpaceCreateInfoANDROID',type='structs',desc='Information to create anchor from persisted anchor',xrefs='xrPersistAnchorANDROID']
+--
+The slink:XrPersistedAnchorSpaceCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPersistedAnchorSpaceCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:anchorId is the slink:XrUuidEXT of the persisted anchor to create an
+  anchor slink:XrSpace from.
+****
+
+The slink:XrPersistedAnchorSpaceCreateInfoANDROID structure provides
+creation options for the anchor when passed to
+flink:xrCreateDeviceAnchorPersistenceANDROID.
+
+include::{generated}/validity/structs/XrPersistedAnchorSpaceCreateInfoANDROID.adoc[]
+--
+
+==== Unpersist a persisted anchor
+
+[open,refpage='xrUnpersistAnchorANDROID',desc='Unpersist a persisted anchor',type='protos',xrefs='XrDeviceAnchorPersistenceANDROID']
+--
+The flink:xrUnpersistAnchorANDROID function is defined as:
+
+include::{generated}/api/protos/xrUnpersistAnchorANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handle is the slink:XrDeviceAnchorPersistenceANDROID.
+* pname:anchorId is the slink:XrUuidEXT of the anchor to unpersist.
+****
+
+The application unpersists a persisted anchor by calling
+flink:xrUnpersistAnchorANDROID and passing the anchor slink:XrUuidEXT of the
+anchor to unpersist.
+The runtime may: take some time to unpersist the anchor.
+Applications should: use flink:xrEnumeratePersistedAnchorsANDROID to verify
+that an anchor has been unpersisted before exiting.
+Anchor spaces that have been created from persisted anchors are unaffected
+by unpersisting and keep tracking as normal anchors.
+
+* The runtime must: return ename:XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID
+  if the persisted data is not ready.
+* The runtime must: return ename:XR_ERROR_ANCHOR_ID_NOT_FOUND_ANDROID if the
+  anchor slink:XrUuidEXT is not found.
+* The runtime must: guarantee that the anchor will be unpersisted,
+  regardless if the anchor at the time of the call is in either pending or
+  persisted state.
+  I.e. A call to flink:xrPersistAnchorANDROID followed by a call to
+  flink:xrUnpersistAnchorANDROID must: always result in the anchor being
+  unpersisted, or never persisted.
+
+include::{generated}/validity/protos/xrUnpersistAnchorANDROID.adoc[]
+--
+
+==== Example code for anchor persistence
+
+The following example code demonstrates how to inspect system capability,
+persist, enumerate and unpersist anchors, as well as creating an anchor from
+persisted anchor slink:XrUuidEXT.
+
+[source,C++]
+----
+XrSession session; // previously initialized
+XrSpace anchor; // previously initialized
+XrSpace appSpace; // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrEnumerateSupportedPersistenceAnchorTypesANDROID xrEnumerateSupportedPersistenceAnchorTypesANDROID; // previously initialized
+PFN_xrCreateDeviceAnchorPersistenceANDROID xrCreateDeviceAnchorPersistenceANDROID; // previously initialized
+PFN_xrDestroyDeviceAnchorPersistenceANDROID xrDestroyDeviceAnchorPersistenceANDROID; // previously initialized
+PFN_xrPersistAnchorANDROID xrPersistAnchorANDROID; // previously initialized
+PFN_xrGetAnchorPersistStateANDROID xrGetAnchorPersistStateANDROID; // previously initialized
+PFN_xrCreatePersistedAnchorSpaceANDROID xrCreatePersistedAnchorSpaceANDROID; // previously initialized
+PFN_xrEnumeratePersistedAnchorsANDROID xrEnumeratePersistedAnchorsANDROID; // previously initialized
+PFN_xrUnpersistAnchorANDROID xrUnpersistAnchorANDROID; // previously initialized
+
+// Create a device anchor persistence handle
+XrDeviceAnchorPersistenceCreateInfoANDROID persistenceHandleCreateInfo;
+persistenceHandleCreateInfo.type = XR_TYPE_DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID;
+persistenceHandleCreateInfo.next = nullptr;
+
+XrDeviceAnchorPersistenceANDROID persistenceHandle;
+CHK_XR(xrCreateDeviceAnchorPersistenceANDROID(session, &persistenceHandleCreateInfo, &persistenceHandle));
+
+/// Persist an anchor
+XrPersistedAnchorSpaceInfoANDROID anchorSpaceInfo;
+anchorSpaceInfo.type = XR_TYPE_PERSISTED_ANCHOR_SPACE_INFO_ANDROID;
+anchorSpaceInfo.next = nullptr;
+anchorSpaceInfo.anchor = anchor;
+
+XrUuidEXT anchorId;
+XrResult result;
+do {
+  result = xrPersistAnchorANDROID(
+    persistenceHandle, &anchorSpaceInfo, &anchorId);
+} while (result == XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID ||
+         result == XR_ERROR_ANCHOR_NOT_TRACKING_ANDROID);
+if (result != XR_SUCCESS) {
+  // Handle errors
+}
+
+// ... Update loop ...
+// Poll for anchor persist state to confirm if it was successfully persisted
+XrAnchorPersistStateANDROID persistState;
+CHK_XR(xrGetAnchorPersistStateANDROID(persistenceHandle, &anchorId, &persistState));
+if (persistState == XR_ANCHOR_PERSIST_STATE_PERSISTED_ANDROID)	{
+  // The anchor was persisted successfully
+}
+
+// Enumerate all persisted anchors
+uint32_t anchorCountOutput = 0;
+std::vector<XrUuidEXT> allAnchors;
+
+CHK_XR(xrEnumeratePersistedAnchorsANDROID(
+  persistenceHandle,
+  anchorCountOutput,
+  &anchorCountOutput,
+  nullptr
+));
+allAnchors.resize(anchorCountOutput, XrUuidEXT{.data={0}});
+
+// Fetch the actual anchors in an appropriately resized array.
+CHK_XR(xrEnumeratePersistedAnchorsANDROID(
+  persistenceHandle,
+  anchorCountOutput,
+  &anchorCountOutput,
+  allAnchors.data()
+));
+
+// Creating an anchor from a previously persisted anchor using its UUID
+XrTime updateTime; // Time used for the current frame's simulation update.
+anchorId = allAnchors[0];
+
+XrPersistedAnchorSpaceCreateInfoANDROID createInfo;
+createInfo.type = XR_TYPE_PERSISTED_ANCHOR_SPACE_CREATE_INFO_ANDROID;
+createInfo.next = nullptr;
+createInfo.anchorId = anchorId;
+
+XrSpace anchorSpace = XR_NULL_HANDLE;
+CHK_XR(xrCreatePersistedAnchorSpaceANDROID(
+  persistenceHandle,
+  &createInfo,
+  &anchorSpace
+));
+
+// The anchor was found and retrieved from the local device successfully.
+XrSpaceLocation anchorLocation = { XR_TYPE_SPACE_LOCATION };
+CHK_XR(xrLocateSpace(anchorSpace, appSpace, updateTime, &anchorLocation));
+XrPosef pose = anchorLocation.pose;
+
+// Unpersist the anchor
+do {
+  result = xrUnpersistAnchorANDROID(persistenceHandle, &anchorId);
+} while (result == XR_ERROR_PERSISTED_DATA_NOT_READY_ANDROID);
+if (result != XR_SUCCESS) {
+  // Handle errors
+}
+
+// Once app is done with all persistence related tasks
+CHK_XR(xrDestroySpace(anchorSpace));
+CHK_XR(xrDestroyDeviceAnchorPersistenceANDROID(persistenceHandle));
+----
+
+include::{generated}/interfaces/XR_ANDROID_device_anchor_persistence.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-07-23 (Kenny Vercaemer)
+** Initial extension description

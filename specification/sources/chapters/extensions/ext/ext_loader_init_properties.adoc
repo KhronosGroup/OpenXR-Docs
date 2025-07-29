@@ -1,0 +1,154 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_loader_init_properties.adoc[]
+
+*Last Modified Date*::
+    2024-11-20
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Bryce Hutchings, Microsoft Corporation +
+    Jakob Bornecrantz, NVIDIA +
+    Rafal Karp, NVIDIA
+
+==== Overview
+
+This extension allows the application to safely pass custom name-value pair
+properties, which act as environment variable overrides, directly to the
+OpenXR loader in slink:XrLoaderInitInfoPropertiesEXT by calling
+flink:xrInitializeLoaderKHR.
+This extension introduces the concept of a internal database of name-value
+pairs that the loader stores internally.
+The loader queries this database first and when looking up environment
+variables as outlined in the OpenXR Loader - Design and Operation document,
+and if finding a name-value pair uses this instead of querying the platform.
+The application uses the slink:XrLoaderInitInfoPropertiesEXT structure
+passed into the flink:xrInitializeLoaderKHR function to populate these
+pairs.
+
+
+==== Loader Initialization Structure
+
+[open,refpage='XrLoaderInitInfoPropertiesEXT',type='structs',desc='A array of name-value pairs passed to loader initialization.',xrefs='xrInitializeLoaderKHR XrLoaderInitPropertyValueEXT']
+--
+
+The slink:XrLoaderInitInfoPropertiesEXT structure is defined as:
+include::{generated}/api/structs/XrLoaderInitInfoPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:propertyValueCount is a code:uint32_t specifying the count of
+  elements in the pname:propertyValues array.
+* pname:propertyValues is an array of slink:XrLoaderInitPropertyValueEXT
+  structures containing the name-value pairs for loader properties.
+****
+
+This structure is either provided directly as the parameter to
+flink:xrInitializeLoaderKHR or on that parameter's pname:next chain,
+depending on whether your platform requires another structure to be passed
+to flink:xrInitializeLoaderKHR.
+It contains an array of string property name-value pairs, intended primarily
+to be used by the loader.
+
+The ordering of properties does not matter because the loader rejects any
+duplicate entries.
+
+The loader must: return ename:XR_ERROR_VALIDATION_FAILURE if there are
+duplicate entries of property names in the given array.
+The loader must: obey the properties in the internal database and use them
+to override environment variables.
+The loader must: start the internal database of property pairs as empty.
+The loader must: must clear the internal database of property pairs when
+flink:xrInitializeLoaderKHR is called with
+slink:XrLoaderInitInfoPropertiesEXT passed in an allowed way.
+(That is, the loader obeys only the properties passed in the most recent
+successful flink:xrInitializeLoaderKHR call that included a
+slink:XrLoaderInitInfoPropertiesEXT structure.)
+
+It is unspecified what happens to the properties if the loader is unloaded
+then reloaded through dynamic library loading, due to differences in
+platforms beyond the control of this extension.
+Unlike platform functions to query environment variables, whose case
+sensitivity varies from platform to platform, the loader must: always treat
+lookups of properties as case-sensitive in the internal database.
+
+
+This extension describes a behavior of the OpenXR loader and not any
+behavior of a loaded runtime.
+As such any properties supplied by the application must: not be exposed as
+environment variables and must: not affect any other component of the
+system.
+Future loader implementations and loader specifications may: add mechanisms
+for the runtime or OpenXR layers to query the properties but as the writing
+of this spec no such functionality exists.
+
+include::{generated}/validity/structs/XrLoaderInitInfoPropertiesEXT.adoc[]
+--
+
+
+[open,refpage='XrLoaderInitPropertyValueEXT',type='structs',desc='A single property name-value pair passed to loader initialization.', xrefs='xrInitializeLoaderKHR XrLoaderInitInfoPropertiesEXT']
+--
+The slink:XrLoaderInitPropertyValueEXT structure is defined as:
+include::{generated}/api/structs/XrLoaderInitPropertyValueEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:name is the name of the given property.
+* pname:value is the value of the given property.
+****
+
+This structure contains a single property name-value pair passed to loader
+initialization.
+The slink:XrLoaderInitInfoPropertiesEXT structure is used to pass an array
+of these structures to the OpenXR loader, and the runtime upon loading, via
+flink:xrInitializeLoaderKHR.
+
+Rules for the value pair strings:
+
+* The loader must: accept any valid UTF-8 string, including those that only
+  contain whitespace, for both pname:name and pname:value except otherwise
+  covered by a rule in this list.
+  Whitespace-only strings are accepted by this extension because whitespace
+  only paths are valid on some platforms.
+* The loader must: return ename:XR_ERROR_VALIDATION_FAILURE if pname:name or
+  pname:value is NULL.
+* The loader must: return ename:XR_ERROR_VALIDATION_FAILURE if pname:name is
+  a zero length string.
+* The loader must: treat a zero length pname:value as if the environmental
+  variable was unset in a platform specific way.
+* The loader may: impose implementation or platform specific limitation on
+  string lengths and/or total string memory usage and must: return
+  ename:XR_ERROR_LIMIT_REACHED when hit.
+* The loader may: impose length limits on pname:name and/or pname:value
+  strings and must: return ename:XR_ERROR_LIMIT_REACHED when hit.
+  Because they might be imposed by the platform, the limits are unspecified.
+* The loader must: not reference the memory pointed to by the given strings
+  beyond returning from this call, this implies that the loader will copy
+  the strings into an internal database.
+
+
+include::{generated}/validity/structs/XrLoaderInitPropertyValueEXT.adoc[]
+--
+
+include::{generated}/interfaces/XR_EXT_loader_init_properties.adoc[leveloffset=1]
+
+==== Issues
+
+* Does this extension mandate when the loader reads the environment
+  variables?
+** Resolved
+** Answer: No.
+   To the extent that this extension is able, it does not mandate when a
+   specific variable is read by the loader.
+   But to be usable this extension needs to impose some rules on the OpenXR
+   loader, but tries to defer to the base or OpenXR loader specification.
+
+==== Version History
+
+* Revision 1, 2024-11-20 (Bryce Hutchings & Rafal Karp)
+** Initial draft

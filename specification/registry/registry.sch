@@ -367,6 +367,21 @@
         </sch:rule>
     </sch:pattern>
 
+    <!-- Naming of event data types-->
+    <sch:pattern>
+        <sch:rule context="types/type[@category = 'struct' and @structextends = 'XrEventDataBaseHeader']">
+            <sch:assert test="starts-with(@name, 'XrEventData')">
+                <sch:value-of select="current()/@name"/>: Extends XrEventDataBaseHeader, but the name doesn't start with XrEventData. Should be named XrEventData...AUTHOR.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="types/type[@category = 'struct' and starts-with(@name, 'XrEventData')]">
+            <sch:assert test="current()/@parentstruct = 'XrEventDataBaseHeader' or current()/@name = ('XrEventDataBaseHeader', 'XrEventDataBuffer')">
+                <sch:value-of select="current()/@name"/>: Looks like XrEventData...AUTHOR, but missing parentstruct=XrEventDataBaseHeader: Add that, or rename.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     <!-- XR_EXT_future struct naming -->
     <sch:pattern>
         <sch:rule context="types/type[@category = 'struct' and @parentstruct = 'XrFutureCompletionBaseHeaderEXT']">
@@ -476,7 +491,7 @@
         <sch:rule context="//commands/command[starts-with(proto/name/text(), 'xrCreate')][//types/type[@parent and @category = 'handle']/name/text() = ./param[last()]/type/text()]">
 
             <!-- TODO fix these exceptions at least for more-standard versions of the functionality -->
-            <sch:let name="is_exception" value="current()/proto/name/text() = ('xrCreateHandMeshSpaceMSFT', 'xrCreateFacialTrackerHTC')" />
+            <sch:let name="is_exception" value="current()/proto/name/text() = ('xrCreateHandMeshSpaceMSFT', 'xrCreateFacialTrackerHTC', 'xrCreatePersistedAnchorSpaceANDROID')" />
             <sch:let name="handle_name" value="current()/param[last()]/type/text()"/>
             <sch:let name="handle_type_node" value="//types/type[@parent and @category = 'handle'][name/text() = $handle_name]"/>
             <sch:let name="parent_handle" value="$handle_type_node/@parent"/>
@@ -530,7 +545,7 @@
             <sch:let name="struct_name" value="current()/../@name"/>
             <sch:let name="member_name" value="current()/name/text()"/>
 
-            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags')"/>
+            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags') or $struct_name = ('XrSystemMarkerTrackingPropertiesANDROID', 'XrTrackableMarkerDatabaseEntryANDROID')"/>
             <sch:assert test="current()/type/text() = 'uint32_t' or $not_size">
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
@@ -545,7 +560,9 @@
                                                     'XrSpaceQueryInfoFB',
                                                     'XrEventDataEventsLost',
                                                     'XrPlaneDetectorLocationEXT',
-                                                    'XrRenderModelPropertiesEXT')"/>
+                                                    'XrRenderModelPropertiesEXT',
+                                                    'XrSystemMarkerTrackingPropertiesANDROID',
+                                                    'XrTrackableMarkerDatabaseEntryANDROID')"/>
             <!-- TODO these are registry errors left in place for now, fix them-->
             <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
 
