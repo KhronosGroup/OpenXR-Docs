@@ -242,6 +242,9 @@ include::{generated}/api/structs/XrSpatialCapabilityComponentTypesEXT.adoc[]
 include::{generated}/validity/structs/XrSpatialCapabilityComponentTypesEXT.adoc[]
 --
 
+[[ext_spatial_entity_capability_features]]
+==== Spatial capability features
+
 [open,refpage='XrSpatialCapabilityFeatureEXT',type='enums',desc='Type of spatial capability features',xrefs='xrEnumerateSpatialCapabilityFeaturesEXT']
 --
 include::{generated}/api/enums/XrSpatialCapabilityFeatureEXT.adoc[]
@@ -281,7 +284,7 @@ include::{generated}/api/protos/xrEnumerateSpatialCapabilityFeaturesEXT.adoc[]
 ****
 * pname:instance is a handle to an slink:XrInstance.
 * pname:systemId is the basetype:XrSystemId whose spatial capability
-  components will be enumerated.
+  features will be enumerated.
 * pname:capability is the elink:XrSpatialCapabilityEXT for which the
   features will be enumerated.
 * pname:capabilityFeatureCapacityInput is the capacity of the array, or 0 to
@@ -1219,7 +1222,7 @@ include::{generated}/api/structs/XrSpatialBufferEXT.adoc[]
   use to retrieve the actual data of the buffer.
 ****
 Some spatial components have variable-sized data and therefore require using
-<<the two-call idiom,fundamentals-buffer-size-parameters>> to retrieve their
+<<fundamentals-buffer-size-parameters,the two-call idiom>> to retrieve their
 data.
 In such cases, the spatial component data structure provides an
 slink:XrSpatialBufferEXT for each variable sized buffer needed in that
@@ -2309,7 +2312,7 @@ for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
    slink:XrSpatialComponentParentListEXT and
    slink:XrSpatialComponentBounded2DListEXT.
    If the component data size is variable and requires the application to
-   use <<the two-call idiom,fundamentals-buffer-size-parameters>> to query
+   use <<fundamentals-buffer-size-parameters,the two-call idiom>> to query
    it, the component data should: provide an slink:XrSpatialBufferEXT for
    each variable-sized data in the list structure and it must: specify the
    elink:XrSpatialBufferTypeEXT for each buffer.

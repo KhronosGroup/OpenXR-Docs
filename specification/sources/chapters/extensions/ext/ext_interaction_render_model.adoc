@@ -824,7 +824,7 @@ CHK_XR(xrGetInstanceProcAddr(instance,
 // Previously initialized
 XrPath subactionPathToHighlight;
 
-// Re-used for each model because results are temporary
+// Reused for each model because results are temporary
 std::vector<XrPath> paths;
 for (size_t modelIndex = 0; modelIndex < interactionModels.size();
      ++modelIndex) {

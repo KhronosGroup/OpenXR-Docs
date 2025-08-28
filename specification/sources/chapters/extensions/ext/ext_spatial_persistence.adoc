@@ -226,6 +226,9 @@ The elink:XrSpatialPersistenceContextResultEXT enumeration identifies the
 different types of result codes for a persistence operation.
 Failures during persistence operations are not always in control of the
 application and this enumeration is used for conveying such cases.
+Similar to elink:XrResult, success codes in the
+elink:XrSpatialPersistenceContextResultEXT enumeration are non-negative
+values, and failure codes are negative values.
 
 The enums have the following meanings:
 

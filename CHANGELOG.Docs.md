@@ -17,6 +17,49 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.51 (2025-08-28)
+
+This release primarily features some specification clarifications and fixes to
+the interaction profile data in the XML registry.
+
+- Specification
+  - Fix: Add documentation for space parameter to xrSetInputDeviceLocationEXT.
+    ([internal MR 3752](https://gitlab.khronos.org/openxr/openxr/merge_requests/3752))
+  - Fix: specification to clarify parameters for
+    `xrEnumerateSpatialCapabilityFeaturesEXT` &
+    `XrPersistSpatialEntityCompletionEXT`.
+    ([internal MR 3932](https://gitlab.khronos.org/openxr/openxr/merge_requests/3932))
+  - Fix: typo in `XrSpatialEntityUnpersistInfoEXT`.
+    ([internal MR 3932](https://gitlab.khronos.org/openxr/openxr/merge_requests/3932))
+  - Fix: links for two-call idiom & capability features in spatial entities
+    extensions.
+    ([internal MR 3932](https://gitlab.khronos.org/openxr/openxr/merge_requests/3932))
+  - Improvement: Clarify success/failure for `XrSpatialPersistenceContextResultEXT`.
+    ([internal MR 3932](https://gitlab.khronos.org/openxr/openxr/merge_requests/3932))
+  - Improvement: Clarify the rendering chapter without making any normative
+    changes.
+    ([internal MR 3662](https://gitlab.khronos.org/openxr/openxr/merge_requests/3662))
+- Registry
+  - Chore: Reserve extension numbers.
+    ([internal MR 3916](https://gitlab.khronos.org/openxr/openxr/merge_requests/3916),
+    [internal MR 3956](https://gitlab.khronos.org/openxr/openxr/merge_requests/3956))
+  - Fix: Missing parent struct for `XrSpatialCapabilityConfigurationAnchorEXT`.
+    ([internal MR 3932](https://gitlab.khronos.org/openxr/openxr/merge_requests/3932))
+  - Fix: Missing `XR_EXT_dpad_binding` paths for
+    `/interaction_profiles/facebook/touch_controller_pro` and
+    `/interaction_profiles/meta/touch_controller_plus`.
+    ([internal MR 3945](https://gitlab.khronos.org/openxr/openxr/merge_requests/3945))
+  - Fix: incorrect placement of `*` in
+    `XR_ERROR_GRAPHICS_REQUIREMENTS_CALL_MISSING` error description.
+    ([internal MR 3960](https://gitlab.khronos.org/openxr/openxr/merge_requests/3960))
+  - Fix: Missing `XR_EXT_dpad_binding` paths for
+    `/interaction_profiles/varjo/xr-4_controller`.
+    ([internal MR 3965](https://gitlab.khronos.org/openxr/openxr/merge_requests/3965))
+  - Fix: Missing `XR_EXT_dpad_binding`, `XR_EXT_palm_pose`, and
+    `XR_EXT_hand_interaction` bindings for
+    `/interaction_profiles/oppo/mr_controller_oppo`.
+    ([internal MR 3966](https://gitlab.khronos.org/openxr/openxr/merge_requests/3966))
+
 ## OpenXR Specification 1.1.50 (2025-07-24)
 
 This release features a new API design principles section in the Style Guide, a

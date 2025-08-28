@@ -11,15 +11,15 @@
 --
 include::{generated}/api/handles/XrSwapchain.adoc[]
 
-Normal XR applications will want to present rendered images to the user.
-To allow this, the runtime provides images organized in swapchains for the
-application to render into.
+Most XR applications present rendered images to the user.
+To allow this, the runtime provides collections of images organized in
+"swapchains" for the application to render into and submit.
+Note that these do not necessarily correspond to objects defined by any
+given graphics API named "swapchains".
 The runtime must: allow applications to create multiple swapchains.
 
-Swapchain image format support by the runtime is specified by the
+Swapchain image format support by the runtime is reported through use of the
 flink:xrEnumerateSwapchainFormats function.
-Runtimes should: support code:R8G8B8A8 and code:R8G8B8A8 code:sRGB formats
-if possible.
 
 Swapchain images can: be 2D or 2D Array.
 
@@ -32,12 +32,16 @@ ename:VK_FORMAT_R8G8B8A8_SRGB) to signal the need for sRGB-to-linear
 conversion (whether automatic or manual) when sampled by the runtime.
 All other formats will be treated as linear values.
 
-[NOTE]
-.Note
-====
 OpenXR applications should: avoid submitting linear encoded 8 bit color data
 (e.g. ename:DXGI_FORMAT_R8G8B8A8_UNORM) whenever possible as it may: result
 in color banding.
+
+
+[NOTE]
+.Note
+====
+
+For additional information, see:
 
 Gritz, L. and d'Eon, E. 2007.
 The Importance of Being Linear.
@@ -69,17 +73,18 @@ include::{generated}/api/protos/xrEnumerateSwapchainFormats.adoc[]
 * pname:formatCountOutput is a pointer to the count of code:uint64_t formats
   written, or a pointer to the required capacity in the case that
   pname:formatCapacityInput is insufficient.
-* pname:formats is a pointer to an array of code:int64_t format ids, but
+* pname:formats is a pointer to an array of code:int64_t format IDs, but
   can: be code:NULL if pname:formatCapacityInput is `0`.
-  The format ids are specific to the specified graphics API.
+  The meanings of the format IDs are specific to the specified graphics API
+  for the session.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
   description of retrieving the required pname:formats size.
 ****
 
 flink:xrEnumerateSwapchainFormats enumerates the texture formats supported
 by the current session.
-The type of formats returned are dependent on the graphics API specified in
-flink:xrCreateSession.
+The type of formats returned are dependent on the graphics API specified by
+the graphics binding structure passed to flink:xrCreateSession.
 For example, if a DirectX graphics API was specified, then the enumerated
 formats correspond to the DXGI formats, such as
 ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB.
@@ -87,6 +92,9 @@ Texture formats should: be in order from highest to lowest runtime
 preference.
 The application should: use the highest preference format that it supports
 for optimal performance and quality.
+
+Runtimes should: support code:R8G8B8A8 and code:R8G8B8A8 formats with
+non-linear ("sRGB") encoding if possible.
 
 ifdef::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
 With an OpenGL-based graphics API, the texture formats correspond to OpenGL

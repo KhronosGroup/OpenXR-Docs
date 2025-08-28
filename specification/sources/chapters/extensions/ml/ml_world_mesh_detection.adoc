@@ -309,7 +309,7 @@ The value for pname:maxBlockCount should: be populated
 slink:XrWorldMeshStateRequestCompletionML::pname:meshBlockStateCountOutput.
 As long as the pname:maxBlockCount is equal or larger to this
 slink:XrWorldMeshStateRequestCompletionML::pname:meshBlockStateCountOutput,
-a memory block may: be re-used for new requests.
+a memory block may: be reused for new requests.
 
 include::{generated}/validity/structs/XrWorldMeshBufferRecommendedSizeInfoML.adoc[]
 --

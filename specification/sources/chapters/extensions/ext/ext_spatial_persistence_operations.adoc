@@ -194,8 +194,8 @@ include::{generated}/api/structs/XrPersistSpatialEntityCompletionEXT.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
-* pname:futureResult is the elink:XrResult of the spatial persistence
-  context creation operation.
+* pname:futureResult is the elink:XrResult of the spatial entity persist
+  operation.
 * pname:persistResult is the elink:XrSpatialPersistenceContextResultEXT of
   the spatial entity persist operation.
 * pname:persistUuid is an slink:XrUuid that the application can: use to
@@ -287,7 +287,7 @@ include::{generated}/api/structs/XrSpatialEntityUnpersistInfoEXT.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
-* pname:persistUuid is an slink:XrUuid prepresting the spatial entity that
+* pname:persistUuid is an slink:XrUuid representing the spatial entity that
   is to be unpersisted.
 ****
 

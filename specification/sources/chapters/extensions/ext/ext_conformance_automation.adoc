@@ -195,6 +195,7 @@ include::{generated}/api/protos/xrSetInputDeviceLocationEXT.adoc[]
   pathname:/user/hand/left).
 * pname:inputSourcePath is the full path of the input component for which we
   wish to set the pose for (e.g. pathname:/user/hand/left/input/grip/pose).
+* pname:space is the slink:XrSpace for the pname:pose
 * pname:pose is the requested pose state of the input device.
 ****
 
