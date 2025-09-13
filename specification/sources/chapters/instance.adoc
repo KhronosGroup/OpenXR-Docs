@@ -181,7 +181,15 @@ different results if a pname:layerName is available in one call but not in
 another.
 The extensions supported by a layer may also change between two calls, e.g.
 if the layer implementation is replaced by a different version between those
-calls.
+calls, or if an `XrInstance` is created or destroyed between those calls.
+
+This function may: be called before an instance has been created;
+implementations must: not assume an instance exists.
+
+When applications invoke this function, the OpenXR loader's implementation
+is used, which enumerates the registered runtime and API layer manifests;
+this function must: still be implemented by API layers and runtimes, as it may
+be invoked by API layers.
 
 include::{generated}/validity/protos/xrEnumerateInstanceExtensionProperties.adoc[]
 --
