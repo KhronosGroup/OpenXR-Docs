@@ -784,7 +784,8 @@
             <sch:assert test="type/text() = 'uint32_t'">
                 <sch:value-of select="$type_name" /> two call idiom struct: The <sch:value-of select="$member_name" /> member must be uint32_t.
             </sch:assert>
-            <sch:assert test="not(ends-with(normalize-space(current()/text()[preceding-sibling::type][1]), '*'))">
+            <sch:let name="is_exception" value="$type_name = ('XrTrackablePlaneANDROID')"/>
+            <sch:assert test="$is_exception or not(ends-with(normalize-space(current()/text()[preceding-sibling::type][1]), '*'))">
                 <sch:value-of select="$type_name" /> two call idiom struct: The <sch:value-of select="$member_name" /> member must not be a pointer.
             </sch:assert>
 
@@ -933,7 +934,7 @@
     <sch:pattern name="Interaction Profile Component naming">
         <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#semantic-path-standard-identifiers -->
         <!-- we also allow `palm` here -->
-        <sch:let name="standard-identifiers" value="'^(a|b|back|aim|dpad_down|dpad_up|dpad_left|dpad_right|grip|grip_surface|haptic|haptic_left|haptic_right|haptic_left_trigger|haptic_right_trigger|home|menu|mute_mic|palm|select|shoulder|shoulder_left|shoulder_right|squeeze|system|thumbrest|thumbstick|thumbstick_left|thumbstick_right|trackpad|trigger|trigger_left|trigger_right|view|volume_up|volume_down|x|y|stylus|thumb_resting_surfaces|trigger_curl|trigger_slide|haptic_trigger|haptic_thumb)$'"/>
+        <sch:let name="standard-identifiers" value="'^(a|b|back|aim|dpad_down|dpad_up|dpad_left|dpad_right|grip|grip_surface|haptic|haptic_left|haptic_right|haptic_left_trigger|haptic_right_trigger|home|menu|mute_mic|palm|select|shoulder|shoulder_left|shoulder_right|squeeze|system|thumbrest|thumbstick|thumbstick_left|thumbstick_right|trackpad|trigger|trigger_left|trigger_right|view|volume_up|volume_down|x|y|stylus|thumb_resting_surfaces|trigger_curl|trigger_slide|haptic_trigger|haptic_thumb|primary|secondary)$'"/>
         <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#_standard_components -->
         <!-- we also allow the dpad identifiers here too -->
         <!-- we also allow `dpad_center` which is not listed in the spec -->

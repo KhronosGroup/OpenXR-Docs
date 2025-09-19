@@ -25,6 +25,7 @@ include::{generated}/meta/XR_EXT_hand_interaction.adoc[]
     Paulo Gomes, Samsung Electronics +
     Ron Bessems, Magic Leap +
     Bastiaan Olij, Godot Engine +
+    John Kearney, Meta Platforms +
 
 ==== Overview
 
@@ -475,3 +476,5 @@ poses>>.
 
 * Revision 1, 2021-08-06 (Yin Li)
 ** Initial extension description
+* Revision 2, 2025-08-20 (John Kearney, Meta)
+** Explicitly list support for grip_surface in extension definition.

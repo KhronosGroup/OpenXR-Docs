@@ -412,6 +412,9 @@ include::{generated}/api/structs/XrTrackablePlaneANDROID.adoc[]
   The polygon may: be concave and must: not be self-intersecting.
 * See the <<fundamentals-buffer-size-parameters>> section for a detailed
   description of retrieving the required pname:vertices size.
+  However, it is important to note that unlike the "structure form" example
+  given in that section, pname:vertexCountOutput is a pointer instead of a
+  value type.
 ****
 
 When the runtime has acquired enough environment information to detect that
@@ -422,6 +425,14 @@ When this happens, the plane information returned in both of the associated
 planes must: be identical.
 The application should: stop querying for information about planes that have
 been reported as subsumed.
+
+.Warning
+****
+Unlike the typical structure forms used for
+<<fundamentals-buffer-size-parameters>>,
+slink:XrTrackablePlaneANDROID::pname:vertexCountOutput is a pointer and not
+a value type.
+****
 
 include::{generated}/validity/structs/XrTrackablePlaneANDROID.adoc[]
 --
@@ -694,3 +705,6 @@ include::{generated}/interfaces/XR_ANDROID_trackables.adoc[leveloffset=1]
 
 * Revision 1, 2025-07-21 (Kenny Vercaemer)
 ** Initial extension description.
+* Revision 2, 2025-09-10 (Nihav Jain)
+** Update slink:XrTrackablePlaneANDROID::pname:vertexCountOutput to a
+   pointer.

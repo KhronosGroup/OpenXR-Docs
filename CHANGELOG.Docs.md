@@ -17,6 +17,63 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.52 (2025-09-19)
+
+This release adds a new ratified Khronos extension, which defines a new
+interaction profile intended for fallback use. It also announces the
+ratification of several existing EXT extensions, fixes issues in the XML
+registry, adds a new vendor extension, and modifies a recent vendor extension.
+
+- Specification
+  - New ratified Khronos extension specification: `XR_KHR_generic_controller` providing a
+    featureful fallback interaction profile that maps easily (and in defined ways)
+    to popular controllers.
+    ([internal MR 3018](https://gitlab.khronos.org/openxr/openxr/merge_requests/3018))
+  - New vendor extension specification: `XR_META_spatial_entity_discovery`
+    providing for vendor-specific spatial entity retrieval in large areas.
+    ([internal MR 2880](https://gitlab.khronos.org/openxr/openxr/merge_requests/2880),
+    [internal MR 4001](https://gitlab.khronos.org/openxr/openxr/merge_requests/4001))
+  - Change: Revert `XrTrackablePlaneANDROID::vertexCountOutput` to a pointer, add
+    note explaining that it does not match convention, and increment extension
+    version number.
+    ([internal MR 3998](https://gitlab.khronos.org/openxr/openxr/merge_requests/3998))
+  - Fix: Update `XR_EXT_hand_interaction` extension version to `2` for clarity,
+    corresponding to adding XML for missing `grip_surface` paths for
+    "/interaction_profiles/ext/hand_interaction_ext" in `xr.xml`.
+    ([internal MR 3963](https://gitlab.khronos.org/openxr/openxr/merge_requests/3963))
+- Registry
+  - New ratified Khronos extension: `XR_KHR_generic_controller`
+    ([internal MR 3018](https://gitlab.khronos.org/openxr/openxr/merge_requests/3018))
+  - Update: Ratified `XR_EXT_debug_utils`
+    ([internal MR 3899](https://gitlab.khronos.org/openxr/openxr/merge_requests/3899))
+  - Update: Ratified `XR_EXT_render_model`
+    ([internal MR 3900](https://gitlab.khronos.org/openxr/openxr/merge_requests/3900))
+  - Update: Ratified `XR_EXT_interaction_render_model`
+    ([internal MR 3901](https://gitlab.khronos.org/openxr/openxr/merge_requests/3901))
+  - New vendor extension: `XR_META_spatial_entity_discovery`.
+    ([internal MR 2880](https://gitlab.khronos.org/openxr/openxr/merge_requests/2880),
+    [internal MR 4001](https://gitlab.khronos.org/openxr/openxr/merge_requests/4001))
+  - Change: Revert `XrTrackablePlaneANDROID::vertexCountOutput` to a pointer, and
+    increment extension version number.
+    ([internal MR 3998](https://gitlab.khronos.org/openxr/openxr/merge_requests/3998))
+  - Chore: Reserve numbers for extensions.
+    ([internal MR 4004](https://gitlab.khronos.org/openxr/openxr/merge_requests/4004))
+  - Fix: Add XML for missing `grip_surface` paths for
+    "/interaction_profiles/ext/hand_interaction_ext". Note that these paths were
+    already listed in the spec prose. Update `XR_EXT_hand_interaction` extension
+    version to `2` for clarity.
+    ([internal MR 3963](https://gitlab.khronos.org/openxr/openxr/merge_requests/3963))
+  - Fix: Mark a few structure members that are bitmasks as optional, to match prose
+    and/or usage intent.
+    ([internal MR 3973](https://gitlab.khronos.org/openxr/openxr/merge_requests/3973))
+  - Fix: Mark `XrCompositionLayerPassthroughFB.space` as optional to match spec
+    prose.
+    ([internal MR 3973](https://gitlab.khronos.org/openxr/openxr/merge_requests/3973))
+  - Fix: Add XML for missing `palm_ext/pose` and `grip_surface/pose` paths for
+    "/interaction_profiles/logitech/mx_ink_stylus_logitech".  Note that these paths
+    were already listed in the spec prose.
+    ([internal MR 3996](https://gitlab.khronos.org/openxr/openxr/merge_requests/3996))
+
 ## OpenXR Specification 1.1.51 (2025-08-28)
 
 This release primarily features some specification clarifications and fixes to

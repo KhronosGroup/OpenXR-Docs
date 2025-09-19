@@ -1,0 +1,247 @@
+// Copyright (c) 2017-2025 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+
+include::{generated}/meta/XR_KHR_generic_controller.adoc[]
+
+*Contributors*::
+    Andreas Loeve Selvik, Meta Platforms +
+    Bastiaan Olij, Godot Engine +
+    Bryce Hutchings, Microsoft +
+    John Kearney, Meta Platforms +
+    Jules Blok, Epic Games +
+    Nathan Nuber, Valve +
+    Rylie Pavlik, Collabora +
+    Lachlan Ford, Microsoft +
+    Yin Li, Microsoft +
+
+==== Overview
+
+This extension enables a new interaction profile for generic motion
+controllers.
+This new interaction profile provides button, trigger, squeeze, thumbstick,
+and haptic support for applications.
+Similarly to Khronos Simple Controller Profile, there is no hardware
+associated with the profile, and runtimes which support this profile should:
+map the input paths provided to whatever the appropriate inputs are on the
+actual hardware.
+
+==== New Interaction Profile Identifiers
+
+* primary - A standalone button that is easier for the user to interact with
+  than secondary button (`secondary`).
+* secondary - A standalone button that is more difficult for the user to
+  interact with than primary button (`primary`).
+
+==== New Interaction Profile
+
+*Khronos Generic Controller Profile*
+
+Path: pathname:/interaction_profiles/khr/generic_controller
+
+Valid for user paths:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+This interaction profile provides basic pose, button, thumbstick, trigger,
+and haptic support for applications which are able to use generic controller
+style input.
+
+Unlike many interaction profiles, there is no specific hardware associated
+with the interaction profile, and runtimes which support this profile
+should: map the input/output binding paths to whatever the appropriate
+inputs/outputs are on the actual hardware.
+
+If there is a specific interaction profile associated with the motion
+controller in use, and the application suggests bindings for that specific
+interaction profile and this Generic Controller Profile, the runtime should:
+select the bindings suggested for the hardware specific interaction profile
+in preference to bindings suggested for this Generic Controller Profile.
+
+Specifically, the Generic Controller Profile is designed to offer broad
+compatibility across motion controllers which offer generic controller style
+data but not to comprehensively cover any specific hardware.
+
+[NOTE]
+.Note
+====
+The intent of this interaction profile is to provide a fallback.
+It is still expected that the application will suggest bindings for all
+hardware based interaction profiles that the application has been tested
+with.
+====
+
+Some runtimes must: select bindings suggested for this interaction profile
+in some conditions.
+
+Specifically, if in some condition, a runtime obeying suggested bindings
+selects bindings suggested for one of the following interaction profiles:
+
+* pathname:/interaction_profiles/oculus/touch_controller
+* pathname:/interaction_profiles/valve/index_controller
+
+Then, such a runtime must: select suggested bindings for
+pathname:/interaction_profiles/khr/generic_controller if bindings are
+suggested for neither of the above, nor for an interaction profile that maps
+more directly to the devices in use.
+
+That is, if a runtime selects "touch_controller" or "index_controller" in
+some case, then it must: select "generic_controller" in a similar situation.
+
+
+[NOTE]
+.Note
+====
+The intent of this language is to **guarantee** support for this interaction
+profile for runtimes implementing certain interaction profiles that are
+known to map well, but runtimes that do not typically remap any of these
+specific interaction profiles are encouraged to map this interaction profile
+onto their devices.
+====
+
+Supported component paths:
+
+* subpathname:/input/primary/click
+* subpathname:/input/secondary/click
+
+* subpathname:/input/thumbstick
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/click
+
+* subpathname:/input/squeeze/value
+* subpathname:/input/trigger/value
+
+* subpathname:/input/grip/pose
+* subpathname:/input/grip_surface/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+===== Expected binding mappings
+
+The runtime may: use any appropriate hardware binding in this; however there
+are natural equivalences between the profiles:
+
+[cols="1,1",options="header"]
+|===
+|Binding path for pathname:/interaction_profiles/khr/generic_controller |Equivalent binding path for pathname:/interaction_profiles/oculus/touch_controller
+
+|pathname:/user/hand/left/input/primary/click      |pathname:/user/hand/left/input/x/click
+|pathname:/user/hand/left/input/secondary/click    |pathname:/user/hand/left/input/y/click
+|pathname:/user/hand/left/input/thumbstick         |pathname:/user/hand/left/input/thumbstick
+|pathname:/user/hand/left/input/thumbstick/x       |pathname:/user/hand/left/input/thumbstick/x
+|pathname:/user/hand/left/input/thumbstick/y       |pathname:/user/hand/left/input/thumbstick/y
+|pathname:/user/hand/left/input/thumbstick/click   |pathname:/user/hand/left/input/thumbstick/click
+|pathname:/user/hand/left/input/squeeze/value      |pathname:/user/hand/left/input/squeeze/value
+|pathname:/user/hand/left/input/trigger/value      |pathname:/user/hand/left/input/trigger/value
+|pathname:/user/hand/left/input/grip/pose          |pathname:/user/hand/left/input/grip/pose
+|pathname:/user/hand/left/input/grip_surface/pose  |pathname:/user/hand/left/input/grip_surface/pose
+|pathname:/user/hand/left/input/aim/pose           |pathname:/user/hand/left/input/aim/pose
+|pathname:/user/hand/left/output/haptic            |pathname:/user/hand/left/output/haptic
+|pathname:/user/hand/right/input/primary/click     |pathname:/user/hand/right/input/a/click
+|pathname:/user/hand/right/input/secondary/click   |pathname:/user/hand/right/input/b/click
+|pathname:/user/hand/right/input/thumbstick        |pathname:/user/hand/right/input/thumbstick
+|pathname:/user/hand/right/input/thumbstick/x      |pathname:/user/hand/right/input/thumbstick/x
+|pathname:/user/hand/right/input/thumbstick/y      |pathname:/user/hand/right/input/thumbstick/y
+|pathname:/user/hand/right/input/thumbstick/click  |pathname:/user/hand/right/input/thumbstick/click
+|pathname:/user/hand/right/input/squeeze/value     |pathname:/user/hand/right/input/squeeze/value
+|pathname:/user/hand/right/input/trigger/value     |pathname:/user/hand/right/input/trigger/value
+|pathname:/user/hand/right/input/grip/pose         |pathname:/user/hand/right/input/grip/pose
+|pathname:/user/hand/right/input/grip_surface/pose |pathname:/user/hand/right/input/grip_surface/pose
+|pathname:/user/hand/right/input/aim/pose          |pathname:/user/hand/right/input/aim/pose
+|pathname:/user/hand/right/output/haptic           |pathname:/user/hand/right/output/haptic
+|===
+
+The following binding paths for
+pathname:/interaction_profiles/oculus/touch_controller lack a generic
+controller equivalent and therefore are omitted from the preceding table:
+
+* pathname:/user/hand/left/input/trigger/proximity
+* pathname:/user/hand/left/input/thumb_resting_surfaces/proximity
+* pathname:/user/hand/left/input/menu/click
+* pathname:/user/hand/right/input/system/click
+* pathname:/user/hand/right/input/trigger/proximity
+* pathname:/user/hand/right/input/thumb_resting_surfaces/proximity
+
+[cols="1,1",options="header"]
+|===
+|Binding path for pathname:/interaction_profiles/khr/generic_controller |Equivalent binding path for pathname:/interaction_profiles/valve/index_controller
+
+|pathname:/user/hand/left/input/primary/click      |pathname:/user/hand/left/input/a/click
+|pathname:/user/hand/left/input/secondary/click    |pathname:/user/hand/left/input/b/click
+|pathname:/user/hand/left/input/thumbstick         |pathname:/user/hand/left/input/thumbstick
+|pathname:/user/hand/left/input/thumbstick/x       |pathname:/user/hand/left/input/thumbstick/x
+|pathname:/user/hand/left/input/thumbstick/y       |pathname:/user/hand/left/input/thumbstick/y
+|pathname:/user/hand/left/input/thumbstick/click   |pathname:/user/hand/left/input/thumbstick/click
+|pathname:/user/hand/left/input/squeeze/value      |pathname:/user/hand/left/input/squeeze/value
+|pathname:/user/hand/left/input/trigger/value      |pathname:/user/hand/left/input/trigger/value
+|pathname:/user/hand/left/input/grip/pose          |pathname:/user/hand/left/input/grip/pose
+|pathname:/user/hand/left/input/grip_surface/pose  |pathname:/user/hand/left/input/grip_surface/pose
+|pathname:/user/hand/left/input/aim/pose           |pathname:/user/hand/left/input/aim/pose
+|pathname:/user/hand/left/output/haptic            |pathname:/user/hand/left/output/haptic
+|pathname:/user/hand/right/input/primary/click     |pathname:/user/hand/right/input/a/click
+|pathname:/user/hand/right/input/secondary/click   |pathname:/user/hand/right/input/b/click
+|pathname:/user/hand/right/input/thumbstick        |pathname:/user/hand/right/input/thumbstick
+|pathname:/user/hand/right/input/thumbstick/x      |pathname:/user/hand/right/input/thumbstick/x
+|pathname:/user/hand/right/input/thumbstick/y      |pathname:/user/hand/right/input/thumbstick/y
+|pathname:/user/hand/right/input/thumbstick/click  |pathname:/user/hand/right/input/thumbstick/click
+|pathname:/user/hand/right/input/squeeze/value     |pathname:/user/hand/right/input/squeeze/value
+|pathname:/user/hand/right/input/trigger/value     |pathname:/user/hand/right/input/trigger/value
+|pathname:/user/hand/right/input/grip/pose         |pathname:/user/hand/right/input/grip/pose
+|pathname:/user/hand/right/input/grip_surface/pose |pathname:/user/hand/right/input/grip_surface/pose
+|pathname:/user/hand/right/input/aim/pose          |pathname:/user/hand/right/input/aim/pose
+|pathname:/user/hand/right/output/haptic           |pathname:/user/hand/right/output/haptic
+|===
+
+The following binding paths for
+pathname:/interaction_profiles/valve/index_controller lack a generic
+controller equivalent and therefore are omitted from the preceding table:
+
+* pathname:/user/hand/left/input/system/click
+* pathname:/user/hand/left/input/system/touch
+* pathname:/user/hand/left/input/trackpad/x
+* pathname:/user/hand/left/input/trackpad/y
+* pathname:/user/hand/left/input/trackpad/force
+* pathname:/user/hand/left/input/trackpad/touch
+* pathname:/user/hand/right/input/system/click
+* pathname:/user/hand/right/input/system/touch
+* pathname:/user/hand/right/input/trackpad/x
+* pathname:/user/hand/right/input/trackpad/y
+* pathname:/user/hand/right/input/trackpad/force
+* pathname:/user/hand/right/input/trackpad/touch
+
+
+include::{generated}/interfaces/XR_KHR_generic_controller.adoc[leveloffset=1]
+
+==== Issues
+
+* Should the specification mandate specific bindings for all hardware with
+  existing interaction profiles?
+** No.
+   This is an area where we expect that the runtime has better information
+   that about hardware configuration, user preferences, etc than the
+   application or the specification authors.
+   Requiring specific binding behavior for the runtimes would be counter
+   productive given that assumption.
+
+* Why is the profile described as a Generic Controller Profile rather than
+  some other name?
+** The data that is made available by the Generic Controller Profile can
+   represent the data commonly made available by VR motion controllers but
+   is not specific to any particular hardware.
+
+* Should controller system buttons be added to this profile?
+** No.
+   While interaction profiles make these system buttons available to
+   applications, they are generally not likely to be bound for regular
+   applications, instead being reserved for internal system usage.
+
+==== Version History
+
+* Revision 1, 2023-2025 (John Kearney)
+** Initial extension description

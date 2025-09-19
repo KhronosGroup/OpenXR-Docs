@@ -1,0 +1,429 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_discovery.adoc[]
+
+*Last Modified Date*::
+    2024-11-10
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Natalie Fleury, Meta Platforms +
+    Abhishek Shrivastava, Meta Platforms +
+    Adrian Mancilla, Meta Platforms +
+
+
+==== Overview
+
+The apiext:XR_META_spatial_entity_discovery extension supports spatial
+entity retrieval in larger areas.
+It offers entity filters like component and UUID filters.
+This allows for more efficient and targeted discovery of spatial entities.
+
+
+===== Technical overview
+
+This extension enables finding and loading persisted Spatial Entities which
+can: then be tracked across different sessions and over time by
+applications.
+
+If the ename:XR_SPACE_COMPONENT_TYPE_STORABLE_FB component has been enabled
+on a space, and that space has previously been persisted, application
+developers can: discover and then track this slink:XrSpace entity.
+apiext:XR_META_spatial_entity_discovery is expected to be used alongside
+apiext:XR_META_spatial_entity_persistence for space persistence and storage
+management.
+
+[NOTE]
+====
+apiext:XR_META_spatial_entity_discovery is not expected to be used alongside
+apiext:XR_FB_spatial_entity_sharing, and applications should not try to
+retrieve shared Spatial Entities via
+apiext:XR_META_spatial_entity_discovery, and should instead use
+apiext:XR_FB_spatial_entity_query to retrieve shared Spatial Entities.
+====
+
+In order to enable the functionality of this extension, you must: pass the
+name of the extension into flink:xrCreateInstance via the
+slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
+indicated in the <<extensions>> section.
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemSpaceDiscoveryPropertiesMETA',type='structs',desc='System property for space discovery',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemSpaceDiscoveryPropertiesMETA structure is defined as:
+
+
+include::{generated}/api/structs/XrSystemSpaceDiscoveryPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsSpaceDiscovery is an basetype:XrBool32, indicating if
+  current system supports space discovery.
+****
+
+An application can: inspect whether the system is capable of supporting
+space discovery by extending the slink:XrSystemProperties with
+slink:XrSystemSpaceDiscoveryPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsSpaceDiscovery, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrDiscoverSpacesMETA and
+flink:xrRetrieveSpaceDiscoveryResultsMETA.
+
+include::{generated}/validity/structs/XrSystemSpaceDiscoveryPropertiesMETA.adoc[]
+
+--
+
+==== Discover Spaces
+
+
+[open,refpage='xrDiscoverSpacesMETA',desc='Discovery space(s) from persistent storage',type='protos',xrefs='xrRetrieveSpaceDiscoveryResultsMETA']
+--
+The flink:xrDiscoverSpacesMETA function is defined as:
+
+include::{generated}/api/protos/xrDiscoverSpacesMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:info contains the input struct slink:XrSpaceDiscoveryInfoMETA for
+  the Discovery operation.
+* pname:requestId is a pointer to an basetype:XrAsyncRequestIdFB value and
+  is an output parameter.
+  The variable it points to is populated with the ID of this asynchronous
+  request.
+****
+
+The flink:xrDiscoverSpacesMETA function discovers spaces that were persisted
+previously, and which comply with the filters passed in the
+slink:XrSpaceDiscoveryInfoMETA pname:info structure.
+
+This operation is asynchronous.
+
+If flink:xrDiscoverSpacesMETA returns a dlink:XR_FAILED result, no discovery
+operation takes place and no events will be queued for this operation.
+
+If the asynchronous operation is scheduled successfully, the runtime must:
+return ename:XR_SUCCESS and the asynchronous discovery operation will queue
+at least 1 event.
+
+If Spatial Entities have been discovered and are ready for retrieval, the
+runtime must: queue an slink:XrEventDataSpaceDiscoveryResultsAvailableMETA
+event.
+The runtime may: queue 0, 1, or more
+slink:XrEventDataSpaceDiscoveryResultsAvailableMETA events depending on the
+Spatial Entities found.
+
+If and only if the runtime returns ename:XR_SUCCESS, the runtime must: queue
+a single slink:XrEventDataSpaceDiscoveryCompleteMETA event identified with a
+slink:XrEventDataSpaceDiscoveryCompleteMETA::pname:requestId matching the
+pname:requestId value output by this function, referred to as the
+"corresponding completion event." The
+slink:XrEventDataSpaceDiscoveryCompleteMETA event is queued after all
+slink:XrEventDataSpaceDiscoveryResultsAvailableMETA events for this
+operation have been queued.
+
+Completion results are conveyed in the event
+slink:XrEventDataSpaceDiscoveryCompleteMETA, while availability of output
+for flink:xrRetrieveSpaceDiscoveryResultsMETA is signaled by either this
+completion event or the event
+slink:XrEventDataSpaceDiscoveryResultsAvailableMETA.
+
+If the asynchronous operation is successful, in the corresponding completion
+event, the runtime must: set the
+slink:XrEventDataSpaceDiscoveryCompleteMETA::pname:result field to
+ename:XR_SUCCESS.
+
+If the asynchronous operation is scheduled but not successful, in the
+corresponding completion event, the runtime must: set the
+slink:XrEventDataSpaceDiscoveryCompleteMETA::pname:result field to an
+appropriate error code instead of ename:XR_SUCCESS.
+
+include::{generated}/validity/protos/xrDiscoverSpacesMETA.adoc[]
+--
+
+[open,refpage='XrSpaceDiscoveryInfoMETA',type='structs',desc='Parameters for a discovery operation',xrefs='']
+--
+The slink:XrSpaceDiscoveryInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceDiscoveryInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:filterCount is the number of filters that are passed in the
+  pname:filters parameter.
+* pname:filters is a pointer to an array of
+  slink:XrSpaceFilterBaseHeaderMETA pointers.
+****
+
+The slink:XrSpaceDiscoveryInfoMETA structure contains information used to
+discover space(s).
+
+include::{generated}/validity/structs/XrSpaceDiscoveryInfoMETA.adoc[]
+--
+
+
+[open,refpage='XrSpaceFilterBaseHeaderMETA',type='structs',desc='Base header for space discovery filters',xrefs='']
+--
+The slink:XrSpaceFilterBaseHeaderMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceFilterBaseHeaderMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+****
+
+The slink:XrSpaceFilterBaseHeaderMETA structure is meant to be used as the
+base header for filter types defined in this extension.
+
+include::{generated}/validity/structs/XrSpaceFilterBaseHeaderMETA.adoc[]
+--
+
+Two such filter types are defined in this extension:
+slink:XrSpaceFilterUuidMETA and slink:XrSpaceFilterComponentMETA.
+
+[open,refpage='XrSpaceFilterUuidMETA',type='structs',desc='ID filter for Discovery',xrefs='']
+--
+The slink:XrSpaceFilterUuidMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceFilterUuidMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+* pname:uuidCount is the number of IDs that should: be in the uuids array.
+* pname:uuids is the slink:XrUuidEXT array (pointer to first element) to the
+  IDs to be discovered.
+****
+
+The slink:XrSpaceFilterUuidMETA structure contains information used to
+discover space(s) by ID.
+
+include::{generated}/validity/structs/XrSpaceFilterUuidMETA.adoc[]
+--
+
+
+[open,refpage='XrSpaceFilterComponentMETA',type='structs',desc='Component filter for Discovery',xrefs='']
+--
+The slink:XrSpaceFilterComponentMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceFilterComponentMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+* pname:componentType is the elink:XrSpaceComponentTypeFB component that is
+  expected to be enabled for the spaces returned by discovery.
+****
+
+The slink:XrSpaceFilterComponentMETA structure contains information used to
+discover Spatial Entities by components enabled.
+
+include::{generated}/validity/structs/XrSpaceFilterComponentMETA.adoc[]
+--
+
+
+[open,refpage='XrEventDataSpaceDiscoveryResultsAvailableMETA',type='structs',desc='Event indicating there are results ready for retrieval from Discovery call.',xrefs='']
+--
+The slink:XrEventDataSpaceDiscoveryResultsAvailableMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrEventDataSpaceDiscoveryResultsAvailableMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the basetype:XrAsyncRequestIdFB of the asynchronous
+  request to discover spaces.
+****
+
+The slink:XrEventDataSpaceDiscoveryResultsAvailableMETA event indicates
+there are results ready to be retrieved.
+Any number of these slink:XrEventDataSpaceDiscoveryResultsAvailableMETA
+events may: be queued, until the slink:XrEventDataSpaceDiscoveryCompleteMETA
+event is queued.
+Once the slink:XrEventDataSpaceDiscoveryCompleteMETA event is queued, there
+must: not be any more slink:XrEventDataSpaceDiscoveryResultsAvailableMETA
+events queued.
+
+include::{generated}/validity/structs/XrEventDataSpaceDiscoveryResultsAvailableMETA.adoc[]
+--
+
+
+
+[open,refpage='XrEventDataSpaceDiscoveryCompleteMETA',type='structs',desc='Event indicating there are no more results and the Discovery call has completed.',xrefs='']
+--
+The slink:XrEventDataSpaceDiscoveryCompleteMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataSpaceDiscoveryCompleteMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:requestId is the basetype:XrAsyncRequestIdFB of the asynchronous
+  request to discover spaces.
+* pname:result the elink:XrResult indicating the success, success with
+  warnings, or failure of the Discovery operation.
+****
+
+The slink:XrEventDataSpaceDiscoveryCompleteMETA event indicates that there
+must: be no more slink:XrEventDataSpaceDiscoveryResultsAvailableMETA queued
+and that Discovery has completed execution.
+
+
+Potential slink:XrEventDataSpaceDiscoveryCompleteMETA::pname:result values
+include the following elink:XrResult enumerants:
+
+* ename:XR_SUCCESS
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_SPACE_INSUFFICIENT_RESOURCES_META
+* ename:XR_ERROR_SPACE_INSUFFICIENT_VIEW_META
+* ename:XR_ERROR_SPACE_PERMISSION_INSUFFICIENT_META
+* ename:XR_ERROR_SPACE_RATE_LIMITED_META
+* ename:XR_ERROR_SPACE_TOO_DARK_META
+* ename:XR_ERROR_SPACE_TOO_BRIGHT_META
+
+
+include::{generated}/validity/structs/XrEventDataSpaceDiscoveryCompleteMETA.adoc[]
+--
+
+
+==== Retrieve Discovered Spaces
+
+[open,refpage='xrRetrieveSpaceDiscoveryResultsMETA',desc='Retrieve results from Discovering.',type='protos',xrefs='xrDiscoverSpacesMETA']
+--
+The flink:xrRetrieveSpaceDiscoveryResultsMETA function is defined as:
+
+include::{generated}/api/protos/xrRetrieveSpaceDiscoveryResultsMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:requestId is the basetype:XrAsyncRequestIdFB returned as part of the
+  slink:XrEventDataSpaceDiscoveryResultsAvailableMETA or
+  slink:XrEventDataSpaceDiscoveryCompleteMETA events.
+* pname:results is the slink:XrSpaceDiscoveryResultsMETA structure used to
+  get the number of results then to populate those results.
+****
+
+The flink:xrRetrieveSpaceDiscoveryResultsMETA function is synchronous, and
+follows the 2-call idiom, where the first call is made to determine the
+number of results, populated in the
+slink:XrSpaceDiscoveryResultsMETA::pname:resultCountOutput.
+The application uses this value to initialize the
+slink:XrSpaceDiscoveryResultsMETA::pname:resultCapacityInput and
+slink:XrSpaceDiscoveryResultsMETA::pname:results fields.
+The second call to flink:xrRetrieveSpaceDiscoveryResultsMETA must: then
+populate the results field with whatever results are available.
+See <<fundamentals-buffer-size-parameters>> for a detailed description of
+retrieving the required results size.
+
+Note that after any results have been retrieved, those specific results will
+be unavailable for retrieval again.
+Application developers can: choose to retrieve discovered Spatial Entities
+either after receiving an
+slink:XrEventDataSpaceDiscoveryResultsAvailableMETA event or after receiving
+an slink:XrEventDataSpaceDiscoveryCompleteMETA event.
+If application developers choose to retrieve after
+slink:XrEventDataSpaceDiscoveryResultsAvailableMETA events (before the
+slink:XrEventDataSpaceDiscoveryCompleteMETA event), more results may: be
+discovered between the first and the second call to
+flink:xrRetrieveSpaceDiscoveryResultsMETA.
+If this occurs, and if the application chose the result array capacity to
+match the slink:XrSpaceDiscoveryResultsMETA::pname:resultCountOutput, that
+capacity is no longer sufficient to receive all available results, so the
+second call will fail due to insufficient size.
+This will not lose results, and the application can: begin the two-call
+process for flink:xrRetrieveSpaceDiscoveryResultsMETA again.
+
+flink:xrPollEvent and flink:xrRetrieveSpaceDiscoveryResultsMETA may: be
+called simultaneously (without external synchronization).
+
+include::{generated}/validity/protos/xrRetrieveSpaceDiscoveryResultsMETA.adoc[]
+--
+
+
+[open,refpage='XrSpaceDiscoveryResultsMETA',type='structs',desc='Result(s) from retrieving results from Discovery',xrefs='']
+--
+The slink:XrSpaceDiscoveryResultsMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceDiscoveryResultsMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:resultCapacityInput is the capacity of the results array, or 0 to
+  indicate a request to retrieve the required capacity.
+* pname:resultCountOutput is an output parameter containing the count of
+  results for retrieval, or returns the required capacity in the case that
+  resultCapacityInput is insufficient.
+* pname:results is a pointer to an array of slink:XrSpaceDiscoveryResultMETA
+  structures to populate with the spaces retrieved, but can: be code:NULL if
+  pname:resultCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:results size.
+****
+
+The slink:XrSpaceDiscoveryResultsMETA structure is used to retrieve all
+results from a Discovery operation.
+
+include::{generated}/validity/structs/XrSpaceDiscoveryResultsMETA.adoc[]
+--
+
+
+
+[open,refpage='XrSpaceDiscoveryResultMETA',type='structs',desc='Single result from retrieving results from Discovery',xrefs='']
+--
+The slink:XrSpaceDiscoveryResultMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceDiscoveryResultMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:space is a space that complies with all the filters provided to
+  Discovery call.
+* pname:uuid is the slink:XrUuidEXT of the space.
+****
+
+The slink:XrSpaceDiscoveryResultMETA structure contains a single Space
+result retrieved after Discovery returns results.
+
+include::{generated}/validity/structs/XrSpaceDiscoveryResultMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_spatial_entity_discovery.adoc[leveloffset=1]
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-11-10 (Natalie Fleury)
+** Initial draft
