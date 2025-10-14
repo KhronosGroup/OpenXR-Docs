@@ -559,9 +559,9 @@ If any elements in pname:topLevelUserPaths are duplicated, the runtime must:
 return ename:XR_ERROR_VALIDATION_FAILURE from
 flink:xrGetRenderModelPoseTopLevelUserPathEXT.
 
-If any elements in pname:topLevelUserPaths are not valid <<top-level
-pathname:/user paths,semantic-paths-user>>, the runtime must: return
-ename:XR_ERROR_PATH_INVALID from
+If any elements in pname:topLevelUserPaths are not valid
+<<semantic-paths-user,top level pathname:/user paths>>, the runtime must:
+return ename:XR_ERROR_PATH_INVALID from
 flink:xrGetRenderModelPoseTopLevelUserPathEXT.
 
 

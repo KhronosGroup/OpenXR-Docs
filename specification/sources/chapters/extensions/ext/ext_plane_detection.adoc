@@ -344,7 +344,7 @@ flink:xrBeginPlaneDetectionEXT.
 
 If the slink:XrEventDataReferenceSpaceChangePending is queued and the
 changeTime elapsed while the application is holding cached data the
-application may: use the event data to adjusted poses accordingly.
+application may: use the event data to adjust the poses accordingly.
 
 include::{generated}/validity/protos/xrGetPlaneDetectionsEXT.adoc[]
 --

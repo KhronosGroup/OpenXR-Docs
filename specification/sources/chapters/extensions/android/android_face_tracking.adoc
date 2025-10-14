@@ -1,0 +1,452 @@
+// Copyright (c) 2017-2025, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_face_tracking.adoc[]
+
+*Last Modified Date*::
+    2025-06-04
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Spencer Quin, Google +
+    Jared Finder, Google +
+    Levana Chen, Google +
+
+==== Overview
+
+This extension enables applications to get weights of blend shapes and
+render facial expressions in XR experiences.
+
+This extension is intended to provide the information needed to create
+realistic avatars and expressive representations of users in virtual space.
+The runtime may: provide additional face calibration to help with face
+tracking experiences.
+The application can: check calibration activation before getting weights of
+blend shapes.
+
+==== Face Tracker
+
+Face tracking data is sensitive personal information and is closely linked
+to personal privacy and integrity.
+It is strongly recommended that applications storing or transferring face
+tracking data always ask the user for active and specific acceptance to do
+so.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the android.permission.FACE_TRACKING
+permission listed in their manifest.
+The android.permission.FACE_TRACKING permission is considered a dangerous
+permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateFaceTrackerANDROID
+
+(protection level: dangerous)
+====
+
+The runtime must: support a permission system to control application access
+to face tracking.
+
+* The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT when
+  creating an active face tracker until the application has been granted
+  permission for the face tracker.
+* When the application access has been granted permission, the runtime may:
+  set slink:XrFaceStateANDROID::pname:isValid ename:XR_TRUE when getting
+  face states via flink:xrGetFaceStateANDROID.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemFaceTrackingPropertiesANDROID',type='structs',desc='System property for face tracking',xrefs='']
+--
+The slink:XrSystemFaceTrackingPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemFaceTrackingPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsFaceTracking is an basetype:XrBool32 indicating if current
+  system supports face tracking.
+****
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the android.permission.FACE_TRACKING
+permission listed in their manifest.
+The android.permission.FACE_TRACKING permission is considered a dangerous
+permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateFaceTrackerANDROID
+
+(protection level: dangerous)
+====
+
+An application inspects whether the system is capable of face tracking by
+extending the slink:XrSystemProperties with an
+slink:XrSystemFaceTrackingPropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsFaceTracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateFaceTrackerANDROID.
+
+include::{generated}/validity/structs/XrSystemFaceTrackingPropertiesANDROID.adoc[]
+--
+
+==== Create a face tracker handle
+
+[open,refpage='XrFaceTrackerANDROID',type='handles',desc='Represents a face tracker']
+--
+include::{generated}/api/handles/XrFaceTrackerANDROID.adoc[]
+
+The slink:XrFaceTrackerANDROID handle represents a face tracker for face
+tracking.
+
+The application uses this handle to access face tracking data using other
+functions in this extension.
+--
+
+[open,refpage='xrCreateFaceTrackerANDROID',type='protos',desc='Create a face tracker handle',xrefs='XrFaceTrackerCreateInfoANDROID XrFaceTrackerANDROID xrDestroyFaceTrackerANDROID']
+--
+The flink:xrCreateFaceTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateFaceTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle in which the face tracker will
+  be active.
+* pname:createInfo is the slink:XrFaceTrackerCreateInfoANDROID used to
+  specify the face tracker.
+* pname:faceTracker is the returned slink:XrFaceTrackerANDROID handle.
+****
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the android.permission.FACE_TRACKING
+permission listed in their manifest.
+The android.permission.FACE_TRACKING permission is considered a dangerous
+permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateFaceTrackerANDROID
+
+(protection level: dangerous)
+====
+
+An application creates an slink:XrFaceTrackerANDROID handle by calling the
+flink:xrCreateFaceTrackerANDROID function.
+
+If the system does not support face tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateFaceTrackerANDROID.
+
+include::{generated}/validity/protos/xrCreateFaceTrackerANDROID.adoc[]
+--
+
+[open,refpage='XrFaceTrackerCreateInfoANDROID',type='structs',desc='Information to create a face tracker handle',xrefs='xrCreateFaceTrackerANDROID']
+--
+The slink:XrFaceTrackerCreateInfoANDROID structure is described as follows:
+
+include::{generated}/api/structs/XrFaceTrackerCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrFaceTrackerCreateInfoANDROID structure describes the information
+to create an slink:XrFaceTrackerANDROID handle.
+
+include::{generated}/validity/structs/XrFaceTrackerCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyFaceTrackerANDROID',type='protos',desc='Destroy a face tracker handle',xrefs='xrCreateFaceTrackerANDROID XrFaceTrackerANDROID']
+--
+
+The flink:xrDestroyFaceTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyFaceTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:faceTracker is an slink:XrFaceTrackerANDROID previously created by
+  flink:xrCreateFaceTrackerANDROID.
+****
+
+When the application's face tracking experience is over it calls the
+flink:xrDestroyFaceTrackerANDROID function to release the pname:faceTracker
+and underlying resources.
+
+include::{generated}/validity/protos/xrDestroyFaceTrackerANDROID.adoc[]
+--
+
+==== Check face calibration
+
+[open,refpage='xrGetFaceCalibrationStateANDROID',type='protos',desc='Gets face calibration state',xrefs='']
+--
+The flink:xrGetFaceCalibrationStateANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetFaceCalibrationStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:faceTracker is an slink:XrFaceTrackerANDROID previously created by
+  flink:xrCreateFaceTrackerANDROID.
+* pname:faceIsCalibratedOutput indicates if the face tracker has been
+  calibrated or not.
+****
+
+An application checks the face calibration state by calling the
+flink:xrGetFaceCalibrationStateANDROID function.
+
+When the tracking service is still under initialization, the runtime may:
+return ename:XR_ERROR_SERVICE_NOT_READY_ANDROID from
+flink:xrGetFaceCalibrationStateANDROID to indicate that the application can:
+retry later.
+
+If the system does not support face calibration, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrGetFaceCalibrationStateANDROID.
+Otherwise, the runtime may: set pname:faceIsCalibratedOutput to
+ename:XR_TRUE to reflect the face calibration state.
+
+include::{generated}/validity/protos/xrGetFaceCalibrationStateANDROID.adoc[]
+--
+
+==== Get facial expressions
+
+[open,refpage='xrGetFaceStateANDROID',type='protos',desc='Obtain blend shapes of facial expressions',xrefs='XrFaceTrackerANDROID XrFaceStateGetInfoANDROID XrFaceStateANDROID']
+--
+The flink:xrGetFaceStateANDROID function returns blend shapes of facial
+expressions at a given time.
+
+include::{generated}/api/protos/xrGetFaceStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:faceTracker is an slink:XrFaceTrackerANDROID previously created by
+  flink:xrCreateFaceTrackerANDROID.
+* pname:getInfo is a pointer to slink:XrFaceStateGetInfoANDROID describing
+  information to obtain face expressions.
+* pname:faceStateOutput is a pointer to slink:XrFaceStateANDROID receiving
+  the returned face tracking state and facial expressions.
+****
+
+include::{generated}/validity/protos/xrGetFaceStateANDROID.adoc[]
+--
+
+[open,refpage='XrFaceStateGetInfoANDROID',type='structs',desc='Describes the information to obtain facial expressions',xrefs='xrGetFaceStateANDROID']
+--
+The slink:XrFaceStateGetInfoANDROID structure describes the information to
+obtain facial expressions.
+
+include::{generated}/api/structs/XrFaceStateGetInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:time is an basetype:XrTime at which the facial expressions are
+  requested.
+****
+
+Applications should: request a time equal to the predicted display time for
+the rendered frame.
+The runtime will employ appropriate modeling to provide expressions for this
+time.
+
+include::{generated}/validity/structs/XrFaceStateGetInfoANDROID.adoc[]
+--
+
+[open,refpage='XrFaceStateANDROID',type='structs',desc='Returns facial expressions',xrefs='xrGetFaceStateANDROID XrFaceParameterIndicesANDROID']
+--
+slink:XrFaceStateANDROID structure returns the face tracking state and
+facial expressions.
+
+include::{generated}/api/structs/XrFaceStateANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:parametersCapacityInput is a code:uint32_t describing the capacity
+  of the pname:parameters array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:parametersCountOutput is a code:uint32_t describing the number of
+  pname:parameters, or the required capacity in the case that
+  pname:parametersCapacityInput is insufficient.
+* pname:parameters is a pointer to an application-allocated array of
+  code:float that will be filled with weights of facial expression blend
+  shapes.
+* pname:faceTrackingState is the elink:XrFaceTrackingStateANDROID of
+  validity status of face tracking.
+* pname:sampleTime is an basetype:XrTime time at which the returned
+  expressions are tracked or extrapolated to.
+  It equals the time at which the expression weights were requested if the
+  extrapolation at the time was successful.
+* pname:isValid indicates if the data is valid even if it is not from the
+  current frame.
+* pname:regionConfidencesCapacityInput is a code:uint32_t describing the
+  capacity of the pname:regionConfidences array, or 0 to indicate a request
+  to retrieve the required capacity.
+* pname:regionConfidencesCountOutput is a code:uint32_t describing the
+  number of pname:regionConfidences, or the required capacity in the case
+  that pname:regionConfidencesCapacityInput is insufficient.
+* pname:regionConfidences is a pointer to an application-allocated array of
+  elink:XrFaceConfidenceRegionsANDROID that will be filled with confidences
+  of facial expression regions.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:parameters size.
+****
+
+The application can: set pname:parametersCapacityInput to
+ename:XR_FACE_PARAMETER_COUNT_ANDROID to get facial expressions which are
+indexed by elink:XrFaceParameterIndicesANDROID.
+
+The runtime must: return pname:parameters representing the weights of blend
+shapes of current facial expressions.
+
+The runtime must: update the pname:parameters array ordered so that the
+application can: index elements using the corresponding facial expression
+enum (e.g. elink:XrFaceParameterIndicesANDROID).
+
+include::{generated}/validity/structs/XrFaceStateANDROID.adoc[]
+--
+
+[open,refpage='XrFaceTrackingStateANDROID',type='enums',desc='Current tracking state of a face tracker',xrefs='xrGetFaceStateANDROID']
+--
+The elink:XrFaceTrackingStateANDROID enumeration identifies the different
+states of the face tracker.
+
+include::{generated}/api/enums/XrFaceTrackingStateANDROID.adoc[]
+
+The enumerants have the following meanings:
+
+include::{generated}/api/enums/XrFaceTrackingStateANDROID.comments.adoc[]
+--
+
+[open,refpage='XrFaceConfidenceRegionsANDROID',type='enums',desc='Face confidence regions',xrefs='xrGetFaceStateANDROID']
+--
+The elink:XrFaceConfidenceRegionsANDROID enumeration identifies the
+different confidence regions of the face.
+
+include::{generated}/api/enums/XrFaceConfidenceRegionsANDROID.adoc[]
+
+The enumerants have the following meanings:
+
+include::{generated}/api/enums/XrFaceConfidenceRegionsANDROID.comments.adoc[]
+--
+
+==== Conventions of blend shapes
+
+This extension defines 68 blend shapes, i.e.
+ename:XR_FACE_PARAMETER_COUNT_ANDROID, for the reduced G-Nome format.
+Each parameter in this enum is an index into a blend shape array whose
+values are type of code:float and the runtime must: normalize to 1 - 0.
+
+[open,refpage='XrFaceParameterIndicesANDROID',type='enums',desc='The names of trackable blend shapes',xrefs='xrGetFaceStateANDROID']
+--
+include::{generated}/api/enums/XrFaceParameterIndicesANDROID.adoc[]
+include::{generated}/api/enums/XrFaceParameterIndicesANDROID.comments.adoc[]
+--
+
+==== Example code for face tracking
+
+The following example code demonstrates how to get all weights for facial
+expression blend shapes.
+
+[source,C++]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session; // previously initialized, e.g. created at app startup.
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateFaceTrackerANDROID xrCreateFaceTrackerANDROID; // previously initialized
+PFN_xrDestroyFaceTrackerANDROID xrDestroyFaceTrackerANDROID; // previously initialized
+PFN_xrGetFaceStateANDROID xrGetFaceStateANDROID; // previously initialized
+PFN_xrGetFaceCalibrationStateANDROID xrGetFaceCalibrationStateANDROID; // previously initialized
+
+// Inspect system capability
+XrSystemProperties properties{XR_TYPE_SYSTEM_PROPERTIES};
+XrSystemFaceTrackingPropertiesANDROID faceTrackingProperties{XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_ANDROID};
+properties.next = &faceTrackingProperties;
+CHK_XR(xrGetSystemProperties(instance, systemId, &properties));
+if (!faceTrackingProperties.supportsFaceTracking) {
+  // face tracking is not supported.
+  return;
+}
+
+XrFaceTrackerANDROID faceTracker;
+XrFaceTrackerCreateInfoANDROID
+        createInfo{.type = XR_TYPE_FACE_TRACKER_CREATE_INFO_ANDROID,
+                    .next = nullptr};
+CHK_XR(xrCreateFaceTrackerANDROID(session, &createInfo, &faceTracker));
+
+// If the system supports face calibration:
+XrBool32 isCalibrated;
+CHK_XR(xrGetFaceCalibrationStateANDROID(faceTracker, &isCalibrated));
+if (!isCalibrated) {
+    // Redirect the user to system calibration setting.
+}
+
+XrFaceStateANDROID faceState;
+float faceExpressionParameters[XR_FACE_PARAMETER_COUNT_ANDROID];
+faceState.type = XR_TYPE_FACE_STATE_ANDROID;
+faceState.next = nullptr;
+faceState.parametersCapacityInput = XR_FACE_PARAMETER_COUNT_ANDROID;
+faceState.parameters = faceExpressionParameters;
+
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+
+    XrFaceStateGetInfoANDROID faceGetInfo{
+            .type = XR_TYPE_FACE_STATE_GET_INFO_ANDROID,
+            .next = nullptr,
+            .time = frameState.predictedDisplayTime,
+    };
+
+    CHK_XR(xrGetFaceStateANDROID(faceTracker, &faceGetInfo, &faceState));
+    if (faceState.isValid) {
+        for (uint32_t i = 0; i < XR_FACE_PARAMETER_COUNT_ANDROID; ++i) {
+            // parameters[i] contains a weight of specific blend shape
+        }
+    }
+}
+
+// after usage
+CHK_XR(xrDestroyFaceTrackerANDROID(faceTracker));
+----
+
+include::{generated}/interfaces/XR_ANDROID_face_tracking.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-09-05 (Levana Chen)
+** Initial extension description

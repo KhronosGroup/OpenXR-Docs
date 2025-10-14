@@ -18,6 +18,17 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <user_path path="/user/hand/right"/>
             <component subpath="/input/menu/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
         </interaction_profile>
+
+        <!-- interaction profile with vendor experimental suffix -->
+        <interaction_profile name="/interaction_profiles/khrx1/flux_compensators_khrx1" title="Flux Compensator X1">
+            <user_path path="/user/hand/left"/>
+            <user_path path="/user/hand/right"/>
+            <component subpath="/input/menu/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <!-- non-standard identifier with vendor experimental suffix -->
+            <component subpath="/input/identifier_khrx1/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <!-- non-standard component with vendor experimental suffix -->
+            <component subpath="/input/menu/component_khrx1"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+        </interaction_profile>
     </interaction_profiles>
 
     <extensions>
@@ -26,6 +37,21 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
                 <enum value="1" name="XR_KHR_loader_init_SPEC_VERSION"/>
                 <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
                 <interaction_profile name="/interaction_profiles/khr/flux_compensator_khr"/>
+            </require>
+        </extension>
+        <extension name="XR_KHRX1_iterative" number="90" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHRX1_iterative_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHRX1_iterative&quot;" name="XR_KHRX1_ITERATIVE_EXTENSION_NAME"/>
+                <interaction_profile name="/interaction_profiles/khrx1/flux_compensators_khrx1"/>
+
+                <!-- extend existing interaction profile with non-standard identifier & component -->
+                <extend interaction_profile_path="/interaction_profiles/khr/flux_compensator_khr">
+                    <!-- non-standard identifier with vendor experimental suffix -->
+                    <component subpath="/input/identifier_khrx1/click"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                    <!-- non-standard component with vendor experimental suffix -->
+                    <component subpath="/input/menu/component_khrx1"       type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                </extend>
             </require>
         </extension>
     </extensions>

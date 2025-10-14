@@ -923,7 +923,7 @@
             <!-- TODO fix exceptions (samsung, hp are not vendor tags) -->
             <sch:let name="is_exception" value="current()/@name = ('/interaction_profiles/samsung/odyssey_controller', '/interaction_profiles/hp/mixed_reality_controller')"/>
 
-            <sch:let name="extension-vendor-author" value="@name/tokenize(., '/')[3]"/>
+            <sch:let name="extension-vendor-author" value="replace(@name/tokenize(., '/')[3], 'x[0-9]*$', '')"/>
             <sch:assert test="$extension-vendor-author = $vendor-authors or $extension-vendor-author = $vendor-tags or $is_exception">
                 Interaction Profile '<sch:value-of select="@name" />' must include a vendor tag (but we got '<sch:value-of select="$extension-vendor-author" />')
             </sch:assert>
@@ -948,14 +948,16 @@
             <sch:let name="identifier-name" value="@subpath/tokenize(., '/')[3]"/>
             <sch:let name="component-name" value="@subpath/tokenize(., '/')[4]"/>
             <sch:let name="vendor-tags" value="//tags/tag/@name/lower-case(.)"/>
+            <!-- Vendor tag could be of the form VENDORX1 and the identifier & component names must match that -->
+            <sch:let name="interaction-profile-vendor-tag" value="lower-case(../@name/tokenize(., '_')[last()])"/>
             <sch:let name="identifier-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[3], '_')[last()]"/>
             <sch:let name="component-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[4], '_')[last()]"/>
 
-            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags">
+            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags or $identifier-name-vendor-tag = $interaction-profile-vendor-tag">
                 Interaction Profile subpath (<sch:value-of select="@subpath" />) must include a standard identifier (but we got '<sch:value-of select="$identifier-name" />') or the identifier must end in _VENDOR (got '<sch:value-of select="$identifier-name-vendor-tag" />')
             </sch:assert>
 
-            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags">
+            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags or $component-name-vendor-tag = $interaction-profile-vendor-tag">
                 Interaction Profile subpath (<sch:value-of select="@subpath" />) must include a standard component (but we got '<sch:value-of select="$component-name" />') or the component must end in _VENDOR (got '<sch:value-of select="$component-name-vendor-tag" />')
             </sch:assert>
 
@@ -981,14 +983,16 @@
             <sch:let name="identifier-name" value="@subpath/tokenize(., '/')[3]"/>
             <sch:let name="component-name" value="@subpath/tokenize(., '/')[4]"/>
             <sch:let name="vendor-tags" value="//tags/tag/@name/lower-case(.)"/>
+            <!-- Vendor tag could be of the form VENDORX1 and the identifier & component names must match that -->
+            <sch:let name="vendor-tag" value="concat('_', lower-case(../../../@name/tokenize(., '_')[2]))"/>
             <sch:let name="identifier-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[3], '_')[last()]"/>
             <sch:let name="component-name-vendor-tag" value="tokenize(@subpath/tokenize(., '/')[4], '_')[last()]"/>
 
-            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags">
-                Interaction Profile subpath '<sch:value-of select="@subpath" />' must include a standard identifier (but we got '<sch:value-of select="$identifier-name" />'), or the identifier must end in _VENDOR (got '<sch:value-of select="$identifier-name-vendor-tag" />')
+            <sch:assert test="matches($identifier-name, $standard-identifiers) or $identifier-name-vendor-tag = $vendor-tags or ends-with($identifier-name, $vendor-tag)">
+                Interaction Profile subpath '<sch:value-of select="@subpath" />' must include a standard identifier (but we got '<sch:value-of select="$identifier-name" />'), or the identifier must end in _VENDOR or _VENDORX# (got '<sch:value-of select="$identifier-name-vendor-tag" />')
             </sch:assert>
 
-            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags">
+            <sch:assert test="not($component-name) or matches($component-name, $standard-components) or $component-name-vendor-tag = $vendor-tags or ends-with($component-name, $vendor-tag)">
                 Interaction Profile subpath '<sch:value-of select="@subpath" />' must include a standard component (but we got '<sch:value-of select="$component-name" />'), or the component must end in _VENDOR (got '<sch:value-of select="$component-name-vendor-tag" />')
             </sch:assert>
 

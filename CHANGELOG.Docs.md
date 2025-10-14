@@ -17,6 +17,50 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.53 (2025-10-14)
+
+This release contains three new vendor extensions and a handful of spec fixes
+and clarifications.
+
+- Specification
+  - Clarify: In `XR_MND_headless`, no `xrGet...GraphicsRequirements` call is
+    required if you create a headless session. Bump version.
+    ([internal MR 3961](https://gitlab.khronos.org/openxr/openxr/merge_requests/3961))
+  - Clarify: Mark `XR_MSFT_hand_interaction` as promoted to
+    `XR_EXT_hand_interaction`.
+    ([internal MR 4021](https://gitlab.khronos.org/openxr/openxr/merge_requests/4021))
+  - Fix: Correct `XR_ANDROID_trackables_object` orientation.
+    ([internal MR 4018](https://gitlab.khronos.org/openxr/openxr/merge_requests/4018))
+  - Fix: Typo in top level /user paths link in `XR_EXT_interaction_render_model`.
+    ([internal MR 4034](https://gitlab.khronos.org/openxr/openxr/merge_requests/4034))
+  - Fix: Typo in `XR_EXT_spatial_entity` and `XR_EXT_plane_detection`.
+    ([internal MR 4038](https://gitlab.khronos.org/openxr/openxr/merge_requests/4038))
+  - Fix: Formatting issue in the version 1.1 appendix.
+    ([internal MR 4042](https://gitlab.khronos.org/openxr/openxr/merge_requests/4042))
+  - Fix: Correct the description of the `1.1-khr` spec artifacts in the copyright-
+    related preamble.
+    ([internal MR 4044](https://gitlab.khronos.org/openxr/openxr/merge_requests/4044))
+  - New vendor extension specification: `XR_BD_facial_simulation`.
+    ([internal MR 2925](https://gitlab.khronos.org/openxr/openxr/merge_requests/2925))
+  - New vendor extension specification: `XR_ANDROID_face_tracking`.
+    ([internal MR 3613](https://gitlab.khronos.org/openxr/openxr/merge_requests/3613))
+  - New vendor extension specification: `XR_BD_ultra_controller_interaction`.
+    ([internal MR 3789](https://gitlab.khronos.org/openxr/openxr/merge_requests/3789))
+- Registry
+  - Fix: Bump `XR_ANDROID_trackables_object` version for fix to orientation.
+    ([internal MR 4018](https://gitlab.khronos.org/openxr/openxr/merge_requests/4018))
+  - New vendor extension: `XR_BD_facial_simulation` for vendor-specific access to
+    facial expressions.
+    ([internal MR 2925](https://gitlab.khronos.org/openxr/openxr/merge_requests/2925))
+  - New vendor extension: `XR_BD_ultra_controller_interaction` for PICO Ultra
+    controller interaction profile.
+    ([internal MR 3789](https://gitlab.khronos.org/openxr/openxr/merge_requests/3789))
+  - New vendor extension specification: `XR_ANDROID_face_tracking` for vendor-
+    specific access to facial expressions.
+    ([internal MR 3613](https://gitlab.khronos.org/openxr/openxr/merge_requests/3613))
+  - Update: Bump version of `XR_MND_headless` for clarification.
+    ([internal MR 3961](https://gitlab.khronos.org/openxr/openxr/merge_requests/3961))
+
 ## OpenXR Specification 1.1.52 (2025-09-19)
 
 This release adds a new ratified Khronos extension, which defines a new

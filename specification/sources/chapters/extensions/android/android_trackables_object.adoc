@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_ANDROID_trackables_object.adoc[]
 
 *Last Modified Date*::
-    2025-07-21
+    2025-09-23
 
 *IP Status*::
     No known IP claims.
@@ -13,6 +13,7 @@ include::{generated}/meta/XR_ANDROID_trackables_object.adoc[]
 *Contributors*::
     Diego Tipaldi, Google +
     David Joseph Tan, Google +
+    Christopher Doer, Google +
     Levana Chen, Google +
     Spencer Quin, Google +
     Jared Finder, Google +
@@ -142,7 +143,7 @@ include::{generated}/validity/structs/XrTrackableObjectANDROID.adoc[]
 
 The orientation of the objects is shown in the
 <<fig-ANDROID_trackables_object-orientation, following image>> (with xyz =
-rgb) originating at the bottom center of the objects.
+rgb) originating at the centroid of the objects.
 
 The 3D orientation of the mouse is aligned to the 3D orientation of the
 supporting plane.
@@ -238,3 +239,5 @@ include::{generated}/interfaces/XR_ANDROID_trackables_object.adoc[leveloffset=1]
 
 * Revision 1, 2025-07-21 (Kenny Vercaemer)
 ** Initial extension description.
+* Revision 2, 2025-09-23 (Kenny Vercaemer)
+** Fix object orientation.

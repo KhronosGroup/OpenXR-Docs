@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_MND_headless.adoc[]
 
 *Last Modified Date*::
-    2019-10-22
+    2025-08-20
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -30,10 +30,12 @@ named entities.
 
 
 * When this extension is enabled, an application may: call
-  flink:xrCreateSession without an stext:XrGraphicsBinding* structure in its
-  pname:next chain.
-  In this case, the runtime must: create a "headless" session that does not
-  interact with the display.
+  flink:xrCreateSession without having made a call to
+  ftext:xrGet*GraphicsRequirements, and without an stext:XrGraphicsBinding*
+  structure in the pname:next chain of slink:XrSessionCreateInfo.
+* If an application does not include an stext:XrGraphicsBinding* structure
+  in the pname:next chain of slink:XrSessionCreateInfo, the runtime must:
+  create a "headless" session that does not interact with the display.
 * In a headless session, the session state should: proceed to
   ename:XR_SESSION_STATE_READY directly from ename:XR_SESSION_STATE_IDLE.
 * In a headless session, the
@@ -83,3 +85,6 @@ resources in a busy-wait loop.
 * Revision 2, 2019-10-22 (Rylie Pavlik, Collabora, Ltd.)
 ** Clarify that `xrWaitFrame` is permitted and should set `shouldRender` to
    false.
+* Revision 3, 2025-08-20 (Dan Willmott, Valve Corporation)
+** Clarify that apps do not need to call `xrGet*GraphicsRequirements` before
+   calling `xrCreateSession` when using this extension.

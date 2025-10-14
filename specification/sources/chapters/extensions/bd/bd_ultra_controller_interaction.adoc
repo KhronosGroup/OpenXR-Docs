@@ -1,0 +1,78 @@
+// Copyright (c) 2025 ByteDance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_ultra_controller_interaction.adoc[]
+
+*Last Modified Date*::
+    2025-04-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+ Shanliang Xu, ByteDance +
+ Shuai Liu, ByteDance +
+ Chenxi Bao,ByteDance +
+ Chen Han,ByteDance +
+ Zhao Jiabin,ByteDance
+
+==== Overview
+
+This extension defines the interaction profile for PICO Ultra Controllers.
+
+Interaction profile path for PICO Ultra Controllers:
+
+* pathname:/interaction_profiles/bytedance/pico_ultra_controller_bd
+
+Valid for user paths for pico_ultra_controller_bd:
+
+* pathname:/user/hand/left
+* pathname:/user/hand/right
+
+Supported component paths for pico_ultra_controller_bd:
+
+* On /user/hand/left only:
+** subpathname:/input/x/click
+** subpathname:/input/x/touch
+** subpathname:/input/y/click
+** subpathname:/input/y/touch
+** subpathname:/input/menu/click
+* On /user/hand/right only:
+** subpathname:/input/a/click
+** subpathname:/input/a/touch
+** subpathname:/input/b/click
+** subpathname:/input/b/touch
+* subpathname:/input/system/click (may: not be available for application
+  use)
+* subpathname:/input/trigger/click
+* subpathname:/input/trigger/value
+* subpathname:/input/trigger/touch
+* subpathname:/input/thumbstick/y
+* subpathname:/input/thumbstick/x
+* subpathname:/input/thumbstick/click
+* subpathname:/input/thumbstick/touch
+* subpathname:/input/squeeze/click
+* subpathname:/input/squeeze/value
+* subpathname:/input/grip/pose
+* subpathname:/input/grip_surface/pose
+* subpathname:/input/aim/pose
+* subpathname:/output/haptic
+
+Be careful with the following component:
+
+* Ultra Controller support subpathname:/input/menu/click only on
+  pathname:/user/hand/left.
+
+include::{config}/ext_palm_pose_notice.adoc[]
+include::{config}/ext_hand_interaction_notice.adoc[]
+
+include::{generated}/interfaces/XR_BD_ultra_controller_interaction.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-04-15 (Shanliang Xu)
+
+** Initial extension description
