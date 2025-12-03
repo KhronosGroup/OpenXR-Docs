@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
 
 *Last Modified Date*::
-    2025-03-07
+    2025-03-21
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -18,7 +18,7 @@ include::{generated}/meta/XR_KHR_vulkan_enable2.adoc[]
     Minmin Gong, Microsoft +
     Robert Menzel, NVIDIA +
     Paulo Gomes, Samsung Electronics +
-
+    Aaron Leiby, Valve
 
 ==== Overview
 
@@ -455,9 +455,6 @@ The OpenXR runtime must: interpret the top-left corner of the swapchain
 image as the coordinate origin unless specified otherwise by extension
 functionality.
 
-The OpenXR runtime must: interpret the swapchain images in a clip space of
-positive Y pointing down, near Z plane at 0, and far Z plane at 1.
-
 include::{generated}/validity/structs/XrSwapchainImageVulkan2KHR.adoc[]
 --
 
@@ -597,3 +594,5 @@ elink:XrStructureType enumeration is extended with:
 ** Document mapping for `XrSwapchainUsageFlags`
 * Revision 3, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
 ** Clarify and make more uniform with other graphics binding extensions.
+* Revision 4, 2025-03-21 (Aaron Leiby)
+** Removed clip space specification

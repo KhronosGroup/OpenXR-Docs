@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+        <tag name="EXT" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <interaction_profiles>
+        <!-- This should fail: has trackpad but incomplete dpad bindings (missing dpad_center) -->
+        <interaction_profile name="/interaction_profiles/khr/simple_controller" title="Simple Controller">
+            <user_path path="/user/hand/left"/>
+            <user_path path="/user/hand/right"/>
+            <component subpath="/input/trackpad" type="XR_ACTION_TYPE_VECTOR2F_INPUT"/>
+            <component subpath="/input/trackpad/click" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+        </interaction_profile>
+    </interaction_profiles>
+
+    <extensions>
+        <extension name="XR_EXT_dpad_binding" number="217" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_dpad_binding_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_dpad_binding&quot;" name="XR_EXT_DPAD_BINDING_EXTENSION_NAME"/>
+                <extend interaction_profile_path="/interaction_profiles/khr/simple_controller">
+                    <component subpath="/input/trackpad/dpad_up" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                    <component subpath="/input/trackpad/dpad_down" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                    <component subpath="/input/trackpad/dpad_left" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                    <component subpath="/input/trackpad/dpad_right" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+                    <!-- Missing dpad_center - this should cause failure -->
+                </extend>
+            </require>
+        </extension>
+    </extensions>
+</registry>

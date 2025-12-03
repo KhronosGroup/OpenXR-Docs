@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_opengl_enable.adoc[]
 
 *Last Modified Date*::
-    2025-03-07
+    2025-10-16
 *IP Status*::
     No known IP claims.
 *Contributors*::
@@ -15,7 +15,8 @@ include::{generated}/meta/XR_KHR_opengl_enable.adoc[]
     Minmin Gong, Microsoft +
     Robert Menzel, NVIDIA +
     Jakob Bornecrantz, Collabora +
-    Paulo Gomes, Samsung Electronics
+    Paulo Gomes, Samsung Electronics +
+    Aaron Leiby, Valve
 
 ==== Overview
 
@@ -45,11 +46,12 @@ The window system defines currently supported by this extension are:
 * dlink:XR_USE_PLATFORM_WIN32
 * dlink:XR_USE_PLATFORM_XLIB
 * dlink:XR_USE_PLATFORM_XCB
-* dlink:XR_USE_PLATFORM_WAYLAND
+* dlink:XR_USE_PLATFORM_WAYLAND (deprecated)
 
 Note that a runtime implementation of this extension is only required to
 support the structures introduced by this extension which correspond to the
 platform it is running on.
+For Wayland deprecation see <<appendix-wayland-notes>>.
 
 [[khr_opengl_enable-threading]]
 ==== OpenGL Context and Threading
@@ -286,6 +288,9 @@ include::{generated}/api/structs/XrGraphicsBindingOpenGLWaylandKHR.adoc[]
 * pname:display is a valid Wayland sname:wl_display.
 ****
 
+Note that use of this structure is **deprecated** - see
+<<appendix-wayland-notes>>.
+
 To create an OpenGL-backed slink:XrSession on any Linux/Unix platform that
 utilizes the Wayland protocol with its compositor, the application provides
 a pointer to an slink:XrGraphicsBindingOpenGLWaylandKHR in the
@@ -334,9 +339,6 @@ The OpenXR runtime must: interpret the bottom-left corner of the swapchain
 image as the coordinate origin unless specified otherwise by extension
 functionality.
 
-The OpenXR runtime must: interpret the swapchain images in a clip space of
-positive Y pointing up, near Z plane at -1, and far Z plane at 1.
-
 include::{generated}/validity/structs/XrSwapchainImageOpenGLKHR.adoc[]
 --
 
@@ -364,6 +366,10 @@ to ensure compatibility with OpenGL.
 
 include::{generated}/interfaces/XR_KHR_opengl_enable.adoc[leveloffset=1]
 
+==== Issues
+
+* Why was Wayland deprecated?
+** See <<appendix-wayland-notes>>.
 
 ==== Version History
 
@@ -390,4 +396,6 @@ include::{generated}/interfaces/XR_KHR_opengl_enable.adoc[leveloffset=1]
 * Revision 11, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
 ** Re-organize, clarify, and make more uniform with other graphics binding
    extensions.
-
+* Revision 12, 2025-10-16 (Jakob Bornecrantz, NVIDIA and Aaron Leiby)
+** Removed clip space specification
+** Deprecate Wayland part of the extension.

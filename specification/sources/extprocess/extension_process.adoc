@@ -411,8 +411,9 @@ For vendor-specific extensions, the main process is:
    * There are no pending conflicts.
    * There are no additions to core or KHR bitmasks or other limited-space
      entities (see <<bitmasks>>).
-   * The reviewer may: also perform a check of the correctness and style of
-     the specification and registry (`xr.xml`) changes.
+   * The reviewer may: at the request of the vendor also perform a check of
+     the correctness and style of the specification and registry (`xr.xml`)
+     changes.
 4. Once the editor is satisfied with their simple review, they (or someone
    approved by them to perform a merge) merge the merge request into the
    appropriate branch within a reasonable amount of time.

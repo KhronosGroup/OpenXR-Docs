@@ -17,6 +17,102 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.54 (2025-12-02)
+
+This release contains a number of specification clarifications and fixes, in
+addition to improved guidance and tooling for those extending OpenXR, among
+other changes.
+
+- Specification
+  - Change: Deprecate the Wayland part of `XR_KHR_opengl_enable`.
+    ([internal MR 4052](https://gitlab.khronos.org/openxr/openxr/merge_requests/4052),
+    [OpenXR-SDK-Source issue 282](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/282),
+    [internal issue 1634](https://gitlab.khronos.org/openxr/openxr/issues/1634),
+    [internal issue 2559](https://gitlab.khronos.org/openxr/openxr/issues/2559))
+  - Change: Update the vendor extension review process.
+    ([internal MR 4056](https://gitlab.khronos.org/openxr/openxr/merge_requests/4056))
+  - Clarification: Add more information in the 1.1 appendix about the
+    thumb_resting_surfaces location
+    ([internal MR 3603](https://gitlab.khronos.org/openxr/openxr/merge_requests/3603))
+  - Clarify: Specify what the runtime may do in a completion function of an
+    `XrFutureEXT` in `XR_EXT_future`.
+    ([internal MR 3796](https://gitlab.khronos.org/openxr/openxr/merge_requests/3796),
+    [internal MR 4028](https://gitlab.khronos.org/openxr/openxr/merge_requests/4028))
+  - Clarify: `xrDestroySwapchain` in practice requires the application to do some
+    sync primitive CPU waiting. (CTS is now enforcing that the runtime is not doing
+    its own waiting there.)
+    ([internal MR 4030](https://gitlab.khronos.org/openxr/openxr/merge_requests/4030))
+  - Clarify: Describe why `xrCreateSpatialAnchorEXT` has 2 outputs.
+    ([internal MR 4033](https://gitlab.khronos.org/openxr/openxr/merge_requests/4033),
+    [internal MR 4021](https://gitlab.khronos.org/openxr/openxr/merge_requests/4021))
+  - Fix: Removed clip space specification from all graphics api extensions.
+    ([internal MR 3765](https://gitlab.khronos.org/openxr/openxr/merge_requests/3765))
+  - Fix: Add comment boxes for `XrSpatialCapabilityEXT` and
+    `XrSpatialCapabilityFeatureEXT`.
+    ([internal MR 4084](https://gitlab.khronos.org/openxr/openxr/merge_requests/4084))
+  - Improvement: Replace the recommendation for manual "New Types", etc. with
+    interface include and make respective samples cleaner in styleguide.
+    ([internal MR 4035](https://gitlab.khronos.org/openxr/openxr/merge_requests/4035))
+  - Improvement: Adjust image assets to reduce spec output file size.
+    ([internal MR 4050](https://gitlab.khronos.org/openxr/openxr/merge_requests/4050),
+    [internal MR 4051](https://gitlab.khronos.org/openxr/openxr/merge_requests/4051),
+    [internal MR 4055](https://gitlab.khronos.org/openxr/openxr/merge_requests/4055))
+  - Improvement: Add missing heading for Mesh3D component in
+    `XR_EXT_spatial_entity`.
+    ([internal MR 4088](https://gitlab.khronos.org/openxr/openxr/merge_requests/4088),
+    [internal MR 4056](https://gitlab.khronos.org/openxr/openxr/merge_requests/4056))
+  - `XR_META_environment_depth`: Add `XrEnvironmentDepthImageTimestampMETA`.
+    ([internal MR 4024](https://gitlab.khronos.org/openxr/openxr/merge_requests/4024))
+- Registry
+  - Change: Deprecate the Wayland part of `XR_KHR_opengl_enable` and bump version.
+    ([internal MR 4052](https://gitlab.khronos.org/openxr/openxr/merge_requests/4052),
+    [OpenXR-SDK-Source issue 282](https://github.com/KhronosGroup/OpenXR-SDK-Source/issues/282),
+    [internal issue 1634](https://gitlab.khronos.org/openxr/openxr/issues/1634),
+    [internal issue 2559](https://gitlab.khronos.org/openxr/openxr/issues/2559))
+  - Chore: Reserve extensions.
+    ([internal MR 4067](https://gitlab.khronos.org/openxr/openxr/merge_requests/4067),
+    [internal MR 4079](https://gitlab.khronos.org/openxr/openxr/merge_requests/4079),
+    [internal MR 4098](https://gitlab.khronos.org/openxr/openxr/merge_requests/4098),
+    [internal MR 4099](https://gitlab.khronos.org/openxr/openxr/merge_requests/4099),
+    [internal MR 4100](https://gitlab.khronos.org/openxr/openxr/merge_requests/4100))
+  - Fix: Correctly define `XR_EXT_dpad_binding` paths for
+    /interaction_profiles/bytedance/pico_ultra_controller_bd in XML.
+    ([internal MR 4049](https://gitlab.khronos.org/openxr/openxr/merge_requests/4049))
+  - Improvement: Add description for `XR_SPACE_COMPONENT_TYPE_TRIANGLE_MESH_META`.
+    ([internal MR 4070](https://gitlab.khronos.org/openxr/openxr/merge_requests/4070))
+  - Schematron: Add validation to ensure bitmasks are non-plural before
+    `Flags`/`FlagBits`.
+    ([internal MR 2678](https://gitlab.khronos.org/openxr/openxr/merge_requests/2678))
+  - Schematron: Add validation to check additional scenarios of `next` pointer
+    const-ness.
+    ([internal MR 2740](https://gitlab.khronos.org/openxr/openxr/merge_requests/2740))
+  - Schematron: Add validation for interaction profile extension binding additions.
+    ([internal MR 3982](https://gitlab.khronos.org/openxr/openxr/merge_requests/3982))
+  - Schematron: Remove unneeded exception from "Param/member naming conventions:
+    camelCase" pattern.
+    ([internal MR 4072](https://gitlab.khronos.org/openxr/openxr/merge_requests/4072))
+  - Schematron: Fix check for multiple arrays bounded by the same `len` param.
+    ([internal MR 4077](https://gitlab.khronos.org/openxr/openxr/merge_requests/4077))
+  - Schematron: Add validation for the comment attribute of
+    `XrSpatialComponentTypeEXT` values. The comment must reference the list and
+    data structs for the component.
+    ([internal MR 4083](https://gitlab.khronos.org/openxr/openxr/merge_requests/4083))
+  - Schematron: Add validation for the comment attribute of
+    `XrSpatialCapabilityFeatureEXT` values. The comment must have references to the
+    feature's config structs.
+    ([internal MR 4084](https://gitlab.khronos.org/openxr/openxr/merge_requests/4084))
+  - Schematron: Add check for orphaned structs, enforcing `structextends` or
+    `parentstruct` when appropriate.
+    ([internal MR 4091](https://gitlab.khronos.org/openxr/openxr/merge_requests/4091),
+    [internal MR 4094](https://gitlab.khronos.org/openxr/openxr/merge_requests/4094))
+  - Update: Bump XR_EXT_future version due to clarifying what the runtime may do in
+    a completion function of an `XrFutureEXT`.
+    ([internal MR 3796](https://gitlab.khronos.org/openxr/openxr/merge_requests/3796),
+    [internal MR 4028](https://gitlab.khronos.org/openxr/openxr/merge_requests/4028))
+  - Update: Add `XrEnvironmentDepthImageTimestampMETA` to
+    XR_META_environment_depth, update spec version to 2.
+    ([internal MR 4024](https://gitlab.khronos.org/openxr/openxr/merge_requests/4024))
+
 ## OpenXR Specification 1.1.53 (2025-10-14)
 
 This release contains three new vendor extensions and a handful of spec fixes
@@ -845,7 +941,7 @@ clarifications.
     blend mode".
     ([internal MR 3301](https://gitlab.khronos.org/openxr/openxr/merge_requests/3301))
   - Clarify: Devices may use environment blend mode to control passthrough and
-    synthentic environments.
+    synthetic environments.
     ([internal MR 3301](https://gitlab.khronos.org/openxr/openxr/merge_requests/3301))
   - Clarify: Clarified that views in `XR_VARJO_quad_views` needs to have identical
     poses for each eye.

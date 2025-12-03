@@ -95,6 +95,8 @@ interaction profile path:
 * subpathname:/output/haptic_thumb_fb -> subpathname:/output/haptic_thumb
 * subpathname:/input/thumb_fb/proximity_fb ->
   subpathname:/input/thumb_resting_surfaces/proximity
+** Note this is a boolean-OR of the "thumbrest" location's proximity sensor
+   as well as other proximity-sensitive regions.
 * subpathname:/input/trigger/curl_fb ->
   subpathname:/input/trigger_curl/value
 * subpathname:/input/trigger/slide_fb ->
@@ -119,6 +121,8 @@ interaction profile path:
   subpathname:/input/trigger/proximity
 * subpathname:/input/thumb_meta/proximity_meta ->
   subpathname:/input/thumb_resting_surfaces/proximity
+** Note this is a boolean-OR of the "thumbrest" location's proximity sensor
+   as well as other proximity-sensitive regions.
 * subpathname:/input/trigger/curl_meta ->
   subpathname:/input/trigger_curl/value
 * subpathname:/input/trigger/slide_meta ->

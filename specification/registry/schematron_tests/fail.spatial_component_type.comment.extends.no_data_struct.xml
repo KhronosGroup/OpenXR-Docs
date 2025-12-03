@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+    </tags>
+
+    <enums name="XrSpatialComponentTypeEXT" type="enum">
+        <enum value="1"   name="XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT" comment="Component that provides the 2D bounds for a spatial entity. Corresponding list structure is slink:XrSpatialComponentBounded2DListEXT; Corresponding data structure is slink:XrSpatialBounded2DDataEXT"/>
+    </enums>
+
+    <extensions>
+        <extension name="XR_EXT_new_component_type" number="89" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_new_component_type_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_new_component_type&quot;" name="XR_EXT_NEW_COMPONENT_TYPE_EXTENSION_NAME"/>
+
+                <!-- component type extension comment is missing reference to data struct. -->
+                <enum offset="0" extends="XrSpatialComponentTypeEXT"    name="XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT"      comment="Component that provides the plane alignment enum for a spatial entity. Corresponding list structure is slink:XrSpatialComponentPlaneAlignmentListEXT;"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

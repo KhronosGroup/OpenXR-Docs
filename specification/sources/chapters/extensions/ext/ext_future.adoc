@@ -190,6 +190,20 @@ Completion functions which only need to return an elink:XrResult may:
 populate the slink:XrFutureCompletionEXT structure provided by this
 extension as their output structure.
 
+If the asynchronous operation creates a handle, the runtime must: not queue
+any events for that handle until the corresponding completion function has
+been called.
+For asynchronous operations that do not create a handle, the result of the
+asynchronous operation may: be observable through other functions even
+before the completion function has been called, e.g. the runtime may: mark
+an object as "started" when the basetype:XrFutureEXT is in ready state,
+without waiting for the completion function to be called.
+Alternatively, the runtime may: use the invocation of the completion
+function to set those observable states, e.g. the runtime may: mark an
+object as "started" only when the completion function is called.
+Extensions exposing asynchronous functions should: clarify when the
+observable states of the asynchronous operation change.
+
 [[ext_future-completed]]
 Once a completion function is called on a future with a valid output
 structure and returns ename:XR_SUCCESS, the future is considered
@@ -874,3 +888,5 @@ elink:XrResult enumeration is extended with:
 * Revision 1, 2023-02-14 (Andreas Løve Selvik, Meta Platforms and Ron
   Bessems, Magic Leap)
 ** Initial extension description
+* Revision 2, 2025-04-17 (Nihav Jain, Google)
+** Clarify what the runtime may do in a completion function.

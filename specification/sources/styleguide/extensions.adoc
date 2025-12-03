@@ -502,38 +502,47 @@ mind:
 ** Contributors - Names and corporate affiliations of people who have made
    significant direct contributions to this extension.
 ** Overview - a brief introduction
-** New Object Types - leave empty if none.
-** New Flag Types - leave empty if none.
-** New Enum Constants - leave empty if none.
-   This is where you may add something like the following for additions to
-   core enumerations - most often `XrStructureType`.
-+
---
-[source,asciidoc]
-.Example Markup
-----
-*New Enum Constants*
-
-elink:XrStructureType enumeration is extended with:
-
-* ename:XR_TYPE_COMPOSITION_LAYER_CYLINDER_KHR
-----
---
-+
-** New Enums - leave empty if none.
-** New Structures - leave empty if none.
-** New Functions - leave empty if none.
-** Issues
+** Refpages for new functions, structs, enums and enum values, bitfields and
+   bits - usually these are ordered roughly in the order they are to be
+   used.
+   For example:
+*** an `XrSystemFooProperties` struct for querying supported features
+*** an `xrEnumerateFooCapabilities` function for querying possible
+    parameters to create an object with
+*** an `XrFoo` handle definition
+*** an `xrCreateFoo` function for creating an object
+*** an `xrDestroyFoo` function for destroying an object may be put directly
+    under its respective `xrCreateFoo` function, or later towards the end
+    depending on most useful organization
+*** after each function, refpages for each new struct type that appears in
+    the arguments of the preceding function such as `XrFooCreateInfo`.
+    After those structs, refpages for structs that can be chained to these
+    structs.
+** Example code - if any
+** A list of `New Object Types`, `New Enum Constants`, etc.
+   is automatically generated and to be included as an asciidoc include
 ** Version History - this must be formatted exactly as found in existing
    specifications, and updated when a "substantial" change is made.
    It is parsed by `xml_consistency` and cross-checked against the version
    enum in the XML registry.
+
 +
 --
 [source,asciidoc]
 .Example Markup
 ----
-*Version History*
+
+==== Overview
+
+// Refpages
+
+// Example code
+
+\include::{generated}/interfaces/XR_KHR_foo.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
 
 * Revision 1, 2019-07-12 (Rylie Pavlik, Collabora, Ltd.)
 ** A brief revision description goes here.
@@ -543,6 +552,7 @@ elink:XrStructureType enumeration is extended with:
 ** ... etc. ...
 ----
 --
+
 +
 * Extensions usually make significant additions and changes to the OpenXR
   specification.
@@ -563,6 +573,7 @@ elink:XrStructureType enumeration is extended with:
   and
   http://asciidoctor.org/docs/user-manual/#checking-multiple-attributes-ifdef-and-ifndef-only).
 +
+
 --
 [source,asciidoc]
 .Example Markup
@@ -579,6 +590,7 @@ elink:XrStructureType enumeration is extended with:
 \endif::XR_KHR_fum[]
 ----
 --
+
 * In cases where a new extension (A) modifies both core and an existing
   extension (B), if the new extension (A) becomes part of the core at a
   future release (i.e. is no longer an extension), the portion of the new

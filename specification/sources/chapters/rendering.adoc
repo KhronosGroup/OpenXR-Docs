@@ -290,7 +290,15 @@ include::{generated}/api/protos/xrDestroySwapchain.adoc[]
 ****
 
 All submitted graphics API commands that refer to pname:swapchain must: have
-completed execution.
+completed execution before calling this function.
+
+.Note
+****
+Note that in some graphics APIs, this implies that the application needs to
+perform a CPU wait on a synchronization primitive or perform a queue flush
+before calling this function.
+****
+
 Runtimes may: continue to utilize swapchain images after
 flink:xrDestroySwapchain is called.
 
@@ -770,8 +778,8 @@ include::{generated}/api/protos/xrWaitFrame.adoc[]
 * pname:session is a valid slink:XrSession handle.
 * pname:frameWaitInfo exists for extensibility purposes, it is code:NULL or
   a pointer to a valid slink:XrFrameWaitInfo.
-* pname:frameState is a pointer to a valid slink:XrFrameState, an output
-  parameter.
+* pname:frameState is a pointer to an slink:XrFrameState to populate, an
+  output parameter.
 ****
 
 flink:xrWaitFrame throttles the application frame loop in order to

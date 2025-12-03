@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_META_environment_depth.adoc[]
 
 *Last Modified Date*::
-    2023-10-09
+    2025-09-19
 
 *IP Status*::
     No known IP claims.
@@ -16,6 +16,7 @@ include::{generated}/meta/XR_META_environment_depth.adoc[]
     Daniel Henell, Meta Platforms +
     John Kearney, Meta Platforms +
     Urs Niesen, Meta Platforms +
+    Martin Sherburn, Meta Platforms +
 
 ==== Overview
 
@@ -641,6 +642,48 @@ used.
 include::{generated}/validity/structs/XrEnvironmentDepthImageMETA.adoc[]
 --
 
+[open,refpage='XrEnvironmentDepthImageTimestampMETA',type='structs',desc='Structure for environment depth image timestamp',xrefs='']
+--
+The slink:XrEnvironmentDepthImageTimestampMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentDepthImageTimestampMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:captureTime is an basetype:XrTime specifying when the depth image
+  was captured.
+****
+
+The slink:XrEnvironmentDepthImageTimestampMETA structure provides timestamp
+information for environment depth data.
+This structure can: be chained to slink:XrEnvironmentDepthImageMETA to
+provide temporal context for the depth information.
+
+The pname:captureTime field indicates the capture time of the images used to
+reconstruct the environment depth map.
+
+Applications can: use this timestamp information for latency measurements
+and synchronization with other time-based data such as passthrough camera.
+
+If present in the structure chain, this structure must: be populated by the
+runtime if and only if the runtime reports version 2 or greater of this
+extension.
+This is an "unknown structure" to runtimes reporting version 1 of this
+extension, and is therefore ignored/unmodified according to
+<<fundamentals-valid-usage-for-structure-pointer-chains>>.
+
+Applications should: initialize pname:captureTime to 0 before chaining this
+structure and calling flink:xrAcquireEnvironmentDepthImageMETA.
+After the call, a non-zero value in pname:captureTime indicates that the
+runtime has populated the timestamp field.
+
+include::{generated}/validity/structs/XrEnvironmentDepthImageTimestampMETA.adoc[]
+--
+
 ==== Vulkan Swapchain Image Layout
 
 For an application using Vulkan, after a successful call to
@@ -706,3 +749,6 @@ the runtime may: exhibit undefined behavior.
 
 * Revision 1, 2023-08-24 (Daniel Henell)
 ** Initial extension description
+
+* Revision 2, 2025-09-19 (Martin Sherburn)
+** Add support for accessing capture time stamps for depth images.

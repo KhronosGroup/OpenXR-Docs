@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025, The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <types>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type name="XrStructureType" category="enum"/>
+
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+        <type requires="openxr_platform_defines" name="uint32_t"/>
+
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <type category="struct" name="XrStructTest1" returnedonly="true">
+            <member values="XR_TYPE_STRUCT_TEST1"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+            <member optional="true"><type>uint32_t</type> <name>objectCapacityInput</name></member>
+            <member optional="true"><type>uint32_t</type> <name>objectCountOutput</name></member>
+            <member optional="true" len="objectCapacityInput"><type>char</type>* <name>handles</name></member>
+        </type>
+    </types>
+
+    <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"    name="XR_TYPE_STRUCT_TEST1"/>
+    </enums>
+
+    <!-- so it is known to be used directly, avoiding false failure reasons. -->
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>void</type> <name>xrTest1</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructTest1</type>* <name>structTest</name></param>
+        </command>
+    </commands>
+</registry>

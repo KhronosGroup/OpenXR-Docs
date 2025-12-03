@@ -392,10 +392,19 @@ needed.
 |[[XR_USE_PLATFORM_XLIB]]    `XR_USE_PLATFORM_XLIB`    |X Window System Xlib
 |[[XR_USE_PLATFORM_XCB]]     `XR_USE_PLATFORM_XCB`     |X Window System XCB
 |[[XR_USE_PLATFORM_EGL]]     `XR_USE_PLATFORM_EGL`     |EGL (for OpenGL/OpenGL ES usage on any platform with EGL support)
-|[[XR_USE_PLATFORM_WAYLAND]] `XR_USE_PLATFORM_WAYLAND` |Wayland
+|[[XR_USE_PLATFORM_WAYLAND]] `XR_USE_PLATFORM_WAYLAND` |Wayland (deprecated)
 |[[XR_USE_PLATFORM_ANDROID]] `XR_USE_PLATFORM_ANDROID` |Android Native
 |============================================
 
+
+[[appendix-wayland-notes]]
+===== Wayland Notes
+The Wayland part of `XR_KHR_opengl_enable` was never implemented by any
+runtime, and it was determined that as written the Wayland integration would
+not work well without making unsafe assumptions.
+It was decided to deprecate these parts.
+A future extension would be needed to provide functionality for a Wayland
+integration.
 
 [[appendix-android-notes]]
 === Android Notes

@@ -5,14 +5,15 @@
 include::{generated}/meta/XR_KHR_D3D11_enable.adoc[]
 
 *Last Modified Date*::
-    2025-03-07
+   2025-03-21
 *IP Status*::
     No known IP claims.
 *Contributors*::
     Bryce Hutchings, Microsoft +
     Paul Pedriana, Oculus +
     Mark Young, LunarG +
-    Minmin Gong, Microsoft
+    Minmin Gong, Microsoft +
+    Aaron Leiby, Valve
 
 ==== Overview
 
@@ -170,9 +171,6 @@ The OpenXR runtime must: interpret the top-left corner of the swapchain
 image as the coordinate origin unless specified otherwise by extension
 functionality.
 
-The OpenXR runtime must: interpret the swapchain images in a clip space of
-positive Y pointing up, near Z plane at 0, and far Z plane at 1.
-
 The OpenXR runtime must: return a texture created in accordance with
 <<khr_d3d11_enable-flags>>.
 
@@ -251,3 +249,5 @@ include::{generated}/interfaces/XR_KHR_D3D11_enable.adoc[leveloffset=1]
 * Revision 10, 2025-03-07 (Rylie Pavlik, Collabora, Ltd.)
 ** Re-organize, clarify, and make more uniform with other graphics binding
    extensions.
+* Revision 11, 2025-03-21 (Aaron Leiby)
+** Removed clip space specification

@@ -145,6 +145,10 @@ include::{generated}/api/enums/XrSpatialCapabilityEXT.adoc[]
 
 The elink:XrSpatialCapabilityEXT enumeration identifies the different types
 of capabilities that the runtime may: support.
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrSpatialCapabilityEXT.comments.adoc[]
 --
 
 [open,refpage='xrEnumerateSpatialCapabilitiesEXT',type='protos',desc='Enumerate supported spatial capabilities in the selected system.',xrefs='']
@@ -272,6 +276,10 @@ enable it.
 Such configuration structures must: be chained to
 slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next of the
 corresponding capability.
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrSpatialCapabilityFeatureEXT.comments.adoc[]
 --
 
 [open,refpage='xrEnumerateSpatialCapabilityFeaturesEXT',type='protos',desc='Enumerate supported features for a capability.',xrefs='xrEnumerateSpatialCapabilitiesEXT XrSpatialCapabilityEXT XrSpatialCapabilityFeatureEXT']
@@ -1907,6 +1915,8 @@ This component does not require any special configuration to be included in
 the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
 
 [[ext_spatial_entity_mesh3d_component]]
+===== Mesh 3D
+
 ====== Component data
 
 [open,refpage='XrSpatialMeshDataEXT',type='structs',desc='structure containing the data for a mesh 3D component',xrefs='XrSpatialComponentMesh3DListEXT xrQuerySpatialComponentDataEXT']

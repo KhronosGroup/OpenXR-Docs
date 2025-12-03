@@ -40,6 +40,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
 
         <type name="XrStructureType" category="enum"/>
+        <type name="XrResult" category="enum"/>
 
         <type requires="openxr_platform_defines" name="void"/>
         <type requires="openxr_platform_defines" name="char"/>
@@ -94,4 +95,45 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <enum value="4"    name="XR_TYPE_STRUCT_EX"/>
         <enum value="5"    name="XR_TYPE_STRUCT_CHILD"/>
     </enums>
+
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrGetBuffer</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructBuffer</type>* <name>buffer</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrGetNumbers</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructNum</type>* <name>numbers</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrGetVelocities</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructY</type>* <name>velocities</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrGetVertices</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructEx</type>* <name>vertices</name></param>
+        </command>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrGetChildren</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrStructChild</type>* <name>children</name></param>
+        </command>
+    </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require>
+            <command name="xrGetBuffer"/>
+            <command name="xrGetNumbers"/>
+            <command name="xrGetVelocities"/>
+            <command name="xrGetVertices"/>
+            <command name="xrGetChildren"/>
+        </require>
+    </feature>
 </registry>

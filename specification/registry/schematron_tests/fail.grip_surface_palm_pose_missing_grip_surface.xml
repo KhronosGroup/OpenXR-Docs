@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+        <tag name="EXT" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <interaction_profiles>
+        <!-- This should fail: has grip pose and left/right hands but missing grip_surface extension -->
+        <interaction_profile name="/interaction_profiles/khr/simple_controller" title="Simple Controller">
+            <user_path path="/user/hand/left"/>
+            <user_path path="/user/hand/right"/>
+            <component subpath="/input/grip/pose" type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component subpath="/input/aim/pose" type="XR_ACTION_TYPE_POSE_INPUT"/>
+        </interaction_profile>
+    </interaction_profiles>
+
+    <extensions>
+        <extension name="XR_EXT_palm_pose" number="56" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_palm_pose_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_palm_pose&quot;" name="XR_EXT_PALM_POSE_EXTENSION_NAME"/>
+                <extend interaction_profile_path="/interaction_profiles/khr/simple_controller">
+                    <component subpath="/input/palm_ext/pose" type="XR_ACTION_TYPE_POSE_INPUT"/>
+                </extend>
+            </require>
+        </extension>
+
+        <extension name="XR_EXT_hand_interaction" number="240" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_hand_interaction_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_hand_interaction&quot;" name="XR_EXT_HAND_INTERACTION_EXTENSION_NAME"/>
+                <extend interaction_profile_path="/interaction_profiles/khr/simple_controller">
+                    <component subpath="/input/poke_ext/pose" type="XR_ACTION_TYPE_POSE_INPUT"/>
+                    <component subpath="/input/pinch_ext/pose" type="XR_ACTION_TYPE_POSE_INPUT"/>
+                </extend>
+            </require>
+        </extension>
+    </extensions>
+</registry>

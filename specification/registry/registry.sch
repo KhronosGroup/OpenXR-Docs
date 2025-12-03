@@ -318,9 +318,39 @@
         </sch:rule>
     </sch:pattern>
 
+    <!-- Structs with next member that don't appear in functions or other structs must have parentstruct or structextends -->
+    <sch:pattern name="Structs with next member validation">
+        <sch:rule context="types/type[@category='struct' and member/name/text()='next']">
+            <sch:let name="struct_name" value="current()/@name"/>
+
+            <!-- Check if this struct appears as a parameter type in any command -->
+            <sch:let name="appears_in_function" value="//commands/command/param/type[text() = $struct_name]"/>
+
+            <!-- Check if this struct appears as a member type in any other struct -->
+            <sch:let name="appears_in_struct" value="//types/type[@category='struct']/member/type[text() = $struct_name]"/>
+
+            <!-- Check if struct has parentstruct or structextends -->
+            <sch:let name="has_parentstruct" value="count(current()/@parentstruct) > 0"/>
+            <sch:let name="has_structextends" value="count(current()/@structextends) > 0"/>
+
+            <!-- Exception for BaseHeader structs - they are base types used polymorphically -->
+            <sch:let name="is_base_header" value="contains($struct_name, 'BaseHeader')"/>
+
+            <!-- TODO: Temporary exceptions - these should be fixed to have proper parentstruct/structextends -->
+            <sch:let name="is_temporary_exception" value="$struct_name = (
+                'XrDevicePcmSampleRateStateFB'
+            )"/>
+
+            <!-- If struct does not appear in any function or other struct and has neither parentstruct nor structextends, raise error -->
+            <sch:assert test="$appears_in_function or $appears_in_struct or $has_parentstruct or $has_structextends or $is_base_header or $is_temporary_exception">
+                <sch:value-of select="$struct_name"/>: Struct has a 'next' member but does not appear as a parameter to any function or as a member in another struct, and is missing both 'parentstruct' and 'structextends' attributes. Structs with 'next' members that are not used as function parameters or struct members should have at least one of these attributes to indicate their role in the type hierarchy.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     <!-- some naming convention enforcement -->
     <sch:pattern name="common name types">
-        <!-- Xr...Info types-->
+        <!-- Xr...Info types -->
         <sch:rule context="types/type[@category = 'struct' and ./member/name/text() = 'next' and contains(@name, 'Info') and starts-with(@name, 'Xr')]">
             <sch:assert test="count(current()/@returnedonly) = 0">
                 <sch:value-of select="current()/@name"/>: Named as Xr...Info (an input struct), but it's marked as returnedonly (an output). Rename if this is an output struct, remove returnedonly if it is an input struct.
@@ -333,22 +363,28 @@
             </sch:assert>
         </sch:rule>
 
-        <!-- Xr...State types-->
+        <!-- Xr...State types -->
         <sch:rule context="types/type[@category = 'struct' and ./member/name/text() = 'next' and contains(@name, 'State') and starts-with(@name, 'Xr')]">
-            <sch:assert test="current()/member[name/text() = 'next']/text() != 'const '">
+            <!-- Event data structs must match XrEventDataBaseHeader, which has a const next pointer -->
+            <sch:let name="event_data" value="current()/@parentstruct = 'XrEventDataBaseHeader'"/>
+            <!-- TODO fix the exceptions we can -->
+            <sch:let name="is_exception" value="current()/@name = ('XrPerformanceMetricsStateMETA', 'XrSpatialFilterTrackingStateEXT')"/>
+            <sch:assert test="not(current()/member[name/text() = 'next']/text() = 'const ') or $is_exception or $event_data">
                 <sch:value-of select="current()/@name"/>: All Xr...State are output structs, so next must be pointer to non-const. Fix the const-ness, or rename if this is not supposed to be an output struct.
             </sch:assert>
         </sch:rule>
 
-        <!-- Xr...Properties types-->
+        <!-- Xr...Properties types -->
         <sch:rule context="types/type[@category = 'struct' and ./member/name/text() = 'next' and contains(@name, 'Properties') and starts-with(@name, 'Xr')]">
-            <sch:assert test="current()/member[name/text() = 'next']/text() != 'const '">
+            <!-- TODO fix the exceptions we can -->
+            <sch:let name="is_exception" value="current()/@name = ('XrSystemSpatialEntityPropertiesFB', 'XrSystemPassthroughPropertiesFB', 'XrSystemPassthroughProperties2FB', 'XrSystemSpacePersistencePropertiesMETA', 'XrSystemSpaceDiscoveryPropertiesMETA', 'XrSystemPassthroughColorLutPropertiesMETA', 'XrSystemTrackablesPropertiesANDROID')"/>
+            <sch:assert test="not(current()/member[name/text() = 'next']/text() = 'const ') or $is_exception">
                 <sch:value-of select="current()/@name"/>: All Xr....Properties are (at least) output structs, so next must be pointer to non-const. Fix the const-ness, or rename if this is not supposed to be an output struct.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
 
-    <!-- Naming of SystemProperties types-->
+    <!-- Naming of SystemProperties types -->
     <sch:pattern>
         <sch:rule context="types/type[@category = 'struct' and @structextends = 'XrSystemProperties']">
             <sch:let name="is_exception" value="current()/@name = 'XrRenderModelCapabilitiesRequestFB'" />
@@ -367,7 +403,7 @@
         </sch:rule>
     </sch:pattern>
 
-    <!-- Naming of event data types-->
+    <!-- Naming of event data types -->
     <sch:pattern>
         <sch:rule context="types/type[@category = 'struct' and @structextends = 'XrEventDataBaseHeader']">
             <sch:assert test="starts-with(@name, 'XrEventData')">
@@ -587,7 +623,7 @@
 
             <!-- Count element comes before the array(s) it affects, with no other elements in between. -->
             <sch:let name="len_member_pos" value="count(preceding-sibling::member)" />
-            <sch:let name="array_member_pos" value="count($sized_members/preceding-sibling::member)" />
+            <sch:let name="array_member_pos" value="for $sized_member in $sized_members return count($sized_member/preceding-sibling::member)" />
             <sch:assert test="(every $array_pos in $array_member_pos satisfies ($array_member_pos > $len_member_pos)) or not($sized_members)">
                 <sch:value-of select="$struct_name"/>::<sch:value-of select="$member_name"/>: This count member is field <sch:value-of select="$len_member_pos"/>, but at least one of the members with length bound by it appears earlier in the structure: positions are <sch:value-of select="$array_member_pos" /> for members <sch:value-of select="$sized_members/name/text()" /> respectively. Make sure the count precedes its arrays.
             </sch:assert>
@@ -656,7 +692,19 @@
             <sch:assert test="if ($is_input_struct_param) then count(types/type[@name = $bare_type]/@returnedonly) = 0 else true()">
                 <sch:value-of select="$bare_type"/>: marked as returnedonly, but passed as a const parameter (input) to <sch:value-of select="current()/parent::command/proto/name/text()" />
             </sch:assert>
+        </sch:rule>
 
+        <!-- returnedonly structs -->
+        <sch:rule context="types/type[@returnedonly and ./member/name/text() = 'next' and starts-with(@name, 'Xr')]">
+            <!-- Event data structs must match XrEventDataBaseHeader, which has a const next pointer -->
+            <sch:let name="event_data" value="current()/@parentstruct = 'XrEventDataBaseHeader' or current()/@name = 'XrEventDataBaseHeader'"/>
+            <!-- These are system properties and are handled by the "Xr...Properties types" tests. -->
+            <sch:let name="system_properties" value="current()/@structextends = 'XrSystemProperties'"/>
+            <!-- TODO fix the exceptions we can -->
+            <sch:let name="is_exception" value="current()/@name = ('XrExternalCameraOCULUS', 'XrPassthroughPreferencesMETA')"/>
+            <sch:assert test="not(current()/member[name/text() = 'next']/text() = 'const ') or $is_exception or $event_data or $system_properties">
+                <sch:value-of select="current()/@name"/>: All returnedonly structs are output structs, so next must be pointer to non-const. Fix the const-ness, or remove returnedonly if this is not supposed to be an output struct.
+            </sch:assert>
         </sch:rule>
     </sch:pattern>
 
@@ -682,7 +730,7 @@
             <sch:let name="member_name" value="current()/name/text()" />
 
             <!-- TODO fix exceptions -->
-            <sch:let name="is_exception" value="$type_name = ('XrFrameEndInfoML', 'XrApiLayerCreateInfo')"/>
+            <sch:let name="is_exception" value="$type_name = 'XrApiLayerCreateInfo'"/>
             <sch:assert test="$is_exception or matches($member_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
                 <sch:value-of select="$type_name" /> member naming: The <sch:value-of select="$member_name" /> member does not match the struct camelCase convention.
             </sch:assert>
@@ -694,6 +742,29 @@
 
             <sch:assert test="matches($param_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
                 <sch:value-of select="$command_name" /> param naming: The <sch:value-of select="$param_name" /> parameter does not match the param camelCase convention.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Bitmask naming convention: singular name before Flags/FlagBits -->
+    <sch:pattern>
+        <sch:rule context="types/type[@bitvalues]">
+            <sch:let name="bitvalues_name" value="current()/@bitvalues" />
+            <sch:let name="flags_name" value="current()/name/text()" />
+
+            <!-- These are not actually plural and are false positives. -->
+            <sch:let name="not_plural" value="$bitvalues_name = 'XrExternalCameraStatusFlagBitsOCULUS'
+                                              or $flags_name = 'XrExternalCameraStatusFlagsOCULUS'"/>
+
+            <!-- TODO fix exceptions -->
+            <sch:let name="is_exception" value="$bitvalues_name = ('XrCompositionLayerSettingsFlagBitsFB', 'XrFacialExpressionBlendShapePropertiesFlagBitsML')
+                                                or $flags_name = ('XrCompositionLayerSettingsFlagsFB', 'XrFacialExpressionBlendShapePropertiesFlagsML')"/>
+
+            <sch:assert test="$is_exception or $not_plural or not(matches($bitvalues_name, 'sFlagBits'))">
+                <sch:value-of select="$bitvalues_name" /> naming: The type name should be singular before "FlagBits". Remove the pluralization or add to the "not_plural" set if this is a false positive.
+            </sch:assert>
+            <sch:assert test="$is_exception or $not_plural or not(matches($flags_name, 'sFlags'))">
+                <sch:value-of select="$flags_name" /> naming: The type name should be singular before "Flags". Remove the pluralization or add to the "not_plural" set if this is a false positive.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -723,7 +794,9 @@
             </sch:assert>
             <!-- We don't bother looking for the array here, we only do it in the other parameter. -->
         </sch:rule>
+    </sch:pattern>
 
+    <sch:pattern>
         <sch:rule context="commands/command/param[ends-with(name/text(), 'CapacityInput')]">
             <sch:let name="command_name" value="current()/ancestor::command/proto/name/text()" />
             <sch:let name="param_name" value="current()/name/text()" />
@@ -796,7 +869,9 @@
             </sch:assert>
 
         </sch:rule>
+    </sch:pattern>
 
+    <sch:pattern>
         <sch:rule context="types/type/member[ends-with(name/text(), 'CapacityInput')]">
             <sch:let name="type_name" value="current()/../@name" />
             <sch:let name="member_name" value="current()/name/text()" />
@@ -822,8 +897,9 @@
                 <sch:value-of select="$type_name" /> two call idiom struct: Has a member named <sch:value-of select="$member_name" /> but none named <sch:value-of select="$other_param" /> as expected by the style guide for two call idiom.
             </sch:assert>
 
+
             <sch:let name="basename_len" value="string-length($basename)" />
-            <!-- Compute the array name: either buffer (if basename is $buffer), otherwise the plural of $basename -->
+            <!-- Compute the array name: either buffer (if basename is buffer), otherwise the plural of $basename -->
             <sch:let name="array_name" value="
                         if ($basename = 'buffer') then
                         'buffer'
@@ -836,8 +912,42 @@
                         else
                         concat($basename, 's')
                         " />
-            <sch:assert test="current()/../member/name[text() = $array_name or (starts-with(text(), $basename) and ends-with(text(), 's'))]" role="warning">
-                <sch:value-of select="$type_name" /> two call idiom struct: Has a member named <sch:value-of select="$member_name" /> but no array member named <sch:value-of select="$array_name" /> (or starting with <sch:value-of select="$basename" /> and ending with "s") as expected by the style guide for two call idiom. Your array member(s) may be named incorrectly.
+
+            <!-- find all members that start with $basename or are $array_name or use that capacity as len, but are not CapacityInput or CountOutput -->
+            <sch:let name="matching_arrays" value="current()/../member/name[text() != $member_name and text() != $other_param and (text() = $array_name or starts-with(text(), $basename))] |
+                                                 current()/../member[@len = $member_name]/name"/>
+            <sch:let name="num_matching_arrays" value="count($matching_arrays)"/>
+
+            <sch:let name="is_exception" value="$type_name = (
+                'XrHandMeshIndexBufferMSFT',
+                'XrHandMeshVertexBufferMSFT',
+                'XrControllerModelPropertiesMSFT',
+                'XrControllerModelStateMSFT',
+                'XrHandTrackingMeshFB',
+                'XrFaceStateANDROID',
+                'XrRaycastHitResultsANDROID'
+            )"/>
+
+            <!-- One apparent array: Must be named $array_name -->
+            <sch:assert test="if ($num_matching_arrays = 1 and not($is_exception)) then
+                                $matching_arrays/text() = $array_name
+                              else
+                                true()">
+                <sch:value-of select="$type_name" /> two call idiom struct, one apparent array: Has a member named <sch:value-of select="$member_name" /> but possible array member '<sch:value-of select="$matching_arrays/text()" separator=", "/>' not named '<sch:value-of select="$array_name" />' as expected by the style guide for two call idiom. Your array member may be named incorrectly, possibly with extra words added.
+            </sch:assert>
+
+            <!-- More than one apparent array: Must be named starting with $basename and ending in 's' -->
+            <sch:assert test="if ($num_matching_arrays > 1 and not($is_exception)) then
+                                every $matching_array in $matching_arrays satisfies ((starts-with($matching_array/text(), $basename) and ends-with($matching_array/text(), 's')) or $matching_array/text() = $array_name)
+                              else
+                                true()">
+                <sch:value-of select="$type_name" /> two call idiom struct, more than one apparent array: Has a member named <sch:value-of select="$member_name" separator=", " /> but inconsistent array members named <sch:value-of select="$matching_arrays/text()" separator=", "/>. They should all share the same longest prefix '<sch:value-of select="$basename"/>' and end in 's', per the style guide for two call idiom. Your array members may be named incorrectly.
+            </sch:assert>
+
+            <!-- no apparent arrays is an error... -->
+            <sch:assert test="$num_matching_arrays > 0 or $is_exception">
+                <sch:value-of select="$matching_arrays"/>
+                <sch:value-of select="$type_name" /> two call idiom struct, no apparent arrays: Has a member named <sch:value-of select="$member_name" /> but no array member named <sch:value-of select="$array_name" /> as expected by the style guide for two call idiom. Your array member may be named incorrectly.
             </sch:assert>
 
             <!-- the "if($array)" keeps us from spamming about arrays we can't find -->
@@ -1027,8 +1137,197 @@
                 Interaction Profile name must end with vendor tag _vendor ('<sch:value-of select="$vendor-tag" />'). '<sch:value-of select="@name" />' if it is introduced in a non-KHR extension.
             </sch:assert>
         </sch:rule>
+    </sch:pattern>
 
+    <sch:pattern name="grip_surface/palm_pose/poke/pinch validation for interaction profiles">
+        <sch:rule context="interaction_profiles/interaction_profile[component[@subpath='/input/grip/pose']]">
+            <!-- /interaction_profiles/htc/hand_interaction hands hand_htc/left, hand_htc/right -->
+            <sch:let name="is_palm_pose_negative_exception" value="current()/@name = (
+                '/interaction_profiles/htc/hand_interaction'
+            )"/>
 
+            <!-- /interaction_profiles/htc/hand_interaction hands hand_htc/left, hand_htc/right -->
+            <!-- See https://gitlab.khronos.org/openxr/openxr/-/merge_requests/3884 for vive_tracker_htcx discussion -->
+            <sch:let name="is_grip_surface_negative_exception" value="current()/@name = (
+                '/interaction_profiles/htc/hand_interaction',
+                '/interaction_profiles/htc/vive_tracker_htcx'
+            )"/>
+
+            <sch:let name="profile_name" value="@name"/>
+
+            <!-- An interaction profile can have a grip without having hands... -->
+            <!-- But if it has grip and no hands, it should not have palm_pose... -->
+            <sch:let name="has_left_or_right_hand" value="current()/user_path[@path='/user/hand/left' or @path='/user/hand/right']" />
+
+            <!-- XR_EXT_palm_pose -->
+            <sch:let name="has_extend_palm_pose" value="//extend[@interaction_profile_path=$profile_name]/component[@subpath='/input/palm_ext/pose']"/>
+
+            <!-- grip_surface -->
+            <sch:let name="has_grip_surface_direct" value="current()/component[@subpath='/input/grip_surface/pose']"/>
+            <sch:let name="has_grip_surface_extend" value="//extend[@interaction_profile_path=$profile_name]/component[@subpath='/input/grip_surface/pose']"/> <!-- grip_surface components inside an extend tag for this profile -->
+            <sch:let name="has_grip_surface_khr_maint1_extend" value="$has_grip_surface_extend[ancestor::require[@depends='XR_KHR_maintenance1'] or ancestor::extension[@name='XR_KHR_maintenance1']]"/>
+            <sch:let name="has_grip_surface_openxr_1_1_extend" value="$has_grip_surface_extend[ancestor::require[@depends='XR_VERSION_1_1'] or ancestor::feature[@name='XR_VERSION_1_1']]"/>
+
+            <!-- XR_EXT_hand_interaction -->
+            <sch:let name="has_grip_direct" value="current()/component[@subpath='/input/grip/pose']"/>
+            <sch:let name="has_aim_direct" value="current()/component[@subpath='/input/aim/pose']"/>
+
+            <sch:let name="has_poke_ext_direct" value="current()/component[@subpath='/input/poke_ext/pose']"/>
+            <sch:let name="has_extend_poke_ext_pose" value="//extend[@interaction_profile_path=$profile_name]/component[@subpath='/input/poke_ext/pose']"/>
+
+            <sch:let name="has_pinch_ext_direct" value="current()/component[@subpath='/input/pinch_ext/pose']"/>
+            <sch:let name="has_extend_pinch_ext_pose" value="//extend[@interaction_profile_path=$profile_name]/component[@subpath='/input/pinch_ext/pose']"/>
+
+            <!-- XR_EXT_palm_pose -->
+
+            <!-- XR_EXT_palm_pose requires the path for left/right exists -->
+            <!-- It does not explicitly specify that it only should be used when grip is available but... -->
+            <sch:assert test="not($has_left_or_right_hand) or $has_extend_palm_pose">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths but is missing XR_EXT_palm_pose input/palm_ext/pose pose.
+            </sch:assert>
+
+            <!-- On the other hand (hahaha), it should not be exposed if this profile is not for a left or right hand -->
+            <sch:assert test="$is_palm_pose_negative_exception or $has_left_or_right_hand or not($has_extend_palm_pose)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' does not have left/right hand top level paths, but exposes input/palm_ext/pose anyway contrary to spec.
+            </sch:assert>
+
+            <!-- XR_KHR_maintenance1 -->
+
+            <sch:assert test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_khr_maint1_extend">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths, but is missing input/grip_surface/pose (through XR_KHR_maintenance1 or directly).
+            </sch:assert>
+
+            <!-- On the other hand (hahaha), it should not be exposed if this profile is not for a left or right hand -->
+            <sch:assert test="$is_grip_surface_negative_exception or $has_left_or_right_hand or not($has_grip_surface_direct | $has_grip_surface_khr_maint1_extend)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' does not have left/right hand top level paths, but exposes input/grip_surface/pose anyway (through XR_KHR_maintenance1 or directly) contrary to spec.
+            </sch:assert>
+
+            <!-- XR_VERSION_1_1 -->
+
+            <sch:assert test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_openxr_1_1_extend">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths, but is missing OpenXR 1.1 input/grip_surface/pose pose.
+            </sch:assert>
+
+            <!-- On the other hand (hahaha), it should not be exposed if this profile is not for a left or right hand -->
+            <sch:assert test="$is_grip_surface_negative_exception or $has_left_or_right_hand or not($has_grip_surface_direct | $has_grip_surface_openxr_1_1_extend)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' does not have left/right hand top level paths, but exposes input/grip_surface/pose anyway (through 1.1 or directly) contrary to spec.
+            </sch:assert>
+
+            <!-- XR_EXT_hand_interaction -->
+            <sch:assert test="not($has_left_or_right_hand) or ($has_grip_direct and $has_aim_direct)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/aim/pose, required by XR_EXT_hand_interaction.
+            </sch:assert>
+            <sch:assert test="not($has_left_or_right_hand) or ($has_poke_ext_direct or $has_extend_poke_ext_pose)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/poke_ext/pose, required by XR_EXT_hand_interaction.
+            </sch:assert>
+            <sch:assert test="not($has_left_or_right_hand) or ($has_pinch_ext_direct or $has_extend_pinch_ext_pose)">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/pinch_ext/pose, required by XR_EXT_hand_interaction.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="dpad_binding thumbstick for interaction profiles">
+        <sch:rule context="interaction_profiles/interaction_profile[component[@subpath='/input/thumbstick']]">
+            <sch:let name="profile_name" value="@name"/>
+
+            <sch:let name="other_ext_plus_dpad_extending_profile" value="//extensions/extension/require[@depends='XR_EXT_dpad_binding']/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_thumbstick_dpad_up" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_up']"/>
+            <sch:let name="has_extend_thumbstick_dpad_down" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_down']"/>
+            <sch:let name="has_extend_thumbstick_dpad_left" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_left']"/>
+            <sch:let name="has_extend_thumbstick_dpad_right" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_right']"/>
+            <sch:let name="has_extend_thumbstick_dpad" value="$has_extend_thumbstick_dpad_up and $has_extend_thumbstick_dpad_down and $has_extend_thumbstick_dpad_left and $has_extend_thumbstick_dpad_right"/>
+
+            <sch:let name="dpad_binding_extending_profile" value="//extensions/extension[@name='XR_EXT_dpad_binding']/require/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_thumbstick_dpad_up_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/thumbstick/dpad_up']"/>
+            <sch:let name="has_extend_thumbstick_dpad_down_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/thumbstick/dpad_down']"/>
+            <sch:let name="has_extend_thumbstick_dpad_left_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/thumbstick/dpad_left']"/>
+            <sch:let name="has_extend_thumbstick_dpad_right_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/thumbstick/dpad_right']"/>
+            <sch:let name="has_extend_thumbstick_dpad_openxr_1_0" value="$has_extend_thumbstick_dpad_up_openxr_1_0 and $has_extend_thumbstick_dpad_down_openxr_1_0 and $has_extend_thumbstick_dpad_left_openxr_1_0 and $has_extend_thumbstick_dpad_right_openxr_1_0"/>
+
+            <sch:let name="openxr_1_1_plus_dpad_extending_profile" value="//feature[@name='XR_VERSION_1_1']/require[@depends='XR_EXT_dpad_binding']/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_thumbstick_dpad_up_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_up']"/>
+            <sch:let name="has_extend_thumbstick_dpad_down_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_down']"/>
+            <sch:let name="has_extend_thumbstick_dpad_left_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_left']"/>
+            <sch:let name="has_extend_thumbstick_dpad_right_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/thumbstick/dpad_right']"/>
+            <sch:let name="has_extend_thumbstick_dpad_openxr_1_1" value="$has_extend_thumbstick_dpad_up_openxr_1_1 and $has_extend_thumbstick_dpad_down_openxr_1_1 and $has_extend_thumbstick_dpad_left_openxr_1_1 and $has_extend_thumbstick_dpad_right_openxr_1_1"/>
+
+            <sch:assert test="$has_extend_thumbstick_dpad or $has_extend_thumbstick_dpad_openxr_1_0 or $has_extend_thumbstick_dpad_openxr_1_1">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' exposes thumbstick but is missing XR_EXT_dpad_binding thumbstick/dpad elements.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="dpad_binding trackpad for interaction profiles">
+        <sch:rule context="interaction_profiles/interaction_profile[component[@subpath='/input/trackpad']]">
+            <sch:let name="profile_name" value="@name"/>
+
+            <sch:let name="other_ext_plus_dpad_extending_profile" value="//extensions/extension/require[@depends='XR_EXT_dpad_binding']/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_trackpad_dpad_up" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_up']"/>
+            <sch:let name="has_extend_trackpad_dpad_down" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_down']"/>
+            <sch:let name="has_extend_trackpad_dpad_left" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_left']"/>
+            <sch:let name="has_extend_trackpad_dpad_right" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_right']"/>
+            <sch:let name="has_extend_trackpad_dpad_center" value="$other_ext_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_center']"/>
+            <sch:let name="has_extend_trackpad_dpad" value="$has_extend_trackpad_dpad_up and $has_extend_trackpad_dpad_down and $has_extend_trackpad_dpad_left and $has_extend_trackpad_dpad_right and $has_extend_trackpad_dpad_center"/>
+
+            <sch:let name="dpad_binding_extending_profile" value="//extensions/extension[@name='XR_EXT_dpad_binding']/require/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_trackpad_dpad_up_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/trackpad/dpad_up']"/>
+            <sch:let name="has_extend_trackpad_dpad_down_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/trackpad/dpad_down']"/>
+            <sch:let name="has_extend_trackpad_dpad_left_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/trackpad/dpad_left']"/>
+            <sch:let name="has_extend_trackpad_dpad_right_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/trackpad/dpad_right']"/>
+            <sch:let name="has_extend_trackpad_dpad_center_openxr_1_0" value="$dpad_binding_extending_profile/component[@subpath='/input/trackpad/dpad_center']"/>
+            <sch:let name="has_extend_trackpad_dpad_openxr_1_0" value="$has_extend_trackpad_dpad_up_openxr_1_0 and $has_extend_trackpad_dpad_down_openxr_1_0 and $has_extend_trackpad_dpad_left_openxr_1_0 and $has_extend_trackpad_dpad_right_openxr_1_0 and $has_extend_trackpad_dpad_center_openxr_1_0"/>
+
+            <sch:let name="openxr_1_1_plus_dpad_extending_profile" value="//feature[@name='XR_VERSION_1_1']/require[@depends='XR_EXT_dpad_binding']/extend[@interaction_profile_path=$profile_name]"/>
+            <sch:let name="has_extend_trackpad_dpad_up_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_up']"/>
+            <sch:let name="has_extend_trackpad_dpad_down_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_down']"/>
+            <sch:let name="has_extend_trackpad_dpad_left_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_left']"/>
+            <sch:let name="has_extend_trackpad_dpad_right_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_right']"/>
+            <sch:let name="has_extend_trackpad_dpad_center_openxr_1_1" value="$openxr_1_1_plus_dpad_extending_profile/component[@subpath='/input/trackpad/dpad_center']"/>
+            <sch:let name="has_extend_trackpad_dpad_openxr_1_1" value="$has_extend_trackpad_dpad_up_openxr_1_1 and $has_extend_trackpad_dpad_down_openxr_1_1 and $has_extend_trackpad_dpad_left_openxr_1_1 and $has_extend_trackpad_dpad_right_openxr_1_1 and $has_extend_trackpad_dpad_center_openxr_1_1"/>
+
+            <sch:assert test="$has_extend_trackpad_dpad or $has_extend_trackpad_dpad_openxr_1_0 or $has_extend_trackpad_dpad_openxr_1_1">
+                Interaction Profile '<sch:value-of select="$profile_name"/>' exposes trackpad but is missing XR_EXT_dpad_binding trackpad/dpad elements.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Spatial Capabiility Features comment format">
+        <!-- XrSpatialCapabilityFeature enum extensions -->
+        <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatialCapabilityFeature')]">
+            <sch:let name="config_struct_phrase" value="'Corresponding config structure is slink:'"/>
+            <sch:let name="has_config_struct" value="contains(@comment, $config_struct_phrase)"/>
+            <sch:assert test="$has_config_struct">
+                XrSpatialCapabilityFeature extension value's ('<sch:value-of select="@name"/>') comment must reference its config structure using the phrase '<sch:value-of select="$config_struct_phrase"/>'.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Spatial Component Types comment format">
+        <!-- XrSpatialComponentType enum -->
+        <sch:rule context="enums[starts-with(@name, 'XrSpatialComponentType')]/enum">
+            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:')"/>
+            <sch:assert test="$has_list_struct">
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:'.
+            </sch:assert>
+
+            <sch:let name="data_struct_comment_regex" value="'.*Corresponding data structure is \w+:.*$'"/>
+            <sch:assert test="matches(@comment, $data_struct_comment_regex)">
+                XrSpatialComponentType value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:'.
+            </sch:assert>
+        </sch:rule>
+
+        <!-- XrSpatialComponentType enum extensions -->
+        <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatialComponentType')]">
+            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:')"/>
+            <sch:assert test="$has_list_struct">
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:'.
+            </sch:assert>
+
+            <sch:let name="data_struct_comment_regex" value="'.*Corresponding data structure is \w+:.*$'"/>
+            <sch:assert test="matches(@comment, $data_struct_comment_regex)">
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:'.
+            </sch:assert>
+        </sch:rule>
     </sch:pattern>
 
 </sch:schema>

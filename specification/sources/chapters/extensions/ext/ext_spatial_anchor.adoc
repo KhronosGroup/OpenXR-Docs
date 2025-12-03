@@ -385,6 +385,19 @@ CHK_XR(xrDestroySpatialEntityEXT(spatialAnchorEntity));
 include::{generated}/interfaces/XR_EXT_spatial_anchor.adoc[leveloffset=1]
 
 ==== Issues
+* Why does flink:xrCreateSpatialAnchorEXT output an entity ID as well as an
+  entity handle?
+** Resolved
+** Answer: The flink:xrCreateSpatialAnchorEXT function could very well have
+   provided just the entity id as the output and applications could create
+   an entity handle for that id using flink:xrCreateSpatialEntityFromIdEXT.
+   However, given the typical usage of an anchor where applications query
+   the anchor pose every frame, it becomes a good candidate to be used in an
+   "update snapshot", which requires entity handles as input.
+   Anticipating this typical usecase, flink:xrCreateSpatialAnchorEXT
+   performs flink:xrCreateSpatialEntityFromIdEXT on behalf of the
+   application and provides it with the entity handle to use with
+   flink:xrCreateSpatialUpdateSnapshotEXT.
 
 
 ==== Version History

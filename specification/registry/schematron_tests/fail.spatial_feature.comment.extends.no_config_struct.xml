@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+    </tags>
+
+    <enums name="XrSpatialCapabilityFeatureEXT" type="enum">
+        <enum value="0" name="XR_SPATIAL_CAPABILITY_FEATURE_MARKER_TRACKING_FIXED_SIZE_MARKERS_EXT" comment="Capability feature to allow applications to specify the size for the markers. Corresponding config structure is slink:XrSpatialMarkerSizeEXT"/>
+    </enums>
+
+    <extensions>
+        <extension name="XR_EXT_new_spatial_feature" number="89" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_new_spatial_feature_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_new_spatial_feature&quot;" name="XR_EXT_NEW_SPATIAL_FEATURE_EXTENSION_NAME"/>
+
+                <!-- feature extension comment is missing reference to config struct. -->
+                <enum offset="1" extends="XrSpatialCapabilityFeatureEXT" name="XR_SPATIAL_CAPABILITY_FEATURE_MARKER_TRACKING_STATIC_MARKERS_EXT"     comment="Capability feature to allow applications to specify if markers are static."/>
+            </require>
+        </extension>
+    </extensions>
+</registry>
