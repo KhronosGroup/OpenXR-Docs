@@ -338,7 +338,8 @@
 
             <!-- TODO: Temporary exceptions - these should be fixed to have proper parentstruct/structextends -->
             <sch:let name="is_temporary_exception" value="$struct_name = (
-                'XrDevicePcmSampleRateStateFB'
+                'XrDevicePcmSampleRateStateFB',
+                'XrTrackableImageConfigurationANDROID'
             )"/>
 
             <!-- If struct does not appear in any function or other struct and has neither parentstruct nor structextends, raise error -->
@@ -581,7 +582,7 @@
             <sch:let name="struct_name" value="current()/../@name"/>
             <sch:let name="member_name" value="current()/name/text()"/>
 
-            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags') or $struct_name = ('XrSystemMarkerTrackingPropertiesANDROID', 'XrTrackableMarkerDatabaseEntryANDROID')"/>
+            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags') or $struct_name = ('XrSystemMarkerTrackingPropertiesANDROID', 'XrTrackableMarkerDatabaseEntryANDROID', 'XrSystemImageTrackingPropertiesANDROID')"/>
             <sch:assert test="current()/type/text() = 'uint32_t' or $not_size">
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
@@ -1326,6 +1327,60 @@
             <sch:let name="data_struct_comment_regex" value="'.*Corresponding data structure is \w+:.*$'"/>
             <sch:assert test="matches(@comment, $data_struct_comment_regex)">
                 XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:'.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Command error and success code alphabetical ordering">
+        <sch:rule context="command[@errorcodes]">
+            <sch:let name="command_name" value="current()/proto/name/text()"/>
+            <sch:let name="errorcodes" value="@errorcodes"/>
+            <!-- replace needed to customize sort behavior -->
+            <sch:let name="errorcodes_list" value="tokenize(replace($errorcodes,'_','~'), ',')"/>
+            <sch:let name="sorted_errorcodes" value="replace(string-join(sort($errorcodes_list), ','),'~','_')"/>
+
+            <sch:assert test="$errorcodes = $sorted_errorcodes">
+                <sch:value-of select="$command_name"/>: errorcodes must be in alphabetical order.
+                Expected: <sch:value-of select="$sorted_errorcodes"/>
+                Got: <sch:value-of select="$errorcodes"/>
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Command success code alphabetical ordering">
+        <sch:rule context="command[@successcodes]">
+            <sch:let name="command_name" value="current()/proto/name/text()"/>
+            <sch:let name="successcodes" value="@successcodes"/>
+            <sch:let name="successcodes_list" value="tokenize($successcodes, ',')"/>
+
+            <sch:assert test="$successcodes_list[1] = 'XR_SUCCESS'">
+                <sch:value-of select="$command_name"/>: successcodes must list XR_SUCCESS first.
+                Got: <sch:value-of select="$successcodes"/>
+            </sch:assert>
+
+            <!-- replace needed to customize sort behavior -->
+            <sch:let name="successcodes_list_after" value="tokenize(replace($successcodes,'_','~'), ',')[position() > 1]"/>
+            <sch:let name="unsorted_successcodes" value="replace(string-join($successcodes_list_after, ','),'~','_')"/>
+            <sch:let name="sorted_successcodes" value="replace(string-join(sort($successcodes_list_after), ','),'~','_')"/>
+
+            <sch:assert test="$unsorted_successcodes = $sorted_successcodes">
+                <sch:value-of select="$command_name"/>: successcodes after XR_SUCCESS must be in alphabetical order.
+                Expected: <sch:value-of select="$sorted_successcodes"/>
+                Got: <sch:value-of select="$unsorted_successcodes"/>
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Spatial entities semantic label enum rules">
+        <sch:rule context="enums[starts-with(@name, 'XrSpatial') and contains(@name, 'SemanticLabel')]">
+            <sch:assert test="enum[contains(@name, 'UNCATEGORIZED')]">
+                Spatial entities semantic label enum '<sch:value-of select="@name"/>' must contain a value that has 'UNCATEGORIZED' in it.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatial') and contains(@extends, 'SemanticLabel')]">
+            <sch:assert test="false()">
+                Extending spatial entities semantic label enumerations ('<sch:value-of select="@extends"/>') is not allowed. Create a new enumeration and spatial component type instead.
             </sch:assert>
         </sch:rule>
     </sch:pattern>

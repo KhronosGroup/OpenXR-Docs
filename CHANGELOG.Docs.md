@@ -17,6 +17,63 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.57 (2026-02-12)
+
+This release features a few cleanups and clarifications, an addition to the
+Spatial Entities specifications, a vendor extension, and tooling improvements.
+
+Note that specification releases 1.1.55 and 1.1.56 were skipped to keep up with
+a monthly increment for the patch version component.
+
+- Specification
+  - Clarify: Add grip-surface/palm and hand interaction snippets to Samsung Odyssey
+    controller extension.
+    ([internal MR 2170](https://gitlab.khronos.org/openxr/openxr/merge_requests/2170))
+  - Fix: `XR_KHR_extended_struct_name_lengths` string length can be up to 256
+    bytes.
+    ([internal MR 4126](https://gitlab.khronos.org/openxr/openxr/merge_requests/4126))
+  - Improvement: Update and optimize CSS for improved browser performance.
+    ([internal MR 4054](https://gitlab.khronos.org/openxr/openxr/merge_requests/4054))
+  - Improvement: Update specification layout and formatting for
+    `XR_QCOM_tracking_optimization_settings`.
+    ([internal MR 4064](https://gitlab.khronos.org/openxr/openxr/merge_requests/4064))
+  - Improvement: Add guidelines for defining semantic labels in the spatial entity
+    framework.
+    ([internal MR 4081](https://gitlab.khronos.org/openxr/openxr/merge_requests/4081))
+  - Improvement: Add known issues to Issues section for
+    `XR_OCULUS_audio_device_guid`.
+    ([internal MR 4102](https://gitlab.khronos.org/openxr/openxr/merge_requests/4102))
+  - New vendor extension specification: `XR_ANDROID_trackables_image` providing
+    vendor-specific tracking of planar images as specified by sets of input
+    reference images.
+    ([internal MR 4069](https://gitlab.khronos.org/openxr/openxr/merge_requests/4069))
+- Registry
+  - Change: Update tooling to properly support extending allowable return codes
+    from extensions.
+    ([internal MR 4009](https://gitlab.khronos.org/openxr/openxr/merge_requests/4009),
+    [internal issue 2494](https://gitlab.khronos.org/openxr/openxr/issues/2494))
+  - Chore: Reorder function return codes to alphabetic (with `XR_SUCCESS` pulled to
+    the front).
+    ([internal MR 3979](https://gitlab.khronos.org/openxr/openxr/merge_requests/3979))
+  - Chore: Reserve extensions.
+    ([internal MR 4157](https://gitlab.khronos.org/openxr/openxr/merge_requests/4157),
+    [internal MR 4162](https://gitlab.khronos.org/openxr/openxr/merge_requests/4162))
+  - Fix: `XR_KHR_extended_struct_name_lengths` string length can be up to 256
+    bytes. (The prose has been modified to match the XML specification.)
+    ([internal MR 4126](https://gitlab.khronos.org/openxr/openxr/merge_requests/4126),
+    [internal issue 2654](https://gitlab.khronos.org/openxr/openxr/issues/2654))
+  - New vendor extension: `XR_ANDROID_trackables_image`.
+    ([internal MR 4069](https://gitlab.khronos.org/openxr/openxr/merge_requests/4069))
+  - Schematron: Add validation for return code ordering.
+    ([internal MR 3979](https://gitlab.khronos.org/openxr/openxr/merge_requests/3979))
+  - Schematron: Add validation for semantic label enums defined for the spatial
+    entity framework.
+    ([internal MR 4081](https://gitlab.khronos.org/openxr/openxr/merge_requests/4081))
+  - Update: Mark `XR_EXT_plane_detection` as deprecated by
+    `XR_EXT_spatial_plane_tracking`.
+    ([internal MR 4057](https://gitlab.khronos.org/openxr/openxr/merge_requests/4057),
+    [internal issue 2625](https://gitlab.khronos.org/openxr/openxr/issues/2625))
+
 ## OpenXR Specification 1.1.54 (2025-12-02)
 
 This release contains a number of specification clarifications and fixes, in

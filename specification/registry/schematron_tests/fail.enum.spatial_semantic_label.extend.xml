@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2025 The EXTonos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+    </tags>
+
+    <enums name="XrSpatialPlaneSemanticLabelEXT" type="enum">
+        <enum value="1"   name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT" comment="The runtime was unable to classify this entity."/>
+        <enum value="2"   name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_FLOOR_EXT"         comment="The entity is a floor."/>
+    </enums>
+
+    <extensions>
+        <extension name="XR_EXT_new_semantic_label" number="89" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_new_semantic_label_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_new_semantic_label&quot;" name="XR_EXT_NEW_SEMANTIC_LABEL_EXTENSION_NAME"/>
+
+                <enum offset="0" extends="XrSpatialPlaneSemanticLabelEXT" name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_WALL_EXT" comment="The entity is a wall."/>
+            </require>
+        </extension>
+    </extensions>
+
+</registry>

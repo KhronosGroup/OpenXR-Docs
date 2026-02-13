@@ -1,9 +1,8 @@
-// Copyright (c) 2021, Qualcomm
+// Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
 include::{generated}/meta/XR_QCOM_tracking_optimization_settings.adoc[]
-
 
 *Last Modified Date*::
     2022-06-02
@@ -11,10 +10,9 @@ include::{generated}/meta/XR_QCOM_tracking_optimization_settings.adoc[]
 *Contributors*::
     Daniel Guttenberg, Qualcomm +
     Martin Renschler, Qualcomm +
-    Karthik Nagarajan, Qualcomm
+    Karthik Nagarajan, Qualcomm +
 
-
-*Overview*
+==== Overview
 
 This extension defines an API for the application to give optimization hints
 to the runtime for tracker domains.
@@ -48,7 +46,6 @@ include::{generated}/api/enums/XrTrackingOptimizationSettingsDomainQCOM.comments
 include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.adoc[]
 include::{generated}/api/enums/XrTrackingOptimizationSettingsHintQCOM.comments-box.adoc[]
 --
-
 
 [open,refpage='xrSetTrackingOptimizationSettingsHintQCOM',type='protos',desc='Submit a tracking optimization hint',xrefs='']
 --
@@ -86,7 +83,6 @@ be set for the same domain.
 include::{generated}/validity/protos/xrSetTrackingOptimizationSettingsHintQCOM.adoc[]
 --
 
-
 ==== Example of setting a tracking optimization hint
 
 [source,C]
@@ -106,26 +102,11 @@ pfnSetTrackingOptimizationSettingsHintQCOM(session,
 // perform tracking while prioritizing long range tracking
 ----
 
-*New Object Types*
+include::{generated}/interfaces/XR_QCOM_tracking_optimization_settings.adoc[leveloffset=1]
 
-*New Flag Types*
+==== Issues
 
-*New Enum Constants*
-
-*New Enums*
-
-* elink:XrTrackingOptimizationSettingsHintQCOM
-* elink:XrTrackingOptimizationSettingsDomainQCOM
-
-*New Structures*
-
-*New Functions*
-
-* flink:xrSetTrackingOptimizationSettingsHintQCOM
-
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-06-02
 ** Initial extension description

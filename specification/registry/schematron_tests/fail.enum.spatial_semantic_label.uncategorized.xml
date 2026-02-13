@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <enums name="XrSpatialPlaneSemanticLabelEXT" type="enum">
+        <enum value="2"   name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_FLOOR_EXT"         comment="The entity is a floor."/>
+    </enums>
+
+</registry>

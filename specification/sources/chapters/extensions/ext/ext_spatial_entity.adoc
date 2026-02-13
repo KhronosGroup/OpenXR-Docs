@@ -2372,6 +2372,146 @@ for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
   ftext:xrGetSpatialBuffer* function to retrieve the actual contents of the
   buffer.
 
+[[ext_spatial_entity_semantic_labels_guidelines]]
+===== Semantic Label Design & Extension Guidelines
+
+While this extension does not define any component for conveying the
+semantic label information of an entity, it lays down the design rules and
+guidelines for any extensions that do define such a component.
+In the following text, "should:" and "must:" constrain the authors of such
+functionality, rather than constraining a runtime implementation or an
+application using the API.
+
+* If an extension is defining semantic labels for any
+  elink:XrSpatialCapabilityEXT, it should: do so by defining a new
+  elink:XrSpatialComponentTypeEXT as well as a new enumeration with a set of
+  labels (a "semantic label set") to be the data for that component.
+* An enumeration representing a semantic label set must: have a value to
+  indicate that the entity is not categorized into any of the labels of this
+  set.
+  The name of this enumerant must: include 'UNCATEGORIZED', e.g.
+  ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT.
+  This value indicates to applications that the runtime does recognize this
+  entity, but that there are other semantic label sets where this entity is
+  categorized.
+* Enumeration of this newly defined elink:XrSpatialComponentTypeEXT in
+  flink:xrEnumerateSpatialCapabilityComponentTypesEXT implies that the
+  runtime supports the semantic label set (and therefore the labels defined
+  in the set) corresponding to that component type.
+* Applications express their desire to discover entities that have labels
+  belonging to this semantic label set by including the corresponding
+  elink:XrSpatialComponentTypeEXT in the
+  slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+  array of the configuration struct for the capability that the component
+  type is enumerated for.
+* It is possible that a single spatial entity has multiple components on it,
+  each providing it with a label from their own semantic label set.
+  Consider the following example with some hypothetical semantic label sets -
+  stext:XrSpatialObjectSemanticLabel, which might have values like chair,
+  sofa, table etc., stext:XrSpatialSofaBrand, which might have values like
+  IKEA, Wayfair, etc., and stext:XrSpatialIkeaSofa, which might have
+  specific IKEA model names of sofas.
+  In this scenario, the same sofa entity has all 3 components (labels from
+  all 3 semantic label sets) on it, each giving a different granularity of
+  information about the entity.
+* If an extension is defining a new elink:XrSpatialComponentTypeEXT which
+  provides a new semantic label set containing multiple labels in addition
+  to the `UNCATEGORIZED` label, the extension should: consider defining an
+  elink:XrSpatialCapabilityFeatureEXT which allows applications to activate
+  only a subset of the labels defined in the semantic label set
+  corresponding to that component type.
+  This subset, provided in the next chain of the capability configuration,
+  acts as a hint for runtimes to optimize their tracking pipelines and only
+  track the subset provided.
+  An example of such a feature struct is provided
+  <<ext_spatial_entity_example_feature_semantic_label_subset, below>>.
+* Extensions must: not add labels to existing semantic label set
+  enumeration.
+  They must: instead define a new enumeration which contains equivalent
+  enumerants with identical semantics and with values equal to those from
+  the other set, in addition to the newly added enumerants.
+  The specification of the newly defined semantic label set must: also
+  establish the mapping between the old label set and the new one.
+  See example <<ext_spatial_entity_example_semantic_label_extension,
+  below>>.
+
+[[ext_spatial_entity_example_feature_semantic_label_subset]]
+====== Example Spatial Feature Definition for Semantic Label Subset
+
+[source,C++]
+----
+// New example semantic label set.
+typedef enum XrSpatialExampleSemanticLabelEXT {
+  // ... label values
+} XrSpatialExampleSemanticLabelEXT;
+
+/*
+typedef enum XrSpatialCapabilityFeatureEXT {
+  // .. existing values
+
+  // new spatial feature value
+  XR_SPATIAL_CAPABILITY_FEATURE_EXAMPLE_SEMANTIC_LABEL_SUBSET_EXT
+
+  // .. existing values
+} XrSpatialCapabilityFeatureEXT;
+*/
+
+// New spatial feaure configuration structure
+typedef struct XrSpatialFeatureExampleSemanticLabelSubsetEXT {
+    XrStructureType                             type;
+    const void* XR_MAY_ALIAS                    next;
+    uint32_t                                    semanticLabelCount;
+    const XrSpatialExampleSemanticLabelEXT*     semanticLabels;
+} XrSpatialFeatureExampleSemanticLabelSubsetEXT;
+----
+
+[[ext_spatial_entity_example_semantic_label_extension]]
+====== Example Spatial Semantic Label Extension
+
+[source,C++]
+----
+typedef enum XrSpatialExamplePlaneSemanticLabelExtensionEXT {
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_UNCATEGORIZED_EXT = 1,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_FLOOR_EXT = 2,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_WALL_EXT = 3,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_CEILING_EXT = 4,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_TABLE_EXT = 5,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_DOOR_EXT = 6,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_WINDOW_EXT = 7,
+    XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_MAX_ENUM_EXT = 0x7FFFFFFF
+} XrSpatialExamplePlaneSemanticLabelExtensionEXT;
+----
+
+Consider the above example where an extension defines an enumeration
+stext:XrSpatialExamplePlaneSemanticLabelExtensionEXT in order to extend the
+existing elink:XrSpatialPlaneSemanticLabelEXT with values to represent doors
+and windows.
+The specification for the new enumeration must: include text for the
+following form -
+
+[source,asciidoc]
+----
+For all non-UNCATEGORIZED label enumerants in elink:XrSpatialPlaneSemanticLabelEXT,
+the runtime must: return that enumerant if and only if it returns the corresponding
+label enumerant from elink:XrSpatialExamplePlaneSemanticLabelExtensionEXT with the same value
+i.e.
+the ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT value for that entity must:
+correspond with the ename:XR_SPATIAL_COMPONENT_TYPE_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_EXT values
+according to the following table -
+
+[width="100%",options="header"]
+|====
+| XrSpatialExamplePlaneSemanticLabelExtensionEXT                | XrSpatialPlaneSemanticLabelEXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_FLOOR_EXT   | XR_SPATIAL_PLANE_SEMANTIC_LABEL_FLOOR_EXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_WALL_EXT    | XR_SPATIAL_PLANE_SEMANTIC_LABEL_WALL_EXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_CEILING_EXT | XR_SPATIAL_PLANE_SEMANTIC_LABEL_CEILING_EXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_TABLE_EXT   | XR_SPATIAL_PLANE_SEMANTIC_LABEL_TABLE_EXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_DOOR_EXT    | XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT
+| XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_WINDOW_EXT  | XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT
+|====
+----
+
+
 include::{generated}/interfaces/XR_EXT_spatial_entity.adoc[leveloffset=1]
 
 ==== Issues

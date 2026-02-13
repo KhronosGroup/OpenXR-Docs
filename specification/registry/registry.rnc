@@ -383,6 +383,14 @@ ExtendPredicateInteractionProfileElt =
         InteractionProfileComponentElt*
     }
 
+ExtendCommandReturnCodesElt =
+    element extend {
+        attribute type { "command" },
+        NameAttr,
+        attribute errorcodes { ReturnCodes_t }?,
+        attribute successcodes { ReturnCodes_t }?
+    }
+
 # Each <feature> defines the interface of an API version.
 Feature =
     element feature {
@@ -397,7 +405,8 @@ Feature =
              (InterfaceElement
               | CommentElt
               | ExtendInteractionProfileElt
-              | ExtendPredicateInteractionProfileElt)*
+              | ExtendPredicateInteractionProfileElt
+              | ExtendCommandReturnCodesElt)*
          }
          | element remove {
                CommentAttr?, (InterfaceElement | CommentElt)*
@@ -432,7 +441,8 @@ Extension =
              (InterfaceElement
               | CommentElt
               | ExtendInteractionProfileElt
-              | ExtendPredicateInteractionProfileElt)*
+              | ExtendPredicateInteractionProfileElt
+              | ExtendCommandReturnCodesElt)*
          }
          | element remove {
                attribute api { text }?,

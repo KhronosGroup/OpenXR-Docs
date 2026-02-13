@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <!-- enums starting with 'XrSpatial' and containing 'SemanticLabel' must have 'UNCATEGORIZED' value -->
+    <enums name="XrSpatialPlaneSemanticLabelEXT" type="enum">
+        <enum value="1"   name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT" comment="The runtime was unable to classify this entity."/>
+        <enum value="2"   name="XR_SPATIAL_PLANE_SEMANTIC_LABEL_FLOOR_EXT"         comment="The entity is a floor."/>
+    </enums>
+
+    <!-- enums starting with 'XrSpatial' but not containing 'SemanticLabel' dont need to have 'UNCATEGORIZED' -->
+    <enums name="XrSpatialSomeOtherEnumEXT" type="enum">
+        <enum value="2"   name="XR_SPATIAL_SOME_OTHER_ENUM_FLOOR_EXT"         comment="The entity is a floor."/>
+    </enums>
+
+</registry>

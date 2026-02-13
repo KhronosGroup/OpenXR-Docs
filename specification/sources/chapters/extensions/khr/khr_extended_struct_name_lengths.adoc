@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_extended_struct_name_lengths.adoc[]
 
 *Last Modified Date*::
-    2024-08-12
+    2025-12-04
 
 *IP Status*::
     No known IP claims.
@@ -25,7 +25,7 @@ flink:xrStructureTypeToString2KHR is provided to allow retrieving the string
 names of structure type enumerants with lengths that exceed the original
 limit of 63 bytes (64 bytes including the null terminator).
 flink:xrStructureTypeToString2KHR returns name strings for structure type
-enumerants up to 127 bytes in length (128 bytes including the null
+enumerants up to 255 bytes in length (256 bytes including the null
 terminator).
 An application can: use flink:xrStructureTypeToString2KHR as a drop-in
 replacement for flink:xrStructureTypeToString, as it works with all
@@ -94,3 +94,5 @@ include::{generated}/interfaces/XR_KHR_extended_struct_name_lengths.adoc[levelof
 
 * Revision 1, 2024-02-29 (Matthew Langille)
 ** Initial extension description
+* Revision 2, 2025-12-04 (Kenny Vercaemer)
+** Fix structure name length specification

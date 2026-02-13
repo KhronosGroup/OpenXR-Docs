@@ -1,0 +1,828 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_trackables_image.adoc[]
+
+*Last Modified Date*::
+    2025-04-08
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Christopher Doer, Google +
+    Levana Chen, Google +
+    Jared Finder, Google +
+    Spencer Quin, Google +
+    Nihav Jain, Google +
+    Diego Tipaldi, Google +
+    Daniel Guttenberg, Qualcomm +
+    Mark Vadasi, Qualcomm +
+    Markus Birkner, Qualcomm +
+    Maximilian Mayer, Qualcomm +
+
+==== Overview
+
+This extension enables tracking of planar images as specified by sets of
+input reference images.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemImageTrackingPropertiesANDROID',type='structs',desc='System property for image tracking',xrefs='']
+--
+The slink:XrSystemImageTrackingPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemImageTrackingPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsImageTracking is an basetype:XrBool32 indicating if current
+  system provides image tracking capability.
+* pname:supportsPhysicalSizeEstimation is an basetype:XrBool32 indicating if
+  current system provides image size estimation.
+* pname:maxTrackedImageCount is the total maximum number of images that can:
+  be tracked at the same time.
+* pname:maxLoadedImageCount is the total maximum number of reference images
+  that can: be loaded across all databases.
+****
+
+An application can: inspect whether the system is capable of image tracking
+by extending the slink:XrSystemProperties with
+slink:XrSystemImageTrackingPropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for image
+tracker creation if and only if pname:supportsImageTracking is
+ename:XR_FALSE.
+
+If a runtime supports image tracking, it must: support
+pname:maxTrackedImageCount tracked images at any given time.
+
+If a runtime supports image tracking, it must: support
+pname:maxLoadedImageCount loaded images at any given time.
+
+If a runtime supports image size estimation, the application can: set
+slink:XrTrackableImageDatabaseEntryANDROID::pname:physicalWidth `0` to
+indicate the usage of size estimation.
+Otherwise, the application must: set
+slink:XrTrackableImageDatabaseEntryANDROID::pname:physicalWidth to a
+positive value or ename:XR_ERROR_VALIDATION_FAILURE will be returned.
+
+include::{generated}/validity/structs/XrSystemImageTrackingPropertiesANDROID.adoc[]
+--
+
+==== Creating databases
+
+The application can: create an slink:XrTrackableImageDatabaseANDROID handle
+by creating one or more slink:XrTrackableImageDatabaseEntryANDROID
+structures and passing them to the
+flink:xrCreateTrackableImageDatabaseAsyncANDROID function through an
+slink:XrTrackableImageDatabaseCreateInfoANDROID structure.
+
+The application must: provide at least one
+slink:XrTrackableImageDatabaseEntryANDROID when creating an
+slink:XrTrackableImageDatabaseANDROID handle.
+
+[open,refpage='XrTrackableImageDatabaseANDROID',type='handles',desc='Trackable image database handle.',xrefs='XrTrackableImageDatabaseEntryANDROID XrTrackableImageDatabaseCreateInfoANDROID xrCreateTrackableImageDatabaseAsyncANDROID xrDestroyTrackableImageDatabaseANDROID']
+--
+An slink:XrTrackableImageDatabaseANDROID is a handle that represents a set
+processed reference images that can: be discovered and tracked in the
+environment.
+
+include::{generated}/api/handles/XrTrackableImageDatabaseANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableImageDatabaseEntryANDROID',type='structs',desc='Information that represents an input reference image.',xrefs='XrTrackableImageDatabaseCreateInfoANDROID xrCreateTrackableImageDatabaseAsyncANDROID']
+--
+The slink:XrTrackableImageDatabaseEntryANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableImageDatabaseEntryANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingMode is an elink:XrTrackableImageTrackingModeANDROID
+  indicating the desired mode for tracking.
+* pname:physicalWidth indicates the width of the image in meters.
+  If zero, the image size will be estimated online.
+* pname:imageWidth indicates the width of the image in pixels.
+* pname:imageHeight indicates the height of the image in pixels.
+* pname:format is an elink:XrTrackableImageFormatANDROID indicating the
+  format of the image data in pname:buffer.
+* pname:bufferSize indicates the byte length of pname:buffer.
+* pname:buffer is the code:uint8_t buffer containing the reference image
+  pixel data.
+  The contents of pname:buffer must: be valid for the duration of the
+  database creation async operation, which is started by
+  flink:xrCreateTrackableImageDatabaseAsyncANDROID and completed by
+  flink:xrCreateTrackableImageDatabaseCompleteANDROID.
+****
+
+The application may: set pname:physicalWidth to 0 to request online size
+estimation if
+slink:XrSystemImageTrackingPropertiesANDROID::pname:supportsPhysicalSizeEstimation
+is ename:XR_TRUE.
+
+The runtime may: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateTrackableImageDatabaseAsyncANDROID if pname:bufferSize does
+not match the expected size based on the entry's pname:imageWidth,
+pname:imageHeight and pname:format.
+
+include::{generated}/validity/structs/XrTrackableImageDatabaseEntryANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableImageDatabaseCreateInfoANDROID',type='structs',desc='Information to create an image database handle.',xrefs='XrTrackableImageDatabaseANDROID xrCreateTrackableImageDatabaseAsyncANDROID']
+--
+The slink:XrTrackableImageDatabaseCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableImageDatabaseCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:entryCount is a code:uint32_t specifying the count of elements in
+  the pname:entries array.
+* pname:entries is an array of slink:XrTrackableImageDatabaseEntryANDROID
+  structures.
+****
+
+include::{generated}/validity/structs/XrTrackableImageDatabaseCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='XrCreateTrackableImageDatabaseCompletionANDROID',type='structs',desc='Information that represents the result of the asynchronous database creation.',xrefs='xrCreateTrackableImageDatabaseAsyncANDROID xrCreateTrackableImageDatabaseCompleteANDROID']
+--
+The slink:XrCreateTrackableImageDatabaseCompletionANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrCreateTrackableImageDatabaseCompletionANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:futureResult is the elink:XrResult of the asynchronous operation.
+* pname:database is the created slink:XrTrackableImageDatabaseANDROID
+  handle.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_LIMIT_REACHED
+****
+
+include::{generated}/validity/structs/XrCreateTrackableImageDatabaseCompletionANDROID.adoc[]
+--
+
+[open,refpage='xrCreateTrackableImageDatabaseAsyncANDROID',type='protos',desc='Creates a reference image database.',xrefs='XrTrackableImageDatabaseANDROID xrCreateTrackableImageDatabaseCompleteANDROID XrCreateTrackableImageDatabaseCompletionANDROID']
+--
+The flink:xrCreateTrackableImageDatabaseAsyncANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateTrackableImageDatabaseAsyncANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:createInfo is a pointer to an
+  slink:XrTrackableImageDatabaseCreateInfoANDROID structure.
+* pname:future is a pointer to the created basetype:XrFutureEXT.
+****
+
+include::{generated}/validity/protos/xrCreateTrackableImageDatabaseAsyncANDROID.adoc[]
+--
+
+[open,refpage='xrCreateTrackableImageDatabaseCompleteANDROID',type='protos',desc='Completes the asynchronous reference image database creation.',xrefs='xrCreateTrackableImageDatabaseAsyncANDROID XrCreateTrackableImageDatabaseCompletionANDROID']
+--
+The flink:xrCreateTrackableImageDatabaseCompleteANDROID function is defined
+as:
+
+include::{generated}/api/protos/xrCreateTrackableImageDatabaseCompleteANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:future is the basetype:XrFutureEXT of the future to complete.
+* pname:completion is a pointer to an
+  slink:XrCreateTrackableImageDatabaseCompletionANDROID structure containing
+  the result of the operation.
+****
+
+include::{generated}/validity/protos/xrCreateTrackableImageDatabaseCompleteANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyTrackableImageDatabaseANDROID',type='protos',desc='Destroys a reference image database handle.',xrefs='XrTrackableImageDatabaseANDROID']
+--
+The flink:xrDestroyTrackableImageDatabaseANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyTrackableImageDatabaseANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:database is the slink:XrTrackableImageDatabaseANDROID handle to
+  destroy.
+****
+
+include::{generated}/validity/protos/xrDestroyTrackableImageDatabaseANDROID.adoc[]
+--
+
+==== Tracking images
+
+This extension adds ename:XR_TRACKABLE_TYPE_IMAGE_ANDROID to
+elink:XrTrackableTypeANDROID.
+
+The application can: create an slink:XrTrackableTrackerANDROID by calling
+flink:xrCreateTrackableTrackerANDROID and specifying
+ename:XR_TRACKABLE_TYPE_IMAGE_ANDROID as the trackable type in
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType to track
+images.
+
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType is
+ename:XR_TRACKABLE_TYPE_IMAGE_ANDROID and
+slink:XrSystemImageTrackingPropertiesANDROID::pname:supportsImageTracking
+returns ename:XR_FALSE via flink:xrGetSystemProperties.
+
+[open,refpage='XrTrackableImageConfigurationANDROID',type='structs',desc='Configure image tracking.',xrefs='xrCreateTrackableTrackerANDROID']
+--
+The slink:XrTrackableImageConfigurationANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableImageConfigurationANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:databaseCount is a code:uint32_t that specifies the number of
+  elements in pname:databases
+* pname:databases is an array of slink:XrTrackableImageDatabaseANDROID that
+  specifies the databases to create the tracker with.
+****
+
+The application must: set a valid configuration by adding a
+slink:XrTrackableImageConfigurationANDROID to the pname:next chain of
+slink:XrTrackableTrackerCreateInfoANDROID.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The application must: provide at least one
+slink:XrTrackableImageDatabaseANDROID structure to create the tracker with.
+
+include::{generated}/validity/structs/XrTrackableImageConfigurationANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableImageTrackingModeANDROID',type='enums',desc='The supported tracking modes of images.',xrefs='XrTrackableImageDatabaseEntryANDROID']
+--
+The elink:XrTrackableImageTrackingModeANDROID enum describes the supported
+tracking modes of images.
+
+include::{generated}/api/enums/XrTrackableImageTrackingModeANDROID.adoc[]
+
+include::{generated}/api/enums/XrTrackableImageTrackingModeANDROID.comments-box.adoc[]
+--
+
+[open,refpage='XrTrackableImageFormatANDROID',type='enums',desc='The supported formats of images.',xrefs='']
+--
+The elink:XrTrackableImageFormatANDROID enum describes the supported formats
+of images.
+
+include::{generated}/api/enums/XrTrackableImageFormatANDROID.adoc[]
+
+include::{generated}/api/enums/XrTrackableImageFormatANDROID.comments-box.adoc[]
+--
+
+[open,refpage='xrAddTrackableImageDatabaseANDROID',type='protos',desc='Adds a reference image dataset to a tracker.',xrefs='XrTrackableTrackerANDROID XrTrackableImageDatabaseANDROID']
+--
+The flink:xrAddTrackableImageDatabaseANDROID function is defined as:
+
+include::{generated}/api/protos/xrAddTrackableImageDatabaseANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID handle to add the
+  pname:database to.
+* pname:database is the slink:XrTrackableImageDatabaseANDROID handle to add
+  to the pname:tracker.
+****
+
+When an slink:XrTrackableImageDatabaseANDROID is added to a tracker, the
+reference images of that database must: be considered for detection and
+tracking in addition to any other databases that have been added previously
+with either flink:xrAddTrackableImageDatabaseANDROID or through the
+slink:XrTrackableImageConfigurationANDROID structure when initially creating
+the tracker.
+
+include::{generated}/validity/protos/xrAddTrackableImageDatabaseANDROID.adoc[]
+--
+
+[open,refpage='xrRemoveTrackableImageDatabaseANDROID',type='protos',desc='Removes a reference image dataset from a tracker.',xrefs='XrTrackableTrackerANDROID XrTrackableImageDatabaseANDROID']
+--
+The flink:xrRemoveTrackableImageDatabaseANDROID function is defined as:
+
+include::{generated}/api/protos/xrRemoveTrackableImageDatabaseANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID handle to remove the
+  pname:database from.
+* pname:database is the slink:XrTrackableImageDatabaseANDROID handle to
+  remove from the pname:tracker.
+****
+
+When an slink:XrTrackableImageDatabaseANDROID is removed from an
+slink:XrTrackableTrackerANDROID, the
+slink:XrTrackableImageDatabaseEntryANDROID structures of that database must:
+no longer be considered for detection and tracking.
+Any actively tracked entries of that database must: no longer be reported.
+The removed slink:XrTrackableImageDatabaseANDROID handle must: not be
+implicitly destroyed as part of this operation.
+
+include::{generated}/validity/protos/xrRemoveTrackableImageDatabaseANDROID.adoc[]
+--
+
+==== Getting images
+
+[open,refpage='xrGetTrackableImageANDROID',type='protos',desc='Get image.',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID XrTrackableGetInfoANDROID']
+--
+The flink:xrGetTrackableImageANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetTrackableImageANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:getInfo is the slink:XrTrackableGetInfoANDROID with the information
+  used to get the trackable QR code.
+* pname:trackable is a pointer to the slink:XrTrackableImageANDROID
+  structure in which the trackable image is returned.
+****
+
+The runtime must: return ename:XR_ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+if the trackable type of the basetype:XrTrackableANDROID is not
+ename:XR_TRACKABLE_TYPE_IMAGE_ANDROID, or if the trackable type of the
+slink:XrTrackableTrackerANDROID is not
+ename:XR_TRACKABLE_TYPE_IMAGE_ANDROID.
+
+include::{generated}/validity/protos/xrGetTrackableImageANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableImageANDROID',type='structs',desc='Trackable image information.',xrefs='xrGetTrackableImageANDROID']
+--
+The slink:XrTrackableImageANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableImageANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingState is the elink:XrTrackingStateANDROID of the image.
+* pname:lastUpdatedTime is the basetype:XrTime of the last update of the
+  image.
+* pname:database is the slink:XrTrackableImageDatabaseANDROID handle this
+  image was tracked from.
+* pname:databaseEntryIndex is the index that maps into the
+  slink:XrTrackableImageDatabaseCreateInfoANDROID::pname:entries array of
+  pname:database.
+* pname:centerPose is the slink:XrPosef of the image located in
+  slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+  The image lies in the XZ plane with X pointing to the right of the image
+  and Z pointing to its bottom.
+* pname:extents is the slink:XrExtent2Df dimensions of the image.
+  The boundary of the bounding box is at points: pname:centerPose +/-
+  (pname:extents / 2).
+****
+
+include::{generated}/validity/structs/XrTrackableImageANDROID.adoc[]
+--
+
+==== Handling failures
+
+The application must: poll for the slink:XrEventDataImageTrackingLostANDROID
+event using flink:xrPollEvent and must: not ignore it.
+
+[open,refpage='XrEventDataImageTrackingLostANDROID',type='structs',desc='Information that indicates that image tracking has suffered an internal failure.',xrefs='xrCreateTrackableImageDatabaseAsyncANDROID xrCreateTrackableTrackerANDROID']
+--
+The slink:XrEventDataImageTrackingLostANDROID structure is defined as:
+
+include::{generated}/api/structs/XrEventDataImageTrackingLostANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:time basetype:XrTime
+****
+
+Receiving the slink:XrEventDataImageTrackingLostANDROID event indicates that
+image tracking has suffered and internal failure causing existing resources
+to be invalidated.
+The application must: destroy all slink:XrTrackableImageDatabaseANDROID
+handles and re-create them if it wishes to continue image tracking.
+The application must: also destroy all image tracking related
+slink:XrTrackableTrackerANDROID handles and re-create them if it wishes to
+continue image tracking.
+
+include::{generated}/validity/structs/XrEventDataImageTrackingLostANDROID.adoc[]
+--
+
+==== Example code for getting trackable images
+
+The following example code demonstrates how to get trackable images.
+
+[source,C++]
+----
+XrInstance instance;  // Previously initialized.
+XrSession session;    // Previously initialized.
+XrSystemId systemId;  // Previously initialized.
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrGetSystemProperties xrGetSystemProperties;                       // Previously initialized.
+PFN_xrPollFutureEXT xrPollFutureEXT;                                   // Previously initialized.
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID;   // Previously initialized.
+PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID;               // Previously initialized.
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // Previously initialized.
+
+PFN_xrGetTrackableImageANDROID xrGetTrackableImageANDROID;                                        // Previously initialized.
+PFN_xrCreateTrackableImageDatabaseAsyncANDROID xrCreateTrackableImageDatabaseAsyncANDROID;        // Previously initialized.
+PFN_xrCreateTrackableImageDatabaseCompleteANDROID xrCreateTrackableImageDatabaseCompleteANDROID;  // Previously initialized.
+PFN_xrDestroyTrackableImageDatabaseANDROID xrDestroyTrackableImageDatabaseANDROID;                // Previously initialized.
+PFN_xrAddTrackableImageDatabaseANDROID xrAddTrackableImageDatabaseANDROID;                        // Previously initialized.
+PFN_xrRemoveTrackableImageDatabaseANDROID xrRemoveTrackableImageDatabaseANDROID;                  // Previously initialized.
+
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+
+// Inspect system capability
+XrSystemImageTrackingPropertiesANDROID imageProperty =
+        {.type = XR_TYPE_SYSTEM_IMAGE_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
+XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
+                                       .next = &imageProperty};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!imageProperty.supportsImageTracking) {
+    // image tracking is not supported.
+    return;
+}
+
+uint8_t* imageBuffer; // Load the image buffer.
+uint32_t imageBufferSize; // Get the image buffer size.
+
+XrTrackableImageDatabaseEntryANDROID imageDatabaseEntries[1] = {
+  {
+    .type = XR_TYPE_TRACKABLE_IMAGE_DATABASE_ENTRY_ANDROID,
+    .next = nullptr,
+    .trackingMode = XR_TRACKABLE_IMAGE_TRACKING_MODE_STATIC_ANDROID,
+    .physicalWidth = 0.1f, // The width of the image in meters.
+    .imageWidth = 640,
+    .imageHeight = 480,
+    .format = XR_TRACKABLE_IMAGE_FORMAT_R8G8B8A8_ANDROID,
+    .bufferSize = imageBufferSize, // RGBA buffer size in bytes.
+    .buffer = imageBuffer, // RGBA data.
+  }
+};
+
+XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo{
+  .type = XR_TYPE_TRACKABLE_IMAGE_DATABASE_CREATE_INFO_ANDROID,
+  .next = nullptr,
+  .entryCount = 1,
+  .entries = imageDatabaseEntries
+};
+
+XrFutureEXT imageDatabaseFuture;
+CHK_XR(xrCreateTrackableImageDatabaseAsyncANDROID(session, &imageDatabaseCreateInfo, &imageDatabaseFuture));
+
+bool keepLooping = true;
+bool futureReady = false;
+while (keepLooping) {
+  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+  pollInfo.future = imageDatabaseFuture;
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+  if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+    futureReady = true;
+    keepLooping = false;
+  } else {
+    // Throttle the loop to not fully expend this CPU core.
+    std::this_thread::yield();
+  }
+}
+
+XrTrackableImageDatabaseANDROID imageDatabase;
+
+if (futureReady) {
+  XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion;
+  imageDatabaseCompletion.type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID;
+  imageDatabaseCompletion.next = nullptr;
+
+  CHK_XR(xrCreateTrackableImageDatabaseCompleteANDROID(session, imageDatabaseFuture, &imageDatabaseCompletion));
+  CHK_XR(imageDatabaseCompletion.futureResult);
+  imageDatabase = imageDatabaseCompletion.database;
+}
+
+XrTrackableImageConfigurationANDROID imageConfig{
+  .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
+  .next = nullptr,
+  .databaseCount = 1,
+  .databases = &imageDatabase
+};
+
+XrTrackableTrackerCreateInfoANDROID createInfo{
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .next = &imageConfig,
+  .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
+};
+
+XrTrackableTrackerANDROID imageTrackableTracker;
+CHK_XR(xrCreateTrackableTrackerANDROID(session, &createInfo, &imageTrackableTracker));
+
+XrTrackableImageDatabaseANDROID anotherImageDatabase; // Load another database.
+
+// ... dynamically add it to the existing tracker
+CHK_XR(xrAddTrackableImageDatabaseANDROID(imageTrackableTracker, anotherImageDatabase));
+
+while (1) {
+  uint32_t trackableCountOutput = 0;
+
+  CHK_XR(xrGetAllTrackablesANDROID(imageTrackableTracker, 0, &trackableCountOutput, nullptr));
+
+  std::vector<XrTrackableANDROID> allImageTrackables;
+  allImageTrackables.resize(trackableCountOutput);
+
+  CHK_XR(xrGetAllTrackablesANDROID(imageTrackableTracker, 0, &trackableCountOutput, allImageTrackables.data()));
+
+  for (XrTrackableANDROID trackable : allImageTrackables) {
+    XrTrackableGetInfoANDROID imageGetInfo{
+      .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+      .next = nullptr,
+      .trackable = trackable,
+      .baseSpace = appSpace,
+      .time = updateTime
+    };
+
+    XrTrackableImageANDROID trackableImage{XR_TYPE_TRACKABLE_IMAGE_ANDROID};
+    CHK_XR(xrGetTrackableImageANDROID(imageTrackableTracker, &imageGetInfo, &trackableImage));
+
+    // Use XrTrackableImageANDROID data.
+    (void)trackableImage.trackingState;
+    (void)trackableImage.lastUpdatedTime;
+    (void)trackableImage.centerPose;
+    (void)trackableImage.extents;
+
+    if (trackableImage.database == imageDatabase && trackableImage.databaseEntryIndex == 0) {
+      // Knowing which image the index of 0 maps to, use the specific image database
+      // entry (e.g. rendering A for image A).
+    }
+    // indices 1+N comparisons for another specific image database entry.
+  }
+
+  // Throttle the loop to not fully expend this CPU core.
+  std::this_thread::yield();
+}
+
+// Remove image database from an existing tracker to stop tracking the images
+// of that specific database. To resume tracking of those images re-add the
+// database at a later point.
+CHK_XR(xrRemoveTrackableImageDatabaseANDROID(imageTrackableTracker, anotherImageDatabase));
+
+// Destroy the image tracker to stop image tracking completely. Re-creating the
+// image tracker with existing image databases will restart image tracking.
+CHK_XR(xrDestroyTrackableTrackerANDROID(imageTrackableTracker));
+
+// Destroy image databases to unload the associated resources. Re-creatingd
+// databases requires going through the asynchronous creation procedure again.
+CHK_XR(xrDestroyTrackableImageDatabaseANDROID(anotherImageDatabase));
+CHK_XR(xrDestroyTrackableImageDatabaseANDROID(imageDatabase));
+----
+
+==== Example code for managing image databases at runtime
+
+The following example code demonstrates how to modify the set of images
+being tracked.
+
+[source,C++]
+----
+XrSession session; // Previously initialized.
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID;   // Previously initialized.
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // Previously initialized.
+
+PFN_xrDestroyTrackableImageDatabaseANDROID xrDestroyTrackableImageDatabaseANDROID;                // Previously initialized.
+PFN_xrAddTrackableImageDatabaseANDROID xrAddTrackableImageDatabaseANDROID;                        // Previously initialized.
+PFN_xrRemoveTrackableImageDatabaseANDROID xrRemoveTrackableImageDatabaseANDROID;                  // Previously initialized.
+
+// See previous C++ sample for database and tracker initialization.
+XrTrackableImageDatabaseANDROID imageDatabases[2]; // Previously initialized.
+XrTrackableImageDatabaseANDROID anotherImageDatabase; // Previously initialized.
+
+// Create the image tracker config with two input databases to track.
+XrTrackableImageConfigurationANDROID imageConfig{
+  .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
+  .next = nullptr,
+  .databaseCount = 2,
+  .databases = imageDatabases
+};
+
+XrTrackableTrackerCreateInfoANDROID createInfo{
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .next = &imageConfig,
+  .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
+};
+
+XrTrackableTrackerANDROID imageTrackableTracker;
+CHK_XR(xrCreateTrackableTrackerANDROID(session, &createInfo, &imageTrackableTracker));
+
+// The tracker currently tracks the images of the two databases 'imageDatabases[0]' and
+// 'imageDatabases[1]' supplied through 'imageConfig'.
+
+CHK_XR(xrRemoveTrackableImageDatabaseANDROID(imageTrackableTracker, imageDatabases[1]));
+
+// The tracker currently tracks 'imageDatabases[0]', but no longer tracks
+// 'imageDatabases[1]'.
+// The 'imageDatabases[1]' database handle is still valid.
+
+CHK_XR(xrAddTrackableImageDatabaseANDROID(imageTrackableTracker, imageDatabases[1]));
+
+// The tracker currently tracks 'imageDatabases[0]' and 'imageDatabases[1]'.
+
+CHK_XR(xrDestroyTrackableImageDatabaseANDROID(imageDatabases[1]));
+
+// The tracker currently tracks 'imageDatabases[0]', but no longer tracks
+// 'imageDatabases[1]'.
+// The 'imageDatabases[1]' database handle is no longer valid and the corresponding
+// resources have been released internally. The database needs to be re-initialized
+// and re-added to resume tracking of 'imageDatabases[0]'.
+
+CHK_XR(xrAddTrackableImageDatabaseANDROID(imageTrackableTracker, anotherImageDatabase));
+
+// The tracker currently tracks 'imageDatabases[0]' and 'anotherImageDatabase'.
+
+CHK_XR(xrDestroyTrackableTrackerANDROID(imageTrackableTracker));
+
+// The 'imageTrackableTracker' tracker handle is invalid and image tracking has been
+// stopped.
+// The 'imageDatabases[0]' and 'anotherImageDatabase' database handles are still valid.
+
+// Create another the image tracker config to re-create the image tracker.
+XrTrackableImageConfigurationANDROID anotherImageConfig{
+  .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
+  .next = nullptr,
+  .databaseCount = 1,
+  .databases = &anotherImageDatabase
+};
+
+XrTrackableTrackerCreateInfoANDROID anotherCreateInfo{
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .next = &anotherImageConfig,
+  .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
+};
+
+CHK_XR(xrCreateTrackableTrackerANDROID(session, &anotherCreateInfo, &imageTrackableTracker));
+
+// The tracker handle has been re-initialized and image tracking has been started again.
+// The tracker currently tracks 'anotherImageDatabase'.
+// The 'imageDatabases[0]' database handle is still valid, but not currently tracked.
+----
+
+==== Example code for reacting to image tracking failures
+
+The following example code demonstrates how to handle failure by polling for
+the slink:XrEventDataImageTrackingLostANDROID event.
+
+[source,C++]
+----
+XrInstance instance; // Previously initialized.
+XrSession session; // Previously initialized.
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrPollFutureEXT xrPollFutureEXT;                                   // Previously initialized.
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID;   // Previously initialized.
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // Previously initialized.
+
+PFN_xrCreateTrackableImageDatabaseAsyncANDROID xrCreateTrackableImageDatabaseAsyncANDROID;        // Previously initialized.
+PFN_xrCreateTrackableImageDatabaseCompleteANDROID xrCreateTrackableImageDatabaseCompleteANDROID;  // Previously initialized.
+PFN_xrDestroyTrackableImageDatabaseANDROID xrDestroyTrackableImageDatabaseANDROID;                // Previously initialized.
+
+XrTrackableImageDatabaseEntryANDROID imageDatabaseEntries[1]; // Previously initialized.
+XrTrackableImageDatabaseANDROID imageDatabase; // Previously initialized.
+XrTrackableTrackerANDROID imageTrackableTracker; // Previously initialized.
+
+// Initialize an event buffer to hold the output.
+XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrResult result = xrPollEvent(instance, &event);
+if (result == XR_SUCCESS) {
+  switch (event.type) {
+    case XR_TYPE_EVENT_DATA_IMAGE_TRACKING_LOST_ANDROID: {
+      const XrEventDataImageTrackingLostANDROID& eventdata =
+        *reinterpret_cast<XrEventDataImageTrackingLostANDROID*>(&event);
+
+      // All existing databases and trackers need to be destroyed.
+      CHK_XR(xrDestroyTrackableTrackerANDROID(imageTrackableTracker));
+      CHK_XR(xrDestroyTrackableImageDatabaseANDROID(imageDatabase));
+
+      // To resume image tracking, the database(s) and the tracker need to be re-created.
+
+      XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo{
+        .type = XR_TYPE_TRACKABLE_IMAGE_DATABASE_CREATE_INFO_ANDROID,
+        .next = nullptr,
+        .entryCount = 1,
+        .entries = imageDatabaseEntries
+      };
+
+      XrFutureEXT imageDatabaseFuture;
+      CHK_XR(xrCreateTrackableImageDatabaseAsyncANDROID(session, &imageDatabaseCreateInfo, &imageDatabaseFuture));
+
+      while (true) {
+        XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+        XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+        pollInfo.future = imageDatabaseFuture;
+        CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+        if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+          break;
+        } else {
+          // Throttle the loop to not fully expend this CPU core.
+          std::this_thread::yield();
+        }
+      }
+
+      XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion;
+      imageDatabaseCompletion.type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID;
+      imageDatabaseCompletion.next = nullptr;
+
+      CHK_XR(xrCreateTrackableImageDatabaseCompleteANDROID(session, imageDatabaseFuture, &imageDatabaseCompletion));
+      CHK_XR(imageDatabaseCompletion.futureResult);
+      imageDatabase = imageDatabaseCompletion.database;
+
+      XrTrackableImageConfigurationANDROID imageConfig{
+       .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
+       .next = nullptr,
+       .databaseCount = 1,
+       .databases = &imageDatabase
+      };
+
+      XrTrackableTrackerCreateInfoANDROID createInfo{
+        .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+        .next = &imageConfig,
+        .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
+      };
+
+      XrTrackableTrackerANDROID imageTrackableTracker;
+      CHK_XR(xrCreateTrackableTrackerANDROID(session, &createInfo, &imageTrackableTracker));
+
+      break;
+    }
+  }
+}
+----
+
+include::{generated}/interfaces/XR_ANDROID_trackables_image.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-04-08 (Daniel Guttenberg)
+** Initial extension description.

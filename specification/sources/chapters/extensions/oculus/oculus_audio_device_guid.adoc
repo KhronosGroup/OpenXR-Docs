@@ -65,6 +65,20 @@ include::{generated}/validity/protos/xrGetAudioInputDeviceGuidOculus.adoc[]
 
 *Issues*
 
+. The intent of flink:xrGetAudioInputDeviceGuidOculus and
+  flink:xrGetAudioOutputDeviceGuidOculus is to provide GUIDs associated with
+  the active head mounted device.
+  In OpenXR, a particular system is represented by an basetype:XrSystemId.
+  If these commands were to be reimplemented, they should also pass a
+  basetype:XrSystemId parameter to allow the head mounted device system to
+  be specified.
+
+. The names flink:xrGetAudioInputDeviceGuidOculus and
+  flink:xrGetAudioOutputDeviceGuidOculus do not match the convention for
+  OpenXR command names.
+  If these commands were to be reimplemented, `Oculus` should be replaced by
+  `OCULUS`.
+
 *Version History*
 
 * Revision 1, 2021-05-13 (John Kearney)
