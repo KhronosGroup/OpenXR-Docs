@@ -1,0 +1,86 @@
+// Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_QCOM_hand_tracking_gesture.adoc[]
+
+*Last Modified Date*::
+    2025-09-17
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Laurent Gaidon, Qualcomm +
+    Ophir Paz, Qualcomm +
+    Kurtis Eveleigh, Qualcomm +
+
+==== Overview
+
+This extension enables applications to detect hand gestures.
+
+==== Get gesture detection data
+
+[open,refpage='xrGetHandGestureQCOM',type='protos',desc='Gets gesture detection data',xrefs='']
+--
+The flink:xrGetHandGestureQCOM function is defined as:
+
+include::{generated}/api/protos/xrGetHandGestureQCOM.adoc[]
+
+.Parameter Descriptions
+****
+* pname:handTracker is an slink:XrHandTrackerEXT previously created by
+  flink:xrCreateHandTrackerEXT.
+* pname:time is the basetype:XrTime of gesture detection.
+* pname:handGesture is a pointer to slink:XrHandGestureQCOM and returns the
+  current gesture detection data.
+****
+
+The flink:xrGetHandGestureQCOM function retrieves the hand gesture data at a
+given time.
+
+include::{generated}/validity/protos/xrGetHandGestureQCOM.adoc[]
+--
+
+[open,refpage='XrHandGestureQCOM',type='structs',desc='Gesture detection data',xrefs='']
+--
+The slink:XrHandGestureQCOM structure is defined as:
+
+include::{generated}/api/structs/XrHandGestureQCOM.adoc[]
+
+.Member Descriptions
+****
+* pname:gesture is the elink:XrHandGestureTypeQCOM detected.
+* pname:gestureRatio is a value between 0 and 1 indicating how much the
+  gesture is applied.
+* pname:flipRatio is a value between -1 and 1 indicating if the hand gesture
+  is detected from the back, from the front, or in between.
+  The value is 1 when the palm is facing the user and is -1 when the palm is
+  directed toward the environment.
+  It represents the normalized dot product between the palm normal and the
+  palm-to-user vector.
+****
+
+slink:XrHandGestureQCOM structure returns the state of the gesture
+detection.
+
+include::{generated}/validity/structs/XrHandGestureQCOM.adoc[]
+--
+
+[open,refpage='XrHandGestureTypeQCOM',type='enums',desc='Gestures done by the user.',xrefs='']
+--
+The elink:XrHandGestureTypeQCOM enumeration identifies the different types
+of gestures.
+
+include::{generated}/api/enums/XrHandGestureTypeQCOM.adoc[]
+include::{generated}/api/enums/XrHandGestureTypeQCOM.comments.adoc[]
+--
+
+include::{generated}/interfaces/XR_QCOM_hand_tracking_gesture.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2022-08-08 (Laurent Gaidon)
+** Initial extension description

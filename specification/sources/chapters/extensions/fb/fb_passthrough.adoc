@@ -154,7 +154,7 @@ include::{generated}/api/enums/XrPassthroughLayerPurposeFB.comments-box.adoc[]
 
 *New Structures*
 
-[open,refpage='XrSystemPassthroughPropertiesFB',type='structs',desc='A passthrough system property',xrefs='']
+[open,refpage='XrSystemPassthroughPropertiesFB',type='structs',desc='A passthrough system property',xrefs='XrSystemProperties']
 --
 The slink:XrSystemPassthroughPropertiesFB structure is defined as:
 
@@ -168,6 +168,8 @@ It describes a passthrough system property.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsPassthrough defines whether the system supports the
   passthrough feature.
 ****
@@ -177,7 +179,7 @@ include::{generated}/validity/structs/XrSystemPassthroughPropertiesFB.adoc[]
 
 *New Structures*
 
-[open,refpage='XrSystemPassthroughProperties2FB',type='structs',desc='Passthrough system properties',xrefs='']
+[open,refpage='XrSystemPassthroughProperties2FB',type='structs',desc='Passthrough system properties',xrefs='XrSystemProperties']
 --
 The slink:XrSystemPassthroughProperties2FB structure is defined as:
 
@@ -197,6 +199,8 @@ Applications should: use slink:XrSystemPassthroughPropertiesFB in that case.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:capabilities defines a set of features supported by the passthrough
   system.
 ****

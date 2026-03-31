@@ -230,7 +230,7 @@ The following example code shows how an application retrieves both the
 location and velocity of one or more spaces in a base space at a given time
 using the flink:xrLocateSpacesKHR function.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSession session; // previously initialized

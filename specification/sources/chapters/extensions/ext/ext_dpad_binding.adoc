@@ -340,7 +340,7 @@ include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.adoc[]
 The following sample code shows how to create dpad bindings using this
 extension.
 
-[source,c++,suppress-build]
+[source,cpp,suppress-build]
 ----
 	// Create dpad paths
 	XrPath pathThumbstick, pathDpadUp, pathDpadDown;

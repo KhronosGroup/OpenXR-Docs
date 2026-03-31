@@ -44,7 +44,7 @@ functions:
 
 ==== Inspect system capability
 
-[open,refpage='XrSystemDeviceAnchorPersistencePropertiesANDROID',type='structs',desc='System property for anchor persistence',xrefs='']
+[open,refpage='XrSystemDeviceAnchorPersistencePropertiesANDROID',type='structs',desc='System property for anchor persistence',xrefs='XrSystemProperties']
 --
 The slink:XrSystemDeviceAnchorPersistencePropertiesANDROID structure is
 defined as:
@@ -57,6 +57,8 @@ include::{generated}/api/structs/XrSystemDeviceAnchorPersistencePropertiesANDROI
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsAnchorPersistence is an basetype:XrBool32 indicating if the
   current system supports anchor persistence for spatial anchors.
 ****
@@ -428,7 +430,7 @@ The following example code demonstrates how to inspect system capability,
 persist, enumerate and unpersist anchors, as well as creating an anchor from
 persisted anchor slink:XrUuidEXT.
 
-[source,C++]
+[source,cpp]
 ----
 XrSession session; // previously initialized
 XrSpace anchor; // previously initialized

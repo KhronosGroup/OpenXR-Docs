@@ -460,7 +460,7 @@ pitch and roll, with +Y up.
 The following code shows how to list the currently available localization
 maps.
 
-[source,C++]
+[source,cpp]
 ----
 uint32_t mapCount = 0;
 CHK_XR(xrQueryLocalizationMapsML(session, nullptr, 0, &mapCount, nullptr));
@@ -472,7 +472,7 @@ CHK_XR(xrQueryLocalizationMapsML(session, nullptr, static_cast<uint32_t>(maps.si
 
 This code shows how to poll for localization events.
 
-[source,C++]
+[source,cpp]
 ----
 XrEventDataBuffer event{XR_TYPE_EVENT_DATA_BUFFER};
 XrResult result = xrPollEvent(instance, &event);

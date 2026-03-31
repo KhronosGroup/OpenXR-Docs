@@ -40,6 +40,8 @@ include::{generated}/api/structs/XrSystemBodyTrackingPropertiesFB.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsBodyTracking is an basetype:XrBool32, indicating if current
   system is capable of receiving body tracking input.
 ****
@@ -364,7 +366,7 @@ include::{generated}/validity/structs/XrBodySkeletonJointFB.adoc[]
 The following example code demonstrates how to locate all body joints
 relatively to a base space.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

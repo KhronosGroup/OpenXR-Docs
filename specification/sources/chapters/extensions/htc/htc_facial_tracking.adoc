@@ -21,7 +21,7 @@ lip movements, empowering developers to read intention and model facial
 expressions.
 
 *Inspect system capability*
-[open,refpage='XrSystemFacialTrackingPropertiesHTC',type='structs',desc='System property for facial tracking',xrefs='']
+[open,refpage='XrSystemFacialTrackingPropertiesHTC',type='structs',desc='System property for facial tracking',xrefs='XrSystemProperties']
 --
 
 slink:XrSystemFacialTrackingPropertiesHTC is defined as:
@@ -34,6 +34,8 @@ include::{generated}/api/structs/XrSystemFacialTrackingPropertiesHTC.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportEyeFacialTracking indicates if the current system is capable
   of generating eye expressions.
 * pname:supportLipFacialTracking indicates if the current system is capable

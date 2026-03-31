@@ -36,6 +36,8 @@ include::{generated}/api/structs/XrSystemBodyTrackingPropertiesHTC.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsBodyTracking indicates if the current system is capable of
   track individual body joints.
 ****
@@ -472,7 +474,7 @@ defined in elink:XrBodyJointHTC.
 The following example code demonstrates how to locate all individual body
 joints relative to a world space.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

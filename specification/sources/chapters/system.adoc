@@ -140,7 +140,7 @@ include::{generated}/validity/structs/XrSystemGetInfo.adoc[]
 --
 
 
-[source,c++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 

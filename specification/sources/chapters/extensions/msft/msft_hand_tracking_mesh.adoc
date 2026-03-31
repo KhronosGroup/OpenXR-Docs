@@ -43,6 +43,8 @@ include::{generated}/api/structs/XrSystemHandTrackingMeshPropertiesMSFT.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsHandTrackingMesh is an basetype:XrBool32, indicating if
   current system is capable of hand tracking mesh input.
 * pname:maxHandMeshIndexCount is a code:uint32_t returns the maximum count
@@ -460,7 +462,7 @@ include::{generated}/validity/structs/XrHandMeshVertexMSFT.adoc[]
 Following example code demos preallocating hand mesh buffers and updating
 the hand mesh in rendering loop
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
@@ -635,7 +637,7 @@ the neutral hand inputs.
 The following example code demonstrates detecting reference hand mesh
 changes and retrieving data for processing.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;                // previously initialized
 XrSession session;                  // previously initialized

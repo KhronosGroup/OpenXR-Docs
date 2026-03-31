@@ -1,0 +1,95 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_view_configuration_views_change.adoc[]
+
+*Last Modified Date*::
+    2025-12-11
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Paul Pedriana, Oculus +
+    Rune Berg, Valve +
+    Aidan Howie, Holo-Light GmbH +
+    Robert Menzel, NVIDIA +
+    Yin Li, Microsoft +
+    Rylie Pavlik, Collabora +
+    Denny Rönngren, Varjo +
+    Jakob Bornecrantz, NVIDIA +
+    Bastiaan Olij, Godot Engine +
+    Nihav Jain, Google, +
+    Aaron Leiby, Valve Corporation
+
+==== Overview
+
+This extension enables runtimes to notify applications that the recommended
+view configuration values (e.g.
+slink:XrViewConfigurationView::pname:recommendedImageRectWidth) have
+changed.
+The runtime may: notify the application that the view configuration values
+have changed via the slink:XrEventDataViewConfigurationViewsChangedEXT
+event.
+
+The runtime must: not use this event for frequent (at a rate faster than 1Hz
+per view configuration) adjustments of the resolution, e.g. to adjust the
+viewport based on current performance.
+This is to avoid expensive reallocations of swapchain images by the
+application at a quick rate.
+
+The updated recommendation can be found by calling
+flink:xrEnumerateViewConfigurationViews for the
+elink:XrViewConfigurationType returned in
+slink:XrEventDataViewConfigurationViewsChangedEXT.
+The application should: reallocate the swapchain being rendering to, by
+calling flink:xrCreateSwapchain.
+The application may: choose to ignore the updated recommendations, however
+this may result in undesired compositing.
+
+==== Changes to xrEnumerateViewConfigurationViews behavior
+
+This extension modifies the behavior specified in
+flink:xrEnumerateViewConfigurationViews in the following way:
+
+* The runtime may: return non-identical buffer contents from the
+  flink:xrEnumerateViewConfigurationViews enumeration for the given
+  pname:systemId and pname:viewConfigurationType for the lifetime of the
+  instance.
+  The runtime must: only change the content of the recommended values within
+  slink:XrViewConfigurationView, e.g. pname:recommendedImageRectWidth.
+
+==== Views Change Event
+
+[open,refpage='XrEventDataViewConfigurationViewsChangedEXT',desc='Viewport configuration change requested by runtime',type='structs']
+--
+The slink:XrEventDataViewConfigurationViewsChangedEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrEventDataViewConfigurationViewsChangedEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:systemId is an basetype:XrSystemId that is notifying that the
+  slink:XrViewConfigurationView viewport configuration has changed.
+* pname:viewConfigurationType is the viewport configuration type that the
+  runtime has new recommended slink:XrViewConfigurationView values for.
+  This may happen for example if the user has changed resolution settings in
+  the runtime.
+****
+
+include::{generated}/validity/structs/XrEventDataViewConfigurationViewsChangedEXT.adoc[]
+--
+
+include::{generated}/interfaces/XR_EXT_view_configuration_views_change.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-12-11
+** Initial version, based on early draft changes.

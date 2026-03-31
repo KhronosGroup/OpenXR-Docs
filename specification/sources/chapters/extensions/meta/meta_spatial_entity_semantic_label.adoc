@@ -1,0 +1,46 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_semantic_label.adoc[]
+
+*Last Modified Date*::
+    2024-10-04
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yuichi Taguchi, Meta Platforms +
+    Chen Liu, Meta Platforms +
+    Markus Schlaefli, Meta Platforms +
+    Martin Sherburn, Meta Platforms +
+
+
+==== Overview
+
+This extension defines semantic labels to describe semantic meanings of an
+associated spatial entity, or parts of an associated spatial entity.
+Spatial entities are defined in the apiext:XR_FB_spatial_entity extension
+using the Entity-Component System.
+
+==== Label enumeration
+
+
+[open,refpage='XrSemanticLabelMETA',desc='Semantic labels',type='enums']
+--
+The elink:XrSemanticLabelMETA enumeration is defined as:
+
+include::{generated}/api/enums/XrSemanticLabelMETA.adoc[]
+
+include::{generated}/api/enums/XrSemanticLabelMETA.comments-box.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_spatial_entity_semantic_label.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-10-04 (Yuichi Taguchi)
+** Initial extension description.

@@ -722,7 +722,7 @@ include::{generated}/validity/structs/XrSpatialAnchorsCreateInfoFromUuidsML.adoc
 
 This example shows how to persist a list of anchors.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;                // previously initialized
 XrSession session;                  // previously initialized
@@ -770,7 +770,7 @@ CHK_XR(xrDestroySpatialAnchorsStorageML(storage));
 
 This example shows how to query for anchors.
 
-[source,C++]
+[source,cpp]
 ----
 XrTime currentTime;                 // previously initialized
 XrVector3f center;                       // previously initialized

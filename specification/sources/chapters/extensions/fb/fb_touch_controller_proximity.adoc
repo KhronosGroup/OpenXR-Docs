@@ -65,7 +65,7 @@ with their thumb.
 The following example code demonstrates detecting when a user lifts their
 finger off the trigger button.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;           // previously initialized
 XrSession session;             // previously initialized

@@ -34,6 +34,8 @@ include::{generated}/api/structs/XrSystemAnchorPropertiesHTC.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsAnchor indicates if current system is capable of anchor
   functionality.
 ****

@@ -47,6 +47,8 @@ include::{generated}/api/structs/XrSystemHandTrackingPropertiesEXT.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsHandTracking is an basetype:XrBool32, indicating if current
   system is capable of hand tracking input.
 ****
@@ -416,7 +418,7 @@ include::{generated}/validity/structs/XrHandJointVelocityEXT.adoc[]
 The following example code demonstrates how to locate all hand joints
 relative to a world space.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

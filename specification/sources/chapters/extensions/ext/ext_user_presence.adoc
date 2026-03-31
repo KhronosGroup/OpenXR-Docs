@@ -56,6 +56,8 @@ include::{generated}/api/structs/XrSystemUserPresencePropertiesEXT.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsUserPresence is an basetype:XrBool32 value that indicates
   whether the system supports user presence sensing.
 ****
@@ -142,7 +144,7 @@ include::{generated}/validity/structs/XrEventDataUserPresenceChangedEXT.adoc[]
 .Proper Method for Receiving OpenXR Event Data
 ====
 
-[source,c++]
+[source,cpp]
 ----
 XrInstance instance;  // previously initialized
 XrSystemId systemId;  // previously initialized

@@ -259,7 +259,7 @@ ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT.
 The following example demonstrates how to configure the anchor capability
 when creating a spatial context.
 
-[source,C++]
+[source,cpp]
 ----
 // Create a spatial spatial context
 XrSpatialContextEXT spatialContext{};
@@ -307,7 +307,7 @@ CHK_XR(xrDestroySpatialContextEXT(spatialContext));
 The following example demonstrates how to create a spatial anchor & gets its
 pose every frame.
 
-[source,C++]
+[source,cpp]
 ----
 XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
 createInfo.baseSpace = localSpace;

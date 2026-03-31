@@ -127,9 +127,8 @@ include::{generated}/api/protos/xrEnumerateSpatialPersistenceScopesEXT.adoc[]
   is insufficient.
 * pname:persistenceScopes is an array of elink:XrSpatialPersistenceScopeEXT.
   It can: be code:NULL if pname:persistenceScopeCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:persistenceScopes
-  size.
+* See <<fundamentals-buffer-size-parameters>> chapter for a detailed
+  description of retrieving the required pname:persistenceScopes size.
 ****
 
 The application can: enumerate the list of spatial persistence scopes
@@ -520,7 +519,7 @@ include::{generated}/interfaces/XR_EXT_spatial_persistence.adoc[leveloffset=1]
 
 ===== Create Persistence Context
 
-[source,C++]
+[source,cpp]
 ----
 // Check if the required persistence scope supported
 uint32_t scopeCount;
@@ -558,7 +557,7 @@ CHK_XR(xrDestroySpatialPersistenceContextEXT(persistenceContext));
 
 ===== Connect Persistence Context to a Spatial Context
 
-[source,C++]
+[source,cpp]
 ----
 // Note: Anchor capability is just used as an example here. Persistence can be
 // supported by other capabilities too. xrEnumerateSpatialCapabilityComponentTypesEXT() can
@@ -625,7 +624,7 @@ CHK_XR(xrDestroySpatialContextEXT(spatialContext));
 
 ===== Discover all persisted entities
 
-[source,C++]
+[source,cpp]
 ----
 XrFutureEXT future = XR_NULL_FUTURE_EXT;
 
@@ -716,7 +715,7 @@ while (1) {
 
 ===== Discover entities with specific UUIDs
 
-[source,C++]
+[source,cpp]
 ----
 XrFutureEXT future = XR_NULL_FUTURE_EXT;
 

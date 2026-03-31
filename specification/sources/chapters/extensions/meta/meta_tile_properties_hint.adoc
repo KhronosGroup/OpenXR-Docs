@@ -1,0 +1,181 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_tile_properties_hint.adoc[]
+
+*Last Modified Date*::
+    2025-06-06
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Brian McNamee, Meta Platforms +
+
+==== Overview
+
+The apiext:XR_META_tile_properties extension allows the application to
+provide a hint to the OpenXR implementation about the tile properties of the
+application's main render pass.
+
+OpenXR runtimes do not have access to the application's frame buffers and
+therefore cannot get the tile properties without providing an API for the
+application to pass those tile properties to the OpenXR runtime.
+
+==== Passing Tile Properties
+
+Applications should: use the returned tile properties from functions
+provided by the `VK_QCOM_tile_properties` Vulkan extension to get the tile
+properties of the application's main render pass and copy those properties
+to an slink:XrTilePropertiesMETA structure to use in a call to
+flink:xrSetTilePropertiesHintMETA.
+These tile properties may: be used for various optimizations in the OpenXR
+implementation, such as providing tile aligned resolutions for
+apiext:XR_META_recommended_layer_resolution and optimized fragment density
+maps when foveated rendering is enabled.
+
+[open,refpage='xrSetTilePropertiesHintMETA',desc='Provides the tile properties of an application render pass as a hint to the OpenXR implementation.',type='protos']
+--
+
+include::{generated}/api/protos/xrSetTilePropertiesHintMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:properties is an slink:XrTilePropertiesHintMETA that provides the
+  tile property data.
+****
+
+flink:xrSetTilePropertiesHintMETA allows the application to provide a hint
+to the OpenXR runtime about the GPU tiling properties to be used for
+internal optimizations, such as providing tile aligned resolutions from
+flink:xrGetRecommendedLayerResolutionMETA and tile aligned fragment density
+maps for foveated swapchains.
+
+include::{generated}/validity/protos/xrSetTilePropertiesHintMETA.adoc[]
+--
+
+[open,refpage='XrTilePropertiesHintMETA',type='structs',desc='Structure that specifies all sets of tile properties for a render pass',xrefs='']
+--
+The slink:XrTilePropertiesHintMETA structure is defined as:
+
+include::{generated}/api/structs/XrTilePropertiesHintMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:propertiesCount is the number of properties in the pname:properties
+  array.
+* pname:properties is an array of slink:XrTilePropertiesMETA corresponding
+  to a single render pass.
+****
+
+Each slink:XrTilePropertiesMETA in the
+slink:XrTilePropertiesHintMETA::properties array should: correspond to a
+sname:VkTilePropertiesQCOM passed by
+fname:vkGetDynamicRenderingTilePropertiesQCOM or
+fname:vkGetFramebufferTilePropertiesQCOM.
+
+include::{generated}/validity/structs/XrTilePropertiesHintMETA.adoc[]
+--
+
+[open,refpage='XrTilePropertiesMETA',type='structs',desc='Structure that specifies one set of tile properties for a render pass.',xrefs='']
+--
+The slink:XrTilePropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrTilePropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:tileDimensions is the dimension of GPU tiles for the render pass.
+* pname:apronDimensions is the dimension of the tile apron for the render
+  pass.
+* pname:origin is the coordinates of the top left corner of the first tile
+  in attachment space.
+****
+
+slink:XrTilePropertiesMETA is used to specify the tile properties for a
+single render pass provided in the slink:XrTilePropertiesHintMETA structure.
+These values should: be provided from the ename:VK_QCOM_tile_properties
+extension from fname:vkGetDynamicRenderingTilePropertiesQCOM or
+fname:vkGetFramebufferTilePropertiesQCOM.
+
+include::{generated}/validity/structs/XrTilePropertiesMETA.adoc[]
+--
+
+[open,refpage='XrExtent3DiMETA',type='structs',desc='Additional structure to specify a 3 dimensionsal integer based extents',xrefs='']
+--
+The slink:XrExtent3DiMETA structure is defined as:
+
+include::{generated}/api/structs/XrExtent3DiMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:width is the width of the extent.
+* pname:height is the height of the extent.
+* pname:depth is the depth of the extent.
+****
+
+include::{generated}/validity/structs/XrExtent3DiMETA.adoc[]
+--
+
+==== Example code
+
+[source,cpp,suppress-build]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+VkDevice device; // previously initialized
+VkFramebuffer framebuffer; // previously initialized
+PFN_vkGetFramebufferTilePropertiesQCOM vkGetFrameBufferTilePropertiesQCOM; // previously initialized
+
+// Get function pointer for xrCreateFaceTrackerFB.
+PFN_xrSetTilePropertiesHintMETA pfnSetTilePropertiesHintMETA;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrSetTilePropertiesHintMETA",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnSetTilePropertiesHintMETA)));
+
+// Get tile properties from vulkan
+uint32_t propertyCount;
+vkGetFrameBufferTilePropertiesQCOM(device, framebuffer, &propertyCount, nullptr);
+
+if (propertyCount == 0) {
+  return;
+}
+
+std::vector<VkTilePropertiesQCOM> qcomProperties(propertyCount);
+vkGetFrameBufferTilePropertiesQCOM(device, framebuffer, &propertyCount, qcomProperties.data());
+
+// Convert VkTilePropertiesQCOM to XrTilePropertiesMETA
+std::vector<XrTilePropertiesMETA> xrProperties(propertyCount, {XR_TYPE_TILE_PROPERTIES_META});
+for (uint32_t i = 0; i < propertyCount; ++i) {
+  xrProperties[i].type = XR_TYPE_TILE_PROPERTIES_META;
+  xrProperties[i].tileDimensions.width = qcomProperties[i].tileSize.width;
+  xrProperties[i].tileDimensions.height = qcomProperties[i].tileSize.height;
+  xrProperties[i].tileDimensions.depth = qcomProperties[i].tileSize.depth;
+  xrProperties[i].apronDimensions.width = qcomProperties[i].apronSize.width;
+  xrProperties[i].apronDimensions.height = qcomProperties[i].apronSize.height;
+  xrProperties[i].origin.x = qcomProperties[i].origin.x;
+  xrProperties[i].origin.y = qcomProperties[i].origin.y;
+}
+
+// Send the hint
+XrTilePropertiesHintMETA hint{XR_TYPE_TILE_PROPERTIES_HINT_META};
+hint.propertiesCount = propertyCount;
+hint.properties = xrProperties.data();
+CHK_XR(pfnSetTilePropertiesHintMETA(session, &hint));
+----
+
+include::{generated}/interfaces/XR_META_tile_properties_hint.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-06-06 (Brian McNamee)
+** Initial extension description

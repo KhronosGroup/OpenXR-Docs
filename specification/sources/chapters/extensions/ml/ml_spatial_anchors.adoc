@@ -252,7 +252,7 @@ This can: be changed to be completely asynchronous by changing the
 `waitInfo.duration` to 0 and checking it during the frame loop until the
 function returns ready.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;                // previously initialized
 XrSession session;                  // previously initialized

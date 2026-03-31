@@ -679,7 +679,7 @@ code:OutputDebugString.
 The second will cause the debugger to break at that callback when an error
 happens and the third will log warnings to stdout.
 
-[source,c++]
+[source,cpp]
 ------------------------------------------------------------------------------
     extern XrInstance instance;  // previously initialized
 
@@ -739,7 +739,7 @@ Associate a name with an slink:XrSpace, for easier debugging in external
 tools or with validation layers that can print a friendly name when
 referring to objects in error messages.
 
-[source,c++]
+[source,cpp]
 ----------------------------------------
     extern XrInstance instance;  // previously initialized
     extern XrSpace space;        // previously initialized
@@ -772,7 +772,7 @@ Labeling the workload with naming information so that any form of analysis
 can display a more usable visualization of where actions occur in the
 lifetime of a session.
 
-[source,c++]
+[source,cpp]
 ----------------------------------------
     extern XrInstance instance;  // previously initialized
     extern XrSession session;    // previously initialized

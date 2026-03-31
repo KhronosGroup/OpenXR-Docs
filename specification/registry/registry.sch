@@ -281,7 +281,11 @@
 
             <!-- you must agree on presence/absence of "returnedonly" with the parent struct -->
             <!-- TODO fix exceptions -->
-            <sch:let name="is_exception" value="current()/@name = ('XrEventDataPerfSettingsEXT', 'XrEventDataMainSessionVisibilityChangedEXTX', 'XrEventDataViveTrackerConnectedHTCX')"/>
+            <sch:let name="is_exception" value="current()/@name = (
+                'XrEventDataPerfSettingsEXT',
+                'XrEventDataMainSessionVisibilityChangedEXTX',
+                'XrEventDataViveTrackerConnectedHTCX'
+            )"/>
             <sch:assert test="count($parentstruct/@returnedonly) = count(current()/@returnedonly) or $is_exception">
                 <sch:value-of select="current()/@name"/>: parent returnedonly mismatch: The struct and its parent struct, <sch:value-of select="$parentstruct_name"/>, do not agree on whether they are "returnedonly".
                     <sch:value-of select="current()/@name"/> says <sch:value-of select="count(current()/@returnedonly)"/>,
@@ -358,7 +362,15 @@
             </sch:assert>
 
             <!-- TODO fix the exceptions we can -->
-            <sch:let name="is_exception" value="current()/@name = ('XrApiLayerNextInfo', 'XrFoveationProfileCreateInfoFB', 'XrSwapchainCreateInfoFoveationFB', 'XrFoveationLevelProfileCreateInfoFB', 'XrRenderModelPathInfoFB','XrRenderModelLoadInfoFB','XrKeyboardSpaceCreateInfoFB')"/>
+            <sch:let name="is_exception" value="current()/@name = (
+                'XrApiLayerNextInfo',
+                'XrFoveationProfileCreateInfoFB',
+                'XrSwapchainCreateInfoFoveationFB',
+                'XrFoveationLevelProfileCreateInfoFB',
+                'XrRenderModelPathInfoFB',
+                'XrRenderModelLoadInfoFB',
+                'XrKeyboardSpaceCreateInfoFB'
+            )"/>
             <sch:assert test="current()/member[name/text() = 'next']/text() = 'const ' or $is_exception">
                 <sch:value-of select="current()/@name"/>: All Xr...Info are input structs, so next must be pointer to const. (If you do not want this to be an input struct, try using Xr...State for outputs that change during runtime, or Xr...Properties for outputs that do not)
             </sch:assert>
@@ -369,7 +381,10 @@
             <!-- Event data structs must match XrEventDataBaseHeader, which has a const next pointer -->
             <sch:let name="event_data" value="current()/@parentstruct = 'XrEventDataBaseHeader'"/>
             <!-- TODO fix the exceptions we can -->
-            <sch:let name="is_exception" value="current()/@name = ('XrPerformanceMetricsStateMETA', 'XrSpatialFilterTrackingStateEXT')"/>
+            <sch:let name="is_exception" value="current()/@name = (
+                'XrPerformanceMetricsStateMETA',
+                'XrSpatialFilterTrackingStateEXT'
+            )"/>
             <sch:assert test="not(current()/member[name/text() = 'next']/text() = 'const ') or $is_exception or $event_data">
                 <sch:value-of select="current()/@name"/>: All Xr...State are output structs, so next must be pointer to non-const. Fix the const-ness, or rename if this is not supposed to be an output struct.
             </sch:assert>
@@ -378,7 +393,15 @@
         <!-- Xr...Properties types -->
         <sch:rule context="types/type[@category = 'struct' and ./member/name/text() = 'next' and contains(@name, 'Properties') and starts-with(@name, 'Xr')]">
             <!-- TODO fix the exceptions we can -->
-            <sch:let name="is_exception" value="current()/@name = ('XrSystemSpatialEntityPropertiesFB', 'XrSystemPassthroughPropertiesFB', 'XrSystemPassthroughProperties2FB', 'XrSystemSpacePersistencePropertiesMETA', 'XrSystemSpaceDiscoveryPropertiesMETA', 'XrSystemPassthroughColorLutPropertiesMETA', 'XrSystemTrackablesPropertiesANDROID')"/>
+            <sch:let name="is_exception" value="current()/@name = (
+                'XrSystemSpatialEntityPropertiesFB',
+                'XrSystemPassthroughPropertiesFB',
+                'XrSystemPassthroughProperties2FB',
+                'XrSystemSpacePersistencePropertiesMETA',
+                'XrSystemSpaceDiscoveryPropertiesMETA',
+                'XrSystemPassthroughColorLutPropertiesMETA',
+                'XrSystemTrackablesPropertiesANDROID'
+            )"/>
             <sch:assert test="not(current()/member[name/text() = 'next']/text() = 'const ') or $is_exception">
                 <sch:value-of select="current()/@name"/>: All Xr....Properties are (at least) output structs, so next must be pointer to non-const. Fix the const-ness, or rename if this is not supposed to be an output struct.
             </sch:assert>
@@ -415,6 +438,38 @@
         <sch:rule context="types/type[@category = 'struct' and starts-with(@name, 'XrEventData')]">
             <sch:assert test="current()/@parentstruct = 'XrEventDataBaseHeader' or current()/@name = ('XrEventDataBaseHeader', 'XrEventDataBuffer')">
                 <sch:value-of select="current()/@name"/>: Looks like XrEventData...AUTHOR, but missing parentstruct=XrEventDataBaseHeader: Add that, or rename.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Naming of composition layer types -->
+    <sch:pattern>
+        <sch:rule context="types/type[@category = 'struct' and @parentstruct = 'XrCompositionLayerBaseHeader']">
+            <sch:assert test="starts-with(@name, 'XrCompositionLayer')">
+                <sch:value-of select="current()/@name"/>: Parented by XrCompositionLayerBaseHeader, but the name doesn't start with XrCompositionLayer. Should be named XrCompositionLayer...AUTHOR.
+            </sch:assert>
+        </sch:rule>
+
+        <sch:rule context="types/type[@category = 'struct' and starts-with(@name, 'XrCompositionLayer')]">
+            <!-- Previously we have used the `XrCompositionLayer` prefix for structextends and parentstruct XrCompositionLayerBaseHeader -->
+            <!-- This type of usage leads to confusion and should be discouraged in future -->
+            <sch:let name="is_exception" value="current()/@name = (
+                'XrCompositionLayerBaseHeader',
+                'XrCompositionLayerDepthInfoKHR',
+                'XrCompositionLayerProjectionView',
+                'XrCompositionLayerImageLayoutFB',
+                'XrCompositionLayerAlphaBlendFB',
+                'XrCompositionLayerSecureContentFB',
+                'XrCompositionLayerColorScaleBiasKHR',
+                'XrCompositionLayerDepthTestVARJO',
+                'XrCompositionLayerReprojectionInfoMSFT',
+                'XrCompositionLayerReprojectionPlaneOverrideMSFT',
+                'XrCompositionLayerSpaceWarpInfoFB',
+                'XrCompositionLayerSettingsFB',
+                'XrCompositionLayerDepthTestFB'
+            )"/>
+            <sch:assert test="@parentstruct = 'XrCompositionLayerBaseHeader' or $is_exception">
+                <sch:value-of select="current()/@name"/>: Looks like XrCompositionLayer...AUTHOR, but missing parentstruct=XrCompositionLayerBaseHeader: Add that, or rename.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -582,7 +637,7 @@
             <sch:let name="struct_name" value="current()/../@name"/>
             <sch:let name="member_name" value="current()/name/text()"/>
 
-            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags') or $struct_name = ('XrSystemMarkerTrackingPropertiesANDROID', 'XrTrackableMarkerDatabaseEntryANDROID', 'XrSystemImageTrackingPropertiesANDROID')"/>
+            <sch:let name="not_size" value="$member_name = ('structSize', 'counterUnit', 'counterFlags') or $struct_name = ('XrSystemMarkerTrackingPropertiesANDROID', 'XrTrackableMarkerDatabaseEntryANDROID', 'XrSystemImageTrackingPropertiesANDROID', 'XrSystemQrCodeTrackingPropertiesANDROID', 'XrTrackableQrCodeConfigurationANDROID')"/>
             <sch:assert test="current()/type/text() = 'uint32_t' or $not_size">
                 <sch:value-of select="$struct_name"/> member <sch:value-of select="$member_name"/> is named suggesting it is a size/length, but it is not uint32_t, the required size type.
             </sch:assert>
@@ -599,9 +654,10 @@
                                                     'XrPlaneDetectorLocationEXT',
                                                     'XrRenderModelPropertiesEXT',
                                                     'XrSystemMarkerTrackingPropertiesANDROID',
-                                                    'XrTrackableMarkerDatabaseEntryANDROID')"/>
+                                                    'XrTrackableMarkerDatabaseEntryANDROID',
+                                                    'XrTrackableQrCodeConfigurationANDROID')"/>
             <!-- TODO these are registry errors left in place for now, fix them-->
-            <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC')"/>
+            <sch:let name="is_exception" value="$struct_name = ('XrTriangleMeshCreateInfoFB', 'XrFacialExpressionsHTC', 'XrPassthroughLayerCreateInfoANDROID')"/>
 
             <sch:let name="sized_members" value="current()/../member[some $len in tokenize(@len, ',') satisfies $len = $member_name]"/>
             <sch:assert test="$sized_members or $not_array_size or $is_exception">

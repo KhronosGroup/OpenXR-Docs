@@ -376,7 +376,7 @@ the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
 The following example code demonstrates how to configure plane tracking
 capability when creating a spatial context.
 
-[source,C++]
+[source,cpp]
 ----
 // Check if plane tracking capability is supported
 uint32_t capabilityCount;
@@ -459,7 +459,7 @@ The following example code demonstrates how to discover spatial entities for
 a context configured with ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT and
 query its component data.
 
-[source,C++]
+[source,cpp]
 ----
 XrFutureEXT future = XR_NULL_FUTURE_EXT;
 

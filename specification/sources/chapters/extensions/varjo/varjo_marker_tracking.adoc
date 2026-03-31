@@ -298,7 +298,7 @@ feature and then polls events.
 The event type ename:XR_TYPE_EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO has a
 special handler to process marker state change.
 
-[source, c++, suppress-build]
+[source,cpp,suppress-build]
 ----
 
 XrSession session; // previously initialized

@@ -1,0 +1,129 @@
+// Copyright (c) 2021-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_interaction_profile_battery_state_display.adoc[]
+
+*Last Modified Date*::
+    2025-10-21
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    John Kearney, Meta +
+    Daniel Willmott, Valve +
+    Denny Rönngren, Varjo +
+    Jakob Bornecrantz, NVIDIA +
+    Nathan Nuber, Valve +
+    Lachlan Ford, Google +
+    Nihav Jain, Google
+
+
+==== Overview
+
+apiext:XR_EXT_interaction_profile_battery_state_display provides a mechanism
+for applications to query the runtime for battery state information for
+devices used with interaction profiles.
+This battery state information should: only be used for display purposes and
+the runtime should: ensure that this information matches what is used in
+built-in system user interfaces.
+
+In cases where multiple physical devices provide input to the actions
+associated with a top level path, such as runtimes performing remapping for
+user customization or accessibility, those runtimes should: make a best
+effort to present useful battery information in a single value.
+
+Specifically, it is not expected for this information to be calibrated
+between runtimes or devices and should: not be used to generate warnings or
+otherwise modify the application behavior.
+
+==== Querying for battery state
+
+[open,refpage='XrBatteryStateDisplayEXT',type='structs',desc='Query battery state']
+--
+The slink:XrBatteryStateDisplayEXT structure is defined as:
+
+include::{generated}/api/structs/XrBatteryStateDisplayEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:stateFlags describes the validity of pname:batteryLevel with bit
+  masks defined in elink:XrBatteryStateDisplayStateFlagBitsEXT
+* pname:batteryLevel is the level of the battery (from 0.0f to 1.0f) of the
+  device connected by the associated entity or action.
+****
+
+To query the battery level, the application chains an
+slink:XrBatteryStateDisplayEXT structure to the
+slink:XrInteractionProfileState::pname:next chain when calling
+flink:xrGetCurrentInteractionProfile.
+
+If flink:xrGetCurrentInteractionProfile sets the
+slink:XrInteractionProfileState::pname:interactionProfile to
+dlink:XR_NULL_PATH, then the runtime must: not set the
+ename:XR_BATTERY_STATE_DISPLAY_STATE_VALID_BIT_EXT bit in pname:stateFlags.
+
+ename:XR_BATTERY_STATE_DISPLAY_STATE_VALID_BIT_EXT indicates whether the
+pname:batteryLevel contains valid data.
+The application must: not read the pname:batteryLevel if the
+ename:XR_BATTERY_STATE_DISPLAY_STATE_VALID_BIT_EXT bit is not set in
+pname:stateFlags.
+
+include::{generated}/validity/structs/XrBatteryStateDisplayEXT.adoc[]
+--
+
+[open,refpage='XrBatteryStateDisplayStateFlagsEXT',desc='Battery State Flags',type='flags',xrefs='XrBatteryStateDisplayStateFlagBitsEXT']
+--
+The slink:XrBatteryStateDisplayEXT::pname:stateFlags member is of the
+following type, and contains a bitwise-OR of zero or more of the bits
+defined in elink:XrBatteryStateDisplayStateFlagBitsEXT.
+
+include::{generated}/api/flags/XrBatteryStateDisplayStateFlagsEXT.adoc[]
+--
+
+[open,refpage='XrBatteryStateDisplayStateFlagBitsEXT',type='enums',desc='Battery State Flag Bits', xrefs='XrBatteryStateDisplayStateFlagsEXT']
+--
+include::{generated}/api/enums/XrBatteryStateDisplayStateFlagBitsEXT.adoc[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrBatteryStateDisplayStateFlagBitsEXT.comments.adoc[]
+--
+
+
+==== Example
+
+[source,cpp]
+----
+// previously initialized
+extern XrSession session;
+extern XrPath topLevelUserPath;
+
+XrBatteryStateDisplayEXT batteryStateDisplay{XR_TYPE_BATTERY_STATE_DISPLAY_EXT};
+XrInteractionProfileState ipState{XR_TYPE_INTERACTION_PROFILE_STATE, &batteryStateDisplay};
+CHK_XR(xrGetCurrentInteractionProfile(session, topLevelUserPath, &ipState));
+if ((batteryStateDisplay.stateFlags & XR_BATTERY_STATE_DISPLAY_STATE_VALID_BIT_EXT) != 0) {
+  // use value of batteryStateDisplay.batteryLevel
+}
+----
+
+include::{generated}/interfaces/XR_EXT_interaction_profile_battery_state_display.adoc[leveloffset=1]
+
+==== Issues
+
+* Can the application query the battery level displayed for a head-mounted
+  device with this extension?
+** **Resolved.** **Not directly**.
+   This extension only supports returning battery level displayed for
+   top-level pathname:/user paths with current interaction profiles.
+   If the application suggests bindings for an interaction profile for the
+   head-mounted device (pathname:/user/head), and if the runtime makes that
+   interaction profile active, then the runtime can return battery level for
+   that top-level pathname:/user path.
+
+==== Version History
+
+* Revision 1, 2025-10-21 (John Kearney)
+** Initial draft.

@@ -1,0 +1,341 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_spatial_component_subsumed_by.adoc[]
+
+*Last Modified Date*::
+    2025-08-19
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Brian Chen, Google +
+    Kyle Chen, Google +
+    Levana Chen, Google +
+    Nihav Jain, Google +
+    Spencer Quin, Google +
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and provides a new
+component for ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT to expose the
+basetype:XrSpatialEntityIdEXT that subsumes the current entity.
+
+When the runtime has acquired enough environment information to detect that
+2 tracked planes are actually the same, the
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component with the ID of
+one of the planes is attached to the other.
+From then on, the application only needs to process the entity that does not
+have the ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component.
+
+This extension also introduces a new filter, which the application can:
+chain to slink:XrSpatialDiscoverySnapshotCreateInfoEXT to filter out any
+entities that have the ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID
+component.
+
+[IMPORTANT]
+.Permissions
+====
+
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension tracks planes in the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Runtime Support
+
+If the runtime is capable of subsuming one plane into another, it must:
+indicate this by enumerating
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID as a supported component
+for ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT capability in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT.
+
+All the component data of the
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID attached entity must: be
+identical to the entity that subsumes it.
+
+==== Subsumed By Component
+
+===== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID uses the
+basetype:XrSpatialEntityIdEXT structure for its data, which represents the
+ID of the subsuming entity.
+
+===== Component list struct to query data
+
+[open,refpage='XrSpatialComponentSubsumedByListANDROID',type='structs',desc='List struct for the subsumed_by component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentSubsumedByListANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentSubsumedByListANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:subsumedUniqueIdCount is a code:uint32_t describing the count of
+  elements in the pname:subsumedUniqueIds array.
+* pname:subsumedUniqueIds is an array of basetype:XrSpatialEntityIdEXT.
+****
+
+The application can: query the
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component of the spatial
+entities in an slink:XrSpatialSnapshotEXT by adding
+ename:XR_TYPE_SPATIAL_COMPONENT_SUBSUMED_BY_LIST_ANDROID to the next chain
+of the slink:XrSpatialComponentDataQueryResultEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+ename:XR_TYPE_SPATIAL_COMPONENT_SUBSUMED_BY_LIST_ANDROID is in the next
+chain of slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:subsumedUniqueIdCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentSubsumedByListANDROID.adoc[]
+--
+
+===== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for
+ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT capability, the application
+can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+===== Filter Subsumed Entities
+
+[open,refpage='XrSpatialDiscoveryUniqueEntitiesFilterANDROID',type='structs',desc='Subsumed by filter',xrefs='xrCreateSpatialDiscoverySnapshotAsyncEXT XrSpatialDiscoverySnapshotCreateInfoEXT XrFutureEXT']
+--
+
+The slink:XrSpatialDiscoveryUniqueEntitiesFilterANDROID structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialDiscoveryUniqueEntitiesFilterANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+The application can: include
+slink:XrSpatialDiscoveryUniqueEntitiesFilterANDROID in the pname:next chain
+of slink:XrSpatialDiscoverySnapshotCreateInfoEXT to get a snapshot with
+entities that are not subsumed by another entity.
+
+If applications chain slink:XrSpatialDiscoveryUniqueEntitiesFilterANDROID to
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT while including
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component in the
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If application chains slink:XrSpatialDiscoveryUniqueEntitiesFilterANDROID to
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT but does not list any
+components in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes, the
+runtime must: include all the spatial entities in the snapshot that have the
+set of components which are enumerated in
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+for the capabilities configured for `spatialContext`, except entities that
+have the ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component.
+
+include::{generated}/validity/structs/XrSpatialDiscoveryUniqueEntitiesFilterANDROID.adoc[]
+--
+
+==== Example code
+
+===== Configure Plane Tracking Capability
+
+The following example code demonstrates how to create a spatial context with
+ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT capability that supports
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID.
+
+[source,cpp]
+----
+// Check runtime supported capabilities
+uint32_t capabilityCount;
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
+std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
+
+if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT) == capabilities.end()) {
+  return;
+}
+
+// Enumerate supported components for plane tracking capability
+XrSpatialCapabilityComponentTypesEXT planeComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
+std::vector<XrSpatialComponentTypeEXT> planeCapabilityComponents(planeComponents.componentTypeCountOutput);
+planeComponents.componentTypeCapacityInput = planeCapabilityComponents.size();
+planeComponents.componentTypes = planeCapabilityComponents.data();
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
+
+const auto supportsComponent = [&planeCapabilityComponents](XrSpatialComponentTypeEXT component) {
+  return std::find(planeCapabilityComponents.begin(), planeCapabilityComponents.end(), component) != planeCapabilityComponents.end();
+};
+
+
+std::vector<XrSpatialComponentTypeEXT> planeTrackingComponents {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT,
+};
+
+if (supportsComponent(XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID)) {
+  planeTrackingComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID);
+}
+
+// Create capability config for plane tracking
+XrSpatialCapabilityConfigurationPlaneTrackingEXT planeTrackingConfig {
+  .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_PLANE_TRACKING_EXT,
+  .next = nullptr,
+  .capability = XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT,
+  .enabledComponentCount = (uint32_t)planeTrackingComponents.size(),
+  .enabledComponents = planeTrackingComponents.data(),
+};
+
+// Create spatial context
+std::vector<const XrSpatialCapabilityConfigurationBaseHeaderEXT*> capabilityConfigs;
+capabilityConfigs.push_back(reinterpret_cast<const XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&planeTrackingConfig));
+
+XrSpatialContextCreateInfoEXT contextCreateInfo{
+  .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+  .next = nullptr,
+  .capabilityConfigCount = (uint32_t)capabilityConfigs.size(),
+  .capabilityConfigs = capabilityConfigs.data(),
+};
+
+CHK_XR(xrCreateSpatialContextAsyncEXT(session, &contextCreateInfo, &future))
+
+// Completes creating spatial context
+XrCreateSpatialContextCompletionEXT contextCompletion{
+XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+
+CHK_XR(xrCreateSpatialContextCompleteEXT(session, future, &contextCompletion))
+----
+
+===== Query Component Data
+
+The following example code demonstrates how to query
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component data from
+context configured with ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT.
+
+[source,cpp]
+----
+// previously created
+XrSpatialSnapshotEXT snapshot;
+
+// Query subsumed_by components
+std::array<XrSpatialComponentTypeEXT, 1> enabledComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID
+};
+
+XrSpatialComponentDataQueryConditionEXT queryCond {
+  .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+  .componentTypeCount = 1,
+  .componentTypes     = enabledComponents.data(),
+};
+
+XrSpatialComponentDataQueryResultEXT queryResult {
+  .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+};
+
+CHK_XR(xrQuerySpatialComponentDataEXT(
+           snapshot, &queryCond, &queryResult));
+
+// Query again with allocated memory
+std::vector<XrSpatialEntityIdEXT> subsumedUniqueIds;
+subsumedUniqueIds.resize(queryResult.entityIdCountOutput);
+XrSpatialComponentSubsumedByListANDROID subsumedByList {
+  .type = XR_TYPE_SPATIAL_COMPONENT_SUBSUMED_BY_LIST_ANDROID,
+  .subsumedUniqueIdCount = static_cast<uint32_t>(subsumedUniqueIds.size()),
+  .subsumedUniqueIds = subsumedUniqueIds.data(),
+};
+
+queryResult.next = &subsumedByList;
+CHK_XR(xrQuerySpatialComponentDataEXT(
+           snapshot, &queryCond, &queryResult));
+
+for (uint32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+  // Plane was subsumed, remove it from processing logic
+  // removeEntityFromProcessingLogic(queryResult.entityIds[i], /*replaceWith=*/ subsumedByList.subsumedUniqueIds[i]);
+}
+
+// Cleanup
+xrDestroySpatialSnapshotEXT(snapshot);
+----
+
+===== Filter Out Subsumed Entities
+
+The following example code demonstrates how to filter out entities with
+ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID component attached from
+discovery snapshot using the filter, as well as query the entity id of the
+subsuming entities.
+
+[source,cpp]
+----
+// Init filter
+XrSpatialDiscoveryUniqueEntitiesFilterANDROID filter {
+  .type = XR_TYPE_SPATIAL_DISCOVERY_UNIQUE_ENTITIES_FILTER_ANDROID,
+};
+
+// Chain filter to the snapshot create info
+// WARNING: Chaining the filter while include subsumed_by component in the
+// componentTypes is invalid
+XrSpatialDiscoverySnapshotCreateInfoEXT discoverySnapshotCreateInfo {
+  .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+  .next = &filter
+};
+
+XrFutureEXT future;
+CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &discoverySnapshotCreateInfo, &future))
+
+waitUntilReady(future);
+
+// Complete async operation.
+XrCreateSpatialDiscoverySnapshotCompletionInfoEXT
+  createSnapshotCompletionInfo {
+    .type   = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = space,
+    .time      = updateTime,
+    .future    = future,
+  };
+
+XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+  XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+
+CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(
+           spatialContext, &createSnapshotCompletionInfo,
+           &completion));
+
+if(completion.futureResult != XR_SUCCESS) return;
+
+// Subsumed entities has already been filtered out in this snapshot,
+// now query the various components of the entities.
+
+// Cleanup
+xrDestroySpatialSnapshotEXT(completion.snapshot);
+----
+
+include::{generated}/interfaces/XR_ANDROID_spatial_component_subsumed_by.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-11-19 (Brian Chen)
+** Initial extension description.

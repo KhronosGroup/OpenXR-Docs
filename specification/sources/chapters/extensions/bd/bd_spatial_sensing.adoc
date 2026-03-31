@@ -97,6 +97,8 @@ include::{generated}/api/structs/XrSystemSpatialSensingPropertiesBD.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsSpatialSensing is an basetype:XrBool32, indicating if
   current system is capable of spatial sensing.
 ****
@@ -1413,7 +1415,7 @@ The following example code demonstrates how to create and start spatial
 sense data provider for capability "Foo", as well as how to query its
 component "Bar" data.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
@@ -1646,7 +1648,7 @@ from a snapshot, and how to get the bounding box 2D component data as well
 as the triangle mesh component data that are defined in the spatial entity's
 location component data's coordinate system.
 
-[source,C++]
+[source,cpp]
 ----
 XrSenseDataProviderBD provider;             // previously returned from xrCreateSenseDataProviderBD
 XrSenseDataSnapshotBD querySnapshotHandle;  // previously returned from xrQuerySenseDataCompleteBD

@@ -1,0 +1,500 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_environment_raycast.adoc[]
+
+*Last Modified Date*::
+    2025-03-01
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Matt Saraceno, Meta +
+    Po-Kang Huang, Meta +
+    Zhentian Qian, Meta +
+    Jiawen Zhang, Meta +
+    Chengyuan Lin, Meta +
+
+==== Overview
+
+The apiext:XR_META_environment_raycast extension allows applications to
+perform raycast operations against the surrounding physical environment.
+
+Given a ray origin and a direction, this extension searches along the ray to
+determine where the ray first intersects with the environment.
+Optionally, the application applies filters to refine the search results.
+
+The application must: also enable the apiext:XR_EXT_future extension in
+order to use this extension.
+Otherwise flink:xrCreateInstance must: return
+ename:XR_ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemEnvironmentRaycastPropertiesMETA',type='structs',desc='System property for environment raycast',xrefs='xrGetSystemProperties XrSystemProperties']
+--
+The slink:XrSystemEnvironmentRaycastPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemEnvironmentRaycastPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsEnvironmentRaycast is an basetype:XrBool32, indicating if
+  current system is capable of performing environment raycast.
+****
+
+An application can: inspect whether the system is capable of performing
+environment raycasts by extending the slink:XrSystemProperties with an
+slink:XrSystemEnvironmentRaycastPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsEnvironmentRaycast, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateEnvironmentRaycasterAsyncMETA.
+
+include::{generated}/validity/structs/XrSystemEnvironmentRaycastPropertiesMETA.adoc[]
+--
+
+==== Create an environment raycaster
+
+[open,refpage='XrEnvironmentRaycasterMETA',type='handles',desc='Represents an environment raycaster.']
+--
+The slink:XrEnvironmentRaycasterMETA handle represents the resources used to
+perform environment raycast operations.
+It is valid until destroyed via flink:xrDestroyEnvironmentRaycasterMETA.
+
+include::{generated}/api/handles/XrEnvironmentRaycasterMETA.adoc[]
+
+The runtime must: have an active environment raycaster handle created by the
+application before providing any raycast hit info.
+--
+
+[open,refpage='xrCreateEnvironmentRaycasterAsyncMETA',type='protos',desc='Create an environment raycaster.',xrefs='']
+--
+The flink:xrCreateEnvironmentRaycasterAsyncMETA function is defined as:
+
+include::{generated}/api/protos/xrCreateEnvironmentRaycasterAsyncMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the environment raycaster
+  will be active.
+* pname:info is the slink:XrEnvironmentRaycasterCreateInfoMETA used to
+  create the raycaster.
+* pname:future is a pointer to an basetype:XrFutureEXT.
+****
+
+This function starts an asynchronous operation and creates a corresponding
+basetype:XrFutureEXT, usable with flink:xrPollFutureEXT and related
+functions.
+The return value of this function only indicates whether the parameters were
+acceptable to schedule the asynchronous operation.
+The corresponding completion function is
+flink:xrCreateEnvironmentRaycasterCompleteMETA, usable when a future from
+this function is in the <<XrFutureStateEXT,READY>> state, with outputs
+populated by that function in the completion structure
+slink:XrEnvironmentRaycasterCreateCompletionMETA.
+
+Runtimes may: initialize needed resources to perform raycast operations
+during this asynchronous call.
+
+If the system does not support environment raycast operations, the runtime
+must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateEnvironmentRaycasterAsyncMETA.
+In this case, the runtime must: return ename:XR_FALSE for
+slink:XrSystemEnvironmentRaycastPropertiesMETA::pname:supportsEnvironmentRaycast
+when the function flink:xrGetSystemProperties is called, so that the
+application can: avoid attempting to create an environment raycaster.
+
+include::{generated}/validity/protos/xrCreateEnvironmentRaycasterAsyncMETA.adoc[]
+--
+
+[open,refpage='XrEnvironmentRaycasterCreateInfoMETA',type='structs',desc='Information to create an environment raycaster',xrefs='']
+--
+The slink:XrEnvironmentRaycasterCreateInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentRaycasterCreateInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrEnvironmentRaycasterCreateInfoMETA structure describes the
+information to create an environment raycaster and respective
+slink:XrEnvironmentRaycasterMETA handle.
+
+include::{generated}/validity/structs/XrEnvironmentRaycasterCreateInfoMETA.adoc[]
+--
+
+[open,refpage='xrCreateEnvironmentRaycasterCompleteMETA',type='protos',desc='Complete the async creation of environment raycaster',xrefs='']
+--
+The flink:xrCreateEnvironmentRaycasterCompleteMETA function is defined as:
+
+include::{generated}/api/protos/xrCreateEnvironmentRaycasterCompleteMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the environment raycaster
+  will be active.
+* pname:future is the basetype:XrFutureEXT received from
+  flink:xrCreateEnvironmentRaycasterAsyncMETA.
+* pname:completion is a pointer to an
+  slink:XrEnvironmentRaycasterCreateCompletionMETA.
+****
+
+This is the completion function corresponding to
+flink:xrCreateEnvironmentRaycasterAsyncMETA.
+It completes the asynchronous operation and returns the results.
+Do not call until the pname:future is <<XrFutureStateEXT,READY>>.
+
+The runtime must: return ename:XR_ERROR_FUTURE_PENDING_EXT if pname:future
+is not in the <<XrFutureStateEXT,READY>> state.
+The runtime must: return ename:XR_ERROR_FUTURE_INVALID_EXT if pname:future
+has already been completed or cancelled.
+
+include::{generated}/validity/protos/xrCreateEnvironmentRaycasterCompleteMETA.adoc[]
+--
+
+[open,refpage='XrEnvironmentRaycasterCreateCompletionMETA',type='structs',desc='Completion struct to retrieve the created environment raycaster',xrefs='']
+--
+The slink:XrEnvironmentRaycasterCreateCompletionMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrEnvironmentRaycasterCreateCompletionMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:futureResult is the elink:XrResult of the environment raycaster
+  creation operation.
+* pname:environmentRaycaster is the returned
+  slink:XrEnvironmentRaycasterMETA handle.
+****
+
+.Future Return Codes
+****
+slink:XrEnvironmentRaycasterCreateCompletionMETA::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+* ename:XR_ERROR_OUT_OF_MEMORY
+* ename:XR_ERROR_FUNCTION_UNSUPPORTED
+****
+
+The slink:XrEnvironmentRaycasterCreateCompletionMETA structure stores the
+result of the environment raycaster creation.
+
+
+include::{generated}/validity/structs/XrEnvironmentRaycasterCreateCompletionMETA.adoc[]
+--
+
+==== Performing an environment raycast operation
+
+[open,refpage='xrPerformEnvironmentRaycastMETA',type='protos',desc='Cast a ray to get its intersection with environment',xrefs='']
+--
+The flink:xrPerformEnvironmentRaycastMETA function is defined as:
+
+include::{generated}/api/protos/xrPerformEnvironmentRaycastMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:environmentRaycaster is an slink:XrEnvironmentRaycasterMETA
+  previously created by flink:xrCreateEnvironmentRaycasterAsyncMETA.
+* pname:info is a pointer to an slink:XrEnvironmentRaycastHitGetInfoMETA
+  describing the ray to cast.
+* pname:hitPoint is a pointer to slink:XrEnvironmentRaycastHitMETA that the
+  runtime fills with information about where the closest hit is, if found.
+****
+
+The flink:xrPerformEnvironmentRaycastMETA function is used by the
+application to perform an environment raycast operation.
+
+include::{generated}/validity/protos/xrPerformEnvironmentRaycastMETA.adoc[]
+--
+
+
+[open,refpage='XrEnvironmentRaycastHitGetInfoMETA',type='structs',desc='A struct to describe a ray to cast',xrefs='xrPerformEnvironmentRaycastMETA']
+--
+The slink:XrEnvironmentRaycastHitGetInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentRaycastHitGetInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:baseSpace is the slink:XrSpace in which all the following locations
+  in this struct will be located in.
+* pname:time is the basetype:XrTime at which all the following locations in
+  this struct will be located.
+* pname:origin is an slink:XrVector3f which describes the starting point for
+  the ray.
+* pname:direction is an slink:XrVector3f which describes the direction of
+  the ray.
+* pname:filterCount is the number of filters that are passed in the
+  pname:filters parameter.
+* pname:filters is a pointer to an array of
+  slink:XrEnvironmentRaycastFilterBaseHeaderMETA pointers.
+****
+
+The slink:XrEnvironmentRaycastHitGetInfoMETA structure describes a ray to
+cast.
+
+include::{generated}/validity/structs/XrEnvironmentRaycastHitGetInfoMETA.adoc[]
+--
+
+[open,refpage='XrEnvironmentRaycastFilterBaseHeaderMETA',type='structs',desc='Base header for environment raycast filters',xrefs='']
+--
+The slink:XrEnvironmentRaycastFilterBaseHeaderMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentRaycastFilterBaseHeaderMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+****
+The slink:XrEnvironmentRaycastFilterBaseHeaderMETA is meant to be used as
+the base header for filter types defined in this extension.
+
+include::{generated}/validity/structs/XrEnvironmentRaycastFilterBaseHeaderMETA.adoc[]
+--
+
+One such filter type is defined in this extension:
+slink:XrEnvironmentRaycastFilterDistanceMETA.
+
+[open,refpage='XrEnvironmentRaycastFilterDistanceMETA',type='structs',desc='Distance filter for environment raycast',xrefs='']
+--
+The slink:XrEnvironmentRaycastFilterDistanceMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentRaycastFilterDistanceMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+* pname:maxDistance is the distance in meters to constrain the length of the
+  ray from slink:XrEnvironmentRaycastHitGetInfoMETA::pname:origin along
+  slink:XrEnvironmentRaycastHitGetInfoMETA::pname:direction.
+****
+
+The slink:XrEnvironmentRaycastFilterDistanceMETA structure contains distance
+filter information for environment raycast.
+
+If the application provides an slink:XrEnvironmentRaycastFilterDistanceMETA,
+the runtime must: constrain the length of the ray from
+slink:XrEnvironmentRaycastHitGetInfoMETA::pname:origin along
+slink:XrEnvironmentRaycastHitGetInfoMETA::pname:direction to
+pname:maxDistance in meters.
+This means that the runtime must: not return any hitpoint that is more than
+slink:XrEnvironmentRaycastFilterDistanceMETA::pname:maxDistance away from
+slink:XrEnvironmentRaycastHitGetInfoMETA::pname:origin.
+
+include::{generated}/validity/structs/XrEnvironmentRaycastFilterDistanceMETA.adoc[]
+--
+
+[open,refpage='XrEnvironmentRaycastHitMETA',type='structs',desc='A struct to describe a raycast hit point',xrefs='']
+--
+The slink:XrEnvironmentRaycastHitMETA structure is defined as:
+
+include::{generated}/api/structs/XrEnvironmentRaycastHitMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next must: be code:NULL
+* pname:status provides more info about whether a hit point was found, or
+  why it was not found.
+* pname:pose is the slink:XrPosef of the hit point in
+  slink:XrEnvironmentRaycastHitGetInfoMETA::pname:baseSpace, if found.
+****
+The slink:XrEnvironmentRaycastHitMETA contains information about where the
+closest hit was found.
+
+The runtime must: set the slink:XrPosef::pname:position of the pname:pose to
+the point where the ray specified in
+slink:XrEnvironmentRaycastHitGetInfoMETA intersected with the environment.
+If the ray intersects with the environment at multiple points,
+slink:XrPosef::pname:position must: be set to the first point of
+intersection when traveling from
+slink:XrEnvironmentRaycastHitGetInfoMETA::pname:origin in the
+slink:XrEnvironmentRaycastHitGetInfoMETA::pname:direction direction.
+
+The slink:XrPosef::pname:orientation of the pname:pose must: represent the
+best estimate of the of the normal of the surface hit by the ray.
+The normal vector is calculated by rotating {0, 0, 1} by this orientation.
+Rotating the vector {0, 1, 0} with slink:XrPosef::pname:orientation must:
+result in a vector that roughly points in the direction of the ray origin.
+
+include::{generated}/validity/structs/XrEnvironmentRaycastHitMETA.adoc[]
+--
+
+[open,refpage='XrEnvironmentRaycastHitStatusMETA',type='enums',desc='Types of raycast hit status',xrefs='XrEnvironmentRaycastHitMETA']
+--
+The elink:XrEnvironmentRaycastHitStatusMETA enumerates the possible status
+of an attempted environment raycast.
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_META indicates a successful
+environment raycast with a valid hit point found given the criteria
+specified in slink:XrEnvironmentRaycastHitGetInfoMETA.
+
+include::{generated}/api/enums/XrEnvironmentRaycastHitStatusMETA.adoc[]
+include::{generated}/api/enums/XrEnvironmentRaycastHitStatusMETA.comments.adoc[]
+
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_NO_HIT_META indicates a failed
+environment raycast, and none of the pname:pose fields are valid.
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_POINT_OCCLUDED_META indicates
+the hit point is occluded.
+For example, if you are looking at a screen, the hit point may be on the
+wall behind it.
+The pname:pose is still valid and represents the best estimate of the hit
+point, but it may not be accurate.
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_POINT_OUTSIDE_OF_FOV_META
+indicates the hit point is outside camera's field of view.
+The pname:pose is not valid, the application should: not use it.
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_RAY_OCCLUDED_META indicates the
+input ray is occluded.
+The pname:pose is not valid, the application should: not use it.
+ename:XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_INVALID_ORIENTATION_META
+indicates a partially successful environment raycast that only the
+slink:XrPosef::pname:position was determined, but the
+slink:XrPosef::pname:orientation was unable to be determined, it contains
+undefined values and the application should: not use it.
+
+When necessary, the application can instruct users to move to a different
+viewing point to achieve more accurate raycast results.
+--
+
+==== Destroy an environment raycaster handle
+
+[open,refpage='xrDestroyEnvironmentRaycasterMETA',type='protos',desc='Destroy an environment raycaster and respective handle',xrefs='']
+--
+The flink:xrDestroyEnvironmentRaycasterMETA function is defined as:
+
+include::{generated}/api/protos/xrDestroyEnvironmentRaycasterMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:environmentRaycaster is an slink:XrEnvironmentRaycasterMETA
+  previously created by flink:xrCreateEnvironmentRaycasterAsyncMETA.
+****
+The flink:xrDestroyEnvironmentRaycasterMETA function releases the
+pname:environmentRaycaster and frees up associated system resources.
+
+include::{generated}/validity/protos/xrDestroyEnvironmentRaycasterMETA.adoc[]
+--
+
+==== Example Code
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session; // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr
+PFN_xrCreateEnvironmentRaycasterAsyncMETA xrCreateEnvironmentRaycasterAsyncMETA;
+PFN_xrCreateEnvironmentRaycasterCompleteMETA xrCreateEnvironmentRaycasterCompleteMETA;
+PFN_xrDestroyEnvironmentRaycasterMETA xrDestroyEnvironmentRaycasterMETA;
+PFN_xrPerformEnvironmentRaycastMETA xrPerformEnvironmentRaycastMETA;
+PFN_xrPollFutureEXT xrPollFutureEXT;
+
+// Check device support
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES};
+XrSystemEnvironmentRaycastPropertiesMETA environmentRaycastProperties{
+    XR_TYPE_SYSTEM_ENVIRONMENT_RAYCAST_PROPERTIES_META};
+systemProperties.next = &environmentRaycastProperties;
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (environmentRaycastProperties.supportsEnvironmentRaycast == XR_FALSE) {
+    return;
+}
+
+// Create a new environment raycaster
+XrFutureEXT createFuture = XR_NULL_HANDLE;
+XrEnvironmentRaycasterCreateInfoMETA createInfo = {
+    XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_INFO_META, nullptr};
+CHK_XR(xrCreateEnvironmentRaycasterAsyncMETA(
+    session, &createInfo, &createFuture));
+
+// Wait for the future to be ready
+bool futureReady = false;
+while (!futureReady) {
+    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
+    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
+    pollInfo.future = createFuture;
+    CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+
+    if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
+        futureReady = true;
+    } else {
+        // sleep(10);
+    }
+}
+
+// Complete future and get creation result
+XrEnvironmentRaycasterCreateCompletionMETA completion = {
+    XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_COMPLETION_META};
+CHK_XR(xrCreateEnvironmentRaycasterCompleteMETA(session, createFuture, &completion));
+CHK_XR(completion.futureResult); // Return code of the create function
+XrEnvironmentRaycasterMETA raycaster = completion.environmentRaycaster;
+
+// these are setup to match the location and time of the ray's origin and direction.
+XrSpace localSpace; // previously initialized, e.g. from XR_REFERENCE_SPACE_TYPE_LOCAL
+XrTime time; // previously initialized, e.g. from frameState.predictedDisplayTime
+XrVector3f rayOrigin; // previously initialized
+XrVector3f rayDirection; // previously initialized
+
+// Perform an environment raycast operation
+XrEnvironmentRaycastFilterDistanceMETA distanceFilter = {
+    XR_TYPE_ENVIRONMENT_RAYCAST_FILTER_DISTANCE_META};
+distanceFilter.maxDistance = 5.0f;
+XrEnvironmentRaycastFilterBaseHeaderMETA* filters[] = {
+    reinterpret_cast<XrEnvironmentRaycastFilterBaseHeaderMETA*>(&distanceFilter)};
+XrEnvironmentRaycastHitGetInfoMETA info = {
+    XR_TYPE_ENVIRONMENT_RAYCAST_HIT_GET_INFO_META};
+info.baseSpace = localSpace;
+info.time = time;
+info.origin = rayOrigin;
+info.direction = rayDirection;
+info.filterCount = 1;
+info.filters = filters;
+XrEnvironmentRaycastHitMETA hitPoint = {XR_TYPE_ENVIRONMENT_RAYCAST_HIT_META};
+CHK_XR(xrPerformEnvironmentRaycastMETA(
+    raycaster, &info, &hitPoint));
+if (hitPoint.status == XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_META) {
+    // Do something with hitPoint, e.g. place a virtual object
+}
+
+// Destroy environment raycaster when no longer needed by the app
+CHK_XR(xrDestroyEnvironmentRaycasterMETA(raycaster));
+----
+
+include::{generated}/interfaces/XR_META_environment_raycast.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-03-01 (Chengyuan Lin)
+** Initial extension description

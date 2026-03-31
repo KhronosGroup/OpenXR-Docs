@@ -135,7 +135,7 @@ specifying a sub-action path for such an action.
 
 Detecting hand/controller modality change per hand:
 
-[source,c++]
+[source,cpp]
 ----
 
 const int NUM_HANDS = 2; // previously defined
@@ -200,7 +200,7 @@ with slink:XrInteractionProfileSuggestedBinding:
 * actionname:LeftControllerDetachedOnly ->
   pathname:/user/detached_controller_meta/left/grip/pose
 
-[source,c++,suppress-build]
+[source,cpp,suppress-build]
 ----
 XrSpace leftControllerSpace = XR_NULL_HANDLE;
 XrSpace detachedLeftControllerSpace = XR_NULL_HANDLE;

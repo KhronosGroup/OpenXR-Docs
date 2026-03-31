@@ -216,8 +216,8 @@ slink:XrHandJointLocationsEXT as the meaning of these members is different.
 +
 The `isActive` member of slink:XrHandTrackingDataSourceStateEXT allows the
 runtime to describe if the tracking device is active.
-slink:XrHandTrackingDataSourceStateEXT::pname:isActive describes if the
-tracking device is actively tracking.
+slink:XrHandJointLocationsEXT::pname:isActive describes if the tracking
+device is actively tracking.
 It is possible for a data source to be active but not actively tracking and
 we want to represent if the device is active in this extension.
 

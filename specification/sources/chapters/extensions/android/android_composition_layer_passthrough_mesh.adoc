@@ -1,0 +1,433 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_composition_layer_passthrough_mesh.adoc[]
+
+*Last Modified Date*::
+    2024-09-18
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Grant Yoshida, Google +
+    Kevin Moule, Google +
+    Vasiliy Baranov, Google +
+    Peter Chen, Google +
+    Levana Chen, Google +
+
+==== Overview
+
+For devices that support multiple environment blend modes, the runtime may:
+provide passthrough configurations to show a user their physical environment
+from an immersive view.
+
+This extension enables applications to project passthrough textures onto
+arbitrary geometry through an additional composition layer
+slink:XrCompositionLayerPassthroughANDROID.
+
+The passthrough layer characteristics are specified by the following
+parameters, in which the projection is represented by
+slink:XrPassthroughLayerANDROID.
+
+[source,listing]
+----
+    XrPosef                      pose;
+    XrVector3f                   scale;
+    float                        opacity;
+    XrPassthroughLayerANDROID    layer;
+----
+
+For full screen passthrough, applications should: prefer
+<<rendering-environment-blend-mode>> with available blend modes.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemPassthroughLayerPropertiesANDROID',type='structs',desc='System property for passthrough layer',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemPassthroughLayerPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemPassthroughLayerPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsPassthroughLayer is an basetype:XrBool32, indicating if the
+  current system supports composition layer passthrough mesh.
+* pname:maxMeshIndexCount is a code:uint32_t returns the maximum count of
+  indices that will be accepted for a passthrough mesh.
+* pname:maxMeshVertexCount is a code:uint32_t returns the maximum count of
+  vertices that will be accepted for a passthrough mesh.
+****
+
+An application inspects whether the system is capable of composition layer
+passthrough mesh by chaining an
+slink:XrSystemPassthroughLayerPropertiesANDROID structure to the
+slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsPassthroughLayer, the
+system does not support composition layer passthrough mesh, and therefore
+must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreatePassthroughLayerANDROID.
+The application should: avoid using composition layer passthrough mesh when
+pname:supportsPassthroughLayer is ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsPassthroughLayer, the
+system supports composition layer passthrough mesh.
+In this case, the runtime must: return a non-zero number for
+pname:maxMeshIndexCount and pname:maxMeshVertexCount.
+An application must: not exceed pname:maxMeshIndexCount and
+pname:maxMeshVertexCount as the maximum values to set passthrough meshes
+when calling flink:xrCreatePassthroughLayerANDROID and
+flink:xrSetPassthroughLayerMeshANDROID, otherwise the runtime must: return
+ename:XR_ERROR_MESH_DATA_LIMIT_EXCEEDED_ANDROID to indicate the mesh data
+exceeds the supported limit.
+
+include::{generated}/validity/structs/XrSystemPassthroughLayerPropertiesANDROID.adoc[]
+--
+
+==== Passthrough Layer Composition
+
+[open,refpage='XrCompositionLayerPassthroughANDROID',type='structs',desc='A composition layer for passthrough',xrefs='XrCompositionLayerBaseHeader XrPassthroughLayerANDROID']
+--
+The slink:XrCompositionLayerPassthroughANDROID structure is defined as:
+
+include::{generated}/api/structs/XrCompositionLayerPassthroughANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:layerFlags is a bitmask of elink:XrCompositionLayerFlags describing
+  flags to apply to the layer.
+* pname:space is the slink:XrSpace in which the pname:pose of the layer mesh
+  is evaluated over time.
+* pname:pose is an slink:XrPosef defining the position and orientation of
+  the layer mesh in the reference frame of the pname:space.
+* pname:scale is an slink:XrVector3f defining the scale of the layer mesh.
+* pname:opacity is a code:float defining the opacity of the passthrough
+  texture in range [0, 1].
+* pname:layer is an slink:XrPassthroughLayerANDROID previously created by
+  flink:xrCreatePassthroughLayerANDROID.
+****
+The slink:XrCompositionLayerPassthroughANDROID contains the information
+needed to render a passthrough texture onto a triangle mesh when calling
+flink:xrEndFrame.
+slink:XrCompositionLayerPassthroughANDROID is an alias type for the base
+struct slink:XrCompositionLayerBaseHeader used in slink:XrFrameEndInfo.
+
+When the application submits an slink:XrCompositionLayerPassthroughANDROID
+structure with the created pname:layer and the corresponding meshes provided
+by slink:XrPassthroughLayerMeshANDROID in the desired layer order, the
+runtime composites a passthrough layer into the final frame output if
+passthrough data is ready.
+
+The runtime may: composite black pixels in place of the passthrough image if
+the data is not yet available for a small period of time.
+
+include::{generated}/validity/structs/XrCompositionLayerPassthroughANDROID.adoc[]
+--
+
+==== Create a passthrough layer handle
+
+[open,refpage='XrPassthroughLayerANDROID',type='handles',desc='Represents a passthrough layer']
+--
+The slink:XrPassthroughLayerANDROID handle represents a passthrough layer
+which defines the behavior of slink:XrCompositionLayerPassthroughANDROID.
+
+include::{generated}/api/handles/XrPassthroughLayerANDROID.adoc[]
+--
+
+[open,refpage='xrCreatePassthroughLayerANDROID',type='protos',desc='Create a passthrough layer handle',xrefs='XrPassthroughLayerANDROID XrPassthroughLayerCreateInfoANDROID xrDestroyPassthroughLayerANDROID']
+--
+The flink:xrCreatePassthroughLayerANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreatePassthroughLayerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the passthrough layer will be
+  created for.
+* pname:createInfo is a pointer to an
+  slink:XrPassthroughLayerCreateInfoANDROID structure specifying initial
+  passthrough layer parameters.
+* pname:layer is a pointer to a handle in which the created
+  slink:XrPassthroughLayerANDROID is returned.
+****
+
+An application creates an slink:XrPassthroughLayerANDROID handle by calling
+flink:xrCreatePassthroughLayerANDROID.
+
+The application should: specify the maximum number of passthrough mesh
+indices it will submit for this layer in
+slink:XrPassthroughLayerCreateInfoANDROID::pname:vertexCapacity and
+slink:XrPassthroughLayerCreateInfoANDROID::pname:indexCapacity, and these
+values should: be less than or equal to the maximum values returned by
+slink:XrSystemPassthroughLayerPropertiesANDROID::pname:maxMeshIndexCount and
+slink:XrSystemPassthroughLayerPropertiesANDROID::pname:maxMeshVertexCount
+when calling flink:xrGetSystemProperties.
+
+If slink:XrPassthroughLayerCreateInfoANDROID::pname:indexCapacity passed in
+pname:createInfo is greater than
+slink:XrSystemPassthroughLayerPropertiesANDROID::pname:maxMeshIndexCount,
+the runtime must: return the ename:XR_ERROR_MESH_DATA_LIMIT_EXCEEDED_ANDROID
+error when calling flink:xrCreatePassthroughLayerANDROID.
+
+The slink:XrPassthroughLayerANDROID handle must: be eventually freed via the
+flink:xrDestroyPassthroughLayerANDROID function.
+
+include::{generated}/validity/protos/xrCreatePassthroughLayerANDROID.adoc[]
+--
+
+[open,refpage='XrPassthroughLayerCreateInfoANDROID',type='structs',desc='Information to create a passthrough layer handle',xrefs='xrCreatePassthroughLayerANDROID XrPassthroughLayerMeshANDROID']
+--
+The slink:XrPassthroughLayerCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughLayerCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is NULL or a pointer to the next structure in a structure
+  chain.
+  slink:XrPassthroughLayerMeshANDROID can: be provided in the next chain to
+  specify an initial mesh for the passthrough layer when calling
+  flink:xrCreatePassthroughLayerANDROID.
+* pname:vertexCapacity is an code:uint32_t representing the *maximum*
+  capacity of the vertex buffer for this layer's mesh, or `0` if
+  unspecified.
+  If specified, the slink:XrPassthroughLayerMeshANDROID::pname:vertexCount
+  of any mesh set for this layer must: be less than or equal to the
+  pname:vertexCapacity.
+* pname:indexCapacity is an code:uint32_t representing the *maximum*
+  capacity of the index buffer for this layer's mesh, or `0` if unspecified.
+  If specified, the slink:XrPassthroughLayerMeshANDROID::pname:indexCount of
+  any mesh set for this layer must: be less than or equal to the
+  pname:indexCapacity.
+****
+
+include::{generated}/validity/structs/XrPassthroughLayerCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyPassthroughLayerANDROID',type='protos',desc='Destroy a passthrough layer handle',xrefs='XrPassthroughLayerANDROID xrCreatePassthroughLayerANDROID']
+--
+The flink:xrDestroyPassthroughLayerANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyPassthroughLayerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:layer is the slink:XrPassthroughLayerANDROID to be destroyed.
+****
+
+An application releases the passthrough layer and the underlying resources
+by calling the flink:xrDestroyPassthroughLayerANDROID function.
+
+include::{generated}/validity/protos/xrDestroyPassthroughLayerANDROID.adoc[]
+--
+
+==== Set passthrough layer mesh
+
+[open,refpage='xrSetPassthroughLayerMeshANDROID',type='protos',desc='Set mesh for a passthrough layer',xrefs='XrPassthroughLayerANDROID XrPassthroughLayerMeshANDROID']
+--
+The flink:xrSetPassthroughLayerMeshANDROID function is defined as:
+
+include::{generated}/api/protos/xrSetPassthroughLayerMeshANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:layer is an slink:XrPassthroughLayerANDROID handle in which to
+  update with the given pname:mesh.
+* pname:mesh is a pointer to an slink:XrPassthroughLayerMeshANDROID
+  structure specifying the information of the mesh.
+****
+An application sets the mesh for a passthrough layer by calling the
+flink:xrSetPassthroughLayerMeshANDROID function.
+
+The application should: specify the number of passthrough mesh indices in
+the slink:XrPassthroughLayerMeshANDROID::pname:vertexCount and
+slink:XrPassthroughLayerMeshANDROID::pname:indexCount less than or equal to
+the maximum values returned by
+slink:XrSystemPassthroughLayerPropertiesANDROID::pname:maxMeshIndexCount and
+slink:XrSystemPassthroughLayerPropertiesANDROID::pname:maxMeshVertexCount
+when calling flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_MESH_DATA_LIMIT_EXCEEDED_ANDROID
+error on flink:xrSetPassthroughLayerMeshANDROID if the count of mesh indices
+or vertices given by pname:mesh is greater than the maximum values.
+
+If slink:XrPassthroughLayerCreateInfoANDROID::pname:vertexCapacity or
+slink:XrPassthroughLayerCreateInfoANDROID::pname:indexCapacity are specified
+when creating the pname:layer via flink:xrCreatePassthroughLayerANDROID, the
+runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT error on
+flink:xrSetPassthroughLayerMeshANDROID if the count of mesh vertices or
+indices defined by pname:mesh is greater than the respective application
+specified capacity.
+
+include::{generated}/validity/protos/xrSetPassthroughLayerMeshANDROID.adoc[]
+--
+
+[open,refpage='XrPassthroughLayerMeshANDROID',type='structs',desc='Information to set the mesh of a passthrough layer']
+--
+The slink:XrPassthroughLayerMeshANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPassthroughLayerMeshANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:windingOrder is the elink:XrWindingOrderANDROID of the mesh
+  triangles.
+  The runtime must: use it for backface culling when rendering the mesh.
+* pname:vertexCount is an code:uint32_t representing the number of vertices
+  in the mesh.
+  When slink:XrPassthroughLayerCreateInfoANDROID::pname:vertexCapacity is
+  specified, the pname:vertexCount must: be less than or equal to the
+  slink:XrPassthroughLayerCreateInfoANDROID::pname:vertexCapacity.
+* pname:vertices is a pointer to an array of pname:vertexCount
+  slink:XrVector3f which contains the vertex positions of the triangle mesh.
+* pname:indexCount is an code:uint32_t representing the number of indices in
+  the triangle mesh.
+  The last `indexCount % 3` indices, if any, will not be drawn.
+  When slink:XrPassthroughLayerCreateInfoANDROID::pname:indexCapacity is
+  specified, the pname:indexCount must: be less than or equal to the
+  slink:XrPassthroughLayerCreateInfoANDROID::pname:indexCapacity.
+* pname:indices is a pointer to an array of pname:indexCount code:uint16_t
+  which contains the indices of the triangle mesh.
+****
+
+include::{generated}/validity/structs/XrPassthroughLayerMeshANDROID.adoc[]
+--
+
+[open,refpage='XrWindingOrderANDROID',type='enums',desc='The winding order of a mesh's triangels',xrefs='XrPassthroughLayerMeshANDROID']
+--
+The elink:XrWindingOrderANDROID enumeration identifies the winding order of
+a mesh's triangles, used by the runtime for backface culling when rendering
+the mesh of the passthrough layer.
+
+include::{generated}/api/enums/XrWindingOrderANDROID.adoc[]
+
+include::{generated}/api/enums/XrWindingOrderANDROID.comments-box.adoc[]
+--
+
+==== Example code for passthrough layer composition
+
+The following example code demonstrates how to create a passthrough layer
+and use it in compositing.
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session; // previously initialized
+XrSpace space; // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreatePassthroughLayerANDROID xrCreatePassthroughLayerANDROID; // previously initialized
+PFN_xrDestroyPassthroughLayerANDROID xrDestroyPassthroughLayerANDROID; // previously initialized
+PFN_xrSetPassthroughLayerMeshANDROID xrSetPassthroughLayerMeshANDROID; // previously initialized
+
+// Inspect passthrough mesh system properties
+XrSystemPassthroughLayerPropertiesANDROID passthroughLayerSystemProperties{
+  XR_TYPE_SYSTEM_PASSTHROUGH_LAYER_PROPERTIES_ANDROID};
+XrSystemProperties systemProperties{
+  XR_TYPE_SYSTEM_PROPERTIES, &passthroughLayerSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!passthroughLayerSystemProperties.supportsPassthroughLayer) {
+    // the system does not support composite layer passthrough mesh.
+    return;
+}
+
+// The initial mesh for the layer.
+uint16_t initialIndices[] = {
+  0, 1, 2,
+  0, 2, 3
+};
+XrVector3f initialVertices[] = {
+  { 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, { 1, 0, 0 }
+};
+XrPassthroughLayerMeshANDROID mesh = {
+  .type = XR_TYPE_PASSTHROUGH_LAYER_MESH_ANDROID,
+  .windingOrder = XR_WINDING_ORDER_CW_ANDROID,
+  .vertexCount = 4,
+  .vertices = initialVertices,
+  .indexCount = 6,
+  .indices = initialIndices
+};
+
+// Create the layer. Layers are expected to persist across frames.
+XrPassthroughLayerCreateInfoANDROID create_info = {
+  .type = XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_ANDROID,
+  .next = &mesh,
+  .vertexCapacity = 0,
+  .indexCapacity = 0,
+};
+XrPassthroughLayerANDROID layer;
+CHK_XR(xrCreatePassthroughLayerANDROID(session, &create_info, &layer));
+
+// Create a composition layer. Composition layers are submitted per frame.
+XrCompositionLayerPassthroughANDROID passthrough_layer = {
+  .type = XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_ANDROID,
+  .next = nullptr,
+  .layerFlags = 0,
+  .space = space,
+  .pose = {
+    .orientation = { 0.0f, 0.0f, 0.0f, 1.0f },
+    .position = { 0.0f, 0.0f, 0.0f }
+  },
+  .scale = { 1.0f, 1.0f, 1.0f },
+  .opacity = 1.0f,
+  .layer = layer
+};
+
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+
+    // Submit composition layer in xrEndFrame.
+    std::vector<XrCompositionLayerBaseHeader*> layers = {
+        // ...,
+        (XrCompositionLayerBaseHeader*)&passthrough_layer
+        // ...
+    };
+    XrFrameEndInfo end_frame_info = { XR_TYPE_FRAME_END_INFO, nullptr };
+    end_frame_info.layerCount = (uint32_t)layers.size();
+    end_frame_info.layers = layers.data();
+    CHK_XR(xrEndFrame(session, &end_frame_info));
+
+    // Update the layer. Results will be seen the next time a passthrough composition
+    // layer is submitted.
+    mesh.indexCount = 9;
+    const uint16_t new_index_buffer[] = {
+        0, 1, 2,
+        0, 2, 3,
+        0, 1, 2
+    };
+    mesh.indices = &new_index_buffer[0];
+    CHK_XR(xrSetPassthroughLayerMeshANDROID(layer, &mesh));
+
+    // ...
+    // Finish frame loop
+    // ...
+}
+
+// Clean up.
+CHK_XR(xrDestroyPassthroughLayerANDROID(layer));
+----
+
+include::{generated}/interfaces/XR_ANDROID_composition_layer_passthrough_mesh.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-09-11 (Levana Chen)
+** Initial extension description

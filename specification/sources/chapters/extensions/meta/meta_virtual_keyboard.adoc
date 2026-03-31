@@ -173,6 +173,8 @@ include::{generated}/api/structs/XrSystemVirtualKeyboardPropertiesMETA.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsVirtualKeyboard is an basetype:XrBool32 indicating if
   virtual keyboard is supported.
 ****
@@ -856,7 +858,7 @@ include::{generated}/validity/structs/XrEventDataVirtualKeyboardHiddenMETA.adoc[
 The following example code demonstrates how to create and use the virtual
 keyboard.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;  // previously initialized
 XrSystemId system;    // previously initialized

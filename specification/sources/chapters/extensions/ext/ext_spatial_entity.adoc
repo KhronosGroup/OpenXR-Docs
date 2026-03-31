@@ -1639,6 +1639,10 @@ slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:entities in the snapshot
 and it must: include the data for all the enabled components of the
 capabilities configured for pname:spatialContext.
 
+The runtime must: not include spatial entities that are not listed in
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:entities in
+pname:snapshot.
+
 The application can: create any number of snapshots it wants but must: be
 mindful of the memory being allocated for each new snapshot and must:
 destroy the snapshots once it no longer needs them.
@@ -2090,7 +2094,7 @@ pattern:
 The following example code demonstrates how to discover spatial entities for
 capability "Foo" query its component data.
 
-[source,C++]
+[source,cpp]
 ----
 /****************************/
 /* Capability definition    */
@@ -2250,7 +2254,7 @@ CHK_XR(xrDestroySpatialContextEXT(spatialContext));
 The following example code demonstrates how to get the data of a component
 that provides an slink:XrSpatialBufferEXT.
 
-[source,C++]
+[source,cpp]
 ----
 /****************************/
 /* Component definition     */
@@ -2438,7 +2442,7 @@ application using the API.
 [[ext_spatial_entity_example_feature_semantic_label_subset]]
 ====== Example Spatial Feature Definition for Semantic Label Subset
 
-[source,C++]
+[source,cpp]
 ----
 // New example semantic label set.
 typedef enum XrSpatialExampleSemanticLabelEXT {
@@ -2468,7 +2472,7 @@ typedef struct XrSpatialFeatureExampleSemanticLabelSubsetEXT {
 [[ext_spatial_entity_example_semantic_label_extension]]
 ====== Example Spatial Semantic Label Extension
 
-[source,C++]
+[source,cpp]
 ----
 typedef enum XrSpatialExamplePlaneSemanticLabelExtensionEXT {
     XR_SPATIAL_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_UNCATEGORIZED_EXT = 1,

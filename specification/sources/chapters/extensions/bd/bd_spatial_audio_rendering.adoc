@@ -1,0 +1,1825 @@
+// Copyright (c) 2025 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_spatial_audio_rendering.adoc[]
+
+*Contributors*::
+    Xuzhou Ye, ByteDance +
+    Shuai Liu, ByteDance +
+
+==== Overview
+
+This extension allows applications to render spatial audio in a 3D space.
+It allows applications to create sound scenes, and submit raw audio data
+which is then processed and rendered by the system.
+
+==== Create Spatial Audio Renderer
+
+[open,refpage='XrSpatialAudioRendererBD',type='handles',desc='Represents a spatial audio renderer instance.']
+--
+include::{generated}/api/handles/XrSpatialAudioRendererBD.adoc[]
+
+An slink:XrSpatialAudioRendererBD handle represents a spatial audio renderer
+instance, which is created by calling flink:xrCreateSpatialAudioRendererBD.
+--
+
+Before creating an slink:XrSpatialAudioRendererBD, there are two enumeration
+functions to call to negotiate mutually acceptable parameters between the
+runtime and the application: flink:xrEnumerateSupportedAudioSampleRateBD and
+flink:xrQueryFramesPerBufferRangeBD.
+
+[open,refpage='xrEnumerateSupportedAudioSampleRateBD',type='protos',desc='Enumerate supported audio sample rates',xrefs='xrCreateSpatialAudioRendererBD']
+--
+The flink:xrEnumerateSupportedAudioSampleRateBD function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSupportedAudioSampleRateBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession for which to enumerate supported
+  audio sample rates.
+* pname:sampleRateCapacityInput is the capacity of the pname:sampleRates
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:sampleRateCountOutput is a pointer to the count of pname:sampleRates
+  written, or a pointer to the required capacity in the case that
+  pname:sampleRateCapacityInput is insufficient.
+* pname:sampleRates is a pointer to an array of elink:XrAudioSampleRateBD
+  structures, but can: be code:NULL if pname:sampleRateCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:sampleRates size.
+****
+
+Before creating the slink:XrSpatialAudioRendererBD, applications should:
+call flink:xrEnumerateSupportedAudioSampleRateBD to enumerate supported
+audio sample rates.
+Applications must: set
+slink:XrSpatialAudioRendererCreateInfoBD::pname:sampleRate to one of the
+supported sample rates, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from flink:xrCreateSpatialAudioRendererBD.
+
+The values enumerated by this function must: not change during the lifetime
+of an slink:XrInstance.
+
+include::{generated}/validity/protos/xrEnumerateSupportedAudioSampleRateBD.adoc[]
+--
+
+[open,refpage='XrAudioSampleRateBD',type='enums',desc='Describes the audio sample rate.',xrefs='']
+--
+The elink:XrAudioSampleRateBD enumeration describes an audio sample rate.
+
+include::{generated}/api/enums/XrAudioSampleRateBD.adoc[]
+include::{generated}/api/enums/XrAudioSampleRateBD.comments.adoc[]
+--
+
+[open,refpage='xrQueryFramesPerBufferRangeBD',type='protos',desc='Query supported frames per buffer range']
+--
+The flink:xrQueryFramesPerBufferRangeBD function is defined as:
+
+include::{generated}/api/protos/xrQueryFramesPerBufferRangeBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to query supported frames per buffer
+  range.
+* pname:sampleRate is the sample rate for which the supported frames per
+  buffer range is queried.
+* pname:min is a pointer to an uint32_t that receives the minimum supported
+  frames per buffer.
+* pname:max is a pointer to an uint32_t that receives the maximum supported
+  frames per buffer.
+****
+
+Before creating the slink:XrSpatialAudioRendererBD, applications should:
+call flink:xrQueryFramesPerBufferRangeBD to query supported frames per
+buffer range.
+Applications must: set
+slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer to a value
+within the supported range, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from flink:xrCreateSpatialAudioRendererBD.
+
+The values enumerated by this function must: not change during the lifetime
+of an slink:XrInstance.
+
+include::{generated}/validity/protos/xrQueryFramesPerBufferRangeBD.adoc[]
+--
+
+[open,refpage='xrCreateSpatialAudioRendererBD',type='protos',desc='Create and initialize a spatial audio renderer instance for given XrSession']
+--
+The flink:xrCreateSpatialAudioRendererBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAudioRendererBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to create the audio renderer in.
+* pname:createInfo is a pointer to the
+  slink:XrSpatialAudioRendererCreateInfoBD structure used to create and
+  initialize the spatial audio renderer instance.
+* pname:renderer is a pointer to an slink:XrSpatialAudioRendererBD that
+  receives the handle of the created spatial audio renderer instance.
+****
+
+To create an slink:XrSpatialAudioRendererBD, applications call
+flink:xrCreateSpatialAudioRendererBD.
+
+Runtimes must: allow at most one slink:XrSpatialAudioRendererBD to exist
+within a session, and must: return ename:XR_ERROR_LIMIT_REACHED if an
+application calls flink:xrCreateSpatialAudioRendererBD to create another
+slink:XrSpatialAudioRendererBD while another one already exists in the same
+session.
+
+An application may: create a new slink:XrSpatialAudioRendererBD after the
+previous one has been destroyed by calling
+flink:xrDestroySpatialAudioRendererBD.
+
+include::{generated}/validity/protos/xrCreateSpatialAudioRendererBD.adoc[]
+--
+
+[open,refpage='XrSpatialAudioRendererCreateInfoBD',type='structs',desc='Information to create a spatial audio renderer',xrefs='xrCreateSpatialAudioRendererBD']
+--
+The slink:XrSpatialAudioRendererCreateInfoBD structure is defined as:
+
+include::{generated}/api/structs/XrSpatialAudioRendererCreateInfoBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:framesPerBuffer is the number of frames contained in each audio data
+  buffer submitted by the application.
+  Each frame consists of one sample for each channel.
+  Applications should: call flink:xrQueryFramesPerBufferRangeBD to get the
+  supported range of pname:framesPerBuffer, and must: set the
+  pname:framesPerBuffer to a value within the supported range.
+* pname:sampleRate is the number of audio frames per second of the audio
+  data submitted by the application.
+  Applications should: call flink:xrEnumerateSupportedAudioSampleRateBD to
+  get the supported sample rates, and must: set the pname:sampleRate as one
+  of the supported sample rates.
+****
+
+The slink:XrSpatialAudioRendererCreateInfoBD structure describes the audio
+configuration the application will use for the submitted audio data.
+The values of pname:framesPerBuffer and pname:sampleRate must: be a
+supported value according to their respective functions
+flink:xrEnumerateSupportedAudioSampleRateBD and
+flink:xrQueryFramesPerBufferRangeBD.
+If the specified values are not supported by the runtime,
+flink:xrCreateSpatialAudioRendererBD must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSpatialAudioRendererCreateInfoBD.adoc[]
+--
+
+[open,refpage='xrDestroySpatialAudioRendererBD',type='protos',desc='Destroy the spatial audio renderer instance for specified slink:XrSession.']
+--
+The flink:xrDestroySpatialAudioRendererBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySpatialAudioRendererBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD to destroy.
+****
+
+Applications should: destroy the spatial audio renderer if it is no longer
+required.
+When applications call flink:xrDestroySpatialAudioRendererBD, the runtime
+also destroys the sound scene and may: free the associated resources.
+Destroying the audio renderer stops all audio playback associated with it,
+if any.
+
+include::{generated}/validity/protos/xrDestroySpatialAudioRendererBD.adoc[]
+--
+
+==== Audience
+
+With this extension, the application does not configure an audience
+explicitly.
+The runtime always renders audio for the user's position and orientation,
+which correlate with ename:XR_REFERENCE_SPACE_TYPE_VIEW (the "audience" in
+audio terms).
+
+Note that this section uses the term *audience* descriptively; readers
+familiar with audio middleware may know this concept under that name.
+No additional audience handle or configuration is introduced by this
+extension.
+
+When the tracking quality of the audience changes (`VIEW` reference space),
+spatial audio is rendered in the following way:
+
+* While the `VIEW` reference space pose is valid, but not tracked (i.e.
+  flink:xrLocateSpace reports its location with
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set, but
+  ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and/or
+  ename:XR_VIEW_STATE_POSITION_TRACKED_BIT not set), the runtime must:
+  continue full spatial audio rendering using the reported pose state
+  without introducing discontinuities.
+
+* While the `VIEW` reference space pose is neither valid nor tracked (i.e.
+  flink:xrLocateSpace reports its location with at least one of
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT unset), the runtime should:
+  fall back to use the most recent valid pose of the view space.
+
+==== Create Sound Scene and Sound Sources
+
+To create a realistic spatial audio effect, the application creates a sound
+scene based on the virtual environment in which the audio is intended to be
+rendered.
+This scene includes application submitted information about sound sources
+(sound fields and sound objects) within the scene.
+The runtime calculates and renders spatial audio based on this scene.
+
+There are two types of sound sources:
+
+* Sound Object - A sound object is a point in 3D space; it has a position
+  and a volume.
+  For example a shotgun, a car engine, or a bird would be modeled as a sound
+  object.
+* Sound Field - A sound field is generally a background sound; it has a
+  position and orientation.
+
+Applications create sound sources in the scene by calling
+flink:xrCreateSoundFieldBD and flink:xrCreateSoundObjectBD.
+
+===== Create Sound Fields
+
+[open,refpage='XrSoundFieldBD',type='handles',desc='Represents a sound field.']
+--
+include::{generated}/api/handles/XrSoundFieldBD.adoc[]
+
+An slink:XrSoundFieldBD handle represents a sound field.
+--
+
+[open,refpage='xrCreateSoundFieldBD',type='protos',desc='Create a sound field in the sound scene rendered by the spatial audio renderer.']
+--
+The flink:xrCreateSoundFieldBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSoundFieldBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD used for spatial
+  audio rendering.
+* pname:config is the slink:XrSoundFieldConfigBD that defines the properties
+  of the sound field.
+* pname:soundField is a pointer to a handle in which the
+  flink:xrCreateSoundFieldBD is returned.
+****
+
+When creating a sound field in the sound scene rendered by the spatial audio
+renderer, applications must: chain a structure that indicates the channel
+definition of the sound field to slink:XrSoundFieldConfigBD::pname:next.
+
+Channel definitions specified by this extension are:
+
+* Channel-based surround sound (for example 5.1): chain
+  slink:XrSoundFieldChannelDefinitionSurroundBD.
+* AmbiX format (ACN channel order and SN3D normalization): chain
+  slink:XrSoundFieldChannelDefinitionAmbixBD.
+* FuMA format (Furse-Malham channel order and maxN normalization): chain
+  slink:XrSoundFieldChannelDefinitionFumaBD.
+
+If the application does not chain any structure specifying the sound format
+to slink:XrSoundFieldConfigBD::pname:next, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If multiple sound field config structures are chained, the runtime ignores
+all but one of those structs.
+To avoid unexpected results, applications should: only chain one sound field
+definition structure to indicate the channel definition of the sound field.
+
+include::{generated}/validity/protos/xrCreateSoundFieldBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldConfigBD',type='structs',desc='Configuration of a sound field',xrefs='xrCreateSoundFieldBD xrUpdateSoundFieldConfigBD']
+--
+The slink:XrSoundFieldConfigBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundFieldConfigBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:enabled is an basetype:XrBool32, indicating whether the sound field
+  is enabled.
+* pname:orientation is the slink:XrQuaternionf of the sound field.
+  It defines the orientation of the sound field in the pname:baseSpace.
+* pname:baseSpace is an slink:XrSpace which the pname:orientation is defined
+  in.
+* pname:mainVolume is the main volume of the sound field.
+  It acts as a linear gain attenuation of the input signal in the range
+  [eq]#(0, 1)#.
+* pname:lfeGain is the LFE (low-frequency effects) gain of the sound field.
+  It acts as a linear gain attenuation of the input signal in the range
+  [eq]#(0, 1)# on top of the main volume.
+****
+
+The behavior below specifies how the runtime renders audio when tracking
+quality changes for the pname:baseSpace.
+
+* While the pname:baseSpace pose is valid, but not tracked (i.e.
+  flink:xrLocateSpace reports its location with
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set, but not
+  ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+  ename:XR_VIEW_STATE_POSITION_TRACKED_BIT), the runtime must: keep
+  rendering the sound field using the most recent valid pose of that space.
+
+* While the pname:baseSpace pose is neither valid nor tracked (i.e.
+  flink:xrLocateSpace reports its location with either
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT or
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT unset), the runtime should:
+  keep rendering the sound field using the most recent valid position and
+  orientation of that space relative to its parent.
+
+include::{generated}/validity/structs/XrSoundFieldConfigBD.adoc[]
+--
+
+[[bd_spatial_audio_rendering_surround]]
+====== Channel-based Surround Configuration
+
+[open,refpage='XrSoundFieldChannelDefinitionSurroundBD',type='structs',desc='Describes the channel definition of a surround sound field',xrefs='XrSoundFieldConfigBD']
+--
+The slink:XrSoundFieldChannelDefinitionSurroundBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundFieldChannelDefinitionSurroundBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:channelMask is the channel mask of the sound field.
+****
+
+include::{generated}/validity/structs/XrSoundFieldChannelDefinitionSurroundBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldChannelMaskSurroundBD',type='enums',desc='the channel mask of a channel-based surround sound field',xrefs='XrSoundFieldChannelDefinitionSurroundBD',xrefs='XrSoundFieldChannelDefinitionSurroundBD']
+--
+The elink:XrSoundFieldChannelMaskSurroundBD describes the channel mask of a
+surround sound field.
+Single bit values for each single channel are included, but applications
+typically select a value (or combination) that includes the word `SETUP`,
+which describes a predefined "composed" configuration.
+
+include::{generated}/api/enums/XrSoundFieldChannelMaskSurroundBD.adoc[]
+include::{generated}/api/enums/XrSoundFieldChannelMaskSurroundBD.comments-box.adoc[]
+--
+
+[[bd_spatial_audio_rendering_ambix]]
+====== AmbiX Configuration
+
+[open,refpage='XrSoundFieldChannelDefinitionAmbixBD',type='structs',desc='Describes the channel definition of an AmbiX sound field',xrefs='XrSoundFieldConfigBD']
+--
+The slink:XrSoundFieldChannelDefinitionAmbixBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundFieldChannelDefinitionAmbixBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:channelMask is the channel mask of the sound field.
+****
+
+include::{generated}/validity/structs/XrSoundFieldChannelDefinitionAmbixBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldChannelMaskAmbixBD',type='enums',desc='The channel mask of an AmbiX sound field',xrefs='XrSoundFieldChannelDefinitionAmbixBD']
+--
+The elink:XrSoundFieldChannelMaskAmbixBD describes the channel mask of an
+AmbiX sound field.
+
+include::{generated}/api/enums/XrSoundFieldChannelMaskAmbixBD.adoc[]
+include::{generated}/api/enums/XrSoundFieldChannelMaskAmbixBD.comments-box.adoc[]
+--
+
+
+[[bd_spatial_audio_rendering_fuma]]
+====== FuMA Configuration
+
+[open,refpage='XrSoundFieldChannelDefinitionFumaBD',type='structs',desc='Describes channel definition of a FuMA sound field',xrefs='XrSoundFieldConfigBD']
+--
+The slink:XrSoundFieldChannelDefinitionFumaBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundFieldChannelDefinitionFumaBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:channelMask is the channel mask of the sound field.
+****
+
+include::{generated}/validity/structs/XrSoundFieldChannelDefinitionFumaBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldChannelMaskFumaBD',type='enums',desc='the channel mask of a FuMA sound field',xrefs='XrSoundFieldChannelDefinitionFumaBD']
+--
+The elink:XrSoundFieldChannelMaskFumaBD describes the channel mask of a FuMA
+sound field.
+
+include::{generated}/api/enums/XrSoundFieldChannelMaskFumaBD.adoc[]
+include::{generated}/api/enums/XrSoundFieldChannelMaskFumaBD.comments-box.adoc[]
+--
+
+===== Update Sound Field Config
+
+[open,refpage='xrUpdateSoundFieldConfigBD',type='protos',desc='Update the configuration of a submitted sound field.']
+--
+The flink:xrUpdateSoundFieldConfigBD function is defined as:
+
+include::{generated}/api/protos/xrUpdateSoundFieldConfigBD.adoc[]
+.Parameter Descriptions
+****
+* pname:soundField is the slink:XrSoundFieldBD to be updated.
+* pname:config is the slink:XrSoundFieldConfigBD that defines the
+  configuration of the sound field.
+* pname:flags is the bit mask (bitwise code:OR of elink:XrSoundFieldFlagsBD)
+  of the sound field configuration to change.
+****
+
+When updating the configuration of a submitted sound field, applications set
+pname:flags to specify which properties to update.
+The runtime must: not update a property if the corresponding flag bit is not
+set.
+The runtime must: not read the parameters of slink:XrSoundFieldConfigBD if
+the corresponding bits are not set; this means that the application may:
+pass invalid or uninitialized fields for parameters it does not intend to
+update.
+
+include::{generated}/validity/protos/xrUpdateSoundFieldConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldFlagsBD',type='flags',desc='XrSoundFieldFlagsBD']
+--
+include::{generated}/api/flags/XrSoundFieldFlagsBD.adoc[]
+--
+
+[open,refpage='XrSoundFieldFlagBitsBD',type='enums',desc='XrSoundFieldFlagBitsBD',xrefs='XrSoundFieldFlagsBD']
+--
+include::{generated}/api/enums/XrSoundFieldFlagBitsBD.adoc[]
+include::{generated}/api/enums/XrSoundFieldFlagBitsBD.comments.adoc[]
+--
+
+===== Destroy Sound Field
+
+[open,refpage='xrDestroySoundFieldBD',type='protos',desc='Remove a submitted sound field.']
+--
+The flink:xrDestroySoundFieldBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySoundFieldBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundField is the handle of the sound field to be removed.
+****
+
+When an application removes a sound field with flink:xrDestroySoundFieldBD,
+its corresponding sound is not rendered anymore.
+
+include::{generated}/validity/protos/xrDestroySoundFieldBD.adoc[]
+--
+
+===== Create Sound Objects
+
+[open,refpage='XrSoundObjectBD',type='handles',desc='Represents a spatial audio sound object.']
+--
+include::{generated}/api/handles/XrSoundObjectBD.adoc[]
+
+An slink:XrSoundObjectBD handle represents a sound object.
+--
+
+[open,refpage='xrCreateSoundObjectBD',type='protos',desc='Create a sound object in the sound scene rendered by the spatial audio renderer.']
+--
+The flink:xrCreateSoundObjectBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSoundObjectBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD used for spatial
+  audio rendering.
+* pname:config is the slink:XrSoundObjectConfigBD that defines the
+  configuration of the sound object.
+* pname:soundObject is a pointer to a handle in which the
+  flink:xrCreateSoundObjectBD returns
+****
+
+Applications add a sound object to the sound scene rendered by the spatial
+audio renderer with this function.
+
+include::{generated}/validity/protos/xrCreateSoundObjectBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectConfigBD',type='structs',desc='Describes configuration of sound objects',xrefs='xrCreateSoundObjectBD']
+--
+The slink:XrSoundObjectConfigBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObjectConfigBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:enabled is an basetype:XrBool32, indicating whether the sound object
+  is enabled.
+* pname:pose is an slink:XrPosef of the sound object.
+* pname:baseSpace is an slink:XrSpace which the pname:pose is defined in.
+* pname:mainVolume is the main volume of the sound object.
+  It acts as a linear gain attenuation of the input signal in the range
+  [eq]#(0, 1)#.
+* pname:reflectionGain is the reflection gain of the sound object.
+  It acts as a linear gain attenuation of the input signal in the range
+  [eq]#(0, 1)# on top of the main volume.
+* pname:enableDoppler is an basetype:XrBool32, indicating whether the
+  Doppler effect is enabled.
+* pname:directSoundAttenuation is the
+  slink:XrSoundObjectDistanceAttenuationBD of the direct sound of the sound
+  object, propagating along a straight line from the source to the listener.
+* pname:indirectSoundAttenuation is the
+  slink:XrSoundObjectDistanceAttenuationBD of the indirect sound of the
+  sound object, which is any other propagation that is not considered
+  "direct."
+****
+
+Applications may: specify the directivity and/or the shape of a sound
+object:
+
+* To describe the sound object's shape, applications chain
+  slink:XrSoundObjectShapeSphereBD to
+  slink:XrSoundObjectConfigBD::pname:next
+* To describe the directivity of a sound object by a cardioid polar pattern,
+  applications chain slink:XrSoundObjectDirectivityCardioidBD to
+  slink:XrSoundObjectConfigBD::pname:next.
+
+If the application does not chain slink:XrSoundObjectShapeSphereBD, the
+sound object is defined as an infinitesimally small point.
+If the application does not change slink:XrSoundObjectDirectivityCardioidBD,
+the sound object is defined to be omnidirectional (uniform sound emission
+intensity over all directions).
+
+The behavior below specifies how the runtime renders audio when tracking
+quality changes for the pname:baseSpace.
+
+* While the pname:baseSpace pose is valid, but not tracked (i.e.
+  flink:xrLocateSpace reports its location with
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT set, but not
+  ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+  ename:XR_VIEW_STATE_POSITION_TRACKED_BIT), the runtime must: keep
+  rendering the sound object using the most recent valid pose of that space.
+
+* While the pname:baseSpace pose is neither valid nor tracked (i.e.
+  flink:xrLocateSpace reports its location with
+  ename:XR_SPACE_LOCATION_POSITION_VALID_BIT and
+  ename:XR_SPACE_LOCATION_ORIENTATION_VALID_BIT unset), the runtime should:
+  keep rendering the sound object using the most recent valid pose of that
+  space relative to its parent.
+
+include::{generated}/validity/structs/XrSoundObjectConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectDistanceAttenuationBD',type='structs',desc='Describes distance attenuation of sound',xrefs='']
+--
+The slink:XrSoundObjectDistanceAttenuationBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObjectDistanceAttenuationBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:distanceAttenuationType is the type of this distance attenuation.
+* pname:minAttenuationRange is the minimum distance of attenuation in
+  meters.
+  Any distance closer than this value will not cause less attenuation.
+* pname:maxAttenuationRange is the maximum distance of attenuation in
+  meters.
+  Any distance further than this value will not cause more attenuation.
+* pname:referenceDistance is the propagation distance in which sound is
+  neither attenuated nor gained.
+  It is ignored if pname:distanceAttenuationType is not
+  ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_ROLLOFF_BD.
+* pname:rolloffFactor is the intensity of distance attenuation, which must:
+  be larger or equal to 0.
+  It is ignored if pname:distanceAttenuationType is not
+  ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_ROLLOFF_BD.
+* pname:customDistanceAttenuationCurve is a pointer to an
+  slink:XrSoundObjectDistanceAttenuationCurveBD structure defining an
+  attenuation curve for a customized distance attenuation.
+  It is ignored if pname:distanceAttenuationType is not
+  ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_CUSTOMIZED_BD
+****
+
+When pname:distanceAttenuationType is
+ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_NONE_BD, the runtime must:
+not apply attenuation based on sound propagation distance, which means:
+[eq]#attenuation(distance) = 1#
+
+When pname:distanceAttenuationType is
+ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_INVERSE_SQUARE_BD, the
+runtime must: use the following formulas to calculate the distance
+attenuation:
+
+* [eq]#attenuation(d) = 1, d < r~min~#
+
+* [eq]#attenuation(d) = 1/{sqrt}(1 + (r~max~ - r~min~)^2^), d > r~max~#
+
+* [eq]#attenuation(d) = 1/{sqrt}(1 + (d - r~min~)^2^), otherwise#
+
+where:
+
+* d is the propagation distance of sound.
+* r~min~ is pname:minAttenuationRange.
+* r~max~ is pname:maxAttenuationRange.
+
+When pname:distanceAttenuationType is
+ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_ROLLOFF_BD, the runtime
+must: use the following formulas to calculate the distance attenuation:
+
+* [eq]#attenuation(d) = (r~min~/d~ref~)^{rho}^, d < r~min~#
+* [eq]#attenuation(d) = (r~max~/d~ref~)^{rho}^, d > r~max~#
+* [eq]#attenuation(d) = (d/d~ref~)^{rho}^, otherwise#
+
+where:
+
+* d is the propagation distance of sound.
+* r~min~ is pname:minAttenuationRange.
+* r~max~ is pname:maxAttenuationRange.
+* d~ref~ is pname:referenceDistance.
+* [eq]#{rho}# is pname:rolloffFactor.
+
+When pname:distanceAttenuationType is
+ename:XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_CUSTOMIZED_BD, the
+application must: set pname:customDistanceAttenuationCurve to an
+slink:XrSoundObjectDistanceAttenuationCurveBD structure defining the
+distance attenuation curve function to calculate the distance attenuation.
+
+If pname:minAttenuationRange is greater than pname:maxAttenuationRange, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSoundObjectDistanceAttenuationBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectDistanceAttenuationTypeBD',type='enums',desc='Describes the type of distance attenuation',xrefs='XrSoundObjectDistanceAttenuationBD']
+--
+The elink:XrSoundObjectDistanceAttenuationTypeBD enumeration describes the
+type of distance attenuation.
+
+include::{generated}/api/enums/XrSoundObjectDistanceAttenuationTypeBD.adoc[]
+include::{generated}/api/enums/XrSoundObjectDistanceAttenuationTypeBD.comments-box.adoc[]
+--
+
+[open,refpage='XrSoundObjectDistanceAttenuationCurveBD',type='structs',desc='Describes a distance attenuation curve',xrefs='XrSoundObjectDistanceAttenuationBD']
+--
+The slink:XrSoundObjectDistanceAttenuationCurveBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObjectDistanceAttenuationCurveBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:curvePointCount is the number of points in the curve.
+* pname:curvePoints is a pointer to an array of
+  slink:XrAttenuationCurvePointBD.
+****
+
+If the propagation distance falls between two points in the curve, the
+runtime must: calculate attenuation by linear interpolation.
+
+If the propagation distance is less than the first point in the curve, the
+runtime must: use the attenuation of the first point.
+
+If the propagation distance is greater than the last point in the curve, the
+runtime must: use the attenuation of the last point.
+
+include::{generated}/validity/structs/XrSoundObjectDistanceAttenuationCurveBD.adoc[]
+--
+
+[open,refpage='XrAttenuationCurvePointBD',type='structs',desc='Describes a custom curve point, including a distance and corresponding attenuation']
+--
+The slink:XrAttenuationCurvePointBD structure is defined as:
+
+include::{generated}/api/structs/XrAttenuationCurvePointBD.adoc[]
+
+.Member Descriptions
+****
+* pname:distance is the propagation distance of the sound wave.
+* pname:gain is the linear attenuation gain within the range of [eq]#(0,
+  1)#, where 0 means complete attenuation (silence) and 1 means no
+  attenuation.
+****
+
+include::{generated}/validity/structs/XrAttenuationCurvePointBD.adoc[]
+--
+
+
+[open,refpage='XrSoundObjectShapeSphereBD',type='structs',desc='Describes information of a shape defined by a sphere',xrefs='XrSoundObjectConfigBD']
+--
+The slink:XrSoundObjectShapeSphereBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObjectShapeSphereBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:radius is the radius of the sphere in meters.
+****
+
+To describe the sound object's shape as defined by a sphere, applications
+may: chain slink:XrSoundObjectShapeSphereBD to the
+slink:XrSoundObjectConfigBD::pname:next chain.
+
+include::{generated}/validity/structs/XrSoundObjectShapeSphereBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectDirectivityCardioidBD',type='structs',desc='Describes information of a cardioid polar pattern',xrefs='XrSoundObjectConfigBD']
+--
+The slink:XrSoundObjectDirectivityCardioidBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObjectDirectivityCardioidBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:alpha describes the shape of the cardioid polar pattern.
+* pname:order is the sharpness of the cardioid polar pattern.
+****
+
+To describe the directivity of a sound object by a cardioid polar pattern,
+applications may: chain slink:XrSoundObjectDirectivityCardioidBD to the
+slink:XrSoundObjectConfigBD::pname:next chain.
+
+include::{generated}/validity/structs/XrSoundObjectDirectivityCardioidBD.adoc[]
+--
+
+
+===== Update Sound Object Config
+
+[open,refpage='xrUpdateSoundObjectConfigBD',type='protos',desc='Update the configuration of a submitted sound object.']
+--
+The flink:xrUpdateSoundObjectConfigBD function is defined as:
+
+include::{generated}/api/protos/xrUpdateSoundObjectConfigBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundObject is the slink:XrSoundObjectBD
+* pname:config is the slink:XrSoundObjectConfigBD that defines the
+  configuration of the sound object.
+* pname:flags is the bit mask (bitwise code:OR of
+  elink:XrSoundObjectFlagsBD) of the sound object properties to change.
+****
+
+When updating the configuration of a submitted sound field, applications use
+pname:flags to specify which properties to update.
+The runtime must: not update a property if the corresponding flag bit is not
+set.
+The runtime must: not read the parameters of slink:XrSoundObjectConfigBD if
+the corresponding bits are not set, this means that the application may:
+pass invalid or uninitialized fields for parameters it does not intend to
+update.
+
+
+include::{generated}/validity/protos/xrUpdateSoundObjectConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectFlagsBD',type='flags',desc='XrSoundObjectFlagsBD']
+--
+include::{generated}/api/flags/XrSoundObjectFlagsBD.adoc[]
+--
+
+[open,refpage='XrSoundObjectFlagBitsBD',type='enums',desc='XrSoundObjectFlagBitsBD',xrefs='XrSoundObjectFlagsBD']
+--
+include::{generated}/api/enums/XrSoundObjectFlagBitsBD.adoc[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrSoundObjectFlagBitsBD.comments.adoc[]
+--
+
+===== Destroy Sound Object
+
+[open,refpage='xrDestroySoundObjectBD',type='protos',desc='Remove a submitted sound object.']
+--
+The flink:xrDestroySoundObjectBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySoundObjectBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundObject is the slink:XrSoundObjectBD to be destroyed.
+****
+
+When an application removes a sound object with
+flink:xrDestroySoundObjectBD, its corresponding sound is not rendered
+anymore.
+
+include::{generated}/validity/protos/xrDestroySoundObjectBD.adoc[]
+--
+
+===== Add Sound Obstacles to the Scene
+
+Applications may: create sound obstacles in the scene that simulate
+real-world or virtual objects that reflect or diffract sound, such as doors,
+walls, carpets, etc.
+
+[open,refpage='XrSoundObstacleMaterialBD',type='handles',desc='Represents a material for sound obstacles in a spatial audio scene.']
+--
+include::{generated}/api/handles/XrSoundObstacleMaterialBD.adoc[]
+
+The slink:XrSoundObstacleMaterialBD handle represents a sound obstacle
+material.
+--
+
+[open,refpage='xrCreateSoundObstacleMaterialBD',type='protos',desc='Create a sound obstacle material.']
+--
+The flink:xrCreateSoundObstacleMaterialBD function is defined as:
+include::{generated}/api/protos/xrCreateSoundObstacleMaterialBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD handle that the sound
+  obstacle material is created for.
+* pname:config is the slink:XrSoundObstacleMaterialBD that defines the
+  configuration of the sound obstacle material.
+* pname:material is a pointer to slink:XrSoundObstacleMaterialBD that
+  flink:xrCreateSoundObstacleMaterialBD returned.
+****
+
+A valid slink:XrSoundObstacleMaterialBD handle can: be used to configure the
+material properties of the sound obstacle when creating or updating a sound
+obstacle.
+
+Note that a successful creation of an slink:XrSoundObstacleMaterialBD on its
+own does not affect the virtual sound propagation, until the created
+slink:XrSoundObstacleMaterialBD is used to create or update sound obstacles
+using flink:xrCreateSoundObstacleBD or flink:xrUpdateSoundObstacleConfigBD.
+
+include::{generated}/validity/protos/xrCreateSoundObstacleMaterialBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleMaterialConfigBD',type='structs',desc='Configuration of an acoustic material',xrefs='']
+--
+The slink:XrSoundObstacleMaterialConfigBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObstacleMaterialConfigBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:materialType is the elink:XrSoundObstacleMaterialTypeBD of sound
+  obstacle.
+* pname:bandCount is the number of bands for which frequencies, absorptions,
+  scatterings, and transmissions are defined below.
+  This field and its associated arrays in subsequent fields are ignored if
+  pname:materialType is not ename:XR_SOUND_OBSTACLE_MATERIAL_TYPE_CUSTOM_BD.
+* pname:bandFrequencies is an array of pname:bandCount frequency centers of
+  the frequency bands for custom materials.
+* pname:bandAbsorptions is an array of pname:bandCount absorption values:
+  the ratio of absorbed sound energy of the sound obstacle when a reflection
+  happens, in the range [eq]#(0, 1)# for custom materials.
+* pname:bandScatterings is an array of pname:bandCount scattering values:
+  the ratio of scattered sound energy of the sound obstacle when a
+  reflection happens, in the range [eq]#(0, 1)# for custom materials.
+* pname:bandTransmissions is an array of pname:bandCount transmission
+  values: the ratio of transmitted sound energy of the sound obstacle when a
+  reflection happens, in the range [eq]#(0, 1)# for custom materials.
+****
+
+Applications use slink:XrSoundObstacleMaterialConfigBD to configure the
+material properties of an slink:XrSoundObstacleMaterialBD.
+
+include::{generated}/validity/structs/XrSoundObstacleMaterialConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleMaterialTypeBD',type='enums',desc='Describes the sound obstacle material type.',xrefs='']
+--
+The elink:XrSoundObstacleMaterialTypeBD enumeration describes the sound
+obstacle material type.
+
+include::{generated}/api/enums/XrSoundObstacleMaterialTypeBD.adoc[]
+include::{generated}/api/enums/XrSoundObstacleMaterialTypeBD.comments.adoc[]
+--
+
+[open,refpage='xrUpdateSoundObstacleMaterialConfigBD',type='protos',desc='Update the properties of a created sound obstacle material.']
+--
+The flink:xrUpdateSoundObstacleMaterialConfigBD function is defined as:
+include::{generated}/api/protos/xrUpdateSoundObstacleMaterialConfigBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:material is the slink:XrSoundObstacleMaterialBD to be updated.
+* pname:config is the slink:XrSoundObstacleMaterialBD that defines the
+  configuration of the sound obstacle material.
+****
+
+This function can: be used to update the configuration of a created
+slink:XrSoundObstacleMaterialBD.
+
+Note that a successful update of an slink:XrSoundObstacleMaterialBD on its
+own does not affect the virtual sound propagation, until the updated
+slink:XrSoundObstacleMaterialBD is used to create or update sound obstacles
+using flink:xrCreateSoundObstacleBD or flink:xrUpdateSoundObstacleConfigBD.
+This is true even if slink:XrSoundObstacleMaterialBD was referenced by an
+active sound obstacle.
+
+include::{generated}/validity/protos/xrUpdateSoundObstacleMaterialConfigBD.adoc[]
+--
+
+[open,refpage='xrDestroySoundObstacleMaterialBD',type='protos',desc='Destroy a created sound obstacle material.']
+--
+The flink:xrDestroySoundObstacleMaterialBD function is defined as:
+include::{generated}/api/protos/xrDestroySoundObstacleMaterialBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:material is the slink:XrSoundObstacleMaterialBD to be destroyed.
+****
+
+This function can: be used to destroy an existing
+slink:XrSoundObstacleMaterialBD.
+
+Note that destroying an slink:XrSoundObstacleMaterialBD does not affect the
+virtual sound propagation, even if it was referenced by an active sound
+obstacle.
+
+include::{generated}/validity/protos/xrDestroySoundObstacleMaterialBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleBD',type='handles',desc='Represents an acoustic obstacle in a spatial audio scene.']
+--
+include::{generated}/api/handles/XrSoundObstacleBD.adoc[]
+
+The slink:XrSoundObstacleBD handle represents a sound obstacle.
+
+Sound obstacles in the environment are represented by
+slink:XrSoundObstacleBD handles, and each slink:XrSoundObstacleBD has
+material properties affecting sound reflection and diffraction
+characteristics.
+
+The runtime must: calculate and render sound according to all the sound
+fields, sound objects, and sound obstacles in the scene.
+--
+
+[open,refpage='xrCreateSoundObstacleBD',type='protos',desc='Create a sound obstacle in the spatial audio renderer, so that virtual sound propagation is influenced by this obstacle.']
+--
+The flink:xrCreateSoundObstacleBD function is defined as:
+
+include::{generated}/api/protos/xrCreateSoundObstacleBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD used for spatial
+  audio rendering.
+* pname:config is the slink:XrSoundObstacleConfigBD that defines the
+  configuration of the sound obstacle, including pose and material
+  information.
+* pname:mesh is the slink:XrSoundTriangleMeshBD that defines the shape of
+  the sound obstacle.
+* pname:soundObstacle is a pointer to slink:XrSoundObstacleBD that
+  flink:xrCreateSoundObstacleBD returned.
+****
+
+When an application creates a sound obstacle in the spatial audio renderer,
+virtual sound propagation is influenced by this acoustic mesh.
+
+include::{generated}/validity/protos/xrCreateSoundObstacleBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleConfigBD',type='structs',desc='Configuration of an acoustic mesh',xrefs='']
+--
+The slink:XrSoundObstacleConfigBD structure is defined as:
+
+include::{generated}/api/structs/XrSoundObstacleConfigBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:enabled is an basetype:XrBool32, indicating whether the sound
+  obstacle is enabled.
+* pname:pose is an slink:XrPosef of the acoustic mesh.
+* pname:baseSpace is an slink:XrSpace which the pname:pose is defined in.
+* pname:materialCount is the number of materials in the pname:materials
+  array.
+* pname:materials is an array of pname:materialCount
+  slink:XrSoundObstacleMaterialBD that defines the material properties for
+  each vertex of the sound obstacle.
+****
+
+Applications use slink:XrSoundObstacleConfigBD to configure an
+slink:XrSoundObstacleBD.
+
+If this config is used to create an slink:XrSoundObstacleBD,
+pname:materialCount must: be equal to the associated
+slink:XrSoundTriangleMeshBD::pname:vertexCount, otherwise the runtime must:
+return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If this config is used to update both shape and materials of an existing
+slink:XrSoundObstacleBD, pname:materialCount must: be equal to the
+associated slink:XrSoundTriangleMeshBD::pname:vertexCount, otherwise the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If this config is used to update only materials of an existing
+slink:XrSoundObstacleBD, pname:materialCount must: be equal to the vertices
+count of this slink:XrSoundTriangleMeshBD, otherwise the runtime must:
+return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: not use the sound obstacle for sound calculations if
+pname:enabled is set to ename:XR_FALSE.
+
+include::{generated}/validity/structs/XrSoundObstacleConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundTriangleMeshBD',type='structs',desc='Information of a triangle mesh',xrefs='']
+--
+The slink:XrSoundTriangleMeshBD structure is described as:
+
+include::{generated}/api/structs/XrSoundTriangleMeshBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:vertexCount is the number of vertices in the triangle mesh.
+* pname:vertices is a pointer to an array of slink:XrVector3f vertices.
+* pname:indexCount is the number of indices in the triangle mesh.
+* pname:indices is a pointer to an array of indices that defines the
+  triangles.
+****
+
+The slink:XrSoundTriangleMeshBD structure describes the shape of a sound
+obstacle.
+The pname:vertices are in counter-clockwise order as viewed from the user
+perspective.
+Only the front faces are considered when rendering the sound.
+The pname:indices array defines the topology of the triangle mesh.
+Each triplet of consecutive elements points to three vertices in the
+vertices array and thus form a triangle.
+
+include::{generated}/validity/structs/XrSoundTriangleMeshBD.adoc[]
+--
+
+===== Update Sound Obstacle Config
+
+[open,refpage='xrUpdateSoundObstacleConfigBD',type='protos',desc='Update the configuration of a submitted sound obstacle.']
+--
+The flink:xrUpdateSoundObstacleConfigBD function is defined as:
+
+include::{generated}/api/protos/xrUpdateSoundObstacleConfigBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundObstacle is the slink:XrSoundObstacleBD to be updated.
+* pname:config is the slink:XrSoundObstacleConfigBD that defines the
+  configuration of the sound obstacle, including pose and material
+  information.
+* pname:mesh is the slink:XrSoundTriangleMeshBD that describes the shape of
+  the sound obstacle.
+* pname:flags is the bit mask (bitwise code:OR of
+  elink:XrSoundObstacleFlagsBD) of the sound obstacle properties to change,
+  including pose and material information.
+****
+
+When updating the configuration of a submitted sound obstacle, applications
+use pname:flags to specify which properties to update.
+The runtime must: not update a property if the corresponding flag bit is not
+set.
+The runtime must: not read the parameters of slink:XrSoundObstacleConfigBD
+if the corresponding bits are not set; this means that the application may:
+pass invalid or uninitialized fields for parameters it does not intend to
+update.
+
+If ename:XR_SOUND_OBSTACLE_MESH_BIT_BD is set in pname:flags, pname:mesh
+must: not be code:NULL, otherwise, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If any other bit is set, pname:config must: not be code:NULL, otherwise, the
+runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/protos/xrUpdateSoundObstacleConfigBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleFlagsBD',type='flags',desc='XrSoundObstacleFlagsBD']
+--
+include::{generated}/api/flags/XrSoundObstacleFlagsBD.adoc[]
+--
+
+[open,refpage='XrSoundObstacleFlagBitsBD',type='enums',desc='XrSoundObstacleFlagBitsBD',xrefs='XrSoundObstacleFlagsBD']
+--
+include::{generated}/api/enums/XrSoundObstacleFlagBitsBD.adoc[]
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrSoundObstacleFlagBitsBD.comments.adoc[]
+--
+
+[open,refpage='xrDestroySoundObstacleBD',type='protos',desc='Remove a submitted sound obstacle.']
+--
+The flink:xrDestroySoundObstacleBD function is defined as:
+
+include::{generated}/api/protos/xrDestroySoundObstacleBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundObstacle is the slink:XrSoundObstacleBD to be removed.
+****
+
+Applications use this function to remove a submitted sound obstacle.
+
+To temporarily disable an obstacle, set the respective
+slink:XrSoundObstacleConfigBD::pname:enabled to ename:XR_FALSE instead with
+a call to flink:xrUpdateSoundObstacleConfigBD.
+
+include::{generated}/validity/protos/xrDestroySoundObstacleBD.adoc[]
+--
+
+==== Submit Audio Buffer
+
+Applications should: submit an audio buffer for each sound object and sound
+field in each audio period.
+
+Because flink:xrWaitAudioPeriodBD is a blocking function, applications
+typically submit the audio buffer within a dedicated audio thread.
+
+===== Audio Period Synchronization
+
+An audio period refers to a continuous block of time during which the
+application provides new input audio data and the runtime processes it for
+spatial rendering.
+Each audio period corresponds to one buffer of audio frames defined by
+slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer.
+
+When an application waits for the next audio period using
+flink:xrWaitAudioPeriodBD, it is effectively synchronizing with the
+runtime's internal audio rendering cycle.
+flink:xrWaitAudioPeriodBD blocks its calling thread until the next audio
+period begins, or the specified timeout expires.
+
+During each audio period:
+
+* The application waits for the runtime to request new data by calling
+  flink:xrWaitAudioPeriodBD.
+* The application submits new audio data for all sound fields and sound
+  objects by calling flink:xrSubmitSoundFieldBufferBD and/or
+  flink:xrSubmitSoundObjectBufferBD.
+* After all submissions are completed, the application signals the end of
+  submissions for this period with flink:xrEndAudioPeriodBD.
+
+This mechanism ensures that input buffers are consumed at the correct
+temporal cadence, matching the renderer's internal processing rate and
+preventing underruns or latency accumulation.
+
+Thus, an application must: follow the following call order to submit the
+audio buffers during each audio period:
+
+1. Call flink:xrWaitAudioPeriodBD to wait for the next audio period to
+   begin.
+2. Call flink:xrSubmitSoundObjectBufferBD and/or
+   flink:xrSubmitSoundFieldBufferBD to submit audio buffers for sound
+   objects and sound fields, if it submits buffers in this audio period.
+3. Call flink:xrEndAudioPeriodBD to notify the runtime of the end of buffer
+   submissions for the current audio period.
+
+If the application violates this call order, the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID for out-of-order calls.
+
+[open,refpage='xrWaitAudioPeriodBD',type='protos',desc='Wait for the next audio period to begin.']
+--
+The flink:xrWaitAudioPeriodBD function is defined as:
+
+include::{generated}/api/protos/xrWaitAudioPeriodBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD which notifies the
+  beginning of the next audio period.
+* pname:timeout is an basetype:XrDuration that specifies the maximum
+  duration to wait for the next audio period in nanoseconds.
+****
+
+This function blocks the calling thread until the next audio period begins
+or the specified timeout expires.
+
+The runtime must: only unblock the calling thread after the previously
+submitted audio buffers are processed and before the previous output audio
+is done playing, so that output audio is gapless.
+
+The runtime should: unblock the calling thread as soon as possible after the
+above criteria is met.
+
+If a previous call to flink:xrEndAudioPeriodBD has not been successful, this
+function must: return ename:XR_ERROR_CALL_ORDER_INVALID.
+
+pname:timeout must: be greater than zero, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+This function must: return ename:XR_TIMEOUT_EXPIRED if the specified timeout
+expires before the next audio period begins.
+
+Calling this function must: be externally synchronized by the application,
+concurrent calls may: result in undefined behavior.
+
+include::{generated}/validity/protos/xrWaitAudioPeriodBD.adoc[]
+--
+
+[open,refpage='xrEndAudioPeriodBD',type='protos',desc='End the current audio period.']
+--
+The flink:xrEndAudioPeriodBD function is defined as:
+
+include::{generated}/api/protos/xrEndAudioPeriodBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:renderer is the slink:XrSpatialAudioRendererBD to be notified with
+  the end of the current audio period.
+****
+
+This function notifies the runtime of the end of the current audio period,
+which means that the application finished submitting all audio buffers for
+the current audio period and the runtime must: start further processing them
+for spatial rendering.
+
+This function must: only be called after a successful and not timed out call
+to flink:xrWaitAudioPeriodBD, otherwise the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+Calling this function must: be externally synchronized by the application,
+concurrent calls may: result in undefined behavior.
+
+include::{generated}/validity/protos/xrEndAudioPeriodBD.adoc[]
+--
+
+===== Audio Buffer Submission
+
+Within each audio period, applications should: submit the audio buffer for
+each sound object and sound field.
+
+[open,refpage='XrAudioBufferBD',type='structs',desc='Audio buffer for spatial audio rendering.']
+--
+include::{generated}/api/structs/XrAudioBufferBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:channelLayout is the elink:XrAudioBufferChannelLayoutBD that
+  specifies the memory layout of the audio data (for example interleaved or
+  planar).
+* pname:bufferChannels is the number of channels in the audio pname:buffer.
+* pname:bufferLength is the number of floating-point elements in
+  pname:buffer.
+  It must: be equal to the product of pname:bufferChannels and the
+  slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer used when
+  creating the spatial audio renderer.
+* pname:buffer is a pointer to a floating-point array containing the audio
+  data.
+****
+
+The audio data in pname:buffer is stored in little-endian byte order.
+
+pname:bufferLength and pname:bufferChannels must: be compatible with the
+values specified in slink:XrSpatialAudioRendererCreateInfoBD when creating
+the renderer.
+In particular, the application must: set pname:bufferLength to
+[eq]#pname:bufferChannels *
+slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer#, otherwise
+the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+The application must: ensure that the audio signal stored in this
+slink:XrAudioBufferBD is sampled at a sample rate of
+slink:XrSpatialAudioRendererCreateInfoBD::pname:sampleRate.
+Supplying data from a mismatched sample rate results in unspecified
+behavior, commonly perceived as tempo/pitch shifts and spectral coloration.
+
+include::{generated}/validity/structs/XrAudioBufferBD.adoc[]
+--
+
+[open,refpage='XrAudioBufferChannelLayoutBD',type='enums',desc='XrAudioBufferChannelLayoutBD']
+--
+The elink:XrAudioBufferChannelLayoutBD enumeration describes the channel
+layout of audio buffers.
+
+include::{generated}/api/enums/XrAudioBufferChannelLayoutBD.adoc[]
+include::{generated}/api/enums/XrAudioBufferChannelLayoutBD.comments.adoc[]
+--
+
+[open,refpage='xrSubmitSoundFieldBufferBD',type='protos',desc='Input audio signal for a submitted sound field.']
+--
+The flink:xrSubmitSoundFieldBufferBD function is defined as:
+
+include::{generated}/api/protos/xrSubmitSoundFieldBufferBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundField is the slink:XrSoundFieldBD to input audio signal.
+* pname:buffer is a pointer to an slink:XrAudioBufferBD structure that
+  contains the input audio signal.
+****
+
+This function submits an audio buffer to a sound field slink:XrSoundFieldBD.
+The corresponding function for a sound object slink:XrSoundObjectBD is
+flink:xrSubmitSoundObjectBufferBD.
+
+This function must: only be called during an audio period, which is the time
+period after a successful and not timed out call to
+flink:xrWaitAudioPeriodBD and before a successful call to
+flink:xrEndAudioPeriodBD, otherwise the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+For each sound field, this function must: not be called more than once per
+audio period, otherwise the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+The pname:buffer must:
+
+* Have an slink:XrAudioBufferBD::pname:bufferChannels greater than 0 and
+  match the channel count defined by the channel mask and configuration used
+  to create the slink:XrSoundFieldBD.
+
+* Have an slink:XrAudioBufferBD::pname:bufferLength that, when divided by
+  the slink:XrAudioBufferBD::pname:bufferChannels, equals the
+  slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer specified
+  at the creation of the spatial audio renderer with
+  flink:xrCreateSpatialAudioRendererBD.
+
+If any of the above conditions are not met, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+When valid audio is submitted, the runtime must: correctly process and
+render the spatial audio.
+
+Applications must: not call this function concurrently with
+flink:xrWaitAudioPeriodBD or flink:xrEndAudioPeriodBD.
+Doing so may: result in undefined behavior.
+
+include::{generated}/validity/protos/xrSubmitSoundFieldBufferBD.adoc[]
+--
+
+[open,refpage='xrSubmitSoundObjectBufferBD',type='protos',desc='Input audio signal for a submitted sound object.']
+--
+The flink:xrSubmitSoundObjectBufferBD function is defined as:
+
+include::{generated}/api/protos/xrSubmitSoundObjectBufferBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:soundObject is the slink:XrSoundObjectBD to input audio signal.
+* pname:buffer is a pointer to an slink:XrAudioBufferBD structure that
+  contains the input audio signal.
+****
+
+This function submits an audio buffer to a sound object
+slink:XrSoundObjectBD.
+The corresponding function for a sound field slink:XrSoundFieldBD is
+flink:xrSubmitSoundFieldBufferBD.
+
+This function must: only be called during an audio period, which is the time
+period after a successful, not timed out call to flink:xrWaitAudioPeriodBD
+and before a successful call to flink:xrEndAudioPeriodBD, otherwise the
+runtime must: return ename:XR_ERROR_CALL_ORDER_INVALID.
+
+For each sound object, this function must: not be called more than once per
+audio period, otherwise the runtime must: return
+ename:XR_ERROR_CALL_ORDER_INVALID.
+
+The pname:buffer must:
+
+* Have slink:XrAudioBufferBD::pname:bufferChannels set to 1.
+
+* Have an slink:XrAudioBufferBD::pname:bufferLength equal to the
+  slink:XrSpatialAudioRendererCreateInfoBD::pname:framesPerBuffer specified
+  when creating the spatial audio renderer with
+  flink:xrCreateSpatialAudioRendererBD.
+
+If any of the above conditions are not met, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+When valid audio is submitted, the runtime must: correctly process and
+render the spatial audio.
+
+Applications must: not call this function concurrently with
+flink:xrWaitAudioPeriodBD or flink:xrEndAudioPeriodBD.
+Doing so may: result in undefined behavior.
+
+include::{generated}/validity/protos/xrSubmitSoundObjectBufferBD.adoc[]
+--
+
+==== Issues
+
+This extension does not define separate structures for each audio frame
+type.
+Instead, it uses a flat array of floats for audio samples within
+slink:XrAudioBufferBD.
+
+Rationale:
+
+* Using a flat array allows zero-copy or minimal-copy paths between
+  application and runtime, improving data transfer efficiency and cache
+  locality.
+* The flat representation aligns with widely used audio APIs and formats
+  (e.g. PCM float arrays), minimizing conversion overhead and easing
+  interoperability.
+* Requirements that would normally vary by frame type (channel count,
+  layout, frames per buffer) are already expressed by fields in
+  slink:XrAudioBufferBD and slink:XrSpatialAudioRendererCreateInfoBD,
+  avoiding the need for per-type structs.
+* All frame types share a common floating-point sample representation.
+  Defining separate structures would introduce redundant fields and
+  unnecessary complexity.
+
+This design choice favors clarity and performance without reducing
+functionality.
+
+==== Example code
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSession session;   // previously initialized
+XrSpace space; //previously initialized
+/***************************************************/
+/* xrCreateSpatialAudioRendererBD */
+/***************************************************/
+
+PFN_xrQueryFramesPerBufferRangeBD xrQueryFramesPerBufferRangeBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrQueryFramesPerBufferRangeBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrQueryFramesPerBufferRangeBD)));
+
+PFN_xrEnumerateSupportedAudioSampleRateBD xrEnumerateSupportedAudioSampleRateBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrEnumerateSupportedAudioSampleRateBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrEnumerateSupportedAudioSampleRateBD)));
+
+PFN_xrCreateSpatialAudioRendererBD xrCreateSpatialAudioRendererBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAudioRendererBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSpatialAudioRendererBD)));
+
+uint32_t sampleRateCount = 0;
+CHK_XR(xrEnumerateSupportedAudioSampleRateBD(session, 0, &sampleRateCount, NULL));
+std::vector<XrAudioSampleRateBD> sampleRates;
+if (sampleRateCount != 0) {
+    sampleRates.resize(sampleRateCount);
+    CHK_XR(xrEnumerateSupportedAudioSampleRateBD(session, sampleRateCount, &sampleRateCount, sampleRates.data()));
+}
+
+uint32_t minFramePerBuffer = 0;
+uint32_t maxFramePerBuffer = 0;
+CHK_XR(xrQueryFramesPerBufferRangeBD(session, sampleRates[0], &minFramePerBuffer, &maxFramePerBuffer));
+
+uint32_t framePerBuffer = 4096;
+framePerBuffer = framePerBuffer < minFramePerBuffer ? minFramePerBuffer : framePerBuffer;
+framePerBuffer = framePerBuffer > maxFramePerBuffer ? maxFramePerBuffer : framePerBuffer;
+
+// Setup context config struct
+XrSpatialAudioRendererCreateInfoBD createInfo{
+    XR_TYPE_SPATIAL_AUDIO_RENDERER_CREATE_INFO_BD,
+    NULL,
+    framePerBuffer,  //  frames_per_buffer
+    sampleRates[0]  //  sample rate
+};
+
+// Create and initialize spatial audio renderer for session
+XrSpatialAudioRendererBD renderer;
+CHK_XR(xrCreateSpatialAudioRendererBD(session, &createInfo, &renderer));
+
+/****************************************************************************/
+/* Setting-up free-field spatialization for sound fields. The following functions are used: */
+/* - xrCreateSoundFieldBD */
+/* - xrUpdateSoundFieldConfigBD */
+/* - xrSubmitSoundFieldBufferBD */
+/****************************************************************************/
+
+// Setup a 1st order ambisonic sound field config struct
+XrSoundFieldChannelDefinitionAmbixBD ambix {
+    XR_TYPE_SOUND_FIELD_CHANNEL_DEFINITION_AMBIX_BD,
+    nullptr,
+    XR_SOUND_FIELD_CHANNEL_MASK_AMBIX_1ST_ORDER_BD
+};
+
+XrSoundFieldConfigBD soundFieldConfig{
+    XR_TYPE_SOUND_FIELD_CONFIG_BD,
+    &ambix,
+    true,
+    {0.0f, 0.0f, 0.0f, 1.0f},  // orientation
+    space,
+    1,  //  main volume
+    1  //  LFE gain
+};
+
+
+// Add sound field to the scene
+PFN_xrCreateSoundFieldBD xrCreateSoundFieldBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundFieldBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSoundFieldBD)));
+XrSoundFieldBD soundField;
+CHK_XR(xrCreateSoundFieldBD(renderer, &soundFieldConfig, &soundField));
+
+// Submit a sound field buffer
+/// Wait for the next audio period to begin
+PFN_xrWaitAudioPeriodBD xrWaitAudioPeriodBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrWaitAudioPeriodBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrWaitAudioPeriodBD)));
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound field buffer
+PFN_xrSubmitSoundFieldBufferBD xrSubmitSoundFieldBufferBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrSubmitSoundFieldBufferBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrSubmitSoundFieldBufferBD)));
+float mcbuffer[4*256];
+XrAudioBufferBD soundFieldBuffer{
+    XR_TYPE_AUDIO_BUFFER_BD,
+    nullptr,
+    XR_AUDIO_BUFFER_CHANNEL_LAYOUT_PLANAR_BD,
+    4,  //  num_channels
+    4*256,  //  buffer_length
+    mcbuffer
+};
+CHK_XR(xrSubmitSoundFieldBufferBD(soundField, &soundFieldBuffer));
+
+/// Signal the end of the current audio period
+PFN_xrEndAudioPeriodBD xrEndAudioPeriodBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrEndAudioPeriodBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrEndAudioPeriodBD)));
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear added sound field in device audio output
+
+// Change sound field config
+soundFieldConfig.orientation = {0.0f, 0.38268343f, 0.0f, 0.92387953f}; // rotate 45 degrees around y axis
+PFN_xrUpdateSoundFieldConfigBD xrUpdateSoundFieldConfigBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundFieldConfigBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrUpdateSoundFieldConfigBD)));
+CHK_XR(xrUpdateSoundFieldConfigBD(soundField, &soundFieldConfig, XR_SOUND_FIELD_ORIENTATION_BIT_BD));
+
+// Submit input signal again
+/// Wait for the next audio period to begin
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound field buffer
+CHK_XR(xrSubmitSoundFieldBufferBD(soundField, &soundFieldBuffer));
+
+/// Signal the end of the current audio period
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear the sound field being rotated in device audio output
+
+/****************************************************************************/
+/* Setting-up free-field spatialization for object audio. The following functions are used: */
+/* - xrCreateSoundObjectBD */
+/* - xrUpdateSoundObjectConfigBD */
+/* - xrSubmitSoundObjectBufferBD */
+/****************************************************************************/
+
+// Add object to the scene
+PFN_xrCreateSoundObjectBD xrCreateSoundObjectBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObjectBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSoundObjectBD)));
+XrSoundObjectBD objectId;
+// Construct polar pattern
+XrSoundObjectDirectivityCardioidBD objectDirectivityCardioid{
+    XR_TYPE_SOUND_OBJECT_DIRECTIVITY_CARDIOID_BD,
+    NULL,
+    0.5f,    //  alpha
+    1.0f     //  order
+};
+
+// Construct shape
+XrSoundObjectShapeSphereBD objectShapeSphere{
+    XR_TYPE_SOUND_OBJECT_SHAPE_SPHERE_BD,
+    &objectDirectivityCardioid,
+    0.1f  //  radius of 0.1 meter
+};
+
+// Construct inverse square distance attenuation
+XrSoundObjectDistanceAttenuationBD objectDistanceAttenuation{
+    XR_TYPE_SOUND_OBJECT_DISTANCE_ATTENUATION_BD,
+    NULL,
+    XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_INVERSE_SQUARE_BD,   //  distance attenuation type
+    0.1f,   //  min distance
+    100.0f,    //  max distance
+    1.0f  //  rolloff factor
+};
+
+// Construct object config
+XrSoundObjectConfigBD objectConfig{
+    XR_TYPE_SOUND_OBJECT_CONFIG_BD,
+    &objectShapeSphere,
+    true,
+    {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}, //   Pose
+    space,
+    1.0f,   //  main volume
+    1.0f,   //  reflection gain
+    true,   //  is Doppler enabled
+    &objectDistanceAttenuation,     //  distance attenuation for direct sound
+    &objectDistanceAttenuation      //  distance attenuation for indirect sound
+};
+
+// Add object to the scene
+CHK_XR(xrCreateSoundObjectBD(renderer, &objectConfig, &objectId));
+
+// Submit a sound object buffer
+/// Wait for the next audio period to begin
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound object buffer
+PFN_xrSubmitSoundObjectBufferBD xrSubmitSoundObjectBufferBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrSubmitSoundObjectBufferBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrSubmitSoundObjectBufferBD)));
+float buffer[256];
+XrAudioBufferBD objBuffer{
+    XR_TYPE_AUDIO_BUFFER_BD,
+    nullptr,
+    XR_AUDIO_BUFFER_CHANNEL_LAYOUT_INTERLEAVED_BD,
+    1,  //  num_channels
+    256,  //  buffer_length
+    buffer
+};
+
+// submit the buffer
+CHK_XR(xrSubmitSoundObjectBufferBD(objectId, &objBuffer));
+
+/// Signal the end of the current audio period
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear added sound object in device audio output
+
+// Change object config
+objectConfig.pose.position = {1.0f, 0.0f, 1.0f}; // move sound object 1 meter towards positive direction of x axis
+PFN_xrUpdateSoundObjectConfigBD xrUpdateSoundObjectConfigBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundObjectConfigBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrUpdateSoundObjectConfigBD)));
+CHK_XR(xrUpdateSoundObjectConfigBD(objectId, &objectConfig, XR_SOUND_OBJECT_POSE_BIT_BD));
+
+
+// Submit input signal again and get output signal with a different sound field position.
+/// Wait for the next audio period to begin
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound object buffer
+CHK_XR(xrSubmitSoundObjectBufferBD(objectId, &objBuffer));
+
+/// Signal the end of the current audio period
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear that the position of the sound object is changed
+
+/****************************************************************************/
+/* Adding sound obstacles to render room acoustics. The following functions are used: */
+/* - xrCreateSoundObstacleBD */
+/* - xrSubmitObjectBufferBD */
+/* - xrUpdateSoundObstacleConfigBD */
+/* - xrDestroySoundObstacleMeshBD */
+/****************************************************************************/
+
+// Setup triangle mesh of a rectangular room
+XrVector3f vertices[] = {{5.0f, 5.0f, 5.0f}, {-5.0f, 5.0f, 5.0f}, {-5.0f, 5.0f, -5.0f}, {5.0f, 5.0f,-5.0f},
+                         {5.0f, -5.0f, 5.0f}, {-5.0f, -5.0f, 5.0f}, {-5.0f, -5.0f, -5.0f}, {5.0f, -5.0f, -5.0f}};
+uint32_t indices[] = {0, 1, 2, 0, 2, 3, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 1, 0, 4, 1, 4, 5, 0, 3, 7, 0, 7, 4, 5, 7, 6, 5, 4, 7};
+XrSoundTriangleMeshBD mesh{
+    XR_TYPE_SOUND_TRIANGLE_MESH_BD,NULL,
+    8,    //  vertexCount
+    vertices,
+    12*3,   //  indexCount
+    indices
+};
+
+// Setup acoustic material
+float freqCenter[] = {500.0f, 1000.0f, 2000.0f, 4000.0f};
+float absorption[] = {0.1f, 0.12f, 0.15f, 0.2f};
+float scattering[] = {0.2f, 0.23f, 0.26f, 0.3f};
+float transmission[] = {0.5f, 0.5f, 0.5f, 0.5f};
+XrSoundObstacleMaterialConfigBD materialConfig{
+    XR_TYPE_SOUND_OBSTACLE_MATERIAL_CONFIG_BD,
+    NULL,
+    XR_SOUND_OBSTACLE_MATERIAL_TYPE_CUSTOM_BD, //  material type
+    4,  //  frequency bandCount
+    freqCenter,       //  bandFrequencies (frequency center of bands)
+    absorption,       //  bandAbsorptions
+    scattering,       //  bandScatterings
+    transmission      //  bandTransmissions
+};
+
+PFN_xrCreateSoundObstacleMaterialBD xrCreateSoundObstacleMaterialBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObstacleMaterialBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSoundObstacleMaterialBD)));
+XrSoundObstacleMaterialBD materialHandle;
+CHK_XR(xrCreateSoundObstacleMaterialBD(renderer, &materialConfig, &materialHandle));
+
+// Setup obstacle config
+XrSoundObstacleMaterialBD materials[8] = {materialHandle, materialHandle, materialHandle, materialHandle,
+    materialHandle, materialHandle, materialHandle, materialHandle};
+XrSoundObstacleConfigBD obstacleConfig{
+    XR_TYPE_SOUND_OBSTACLE_CONFIG_BD,
+    NULL,
+    true,   //  sound obstacle enabled
+    {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}, //  Pose
+    space,
+    8,    //  materialCount, which is equal to vertexCount
+    materials    //  material for each vertex
+};
+
+//  Submit sound obstacle to the scene
+PFN_xrCreateSoundObstacleBD xrCreateSoundObstacleBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObstacleBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrCreateSoundObstacleBD)));
+XrSoundObstacleBD soundObstacleHandle;
+CHK_XR(xrCreateSoundObstacleBD(renderer, &obstacleConfig, &mesh, &soundObstacleHandle));
+
+
+// Input object audio
+/// Wait for the next audio period to begin
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound object buffer
+CHK_XR(xrSubmitSoundObjectBufferBD(objectId, &objBuffer));
+
+/// Signal the end of the current audio period
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear the sound object
+// being reflected by the sound obstacle we just added in the form of echo and reverb
+
+// Change sound obstacle config
+obstacleConfig.enabled = false;
+PFN_xrUpdateSoundObstacleConfigBD xrUpdateSoundObstacleConfigBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundObstacleConfigBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrUpdateSoundObstacleConfigBD)));
+CHK_XR(xrUpdateSoundObstacleConfigBD(soundObstacleHandle, &obstacleConfig, NULL, XR_SOUND_OBSTACLE_ENABLED_BIT_BD));
+
+
+// Input object audio
+/// Wait for the next audio period to begin
+CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
+
+/// Submit a sound object buffer
+CHK_XR(xrSubmitSoundObjectBufferBD(objectId, &objBuffer));
+
+/// Signal the end of the current audio period
+CHK_XR(xrEndAudioPeriodBD(renderer));
+
+// We should now be able to hear the echo and reverb goes away
+// since the only sound obstacle is disabled
+
+/**********************************************************/
+/* Destroying spatial audio renderer for specified session */
+/**********************************************************/
+
+// Destroy spatial audio renderer
+PFN_xrDestroySpatialAudioRendererBD xrDestroySpatialAudioRendererBD;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrDestroySpatialAudioRendererBD",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &xrDestroySpatialAudioRendererBD)));
+CHK_XR(xrDestroySpatialAudioRendererBD(renderer));
+----
+
+include::{generated}/interfaces/XR_BD_spatial_audio_rendering.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-01-22 (Xuzhou Ye)
+** Initial extension description
+

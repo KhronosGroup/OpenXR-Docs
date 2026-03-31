@@ -234,7 +234,7 @@ include::{generated}/validity/structs/XrRaycastHitResultANDROID.adoc[]
 
 The following example code demonstrates how to perform raycasts.
 
-[source,C++]
+[source,cpp]
 ----
 XrSession session; // previously initialized
 XrTime updateTime; // previously initialized

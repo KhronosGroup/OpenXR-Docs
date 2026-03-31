@@ -451,7 +451,7 @@ image::images/ext_marker_tracking_aruco.svg[align="center", title="ArUco marker 
 The following example code demonstrates how to configure the QR code
 tracking capability when creating a spatial context.
 
-[source,C++]
+[source,cpp]
 ----
 // Check if marker tracking capability is supported
 uint32_t capabilityCount;
@@ -525,7 +525,7 @@ a context configured with
 ename:XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT and query its
 component data.
 
-[source,C++]
+[source,cpp]
 ----
 XrFutureEXT future = XR_NULL_FUTURE_EXT;
 

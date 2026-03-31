@@ -200,7 +200,7 @@ include::{generated}/validity/protos/xrUnshareAnchorANDROID.adoc[]
 The following example code demonstrates how to share and unshare an anchor
 with other applications.
 
-[source,C++]
+[source,cpp]
 ----
 #if defined(XR_USE_PLATFORM_ANDROID)
 XrSession session; // previously initialized

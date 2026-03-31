@@ -36,6 +36,8 @@ include::{generated}/api/structs/XrSystemBodyTrackingPropertiesBD.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsBodyTracking is an basetype:XrBool32, indicating if current
   system is capable of receiving body tracking input.
 ****
@@ -292,7 +294,7 @@ include::{generated}/validity/structs/XrBodyJointLocationBD.adoc[]
 The following example code demonstrates how to locate all body joints
 relative to a base space.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

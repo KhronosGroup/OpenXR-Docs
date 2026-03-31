@@ -1,0 +1,151 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_mouse_interaction.adoc[]
+
+*Last Modified Date*::
+    2024-09-06
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Sharayu Shenoy, Google +
+    Chiara Coetzee, Google +
+    Levana Chen, Google +
+    Spencer Quin, Google +
+
+==== Overview
+
+This extension provides an basetype:XrPath for getting mouse input and
+defines one commonly used action pose for user mouse profiles including both
+mouse devices and trackpad devices.
+
+This extension also introduces a new interaction profile specifically
+designed for mouse devices to input through the <<input, OpenXR action
+system>>.
+
+[[android_mouse_interaction-action-pose]]
+==== Action pose for mouse interactions
+
+The following action pose (i.e. "aim") enables a 3D pointer ray, whether the
+tracking inputs are provided by a mouse device or a trackpad device.
+
+The runtime must: support the following action subpath on all
+<<semantic-paths-interaction-profiles, interaction profiles>> that are valid
+for the user path of pathname:/user/mouse, including those interaction
+profiles enabled through extensions.
+
+* subpathname:/input/aim/pose
+
+===== Aim pose
+
+The subpathname:/input/aim/pose is designed for interacting with objects
+through a mouse pointer in 3D space.
+For example, using a virtual laser pointer to aim at a virtual button on the
+wall is an interaction suited to the "aim" pose.
+
+This is the same "aim" pose defined in
+<<semantic-paths-standard-pose-identifiers>>.
+Every tracked controller profile already supports this pose.
+
+[[fig-ANDROID_mouse_interaction-mouse-aim-pose]]
+image::images/XR_ANDROID_mouse_interaction_aim_pose.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
+
+*Position*
+
+The position of the "aim" pose is typically the user's head, that is, the
+same position of the head when a mouse movement is detected.
+The aim pose for the mouse is calculated when there is a mouse movement.
+The runtime should: keep the last known aim position until the next mouse
+movement.
+
+*Orientation*
+
+The orientation of the "aim" pose may: be used to render a 3D pointer ray to
+interact with a virtual object, for example, clicking a menu button on the
+wall.
+
+The aim pose for the mouse is calculated when there is a mouse movement.
+The runtime should: keep the last known aim orientation until the next mouse
+movement.
+
+The -Z direction is the forward direction of the aiming gesture, that is,
+where the aiming ray is pointing at.
+
+The relative X,Y movement of the mouse is used to compute the relative
+movement of the mouse along a sphere around the user's head.
+
+[[fig-ANDROID_mouse_interaction-mouse-aim-drag]]
+image::images/XR_ANDROID_mouse_interaction_aim_drag.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
+
+The runtime should: support depth movement using primary click and scroll.
+When an action to move in depth is in process, the position is offset from
+the head position in positive or negative Z-direction along the ray
+depending on the positive or negative scroll value.
+The runtime should: stabilize the depth movement within the sphere around
+the user's head.
+
+[[android_mouse_interaction-profile]]
+==== The interaction profile for mouse devices
+
+The mouse interaction profile is designed for runtimes which provide mouse
+inputs using mouse devices or trackpad devices with buttons and scroll.
+This allows mouse devices and trackpad devices to provide commonly used
+clicks, scroll and action pose to the <<input, OpenXR action system>>.
+
+Interaction profile path:
+
+* pathname:/interaction_profiles/android/mouse_interaction
+
+Valid for top level user path:
+
+* pathname:/user/mouse
+
+Supported component paths:
+
+* subpathname:/input/aim/pose
+* subpathname:/input/select/click
+* subpathname:/input/secondary_android/click
+* subpathname:/input/tertiary_android/click
+* subpathname:/input/scroll_android/value
+
+This interaction profile supports the above
+<<android_mouse_interaction-action-pose, action pose>>, as well as the
+following two groups of action inputs.
+
+===== Click action
+
+This interaction profile supports subpathname:/input/select/click,
+subpathname:/input/secondary_android/click and /input/tertiary_android/click
+actions.
+
+The subpathname:/input/select/click is a boolean input, where the value
+`XR_TRUE` indicates that the primary button on the mouse or trackpad is
+pressed.
+
+The subpathname:/input/secondary_android/click is a boolean input, where the
+value `XR_TRUE` indicates that the secondary button on the mouse or trackpad
+is pressed.
+
+The subpathname:/input/tertiary_android/click is a boolean input, where the
+value `XR_TRUE` indicates that the mouse scroll or the tertiary button is
+pressed.
+
+===== Scroll action
+
+This interaction profile supports subpathname:/input/scroll_android/value
+actions.
+
+The subpathname:/input/scroll_android/value is a 2D input component varying
+from -1 to 1 to map to scroll down and scroll up.
+
+include::{generated}/interfaces/XR_ANDROID_mouse_interaction.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-08-29 (Levana Chen)
+** Initial extension description

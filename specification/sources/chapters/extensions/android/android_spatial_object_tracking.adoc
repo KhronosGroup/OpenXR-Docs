@@ -1,0 +1,407 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_spatial_object_tracking.adoc[]
+
+*Last Modified Date*::
+    2025-06-25
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Kyle Chen, Google +
+    Nihav Jain, Google +
+    Levana Chen, Google +
+    Spencer Quin, Google +
+
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and defines a spatial
+capability for tracking a set of predefined physical objects without
+requiring an input dataset from the application.
+For example, the system can: track keyboards, mice, and other objects in the
+environment, and then report the poses and extents of these objects to the
+application.
+
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Runtime Support
+
+If the runtime supports object tracking, it must: indicate this by
+enumerating ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID in
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+==== Configuration
+
+[open,refpage='XrSpatialCapabilityConfigurationObjectTrackingANDROID',type='structs',desc='Config struct for the object tracking capability',xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationObjectTrackingANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationObjectTrackingANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT and must: be
+  ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+  It must: be greater than 0.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+* pname:activeSemanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:activeSemanticLabels array.
+  It can: be 0, which means all semantic labels are active, or it can: be
+  greater than 0, in which case the pname:activeSemanticLabels array is used
+  to determine which semantic labels are active.
+* pname:activeSemanticLabels is a pointer to the array of
+  elink:XrSpatialObjectSemanticLabelANDROID indicating the active objects in
+  tracking.
+  It must: be null if pname:activeSemanticLabelCount is 0.
+  And it must: be non-null if pname:activeSemanticLabelCount is greater than
+  0, which means that it is used to determine which semantic labels are
+  active.
+****
+
+Applications can: enable the
+ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID spatial capability by
+adding a pointer to the
+slink:XrSpatialCapabilityConfigurationObjectTrackingANDROID structure in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:capability is not ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID.
+
+Applications can: specify the desired semantic labels in
+pname:activeSemanticLabels which they are in favor to track.
+If there is no semantic labels specified in pname:activeSemanticLabels and
+pname:activeSemanticLabelCount is 0, all semantic labels are active to be
+tracked by default.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationObjectTrackingANDROID.adoc[]
+--
+
+[[android_spatial_object_tracking_guaranteed_components]]
+==== Guaranteed Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID
+must: support the following spatial components as guaranteed components of
+the entities discovered by this capability and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT -
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT
+* ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID An object
+tracking capability is meaningless without a semantic label component.
+While this extension defines the
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID as one of the
+possible semantic label components for runtimes to support, other extensions
+may: define new component types to provide different classes of semantic
+labels that describe a tracked object.
+
+===== Bounded 3D Component
+
+The bounded 3D component provides the center and extents of the object
+represented by the entity it is on.
+See <<ext_spatial_entity_bounded3D_component>> for more details.
+
+[[android_spatial_object_semantic_label_component]]
+===== Object Semantic Label Component
+
+====== Component Data
+
+[open,refpage='XrSpatialObjectSemanticLabelANDROID',type='enums',desc='The semantic label of the object represented by the entity it is on.',xrefs='XrSpatialComponentObjectSemanticLabelListANDROID']
+--
+include::{generated}/api/enums/XrSpatialObjectSemanticLabelANDROID.adoc[]
+
+The elink:XrSpatialObjectSemanticLabelANDROID enumeration describes a set of
+semantic labels for a object.
+
+include::{generated}/api/enums/XrSpatialObjectSemanticLabelANDROID.comments.adoc[]
+--
+
+===== Spatial object orientation
+
+The orientation of the objects is shown in the
+<<fig-ANDROID_spatial_object-orientation, following image>> (with xyz = rgb)
+originating at the bottom center of the objects.
+
+The 3D orientation of the mouse is aligned to the 3D orientation of the
+supporting plane.
+The extents enclose the keyboard and mouse completely and the base of the
+laptop.
+
+[[fig-ANDROID_spatial_object-orientation]]
+image::images/XR_ANDROID_spatial_object_orientation.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example object orientation."]
+
+====== Component list struct to query data
+
+[open,refpage='XrSpatialComponentObjectSemanticLabelListANDROID',type='structs',desc='List struct for the semantic label component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentObjectSemanticLabelListANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialComponentObjectSemanticLabelListANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of
+  elink:XrSpatialObjectSemanticLabelANDROID.
+****
+
+The application can: query the semantic label component of the spatial
+entities in an slink:XrSpatialSnapshotEXT by adding
+ename:XR_TYPE_SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_ANDROID in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+adding slink:XrSpatialComponentObjectSemanticLabelListANDROID to the next
+pointer chain of slink:XrSpatialComponentDataQueryResultEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentObjectSemanticLabelListANDROID is in the next chain
+of slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID is not
+included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentObjectSemanticLabelListANDROID.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID is
+enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+
+==== Example code
+
+===== Configure Object Tracking Capability
+
+The following example code demonstrates how to configure object tracking
+capability when creating a spatial context.
+
+[source,cpp]
+----
+// Check if object tracking capability is supported
+uint32_t capabilityCount;
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
+std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
+
+if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID) == capabilities.end()) {
+  return;
+}
+
+// Enumerate supported components for object tracking capability
+XrSpatialCapabilityComponentTypesEXT objectComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID, &objectComponents));
+std::vector<XrSpatialComponentTypeEXT> objectCapabilityComponents(objectComponents.componentTypeCountOutput);
+objectComponents.componentTypeCapacityInput = objectCapabilityComponents.size();
+objectComponents.componentTypes = objectCapabilityComponents.data();
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID, &objectComponents));
+
+// Create a spatial context
+XrSpatialContextEXT spatialContext{};
+
+// Enable the 2 guaranteed components (bounded 3D, semantic label) of the object tracking capability
+std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID,
+};
+
+// Specify some semantic labels to be active and tracked
+std::vector<XrSpatialObjectSemanticLabelANDROID> activeSemanticLabels =
+{
+    XR_SPATIAL_OBJECT_SEMANTIC_LABEL_KEYBOARD_ANDROID,
+    XR_SPATIAL_OBJECT_SEMANTIC_LABEL_MOUSE_ANDROID,
+};
+
+XrSpatialCapabilityConfigurationObjectTrackingANDROID objectTrackingConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_OBJECT_TRACKING_ANDROID};
+objectTrackingConfig.capability = XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID;
+objectTrackingConfig.enabledComponentCount = enabledComponents.size();
+objectTrackingConfig.enabledComponents = enabledComponents.data();
+// Specify the count of active semantic labels and the pointer to the array of
+// active semantic labels.
+// If the `activeSemanticLabelCount` is 0 and `activeSemanticLabels` is NULL,
+// all labels will be set to active by default.
+objectTrackingConfig.activeSemanticLabelCount = activeSemanticLabels.size();
+objectTrackingConfig.activeSemanticLabels = activeSemanticLabels.data();
+
+std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+  reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&objectTrackingConfig),
+};
+
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
+spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
+spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+XrFutureEXT createContextFuture;
+CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+waitUntilReady(createContextFuture);
+
+XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+if (completion.futureResult != XR_SUCCESS) {
+  return;
+}
+
+spatialContext = completion.spatialContext;
+
+// ...
+// Discover entities with the spatial context
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Discover Spatial Entities & Query Component Data
+
+The following example code demonstrates how to discover spatial entities for
+a context configured with
+ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID and query its component
+data.
+
+[source,cpp]
+----
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT,
+  XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID,
+};
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
+  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
+  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
+  completionInfo.baseSpace = localSpace;
+  completionInfo.time = time;
+  completionInfo.future = future;
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the semantic label component data
+    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
+    queryCond.componentTypeCount = snapshotComponents.size();
+    queryCond.componentTypes = snapshotComponents.data();
+
+    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrBoxf> bounded3D(queryResult.entityIdCountOutput);
+    XrSpatialComponentBounded3DListEXT bounded3DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT};
+    bounded3DList.boundCount = bounded3D.size();
+    bounded3DList.bounds = bounded3D.data();
+    queryResult.next = &bounded3DList;
+
+    std::vector<XrSpatialObjectSemanticLabelANDROID> semanticLabels;
+    XrSpatialComponentObjectSemanticLabelListANDROID semanticLabelsList{XR_TYPE_SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_ANDROID};
+    semanticLabels.resize(queryResult.entityIdCountOutput);
+    semanticLabelsList.semanticLabelCount = semanticLabels.size();
+    semanticLabelsList.semanticLabels = semanticLabels.data();
+    semanticLabelsList.next = queryResult.next;
+    queryResult.next = &semanticLabelsList;
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (entityStates[i] != XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+        continue;
+      }
+
+      // 3D bounds for entity entityIds[i] is bounded3D[i].extents centered on bounded3D[i].center.
+
+      // semantic label for entity entityIds[i] is semanticLabels[i].
+
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+    if (event.type == XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT) {
+      const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+          *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+      // Discover spatial entities for the context that we received the "discovery
+      // recommended" event for.
+      discoverSpatialEntities(eventdata.spatialContext, time);
+    }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+include::{generated}/interfaces/XR_ANDROID_spatial_object_tracking.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-06-26 (Kyle Chen)
+** Initial extension description.
+* Revision 2, 2025-12-04 (Kyle Chen)
+** Update the example format to new style.

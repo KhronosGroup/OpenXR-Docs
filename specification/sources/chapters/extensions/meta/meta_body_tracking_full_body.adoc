@@ -40,6 +40,8 @@ include::{generated}/api/structs/XrSystemPropertiesBodyTrackingFullBodyMETA.adoc
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsFullBodyTracking is an basetype:XrBool32, indicating if
   current system is capable of locating the full body tracking jointset.
 ****
@@ -84,7 +86,7 @@ matches the corresponding index in elink:XrBodyJointFB.
 The following example code demonstrates how to create a body tracker with
 full body joint set.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

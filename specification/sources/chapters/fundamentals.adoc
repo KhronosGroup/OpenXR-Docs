@@ -1718,7 +1718,7 @@ such structure beginning with an slink:XrEventDataBaseHeader.
 .Proper Method for Receiving OpenXR Event Data
 ====
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 

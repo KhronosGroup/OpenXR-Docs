@@ -1,0 +1,147 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_unbounded_reference_space.adoc[]
+
+*Last Modified Date*::
+    2024-09-12
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Spencer Quin, Google +
+    Jared Finder, Google +
+    Fengtao Fan, Google +
+    Lachlan Ford, Google +
+    Nihav Jain, Google +
+    Levana Chen, Google +
+
+==== Overview
+
+This extension allows applications to create an
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID reference space.
+This reference space enables the viewer to move freely through a complex
+environment, often many meters from where they started, while always
+optimizing for coordinate system stability near the viewer.
+As the device senses more of its environment to build a better scene
+understanding, the origin of the reference space may: drift with *huge
+adjustments* as necessary to maintain device tracking.
+
+Runtimes that support the ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID
+reference space must: enumerate it when applications call
+flink:xrEnumerateReferenceSpaces if and only if this extension is enabled.
+
+To create an ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID reference
+space, the application sets
+slink:XrReferenceSpaceCreateInfo::pname:referenceSpaceType to
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID when passing it to
+flink:xrCreateReferenceSpace.
+
+The ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID reference space is meant
+to be used in conjunction with anchor spaces, in order to provide stable
+world tracking information to the application regardless of the viewer's
+movement through the environment and possible recenter events.
+
+Possible use cases include tracking of world elements across multiple rooms
+of a building or tracking of world elements in large outdoor environments.
+
+The ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID reference space
+establishes a world-locked origin of the headset's position when the device
+tracking starts.
+It is gravity-aligned to exclude pitch and roll, with +X to the right, +Y
+up, and -Z forward.
+
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID space is useful when an
+application needs to render *world-scale* content that spans beyond the
+bounds of a single `STAGE`, for example, an entire floor or multiple floors
+of a building.
+
+An ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID space maintains stability
+near the viewer by adjusting its origin over time.
+The runtime may: make *slight* and *huge* adjustments as necessary to
+maintain device tracking.
+
+* The runtime must: not queue the
+  slink:XrEventDataReferenceSpaceChangePending event in response to *minor
+  adjustments*.
+* The runtime must: queue the slink:XrEventDataReferenceSpaceChangePending
+  event in response to *huge adjustments*.
+  For example, the pose in ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID
+  space is reset due to a tracking loss and the tracking is re-established
+  on a disconnected estimate of the world (a "new map").
+* The system is constantly updating its understanding of the world and
+  adjusting device tracking.
+  If an application requires a persisted location regardless of tracking
+  resets, an anchor can: be used in this case.
+
+The application should: use anchor spaces and flink:xrLocateViews to get the
+world locked position of elements tracked around the user.
+
+[XR_ANDROID_unbounded_reference_space-event]
+==== Reference space change event
+
+If the runtime queues an slink:XrEventDataReferenceSpaceChangePending for
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID, the application can: use
+the parameters of slink:XrEventDataReferenceSpaceChangePending to understand
+the relocalization event:
+
+* slink:XrEventDataReferenceSpaceChangePending::pname:changeTime represents
+  the basetype:XrTime at which relocalization completed.
+* slink:XrEventDataReferenceSpaceChangePending::pname:poseValid is
+  code:false if the new tracking session is disconnected from the previous
+  one or code:true after if the new tracking session was able to relocalize
+  and connect with the previous session.
+* slink:XrEventDataReferenceSpaceChangePending::pname:poseInPreviousSpace is
+  not valid when
+  slink:XrEventDataReferenceSpaceChangePending::pname:poseValid is
+  code:false.
+
+When tracking relative to the
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID space is recovered after a
+loss, runtimes should: snap the pose of other spaces back into position
+relative to the ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID space's
+original origin.
+However, if tracking recovers into a new tracking volume in which the
+original origin is unable to be located, the runtime may: recenter the
+origin arbitrarily, for example moving the origin to coincide with the
+viewer.
+If such recentering occurs, the runtime must: queue the
+slink:XrEventDataReferenceSpaceChangePending event with pname:poseValid set
+to code:false.
+
+
+==== Example code for creating an unbounded reference space
+
+The following example code demonstrates how to create an
+ename:XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID slink:XrSpace.
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+XrPosef pose; // previously initialized
+
+// Use the new reference space type in the create info struct
+XrReferenceSpaceCreateInfo createInfo = {
+    .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+    .next = nullptr,
+    .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID,
+    .poseInReferenceSpace = pose,
+};
+XrSpace referenceSpace;
+CHK_XR(xrCreateReferenceSpace(session, &createInfo, &referenceSpace));
+
+// After usage
+CHK_XR(xrDestroySpace(referenceSpace));
+----
+
+include::{generated}/interfaces/XR_ANDROID_unbounded_reference_space.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-09-12 (Levana Chen)
+** Initial extension description

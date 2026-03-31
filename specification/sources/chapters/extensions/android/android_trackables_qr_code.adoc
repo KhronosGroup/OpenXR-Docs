@@ -1,0 +1,303 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_trackables_qr_code.adoc[]
+
+*Last Modified Date*::
+    2025-02-05
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Christopher Doer, Google +
+    Levana Chen, Google +
+    Jared Finder, Google +
+    Spencer Quin, Google +
+    Nihav Jain, Google +
+    Diego Tipaldi, Google +
+    Ken Mackay, Google +
+    Daniel Guttenberg, Qualcomm +
+
+==== Overview
+
+This extension enables physical QR code tracking and QR code data decoding.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+android.permission.SCENE_UNDERSTANDING_COARSE permission listed in their
+manifest as this extension depends on apiext:XR_ANDROID_trackables and
+exposes the geometry of the environment.
+The android.permission.SCENE_UNDERSTANDING_COARSE permission is considered a
+dangerous permission.
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemQrCodeTrackingPropertiesANDROID',type='structs',desc='System property for QR code tracking',xrefs='']
+--
+The slink:XrSystemQrCodeTrackingPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemQrCodeTrackingPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsQrCodeTracking is an basetype:XrBool32 indicating if current
+  system provides QR code tracking capability.
+* pname:supportsQrCodeSizeEstimation is an basetype:XrBool32 indicating if
+  current system provides QR code size estimation.
+* pname:maxQrCodeCount is the total maximum number of QR codes that can: be
+  tracked at the same time.
+****
+
+An application can: inspect whether the system is capable of QR code
+tracking by extending the slink:XrSystemProperties with
+slink:XrSystemQrCodeTrackingPropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED for QR code
+tracker creation if and only if pname:supportsQrCodeTracking is
+ename:XR_FALSE.
+
+If a runtime supports QR code tracking, pname:maxQrCodeCount must: be at
+least 1.
+If a runtime does not support QR code tracking, pname:maxQrCodeCount must:
+be 0.
+
+include::{generated}/validity/structs/XrSystemQrCodeTrackingPropertiesANDROID.adoc[]
+--
+
+==== Tracking QR codes
+
+This extension adds ename:XR_TRACKABLE_TYPE_QR_CODE_ANDROID to
+elink:XrTrackableTypeANDROID.
+
+The application may: create an slink:XrTrackableTrackerANDROID by calling
+flink:xrCreateTrackableTrackerANDROID and specifying
+ename:XR_TRACKABLE_TYPE_QR_CODE_ANDROID as the trackable type in
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType to track QR
+codes.
+
+The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED if
+slink:XrTrackableTrackerCreateInfoANDROID::pname:trackableType is
+ename:XR_TRACKABLE_TYPE_QR_CODE_ANDROID and
+slink:XrSystemQrCodeTrackingPropertiesANDROID::pname:supportsQrCodeTracking
+returns ename:XR_FALSE via flink:xrGetSystemProperties.
+
+[open,refpage='XrTrackableQrCodeConfigurationANDROID',type='structs',desc='Configure QR code tracking.',xrefs='xrCreateTrackableTrackerANDROID']
+--
+The slink:XrTrackableQrCodeConfigurationANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableQrCodeConfigurationANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingMode is an elink:XrQrCodeTrackingModeANDROID indicating the
+  desired mode for tracking.
+* pname:qrCodeEdgeSize indicates the size of the QR code edge in meters.
+  If zero, the runtime estimates the QR code size online.
+****
+
+The application must: set a valid configuration by adding a
+slink:XrTrackableQrCodeConfigurationANDROID to the next chain of
+slink:XrTrackableTrackerCreateInfoANDROID.
+Otherwise, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+If the runtime supports QR code size estimation, the application may: set
+slink:XrTrackableQrCodeConfigurationANDROID::pname:qrCodeEdgeSize to `0.0`
+to indicate the usage of size estimation.
+
+If the runtime does not support QR code size estimation, the application
+must: set slink:XrTrackableQrCodeConfigurationANDROID::pname:qrCodeEdgeSize
+to a positive value, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+The runtime must: filter the output from flink:xrGetAllTrackablesANDROID to
+match the pname:trackingMode.
+If slink:XrTrackableQrCodeConfigurationANDROID::pname:qrCodeEdgeSize is not
+set to `0.0` the runtime must: only return QR codes that match this size.
+If slink:XrTrackableQrCodeConfigurationANDROID::pname:qrCodeEdgeSize is set
+to `0.0` the runtime must: return all QR codes with estimated size.
+
+include::{generated}/validity/structs/XrTrackableQrCodeConfigurationANDROID.adoc[]
+--
+
+[open,refpage='XrQrCodeTrackingModeANDROID',type='enums',desc='The supported tracking modes of QR codes.',xrefs='']
+--
+The elink:XrQrCodeTrackingModeANDROID enum describes the supported tracking
+modes of QR codes.
+
+include::{generated}/api/enums/XrQrCodeTrackingModeANDROID.adoc[]
+
+include::{generated}/api/enums/XrQrCodeTrackingModeANDROID.comments-box.adoc[]
+--
+
+==== Get QR codes
+
+[open,refpage='xrGetTrackableQrCodeANDROID',type='protos',desc='Get QR code.',xrefs='XrTrackableANDROID XrTrackableTrackerANDROID XrTrackableGetInfoANDROID']
+--
+The flink:xrGetTrackableQrCodeANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetTrackableQrCodeANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:tracker is the slink:XrTrackableTrackerANDROID to query.
+* pname:getInfo is the slink:XrTrackableGetInfoANDROID with the information
+  used to get the trackable QR code.
+* pname:qrCodeOutput is a pointer to the slink:XrTrackableQrCodeANDROID
+  structure in which the trackable QR code is returned.
+****
+
+The runtime must: return ename:XR_ERROR_MISMATCHING_TRACKABLE_TYPE_ANDROID
+if the trackable type of the basetype:XrTrackableANDROID is not
+ename:XR_TRACKABLE_TYPE_QR_CODE_ANDROID, or if the trackable type of the
+slink:XrTrackableTrackerANDROID is not
+ename:XR_TRACKABLE_TYPE_QR_CODE_ANDROID.
+
+include::{generated}/validity/protos/xrGetTrackableQrCodeANDROID.adoc[]
+--
+
+[open,refpage='XrTrackableQrCodeANDROID',type='structs',desc='Trackable QR code information.',xrefs='']
+--
+The slink:XrTrackableQrCodeANDROID structure is defined as:
+
+include::{generated}/api/structs/XrTrackableQrCodeANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:trackingState is the elink:XrTrackingStateANDROID of the QR code.
+* pname:lastUpdatedTime is the basetype:XrTime of the last update of the QR
+  code.
+  If pname:lastUpdatedTime is changed from the last call, all other fields
+  may: have changed.
+* pname:centerPose is the slink:XrPosef of the QR code located in
+  slink:XrTrackableGetInfoANDROID::pname:baseSpace.
+  The QR code lies in the XZ plane with X pointing to the right of the QR
+  code, Z pointing to its bottom and Y coming out of the QR code as the
+  normal.
+* pname:extents is the slink:XrExtent2Df dimensions of the QR code.
+  The boundary of the bounding box is at points: pname:centerPose +/-
+  (pname:extents / 2).
+* pname:bufferCapacityInput is the capability of the pname:buffer, or `0` to
+  retrieve the required capability.
+* pname:bufferCountOutput If the pname:bufferCapacityInput is `0`, the
+  runtime will write the required buffer size into pname:bufferCountOutput.
+  Otherwise, it contains the total elements written in pname:buffer.
+  If the QR code data has not been decoded yet, the runtime must: set
+  bufferCountOutput to 0.
+* pname:buffer is a pointer to an array of code:char to write the decoded QR
+  code data.
+  If the application does not care about the decoded QR code data it can:
+  pass code:nullptr and omit the second two-call call.
+  The QR code data is returned as null-terminated UTF-8 string.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
+****
+
+include::{generated}/validity/structs/XrTrackableQrCodeANDROID.adoc[]
+--
+
+==== Example code for getting trackable QR codes
+
+The following example code demonstrates how to get trackable QR codes.
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrGetSystemProperties xrGetSystemProperties;                       // previously initialized
+PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID;   // previously initialized
+PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID;               // previously initialized
+PFN_xrGetTrackableQrCodeANDROID xrGetTrackableQrCodeANDROID;           // previously initialized
+PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previously initialized
+
+XrTime updateTime; // Time used for the current frame's simulation update.
+XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
+
+// Inspect system capability
+XrSystemQrCodeTrackingPropertiesANDROID qrCodeProperty =
+        {.type = XR_TYPE_SYSTEM_QR_CODE_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
+XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
+                                       .next = &qrCodeProperty};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!qrCodeProperty.supportsQrCodeTracking) {
+    // QR code tracking is not supported.
+    return;
+}
+
+// Create a trackable tracker for QR code tracking.
+// If the runtime does not support size estimation, configures QR code edge size of 0.1m.
+XrTrackableQrCodeConfigurationANDROID configuration =
+        {.type = XR_TYPE_TRACKABLE_QR_CODE_CONFIGURATION_ANDROID,
+         .next = nullptr,
+         .trackingMode = XR_QR_CODE_TRACKING_MODE_DYNAMIC_ANDROID,
+         .qrCodeEdgeSize = qrCodeProperty.supportsQrCodeSizeEstimation ? 0.0f : 0.1f};
+XrTrackableTrackerCreateInfoANDROID createInfo =
+        {.type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+         .next = &configuration,
+         .trackableType = XR_TRACKABLE_TYPE_QR_CODE_ANDROID};
+XrTrackableTrackerANDROID qrCodeTracker;
+auto res = xrCreateTrackableTrackerANDROID(session, &createInfo, &qrCodeTracker);
+if (res == XR_ERROR_PERMISSION_INSUFFICIENT) {
+    // Handle permission requests.
+}
+CHK_XR(res);
+
+// Get QR codes.
+std::vector<XrTrackableANDROID> trackables(qrCodeProperty.maxQrCodeCount);
+std::vector<XrTrackableQrCodeANDROID> qrCodes(qrCodeProperty.maxQrCodeCount);
+uint32_t qrCodeSize = 0;
+CHK_XR(xrGetAllTrackablesANDROID(qrCodeTracker, qrCodeProperty.maxQrCodeCount, &qrCodeSize,
+                                 trackables.data()));
+for (int i = 0; i < qrCodeSize; i++) {
+    qrCodes[i].type = XR_TYPE_TRACKABLE_QR_CODE_ANDROID;
+    qrCodes[i].next = nullptr;
+    qrCodes[i].bufferCountOutput = 0;
+    XrTrackableGetInfoANDROID getInfo = {.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+                                         .next = nullptr,
+                                         .trackable = trackables.at(i),
+                                         .baseSpace = appSpace,
+                                         .time = updateTime};
+    CHK_XR(xrGetTrackableQrCodeANDROID(qrCodeTracker, &getInfo, &qrCodes[i]));
+    if (qrCodes[i].bufferCountOutput > 0) {
+        // Allocate the buffer if it is not already allocated.
+        if (qrCodes[i].bufferCapacityInput == 0) {
+            qrCodes[i].buffer = new char[qrCodes[i].bufferCountOutput];
+            qrCodes[i].bufferCapacityInput = qrCodes[i].bufferCountOutput;
+            CHK_XR(xrGetTrackableQrCodeANDROID(qrCodeTracker, &getInfo, &qrCodes[i]));
+        }
+    }
+}
+
+// Release trackable tracker.
+CHK_XR(xrDestroyTrackableTrackerANDROID(qrCodeTracker));
+----
+
+include::{generated}/interfaces/XR_ANDROID_trackables_qr_code.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-02-05 (Levana Chen)
+** Initial extension description.

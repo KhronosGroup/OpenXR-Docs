@@ -97,7 +97,7 @@ elink:XrReferenceSpaceType enumeration is extended with:
 If a runtime does not support the local floor extension, an application can:
 construct an equivalent space using the `LOCAL` and `STAGE` spaces.
 
-[source,c++]
+[source,cpp]
 ----
 extern XrSession session;
 extern bool supportsStageSpace;

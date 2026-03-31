@@ -16,10 +16,10 @@ The makefile target `build-examples` does the following:
 To be extracted, a code block must satisfy *all* of the following conditions:
 
 - Between two `----` dividers.
-- Preceded by a line like `[source,c++]` or `[source,c]`
+- Preceded by a line like `[source,cpp]` or `[source,c]`
   - This "tag list" is comma separated, case-insensitive, and order-insensitive after the first tag.
   - `source` must be the first tag in the list
-  - `c` or `c++` must be in the list
+  - `c` or `cpp` must be in the list
   - `suppress-build` must **not** be in the list.
   - All other tags are silently ignored (neither required nor disqualifying).
 - Longer than "trivial" (more than a handful of lines, see `MIN_LINES` in the script)

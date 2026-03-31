@@ -137,8 +137,8 @@ include::{generated}/api/protos/xrEnumerateInteractionRenderModelIdsEXT.adoc[]
   case that pname:renderModelIdCapacityInput is insufficient.
 * pname:renderModelIds is an array of basetype:XrRenderModelIdEXT that will
   be populated with IDs for devices that are associated with actions.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:renderModelIds size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:renderModelIds size.
 ****
 
 This function returns render model IDs associated with any device associated
@@ -338,8 +338,8 @@ include::{generated}/api/protos/xrEnumerateRenderModelSubactionPathsEXT.adoc[]
   pname:pathCapacityInput is insufficient.
 * pname:paths is a pointer to an array of basetype:XrPath atoms, but can: be
   code:NULL if pname:pathCapacityInput is 0.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:paths size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:paths size.
 ****
 
 flink:xrEnumerateRenderModelSubactionPathsEXT allows the application to
@@ -571,7 +571,7 @@ include::{generated}/validity/structs/XrInteractionRenderModelTopLevelUserPathGe
 
 ==== Example
 
-[source,c++]
+[source,cpp]
 ----
 // previously initialized
 extern XrInstance instance;
@@ -802,7 +802,7 @@ rendering (e.g. highlight) for devices that provide input to a given
 subaction path, such as to emphasize which device is controlling a
 currently-active teleport targeting.
 
-[source,c++]
+[source,cpp]
 ----
 // previously initialized
 extern XrInstance instance;

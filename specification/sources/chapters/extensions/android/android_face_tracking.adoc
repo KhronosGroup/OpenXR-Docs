@@ -74,6 +74,8 @@ include::{generated}/api/structs/XrSystemFaceTrackingPropertiesANDROID.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsFaceTracking is an basetype:XrBool32 indicating if current
   system supports face tracking.
 ****
@@ -376,7 +378,7 @@ include::{generated}/api/enums/XrFaceParameterIndicesANDROID.comments.adoc[]
 The following example code demonstrates how to get all weights for facial
 expression blend shapes.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

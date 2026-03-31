@@ -78,7 +78,7 @@ cached or saved version of the model.
 
 *New Structures*
 
-[open,refpage='XrSystemRenderModelPropertiesFB',type='structs',desc='A render model system property',xrefs='']
+[open,refpage='XrSystemRenderModelPropertiesFB',type='structs',desc='A render model system property',xrefs='XrSystemProperties']
 --
 The slink:XrSystemRenderModelPropertiesFB structure is defined as:
 
@@ -92,6 +92,8 @@ It describes a render model system property.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsRenderModelLoading defines whether the system supports
   loading render models.
 ****

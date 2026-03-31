@@ -226,7 +226,7 @@ To locate the tracker, create an action space from that action, with
 pathname:/user/vive_tracker_htcx/role/chest once again specified as the
 subaction path.
 
-[source,c++]
+[source,cpp]
 ----
 extern XrInstance instance;  // previously initialized
 extern XrSession session;  // previously initialized
@@ -294,7 +294,7 @@ The slink:XrInteractionProfileState::pname:interactionProfile will be
 dlink:XR_NULL_PATH if the tracker represented by that top level path is not
 connected.
 
-[source,c++]
+[source,cpp]
 ----
 extern XrInstance instance;  // previously initialized
 extern XrSession session;  // previously initialized

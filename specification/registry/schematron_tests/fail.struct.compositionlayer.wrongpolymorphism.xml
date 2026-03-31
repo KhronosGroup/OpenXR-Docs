@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <enums name="XrResult" type="enum" comment="Error and return codes">
+        <enum value="0"    name="XR_SUCCESS"                  comment="Function successfully completed."/>
+        <enum value="-1"   name="XR_ERROR_VALIDATION_FAILURE" comment="The function usage was invalid in some way."/>
+    </enums>
+
+    <types>
+
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="void"/>
+
+        <type name="XrStructureType" category="enum"/>
+        <type name="XrResult" category="enum"/>
+        <type name="XrCompositionLayerFlags" category="enum"/>
+
+        <!-- Base header for composition layers -->
+        <type category="struct" name="XrCompositionLayerBaseHeader">
+            <member><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member optional="true"><type>XrCompositionLayerFlags</type> <name>layerFlags</name></member>
+        </type>
+
+        <!-- Uses structextends instead of parentstruct for extending XrCompositionLayerBaseHeader -->
+        <type category="struct" name="XrCompositionLayerDepthFB" structextends="XrCompositionLayerBaseHeader">
+            <member values="XR_TYPE_COMPOSITION_LAYER_DEPTH_FB"><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member optional="true"><type>XrCompositionLayerFlags</type> <name>layerFlags</name></member>
+        </type>
+
+    </types>
+
+    <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
+        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"    name="XR_TYPE_COMPOSITION_LAYER_DEPTH_FB"/>
+    </enums>
+
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrSubmitLayers</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param>const <type>XrCompositionLayerBaseHeader</type>* <name>layer</name></param>
+        </command>
+    </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require>
+            <command name="xrSubmitLayers"/>
+        </require>
+    </feature>
+
+</registry>

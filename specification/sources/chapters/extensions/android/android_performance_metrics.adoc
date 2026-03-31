@@ -1,0 +1,289 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_performance_metrics.adoc[]
+
+*Last Modified Date*::
+    2024-09-06
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Dmitry Kotov, Google +
+    Levana Chen, Google +
+    Jared Finder, Google +
+    Spencer Quin, Google +
+
+
+==== Overview
+
+This extension provides APIs to enumerate and query various performance
+metrics counters of the current XR device, compositor and XR application.
+
+Its intended use is for developers to perform performance analysis and do
+targeted optimization to the XR application using the performance metrics
+counters being collected.
+The application should: not change its behavior based on the counter reads.
+
+The performance metrics counters are organized into predefined
+basetype:XrPath values, under the root path pathname:/perfmetrics_android.
+Applications query the available counters through
+flink:xrEnumeratePerformanceMetricsCounterPathsANDROID.
+
+The following performance metrics counter paths may: be provided on Android
+devices:
+
+* pathname:/perfmetrics_android/app/cpu_frametime (milliseconds, float) -
+  time spent by the application to process a frame, averaged over a sliding
+  window.
+* pathname:/perfmetrics_android/app/gpu_frametime (milliseconds, float) -
+  time spent to complete the GPU work submitted by the application per
+  frame, averaged over a sliding window.
+** A high wait time may: mean that the GPU was busy with other tasks, not
+   necessarily that this client is doing too much GPU work.
+** The GPU wait time may: be zero if rendering was already complete when
+   checked by the compositor.
+* pathname:/perfmetrics_android/app/cpu_utilization (percentage, float) -
+  total app CPU utilization rate averaged over time.
+** It may: be higher than 100% on multi-core processors.
+* pathname:/perfmetrics_android/app/gpu_utilization (percentage) - app total
+  GPU utilization rate averaged over time.
+* pathname:/perfmetrics_android/app/motion_to_photon_latency (milliseconds,
+  float) - time spent from user-initiated motion event to corresponding
+  physical image update on the display.
+* pathname:/perfmetrics_android/compositor/cpu_frametime (milliseconds,
+  float) - time spent by the compositor to process a frame, averaged over a
+  sliding window.
+* pathname:/perfmetrics_android/compositor/gpu_frametime (milliseconds,
+  float) - time spent to complete the GPU work submitted by the compositor
+  per frame, averaged over a sliding window.
+* pathname:/perfmetrics_android/compositor/dropped_frame_count (integer) -
+  total number of dropped frames from all apps.
+* pathname:/perfmetrics_android/compositor/frames_per_second (float) -
+  number of compositor frames drawn on device per second.
+* pathname:/perfmetrics_android/device/cpu_utilization_average (percentage,
+  float) - device CPU utilization rate averaged across all cores and
+  averaged over time.
+* pathname:/perfmetrics_android/device/cpu_utilization_worst (percentage,
+  float) +-+ device CPU utilization rate of worst performing core averaged
+  over time.
+* pathname:/perfmetrics_android/device/cpu0_utilization through
+  pathname:/perfmetrics_android/device/cpuX_utilization (percentage, float,
+  X is the number of CPU cores minus one) - device CPU utilization rate per
+  CPU core averaged over time.
+* pathname:/perfmetrics_android/device/cpu_frequency (MHz, float) - device
+  CPU frequency averaged across all cores and averaged over time.
+* pathname:/perfmetrics_android/device/gpu_utilization (percentage, float) -
+  device GPU utilization rate averaged over time.
+
+To enable the performance metrics system for a session, applications call
+flink:xrSetPerformanceMetricsStateANDROID.
+
+Applications use flink:xrQueryPerformanceMetricsCounterANDROID to query a
+performance metrics counter on a session that has the performance metrics
+system enabled, or flink:xrGetPerformanceMetricsStateANDROID to query if the
+performance metrics system is enabled.
+
+Note that the measurement intervals of individual performance metrics
+counters are defined by the OpenXR runtime.
+The application should: not make assumptions or change its behavior at
+runtime by measuring them.
+
+==== Enumerate supported metrics counter paths
+
+[open,refpage='xrEnumeratePerformanceMetricsCounterPathsANDROID',desc='Enumerate all performance metrics counter paths that are supported by the runtime',type='protos',xrefs='']
+--
+The flink:xrEnumeratePerformanceMetricsCounterPathsANDROID function is
+defined as:
+
+include::{generated}/api/protos/xrEnumeratePerformanceMetricsCounterPathsANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:instance is an slink:XrInstance handle previously created with
+  flink:xrCreateInstance.
+* pname:counterPathCapacityInput is the capacity of the pname:counterPaths
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:counterPathCountOutput is filled in by the runtime with the count of
+  pname:counterPaths written or the required capacity in the case that
+  pname:counterPathCapacityInput is insufficient.
+* pname:counterPaths is an array of basetype:XrPath filled in by the runtime
+  which contains all the available performance metrics counters, but can: be
+  code:NULL if pname:counterPathCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:counterPaths size.
+****
+
+This function enumerates all performance metrics counter paths that are
+supported by the runtime.
+
+include::{generated}/validity/protos/xrEnumeratePerformanceMetricsCounterPathsANDROID.adoc[]
+--
+
+==== Set and query performance metrics system state
+
+[open,refpage='xrSetPerformanceMetricsStateANDROID',desc='Enable or disable the performance metrics system',type='protos',xrefs='xrGetPerformanceMetricsStateANDROID']
+--
+The flink:xrSetPerformanceMetricsStateANDROID function is defined as:
+
+include::{generated}/api/protos/xrSetPerformanceMetricsStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:state is a pointer to an slink:XrPerformanceMetricsStateANDROID
+  structure.
+****
+
+The flink:xrSetPerformanceMetricsStateANDROID function enables or disables
+the performance metrics system.
+
+include::{generated}/validity/protos/xrSetPerformanceMetricsStateANDROID.adoc[]
+--
+
+[open,refpage='XrPerformanceMetricsStateANDROID',type='structs',desc='Performance metric collection state',xrefs='']
+--
+
+The slink:XrPerformanceMetricsStateANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPerformanceMetricsStateANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:enabled is set to ename:XR_TRUE to indicate the performance metrics
+  system is enabled, ename:XR_FALSE otherwise, when getting state.
+  When setting state, set to ename:XR_TRUE to enable the performance metrics
+  system and ename:XR_FALSE to disable it.
+****
+
+slink:XrPerformanceMetricsStateANDROID is provided as input when calling
+flink:xrSetPerformanceMetricsStateANDROID to enable or disable the
+performance metrics system.
+
+slink:XrPerformanceMetricsStateANDROID is populated as an output parameter
+when calling flink:xrGetPerformanceMetricsStateANDROID to query if the
+performance metrics system is enabled.
+
+include::{generated}/validity/structs/XrPerformanceMetricsStateANDROID.adoc[]
+--
+
+[open,refpage='xrGetPerformanceMetricsStateANDROID',desc='Get the current state of the performance metrics system',type='protos',xrefs='xrSetPerformanceMetricsStateANDROID']
+--
+The flink:xrGetPerformanceMetricsStateANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetPerformanceMetricsStateANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:state is a pointer to an slink:XrPerformanceMetricsStateANDROID
+  structure.
+****
+
+The flink:xrGetPerformanceMetricsStateANDROID function gets the current
+state of the performance metrics system.
+
+include::{generated}/validity/protos/xrGetPerformanceMetricsStateANDROID.adoc[]
+--
+
+==== Query performance counters
+
+[open,refpage='xrQueryPerformanceMetricsCounterANDROID',desc='Query a performance metrics counter',type='protos',xrefs='']
+--
+The flink:xrQueryPerformanceMetricsCounterANDROID function is defined as:
+
+include::{generated}/api/protos/xrQueryPerformanceMetricsCounterANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:counterPath is a valid performance metrics counter path.
+* pname:counter is a pointer to an slink:XrPerformanceMetricsCounterANDROID
+  structure.
+****
+
+The flink:xrQueryPerformanceMetricsCounterANDROID function queries a
+performance metrics counter.
+
+The application must: enable the performance metrics system (by calling
+flink:xrSetPerformanceMetricsStateANDROID) before querying metrics using
+flink:xrQueryPerformanceMetricsCounterANDROID.
+If the performance metrics system has not been enabled before calling
+flink:xrQueryPerformanceMetricsCounterANDROID, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If pname:counterPath is not in the list returned by
+flink:xrEnumeratePerformanceMetricsCounterPathsANDROID, the runtime must:
+return ename:XR_ERROR_PATH_UNSUPPORTED.
+
+include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterANDROID.adoc[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterANDROID',type='structs',desc='Performance metrics counter data',xrefs='xrQueryPerformanceMetricsCounterANDROID']
+--
+The slink:XrPerformanceMetricsCounterANDROID structure is defined as:
+
+include::{generated}/api/structs/XrPerformanceMetricsCounterANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:counterFlags is a bitmask of
+  elink:XrPerformanceMetricsCounterFlagBitsANDROID describing the validity
+  of value members.
+* pname:counterUnit is an enum of
+  elink:XrPerformanceMetricsCounterUnitANDROID describing the measurement
+  unit.
+* pname:uintValue is the counter value in code:uint32_t format.
+  It is valid if pname:counterFlags contains
+  ename:XR_PERFORMANCE_METRICS_COUNTER_UINT_VALUE_VALID_BIT_ANDROID.
+* pname:floatValue is the counter value in code:float format.
+  It is valid if pname:counterFlags contains
+  ename:XR_PERFORMANCE_METRICS_COUNTER_FLOAT_VALUE_VALID_BIT_ANDROID.
+****
+
+slink:XrPerformanceMetricsCounterANDROID is populated by calling
+flink:xrQueryPerformanceMetricsCounterANDROID to query real-time performance
+metrics counter information.
+
+include::{generated}/validity/structs/XrPerformanceMetricsCounterANDROID.adoc[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterFlagsANDROID',type='flags',desc='XrPerformanceMetricsCounterFlagsANDROID']
+--
+include::{generated}/api/flags/XrPerformanceMetricsCounterFlagsANDROID.adoc[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterFlagBitsANDROID',type='enums',desc='XrPerformanceMetricsCounterFlagBitsANDROID']
+--
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsANDROID.adoc[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterFlagBitsANDROID.comments.adoc[]
+--
+
+[open,refpage='XrPerformanceMetricsCounterUnitANDROID',type='enums',desc='XrPerformanceMetricsCounterUnitANDROID']
+--
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitANDROID.adoc[]
+include::{generated}/api/enums/XrPerformanceMetricsCounterUnitANDROID.comments.adoc[]
+--
+
+include::{generated}/interfaces/XR_ANDROID_performance_metrics.adoc[leveloffset=1]
+
+==== Issues
+
+
+==== Version History
+
+* Revision 1, 2024-08-28 (Levana Chen)
+** Initial extension description

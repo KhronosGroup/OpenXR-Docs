@@ -64,7 +64,7 @@ the attached CoreWindow to receive keyboard input, use
 sname:CoreTextEditContext to handle text typing experience, and use
 sname:IActivatedEventArgs to handle protocol launching arguments.
 
-[source,c++,suppress-build]
+[source,cpp,suppress-build]
 ----
 struct AppView : implements<AppView, IFrameworkView> {
     void Initialize(CoreApplicationView const& applicationView) {

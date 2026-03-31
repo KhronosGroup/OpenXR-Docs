@@ -1,0 +1,229 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_body_tracking_fidelity.adoc[]
+
+*Last Modified Date*::
+    2023-09-28
+
+*IP Status*::
+    No known IP claims.
+
+ *Contributors*::
+    Giancarlo Di Biase, Meta +
+    Dikpal Reddy, Meta +
+    Igor Tceglevskii, Meta +
+    Bill Orr, Meta
+
+==== Overview
+
+This extension enables applications to control tradeoffs with body tracking
+quality and performance.
+
+This extension builds on top of the apiext:XR_FB_body_tracking extension
+which provides the actual body tracking output.
+
+==== Interaction with other extensions
+
+* apiext:XR_META_simultaneous_hands_and_controllers - Both high and low
+  fidelity body tracking is able to work regardless of whether hands or
+  controllers are in use.
+  Body tracking hands should: reflect the location of the user's hands.
+
+* `XR_META_hand_tracking_wide_motion_mode` - Wide motion mode for hand
+  tracking may: use body tracking internally, and may: force the system to
+  use high fidelity.
+  In this case, the system may: use high fidelity tracking even when the
+  application requests low fidelity.
+
+* apiext:XR_META_detached_controllers - Both high and low fidelity body
+  tracking is able to work regardless of whether hands or controllers are in
+  use.
+  Body tracking should: not use the location of detached controllers to
+  calculate its output.
+
+* apiext:XR_META_body_tracking_full_body - Full body tracking must: be
+  compatible with both high fidelity and low fidelity body tracking.
+  If a runtime does not support a low fidelity full body tracking system,
+  the runtime may: report that high fidelity is already in use when full
+  body is in use.
+
+* apiext:XR_EXT_hand_tracking_data_source - When the runtime is simulating
+  hands via controllers, body tracking will similarly simulate hands via
+  controllers.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemPropertiesBodyTrackingFidelityMETA',type='structs',desc='System property for body tracking fidelity',xrefs='']
+--
+The slink:XrSystemPropertiesBodyTrackingFidelityMETA structure is defined
+as:
+
+include::{generated}/api/structs/XrSystemPropertiesBodyTrackingFidelityMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsBodyTrackingFidelity is an basetype:XrBool32, indicating if
+  current system is capable of changing body tracking fidelity.
+****
+
+An application can: inspect whether the system is capable of controlling
+body tracking fidelity by extending the slink:XrSystemProperties with
+slink:XrSystemPropertiesBodyTrackingFidelityMETA structure when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsBodyTrackingFidelity,
+the runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrRequestBodyTrackingFidelityMETA.
+
+include::{generated}/validity/structs/XrSystemPropertiesBodyTrackingFidelityMETA.adoc[]
+
+--
+
+==== Setting requested fidelity
+
+[open,refpage='xrRequestBodyTrackingFidelityMETA',type='protos',desc='Configure the body tracking fidelity.',xrefs='XrSystemPropertiesBodyTrackingFidelityMETA']
+--
+The flink:xrRequestBodyTrackingFidelityMETA function is defined as:
+
+include::{generated}/api/protos/xrRequestBodyTrackingFidelityMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:bodyTracker is an slink:XrBodyTrackerFB used to specify which body
+  tracker we want to configure fidelity.
+* pname:fidelity is the elink:XrBodyTrackingFidelityMETA enum value
+  specifying the desired fidelity.
+****
+
+An application can: request a desired fidelity using the
+flink:xrRequestBodyTrackingFidelityMETA function.
+
+If the system does not support changing body tracking fidelity, the runtime
+must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrRequestBodyTrackingFidelityMETA.
+
+The flink:xrRequestBodyTrackingFidelityMETA function allows applications to
+express a preference for body tracking fidelity, but this is a request that
+the runtime is allowed to ignore.
+The runtime must: return ename:XR_SUCCESS if the request is valid, even if
+the runtime will not honor the requested fidelity level.
+
+The runtime may: ignore the requested fidelity due to system load, thermal
+state, or when other active extensions require a higher fidelity level.
+When the application calls flink:xrLocateBodyJointsFB with
+slink:XrBodyTrackingFidelityStatusMETA in the next chain, the runtime will
+report the actual fidelity level in use.
+
+include::{generated}/validity/protos/xrRequestBodyTrackingFidelityMETA.adoc[]
+
+--
+
+[open,refpage='XrBodyTrackingFidelityMETA',type='enums',desc='Fidelity that may be requested or currently in use by the body tracker',xrefs='xrRequestBodyTrackingFidelityMETA XrBodyTrackingFidelityStatusMETA']
+--
+include::{generated}/api/enums/XrBodyTrackingFidelityMETA.adoc[]
+
+include::{generated}/api/enums/XrBodyTrackingFidelityMETA.comments.adoc[]
+
+The runtime may: support a variety of fidelity options for body tracking
+expression.
+The application can: request a desired fidelity, and the runtime will
+attempt to use that fidelity to provide body tracking for this application.
+
+--
+[open,refpage='XrBodyTrackingFidelityStatusMETA',type='structs',desc='Information for current and requested body tracking fidelity',xrefs='XrBodyJointLocationsFB']
+--
+The slink:XrBodyTrackingFidelityStatusMETA structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackingFidelityStatusMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:fidelity is an elink:XrBodyTrackingFidelityMETA that describes the
+  fidelity in use by the runtime.
+****
+
+The slink:XrBodyTrackingFidelityStatusMETA structure is used to obtain the
+fidelity of the body tracking system.
+
+An application can: inspect which fidelity is in use by the runtime by
+extending the slink:XrBodyJointLocationsFB with
+slink:XrBodyTrackingFidelityStatusMETA structure when calling
+flink:xrLocateBodyJointsFB.
+
+
+include::{generated}/validity/structs/XrBodyTrackingFidelityStatusMETA.adoc[]
+--
+
+==== Example code for setting fidelity
+
+The following example code demonstrates how to set and inspect the body
+tracking fidelity.
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+XrBodyTrackerFB bodyTracker; // previously initialized
+PFN_xrLocateBodyJointsFB pfnLocateBodyJointsFB; // previously initialized
+XrSpace stageSpace; // previously initialized
+
+// Confirm body tracking fidelity system support.
+XrSystemPropertiesBodyTrackingFidelityMETA bodyTrackingFidelitySystemProperties{
+    XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FIDELITY_META};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &bodyTrackingFidelitySystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!bodyTrackingFidelitySystemProperties.supportsBodyTrackingFidelity) {
+    // The system does not support body tracking fidelity.
+    return;
+}
+
+// Get function pointer for xrRequestBodyTrackingFidelityMETA.
+PFN_xrRequestBodyTrackingFidelityMETA pfnRequestBodyTrackingFidelity;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrRequestBodyTrackingFidelityMETA",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnRequestBodyTrackingFidelity)));
+CHK_XR(pfnRequestBodyTrackingFidelity(bodyTracker, XR_BODY_TRACKING_FIDELITY_HIGH_META));
+
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    // input
+    XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
+    locateInfo.baseSpace = stageSpace;
+    locateInfo.time = time;
+
+    // output
+    XrBodyTrackingFidelityStatusMETA bodyFidelityStatus{XR_TYPE_BODY_TRACKING_FIDELITY_STATUS_META};
+    XrBodyJointLocationFB jointLocations[XR_BODY_JOINT_COUNT_FB];
+    XrBodyJointLocationsFB bodyLocations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
+    bodyLocations.next = &bodyFidelityStatus;
+    bodyLocations.jointCount = XR_BODY_JOINT_COUNT_FB;
+    bodyLocations.jointLocations = jointLocations;
+
+    CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &bodyLocations));
+    if (bodyFidelityStatus.fidelity != XR_BODY_TRACKING_FIDELITY_HIGH_META) {
+        // App-specific logic.
+    }
+}
+----
+
+include::{generated}/interfaces/XR_META_body_tracking_fidelity.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2023-09-28 (Bill Orr)
+** Initial extension description

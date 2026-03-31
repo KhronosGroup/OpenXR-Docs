@@ -54,6 +54,8 @@ include::{generated}/api/structs/XrSystemImageTrackingPropertiesANDROID.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsImageTracking is an basetype:XrBool32 indicating if current
   system provides image tracking capability.
 * pname:supportsPhysicalSizeEstimation is an basetype:XrBool32 indicating if
@@ -471,7 +473,7 @@ include::{generated}/validity/structs/XrEventDataImageTrackingLostANDROID.adoc[]
 
 The following example code demonstrates how to get trackable images.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance;  // Previously initialized.
 XrSession session;    // Previously initialized.
@@ -641,7 +643,7 @@ CHK_XR(xrDestroyTrackableImageDatabaseANDROID(imageDatabase));
 The following example code demonstrates how to modify the set of images
 being tracked.
 
-[source,C++]
+[source,cpp]
 ----
 XrSession session; // Previously initialized.
 
@@ -731,7 +733,7 @@ CHK_XR(xrCreateTrackableTrackerANDROID(session, &anotherCreateInfo, &imageTracka
 The following example code demonstrates how to handle failure by polling for
 the slink:XrEventDataImageTrackingLostANDROID event.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // Previously initialized.
 XrSession session; // Previously initialized.

@@ -44,6 +44,8 @@ include::{generated}/api/structs/XrSystemFacialExpressionPropertiesML.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsFacialExpression is an basetype:XrBool32, indicating if
   current system is capable of parsing facial expressions enumerated in
   elink:XrFacialBlendShapeML
@@ -321,7 +323,7 @@ include::{generated}/api/enums/XrFacialExpressionBlendShapePropertiesFlagBitsML.
 The following example code demonstrates how to obtain weights for facial
 expression blend shapes.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

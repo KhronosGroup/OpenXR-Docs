@@ -1,0 +1,215 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_spatial_anchor_space.adoc[]
+
+*Last Modified Date*::
+    2025-09-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    YuSheng Chang, Google +
+    Kyle Chen, Google +
+    Levana Chen, Google +
+    Nihav Jain, Google +
+    Spencer Quin, Google +
+
+==== Overview
+
+The flink:xrCreateSpatialAnchorEXT function defined in the
+apiext:XR_EXT_spatial_anchor extension allows applications to create spatial
+anchors with an slink:XrSpatialEntityEXT handle to represent it.
+In contrast, this extension creates a spatial anchor that are represented by
+an slink:XrSpace handle instead.
+This is useful for cases where the application wants to:
+
+* Use flink:xrLocateSpaces to get the location of the anchor.
+* Locate other spaces relative to the anchor.
+* Export the anchor using apiext:XR_ANDROID_anchor_sharing_export.
+* Application has placed anchors and now only cares about the location of
+  the anchors (to attach virtual content to), and does not care about any
+  other component of any other entities discovered via the
+  slink:XrSpatialContextEXT used to create the anchor, thereby allowing the
+  application to destroy the spatial context.
+
+Anchors created with this extension cannot: be persisted using the
+apiext:XR_ANDROID_device_anchor_persistence extension and the application
+must: instead use apiext:XR_EXT_spatial_persistence_operations.
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrPersistAnchorANDROID if
+slink:XrPersistedAnchorSpaceInfoANDROID::pname:anchor is created using
+flink:xrCreateSpatialAnchorSpaceANDROID or
+flink:xrCreateSpatialAnchorSpaceFromIdANDROID.
+
+==== Create XrSpace for a Spatial Anchor
+
+===== Create a spatial anchor and space
+
+[open,refpage='xrCreateSpatialAnchorSpaceANDROID',type='protos',desc='Create a spatial anchor and return as an XrSpace.',xrefs='xrCreateSpatialAnchorEXT']
+--
+The flink:xrCreateSpatialAnchorSpaceANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorSpaceANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to an slink:XrSpatialAnchorCreateInfoEXT.
+* pname:anchorEntityId is a pointer to an basetype:XrSpatialEntityIdEXT.
+* pname:anchorSpace is a pointer to an slink:XrSpace.
+****
+
+The flink:xrCreateSpatialAnchorSpaceANDROID function creates an anchor that
+outputs an basetype:XrSpatialEntityIdEXT and an slink:XrSpace handle.
+flink:xrCreateSpatialAnchorSpaceANDROID has the same validation requirements
+as flink:xrCreateSpatialAnchorEXT.
+
+Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+slink:XrSpatialContextEXT passed to flink:xrCreateSpatialAnchorSpaceANDROID
+was not configured with ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT.
+
+With respect to the discoverability of the created anchor by
+flink:xrCreateSpatialAnchorSpaceANDROID, the last paragraph of the
+flink:xrCreateSpatialAnchorEXT spec applies.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorSpaceANDROID.adoc[]
+--
+
+===== Create XrSpace from an existing spatial anchor
+
+[open,refpage='xrCreateSpatialAnchorSpaceFromIdANDROID',type='protos',desc='Create XrSpace from a spatial anchor XrSpatialEntityIdEXT.',xrefs='xrCreateSpatialAnchorEXT']
+--
+The flink:xrCreateSpatialAnchorSpaceFromIdANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateSpatialAnchorSpaceFromIdANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession
+* pname:spatialContext is an slink:XrSpatialContextEXT previously created
+  using flink:xrCreateSpatialContextAsyncEXT.
+* pname:createInfo is a pointer to an
+  slink:XrSpatialAnchorSpaceFromIdCreateInfoANDROID.
+* pname:anchorSpace is a pointer to an slink:XrSpace.
+****
+
+In scenarios where spatial anchor entities are preexisting (e.g. due to
+persistence), applications can: create an slink:XrSpace from these spatial
+anchors by supplying their spatial entity IDs.
+
+The flink:xrCreateSpatialAnchorSpaceFromIdANDROID function creates an
+slink:XrSpace handle by providing an basetype:XrSpatialEntityIdEXT in the
+slink:XrSpatialAnchorSpaceFromIdCreateInfoANDROID::entityId field.
+
+Runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if the
+slink:XrSpatialContextEXT passed to
+flink:xrCreateSpatialAnchorSpaceFromIdANDROID was not configured with
+ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT.
+
+include::{generated}/validity/protos/xrCreateSpatialAnchorSpaceFromIdANDROID.adoc[]
+--
+
+[open,refpage='XrSpatialAnchorSpaceFromIdCreateInfoANDROID',type='structs',desc='Create struct for XrSpace of anchor',xrefs='xrCreateSpatialAnchorSpaceFromIdANDROID']
+--
+
+The slink:XrSpatialAnchorSpaceFromIdCreateInfoANDROID structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialAnchorSpaceFromIdCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:anchorEntityId is the basetype:XrSpatialEntityIdEXT of the existing
+  spatial anchor from which to create the slink:XrSpace.
+****
+
+The runtime must: return ename:XR_ERROR_SPATIAL_ENTITY_ID_INVALID_EXT if
+slink:XrSpatialAnchorSpaceFromIdCreateInfoANDROID::entityId is not a valid
+ID for `spatialContext`.
+
+The runtime must: return
+ename:XR_ERROR_SPATIAL_ANCHOR_ENTITY_ID_INVALID_ANDROID if
+slink:XrSpatialAnchorSpaceFromIdCreateInfoANDROID::entityId is not a valid
+entity ID for an anchor.
+
+include::{generated}/validity/structs/XrSpatialAnchorSpaceFromIdCreateInfoANDROID.adoc[]
+--
+
+==== Anchor Lifecycle
+
+The parent of an slink:XrSpace handle is an slink:XrSession.
+This implies that an slink:XrSpace handle representing the anchor remains
+valid even after
+flink:xrCreateSpatialAnchorSpaceFromIdANDROID::pname:spatialContext or
+flink:xrCreateSpatialAnchorSpaceANDROID::pname:spatialContext are destroyed.
+Creating an slink:XrSpace to represent a spatial entity anchor allows the
+application to destroy the slink:XrSpatialContextEXT that was configured
+with ename:XR_SPATIAL_CAPABILITY_ANCHOR_EXT while still continuing to get
+the latest pose of the anchor using its slink:XrSpace with
+flink:xrLocateSpaces i.e. the runtime must: continue to track the anchor
+until all slink:XrSpace handles that represent it have been destroyed.
+
+==== Example code
+
+===== Create spatial anchor as an XrSpace
+
+The following example code demonstrates how to create a spatial anchor and
+return it as an slink:XrSpace.
+
+[source,cpp]
+----
+XrSpatialEntityIdEXT spatialAnchorEntityId;
+XrSpace spatialAnchorSpace = XR_NULL_HANDLE; // XrSpace handle of anchor
+
+// Spatial anchor create info
+XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
+createInfo.baseSpace = localSpace;
+createInfo.time = predictedDisplayTime;
+createInfo.pose = {{0, 0, 0, 1}, {1, 1, 1}};
+
+// Create spatial anchor using the new API
+CHK_XR(xrCreateSpatialAnchorSpaceANDROID(session, spatialContext, &createInfo, &spatialAnchorEntityId, &spatialAnchorSpace));
+
+// ...
+
+----
+
+===== Create XrSpace from anchor entity ID
+
+The following example code demonstrates how to create an slink:XrSpace from
+a preexisting anchor entity ID.
+
+[source,cpp]
+----
+XrSpace anchorSpace = XR_NULL_HANDLE;
+
+// Spatial anchor from XrSpace create info
+XrSpatialAnchorSpaceFromIdCreateInfoANDROID createInfoFromId{XR_TYPE_SPATIAL_ANCHOR_SPACE_FROM_ID_CREATE_INFO_ANDROID};
+createInfoFromId.anchorEntityId = spatialAnchorEntityId;
+
+// Create XrSpace handle from spatial anchor ID
+CHK_XR(xrCreateSpatialAnchorSpaceFromIdANDROID(session, spatialContext, &createInfoFromId, &anchorSpace));
+
+// ...
+
+----
+
+
+include::{generated}/interfaces/XR_ANDROID_spatial_anchor_space.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-09-15 (YuSheng Chang, Kyle Chen)
+** Initial extension description.

@@ -73,7 +73,7 @@ testing with range 0m to 1m.
 
 The following code illustrates how to enable depth testing:
 
-[source,c++]
+[source,cpp]
 ----
 XrCompositionLayerProjection layer; // previously populated
 

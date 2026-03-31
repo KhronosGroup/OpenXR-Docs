@@ -37,6 +37,8 @@ include::{generated}/api/structs/XrSystemSpatialAnchorSharingPropertiesBD.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsSpatialAnchorSharing is an basetype:XrBool32, indicating if
   the current system is capable of spatial anchor sharing.
 ****

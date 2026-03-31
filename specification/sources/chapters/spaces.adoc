@@ -759,7 +759,7 @@ location and velocity of a space within a base space using the
 flink:xrLocateSpace function by chaining an slink:XrSpaceVelocity to the
 `next` pointer of slink:XrSpaceLocation and calling flink:xrLocateSpace.
 
-[source,C++]
+[source,cpp]
 ----
 XrSpace space;      // previously initialized
 XrSpace baseSpace;  // previously initialized
@@ -959,7 +959,7 @@ include::{generated}/api/structs/XrSpacesLocateInfo.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
-  No such structures are defined in core OpenXR or this extension.
+  No such structures are defined in core OpenXR.
 * pname:baseSpace identifies the underlying space in which to locate
   pname:spaces.
 * pname:time is the time for which the location is requested.
@@ -1113,7 +1113,7 @@ The following example code shows how an application retrieves both the
 location and velocity of one or more spaces in a base space at a given time
 using the flink:xrLocateSpaces function.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSession session; // previously initialized

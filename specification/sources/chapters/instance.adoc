@@ -35,7 +35,7 @@ API, where the intended instance is inferred from the highest ascendant of
 an OpenXR function's target object.
 For example, in:
 
-[source,c++]
+[source,cpp]
 ----
 myResult = xrEndFrame(mySession, &myEndFrameDescription);
 ----

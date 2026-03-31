@@ -305,7 +305,7 @@ include::{generated}/validity/structs/XrViewConfigurationView.adoc[]
 === Example View Configuration Code
 
 // see view_configuration.0.h
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId system;   // previously initialized

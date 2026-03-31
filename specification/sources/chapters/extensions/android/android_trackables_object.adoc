@@ -157,7 +157,7 @@ image::images/XR_ANDROID_trackables_object_orientation.png[opts="inline", width=
 
 The following example code demonstrates how to get trackable objects.
 
-[source,C++]
+[source,cpp]
 ----
 XrSession session; // previously initialized
 

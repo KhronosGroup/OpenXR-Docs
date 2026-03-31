@@ -714,8 +714,8 @@ include::{generated}/api/structs/XrRenderModelAssetDataEXT.adoc[]
   pname:bufferCapacityInput is 0.
 * pname:buffer is a pointer to an application-allocated byte array that will
   be filled with the render model asset binary data.
-* See the <<buffer-size-parameters, Buffer Size Parameters>> section for a
-  detailed description of retrieving the required pname:buffer size.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:buffer size.
 ****
 
 slink:XrRenderModelAssetDataEXT is an input/output structure for
@@ -1003,7 +1003,7 @@ include::{generated}/validity/structs/XrRenderModelNodeStateEXT.adoc[]
 
 ==== Example
 
-[source,c++]
+[source,cpp]
 ----
 // previously initialized
 extern XrInstance instance;

@@ -58,7 +58,7 @@ should:
 
 ==== Inspect system capability
 
-[open,refpage='XrSystemFoveatedRenderingPropertiesVARJO',type='structs',desc='System property for foveated rendering',xrefs='']
+[open,refpage='XrSystemFoveatedRenderingPropertiesVARJO',type='structs',desc='System property for foveated rendering',xrefs='XrSystemProperties']
 --
 An application can: inspect whether the system is capable of foveated
 rendering by chaining an slink:XrSystemFoveatedRenderingPropertiesVARJO
@@ -73,6 +73,8 @@ include::{generated}/api/structs/XrSystemFoveatedRenderingPropertiesVARJO.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsFoveatedRendering is an basetype:XrBool32, indicating if
   current system is capable of performoning foveated rendering.
 ****
@@ -119,7 +121,7 @@ include::{generated}/validity/structs/XrFoveatedViewConfigurationViewVARJO.adoc[
 
 For example:
 
-[source,c++]
+[source,cpp]
 ----
 XrInstance instance; // previously populated
 XrSystemId systemId; // previously populated
@@ -168,7 +170,7 @@ After calling flink:xrLocateSpace, application should: inspect
 ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT bit.
 If it's set, rendering gaze is available otherwise not.
 
-[source,c++]
+[source,cpp]
 ----
 XrSession session; // previously populated
 
@@ -231,7 +233,7 @@ pname:foveatedRenderingActive is ename:XR_TRUE.
 include::{generated}/validity/structs/XrViewLocateFoveatedRenderingVARJO.adoc[]
 --
 
-[source,c++]
+[source,cpp]
 ----
 // ...
 // in frame loop

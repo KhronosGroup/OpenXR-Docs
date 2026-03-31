@@ -17,6 +17,165 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.58 (2026-03-31)
+
+This release features several fixes and improvements to the specification as
+well as a number of new extensions. The most notable are the two new ratified
+multi-vendor extensions, `XR_EXT_view_configuration_views_change` and
+`XR_EXT_interaction_profile_battery_state_display`.
+
+- Specification
+  - Change: Update the extension process document to include an alternate method of
+    distinguishing experimental extensions during their development.
+    ([internal MR 3678](https://gitlab.khronos.org/openxr/openxr/merge_requests/3678))
+  - Clarify: In `XR_EXT_spatial_entity`, clarify that update snapshot must not
+    included unlisted entities.
+    ([internal MR 4149](https://gitlab.khronos.org/openxr/openxr/merge_requests/4149))
+  - Fix: Typo in `XR_EXT_hand_tracking_data_source` Issue 2, referencing the
+    incorrect structure.
+    ([internal MR 4170](https://gitlab.khronos.org/openxr/openxr/merge_requests/4170))
+  - Fix: Correct link for MR number reservation from extension process to style
+    guide.
+    ([internal MR 4183](https://gitlab.khronos.org/openxr/openxr/merge_requests/4183),
+    [internal issue 2688](https://gitlab.khronos.org/openxr/openxr/issues/2688))
+  - Fix: Two-call idiom links in some extensions.
+    ([internal MR 4185](https://gitlab.khronos.org/openxr/openxr/merge_requests/4185))
+  - Improvement: Fix syntax highlighting of example C++ code in the spec.
+    ([internal MR 4181](https://gitlab.khronos.org/openxr/openxr/merge_requests/4181))
+  - Improvement: Add links to `XrSystemProperties` next chain usage.
+    ([internal MR 4195](https://gitlab.khronos.org/openxr/openxr/merge_requests/4195))
+  - New ratified multi-vendor extension specification:
+    `XR_EXT_view_configuration_views_change` providing an event to notify the app
+    of manual or infrequent changes to views (usually recommended resolutions).
+    ([internal MR 711](https://gitlab.khronos.org/openxr/openxr/merge_requests/711),
+    [internal issue 619](https://gitlab.khronos.org/openxr/openxr/issues/619))
+  - New ratified multi-vendor extension specification:
+    `XR_EXT_interaction_profile_battery_state_display` providing access to limited
+    battery state information for display purposes only.
+    ([internal MR 3528](https://gitlab.khronos.org/openxr/openxr/merge_requests/3528),
+    [internal issue 1339](https://gitlab.khronos.org/openxr/openxr/issues/1339),
+    [internal issue 1905](https://gitlab.khronos.org/openxr/openxr/issues/1905))
+  - New vendor extension specification: `XR_QCOM_hand_tracking_gesture` adding
+    vendor-specific additional data to the hand tracking extension.
+    ([internal MR 2572](https://gitlab.khronos.org/openxr/openxr/merge_requests/2572))
+  - New vendor extension specification: `XR_META_body_tracking_fidelity` providing
+    applications with the ability to influence performance vs. quality tradeoffs in
+    body tracking.
+    ([internal MR 2962](https://gitlab.khronos.org/openxr/openxr/merge_requests/2962))
+  - New vendor extension specification: `XR_META_spatial_entity_semantic_label`
+    defines semantic labels to describe semantic meanings of an associated spatial
+    entity, within the `XR_FB_spatial_entity` framework.
+    ([internal MR 3529](https://gitlab.khronos.org/openxr/openxr/merge_requests/3529))
+  - New vendor extension specification: `XR_ANDROID_performance_metrics` to
+    enumerate and query various performance metrics counters of the current XR
+    device.
+    ([internal MR 3607](https://gitlab.khronos.org/openxr/openxr/merge_requests/3607))
+  - New vendor extension specification: `XR_ANDROID_mouse_interaction` introduces a
+    new vendor-specific interaction profile for mouse devices.
+    ([internal MR 3608](https://gitlab.khronos.org/openxr/openxr/merge_requests/3608))
+  - New vendor extension specification: `XR_ANDROID_unbounded_reference_space`
+    provides a new vendor-specific reference space type.
+    ([internal MR 3624](https://gitlab.khronos.org/openxr/openxr/merge_requests/3624))
+  - New vendor extension specification:
+    `XR_ANDROID_composition_layer_passthrough_mesh` enables applications to project
+    passthrough textures onto arbitrary geometry.
+    ([internal MR 3625](https://gitlab.khronos.org/openxr/openxr/merge_requests/3625))
+  - New vendor extension specification: `XR_META_environment_raycast` allowing
+    applications to perform raycast operations against the surrounding physical
+    environment.
+    ([internal MR 3758](https://gitlab.khronos.org/openxr/openxr/merge_requests/3758))
+  - New vendor extension specification: `XR_ANDROID_trackables_qr_code` allowing
+    applications to detect and track QR codes in the user's environment, in the
+    `XR_ANDROID_trackables` framework.
+    ([internal MR 3772](https://gitlab.khronos.org/openxr/openxr/merge_requests/3772))
+  - New vendor extension specification: `XR_BD_spatial_audio_rendering` allowing
+    applications to render spatial audio in a 3D space.
+    ([internal MR 3794](https://gitlab.khronos.org/openxr/openxr/merge_requests/3794))
+  - New vendor extension specification: `XR_ANDROID_scene_meshing` to track the
+    triangle mesh representation of the user's environment.
+    ([internal MR 3872](https://gitlab.khronos.org/openxr/openxr/merge_requests/3872))
+  - New vendor extension specification: `XR_META_tile_properties_hint` allowing
+    applications to provide the tile properties of a render pass as a hint to the
+    OpenXR runtime.
+    ([internal MR 3885](https://gitlab.khronos.org/openxr/openxr/merge_requests/3885))
+  - New vendor extension specification: `XR_ANDROID_spatial_object_tracking`
+    allowing applications to track objects in the user's environment, within the
+    `XR_EXT_spatial_entity` framework.
+    ([internal MR 3992](https://gitlab.khronos.org/openxr/openxr/merge_requests/3992))
+  - New vendor extension specification: `XR_ANDROID_spatial_discovery_raycast` to
+    discover spatial entities via raycast hit test.
+    ([internal MR 3993](https://gitlab.khronos.org/openxr/openxr/merge_requests/3993))
+  - New vendor extension specification: `XR_ANDROID_spatial_entity_bound_anchor`
+    allowing applications to attach anchors to spatial entities, within the
+    `XR_EXT_spatial_entity` framework.
+    ([internal MR 3994](https://gitlab.khronos.org/openxr/openxr/merge_requests/3994))
+  - New vendor extension specification: `XR_ANDROID_spatial_component_subsumed_by`
+    to provide a component on spatial entities that get subsumed by another entity,
+    within the `XR_EXT_spatial_entity` framework.
+    ([internal MR 4125](https://gitlab.khronos.org/openxr/openxr/merge_requests/4125))
+  - New vendor extension specification: `XR_ANDROID_spatial_anchor_space` to create
+    an XrSpace that represents a spatial anchor, within the `XR_EXT_spatial_entity`
+    framework.
+    ([internal MR 4132](https://gitlab.khronos.org/openxr/openxr/merge_requests/4132))
+- Registry
+  - Change: Mark `XR_FB_space_warp` as deprecated by `XR_EXT_frame_synthesis`,
+    which provides the same functionality with a slightly modified interface.
+    ([internal MR 4173](https://gitlab.khronos.org/openxr/openxr/merge_requests/4173),
+    [internal issue 2469](https://gitlab.khronos.org/openxr/openxr/issues/2469))
+  - Chore: Reserve extension numbers.
+    ([internal MR 4204](https://gitlab.khronos.org/openxr/openxr/merge_requests/4204))
+  - Fix: Mark `XR_FB_touch_controller_proximity` as obsoleted by OpenXR 1.1.
+    ([internal MR 4191](https://gitlab.khronos.org/openxr/openxr/merge_requests/4191),
+    [internal issue 2599](https://gitlab.khronos.org/openxr/openxr/issues/2599))
+  - Improvement: Add command return code checks in `xml_consistency.py` for
+    specific spatial entity input types.
+    ([internal MR 4151](https://gitlab.khronos.org/openxr/openxr/merge_requests/4151))
+  - New ratified multi-vendor extension: `XR_EXT_view_configuration_views_change`
+    ([internal MR 711](https://gitlab.khronos.org/openxr/openxr/merge_requests/711),
+    [internal issue 619](https://gitlab.khronos.org/openxr/openxr/issues/619))
+  - New ratified multi-vendor extension:
+    `XR_EXT_interaction_profile_battery_state_display`.
+    ([internal MR 3528](https://gitlab.khronos.org/openxr/openxr/merge_requests/3528),
+    [internal issue 1339](https://gitlab.khronos.org/openxr/openxr/issues/1339),
+    [internal issue 1905](https://gitlab.khronos.org/openxr/openxr/issues/1905))
+  - New vendor extension: `XR_QCOM_hand_tracking_gesture`
+    ([internal MR 2572](https://gitlab.khronos.org/openxr/openxr/merge_requests/2572))
+  - New vendor extension: `XR_META_body_tracking_fidelity`
+    ([internal MR 2962](https://gitlab.khronos.org/openxr/openxr/merge_requests/2962))
+  - New vendor extension: `XR_META_spatial_entity_semantic_label`
+    ([internal MR 3529](https://gitlab.khronos.org/openxr/openxr/merge_requests/3529))
+  - New vendor extension: `XR_ANDROID_performance_metrics`
+    ([internal MR 3607](https://gitlab.khronos.org/openxr/openxr/merge_requests/3607))
+  - New vendor extension: `XR_ANDROID_mouse_interaction`
+    ([internal MR 3608](https://gitlab.khronos.org/openxr/openxr/merge_requests/3608))
+  - New vendor extension: `XR_ANDROID_unbounded_reference_space`
+    ([internal MR 3624](https://gitlab.khronos.org/openxr/openxr/merge_requests/3624))
+  - New vendor extension: `XR_ANDROID_composition_layer_passthrough_mesh`
+    ([internal MR 3625](https://gitlab.khronos.org/openxr/openxr/merge_requests/3625))
+  - New vendor extension: `XR_META_environment_raycast`
+    ([internal MR 3758](https://gitlab.khronos.org/openxr/openxr/merge_requests/3758))
+  - New vendor extension: `XR_ANDROID_trackables_qr_code`
+    ([internal MR 3772](https://gitlab.khronos.org/openxr/openxr/merge_requests/3772))
+  - New vendor extension: `XR_BD_spatial_audio_rendering`
+    ([internal MR 3794](https://gitlab.khronos.org/openxr/openxr/merge_requests/3794))
+  - New vendor extension: `XR_ANDROID_scene_meshing`
+    ([internal MR 3872](https://gitlab.khronos.org/openxr/openxr/merge_requests/3872))
+  - New vendor extension: `XR_META_tile_properties_hint`
+    ([internal MR 3885](https://gitlab.khronos.org/openxr/openxr/merge_requests/3885))
+  - New vendor extension: `XR_ANDROID_spatial_object_tracking`
+    ([internal MR 3992](https://gitlab.khronos.org/openxr/openxr/merge_requests/3992))
+  - New vendor extension: `XR_ANDROID_spatial_discovery_raycast`
+    ([internal MR 3993](https://gitlab.khronos.org/openxr/openxr/merge_requests/3993))
+  - New vendor extension: `XR_ANDROID_spatial_entity_bound_anchor`
+    ([internal MR 3994](https://gitlab.khronos.org/openxr/openxr/merge_requests/3994))
+  - New vendor extension: `XR_ANDROID_spatial_component_subsumed_by`
+    ([internal MR 4125](https://gitlab.khronos.org/openxr/openxr/merge_requests/4125))
+  - New vendor extension: `XR_ANDROID_spatial_anchor_space`
+    ([internal MR 4132](https://gitlab.khronos.org/openxr/openxr/merge_requests/4132))
+  - Schematron: Add schematron validation for prefix `XrCompositionLayer` for
+    structures which extend `XrCompositionLayerBaseHeader`.
+    ([internal MR 4131](https://gitlab.khronos.org/openxr/openxr/merge_requests/4131))
+
 ## OpenXR Specification 1.1.57 (2026-02-12)
 
 This release features a few cleanups and clarifications, an addition to the

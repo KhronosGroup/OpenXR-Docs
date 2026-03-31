@@ -511,7 +511,7 @@ should: follow the following patterns:
 
 ===== `xrCreate` functions
 
-[source,c++]
+[source,cpp]
 ----
 /****************************/
 /* Foo extension definition */
@@ -585,7 +585,7 @@ if (futureReady) {
 ----
 
 ===== Two-call idiom
-[source,c++]
+[source,cpp]
 ----
 /****************************/
 /* Foo extension definition */
@@ -671,7 +671,7 @@ if (futureReady) {
 
 ===== Sample code
 
-[source,c++]
+[source,cpp]
 ----
 /*****************************************/
 /* Slow Foo extension definition */
@@ -750,7 +750,7 @@ class MyGame {
 ----
 
 ===== Multi-threaded code
-[source,c++]
+[source,cpp]
 ----
 class MyThreadedGame {
 

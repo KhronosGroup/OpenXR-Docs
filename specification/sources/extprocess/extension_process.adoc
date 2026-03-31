@@ -59,8 +59,6 @@ OpenXR extensions fall into three categories:
 *** May be developed in the working group with an intent to ratify before
     release, or as a separate process outside of the working group without
     ratification.
-** If a multi-vendor extension is proposed as provisional, experimental, or
-   preview, its author/vendor identification is `EXTX`.
 ** **Note:** Some level of working group notification and approval is
    required before publication for naming review because `EXT` is a shared
    namespace.
@@ -89,6 +87,52 @@ OpenXR extensions fall into three categories:
 ====
 All vendor IDs are clearly identified in the OpenXR registry (xr.xml)
 ====
+
+=== Experimental Extension Iterative Development and Provisional Extensions
+
+At their option, the working group, a vendor, or a group of vendors may
+identify experimental extensions with an author ID ending in X and an
+optional natural number, and by marking them as "provisional" in the XML
+registry.
+If the author ID used is the registered author ID plus "X" and optionally a
+number appended (e.g. "EXT" -> "EXTX1"), separate registration of the "X"
+author ID is not required.
+It is the author's discretion what this implies, but typically indicates a
+provisional, experimental, or preview extension, and may imply removal from
+future implementations.
+A revision of an experimental extension has no requirements regarding
+compatibility with its earlier revisions.
+
+The working group recommends the following process for source-incompatible
+iterative development of experimental extensions without using up multiple
+extension numbers or implying continuing support for earlier versions.
+The vendor/author tag is suffixed with "X" and an natural number in all
+places used.
+Upon each major (published or circulated) revision of an extension marked in
+this way, the natural number following "X" is incremented for all entities
+defined by the extension, to force source code updates.
+
+When the experimental iterations have concluded, the final extension
+replaces the "X"-suffixed in the XML registry and specification, ensuring
+source-incompatibility with software written against earlier experimental
+revisions.
+
+For example, a multi-vendor extension may be initially drafted and
+circulated with the tag `EXTX1`, published in revised form with the tag
+`EXTX2`, and revised and published in final form with the `EXT` tag.
+
+In some cases, a variant of the author tag with X substituted for the last
+character (e.g. `KHX`) is used instead.
+
+Developers using extensions marked with an "X" suffix and/or indicated as
+"Provisional" in the specification are warned that:
+
+* Experimental extensions have no compatibility requirements or guarantees.
+* Developers should not ship completed software using experimental
+  extensions.
+* The finalized extension corresponding to any given experimental or
+  provisional extension, if one is published, will require source and binary
+  updates.
 
 
 == Typical Extension Process Flow
@@ -236,7 +280,9 @@ assignment prior to extension publication:
      `supported="disabled"`.
      The extension number will be reserved only once this merge request is
      accepted.
-     See the <<mr-reserve-extension-number,example>> below.
+     See the
+     link:https://registry.khronos.org/OpenXR/specs/1.1/styleguide.html#mr-reserve-extension-number[example]
+     in the style guide.
    * The extension number will be reserved only once this merge request is
      accepted.
    * To accommodate internal development of the specification, the spec

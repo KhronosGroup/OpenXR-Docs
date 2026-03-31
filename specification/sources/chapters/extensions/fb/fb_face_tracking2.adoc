@@ -58,7 +58,7 @@ face is tracked properly.
 
 ==== Inspect system capability
 
-[open,refpage='XrSystemFaceTrackingProperties2FB',type='structs',desc='System property for face tracking',xrefs='']
+[open,refpage='XrSystemFaceTrackingProperties2FB',type='structs',desc='System property for face tracking',xrefs='XrSystemProperties']
 --
 
 include::{generated}/api/structs/XrSystemFaceTrackingProperties2FB.adoc[]
@@ -69,6 +69,8 @@ include::{generated}/api/structs/XrSystemFaceTrackingProperties2FB.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsVisualFaceTracking is an basetype:XrBool32, indicating if
   the current system is capable of receiving face tracking input that is
   estimated based on visual data source.
@@ -389,7 +391,7 @@ include::{generated}/validity/structs/XrFaceExpressionWeights2FB.adoc[]
 The following example code demonstrates how to obtain all weights for facial
 expression blend shapes.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

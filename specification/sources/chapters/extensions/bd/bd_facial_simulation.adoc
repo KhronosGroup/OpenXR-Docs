@@ -55,6 +55,8 @@ include::{generated}/api/structs/XrSystemFacialSimulationPropertiesBD.adoc[]
 * pname:type is the elink:XrStructureType of this structure.
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsFaceTracking is an basetype:XrBool32, indicating if the
   current system is capable of receiving face tracking input.
 ****
@@ -422,7 +424,7 @@ include::{generated}/validity/protos/xrSetFacialSimulationModeBD.adoc[]
 
 The code below shows how to use this extension.
 
-[source,c++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized

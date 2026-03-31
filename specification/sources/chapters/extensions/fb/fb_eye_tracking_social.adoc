@@ -43,7 +43,7 @@ pname:isValid on the supplied slink:XrEyeGazeFB structure to ename:XR_TRUE.
 
 ==== Inspect system capability
 
-[open,refpage='XrSystemEyeTrackingPropertiesFB',type='structs',desc='System property for eye tracking',xrefs='']
+[open,refpage='XrSystemEyeTrackingPropertiesFB',type='structs',desc='System property for eye tracking',xrefs='XrSystemProperties']
 --
 
 The slink:XrSystemEyeTrackingPropertiesFB structure is defined as:
@@ -56,6 +56,8 @@ include::{generated}/api/structs/XrSystemEyeTrackingPropertiesFB.adoc[]
 * pname:next is code:NULL or a pointer to the next structure in a structure
   chain.
   No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
 * pname:supportsEyeTracking is an basetype:XrBool32, indicating if the
   current system is capable of receiving eye tracking input.
 ****
@@ -274,7 +276,7 @@ include::{generated}/api/enums/XrEyePositionFB.comments-box.adoc[]
 The following example code demonstrates how to locate eye gaze relative to a
 world space.
 
-[source,C++]
+[source,cpp]
 ----
 XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
