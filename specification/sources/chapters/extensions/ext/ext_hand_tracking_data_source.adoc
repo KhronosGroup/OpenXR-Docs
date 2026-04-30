@@ -19,10 +19,8 @@ include::{generated}/meta/XR_EXT_hand_tracking_data_source.adoc[]
     Yin Li, Microsoft +
     Robert Blenkinsopp, Ultraleap +
     Nathan Nuber, Valve +
-*Contacts*::
-    John Kearney, Meta +
 
-*Overview*
+==== Overview
 
 This extension augments the apiext:XR_EXT_hand_tracking extension.
 
@@ -38,6 +36,8 @@ to specify the currently active data source.
 
 The application must: enable the apiext:XR_EXT_hand_tracking extension in
 order to use this extension.
+
+==== Data Sources
 
 [open,refpage='XrHandTrackingDataSourceEXT',type='enums',desc='Describes the hand tracking data source.',xrefs='xrLocateHandJointsEXT xrCreateHandTrackerEXT']
 --
@@ -81,6 +81,8 @@ application will use that extension when retrieving hand joint poses.
 --
 
 
+==== Specifying Acceptable Data Source at Creation
+
 [open,refpage='XrHandTrackingDataSourceInfoEXT',type='structs',desc='Specify the data source to create the hand tracker',xrefs='XrHandTrackerCreateInfoEXT xrCreateHandTrackerEXT']
 --
 The slink:XrHandTrackingDataSourceInfoEXT structure is defined as:
@@ -120,6 +122,8 @@ flink:xrCreateHandTrackerEXT.
 
 include::{generated}/validity/structs/XrHandTrackingDataSourceInfoEXT.adoc[]
 --
+
+==== Getting Data Source With Data
 
 [open,refpage='XrHandTrackingDataSourceStateEXT',type='structs',desc='Chains to slink:XrHandJointLocationsEXT to get hand tracking data source state',xrefs='XrHandJointLocationsEXT xrLocateHandJointsEXT']
 --
@@ -166,28 +170,10 @@ creating the corresponding hand tracker.
 include::{generated}/validity/structs/XrHandTrackingDataSourceStateEXT.adoc[]
 --
 
-*New Object Types*
+include::{generated}/interfaces/XR_EXT_hand_tracking_data_source.adoc[leveloffset=1]
 
-*New Flag Types*
 
-*New Enum Constants*
-
-elink:XrStructureType enumeration is extended with:
-* ename:XR_TYPE_HAND_TRACKING_DATA_SOURCE_INFO_EXT
-* ename:XR_TYPE_HAND_TRACKING_DATA_SOURCE_STATE_EXT
-
-*New Enums*
-
-* elink:XrHandTrackingDataSourceEXT
-
-*New Structures*
-
-* slink:XrHandTrackingDataSourceInfoEXT
-* slink:XrHandTrackingDataSourceStateEXT
-
-*New Functions*
-
-*Issues*
+==== Issues
 
 . Should this extension require
   ename:XR_HAND_JOINTS_MOTION_RANGE_CONFORMING_TO_CONTROLLER_EXT if the data
@@ -221,7 +207,7 @@ device is actively tracking.
 It is possible for a data source to be active but not actively tracking and
 we want to represent if the device is active in this extension.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-01-23 (John Kearney)
 ** Initial extension description

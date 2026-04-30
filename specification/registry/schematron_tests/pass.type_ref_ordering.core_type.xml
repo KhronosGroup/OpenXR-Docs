@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="uint32_t"/>
+
+        <!-- Core type defined in a feature, not an extension -->
+        <type category="struct" name="XrCoreStruct">
+            <member><type>uint32_t</type> <name>dummy</name></member>
+        </type>
+
+        <!-- Extension type referencing a core type — always allowed -->
+        <type category="struct" name="XrFooKHR">
+            <member><type>XrCoreStruct</type> <name>core</name></member>
+        </type>
+    </types>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require>
+            <type name="openxr_platform_defines"/>
+            <type name="XrCoreStruct"/>
+        </require>
+    </feature>
+
+    <extensions>
+        <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_foo_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
+                <type name="XrFooKHR"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

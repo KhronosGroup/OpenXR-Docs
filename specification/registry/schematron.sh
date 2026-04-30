@@ -9,9 +9,9 @@
 # You must set and export REGISTRY_DIR before sourcing.
 
 set -e
-SCHEMATRON_VERSION=1.9.4
-# from https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.9.4/cli-1.9.4.jar.sha1
-export SCHEMATRON_SHA1SUM=a94c5532487705fb42f09f11ae6d172caeaf7972
+SCHEMATRON_VERSION=1.10.1
+# from https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/1.10.1/cli-1.10.1.jar.sha1
+export SCHEMATRON_SHA1SUM=00dd23a94e410b3ffe410f4ffc4de8c0646b4d29
 export SCHXSLT_URI=https://repo1.maven.org/maven2/name/dmaus/schxslt/cli/$SCHEMATRON_VERSION/cli-$SCHEMATRON_VERSION.jar
 
 REGISTRY_DIR=$(cd "$REGISTRY_DIR" && pwd)
@@ -23,7 +23,7 @@ export SCHXSLT_CLI
 export SCH="$REGISTRY_DIR/registry.sch"
 
 makeSchematronReport() {
-    java -jar "$SCHXSLT_CLI" -d "$1" -s "$SCH" -v -o "$1.srvl"
+    java -jar "$SCHXSLT_CLI" --document "$1" --schematron "$SCH" --verbose --output "$1.srvl" --exitcode 1
 }
 
 runSchematron() {
@@ -77,18 +77,18 @@ ensureSchXslt() {
         fi
 
         echo "Checking hash of schxslt cli jar"
-        echo "$SCHEMATRON_SHA1SUM $SCHXSLT_CLI" > $SCHXSLT_CLI.sha1sum
-        if [ "$(uname)" == "Darwin" ]; then
-            if ! (sha1sum -c $SCHXSLT_CLI.sha1sum | grep -q OK); then
+        echo "$SCHEMATRON_SHA1SUM $SCHXSLT_CLI" > "$SCHXSLT_CLI.sha1sum"
+        if [ "$(uname)" = "Darwin" ]; then
+            if ! (sha1sum -c "$SCHXSLT_CLI.sha1sum" | grep -q OK); then
                 echo "Verification of download failed."
                 return 1;
             fi
         else
-            if ! (sha1sum --check $SCHXSLT_CLI.sha1sum); then
+            if ! (sha1sum --check "$SCHXSLT_CLI.sha1sum"); then
                 echo "Verification of download failed."
                 return 1
             fi
         fi
-        rm $SCHXSLT_CLI.sha1sum
+        rm "$SCHXSLT_CLI.sha1sum"
     )
 }

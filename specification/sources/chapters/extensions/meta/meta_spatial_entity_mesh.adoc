@@ -27,12 +27,6 @@ the Entity-Component System.
 The triangle mesh is a component type that may: be associated to a spatial
 entity.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
-
 ==== Retrieving a triangle mesh
 
 [open,refpage='xrGetSpaceTriangleMeshMETA',desc='Gets an XrSpaceTriangleMeshMETA that represents a triangle mesh',type='protos',xrefs='']

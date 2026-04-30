@@ -1,0 +1,416 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_eye_tracking.adoc[]
+
+*Last Modified Date*::
+    2025-01-17
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Spencer Quin, Google +
+    Jared Finder, Google +
+    Levana Chen, Google +
+    Kenny Vercaemer, Google +
+    Prasanthi Gurumurthy, Google +
+    Nihav Jain, Google +
+
+==== Overview
+
+This extension enables applications to obtain position and orientation of
+the user's eyes, as well as eye tracking status.
+
+Eye tracking data is provided in two modes: coarse and fine.
+Coarse tracking provides a coarse estimate of the user's eyes, while fine
+tracking provides a more accurate estimate.
+Coarse tracking is meant for applications that want to provide a basic
+avatar-like representation, while fine tracking is meant for more precise
+applications.
+
+For interaction, apiext:XR_EXT_eye_gaze_interaction should: be used.
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the android.permission.EYE_TRACKING_COARSE
+or the android.permission.EYE_TRACKING_FINE permission listed in their
+manifest.
+These permissions are considered dangerous permissions.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateEyeTrackerANDROID (at least one of the permissions)
+* flink:xrGetCoarseTrackingEyesInfoANDROID
+  (android.permission.EYE_TRACKING_COARSE)
+* flink:xrGetFineTrackingEyesInfoANDROID
+  (android.permission.EYE_TRACKING_FINE)
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemEyeTrackingPropertiesANDROID',type='structs',desc='System property for eye tracking',xrefs='XrEyeTrackerANDROID xrCreateEyeTrackerANDROID']
+--
+The slink:XrSystemEyeTrackingPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemEyeTrackingPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsEyeTracking is an basetype:XrBool32 indicating if current
+  system supports eye tracking.
+****
+
+An application can: inspect whether the system is capable of eye tracking by
+extending the slink:XrSystemProperties with
+slink:XrSystemEyeTrackingPropertiesANDROID structure when calling
+flink:xrGetSystemProperties.
+
+If and only if a runtime returns ename:XR_FALSE for
+pname:supportsEyeTracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateEyeTrackerANDROID.
+
+include::{generated}/validity/structs/XrSystemEyeTrackingPropertiesANDROID.adoc[]
+--
+
+==== Creating an eye tracker handle
+
+[open,refpage='XrEyeTrackerANDROID',type='handles',desc='Represents an eye tracker']
+--
+include::{generated}/api/handles/XrEyeTrackerANDROID.adoc[]
+
+The slink:XrEyeTrackerANDROID handle represents an eye tracker for tracking
+eyes and accurately maps where the user is looking.
+
+Eye tracking data is sensitive personal information and is closely linked to
+personal privacy and integrity.
+It is strongly recommended that applications that store or transfer eye
+tracking data always ask the user for active and specific acceptance to do
+so.
+
+The application uses this handle to access eye tracking data using other
+functions in this extension.
+
+Eye tracking provides eye pose and status representation in the scene.
+--
+
+[open,refpage='xrCreateEyeTrackerANDROID',type='protos',desc='Create an eye tracker handle',xrefs='XrSystemEyeTrackingPropertiesANDROID XrEyeTrackerCreateInfoANDROID XrEyeTrackerANDROID xrDestroyEyeTrackerANDROID']
+--
+The flink:xrCreateEyeTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateEyeTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle in which the eye tracking will
+  be active.
+* pname:createInfo is the slink:XrEyeTrackerCreateInfoANDROID used to
+  specify the eye tracking.
+* pname:eyeTracker is the returned slink:XrEyeTrackerANDROID handle.
+****
+
+An application creates an slink:XrEyeTrackerANDROID handle using the
+flink:xrCreateEyeTrackerANDROID function.
+
+If the system does not support eye tracking, the runtime must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from flink:xrCreateEyeTrackerANDROID.
+
+include::{generated}/validity/protos/xrCreateEyeTrackerANDROID.adoc[]
+--
+
+[open,refpage='XrEyeTrackerCreateInfoANDROID',type='structs',desc='Information to create a eye tracker handle',xrefs='xrCreateEyeTrackerANDROID']
+--
+The slink:XrEyeTrackerCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrEyeTrackerCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+****
+
+The slink:XrEyeTrackerCreateInfoANDROID structure describes the information
+to create an slink:XrEyeTrackerANDROID handle.
+
+include::{generated}/validity/structs/XrEyeTrackerCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyEyeTrackerANDROID',type='protos',desc='Destroy an eye tracker handle',xrefs='xrCreateEyeTrackerANDROID XrEyeTrackerANDROID']
+--
+The flink:xrDestroyEyeTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyEyeTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:eyeTracker is an slink:XrEyeTrackerANDROID previously created by
+  flink:xrCreateEyeTrackerANDROID.
+****
+
+flink:xrDestroyEyeTrackerANDROID function releases the pname:eyeTracker and
+the underlying resources when finished with eye tracking experiences.
+
+include::{generated}/validity/protos/xrDestroyEyeTrackerANDROID.adoc[]
+--
+
+==== Getting eyes information
+
+[open,refpage='xrGetCoarseTrackingEyesInfoANDROID',type='protos',desc='Gets coarse tracking eyes information',xrefs='XrEyeTrackerANDROID XrEyesANDROID']
+--
+The flink:xrGetCoarseTrackingEyesInfoANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetCoarseTrackingEyesInfoANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:eyeTracker is an slink:XrEyeTrackerANDROID previously created by
+  flink:xrCreateEyeTrackerANDROID.
+* pname:getInfo is a pointer to slink:XrEyesGetInfoANDROID used to provide
+  info for querying eye poses and states.
+* pname:eyesOutput is a pointer to slink:XrEyesANDROID that contains the
+  returned eyes information including poses and states.
+****
+
+flink:xrGetCoarseTrackingEyesInfoANDROID function gets the information for
+eye states and poses in a way that preserves user privacy.
+
+The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if the
+application does not have the android.permission.EYE_TRACKING_COARSE
+permission.
+
+The eye poses are expressed in slink:XrEyesGetInfoANDROID::pname:baseSpace
+at slink:XrEyesGetInfoANDROID::pname:time.
+
+At any point of time both the position and direction of the eye pose is
+tracked or untracked.
+This means that the runtime must: set both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT or clear both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT on the supplied
+slink:XrEyesANDROID::pname:eyes, and set slink:XrEyesANDROID::pname:mode to
+indicate the tracking states.
+
+include::{generated}/validity/protos/xrGetCoarseTrackingEyesInfoANDROID.adoc[]
+--
+
+[open,refpage='xrGetFineTrackingEyesInfoANDROID',type='protos',desc='Gets fine tracking eyes information',xrefs='XrEyeTrackerANDROID XrEyesANDROID']
+--
+The flink:xrGetFineTrackingEyesInfoANDROID function is defined as:
+
+include::{generated}/api/protos/xrGetFineTrackingEyesInfoANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:eyeTracker is an slink:XrEyeTrackerANDROID previously created by
+  flink:xrCreateEyeTrackerANDROID.
+* pname:getInfo is a pointer to slink:XrEyesGetInfoANDROID used to specify
+  what output is required.
+* pname:eyesOutput is a pointer to slink:XrEyesANDROID that contains the
+  returned eyes information including poses and states.
+****
+
+flink:xrGetFineTrackingEyesInfoANDROID function gets the information for eye
+states and poses with higher precision than
+flink:xrGetCoarseTrackingEyesInfoANDROID.
+
+The runtime must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT if the
+application does not have the android.permission.EYE_TRACKING_FINE
+permission.
+
+The eyes information is resolved and relative to the base space at the time
+of the call to flink:xrGetFineTrackingEyesInfoANDROID using
+slink:XrEyesGetInfoANDROID::pname:time,
+slink:XrEyesGetInfoANDROID::pname:baseSpace.
+The runtime must: resolve the location defined by
+slink:XrEyesGetInfoANDROID::pname:baseSpace at the time of the call.
+
+At any point of time both the position and direction of the eye pose is
+tracked or untracked.
+This means that the runtime must: set both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT or clear both
+ename:XR_SPACE_LOCATION_POSITION_TRACKED_BIT and
+ename:XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT on the supplied
+slink:XrEyesANDROID::pname:eyes, and set slink:XrEyesANDROID::pname:mode to
+indicate the tracking states.
+
+include::{generated}/validity/protos/xrGetFineTrackingEyesInfoANDROID.adoc[]
+--
+
+[open,refpage='XrEyesGetInfoANDROID',type='structs',desc='Information to get eyes states and poses',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID']
+--
+slink:XrEyesGetInfoANDROID structure contains the information required to
+retrieve eye poses and states.
+
+include::{generated}/api/structs/XrEyesGetInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:time is the basetype:XrTime at which to evaluate the coordinates
+  relative to the pname:baseSpace.
+* pname:baseSpace is the slink:XrSpace in which to return the eye poses.
+****
+
+include::{generated}/validity/structs/XrEyesGetInfoANDROID.adoc[]
+--
+
+[open,refpage='XrEyesANDROID',type='structs',desc='Contains the eyes information',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID XrEyeANDROID XrEyeIndexANDROID XrEyeTrackingModeANDROID']
+--
+The slink:XrEyesANDROID structure contains information about the tracked
+eyes.
+
+include::{generated}/api/structs/XrEyesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:eyes is an array of slink:XrEyeANDROID, of size
+  ename:XR_EYE_MAX_ANDROID, for the left and right eyes as indexed by
+  elink:XrEyeIndexANDROID.
+* pname:mode is the elink:XrEyeTrackingModeANDROID indicating which of the
+  eyes are currently tracking.
+****
+
+include::{generated}/validity/structs/XrEyesANDROID.adoc[]
+--
+
+[open,refpage='XrEyeANDROID',type='structs',desc='Describes the state and pose of an eye',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID XrEyesANDROID XrEyeStateANDROID']
+--
+The slink:XrEyeANDROID structure describes the state, position and
+orientation of an eye.
+
+include::{generated}/api/structs/XrEyeANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:eyeState is the elink:XrEyeStateANDROID of an eye.
+* pname:eyePose is an slink:XrPosef defining the position and orientation of
+  the pupil of an eye within the reference frame of the corresponding
+  slink:XrEyesGetInfoANDROID::pname:baseSpace.
+  An identity orientation here represents a coordinate axes with +Z into the
+  user's eyes, +X to the right and +Y up.
+****
+
+include::{generated}/validity/structs/XrEyeANDROID.adoc[]
+--
+
+
+[open,refpage='XrEyeStateANDROID',type='enums',desc='State of a tracked eye',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID XrEyesANDROID XrEyeANDROID']
+--
+The elink:XrEyeStateANDROID enumeration identifies the different state of
+tracked eyes.
+
+include::{generated}/api/enums/XrEyeStateANDROID.adoc[]
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrEyeStateANDROID.comments.adoc[]
+--
+
+[open,refpage='XrEyeIndexANDROID',type='enums',desc='Index of the left or right eye',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID XrEyesANDROID XrEyeANDROID']
+--
+The elink:XrEyeIndexANDROID enumeration identifies the index of the left or
+right eyes.
+
+include::{generated}/api/enums/XrEyeIndexANDROID.adoc[]
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrEyeIndexANDROID.comments.adoc[]
+--
+
+[open,refpage='XrEyeTrackingModeANDROID',type='enums',desc='Current tracking mode of an eye tracker',xrefs='xrGetCoarseTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID XrEyesANDROID']
+--
+The elink:XrEyeTrackingModeANDROID enumeration identifies the different
+state of tracked eyes.
+
+include::{generated}/api/enums/XrEyeTrackingModeANDROID.adoc[]
+
+The enums have the following meanings:
+
+include::{generated}/api/enums/XrEyeTrackingModeANDROID.comments.adoc[]
+--
+
+==== Example code for eye tracking
+
+The following example code demonstrates how to get eyes information relative
+to a view space.
+
+[source,cpp]
+----
+XrSession session; // previously initialized, e.g. created at app startup.
+XrSpace viewSpace; // space created for XR_REFERENCE_SPACE_TYPE_VIEW.
+
+// The function pointers are previously initialized using xrGetInstanceProcAddr.
+PFN_xrCreateEyeTrackerANDROID xrCreateEyeTrackerANDROID; // previously initialized
+PFN_xrDestroyEyeTrackerANDROID xrDestroyEyeTrackerANDROID; // previously initialized
+PFN_xrGetCoarseTrackingEyesInfoANDROID xrGetCoarseTrackingEyesInfoANDROID; // previously initialized
+PFN_xrGetFineTrackingEyesInfoANDROID xrGetFineTrackingEyesInfoANDROID; // previously initialized
+
+// This will use the XrSession that is bound to the eye tracker done at time of creation.
+XrEyeTrackerANDROID eyeTracker;
+XrEyeTrackerCreateInfoANDROID createInfo{
+    .type = XR_TYPE_EYE_TRACKER_CREATE_INFO_ANDROID,
+    .next = nullptr};
+CHK_XR(xrCreateEyeTrackerANDROID(session, &createInfo, &eyeTracker));
+
+while (1) {
+    // ...
+    // For every frame in frame loop
+    // ...
+
+    XrFrameState frameState;  // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+    XrEyesANDROID fineEyesInfo{.type = XR_TYPE_EYES_ANDROID,
+                               .next = nullptr,
+                               .mode = XR_EYE_TRACKING_MODE_BOTH_ANDROID};
+    XrEyesANDROID coarseEyesInfo{.type = XR_TYPE_EYES_ANDROID,
+                                 .next = nullptr,
+                                 .mode = XR_EYE_TRACKING_MODE_BOTH_ANDROID};
+    XrEyesGetInfoANDROID eyesGetInfo{.type = XR_TYPE_EYES_GET_INFO_ANDROID,
+                                     .next = nullptr,
+                                     .time = time,
+                                     .baseSpace = viewSpace};
+    CHK_XR(xrGetCoarseTrackingEyesInfoANDROID(eyeTracker, &eyesGetInfo, &coarseEyesInfo));
+    CHK_XR(xrGetFineTrackingEyesInfoANDROID(eyeTracker, &eyesGetInfo, &fineEyesInfo));
+
+    // eyes tracking information is now available:
+    // drawLeftEye(eyesInfo.eyes[XR_EYE_INDEX_LEFT_ANDROID].eyePose);
+    // drawRightEye(eyesInfo.eyes[XR_EYE_INDEX_RIGHT_ANDROID].eyePose);
+
+    // ...
+    // Finish frame loop
+    // ...
+}
+
+// after usage
+CHK_XR(xrDestroyEyeTrackerANDROID(eyeTracker));
+----
+
+include::{generated}/interfaces/XR_ANDROID_eye_tracking.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-01-17 (Kenny Vercaemer)
+** Initial extension description

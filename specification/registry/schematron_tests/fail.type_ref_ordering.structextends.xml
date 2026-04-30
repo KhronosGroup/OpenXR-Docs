@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="uint32_t"/>
+        <type name="XrStructureType" category="enum"/>
+
+        <!-- Type defined by higher-numbered extension (100) with next pointer -->
+        <type category="struct" name="XrFooKHR">
+            <member><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member><type>uint32_t</type> <name>dummy</name></member>
+        </type>
+
+        <!-- Type from lower-numbered extension (50) extends XrFooKHR from extension 100 — wrong order -->
+        <type category="struct" name="XrBarKHR" structextends="XrFooKHR">
+            <member><type>XrStructureType</type> <name>type</name></member>
+            <member>const <type>void</type>* <name>next</name></member>
+            <member><type>XrFooKHR</type> <name>foo</name></member>
+        </type>
+    </types>
+
+    <enums name="XrStructureType" type="enum">
+        <enum value="0" name="XR_TYPE_UNKNOWN"/>
+    </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require>
+            <type name="openxr_platform_defines"/>
+            <type name="XrStructureType"/>
+        </require>
+    </feature>
+
+    <extensions>
+        <!-- XrBarKHR (number 50) structextends XrFooKHR (number 100) — wrong order -->
+        <extension name="XR_KHR_bar" number="50" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_bar_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_bar&quot;" name="XR_KHR_BAR_EXTENSION_NAME"/>
+                <type name="XrBarKHR"/>
+            </require>
+        </extension>
+        <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_foo_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
+                <type name="XrFooKHR"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

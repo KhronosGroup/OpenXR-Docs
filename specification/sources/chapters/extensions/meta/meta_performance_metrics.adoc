@@ -49,11 +49,6 @@ are defined by the OpenXR runtime.
 The application must: not make assumptions or change its behavior at runtime
 by measuring them.
 
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Flag Types*
 
 [open,refpage='XrPerformanceMetricsCounterFlagsMETA',type='flags',desc='XrPerformanceMetricsCounterFlagsMETA',xrefs='XrPerformanceMetricsCounterFlagBitsMETA']

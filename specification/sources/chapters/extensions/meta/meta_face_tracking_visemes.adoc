@@ -1,0 +1,341 @@
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_face_tracking_visemes.adoc[]
+
+*Last Modified Date*::
+    2024-08-05
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Jaebong Lee, Meta +
+    Bill Orr, Meta +
+    Scott Ramsby, Meta +
+    Igor Tceglevskii, Meta +
+
+==== Overview
+
+Visemes are the visual representations of the face and mouth while speaking
+certain sounds in a spoken language.
+Visemes are used here as an alternative way of representing the output of
+the face tracking extension.
+
+This extension augments the apiext:XR_FB_face_tracking2 extension to enable
+an alternative way of representing its output.
+
+The application must: also enable the apiext:XR_FB_face_tracking2 extension
+in order to use this extension.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemFaceTrackingVisemesPropertiesMETA',type='structs',desc='System property for face tracking visemes extension.',xrefs='']
+--
+
+The slink:XrSystemFaceTrackingVisemesPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemFaceTrackingVisemesPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:supportsVisemes is an basetype:XrBool32 specifying if visemes are
+  supported.
+****
+
+An application can: inspect whether the system is capable of estimating
+visemes by extending the slink:XrSystemProperties with
+slink:XrSystemFaceTrackingVisemesPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+The runtime must: set pname:supportsVisemes to ename:XR_FALSE, if both
+slink:XrSystemFaceTrackingProperties2FB::pname:supportsVisualFaceTracking
+and slink:XrSystemFaceTrackingProperties2FB::pname:supportsAudioFaceTracking
+of slink:XrSystemFaceTrackingProperties2FB are ename:XR_FALSE.
+
+include::{generated}/validity/structs/XrSystemFaceTrackingVisemesPropertiesMETA.adoc[]
+--
+
+
+==== Obtain visemes
+
+[open,refpage='XrFaceTrackingVisemesMETA',type='structs',desc='Returns the visemes',xrefs='']
+--
+
+The slink:XrFaceTrackingVisemesMETA structure is defined as:
+
+include::{generated}/api/structs/XrFaceTrackingVisemesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:isValid is an basetype:XrBool32 which indicates that the visemes are
+  valid.
+* pname:visemes is an array of code:float that will be filled with visemes.
+****
+
+The slink:XrFaceTrackingVisemesMETA structure returns the visemes.
+The application can: add slink:XrFaceTrackingVisemesMETA to the pname:next
+chain of the slink:XrFaceExpressionWeights2FB structure when calling
+flink:xrGetFaceExpressionWeights2FB.
+
+The runtime should: set pname:isValid to ename:XR_FALSE, if any of the
+following are true:
+
+* the face tracker failed to estimate visemes
+* the application lost focus
+* the consent for audio recording was denied.
+
+If pname:isValid is ename:XR_FALSE, the runtime must: also set all elements
+of pname:visemes to zero.
+
+Otherwise, if the runtime sets pname:isValid to ename:XR_TRUE, the runtime
+must: update the pname:visemes array ordered so that the array elements are
+indexed using the corresponding viseme enumeration
+elink:XrFaceTrackingVisemeMETA.
+
+Each value in the pname:visemes array must: be between 0.0 and 1.0
+(inclusive), and the values represent a probability.
+If pname:isValid is ename:XR_TRUE, the summation of all elements in the
+pname:visemes array must: be 1.0.
+
+If the application only wants visemes without blend shapes, as a **change**
+in the behavior of the underlying extension, it may: assign 0 to
+slink:XrFaceExpressionWeights2FB::pname:weightCount and
+slink:XrFaceExpressionWeights2FB::pname:confidenceCount when calling
+flink:xrGetFaceExpressionWeights2FB.
+In this case, the application can: assign code:NULL to
+slink:XrFaceExpressionWeights2FB::pname:weights and
+slink:XrFaceExpressionWeights2FB::pname:confidences.
+
+include::{generated}/validity/structs/XrFaceTrackingVisemesMETA.adoc[]
+--
+
+==== Conventions of visemes
+
+
+[open,refpage='XR_FACE_TRACKING_VISEME_COUNT_META',type='enums',desc='The number of visemes in elink:XrFaceTrackingVisemeMETA.',xrefs='XrFaceTrackingVisemeMETA']
+--
+This extension defines 15 visemes and is designed to match existing
+15-viseme standards as well as match the older Oculus Lipsync API's visemes.
+
+include::{generated}/api/enums/XR_FACE_TRACKING_VISEME_COUNT_META.adoc[]
+
+They are enumerated by elink:XrFaceTrackingVisemeMETA.
+--
+
+[open,refpage='XrFaceTrackingVisemeMETA',type='enums',desc='The name of visemes',xrefs='XR_FACE_TRACKING_VISEME_COUNT_META']
+--
+include::{generated}/api/enums/XrFaceTrackingVisemeMETA.adoc[]
+
+[cols="6*"]
+|====
+|Viseme |Phonemes |Examples |Mild Production |Emphasized Production |Rotated Image
+
+|SIL (ename:XR_FACE_TRACKING_VISEME_SIL_META)
+|neutral
+|
+a|image::images/XR_META_Face_Tracking_Viseme_SIL.jpg[]
+|None
+a|image::images/XR_META_Face_Tracking_Viseme_SIL_rot.jpg[]
+
+|PP (ename:XR_FACE_TRACKING_VISEME_PP_META)
+|p, b, m
+|put, bat, mat
+a|image::images/XR_META_Face_Tracking_Viseme_PP.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_PP_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_PP_rot.jpg[]
+
+|FF (ename:XR_FACE_TRACKING_VISEME_FF_META)
+|f, v
+|fat, vat
+a|image::images/XR_META_Face_Tracking_Viseme_FF.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_FF_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_FF_rot.jpg[]
+
+|TH (ename:XR_FACE_TRACKING_VISEME_TH_META)
+|th
+|think, that
+a|image::images/XR_META_Face_Tracking_Viseme_TH.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_TH_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_TH_rot.jpg[]
+
+|DD (ename:XR_FACE_TRACKING_VISEME_DD_META)
+|t, d
+|tip, doll
+a|image::images/XR_META_Face_Tracking_Viseme_DD.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_DD_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_DD_rot.jpg[]
+
+|KK (ename:XR_FACE_TRACKING_VISEME_KK_META)
+|k, g
+|call, gas
+a|image::images/XR_META_Face_Tracking_Viseme_KK.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_KK_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_KK_rot.jpg[]
+
+|CH (ename:XR_FACE_TRACKING_VISEME_CH_META)
+|tS, dZ, S
+|chair, join, she
+a|image::images/XR_META_Face_Tracking_Viseme_CH.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_CH_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_CH_rot.jpg[]
+
+|SS (ename:XR_FACE_TRACKING_VISEME_SS_META)
+|s, z
+|sir, zeal
+a|image::images/XR_META_Face_Tracking_Viseme_SS.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_SS_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_SS_rot.jpg[]
+
+|NN (ename:XR_FACE_TRACKING_VISEME_NN_META)
+|n, l
+|lot, not
+a|image::images/XR_META_Face_Tracking_Viseme_NN.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_NN_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_NN_rot.jpg[]
+
+|RR (ename:XR_FACE_TRACKING_VISEME_RR_META)
+|r
+|red
+a|image::images/XR_META_Face_Tracking_Viseme_RR.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_RR_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_RR_rot.jpg[]
+
+|AA (ename:XR_FACE_TRACKING_VISEME_AA_META)
+|A:
+|car
+a|image::images/XR_META_Face_Tracking_Viseme_AA.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_AA_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_AA_rot.jpg[]
+
+|E (ename:XR_FACE_TRACKING_VISEME_E_META)
+|e
+|bed
+a|image::images/XR_META_Face_Tracking_Viseme_E.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_E_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_E_rot.jpg[]
+
+|IH (ename:XR_FACE_TRACKING_VISEME_IH_META)
+|ih
+|tip
+a|image::images/XR_META_Face_Tracking_Viseme_IH.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_IH_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_IH_rot.jpg[]
+
+|OH (ename:XR_FACE_TRACKING_VISEME_OH_META)
+|oh
+|toe
+a|image::images/XR_META_Face_Tracking_Viseme_OH.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_OH_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_OH_rot.jpg[]
+
+|OU (ename:XR_FACE_TRACKING_VISEME_OU_META)
+|ou
+|book
+a|image::images/XR_META_Face_Tracking_Viseme_OU.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_OU_emp.jpg[]
+a|image::images/XR_META_Face_Tracking_Viseme_OU_rot.jpg[]
+|====
+
+--
+
+
+==== Example code for obtaining visemes
+
+The following example code demonstrates how to obtain all visemes.
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSystemId systemId; // previously initialized
+XrSession session;   // previously initialized
+
+// Confirm face tracking system support.
+XrSystemFaceTrackingVisemesPropertiesMETA faceTrackingVisemesSystemProperties{
+    XR_TYPE_SYSTEM_FACE_TRACKING_VISEMES_PROPERTIES_META};
+XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
+                                    &faceTrackingVisemesSystemProperties};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!faceTrackingVisemesSystemProperties.supportsVisemes) {
+    // The system does not support visemes
+    return;
+}
+
+// Get function pointer for xrCreateFaceTracker2FB.
+PFN_xrCreateFaceTracker2FB pfnCreateFaceTracker2FB;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFaceTracker2FB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnCreateFaceTracker2FB)));
+
+// Create a face tracker for default set of facial expressions.
+XrFaceTracker2FB faceTracker = {};
+{
+    XrFaceTrackerCreateInfo2FB createInfo{XR_TYPE_FACE_TRACKER_CREATE_INFO2_FB};
+    createInfo.faceExpressionSet = XR_FACE_EXPRESSION_SET2_DEFAULT_FB;
+    // This tells the runtime that the application accepts
+    // facial expression data from either of two data sources.
+    createInfo.requestedDataSourceCount = 2;
+    XrFaceTrackingDataSource2FB dataSources[2] = {
+        XR_FACE_TRACKING_DATA_SOURCE2_VISUAL_FB,
+        XR_FACE_TRACKING_DATA_SOURCE2_AUDIO_FB};
+    createInfo.requestedDataSources = dataSources;
+    CHK_XR(pfnCreateFaceTracker2FB(session, &createInfo, &faceTracker));
+}
+
+// Set 0 to weightCount and confidenceCount to get visemes only
+XrFaceExpressionWeights2FB expressionWeights{XR_TYPE_FACE_EXPRESSION_WEIGHTS2_FB};
+expressionWeights.weightCount = 0;
+expressionWeights.confidenceCount = 0;
+
+XrFaceTrackingVisemesMETA visemeInfo{XR_TYPE_FACE_TRACKING_VISEMES_META};
+expressionWeights.next = &visemeInfo;
+
+// Get function pointer for xrGetFaceExpressionWeights2FB.
+PFN_xrGetFaceExpressionWeights2FB pfnGetFaceExpressionWeights;
+CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFaceExpressionWeights2FB",
+                             reinterpret_cast<PFN_xrVoidFunction*>(
+                             &pfnGetFaceExpressionWeights)));
+while (1) {
+    // ...
+    // For every frame in the frame loop
+    // ...
+    XrFrameState frameState; // previously returned from xrWaitFrame
+    const XrTime time = frameState.predictedDisplayTime;
+
+    XrFaceExpressionInfo2FB expressionInfo{XR_TYPE_FACE_EXPRESSION_INFO2_FB};
+    expressionInfo.time = time;
+
+    CHK_XR(pfnGetFaceExpressionWeights(faceTracker, &expressionInfo, &expressionWeights));
+
+    if (visemeInfo.isValid) {
+        for (uint32_t i = 0; i < XR_FACE_TRACKING_VISEME_COUNT_META; ++i) {
+            // visemeInfo.visemes[i] contains a weight of specific visemes
+        }
+    }
+}
+----
+
+include::{generated}/interfaces/XR_META_face_tracking_visemes.adoc[leveloffset=1]
+
+==== Issues
+
+* Does this extension operate independently of apiext:XR_FB_face_tracking2?
+** Resolved.
+** Answer: Yes.
+   The extension allows the application to query visemes data without
+   returning blend weights (from apiext:XR_FB_face_tracking2) but it is
+   expected that an application could use the two datasets together and that
+   a runtime could generate the two datasets together.
+
+==== Version History
+
+* Revision 1, 2024-08-05 (Jaebong Lee)
+** Initial extension description

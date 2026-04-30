@@ -24,11 +24,6 @@ source color is unpremultiplied alpha.
 
 Like color, destination alpha is initialized to 0 before composition begins.
 
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 These blend factors are specified by attaching a
 slink:XrCompositionLayerAlphaBlendFB structure to the pname:next chain of a
 layer structure derived from slink:XrCompositionLayerBaseHeader.

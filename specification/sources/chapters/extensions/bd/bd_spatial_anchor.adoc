@@ -42,23 +42,10 @@ This allows spatial anchors to be shared and localized across application
 sessions on the device for the same application.
 This extension requires apiext:XR_BD_spatial_sensing to be enabled.
 
-
 ==== Permission
 
-[open,refpage='com.picovr.permission.SPATIAL_DATA',type='freeform',desc='Android permission for spatial anchor.',xrefs='xrGetSystemProperties XrSystemSpatialAnchorPropertiesBD']
---
-A runtime on an Android-based platform must: verify that applications have
-the `com.picovr.permission.SPATIAL_DATA` permission both listed in their
-manifest and granted to use apiext:XR_BD_spatial_anchor functionality.
-Without it, the runtime must: set
-slink:XrFutureCompletionEXT::pname:futureResult to
-ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
-flink:xrStartSenseDataProviderCompleteBD is called.
-
-This is an auto-requested permission: if it is listed in the manifest but
-not yet granted or denied, the runtime must: prompt the user to grant or
-deny the permission when flink:xrCreateSenseDataProviderBD is called with a
-provider type that requires it.
+:bd-spatial-permission-capability: spatial anchor
+include::{config}/bd_spatial_data_perm.adoc[]
 
 
 ifdef::XR_BD_spatial_mesh[]
@@ -74,7 +61,6 @@ endif::XR_BD_spatial_scene[]
 ifdef::XR_BD_spatial_plane[]
 This permission is also used by apiext:XR_BD_spatial_plane.
 endif::XR_BD_spatial_plane[]
---
 
 ==== Inspect System Capability
 

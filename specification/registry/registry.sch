@@ -226,6 +226,146 @@
         <sch:param name="struct_or_func_name" value="current()/@name"/>
     </sch:pattern>
 
+    <!--
+         Type reference extension ordering: extensions are emitted in number
+         order in the combined header, so if extension B uses a type defined
+         by extension A, then A must have a lower (or equal) extension number.
+         Otherwise the type is used before it is declared.
+         See: https://gitlab.khronos.org/openxr/openxr/-/issues/2054
+    -->
+
+    <!-- Struct member types must come from same or lower-numbered extensions -->
+    <sch:pattern name="Struct member type reference extension ordering">
+        <sch:rule context="types/type[@category = ('struct', 'union')]/member/type">
+            <sch:let name="struct_name" value="ancestor::type/@name"/>
+            <sch:let name="ref_type" value="text()"/>
+
+            <!-- Extension that introduces the struct containing this member -->
+            <sch:let name="struct_ext"
+                     value="//extensions/extension[require/type[@name = $struct_name]]"/>
+            <!-- Extension that introduces the referenced type -->
+            <sch:let name="ref_ext"
+                     value="//extensions/extension[require/type[@name = $ref_type]]"/>
+
+            <!-- Normalize experimental suffix for same-base-extension check (e.g. FOOX1 -> FOO) -->
+            <sch:let name="struct_ext_base"
+                     value="replace($struct_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_')"/>
+            <sch:let name="ref_ext_base"
+                     value="replace($ref_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_')"/>
+
+            <!-- Pre-existing extension pairs where the referenced type has a higher number.
+                 These cannot be fixed because extension numbers are immutable. -->
+            <sch:let name="is_exception" value="
+                concat($struct_ext/@name, ':', $ref_ext/@name) = (
+                    'XR_EXT_performance_settings:XR_EXT_thermal_query',
+                    'XR_FB_scene:XR_EXT_uuid',
+                    'XR_FB_spatial_entity:XR_EXT_uuid',
+                    'XR_FB_spatial_entity_container:XR_EXT_uuid',
+                    'XR_FB_spatial_entity_query:XR_EXT_uuid',
+                    'XR_FB_spatial_entity_query:XR_FB_spatial_entity_storage',
+                    'XR_FB_spatial_entity_storage:XR_EXT_uuid',
+                    'XR_META_headset_id:XR_EXT_uuid',
+                    'XR_META_spatial_entity_discovery:XR_EXT_uuid',
+                    'XR_META_spatial_entity_persistence:XR_EXT_uuid',
+                    'XR_ML_localization_map:XR_EXT_uuid',
+                    'XR_ML_spatial_anchors_storage:XR_EXT_uuid'
+                )
+            "/>
+
+            <sch:assert test="
+                not($struct_ext) or not($ref_ext)
+                or $struct_ext/@name = $ref_ext/@name
+                or $struct_ext_base = $ref_ext_base
+                or number($ref_ext/@number) &lt;= number($struct_ext/@number)
+                or $is_exception
+            ">
+                <sch:value-of select="$struct_name"/>: member type <sch:value-of select="$ref_type"/> is defined in <sch:value-of select="$ref_ext/@name"/> (number <sch:value-of select="$ref_ext/@number"/>), which has a higher extension number than <sch:value-of select="$struct_ext/@name"/> (number <sch:value-of select="$struct_ext/@number"/>). The referenced type must come from a lower-numbered extension to avoid use-before-declaration in the combined header.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Command parameter types must come from same or lower-numbered extensions -->
+    <sch:pattern name="Command parameter type reference extension ordering">
+        <sch:rule context="commands/command/param/type">
+            <sch:let name="cmd_name" value="ancestor::command/proto/name/text()"/>
+            <sch:let name="ref_type" value="text()"/>
+
+            <sch:let name="cmd_ext"
+                     value="//extensions/extension[require/command[@name = $cmd_name]]"/>
+            <sch:let name="ref_ext"
+                     value="//extensions/extension[require/type[@name = $ref_type]]"/>
+
+            <sch:let name="cmd_ext_base"
+                     value="replace($cmd_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_')"/>
+            <sch:let name="ref_ext_base"
+                     value="replace($ref_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_')"/>
+
+            <!-- Pre-existing extension pairs where the referenced type has a higher number.
+                 These cannot be fixed because extension numbers are immutable. -->
+            <sch:let name="is_exception" value="
+                concat($cmd_ext/@name, ':', $ref_ext/@name) = (
+                    'XR_BD_spatial_anchor:XR_EXT_future',
+                    'XR_BD_spatial_anchor_sharing:XR_EXT_future',
+                    'XR_BD_spatial_scene:XR_EXT_future',
+                    'XR_BD_spatial_sensing:XR_EXT_future',
+                    'XR_EXT_performance_settings:XR_EXT_thermal_query',
+                    'XR_FB_spatial_entity:XR_EXT_uuid',
+                    'XR_ML_localization_map:XR_EXT_uuid',
+                    'XR_ML_spatial_anchors:XR_EXT_future',
+                    'XR_ML_spatial_anchors_storage:XR_EXT_future'
+                )
+            "/>
+
+            <sch:assert test="
+                not($cmd_ext) or not($ref_ext)
+                or $cmd_ext/@name = $ref_ext/@name
+                or $cmd_ext_base = $ref_ext_base
+                or number($ref_ext/@number) &lt;= number($cmd_ext/@number)
+                or $is_exception
+            ">
+                <sch:value-of select="$cmd_name"/>: parameter type <sch:value-of select="$ref_type"/> is defined in <sch:value-of select="$ref_ext/@name"/> (number <sch:value-of select="$ref_ext/@number"/>), which has a higher extension number than <sch:value-of select="$cmd_ext/@name"/> (number <sch:value-of select="$cmd_ext/@number"/>). The referenced type must come from a lower-numbered extension to avoid use-before-declaration in the combined header.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- structextends targets must come from same or lower-numbered extensions -->
+    <sch:pattern name="structextends type reference extension ordering">
+        <sch:rule context="types/type[@category = 'struct' and @structextends]">
+            <sch:let name="struct_name" value="@name"/>
+            <sch:let name="extended_names" value="tokenize(@structextends, ',')"/>
+
+            <sch:let name="struct_ext"
+                     value="//extensions/extension[require/type[@name = $struct_name]]"/>
+            <sch:let name="struct_ext_base"
+                     value="replace($struct_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_')"/>
+
+            <!-- Pre-existing extension pairs where the referenced type has a higher number.
+                 These cannot be fixed because extension numbers are immutable. -->
+            <sch:let name="is_exception" value="
+                $struct_ext/@name and (
+                    some $ext_name in $extended_names satisfies
+                        concat($struct_ext/@name, ':', //extensions/extension[require/type[@name = $ext_name]]/@name) = (
+                            'XR_BD_future_progress:XR_EXT_future'
+                        )
+                )
+            "/>
+
+            <sch:assert test="
+                not($struct_ext)
+                or $is_exception
+                or (every $ext_name in $extended_names satisfies (
+                    let $ext_ext := //extensions/extension[require/type[@name = $ext_name]]
+                    return not($ext_ext)
+                        or $struct_ext/@name = $ext_ext/@name
+                        or replace($ext_ext/@name, 'XR_([A-Z]+)X[0-9]*_', 'XR_$1_') = $struct_ext_base
+                        or number($ext_ext/@number) &lt;= number($struct_ext/@number)
+                ))
+            ">
+                <sch:value-of select="$struct_name"/>: structextends <sch:value-of select="@structextends"/> but one of those types comes from a higher-numbered extension. The extended type must come from a lower-numbered extension to avoid use-before-declaration in the combined header.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     <!-- look for structs with structextends -->
     <sch:pattern name="structextends">
         <sch:rule context="types/type[@structextends]">

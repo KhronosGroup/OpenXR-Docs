@@ -1,0 +1,298 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_stationary_reference_space.adoc[]
+
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    Yin Li, Microsoft +
+    Andreas Selvik, Meta +
+    Yuichi Taguchi, Meta +
+    Nathan Nuber, Valve +
+    Jakob Bornecrantz, NVIDIA +
+    Jared Finder, Google +
+
+==== Overview
+
+There are 3 primary motivations for applications to use a STATIONARY
+reference space.
+
+1. Use a reference space that is related to the physical world and is
+   unaffected by the "recenter" operation or user-defined room boundary.
+2. Use a reference space that can regain its location in the physical world
+   after tracking is lost, after the headset is removed and put back on, or
+   after the device is suspended and resumed from low power mode.
+3. Use a reference space that persists its origin location in the physical
+   world across app restarts or device reboots.
+
+==== Conventions
+
+When this extension is not enabled, a runtime must: not return
+ename:XR_REFERENCE_SPACE_TYPE_STATIONARY_EXT from
+flink:xrEnumerateReferenceSpaces.
+
+When this extension is enabled, a runtime may: return
+ename:XR_REFERENCE_SPACE_TYPE_STATIONARY_EXT from
+flink:xrEnumerateReferenceSpaces.
+When it is not returned, the runtime indicates the current system does not
+support remembering the space location in the physical world according to
+this extension's requirements.
+If it is not supported, the runtime must: return the
+ename:XR_ERROR_REFERENCE_SPACE_UNSUPPORTED error from the
+flink:xrCreateReferenceSpace function when called with
+ename:XR_REFERENCE_SPACE_TYPE_STATIONARY_EXT.
+
+A `STATIONARY` reference space
+(ename:XR_REFERENCE_SPACE_TYPE_STATIONARY_EXT) establishes a world-locked
+origin, gravity-aligned to exclude pitch and roll, with +Y pointing up.
+
+Unlike {local_space} or {local_floor_space}, the `STATIONARY` reference
+space does not prescribe the forward direction, nor the Y height at eye
+level or at floor level.
+Applications must: not rely on any conventions regarding the height or
+forward direction of the `STATIONARY` reference space, because the runtime
+may: choose the best stationary space origin in the scene which might be
+unrelated to the current user or the height of the floor level.
+
+The runtime must: not relate a system-level "recenter" operation to the
+`STATIONARY` reference space, nor raise an
+slink:XrEventDataReferenceSpaceChangePending event for `STATIONARY`
+reference space only because the user did a recenter operation.
+
+Unlike {stage_space}, the origin of the `STATIONARY` space is not impacted
+by the geometry of the user-defined room boundary, if there is any.
+The origin of `STATIONARY` space must: not move only because the user
+redefines the room boundary.
+
+[NOTE]
+.Note
+====
+* Applications can use the {local_floor_space} location in `STATIONARY`
+  reference space to obtain the floor height.
+* Applications can use the {view_space} location in `STATIONARY` reference
+  space to compute the user's eye level height and forward direction at a
+  specified time.
+* Applications can use the {local_space} location in `STATIONARY` reference
+  space to reason about the recenter operation, or place the UI at a
+  comfortable position in front of the user according to recentering.
+====
+
+The `STATIONARY` reference space enables the user to move freely through a
+complex environment, often many meters from where they started.
+The runtime may: optimize for coordinate system stability near the user by
+slightly adjusting the `STATIONARY` reference space origin over time while
+the user is walking around.
+The runtime must: not queue the slink:XrEventDataReferenceSpaceChangePending
+event for such minor adjustments.
+The runtime must: maintain an accurate location of the space origin when the
+user is returning near the space origin.
+
+==== Relocation
+
+The runtime must: make a best effort to remember the location of the
+`STATIONARY` space origin in the physical world under the following
+conditions and try to relocate it after regaining tracking:
+
+* When the tracking system loses tracking and later regains it.
+* When the device is removed from the user's head and later put back on.
+* When the session state is suspended to the IDLE state and later resumed to
+  RUNNING.
+* When the session is destroyed and later a new session is created.
+* When the application is shut down and later relaunched.
+* When the device is powered off and later turned on, and the application
+  resumes.
+
+The runtime may: be unable to relocate the `STATIONARY` space; for example
+when the lighting conditions or the objects in the environment change
+significantly or when the user enters a different room.
+The runtime may: determine that the previous `STATIONARY` space cannot be
+relocated and move on to the next generation of the `STATIONARY` space at a
+new location.
+When this happens, the runtime must: queue an
+slink:XrEventDataReferenceSpaceChangePending event for the `STATIONARY`
+space to notify applications about the change of the reference space origin.
+The runtime must: also generate a new distinct pname:generationId returned
+by flink:xrGetStationaryReferenceSpaceGenerationIdEXT to indicate that a new
+generation of the `STATIONARY` space origin is created.
+In this event, the
+slink:XrEventDataReferenceSpaceChangePending::pname:poseValid must: be
+ename:XR_FALSE, because the runtime cannot establish the relation between
+the new space and the old one.
+
+[NOTE]
+.Note
+====
+A runtime may: queue space change events in any order when multiple types of
+reference spaces change simultaneously.
+This is to allow runtimes to have different delays for different types of
+reference spaces since how they are implemented can vary between runtimes.
+Portable applications cannot assume a particular order for space change
+events.
+====
+
+==== Stationary space generation ID
+
+[open,refpage='xrGetStationaryReferenceSpaceGenerationIdEXT',desc='Returns the UUID of the current STATIONARY reference space',type='protos',xrefs='']
+--
+The flink:xrGetStationaryReferenceSpaceGenerationIdEXT function is defined
+as:
+
+include::{generated}/api/protos/xrGetStationaryReferenceSpaceGenerationIdEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession previously created with
+  flink:xrCreateSession.
+* pname:getInfo is code:NULL or a pointer to
+  slink:XrStationaryReferenceSpaceGenerationIdGetInfoEXT to provide
+  information for getting the generation ID of the `STATIONARY` reference
+  space.
+* pname:generationIdResult is a pointer to
+  slink:XrStationaryReferenceSpaceGenerationIdResultEXT to populate with the
+  current ID for the `STATIONARY` reference space.
+****
+
+During <<session_running, a running session>>, the application can: call
+flink:xrGetStationaryReferenceSpaceGenerationIdEXT to get the slink:XrUuid
+corresponding to the current `STATIONARY` reference space.
+
+include::{generated}/validity/protos/xrGetStationaryReferenceSpaceGenerationIdEXT.adoc[]
+--
+
+[open,refpage='XrStationaryReferenceSpaceGenerationIdGetInfoEXT',desc='Information to get stationary reference space generation ID',type='structs',xrefs='xrGetStationaryReferenceSpaceGenerationIdEXT']
+--
+
+The slink:XrStationaryReferenceSpaceGenerationIdGetInfoEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrStationaryReferenceSpaceGenerationIdGetInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+slink:XrStationaryReferenceSpaceGenerationIdGetInfoEXT is an input structure
+for the flink:xrGetStationaryReferenceSpaceGenerationIdEXT function.
+
+slink:XrStationaryReferenceSpaceGenerationIdGetInfoEXT exists for future
+extensibility.
+
+include::{generated}/validity/structs/XrStationaryReferenceSpaceGenerationIdGetInfoEXT.adoc[]
+--
+
+[open,refpage='XrStationaryReferenceSpaceGenerationIdResultEXT',desc='Returns the stationary reference space generation ID',type='structs',xrefs='xrGetStationaryReferenceSpaceGenerationIdEXT']
+--
+
+The slink:XrStationaryReferenceSpaceGenerationIdResultEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrStationaryReferenceSpaceGenerationIdResultEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:generationId is an slink:XrUuid that contains the returned space
+  generation ID.
+****
+
+
+The slink:XrStationaryReferenceSpaceGenerationIdResultEXT structure returns
+the `STATIONARY` reference space generation ID.
+
+All `STATIONARY` reference slink:XrSpace handles share the same UUID in a
+given session.
+
+The runtime must: not return an empty UUID, i.e. a UUID with all zeros in
+its bytes.
+The empty UUID typically reserved to represent an invalid UUID value, and
+the generation ID of `STATIONARY` space must: never be invalid.
+
+To detect whether the `STATIONARY` reference space origin has changed during
+a period in which the session was not running, an application gets the
+pname:generationId after a successful flink:xrBeginSession and compares the
+slink:XrUuid with a pname:generationId from a previous session.
+
+For this use case the application is responsible for remembering the ID from
+a previous session.
+
+The equality of pname:generationId is a reliable indicator for the
+application to determine the equality of the `STATIONARY` space origin
+across multiple sessions, application restarts, or device restarts.
+
+However, this does not imply that when pname:generationId is different, the
+origin is not at the same location or in close proximity.
+It also does not imply that the same origin always returns the same ID.
+
+[NOTE]
+.Note
+====
+If the application is interested in identifying the space the user is in, it
+should use the apiext:XR_EXT_spatial_persistence and
+apiext:XR_EXT_spatial_persistence_operations extensions instead.
+====
+
+Because the generation ID of the `STATIONARY` reference space cannot be used
+to identify a space, the runtime must: not require the application to
+request any permissions to use the stationary reference space.
+
+For systems that are not capable of relocating the `STATIONARY` space across
+sessions, for example because the tracking system does not support
+relocalization or the platform blocks location persistence due to privacy
+requirements, the runtime may: return a different generation ID for each
+session, and the `STATIONARY` space origin may: be at a different location
+in the physical world across sessions.
+
+The runtime may: or may: not use the same pname:generationId for
+`STATIONARY` space across applications.
+
+When the runtime loses tracking or before relocating the space origin while
+starting a new session or application, it may: attempt to relocate the space
+origin for reasonable duration.
+During this relocation phase, the runtime must: return the previous
+pname:generationId for the `STATIONARY` space, not raise the
+slink:XrEventDataReferenceSpaceChangePending event, and return untracked
+data for all space locate functions when using the `STATIONARY` space, such
+as flink:xrLocateSpace or flink:xrLocateViews.
+
+When the runtime changes the placement of the `STATIONARY` space origin in
+the physical world, typically after a reasonable timeout during which it
+attempted but failed to relocate the previous space origin, or when the
+runtime is certain that the user has moved to a different physical space, it
+must: raise an slink:XrEventDataReferenceSpaceChangePending event with
+slink:XrEventDataReferenceSpaceChangePending::pname:poseValid set to
+ename:XR_FALSE, indicating that the new space and the old space are
+unrelated.
+The application then queries the
+flink:xrGetStationaryReferenceSpaceGenerationIdEXT function to obtain the
+changed slink:XrUuid if desired.
+
+The runtime must: not reuse the same slink:XrUuid once the corresponding
+origin of the `STATIONARY` reference space is changed, i.e. the returned
+slink:XrUuid must: be unique once it is changed and will never repeat.
+
+The runtime must: generate a new UUID every time a new pname:generationId is
+created, typically using the `uuid_generate*` function on Linux or the
+`CoCreateGuid` function on Windows.
+
+The runtime must: not reuse any UUID from the underlying spatial anchor or
+spatial entity system.
+
+
+include::{generated}/validity/structs/XrStationaryReferenceSpaceGenerationIdResultEXT.adoc[]
+--
+
+include::{generated}/interfaces/XR_EXT_stationary_reference_space.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2026-04-22 (Yin Li)
+** Initial extension description

@@ -17,11 +17,6 @@ This extension expands on the concept of spatial entities to include a way
 for a spatial entity to represent rooms, objects, or other boundaries in a
 scene.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

@@ -36,12 +36,6 @@ apiext:XR_META_spatial_entity_persistence is expected to be used alongside
 apiext:XR_META_spatial_entity_discovery for spatial entity discovery/loading
 and retrieval.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
-
-
 ==== Inspect System Capability
 
 [open,refpage='XrSystemSpacePersistencePropertiesMETA',type='structs',desc='System property for space persistence',xrefs='XrSystemProperties xrGetSystemProperties']

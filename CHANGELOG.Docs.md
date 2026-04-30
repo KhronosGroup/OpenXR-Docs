@@ -17,6 +17,100 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.59 (2026-04-30)
+
+This release provides a usability improvement for the HTML spec: anchors for
+symbols are now at the top of the relevant docs, rather than at the C
+declaration. Clicking links in the spec will now bring you to a more useful
+location in the spec so you do not miss any of the information. There is also a
+new multi-vendor extension, as well as several new vendor extensions, and the
+usual mix of smaller changes and improvements.
+
+- Specification
+  - Improvement: Clean up formatting for `XR_EXT_hand_tracking_data_source`.
+    ([internal MR 4218](https://gitlab.khronos.org/openxr/openxr/merge_requests/4218))
+  - Improvement: Fix `EYES_LOOK` blend shape descriptions in `XR_FB_face_tracking2`
+    specification.
+    ([internal MR 4232](https://gitlab.khronos.org/openxr/openxr/merge_requests/4232),
+    [internal issue 2515](https://gitlab.khronos.org/openxr/openxr/issues/2515),
+    [OpenXR-Docs issue 189](https://github.com/KhronosGroup/OpenXR-Docs/issues/189))
+  - Improvement: Document eye rotation angles for `EYES_LOOK` blend shapes for
+    `XR_FB_face_tracking2`.
+    ([internal MR 4233](https://gitlab.khronos.org/openxr/openxr/merge_requests/4233),
+    [internal issue 2514](https://gitlab.khronos.org/openxr/openxr/issues/2514),
+    [OpenXR-Docs issue 188](https://github.com/KhronosGroup/OpenXR-Docs/issues/188))
+  - Improvement: Unify permission text for ByteDance spatial APIs using a shared
+    spec include.
+    ([internal MR 4238](https://gitlab.khronos.org/openxr/openxr/merge_requests/4238))
+  - Improvement: Move link destination for symbols (function, structure, etc.) to
+    top of the marked documentation.
+    ([internal MR 4272](https://gitlab.khronos.org/openxr/openxr/merge_requests/4272),
+    [internal MR 4282](https://gitlab.khronos.org/openxr/openxr/merge_requests/4282))
+  - Improvement: Change sample haptic duration from 300ns to 300ms.
+    ([internal MR 4281](https://gitlab.khronos.org/openxr/openxr/merge_requests/4281),
+    [internal issue 1663](https://gitlab.khronos.org/openxr/openxr/issues/1663))
+  - Improvement: Remove language describing how to enable extensions from extension
+    text where it duplicated implicit validity language.
+    ([internal MR 4285](https://gitlab.khronos.org/openxr/openxr/merge_requests/4285))
+  - New multi-vendor extension specification: `XR_EXT_stationary_reference_space`,
+    providing a reference space focused solely on remaining stationary to the best
+    of the runtime's ability.
+    ([internal MR 3021](https://gitlab.khronos.org/openxr/openxr/merge_requests/3021))
+  - New vendor extension specification: `XR_META_boundary_visibility` providing the
+    ability for the application to suggest hiding or showing the play space
+    boundary.
+    ([internal MR 3249](https://gitlab.khronos.org/openxr/openxr/merge_requests/3249))
+  - New vendor extension specification: `XR_META_face_tracking_visemes` exposing
+    visemes data in face tracking, as an alternate or additional output besides
+    blend shapes.
+    ([internal MR 3424](https://gitlab.khronos.org/openxr/openxr/merge_requests/3424))
+  - New vendor extension specification: `XR_META_spatial_entity_room_mesh` provides
+    access to room mesh and associated metadata when also using the
+    `XR_FB_spatial_entity` vendor extension.
+    ([internal MR 3530](https://gitlab.khronos.org/openxr/openxr/merge_requests/3530))
+  - New vendor extension specification: `XR_ANDROID_eye_tracking` for access to the
+    position and orientation of the user's eyes.
+    ([internal MR 3773](https://gitlab.khronos.org/openxr/openxr/merge_requests/3773))
+  - New vendor extension specification: `XR_ANDROID_recommended_resolution` to
+    notify the application when the recommended resolution changes.
+    ([internal MR 3840](https://gitlab.khronos.org/openxr/openxr/merge_requests/3840))
+  - New vendor extension specification: `XR_ANDROID_light_estimation` to query
+    lighting information from the user's environment.
+    ([internal MR 3879](https://gitlab.khronos.org/openxr/openxr/merge_requests/3879))
+  - Update vendor specification: Revision 5 of `XR_FB_passthrough`
+    ([internal MR 3682](https://gitlab.khronos.org/openxr/openxr/merge_requests/3682))
+- Registry
+  - Chore: Reserve extension numbers and adjust previous reservations.
+    ([internal MR 4266](https://gitlab.khronos.org/openxr/openxr/merge_requests/4266),
+    [internal MR 4276](https://gitlab.khronos.org/openxr/openxr/merge_requests/4276),
+    [internal MR 4282](https://gitlab.khronos.org/openxr/openxr/merge_requests/4282),
+    [internal MR 4253](https://gitlab.khronos.org/openxr/openxr/merge_requests/4253))
+  - Improvement: Enforce that essentially all functions must be able to return
+    `XR_ERROR_RUNTIME_FAILURE`.
+    ([internal MR 3611](https://gitlab.khronos.org/openxr/openxr/merge_requests/3611),
+    [internal issue 2345](https://gitlab.khronos.org/openxr/openxr/issues/2345))
+  - New multi-vendor extension: `XR_EXT_stationary_reference_space`
+    ([internal MR 3021](https://gitlab.khronos.org/openxr/openxr/merge_requests/3021))
+  - New vendor extension: `XR_META_boundary_visibility`
+    ([internal MR 3249](https://gitlab.khronos.org/openxr/openxr/merge_requests/3249))
+  - New vendor extension: `XR_META_face_tracking_visemes`
+    ([internal MR 3424](https://gitlab.khronos.org/openxr/openxr/merge_requests/3424))
+  - New vendor extension: `XR_META_spatial_entity_room_mesh`
+    ([internal MR 3530](https://gitlab.khronos.org/openxr/openxr/merge_requests/3530))
+  - New vendor extension: `XR_ANDROID_eye_tracking`
+    ([internal MR 3773](https://gitlab.khronos.org/openxr/openxr/merge_requests/3773))
+  - New vendor extension: `XR_ANDROID_recommended_resolution`
+    ([internal MR 3840](https://gitlab.khronos.org/openxr/openxr/merge_requests/3840))
+  - New vendor extension: `XR_ANDROID_light_estimation`.
+    ([internal MR 3879](https://gitlab.khronos.org/openxr/openxr/merge_requests/3879))
+  - Schematron: Improvement: Add validation for ordering of structs in `xr.xml`.
+    ([internal MR 4251](https://gitlab.khronos.org/openxr/openxr/merge_requests/4251))
+  - Schematron: Bump schXslt Schematron checker version and fix error in wrapper
+    script.
+    ([internal MR 4288](https://gitlab.khronos.org/openxr/openxr/merge_requests/4288))
+  - Update vendor specification: Revision 5 of `XR_FB_passthrough`
+    ([internal MR 3862](https://gitlab.khronos.org/openxr/openxr/merge_requests/3862))
+
 ## OpenXR Specification 1.1.58 (2026-03-31)
 
 This release features several fixes and improvements to the specification as

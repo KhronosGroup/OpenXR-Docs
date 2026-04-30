@@ -1,14 +1,15 @@
-// Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+// Copyright (c) Meta Platforms, LLC and its affiliates. All rights reserved.
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
 include::{generated}/meta/XR_FB_passthrough.adoc[]
 
 *Contributors*::
-    Anton Vaneev, Facebook +
-    Cass Everitt, Facebook +
-    Federico Schliemann, Facebook +
-    Johannes Schmid, Facebook
+    Anton Vaneev, Meta Platforms +
+    Cass Everitt, Meta Platforms +
+    Federico Schliemann, Meta Platforms +
+    Johannes Schmid, Meta Platforms +
+    Ante Trbojevic, Meta Platforms
 
 
 *Overview*
@@ -506,6 +507,12 @@ include::{generated}/api/protos/xrCreatePassthroughFB.adoc[]
 
 Creates an slink:XrPassthroughFB handle.
 The returned passthrough handle may: be subsequently used in API calls.
+A single slink:XrSession allows only one slink:XrPassthroughFB.
+If an slink:XrPassthroughFB handle has been already created for this
+slink:XrSession, the runtime must: return
+ename:XR_ERROR_FEATURE_ALREADY_CREATED_PASSTHROUGH_FB.
+If an app requires another feature, then the previous one must: be destroyed
+by the app with flink:xrDestroyPassthroughFB first.
 
 include::{generated}/validity/protos/xrCreatePassthroughFB.adoc[]
 --
@@ -522,6 +529,9 @@ include::{generated}/api/protos/xrDestroyPassthroughFB.adoc[]
 ****
 
 Destroys an slink:XrPassthroughFB handle.
+
+The application is responsible for ensuring that it has no calls using
+feature handles in progress when the slink:XrPassthroughFB is destroyed.
 
 include::{generated}/validity/protos/xrDestroyPassthroughFB.adoc[]
 --
@@ -586,6 +596,10 @@ Creates an slink:XrPassthroughLayerFB handle.
 The returned layer handle may: be subsequently used in API calls.
 Layer objects may be used to specify rendering properties of the layer, such
 as styles, and compositing rules.
+
+If slink:XrPassthroughFB has not be created for slink:XrSession before
+calling this operation, then the runtime must: return
+ename:XR_ERROR_FEATURE_REQUIRED_PASSTHROUGH_FB.
 
 include::{generated}/validity/protos/xrCreatePassthroughLayerFB.adoc[]
 --
@@ -721,6 +735,24 @@ include::{generated}/validity/protos/xrGeometryInstanceSetTransformFB.adoc[]
 --
 
 *Issues*
+* Is slink:XrPassthroughFB the parent for slink:XrPassthroughLayerFB?
+** From OpenXR conventions, it is clear that the slink:XrSession is the
+   parent of slink:XrPassthroughLayerFB, however slink:XrPassthroughLayerFB
+   is also strongly associated to slink:XrPassthroughFB and a reasonable
+   implementation could result in it be invalidated after
+   slink:XrPassthroughFB is destroyed.
+** In retrospect, (i.e. if we were going to design this extension again), we
+   would explicitly define slink:XrPassthroughFB as the first parameter (and
+   therefore parent, instead of slink:XrSession) in
+   flink:xrCreatePassthroughLayerFB and thus explicitly define
+   slink:XrPassthroughFB as the parent of slink:XrPassthroughLayerFB.
+** To avoid potential issues, applications are recommended not to use
+   slink:XrPassthroughLayerFB after slink:XrPassthroughFB has been
+   destroyed.
+   That means that before destroying feature slink:XrPassthroughFB with
+   flink:xrDestroyPassthroughFB, an app should destroy all
+   slink:XrPassthroughLayerFB handles first, by calling
+   flink:xrDestroyPassthroughLayerFB for each such handle.
 
 *Version History*
 
@@ -738,3 +770,10 @@ include::{generated}/validity/protos/xrGeometryInstanceSetTransformFB.adoc[]
 * Revision 4, 2024-06-03 (Rylie Pavlik, Collabora)
 ** Correct registry for `XrCompositionLayerPassthroughFB`, note errata
    regarding field name.
+* Revision 5, 2025-01-15 (Ante Trbojevic)
+** Explicitly define that only one slink:XrPassthroughFB handle per
+   slink:XrSession is allowed.
+** Update Issues section with "Is slink:XrPassthroughFB the parent for
+   slink:XrPassthroughLayerFB?"
+** Change wording "Facebook" to "Meta Platforms"
+

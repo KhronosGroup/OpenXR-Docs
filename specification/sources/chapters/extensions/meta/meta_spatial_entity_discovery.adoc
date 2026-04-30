@@ -46,11 +46,6 @@ apiext:XR_META_spatial_entity_discovery, and should instead use
 apiext:XR_FB_spatial_entity_query to retrieve shared Spatial Entities.
 ====
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<extensions>> section.
-
 ==== Inspect System Capability
 
 [open,refpage='XrSystemSpaceDiscoveryPropertiesMETA',type='structs',desc='System property for space discovery',xrefs='XrSystemProperties xrGetSystemProperties']

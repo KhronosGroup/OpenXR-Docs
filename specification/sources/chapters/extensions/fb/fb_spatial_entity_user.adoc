@@ -14,11 +14,6 @@ include::{generated}/meta/XR_FB_spatial_entity_user.adoc[]
 This extension enables creation and management of user objects which can: be
 used by the application to reference a user other than the current user.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 [open,refpage='XrSpaceUserFB',type='handles',desc='Represents a user with which spaces can be shared']

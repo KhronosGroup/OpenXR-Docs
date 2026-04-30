@@ -14,11 +14,6 @@ include::{generated}/meta/XR_FB_swapchain_update_state.adoc[]
 This extension enables the application to modify and query specific mutable
 state associated with a swapchain.
 
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

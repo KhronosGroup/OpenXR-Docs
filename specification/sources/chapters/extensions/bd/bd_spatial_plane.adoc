@@ -21,21 +21,10 @@ This extension allows applications to request the runtime to detect and
 track planes in the physical environment.
 This extension requires apiext:XR_BD_spatial_sensing to be enabled.
 
-
 ==== Permission
 
-A runtime on an Android-based platform must: verify that applications have
-the reflink:com.picovr.permission.SPATIAL_DATA permission both listed in
-their manifest and granted to use spatial plane functionality.
-Without it, runtime must: set
-slink:XrFutureCompletionEXT::pname:futureResult to
-ename:XR_ERROR_PERMISSION_INSUFFICIENT when the
-flink:xrStartSenseDataProviderCompleteBD function is called.
-
-This is an auto-requested permission: if it is listed in the manifest but
-not yet granted or denied, the runtime must: prompt the user to grant or
-deny the permission when flink:xrCreateSenseDataProviderBD is called with a
-provider type that requires it.
+:bd-spatial-permission-capability: spatial plane
+include::{config}/bd_spatial_data_perm.adoc[]
 
 ifdef::XR_BD_spatial_anchor[]
 This permission is also used by apiext:XR_BD_spatial_anchor.
@@ -50,7 +39,6 @@ endif::XR_BD_spatial_mesh[]
 ifdef::XR_BD_spatial_scene[]
 This permission is also used by apiext:XR_BD_spatial_scene.
 endif::XR_BD_spatial_scene[]
-
 
 ==== Inspect System Capability
 

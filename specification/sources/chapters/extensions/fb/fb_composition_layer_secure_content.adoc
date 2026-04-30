@@ -17,11 +17,6 @@ layer type has secure content and whether it must be completely excluded
 from external outputs, like video or screen capture, or if proxy content
 must be rendered in its place.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

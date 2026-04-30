@@ -22,12 +22,6 @@ state associated with an Android surface swapchain, examples include:
   This is important for correct application of the non-normalized
   pname:imageRect specified via slink:XrSwapchainSubImage.
 
-
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

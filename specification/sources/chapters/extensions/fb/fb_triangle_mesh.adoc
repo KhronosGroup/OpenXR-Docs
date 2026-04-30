@@ -24,11 +24,6 @@ This extension allows:
 * An application to create a triangle mesh and specify the mesh data.
 * An application to update mesh contents if a mesh is mutable.
 
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 [open,refpage='XrTriangleMeshFB',type='handles',desc='Triangle mesh']

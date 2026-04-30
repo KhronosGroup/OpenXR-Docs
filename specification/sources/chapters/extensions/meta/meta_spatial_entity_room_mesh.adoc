@@ -1,0 +1,232 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_spatial_entity_room_mesh.adoc[]
+
+*Last Modified Date*::
+    2024-10-04
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yuichi Taguchi, Meta Platforms +
+    Chen Liu, Meta Platforms +
+    Markus Schlaefli, Meta Platforms +
+    Martin Sherburn, Meta Platforms +
+
+
+==== Overview
+
+This extension expands on the concept of spatial entities to include a way
+for a spatial entity to represent a room mesh.
+A room mesh provides 3D geometry and semantic information of a room in a
+scene.
+Spatial entities are defined in the apiext:XR_FB_spatial_entity extension
+using the Entity-Component System.
+A spatial entity may: have the room mesh component type associated with it.
+
+==== Retrieving a room mesh
+
+[open,refpage='xrGetSpaceRoomMeshMETA',desc='Gets an XrRoomMeshMETA that represents a room mesh',type='protos',xrefs='']
+--
+The flink:xrGetSpaceRoomMeshMETA function is defined as:
+
+include::{generated}/api/protos/xrGetSpaceRoomMeshMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:space is a handle to an slink:XrSpace.
+* pname:getInfo is the input parameter that points to a valid
+  slink:XrSpaceRoomMeshGetInfoMETA.
+* pname:roomMeshOutput is the output parameter that points to a valid
+  slink:XrRoomMeshMETA.
+****
+
+The flink:xrGetSpaceRoomMeshMETA function is used by the application to
+perform the two calls required to obtain a room mesh associated with a
+spatial entity specified by pname:space.
+
+If the spatial entity pname:space does not have the
+ename:XR_SPACE_COMPONENT_TYPE_ROOM_MESH_META component type enabled, this
+function must: return ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
+
+include::{generated}/validity/protos/xrGetSpaceRoomMeshMETA.adoc[]
+--
+
+[open,refpage='XrSpaceRoomMeshGetInfoMETA',type='structs',desc='Input parameter to the xrGetSpaceRoomMeshMETA function',xrefs='']
+--
+The slink:XrSpaceRoomMeshGetInfoMETA structure is defined as:
+
+include::{generated}/api/structs/XrSpaceRoomMeshGetInfoMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:recognizedSemanticLabelCount is an input parameter for the
+  application to specify the number of elements in the
+  pname:recognizedSemanticLabels array.
+* pname:recognizedSemanticLabels is an input parameter for the application
+  to specify an array of elink:XrSemanticLabelMETA.
+  The runtime must: return only the semantic labels specified in this list
+  in slink:XrRoomMeshFaceMETA::pname:semanticLabel.
+  The runtime must: return semantic labels that are not specified in this
+  list as ename:XR_SEMANTIC_LABEL_UNKNOWN_META.
+****
+
+include::{generated}/validity/structs/XrSpaceRoomMeshGetInfoMETA.adoc[]
+--
+
+[open,refpage='XrRoomMeshMETA',type='structs',desc='Output parameter to the xrGetSpaceRoomMeshMETA function',xrefs='']
+--
+The slink:XrRoomMeshMETA structure is defined as:
+
+include::{generated}/api/structs/XrRoomMeshMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:vertexCapacityInput is an input parameter for the application to
+  specify the capacity of the pname:vertices array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:vertexCountOutput is an output parameter that will hold the number
+  of vertices written in the output array, or the required capacity in the
+  case that pname:vertexCapacityInput is insufficient.
+  The returned value must: be equal to or larger than 4.
+* pname:vertices is a pointer to an array of slink:XrVector3f, but can: be
+  code:NULL if pname:vertexCapacityInput is 0.
+  The vertices are defined in the coordinate frame of slink:XrSpace to which
+  this struct is associated.
+* pname:faceCapacityInput is an input parameter for the application to
+  specify the capacity of the pname:faces array, or 0 to indicate a request
+  to retrieve the required capacity.
+* pname:faceCountOutput is an output parameter that will hold the number of
+  faces written in the output array, or the required capacity in the case
+  that pname:faceCapacityInput is insufficient.
+* pname:faces is a pointer to an array of slink:XrRoomMeshFaceMETA, but can:
+  be code:NULL if pname:faceCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:vertices and pname:faces
+  array sizes.
+****
+
+The application uses the slink:XrRoomMeshMETA structure to perform the two
+calls required to obtain a room mesh associated with a specified spatial
+entity.
+
+The output values written in the pname:faces array represent faces of the
+room mesh.
+Each face is represented with an slink:XrRoomMeshFaceMETA structure as well
+as an slink:XrRoomMeshFaceIndicesMETA structure that can: be separately
+obtained by using the flink:xrGetSpaceRoomMeshFaceIndicesMETA function.
+The faces of the room mesh must: define a closed 3D volume.
+The faces must: not have overlaps with each other.
+
+include::{generated}/validity/structs/XrRoomMeshMETA.adoc[]
+--
+
+[open,refpage='XrRoomMeshFaceMETA',type='structs',desc='Struct to represent each face of a room mesh',xrefs='']
+--
+The slink:XrRoomMeshFaceMETA structure is defined as:
+
+include::{generated}/api/structs/XrRoomMeshFaceMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:uuid is a valid slink:XrUuid of this face.
+* pname:parentUuid is a valid slink:XrUuid of the parent face of this face
+  if the parent face exists; otherwise, it is an all-zero slink:XrUuid.
+* pname:semanticLabel is the semantic label of this face, which must: be one
+  of the semantic labels specified in
+  slink:XrSpaceRoomMeshGetInfoMETA::pname:recognizedSemanticLabels or
+  ename:XR_SEMANTIC_LABEL_UNKNOWN_META.
+****
+
+include::{generated}/validity/structs/XrRoomMeshFaceMETA.adoc[]
+--
+
+
+==== Retrieving indices of a face of a room mesh
+
+[open,refpage='xrGetSpaceRoomMeshFaceIndicesMETA',desc='Gets an XrRoomMeshFaceIndicesMETA that represents indices of a face of a room mesh',type='protos',xrefs='']
+--
+The flink:xrGetSpaceRoomMeshFaceIndicesMETA function is defined as:
+
+include::{generated}/api/protos/xrGetSpaceRoomMeshFaceIndicesMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:space is a handle to an slink:XrSpace.
+* pname:faceUuid is the input parameter that points to a valid slink:XrUuid
+  obtained from slink:XrRoomMeshFaceMETA::pname:uuid.
+* pname:roomMeshFaceIndicesOutput is the output parameter that points to a
+  valid slink:XrRoomMeshFaceIndicesMETA.
+****
+
+The flink:xrGetSpaceRoomMeshFaceIndicesMETA function is used by the
+application to perform the two calls required to obtain indices of a face
+specified by pname:faceUuid of a room mesh associated with a spatial entity
+specified by pname:space.
+
+If the spatial entity pname:space does not have the
+ename:XR_SPACE_COMPONENT_TYPE_ROOM_MESH_META component type enabled, this
+function must: return ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
+
+include::{generated}/validity/protos/xrGetSpaceRoomMeshFaceIndicesMETA.adoc[]
+--
+
+[open,refpage='XrRoomMeshFaceIndicesMETA',type='structs',desc='Output parameter to the xrGetSpaceRoomMeshFaceIndicesMETA function',xrefs='']
+--
+The slink:XrRoomMeshFaceIndicesMETA structure is defined as:
+
+include::{generated}/api/structs/XrRoomMeshFaceIndicesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:indexCapacityInput is an input parameter for the application to
+  specify the capacity of the pname:indices array, or 0 to indicate a
+  request to retrieve the required capacity.
+* pname:indexCountOutput is an output parameter that will hold the number of
+  indices written in the output array, or the required capacity in the case
+  that pname:indexCapacityInput is insufficient.
+  The returned value must: be a multiple of 3.
+* pname:indices is a pointer to an array of code:uint32_t, but can: be
+  code:NULL if pname:indexCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:indices array sizes.
+****
+
+The slink:XrRoomMeshFaceIndicesMETA structure can: be used by the
+application to perform the two calls required to obtain indices of a face of
+a room mesh associated with a specified spatial entity.
+
+The geometry of a face is represented as a set of triangles.
+The output values written in the pname:indices array represent indices of
+the vertices obtained in slink:XrRoomMeshMETA::pname:vertices.
+Three consecutive elements represent a triangle with a counter-clockwise
+winding order.
+Each face of a room mesh must: be a planar face; i.e. the vertices of a face
+must: be coplanar.
+
+include::{generated}/validity/structs/XrRoomMeshFaceIndicesMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_spatial_entity_room_mesh.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-10-04 (Yuichi Taguchi)
+** Initial extension description.

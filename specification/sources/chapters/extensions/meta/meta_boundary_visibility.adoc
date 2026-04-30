@@ -1,0 +1,155 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_boundary_visibility.adoc[]
+
+*Last Modified Date*::
+    2024-02-22
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Yuichi Taguchi, Meta Platforms +
+    Jasmine Ou, Meta Platforms +
+    Shen Li, Meta Platforms +
+
+
+==== Overview
+
+Some applications include both MR/AR (users see their environment) and VR
+(users have immersive experiences) portions.
+In the MR/AR portion, the application might want to suppress the boundary
+visibility so that the user moves freely if there are no safety concerns.
+In the VR portion, the application might not want to suppress the boundary
+visibility so that the user stays safely within the boundary.
+
+This extension enables the application to request the runtime to change the
+boundary visibility.
+The runtime may: accept such a request depending on runtime-specific
+conditions.
+
+
+==== Requesting the runtime to change the boundary visibility
+
+[open,refpage='xrRequestBoundaryVisibilityMETA',desc='Requests the runtime to change the boundary visibility',type='protos',xrefs='XrBoundaryVisibilityMETA XrEventDataBoundaryVisibilityChangedMETA']
+--
+The flink:xrRequestBoundaryVisibilityMETA function is defined as:
+
+include::{generated}/api/protos/xrRequestBoundaryVisibilityMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is a handle to an slink:XrSession.
+* pname:boundaryVisibility is a valid elink:XrBoundaryVisibilityMETA value.
+****
+
+The flink:xrRequestBoundaryVisibilityMETA function is used by the
+application to request a specific boundary visibility represented with
+elink:XrBoundaryVisibilityMETA.
+The function returns ename:XR_SUCCESS if the runtime accepted the request.
+The function returns
+ename:XR_BOUNDARY_VISIBILITY_SUPPRESSION_NOT_ALLOWED_META if the runtime did
+not accept the request to suppress the boundary visibility depending on
+runtime-specific conditions.
+An example of the runtime-specific conditions preventing the boundary
+visibility from changing may: be the application fully obscuring the real
+world environment.
+The application can: request suppressing the boundary visibility later
+again, and the runtime may: accept the new request when the conditions are
+met.
+
+include::{generated}/validity/protos/xrRequestBoundaryVisibilityMETA.adoc[]
+--
+
+[open,refpage='XrBoundaryVisibilityMETA',type='enums',desc='Boundary visibility',xrefs='']
+--
+The elink:XrBoundaryVisibilityMETA enum is defined as:
+
+include::{generated}/api/enums/XrBoundaryVisibilityMETA.adoc[]
+
+include::{generated}/api/enums/XrBoundaryVisibilityMETA.comments-box.adoc[]
+--
+
+==== Event indicating that the boundary visibility has changed in the runtime
+
+[open,refpage='XrEventDataBoundaryVisibilityChangedMETA',type='structs',desc='Event indicating that the boundary visibility has changed in the runtime',xrefs='XrBoundaryVisibilityMETA xrRequestBoundaryVisibilityMETA']
+--
+The slink:XrEventDataBoundaryVisibilityChangedMETA structure is defined as:
+
+include::{generated}/api/structs/XrEventDataBoundaryVisibilityChangedMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:boundaryVisibility is an elink:XrBoundaryVisibilityMETA value to
+  represent the boundary visibility changed in the runtime.
+****
+
+The slink:XrEventDataBoundaryVisibilityChangedMETA structure represents an
+event indicating that the boundary visibility has changed in the runtime.
+This event may: be a result of the flink:xrRequestBoundaryVisibilityMETA
+function called from this application or some other application.
+This event may: also be a result of runtime-specific conditions that changed
+the boundary visibility.
+An example of the runtime-specific conditions may: be the application fully
+obscuring the real world environment, in which case the runtime may: change
+the boundary visibility to ename:XR_BOUNDARY_VISIBILITY_NOT_SUPPRESSED_META.
+
+The runtime must: queue this event upon a successful call to the
+flink:xrBeginSession function, regardless of the value of
+pname:boundaryVisibility, so that the application is in sync on the value of
+the boundary visibility when a session begins running.
+
+The runtime must: return a valid slink:XrSession handle for a
+<<session_running, running session>>.
+
+After the application calls flink:xrEndSession, a <<session_running, running
+session>> is ended and the runtime must: not enqueue this event anymore.
+Therefore, the application will no longer observe any changes of the
+pname:boundaryVisibility until another <<session_running, running session>>.
+
+include::{generated}/validity/structs/XrEventDataBoundaryVisibilityChangedMETA.adoc[]
+--
+
+==== System properties
+
+[open,refpage='XrSystemBoundaryVisibilityPropertiesMETA',type='structs',desc='Properties object retrieved as part of next chain from xrGetSystemProperties',xrefs='xrGetSystemProperties']
+--
+The slink:XrSystemBoundaryVisibilityPropertiesMETA structure is defined as:
+
+include::{generated}/api/structs/XrSystemBoundaryVisibilityPropertiesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsBoundaryVisibility is a boolean value that determines if
+  this capability is supported by the runtime.
+****
+
+The application can: inspect whether the runtime supports this capability by
+extending the slink:XrSystemProperties with
+slink:XrSystemBoundaryVisibilityPropertiesMETA structure when calling
+flink:xrGetSystemProperties.
+
+If the runtime returns ename:XR_FALSE for pname:supportsBoundaryVisibility,
+the runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrRequestBoundaryVisibilityMETA.
+
+include::{generated}/validity/structs/XrSystemBoundaryVisibilityPropertiesMETA.adoc[]
+--
+
+include::{generated}/interfaces/XR_META_boundary_visibility.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2024-02-22 (Yuichi Taguchi)
+** Initial extension description.

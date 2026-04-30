@@ -20,11 +20,6 @@ mutable state associated with a swapchain, examples include:
   but the texture state may not; and, an explicit mechanism to synchronize
   this texture state between the application and the compositor is required.
 
-In order to enable the functionality of this extension, the application
-must: pass the name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

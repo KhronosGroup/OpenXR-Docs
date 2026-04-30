@@ -246,7 +246,7 @@ The runtime must: set the corresponding future result returned by
 flink:xrStartSenseDataProviderCompleteBD to ename:XR_SUCCESS.
 
 Individual sense data provider types may: specify required a permission or
-permissions to use their capabilities on Android-based platforms.
+permissions to use their capabilities on AOSP-based platforms.
 If the specified provider type requires a permission and that permission is
 not listed in the application's manifest, or the permission is listed but
 denied, the future state will be ename:XR_FUTURE_STATE_READY_EXT immediately

@@ -22,11 +22,6 @@ This extension allows:
 * An application to obtain foveation textures or constructs needed for
   foveated rendering in Vulkan.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

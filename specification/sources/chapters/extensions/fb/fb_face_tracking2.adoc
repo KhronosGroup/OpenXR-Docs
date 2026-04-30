@@ -339,8 +339,18 @@ pname:confidenceCount is not equal to the number of confidence areas defined
 by the elink:XrFaceExpressionSet2FB used to create the
 slink:XrFaceTracker2FB.
 
+A special case applies when slink:XrFaceTrackingVisemesMETA is added to the
+pname:next chain.
+In this scenario, pname:weightCount and pname:confidenceCount can be set to
+0 to indicate that only visemes are requested.
+In such cases, it is not necessary to assign pointers to the pname:weights
+and pname:confidences.
+
 The runtime must: return pname:weights representing the weights of blend
 shapes of current facial expression.
+Each weight is a normalized value in the range [eq]#[0, 1]#, where [eq]#0#
+indicates the blend shape is not active and [eq]#1# indicates the blend
+shape is fully active.
 
 The runtime must: update the pname:weights array ordered so that the
 application can: index elements using the corresponding facial expression
@@ -571,51 +581,60 @@ the right eye.
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Down_L.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_DOWN_L_FB moves the left eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_DOWN_L_FB moves the left eye consistent
 with downward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Down_R.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_DOWN_R_FB moves the right eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_DOWN_R_FB moves the right eye consistent
 with downward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Left_L.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_LEFT_L_FB moves the left eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_LEFT_L_FB moves the left eye consistent
 with leftward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Left_R.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_LEFT_R_FB moves the right eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_LEFT_R_FB moves the right eye consistent
 with leftward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Right_L.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_RIGHT_L_FB moves the left eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_RIGHT_L_FB moves the left eye consistent
 with rightward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Right_R.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_RIGHT_R_FB moves the right eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_RIGHT_R_FB moves the right eye consistent
 with rightward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Up_L.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_UP_L_FB moves the left eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_UP_L_FB moves the left eye consistent
 with upward gaze.
 |====
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Eyes_Look_Up_R.png[Static,width=460]|
-ename:XR_FACE_EXPRESSION2_EYES_LOOK_UP_R_FB moves the right eyelid consistent
+ename:XR_FACE_EXPRESSION2_EYES_LOOK_UP_R_FB moves the right eye consistent
 with upward gaze.
 |====
+
+The eight `XR_FACE_EXPRESSION2_EYES_LOOK_*` blend shapes represent eye
+rotation as a linear mapping from angle to weight.
+A weight of [eq]#0# corresponds to the eye at its neutral forward position
+and a weight of [eq]#1# corresponds to the eye rotated to its maximum angle
+in the given direction.
+For opposing directions (e.g. left vs right), only one of the pair will be
+non-zero at any given time.
+
 [width="100%"]
 |====
 ^.^a|image::images/XR_FB_Face_Expression_2_Inner_Brow_Raiser_L.png[Static,width=460]|

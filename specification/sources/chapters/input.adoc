@@ -102,7 +102,7 @@ while (1)
         // fire haptics using output action
         XrHapticVibration vibration{XR_TYPE_HAPTIC_VIBRATION};
         vibration.amplitude = 0.5;
-        vibration.duration = 300;
+        vibration.duration = 300000; // 300 ms
         vibration.frequency = 3000;
         XrHapticActionInfo hapticActionInfo{XR_TYPE_HAPTIC_ACTION_INFO};
         hapticActionInfo.action = hapticsAction;

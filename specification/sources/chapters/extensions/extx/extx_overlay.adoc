@@ -39,11 +39,6 @@ This extension allows:
  * The ability for an overlay session to get information about what is going
    on with the main application
 
-To enable the functionality of this extension, an application must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 To create an overlay session, an application must: pass an
 slink:XrSessionCreateInfoOverlayEXTX structure to flink:xrCreateSession via
 the slink:XrSessionCreateInfo structure's pname:next parameter.

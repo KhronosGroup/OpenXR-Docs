@@ -15,11 +15,6 @@ This extension does not define a new composition layer type, but rather it
 defines parameters that change the interpretation of the image layout, where
 the default image layout is dictated by the Graphics API.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*

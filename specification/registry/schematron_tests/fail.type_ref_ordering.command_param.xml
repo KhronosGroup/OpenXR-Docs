@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type requires="openxr_platform_defines" name="uint32_t"/>
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <type name="XrResult" category="enum"/>
+
+        <!-- Type defined by higher-numbered extension (100) -->
+        <type category="struct" name="XrFooKHR">
+            <member><type>uint32_t</type> <name>dummy</name></member>
+        </type>
+    </types>
+
+    <enums name="XrResult" type="enum">
+        <enum value="0" name="XR_SUCCESS"/>
+        <enum value="-1" name="XR_ERROR_VALIDATION_FAILURE"/>
+    </enums>
+
+    <commands>
+        <!-- Command from extension 50 uses a type from extension 100 -->
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrDoBarKHR</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param>const <type>XrFooKHR</type>* <name>foo</name></param>
+        </command>
+    </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require>
+            <type name="openxr_platform_defines"/>
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrResult"/>
+            <type name="XrInstance"/>
+        </require>
+    </feature>
+
+    <extensions>
+        <!-- xrDoBarKHR (number 50) takes XrFooKHR (number 100) as param — wrong order -->
+        <extension name="XR_KHR_bar" number="50" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_bar_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_bar&quot;" name="XR_KHR_BAR_EXTENSION_NAME"/>
+                <command name="xrDoBarKHR"/>
+            </require>
+        </extension>
+        <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
+            <require>
+                <enum value="1" name="XR_KHR_foo_SPEC_VERSION"/>
+                <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
+                <type name="XrFooKHR"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

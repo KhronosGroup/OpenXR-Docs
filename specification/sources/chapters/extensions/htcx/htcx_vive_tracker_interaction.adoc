@@ -23,11 +23,6 @@ of human body.
 It can also be attached to any other devices the user wants to track and
 interact with.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 This extension allows:
 
 * An application to enumerate the subpaths of all current connected VIVE

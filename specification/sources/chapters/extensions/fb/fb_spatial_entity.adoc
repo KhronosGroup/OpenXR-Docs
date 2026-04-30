@@ -25,11 +25,6 @@ entities such as Spatial Anchors.
 In other words, any operation which involves spatial entities uses
 slink:XrSpace handles to identify the affected spatial entities.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 This extension allows:
 
 * An application to create a Spatial Anchor (a type of spatial entity).

@@ -16,11 +16,6 @@ include::{generated}/meta/XR_FB_scene_capture.adoc[]
 This extension allows an application to request that the system begin
 capturing information about what is in the environment around the user.
 
-In order to enable the functionality of this extension, you must: pass the
-name of the extension into flink:xrCreateInstance via the
-slink:XrInstanceCreateInfo::pname:enabledExtensionNames parameter as
-indicated in the <<fundamentals-extensions>> section.
-
 *New Object Types*
 
 *New Flag Types*
