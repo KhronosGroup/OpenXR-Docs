@@ -1647,11 +1647,11 @@ include::{generated}/api/structs/XrFovf.adoc[]
 .Member Descriptions
 ****
 * pname:angleLeft is the angle of the left side of the field of view.
-  For a symmetric field of view this value is negative.
+  For an asymmetric field of view this value is negative.
 * pname:angleRight is the angle of the right side of the field of view.
 * pname:angleUp is the angle of the top part of the field of view.
 * pname:angleDown is the angle of the bottom part of the field of view.
-  For a symmetric field of view this value is negative.
+  For an asymmetric field of view this value is negative.
 ****
 
 Angles to the right of the center and upwards from the center are positive,
