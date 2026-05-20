@@ -17,6 +17,90 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.60 (2026-05-20)
+
+This release features a new multi-vendor extension and a number of quality and
+correctness fixes to the specification. A number of extensions have also been
+marked deprecate.
+
+- Specification
+  - New multi-vendor extension specification: `XR_EXT_haptic_parametric` allows
+    triggering high-fidelity haptic vibrations.
+    ([internal MR 3307](https://gitlab.khronos.org/openxr/openxr/merge_requests/3307))
+  - Change: Document `XR_ANDROID_trackables` and its child extensions as deprecated
+    by various `XR_EXT` and `XR_ANDROID` spatial entity extensions, with
+    deprecation notes in the specification.
+    ([internal MR 4228](https://gitlab.khronos.org/openxr/openxr/merge_requests/4228))
+  - Fix: Correct documentation for `VERY_STRICT` in `specification/Makefile`.
+    ([internal MR 4294](https://gitlab.khronos.org/openxr/openxr/merge_requests/4294),
+    [internal issue 2742](https://gitlab.khronos.org/openxr/openxr/issues/2742))
+  - Fix: Add missing ref pages for constants defined in `XR_ANDROID_eye_tracking`
+    and `XR_ANDROID_face_tracking`.
+    ([internal MR 4303](https://gitlab.khronos.org/openxr/openxr/merge_requests/4303),
+    [internal issue 2741](https://gitlab.khronos.org/openxr/openxr/issues/2741))
+  - Fix: Several broken internal cross-references in extensions.
+    ([internal MR 4328](https://gitlab.khronos.org/openxr/openxr/merge_requests/4328))
+  - Improvement: Clean up specification for `XR_EXT_eye_gaze_interaction`, and
+    resolve a question previously left unspecified.
+    ([internal MR 3498](https://gitlab.khronos.org/openxr/openxr/merge_requests/3498))
+  - Improvement: Improve consistency of struct initialization patterns in adoc
+    sample code, using designated initializers for clarity.
+    ([internal MR 4231](https://gitlab.khronos.org/openxr/openxr/merge_requests/4231),
+    [internal MR 4240](https://gitlab.khronos.org/openxr/openxr/merge_requests/4240),
+    [internal MR 4243](https://gitlab.khronos.org/openxr/openxr/merge_requests/4243))
+  - Improvement: Enable warnings as errors in AsciiDoctor builds.
+    ([internal MR 4294](https://gitlab.khronos.org/openxr/openxr/merge_requests/4294),
+    [internal issue 2742](https://gitlab.khronos.org/openxr/openxr/issues/2742))
+  - Improvement: Fix mouse interaction profile name & clarify scroll component in
+    the `XR_ANDROID_mouse_interaction` extension.
+    ([internal MR 4297](https://gitlab.khronos.org/openxr/openxr/merge_requests/4297))
+  - Improvement: Silence warnings when generating style guide
+    ([internal MR 4300](https://gitlab.khronos.org/openxr/openxr/merge_requests/4300))
+  - Scripts: Replace `findBareNormatives.sh` with `findBareNormatives.py` to make
+    it easier to run cross-platform and easier to build on top of, and populate a
+    `bare_normatives_allowlist.txt` file to list (current) known exceptions to bare
+    normative rules.
+    ([internal MR 4286](https://gitlab.khronos.org/openxr/openxr/merge_requests/4286),
+    [internal MR 4320](https://gitlab.khronos.org/openxr/openxr/merge_requests/4320))
+  - Scripts: Add `findBareNormatives.py` to `make check-spec-links`.
+    ([internal MR 4286](https://gitlab.khronos.org/openxr/openxr/merge_requests/4286),
+    [internal MR 4286](https://gitlab.khronos.org/openxr/openxr/merge_requests/4286))
+  - Style Guide: Update schema to document deprecation expressions referring to
+    more than one extension, as well as the `<extend type="command">` tag for
+    extending return codes for a function.
+    ([internal MR 4228](https://gitlab.khronos.org/openxr/openxr/merge_requests/4228),
+    [internal MR 4228](https://gitlab.khronos.org/openxr/openxr/merge_requests/4228),
+    [internal issue 2494](https://gitlab.khronos.org/openxr/openxr/issues/2494),
+    [internal MR 4009](https://gitlab.khronos.org/openxr/openxr/merge_requests/4009))
+- Registry
+  - New multi-vendor extension: `XR_EXT_haptic_parametric`
+    ([internal MR 3307](https://gitlab.khronos.org/openxr/openxr/merge_requests/3307))
+  - Change: Deprecate HoloLens 2 related extensions.
+    ([internal MR 4133](https://gitlab.khronos.org/openxr/openxr/merge_requests/4133))
+  - Change: Mark `XR_ANDROID_trackables` and its child extensions as deprecated by
+    various `XR_EXT` and `XR_ANDROID` spatial entity extensions.
+    ([internal MR 4228](https://gitlab.khronos.org/openxr/openxr/merge_requests/4228))
+  - Fix: Add comment for enum value `XR_SPACE_COMPONENT_TYPE_ROOM_MESH_META` in
+    `xr.xml`.
+    ([internal MR 4292](https://gitlab.khronos.org/openxr/openxr/merge_requests/4292),
+    [internal issue 2740](https://gitlab.khronos.org/openxr/openxr/issues/2740))
+  - Fix: Add comment for result value
+    `XR_BOUNDARY_VISIBILITY_SUPPRESSION_NOT_ALLOWED_META` in `xr.xml`.
+    ([internal MR 4293](https://gitlab.khronos.org/openxr/openxr/merge_requests/4293),
+    [internal issue 2739](https://gitlab.khronos.org/openxr/openxr/issues/2739))
+  - Fix: Mark `XrSessionCreateInfoOverlayEXTX::createFlags` as optional.
+    ([internal MR 4302](https://gitlab.khronos.org/openxr/openxr/merge_requests/4302))
+  - Fix: Update `XrFoveationEyeTrackedProfileCreateInfoMETA` to mark `flags` as
+    optional
+    ([internal MR 4317](https://gitlab.khronos.org/openxr/openxr/merge_requests/4317),
+    [internal MR 4317](https://gitlab.khronos.org/openxr/openxr/merge_requests/4317))
+  - Improvement: Add schematron validation for `optional` required for empty bit
+    flags.
+    ([internal MR 4317](https://gitlab.khronos.org/openxr/openxr/merge_requests/4317),
+    [internal issue 2745](https://gitlab.khronos.org/openxr/openxr/issues/2745))
+  - Scripts: Handle deprecation expressions referring to multiple extensions.
+    ([internal MR 4228](https://gitlab.khronos.org/openxr/openxr/merge_requests/4228))
+
 ## OpenXR Specification 1.1.59 (2026-04-30)
 
 This release provides a usability improvement for the HTML spec: anchors for

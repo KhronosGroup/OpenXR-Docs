@@ -42,6 +42,37 @@ functions:
 (protection level: dangerous)
 ====
 
+==== Deprecation note
+
+The apiext:XR_ANDROID_device_anchor_persistence extension is now deprecated.
+Unlike typical OpenXR deprecations, its features are not replaced by a
+single successor.
+Instead, its functionality has been distributed across several different
+extensions.
+
+System support, persistence data loading, and enumeration of persisted
+anchors is replaced by apiext:XR_EXT_spatial_persistence:
+
+[width="100%",options="header"]
+|====
+| apiext:XR_ANDROID_device_anchor_persistence functionality | Now available in
+| slink:XrSystemDeviceAnchorPersistencePropertiesANDROID & flink:xrEnumerateSupportedPersistenceAnchorTypesANDROID | flink:xrEnumerateSpatialPersistenceScopesEXT
+| slink:XrDeviceAnchorPersistenceANDROID             | slink:XrSpatialPersistenceContextEXT
+| flink:xrCreateDeviceAnchorPersistenceANDROID       | flink:xrCreateSpatialPersistenceContextAsyncEXT & flink:xrCreateSpatialPersistenceContextCompleteEXT
+| flink:xrDestroyDeviceAnchorPersistenceANDROID      | flink:xrDestroySpatialPersistenceContextEXT
+| flink:xrEnumeratePersistedAnchorsANDROID           | <<ext_spatial_persistence_discover_all_entities>>
+|====
+
+Functions to persist and unpersist anchors are replaced by
+apiext:XR_EXT_spatial_persistence_operations:
+
+[width="100%",options="header"]
+|====
+| apiext:XR_ANDROID_device_anchor_persistence functionality           | Now available in
+| flink:xrPersistAnchorANDROID & flink:xrGetAnchorPersistStateANDROID | flink:xrPersistSpatialEntityAsyncEXT & flink:xrPersistSpatialEntityCompleteEXT
+| flink:xrUnpersistAnchorANDROID                                      | flink:xrUnpersistSpatialEntityAsyncEXT & flink:xrUnpersistSpatialEntityCompleteEXT
+|====
+
 ==== Inspect system capability
 
 [open,refpage='XrSystemDeviceAnchorPersistencePropertiesANDROID',type='structs',desc='System property for anchor persistence',xrefs='XrSystemProperties']
@@ -447,18 +478,20 @@ PFN_xrEnumeratePersistedAnchorsANDROID xrEnumeratePersistedAnchorsANDROID; // pr
 PFN_xrUnpersistAnchorANDROID xrUnpersistAnchorANDROID; // previously initialized
 
 // Create a device anchor persistence handle
-XrDeviceAnchorPersistenceCreateInfoANDROID persistenceHandleCreateInfo;
-persistenceHandleCreateInfo.type = XR_TYPE_DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID;
-persistenceHandleCreateInfo.next = nullptr;
+XrDeviceAnchorPersistenceCreateInfoANDROID persistenceHandleCreateInfo {
+  .type = XR_TYPE_DEVICE_ANCHOR_PERSISTENCE_CREATE_INFO_ANDROID,
+  .next = nullptr,
+};
 
 XrDeviceAnchorPersistenceANDROID persistenceHandle;
 CHK_XR(xrCreateDeviceAnchorPersistenceANDROID(session, &persistenceHandleCreateInfo, &persistenceHandle));
 
 /// Persist an anchor
-XrPersistedAnchorSpaceInfoANDROID anchorSpaceInfo;
-anchorSpaceInfo.type = XR_TYPE_PERSISTED_ANCHOR_SPACE_INFO_ANDROID;
-anchorSpaceInfo.next = nullptr;
-anchorSpaceInfo.anchor = anchor;
+XrPersistedAnchorSpaceInfoANDROID anchorSpaceInfo {
+  .type = XR_TYPE_PERSISTED_ANCHOR_SPACE_INFO_ANDROID,
+  .next = nullptr,
+  .anchor = anchor,
+};
 
 XrUuidEXT anchorId;
 XrResult result;
@@ -503,10 +536,11 @@ CHK_XR(xrEnumeratePersistedAnchorsANDROID(
 XrTime updateTime; // Time used for the current frame's simulation update.
 anchorId = allAnchors[0];
 
-XrPersistedAnchorSpaceCreateInfoANDROID createInfo;
-createInfo.type = XR_TYPE_PERSISTED_ANCHOR_SPACE_CREATE_INFO_ANDROID;
-createInfo.next = nullptr;
-createInfo.anchorId = anchorId;
+XrPersistedAnchorSpaceCreateInfoANDROID createInfo {
+  .type = XR_TYPE_PERSISTED_ANCHOR_SPACE_CREATE_INFO_ANDROID,
+  .next = nullptr,
+  .anchorId = anchorId,
+};
 
 XrSpace anchorSpace = XR_NULL_HANDLE;
 CHK_XR(xrCreatePersistedAnchorSpaceANDROID(
@@ -516,7 +550,9 @@ CHK_XR(xrCreatePersistedAnchorSpaceANDROID(
 ));
 
 // The anchor was found and retrieved from the local device successfully.
-XrSpaceLocation anchorLocation = { XR_TYPE_SPACE_LOCATION };
+XrSpaceLocation anchorLocation {
+  .type = XR_TYPE_SPACE_LOCATION,
+};
 CHK_XR(xrLocateSpace(anchorSpace, appSpace, updateTime, &anchorLocation));
 XrPosef pose = anchorLocation.pose;
 

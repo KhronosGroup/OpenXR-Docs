@@ -335,10 +335,13 @@ PFN_xrDestroyPassthroughLayerANDROID xrDestroyPassthroughLayerANDROID; // previo
 PFN_xrSetPassthroughLayerMeshANDROID xrSetPassthroughLayerMeshANDROID; // previously initialized
 
 // Inspect passthrough mesh system properties
-XrSystemPassthroughLayerPropertiesANDROID passthroughLayerSystemProperties{
-  XR_TYPE_SYSTEM_PASSTHROUGH_LAYER_PROPERTIES_ANDROID};
-XrSystemProperties systemProperties{
-  XR_TYPE_SYSTEM_PROPERTIES, &passthroughLayerSystemProperties};
+XrSystemPassthroughLayerPropertiesANDROID passthroughLayerSystemProperties {
+  .type = XR_TYPE_SYSTEM_PASSTHROUGH_LAYER_PROPERTIES_ANDROID,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &passthroughLayerSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!passthroughLayerSystemProperties.supportsPassthroughLayer) {
     // the system does not support composite layer passthrough mesh.
@@ -353,7 +356,7 @@ uint16_t initialIndices[] = {
 XrVector3f initialVertices[] = {
   { 0, 0, 0 }, { 0, 1, 0 }, { 1, 1, 0 }, { 1, 0, 0 }
 };
-XrPassthroughLayerMeshANDROID mesh = {
+XrPassthroughLayerMeshANDROID mesh {
   .type = XR_TYPE_PASSTHROUGH_LAYER_MESH_ANDROID,
   .windingOrder = XR_WINDING_ORDER_CW_ANDROID,
   .vertexCount = 4,
@@ -363,7 +366,7 @@ XrPassthroughLayerMeshANDROID mesh = {
 };
 
 // Create the layer. Layers are expected to persist across frames.
-XrPassthroughLayerCreateInfoANDROID create_info = {
+XrPassthroughLayerCreateInfoANDROID create_info {
   .type = XR_TYPE_PASSTHROUGH_LAYER_CREATE_INFO_ANDROID,
   .next = &mesh,
   .vertexCapacity = 0,
@@ -373,7 +376,7 @@ XrPassthroughLayerANDROID layer;
 CHK_XR(xrCreatePassthroughLayerANDROID(session, &create_info, &layer));
 
 // Create a composition layer. Composition layers are submitted per frame.
-XrCompositionLayerPassthroughANDROID passthrough_layer = {
+XrCompositionLayerPassthroughANDROID passthrough_layer {
   .type = XR_TYPE_COMPOSITION_LAYER_PASSTHROUGH_ANDROID,
   .next = nullptr,
   .layerFlags = 0,
@@ -398,9 +401,12 @@ while (1) {
         (XrCompositionLayerBaseHeader*)&passthrough_layer
         // ...
     };
-    XrFrameEndInfo end_frame_info = { XR_TYPE_FRAME_END_INFO, nullptr };
-    end_frame_info.layerCount = (uint32_t)layers.size();
-    end_frame_info.layers = layers.data();
+    XrFrameEndInfo end_frame_info {
+      .type = XR_TYPE_FRAME_END_INFO,
+      .next = nullptr,
+      .layerCount = static_cast<uint32_t>(layers.size()),
+      .layers = layers.data(),
+    };
     CHK_XR(xrEndFrame(session, &end_frame_info));
 
     // Update the layer. Results will be seen the next time a passthrough composition

@@ -1,0 +1,734 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_haptic_parametric.adoc[]
+
+
+*Last Modified Date*::
+    2026-05-15
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Thomas McGuire, Meta Platforms +
+    Shuai Liu, ByteDance +
+    Shanliang Xu, ByteDance +
+
+==== Overview
+
+This extension enables applications to trigger haptic vibration events using
+a device-independent parametric haptic data format.
+
+==== Parametric data format
+
+The haptic event is described by three independent series of amplitude
+points, frequency points, and transients.
+
+The amplitude and frequency points describe how the amplitude and frequency
+of the vibration change over time.
+The runtime applies linear interpolation between the amplitude and frequency
+points.
+
+A transient is a short burst which has a strong and "clicky" characteristic.
+Transients are useful for adding a layer of distinct, discernible and
+emphasized points to the resulting vibration.
+
+The runtime uses the parametric data to drive the haptic element.
+The runtime translates the parametric data into the data format needed to
+drive the haptic element in the best possible way, with graceful degradation
+for features not supported by the haptic element.
+
+[[fig-EXT_haptic_parametric-vcm]]
+image::images/XR_EXT_Haptic_Parametric_VCM.png[align="center", title="Example of translating parametric data to a PCM waveform for driving a VCM, using reserved headroom to make the transient stand out."]
+
+For example, a voice coil motor (VCM) haptic element is driven by pulse-code
+modulation (PCM) data, and the runtime translates the parametric data into
+PCM data by modulating a waveform.
+The amplitude and frequency of the waveform varies according to the
+amplitude and frequency points.
+
+[[fig-EXT_haptic_parametric-lra]]
+image::images/XR_EXT_Haptic_Parametric_LRA.png[align="center", title="Example of translating parametric data to amplitude steps for driving an LRA, using reserved headroom to make the transient stand out."]
+
+For haptic elements that do not support varying the frequency of the
+vibration, like linear resonant actuators (LRAs), the runtime must: ignore
+the frequency points and only change the vibration intensity according to
+the amplitude points.
+
+The runtime should: render a transient with dedicated system support if
+available.
+The runtime must: make sure that a transient is perceivable when the
+transient's amplitude is higher than the amplitude defined by the amplitude
+points at the transient's time.
+For example the system might support briefly providing a non-nominal voltage
+spike (e.g. overdrive) to the actuator, which forces an abrupt change that
+is perceived as a clicky transient effect.
+Alternatively, the runtime may: render a transient by reserving a headroom
+in the intensity used for the amplitude points, and use that headroom for
+the transient, to make sure it stands out.
+
+Amplitude and frequency values range from 0.0 to 1.0 (inclusive).
+The runtime maps the normalized amplitude range to the absolute intensity
+range supported by the haptic element.
+If the application specifies the absolute frequency range with the
+slink:XrHapticParametricVibrationEXT::pname:minFrequencyHz and
+slink:XrHapticParametricVibrationEXT::pname:maxFrequencyHz values, the
+runtime maps the normalized frequency range to the specified range.
+If the application does not specify the absolute frequency range, the
+runtime maps the normalized frequency range to the absolute frequency range
+supported by the haptic element.
+
+The duration of the haptic event is defined by the time of the last
+amplitude point.
+When <<ext_haptic_parametric-streaming,streaming>>, the haptic event
+consists of multiple <<ext_haptic_parametric-haptic-frame,haptic frames>>,
+and the last amplitude point is contained in the last
+<<ext_haptic_parametric-haptic-frame>> of the stream.
+Therefore the duration of the haptic event is not known upfront when
+streaming.
+
+==== Inspect system capability
+
+[open,refpage='XrSystemHapticParametricPropertiesEXT',type='structs',desc='System property for parametric haptics',xrefs='xrGetSystemProperties']
+--
+An application can: inspect whether the system is capable of parametric
+haptics by extending the slink:XrSystemProperties structure with
+slink:XrSystemHapticParametricPropertiesEXT when calling
+flink:xrGetSystemProperties.
+
+The slink:XrSystemHapticParametricPropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrSystemHapticParametricPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
+* pname:supportsParametricHaptics is an basetype:XrBool32, indicating if the
+  current system is capable of parametric haptics.
+****
+
+If the system does not support parametric haptics:
+
+* The runtime must: return ename:XR_FALSE for
+  pname:supportsParametricHaptics.
+* The runtime must: return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+  flink:xrHapticParametricGetPropertiesEXT.
+* The runtime must: not trigger a haptic event when the application calls
+  flink:xrApplyHapticFeedback with slink:XrHapticParametricVibrationEXT, and
+  must: return ename:XR_ERROR_FEATURE_UNSUPPORTED.
+
+If the system supports parametric haptics:
+
+* The runtime must: return ename:XR_TRUE for
+  pname:supportsParametricHaptics.
+* The runtime must: support haptic events of type
+  slink:XrHapticParametricVibrationEXT on all output component paths that
+  are supported for haptic events of type slink:XrHapticVibration.
+
+include::{generated}/validity/structs/XrSystemHapticParametricPropertiesEXT.adoc[]
+--
+
+==== Trigger haptics
+
+To trigger a parametric haptic event, create a
+slink:XrHapticParametricVibrationEXT structure and call
+flink:xrApplyHapticFeedback with it.
+
+[open,refpage='XrHapticParametricVibrationEXT',type='structs',desc='Parametric haptic event',xrefs='xrApplyHapticFeedback']
+--
+The slink:XrHapticParametricVibrationEXT structure is defined as:
+
+include::{generated}/api/structs/XrHapticParametricVibrationEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:amplitudePointCount is the number of points in
+  pname:amplitudePoints.
+* pname:amplitudePoints is an array of slink:XrHapticParametricPointEXT,
+  describing how the intensity of the vibration changes over time.
+* pname:frequencyPointCount is the number of points in
+  pname:frequencyPoints.
+* pname:frequencyPoints is an array of slink:XrHapticParametricPointEXT,
+  describing how the frequency of the vibration changes over time.
+  If it is code:NULL, a vibration frequency of 0.5 is used for the entire
+  haptic event.
+* pname:transientCount is the number of transients in pname:transients.
+* pname:transients is an array of slink:XrHapticParametricTransientEXT,
+  describing the transients in the haptic event.
+  If it is code:NULL, the haptic event has no transients.
+* pname:minFrequencyHz is the absolute frequency, in Hertz, that the
+  normalized frequency of 0.0 maps to.
+  If it is dlink:XR_FREQUENCY_UNSPECIFIED, the runtime maps 0.0 to the
+  lowest frequency supported by the haptic element.
+* pname:maxFrequencyHz is the absolute frequency, in Hertz, that the
+  normalized frequency of 1.0 maps to.
+  If it is dlink:XR_FREQUENCY_UNSPECIFIED, the runtime maps 1.0 to the
+  highest frequency supported by the haptic element.
+* pname:streamFrameType is the elink:XrHapticParametricStreamFrameTypeEXT
+  that describes if and how the data in this structure is part of a longer
+  haptic <<ext_haptic_parametric-streaming,stream>>.
+****
+
+This structure describes a parametric haptic event.
+
+[[ext_haptic_parametric-validation]]
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrApplyHapticFeedback if any of the following conditions are not met:
+
+* When pname:streamFrameType is
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT or
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT, the
+  structure must: contain at least two amplitude points.
+  For all other values of pname:streamFrameType, the structure must: contain
+  at least one amplitude point.
+* The structure must: not contain more than
+  dlink:XR_HAPTIC_PARAMETRIC_MAX_POINTS_TRANSIENTS_EXT amplitude points,
+  frequency points or transients, respectively.
+  An application can: trigger haptic events with more than
+  dlink:XR_HAPTIC_PARAMETRIC_MAX_POINTS_TRANSIENTS_EXT amplitude points,
+  frequency points or transients by calling flink:xrApplyHapticFeedback
+  multiple times in a sequence, see <<ext_haptic_parametric-streaming>> for
+  details.
+* When pname:streamFrameType is
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT or
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT, the first
+  amplitude and frequency point must: be at time 0.
+* When pname:streamFrameType is
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT, the time of
+  the last amplitude point in the frame must: be greater than or equal to
+  slink:XrHapticParametricPropertiesEXT::pname:minimumFirstFrameDuration.
+* The time of the last frequency point and the last transient of the stream
+  must: be less than or equal to the time of the last amplitude point of the
+  stream.
+* When pname:streamFrameType is
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT or
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT, a stream
+  must: already be running on the haptic element.
+* pname:minFrequencyHz and pname:maxFrequencyHz must: either be both
+  dlink:XR_FREQUENCY_UNSPECIFIED, or both specified in the range
+  dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MIN_HZ_EXT -
+  dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MAX_HZ_EXT (inclusive).
+* pname:maxFrequencyHz must: be equal to or larger than
+  pname:minFrequencyHz, or dlink:XR_FREQUENCY_UNSPECIFIED.
+* When pname:streamFrameType is
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT or
+  ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT,
+  pname:minFrequencyHz and pname:maxFrequencyHz must: both be
+  dlink:XR_FREQUENCY_UNSPECIFIED.
+  The application may: only set the absolute frequency range in the first
+  <<ext_haptic_parametric-haptic-frame>>, and the runtime uses the range for
+  the entire haptic event.
+* Each amplitude point and frequency point must: not have an earlier time
+  than the one preceding it.
+* Each transient must: have a later time than the one preceding it.
+* The amplitude and frequency of a point or transient must: be between 0.0
+  and 1.0 (inclusive).
+
+In addition to the restrictions above, the following is explicitly allowed:
+
+* The first transient may: be at any time, it does not need to be at time 0.
+* The number of amplitude points, frequency points and transients may: be
+  completely independent of each other.
+* Amplitude points, frequency points and transients with the same array
+  index may: be at a different times.
+* There may: be multiple amplitude points or frequency points at the same
+  time.
+  Applications can: use this to model an abrupt jump in amplitude or
+  frequency.
+  The order of the points in the array determines the starting and ending
+  values of the jump.
+
+If the time of the last frequency point of the stream is earlier than the
+time of the last amplitude point of the stream, the runtime must: continue
+and finish the haptic event with the frequency of the last frequency point.
+As per the <<ext_haptic_parametric-validation,validation rules>>, the
+opposite case, a stream in which the time of the last amplitude point of the
+stream is earlier than the time of the last frequency point of the stream,
+is not allowed, and the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from flink:xrApplyHapticFeedback.
+
+The application may: call flink:xrHapticParametricGetPropertiesEXT to
+determine the frequency range supported by the haptic element.
+If the range specified by pname:minFrequencyHz and pname:maxFrequencyHz is
+outside of the supported range, the runtime must: clamp the values to the
+supported range.
+The runtime then maps the normalized frequency range to the clamped absolute
+frequency range.
+
+When pname:streamFrameType is
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT or
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT, a new haptic
+event is started.
+In this case, the runtime must: cancel any unfinished haptic events
+currently running on the haptic element, as usual for the core
+specification.
+This applies to all types of haptic events, including e.g.
+slink:XrHapticPcmVibrationFB, slink:XrHapticVibration and
+slink:XrHapticParametricVibrationEXT.
+
+When the call to flink:xrApplyHapticFeedback fails with an error code, the
+runtime must: ignore the new frame and discard the haptic data contained in
+it.
+The runtime must: not cancel or otherwise modify an existing stream, if any,
+currently running on the haptic element.
+The runtime must: not start a new haptic event.
+
+include::{generated}/validity/structs/XrHapticParametricVibrationEXT.adoc[]
+--
+
+[open,refpage='XrHapticParametricPointEXT',type='structs',desc='Parametric haptic point',xrefs='XrHapticParametricVibrationEXT']
+--
+The slink:XrHapticParametricPointEXT structure is defined as:
+
+include::{generated}/api/structs/XrHapticParametricPointEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:time is the time of the amplitude or frequency point, as a duration
+  in nanoseconds since the start of the haptic event.
+* pname:value is the normalized value of the vibration amplitude or
+  frequency at this point in time, with a value between 0.0 and 1.0
+  (inclusive).
+****
+
+This structure describes an amplitude or frequency point.
+
+include::{generated}/validity/structs/XrHapticParametricPointEXT.adoc[]
+--
+
+[open,refpage='XrHapticParametricTransientEXT',type='structs',desc='Parametric haptic transient',xrefs='XrHapticParametricVibrationEXT']
+--
+The slink:XrHapticParametricTransientEXT structure is defined as:
+
+include::{generated}/api/structs/XrHapticParametricTransientEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:time is the time of the transient, as a duration in nanoseconds
+  since the start of the haptic event.
+* pname:amplitude is the normalized amplitude of the transient, with a value
+  between 0.0 and 1.0 (inclusive).
+* pname:frequency is the normalized frequency of the transient, with a value
+  between 0.0 and 1.0 (inclusive).
+****
+
+This structure describes a transient, which is a brief and abrupt change of
+amplitude and frequency.
+
+The intensity of a transient is set by the amplitude value, while the
+frequency value has an effect on how sharp a transient feels.
+
+include::{generated}/validity/structs/XrHapticParametricTransientEXT.adoc[]
+--
+
+[open,refpage='XR_HAPTIC_PARAMETRIC_MAX_POINTS_TRANSIENTS_EXT',type='defines',desc='Maximum amount of points or transients for parametric haptics',xrefs='']
+--
+include::{generated}/api/defines/XR_HAPTIC_PARAMETRIC_MAX_POINTS_TRANSIENTS_EXT.adoc[]
+
+dlink:XR_HAPTIC_PARAMETRIC_MAX_POINTS_TRANSIENTS_EXT defines the maximum
+amount of amplitude points, frequency points or transients that the runtime
+accepts in a single call to flink:xrApplyHapticFeedback.
+--
+
+[open,refpage='XR_HAPTIC_PARAMETRIC_FREQUENCY_MIN_HZ_EXT',type='defines',desc='Minimum valid absolute frequency for parametric haptics',xrefs='XrHapticParametricVibrationEXT']
+--
+include::{generated}/api/defines/XR_HAPTIC_PARAMETRIC_FREQUENCY_MIN_HZ_EXT.adoc[]
+
+dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MIN_HZ_EXT defines the minimum valid
+frequency value, in Hertz, for
+slink:XrHapticParametricVibrationEXT::pname:minFrequencyHz and
+slink:XrHapticParametricVibrationEXT::pname:maxFrequencyHz.
+--
+
+[open,refpage='XR_HAPTIC_PARAMETRIC_FREQUENCY_MAX_HZ_EXT',type='defines',desc='Maximum valid absolute frequency for parametric haptics',xrefs='XrHapticParametricVibrationEXT']
+--
+include::{generated}/api/defines/XR_HAPTIC_PARAMETRIC_FREQUENCY_MAX_HZ_EXT.adoc[]
+
+dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MAX_HZ_EXT defines the maximum valid
+frequency value, in Hertz, for
+slink:XrHapticParametricVibrationEXT::pname:minFrequencyHz and
+slink:XrHapticParametricVibrationEXT::pname:maxFrequencyHz.
+--
+
+[[ext_haptic_parametric-streaming]]
+==== Streaming
+
+An application can: trigger a parametric haptic event in two ways:
+
+* A single call to flink:xrApplyHapticFeedback, in which the data for the
+  entire haptic event is known in advance and submitted in one call.
+** In this case, slink:XrHapticParametricVibrationEXT::pname:streamFrameType
+   is ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT.
+* A sequence of calls over time to flink:xrApplyHapticFeedback, in which the
+  data of the entire haptic event is submitted piece by piece in multiple
+  calls.
+** This is called _streaming_.
+** [[ext_haptic_parametric-haptic-frame,haptic frame]]The haptic data
+   submitted in one call is called a _haptic frame_.
+** In this case, slink:XrHapticParametricVibrationEXT::pname:streamFrameType
+   is ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT for the
+   first call,
+   ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT for
+   calls in the middle and
+   ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT for the last
+   call of the stream sequence.
+
+Streaming a haptic event is required when the entire haptic data is not yet
+known at the time of the first call, for example when the haptic data is
+generated on the fly.
+Streaming is also required when the haptic event has more amplitude points,
+frequency points or transients than the maximum supported in one call, for
+example for a long running haptic event.
+
+Each haptic element has at most one stream running on it.
+The runtime must: support running multiple independent streams on different
+haptic elements at the same time, e.g. one stream on the main haptic element
+of the device in the user's left hand and one stream on the trigger haptic
+element of the device in the user's right hand.
+
+If an application wants to continue a stream to extend the haptic event, it
+should: submit a new haptic frame before the runtime finishes playing back
+the previously submitted haptic frame.
+The application can: extend the stream if the previously submitted frame is
+of type ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT or
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT.
+If it is not, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE
+from flink:xrApplyHapticFeedback, as per the
+<<ext_haptic_parametric-validation,validation rules>>.
+
+If the application submits the new haptic frame too late and the runtime has
+already finished playing back the previously submitted haptic frame, the
+runtime must: continue the vibration with the intensity of the last
+amplitude point and the frequency of the last frequency point, for exactly
+dlink:XR_HAPTIC_PARAMETRIC_VIBRATION_EXTEND_DURATION_EXT nanoseconds, or
+until the application submits a new haptic frame, or the application stops
+haptic feedback with flink:xrStopHapticFeedback.
+If the application submits a new frame after the previously submitted haptic
+frame finished, the runtime must: immediately change the intensity and
+frequency to the intensity and frequency described by the amplitude and
+frequency points of the newly submitted haptic frame at the current playback
+position.
+The runtime must: ignore any amplitude points, frequency points or
+transients in the newly submitted haptic frame that are before the current
+playback position.
+
+If the application does not submit a new haptic frame within
+dlink:XR_HAPTIC_PARAMETRIC_VIBRATION_EXTEND_DURATION_EXT nanoseconds after
+the previously submitted haptic frame finished, the runtime must: stop the
+vibration.
+After this, the haptic event is still considered running, and the playback
+time is still advancing, but no vibration is triggered anymore.
+The runtime must: still accept new haptic frames of type
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT or
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT.
+Once a new haptic frame is submitted, the runtime must: resume the
+vibration.
+
+To end a stream, the application can: submit a haptic frame of type
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT or call
+flink:xrStopHapticFeedback.
+flink:xrStopHapticFeedback stops the stream immediately, while
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT stops the stream
+after the last haptic frame has finished playing.
+
+A call to flink:xrApplyHapticFeedback with
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT starts a new
+haptic event and a new stream.
+A call to flink:xrApplyHapticFeedback with
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT starts a new haptic
+event, but not a stream.
+
+The runtime may: process the haptic data submitted by the application
+periodically, in batches.
+This affects the rate at which applications that generate haptic data on the
+fly should: submit new haptic frames.
+The application may: query this rate with
+flink:xrHapticParametricGetPropertiesEXT.
+A faster rate than
+slink:XrHapticParametricPropertiesEXT::pname:idealFrameSubmissionRate would
+not be useful, as the runtime processes the haptic data at a slower rate
+anyway.
+A slower rate than
+slink:XrHapticParametricPropertiesEXT::pname:idealFrameSubmissionRate would
+increase latency between generating the haptic data and the data being
+played back.
+
+When a stream starts, the runtime may: need a certain minimum amount of
+haptic data upfront.
+The application should: query this amount of data with
+flink:xrHapticParametricGetPropertiesEXT.
+slink:XrHapticParametricPropertiesEXT::pname:minimumFirstFrameDuration
+describes how much haptic data the runtime needs in the first haptic frame.
+If the application submits less haptic data in the first frame, the runtime
+must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrApplyHapticFeedback, as per the
+<<ext_haptic_parametric-validation,validation rules>>.
+
+The application should: not use
+slink:XrHapticParametricPropertiesEXT::pname:minimumFirstFrameDuration to
+determine when to send the second frame of a stream, and should: instead use
+slink:XrHapticParametricPropertiesEXT::pname:idealFrameSubmissionRate.
+As an example, a runtime may: want to build up a buffer of haptic data in
+the first frame, and for that may: return a value of
+slink:XrHapticParametricPropertiesEXT::pname:minimumFirstFrameDuration that
+is higher than
+slink:XrHapticParametricPropertiesEXT::pname:idealFrameSubmissionRate.
+
+The time of amplitude points, frequency points and transients is defined as
+the duration since the start of the haptic event.
+In a stream, the haptic event starts with the first frame, which means that
+the stream maintains a uniform time base throughout the entire haptic event.
+
+[open,refpage='XrHapticParametricStreamFrameTypeEXT',desc='Parametric haptic frame type',type='enums']
+--
+The elink:XrHapticParametricStreamFrameTypeEXT enum is defined as:
+
+include::{generated}/api/enums/XrHapticParametricStreamFrameTypeEXT.adoc[]
+
+This enum describes if and how the haptic data in
+slink:XrHapticParametricVibrationEXT is part of a stream.
+
+.Enumerant Descriptions
+****
+* ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT The haptic data is
+  not part of a stream.
+* ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT The haptic
+  data is the first haptic frame of the stream.
+* ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT The
+  haptic data is a haptic frame in the middle of the stream.
+* ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_LAST_FRAME_EXT The haptic
+  data is the last haptic frame of the stream.
+****
+--
+
+[open,refpage='XR_HAPTIC_PARAMETRIC_VIBRATION_EXTEND_DURATION_EXT',type='defines',desc='Duration for which the vibration continues after the last submitted haptic frame',xrefs='']
+--
+include::{generated}/api/defines/XR_HAPTIC_PARAMETRIC_VIBRATION_EXTEND_DURATION_EXT.adoc[]
+
+dlink:XR_HAPTIC_PARAMETRIC_VIBRATION_EXTEND_DURATION_EXT defines the
+duration, in nanoseconds, for which the runtime continues the vibration
+after the last submitted haptic frame of type
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT or
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT has
+finished playing.
+--
+
+==== Properties
+
+[open,refpage='xrHapticParametricGetPropertiesEXT',type='protos',desc='Get parametric haptic properties',xrefs='XrHapticParametricPropertiesEXT']
+--
+The flink:xrHapticParametricGetPropertiesEXT function is defined as:
+
+include::{generated}/api/protos/xrHapticParametricGetPropertiesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the specified slink:XrSession.
+* pname:hapticActionInfo identifies the haptic element
+* pname:parametricProperties is a pointer to
+  flink:xrHapticParametricGetPropertiesEXT which is populated by the
+  runtime.
+****
+
+flink:xrHapticParametricGetPropertiesEXT retrieves various properties of a
+haptic element that relate to parametric haptics.
+
+The action and subaction paths provided by pname:hapticActionInfo identify
+the haptic element.
+If multiple haptic elements are identified by pname:hapticActionInfo, the
+runtime must: select a single haptic element.
+
+include::{generated}/validity/protos/xrHapticParametricGetPropertiesEXT.adoc[]
+--
+
+[open,refpage='XrHapticParametricPropertiesEXT',type='structs',desc='Parametric haptic properties of a haptic element',xrefs='xrHapticParametricGetPropertiesEXT']
+--
+
+The slink:XrHapticParametricPropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrHapticParametricPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:idealFrameSubmissionRate is the ideal rate the application should:
+  submit <<ext_haptic_parametric-haptic-frame,haptic frames>> with, in
+  nanoseconds, for applications that generate haptic data on the fly.
+* pname:minimumFirstFrameDuration is the minimum amount of haptic data, in
+  nanoseconds, the application should: submit in the first
+  <<ext_haptic_parametric-haptic-frame>>.
+* pname:minFrequencyHz is the minimum frequency, in Hertz, supported by the
+  haptic element.
+* pname:maxFrequencyHz is the maximum frequency, in Hertz, supported by the
+  haptic element.
+****
+
+This structure contains properties about streaming timing and supported
+frequency range specific to a haptic element.
+
+The runtime may: populate pname:idealFrameSubmissionRate with 0 if it has no
+restrictions on the <<ext_haptic_parametric-haptic-frame>> submission rate.
+In this case, the application may: freely choose any positive
+<<ext_haptic_parametric-haptic-frame>> submission rate.
+
+The runtime may: populate pname:minimumFirstFrameDuration with 0 if it has
+no restrictions on the minimum first <<ext_haptic_parametric-haptic-frame>>
+duration.
+In this case, the application may: freely choose the amount of haptic data
+in the first <<ext_haptic_parametric-haptic-frame>>.
+
+pname:minFrequencyHz and pname:maxFrequencyHz specify the absolute frequency
+range supported by the haptic element.
+The runtime may: populate both with dlink:XR_FREQUENCY_UNSPECIFIED if it
+does not have the information.
+Otherwise, pname:maxFrequencyHz must: be pname:minFrequencyHz or higher, and
+both values must: be between dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MIN_HZ_EXT
+and dlink:XR_HAPTIC_PARAMETRIC_FREQUENCY_MAX_HZ_EXT (inclusive).
+
+include::{generated}/validity/structs/XrHapticParametricPropertiesEXT.adoc[]
+--
+
+==== Example code
+
+The following example code shows how to trigger a one-second parametric
+haptic event that matches the <<fig-EXT_haptic_parametric-vcm,illustration>>
+shown above.
+In the example, dlink:XR_FREQUENCY_UNSPECIFIED is used, so no absolute
+frequency range is specified.
+Streaming is not used in this example, as
+ename:XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT is used as the haptic
+frame type.
+
+[source,cpp]
+----
+XrSession session;                   // previously initialized
+XrHapticActionInfo hapticActionInfo; // previously initialized
+
+std::vector<XrHapticParametricPointEXT> amplitudePoints{{
+   {0, 0.0}, {100000000, 1.0}, {270000000, 1.0}, {480000000, 0.7}, {750000000, 0.6},
+   {1000000000, 1.0}}};
+std::vector<XrHapticParametricPointEXT> frequencyPoints{{
+    {0, 1.0}, {1000000000, 0.0}}};
+std::vector<XrHapticParametricTransientEXT> transients{{
+    {600000000, 1.0, 1.0}}};
+
+XrHapticParametricVibrationEXT parametricVibration{XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT};
+parametricVibration.amplitudePointCount = amplitudePoints.size();
+parametricVibration.amplitudePoints = amplitudePoints.data();
+parametricVibration.frequencyPointCount = frequencyPoints.size();
+parametricVibration.frequencyPoints = frequencyPoints.data();
+parametricVibration.transientCount = transients.size();
+parametricVibration.transients = transients.data();
+parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+parametricVibration.streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT;
+CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
+    reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
+----
+
+The next example shows how to use streaming.
+The amplitude and frequency of the vibration is determined on the fly by
+calling the hypothetical fname:getDynamicAmplitude and
+fname:getDynamicFrequency functions.
+
+The example submits <<ext_haptic_parametric-haptic-frame,haptic frames>> at
+the ideal frame submission rate recommended by the runtime.
+For this purpose, it sleeps between
+<<ext_haptic_parametric-haptic-frame,haptic frame>> submissions, which
+assumes a dedicated thread.
+Alternatively, it would also be possible to submit the
+<<ext_haptic_parametric-haptic-frame,haptic frames>> from any other thread
+at a different rate, as long as the application submits a new
+<<ext_haptic_parametric-haptic-frame>> before the runtime finishes playing
+back the previously submitted <<ext_haptic_parametric-haptic-frame>>.
+The example uses flink:xrHapticParametricGetPropertiesEXT to query the ideal
+frame submission rate as well as the minimum first frame duration.
+
+For the sake of brevity in the example code, the haptic event plays forever
+and is not stopped.
+
+[source,cpp]
+----
+XrInstance instance;                 // previously initialized
+XrSession session;                   // previously initialized
+XrHapticActionInfo hapticActionInfo; // previously initialized
+
+float getDynamicAmplitude(void); // generates amplitude data on the fly
+float getDynamicFrequency(void); // generates frequency data on the fly
+
+PFN_xrHapticParametricGetPropertiesEXT xrHapticParametricGetPropertiesEXT = nullptr;
+CHK_XR(xrGetInstanceProcAddr(
+    instance, "xrHapticParametricGetPropertiesEXT",
+    (PFN_xrVoidFunction*)(&xrHapticParametricGetPropertiesEXT)));
+
+XrHapticParametricPropertiesEXT properties{XR_TYPE_HAPTIC_PARAMETRIC_PROPERTIES_EXT};
+CHK_XR(xrHapticParametricGetPropertiesEXT(session, &hapticActionInfo, &properties));
+// The runtime may: populate properties with 0, use a reasonable default in that case
+if (properties.idealFrameSubmissionRate == 0) {
+    properties.idealFrameSubmissionRate = 50 * 1e6; // 50ms
+}
+if (properties.minimumFirstFrameDuration == 0) {
+    properties.minimumFirstFrameDuration = 100 * 1e6; // 100ms
+}
+
+int64_t endOfFrameNs = properties.minimumFirstFrameDuration;
+std::vector<XrHapticParametricPointEXT> amplitudePoints{{{0, 0.5}, {endOfFrameNs, 0.5}}};
+std::vector<XrHapticParametricPointEXT> frequencyPoints{{{0, 0.5}, {endOfFrameNs, 0.5}}};
+
+XrHapticParametricVibrationEXT parametricVibration{XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT};
+parametricVibration.amplitudePointCount = amplitudePoints.size();
+parametricVibration.amplitudePoints = amplitudePoints.data();
+parametricVibration.frequencyPointCount = frequencyPoints.size();
+parametricVibration.frequencyPoints = frequencyPoints.data();
+parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+parametricVibration.streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT;
+CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
+    reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
+
+auto firstFrameTime = std::chrono::steady_clock::now();
+for (int frameNum = 1;; frameNum++) {
+    // To maintain accurate timing, it is not possible to simply use
+    // "sleep_for(idealFrameSubmissionRate)". Due to scheduling imprecisions and the
+    // execution time of the surrounding code, the timing would drift over time, eventually
+    // causing the application to submit haptic frames too late.
+    std::this_thread::sleep_until(firstFrameTime +
+        std::chrono::nanoseconds{properties.idealFrameSubmissionRate} * frameNum);
+    endOfFrameNs += properties.idealFrameSubmissionRate;
+
+    XrHapticParametricPointEXT amplitudePoint{endOfFrameNs, getDynamicAmplitude()};
+    XrHapticParametricPointEXT frequencyPoint{endOfFrameNs, getDynamicFrequency()};
+
+    parametricVibration.amplitudePointCount = 1;
+    parametricVibration.amplitudePoints = &amplitudePoint;
+    parametricVibration.frequencyPointCount = 1;
+    parametricVibration.frequencyPoints = &frequencyPoint;
+    parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+    parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
+    parametricVibration.streamFrameType =
+        XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT;
+    CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
+        reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
+}
+----
+
+include::{generated}/interfaces/XR_EXT_haptic_parametric.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-05-22 (Thomas McGuire, Meta Platforms)
+** Initial extension description

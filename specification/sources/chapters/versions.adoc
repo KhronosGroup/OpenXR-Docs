@@ -20,6 +20,8 @@ from extensions.
 ifdef::isrefpage[]
 [open,refpage='XR_VERSION_1_1',desc='OpenXR version 1.1',type='feature',anchor='versions-1.1']
 --
+[[versions-1.1-new-features]]
+
 OpenXR version 1.1 promoted a number of key extensions into the core API:
 
 include::{generated}/meta/promoted_extensions_XR_VERSION_1_1.adoc[]
@@ -32,6 +34,7 @@ include::{generated}/interfaces/XR_VERSION_1_1.adoc[]
 --
 endif::isrefpage[]
 
+[[versions-1.1-new-features]]
 ==== OpenXR 1.1 Promotions
 
 // This is the spec-specific form of the section

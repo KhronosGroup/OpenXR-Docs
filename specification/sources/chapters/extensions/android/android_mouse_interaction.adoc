@@ -97,7 +97,7 @@ clicks, scroll and action pose to the <<input, OpenXR action system>>.
 
 Interaction profile path:
 
-* pathname:/interaction_profiles/android/mouse_interaction
+* pathname:/interaction_profiles/android/mouse_interaction_android
 
 Valid for top level user path:
 
@@ -139,7 +139,8 @@ This interaction profile supports subpathname:/input/scroll_android/value
 actions.
 
 The subpathname:/input/scroll_android/value is a 2D input component varying
-from -1 to 1 to map to scroll down and scroll up.
+from -1 to 1 to map to scroll left and right using the X component and
+scroll down and up using the Y component.
 
 include::{generated}/interfaces/XR_ANDROID_mouse_interaction.adoc[leveloffset=1]
 

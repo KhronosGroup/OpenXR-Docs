@@ -137,13 +137,13 @@ VkFramebuffer framebuffer; // previously initialized
 PFN_vkGetFramebufferTilePropertiesQCOM vkGetFrameBufferTilePropertiesQCOM; // previously initialized
 
 // Get function pointer for xrCreateFaceTrackerFB.
-PFN_xrSetTilePropertiesHintMETA pfnSetTilePropertiesHintMETA;
+PFN_xrSetTilePropertiesHintMETA pfnSetTilePropertiesHintMETA = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrSetTilePropertiesHintMETA",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnSetTilePropertiesHintMETA)));
 
 // Get tile properties from vulkan
-uint32_t propertyCount;
+uint32_t propertyCount = 0;
 vkGetFrameBufferTilePropertiesQCOM(device, framebuffer, &propertyCount, nullptr);
 
 if (propertyCount == 0) {
@@ -154,7 +154,9 @@ std::vector<VkTilePropertiesQCOM> qcomProperties(propertyCount);
 vkGetFrameBufferTilePropertiesQCOM(device, framebuffer, &propertyCount, qcomProperties.data());
 
 // Convert VkTilePropertiesQCOM to XrTilePropertiesMETA
-std::vector<XrTilePropertiesMETA> xrProperties(propertyCount, {XR_TYPE_TILE_PROPERTIES_META});
+std::vector<XrTilePropertiesMETA> xrProperties(propertyCount, {
+    .type = XR_TYPE_TILE_PROPERTIES_META,
+});
 for (uint32_t i = 0; i < propertyCount; ++i) {
   xrProperties[i].type = XR_TYPE_TILE_PROPERTIES_META;
   xrProperties[i].tileDimensions.width = qcomProperties[i].tileSize.width;
@@ -167,9 +169,11 @@ for (uint32_t i = 0; i < propertyCount; ++i) {
 }
 
 // Send the hint
-XrTilePropertiesHintMETA hint{XR_TYPE_TILE_PROPERTIES_HINT_META};
-hint.propertiesCount = propertyCount;
-hint.properties = xrProperties.data();
+XrTilePropertiesHintMETA hint{
+    .type = XR_TYPE_TILE_PROPERTIES_HINT_META,
+    .propertiesCount = propertyCount,
+    .properties = xrProperties.data(),
+};
 CHK_XR(pfnSetTilePropertiesHintMETA(session, &hint));
 ----
 

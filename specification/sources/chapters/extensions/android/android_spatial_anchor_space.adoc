@@ -169,13 +169,15 @@ return it as an slink:XrSpace.
 [source,cpp]
 ----
 XrSpatialEntityIdEXT spatialAnchorEntityId;
-XrSpace spatialAnchorSpace = XR_NULL_HANDLE; // XrSpace handle of anchor
+XrSpace spatialAnchorSpace {XR_NULL_HANDLE}; // XrSpace handle of anchor
 
 // Spatial anchor create info
-XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
-createInfo.baseSpace = localSpace;
-createInfo.time = predictedDisplayTime;
-createInfo.pose = {{0, 0, 0, 1}, {1, 1, 1}};
+XrSpatialAnchorCreateInfoEXT createInfo{
+  .type = XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT,
+  .baseSpace = localSpace,
+  .time = predictedDisplayTime,
+  .pose = {{0, 0, 0, 1}, {1, 1, 1}},
+};
 
 // Create spatial anchor using the new API
 CHK_XR(xrCreateSpatialAnchorSpaceANDROID(session, spatialContext, &createInfo, &spatialAnchorEntityId, &spatialAnchorSpace));
@@ -194,8 +196,10 @@ a preexisting anchor entity ID.
 XrSpace anchorSpace = XR_NULL_HANDLE;
 
 // Spatial anchor from XrSpace create info
-XrSpatialAnchorSpaceFromIdCreateInfoANDROID createInfoFromId{XR_TYPE_SPATIAL_ANCHOR_SPACE_FROM_ID_CREATE_INFO_ANDROID};
-createInfoFromId.anchorEntityId = spatialAnchorEntityId;
+XrSpatialAnchorSpaceFromIdCreateInfoANDROID createInfoFromId{
+  .type = XR_TYPE_SPATIAL_ANCHOR_SPACE_FROM_ID_CREATE_INFO_ANDROID,
+  .anchorEntityId = spatialAnchorEntityId,
+};
 
 // Create XrSpace handle from spatial anchor ID
 CHK_XR(xrCreateSpatialAnchorSpaceFromIdANDROID(session, spatialContext, &createInfoFromId, &anchorSpace));

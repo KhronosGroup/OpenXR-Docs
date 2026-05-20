@@ -373,6 +373,25 @@ include::{generated}/api/enums/XrFaceParameterIndicesANDROID.adoc[]
 include::{generated}/api/enums/XrFaceParameterIndicesANDROID.comments.adoc[]
 --
 
+[open,refpage='XR_FACE_PARAMETER_COUNT_ANDROID',desc='Number of face parameters',type='enums',xrefs='XrFaceStateANDROID XrFaceParameterIndicesANDROID']
+--
+include::{generated}/api/enums/XR_FACE_PARAMETER_COUNT_ANDROID.adoc[]
+
+ename:XR_FACE_PARAMETER_COUNT_ANDROID is the number of blend shapes for
+which weights are reported in slink:XrFaceStateANDROID::pname:parameters,
+indexed by elink:XrFaceParameterIndicesANDROID.
+--
+
+[open,refpage='XR_FACE_REGION_CONFIDENCE_COUNT_ANDROID',desc='Number of face regions for which confidence is reported',type='enums',xrefs='XrFaceStateANDROID XrFaceConfidenceRegionsANDROID']
+--
+include::{generated}/api/enums/XR_FACE_REGION_CONFIDENCE_COUNT_ANDROID.adoc[]
+
+ename:XR_FACE_REGION_CONFIDENCE_COUNT_ANDROID is the number of regions of
+the face for which confidence is reported by
+slink:XrFaceStateANDROID::pname:regionConfidences, indexed by
+elink:XrFaceConfidenceRegionsANDROID.
+--
+
 ==== Example code for face tracking
 
 The following example code demonstrates how to get all weights for facial
@@ -391,9 +410,13 @@ PFN_xrGetFaceStateANDROID xrGetFaceStateANDROID; // previously initialized
 PFN_xrGetFaceCalibrationStateANDROID xrGetFaceCalibrationStateANDROID; // previously initialized
 
 // Inspect system capability
-XrSystemProperties properties{XR_TYPE_SYSTEM_PROPERTIES};
-XrSystemFaceTrackingPropertiesANDROID faceTrackingProperties{XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_ANDROID};
-properties.next = &faceTrackingProperties;
+XrSystemFaceTrackingPropertiesANDROID faceTrackingProperties {
+  .type = XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_ANDROID,
+};
+XrSystemProperties properties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &faceTrackingProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &properties));
 if (!faceTrackingProperties.supportsFaceTracking) {
   // face tracking is not supported.
@@ -401,9 +424,10 @@ if (!faceTrackingProperties.supportsFaceTracking) {
 }
 
 XrFaceTrackerANDROID faceTracker;
-XrFaceTrackerCreateInfoANDROID
-        createInfo{.type = XR_TYPE_FACE_TRACKER_CREATE_INFO_ANDROID,
-                    .next = nullptr};
+XrFaceTrackerCreateInfoANDROID createInfo{
+  .type = XR_TYPE_FACE_TRACKER_CREATE_INFO_ANDROID,
+  .next = nullptr,
+};
 CHK_XR(xrCreateFaceTrackerANDROID(session, &createInfo, &faceTracker));
 
 // If the system supports face calibration:
@@ -413,12 +437,13 @@ if (!isCalibrated) {
     // Redirect the user to system calibration setting.
 }
 
-XrFaceStateANDROID faceState;
 float faceExpressionParameters[XR_FACE_PARAMETER_COUNT_ANDROID];
-faceState.type = XR_TYPE_FACE_STATE_ANDROID;
-faceState.next = nullptr;
-faceState.parametersCapacityInput = XR_FACE_PARAMETER_COUNT_ANDROID;
-faceState.parameters = faceExpressionParameters;
+XrFaceStateANDROID faceState {
+  .type = XR_TYPE_FACE_STATE_ANDROID,
+  .next = nullptr,
+  .parametersCapacityInput = XR_FACE_PARAMETER_COUNT_ANDROID,
+  .parameters = faceExpressionParameters,
+};
 
 while (1) {
     // ...
@@ -426,10 +451,10 @@ while (1) {
     // ...
     XrFrameState frameState; // previously returned from xrWaitFrame
 
-    XrFaceStateGetInfoANDROID faceGetInfo{
-            .type = XR_TYPE_FACE_STATE_GET_INFO_ANDROID,
-            .next = nullptr,
-            .time = frameState.predictedDisplayTime,
+    XrFaceStateGetInfoANDROID faceGetInfo {
+      .type = XR_TYPE_FACE_STATE_GET_INFO_ANDROID,
+      .next = nullptr,
+      .time = frameState.predictedDisplayTime,
     };
 
     CHK_XR(xrGetFaceStateANDROID(faceTracker, &faceGetInfo, &faceState));

@@ -124,11 +124,11 @@ XrSession session; // previously initialized
 XrPosef pose; // previously initialized
 
 // Use the new reference space type in the create info struct
-XrReferenceSpaceCreateInfo createInfo = {
-    .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
-    .next = nullptr,
-    .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID,
-    .poseInReferenceSpace = pose,
+XrReferenceSpaceCreateInfo createInfo {
+  .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+  .next = nullptr,
+  .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_UNBOUNDED_ANDROID,
+  .poseInReferenceSpace = pose,
 };
 XrSpace referenceSpace;
 CHK_XR(xrCreateReferenceSpace(session, &createInfo, &referenceSpace));

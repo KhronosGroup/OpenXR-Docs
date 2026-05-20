@@ -331,9 +331,12 @@ XrSession session;   // previously initialized
 
 // Confirm face tracking system support.
 XrSystemFaceTrackingPropertiesFB faceTrackingSystemProperties{
-    XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_FB};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &faceTrackingSystemProperties};
+    .type = XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES_FB,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &faceTrackingSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!faceTrackingSystemProperties.supportsFaceTracking) {
     // The system does not support face tracking
@@ -341,16 +344,19 @@ if (!faceTrackingSystemProperties.supportsFaceTracking) {
 }
 
 // Get function pointer for xrCreateFaceTrackerFB.
-PFN_xrCreateFaceTrackerFB pfnCreateFaceTrackerFB;
+PFN_xrCreateFaceTrackerFB pfnCreateFaceTrackerFB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFaceTrackerFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateFaceTrackerFB)));
 
 // Create a face tracker for default set of facial expressions.
-XrFaceTrackerFB faceTracker = {};
+XrFaceTrackerFB faceTracker{XR_NULL_HANDLE};
 {
-    XrFaceTrackerCreateInfoFB createInfo{XR_TYPE_FACE_TRACKER_CREATE_INFO_FB};
-    createInfo.faceExpressionSet = XR_FACE_EXPRESSION_SET_DEFAULT_FB;
+    XrFaceTrackerCreateInfoFB createInfo{
+        .type = XR_TYPE_FACE_TRACKER_CREATE_INFO_FB,
+        .next = nullptr,
+        .faceExpressionSet = XR_FACE_EXPRESSION_SET_DEFAULT_FB,
+    };
     CHK_XR(pfnCreateFaceTrackerFB(session, &createInfo, &faceTracker));
 }
 
@@ -359,14 +365,17 @@ XrFaceTrackerFB faceTracker = {};
 float weights[XR_FACE_EXPRESSION_COUNT_FB];
 float confidences[XR_FACE_CONFIDENCE_COUNT_FB];
 
-XrFaceExpressionWeightsFB expressionWeights{XR_TYPE_FACE_EXPRESSION_WEIGHTS_FB};
-expressionWeights.weightCount = XR_FACE_EXPRESSION_COUNT_FB;
-expressionWeights.weights = weights;
-expressionWeights.confidenceCount = XR_FACE_CONFIDENCE_COUNT_FB;
-expressionWeights.confidences = confidences;
+XrFaceExpressionWeightsFB expressionWeights{
+    .type = XR_TYPE_FACE_EXPRESSION_WEIGHTS_FB,
+    .next = nullptr,
+    .weightCount = XR_FACE_EXPRESSION_COUNT_FB,
+    .weights = weights,
+    .confidenceCount = XR_FACE_CONFIDENCE_COUNT_FB,
+    .confidences = confidences,
+};
 
 // Get function pointer for xrGetFaceExpressionWeightsFB.
-PFN_xrGetFaceExpressionWeightsFB pfnGetFaceExpressionWeights;
+PFN_xrGetFaceExpressionWeightsFB pfnGetFaceExpressionWeights = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFaceExpressionWeightsFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnGetFaceExpressionWeights)));
@@ -377,8 +386,11 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrFaceExpressionInfoFB expressionInfo{XR_TYPE_FACE_EXPRESSION_INFO_FB};
-    expressionInfo.time = time;
+    XrFaceExpressionInfoFB expressionInfo{
+        .type = XR_TYPE_FACE_EXPRESSION_INFO_FB,
+        .next = nullptr,
+        .time = time,
+    };
 
     CHK_XR(pfnGetFaceExpressionWeights(faceTracker, &expressionInfo, &expressionWeights));
 

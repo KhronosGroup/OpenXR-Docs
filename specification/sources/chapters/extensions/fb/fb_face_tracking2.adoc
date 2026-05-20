@@ -409,9 +409,12 @@ XrSession session;   // previously initialized
 
 // Confirm face tracking system support.
 XrSystemFaceTrackingProperties2FB faceTrackingSystemProperties{
-    XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES2_FB};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &faceTrackingSystemProperties};
+    .type = XR_TYPE_SYSTEM_FACE_TRACKING_PROPERTIES2_FB,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &faceTrackingSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!faceTrackingSystemProperties.supportsVisualFaceTracking &&
     !faceTrackingSystemProperties.supportsAudioFaceTracking) {
@@ -420,23 +423,27 @@ if (!faceTrackingSystemProperties.supportsVisualFaceTracking &&
 }
 
 // Get function pointer for xrCreateFaceTracker2FB.
-PFN_xrCreateFaceTracker2FB pfnCreateFaceTracker2FB;
+PFN_xrCreateFaceTracker2FB pfnCreateFaceTracker2FB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFaceTracker2FB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateFaceTracker2FB)));
 
 // Create a face tracker for default set of facial expressions.
-XrFaceTracker2FB faceTracker = {};
+XrFaceTracker2FB faceTracker{XR_NULL_HANDLE};
 {
-    XrFaceTrackerCreateInfo2FB createInfo{XR_TYPE_FACE_TRACKER_CREATE_INFO2_FB};
-    createInfo.faceExpressionSet = XR_FACE_EXPRESSION_SET2_DEFAULT_FB;
-    // This tells the runtime that the application can take
-    // facial expression from any of two data sources.
-    createInfo.requestedDataSourceCount = 2;
     XrFaceTrackingDataSource2FB dataSources[2] = {
         XR_FACE_TRACKING_DATA_SOURCE2_VISUAL_FB,
         XR_FACE_TRACKING_DATA_SOURCE2_AUDIO_FB};
-    createInfo.requestedDataSources = dataSources;
+
+    XrFaceTrackerCreateInfo2FB createInfo{
+        .type = XR_TYPE_FACE_TRACKER_CREATE_INFO2_FB,
+        .next = nullptr,
+        .faceExpressionSet = XR_FACE_EXPRESSION_SET2_DEFAULT_FB,
+        // This tells the runtime that the application can take
+        // facial expression from any of two data sources.
+        .requestedDataSourceCount = 2,
+        .requestedDataSources = dataSources,
+    };
     CHK_XR(pfnCreateFaceTracker2FB(session, &createInfo, &faceTracker));
 }
 
@@ -445,14 +452,17 @@ XrFaceTracker2FB faceTracker = {};
 float weights[XR_FACE_EXPRESSION2_COUNT_FB];
 float confidences[XR_FACE_CONFIDENCE2_COUNT_FB];
 
-XrFaceExpressionWeights2FB expressionWeights{XR_TYPE_FACE_EXPRESSION_WEIGHTS2_FB};
-expressionWeights.weightCount = XR_FACE_EXPRESSION2_COUNT_FB;
-expressionWeights.weights = weights;
-expressionWeights.confidenceCount = XR_FACE_CONFIDENCE2_COUNT_FB;
-expressionWeights.confidences = confidences;
+XrFaceExpressionWeights2FB expressionWeights{
+    .type = XR_TYPE_FACE_EXPRESSION_WEIGHTS2_FB,
+    .next = nullptr,
+    .weightCount = XR_FACE_EXPRESSION2_COUNT_FB,
+    .weights = weights,
+    .confidenceCount = XR_FACE_CONFIDENCE2_COUNT_FB,
+    .confidences = confidences,
+};
 
 // Get function pointer for xrGetFaceExpressionWeights2FB.
-PFN_xrGetFaceExpressionWeights2FB pfnGetFaceExpressionWeights;
+PFN_xrGetFaceExpressionWeights2FB pfnGetFaceExpressionWeights = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFaceExpressionWeights2FB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnGetFaceExpressionWeights)));
@@ -463,8 +473,11 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrFaceExpressionInfo2FB expressionInfo{XR_TYPE_FACE_EXPRESSION_INFO2_FB};
-    expressionInfo.time = time;
+    XrFaceExpressionInfo2FB expressionInfo{
+        .type = XR_TYPE_FACE_EXPRESSION_INFO2_FB,
+        .next = nullptr,
+        .time = time,
+    };
 
     CHK_XR(pfnGetFaceExpressionWeights(faceTracker, &expressionInfo, &expressionWeights));
 

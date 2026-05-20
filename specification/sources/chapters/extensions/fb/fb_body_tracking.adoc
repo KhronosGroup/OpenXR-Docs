@@ -376,9 +376,12 @@ XrSpace baseSpace;  // previously initialized, e.g. from
 
 // Inspect body tracking system properties
 XrSystemBodyTrackingPropertiesFB bodyTrackingSystemProperties{
-    XR_TYPE_SYSTEM_BODY_TRACKING_PROPERTIES_FB};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &bodyTrackingSystemProperties};
+    .type = XR_TYPE_SYSTEM_BODY_TRACKING_PROPERTIES_FB,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &bodyTrackingSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!bodyTrackingSystemProperties.supportsBodyTracking) {
     // The system does not support body tracking
@@ -386,28 +389,34 @@ if (!bodyTrackingSystemProperties.supportsBodyTracking) {
 }
 
 // Get function pointer for xrCreateBodyTrackerFB
-PFN_xrCreateBodyTrackerFB pfnCreateBodyTrackerFB;
+PFN_xrCreateBodyTrackerFB pfnCreateBodyTrackerFB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateBodyTrackerFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateBodyTrackerFB)));
 
 // Create a body tracker that tracks default set of body joints.
-XrBodyTrackerFB bodyTracker = {};
+XrBodyTrackerFB bodyTracker{XR_NULL_HANDLE};
 {
-    XrBodyTrackerCreateInfoFB createInfo{XR_TYPE_BODY_TRACKER_CREATE_INFO_FB};
-    createInfo.bodyJointSet = XR_BODY_JOINT_SET_DEFAULT_FB;
+    XrBodyTrackerCreateInfoFB createInfo{
+        .type = XR_TYPE_BODY_TRACKER_CREATE_INFO_FB,
+        .next = nullptr,
+        .bodyJointSet = XR_BODY_JOINT_SET_DEFAULT_FB,
+    };
     CHK_XR(pfnCreateBodyTrackerFB(session, &createInfo, &bodyTracker));
 }
 
 // Allocate buffers to receive joint location data before frame
 // loop starts.
 XrBodyJointLocationFB jointLocations[XR_BODY_JOINT_COUNT_FB];
-XrBodyJointLocationsFB locations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
-locations.jointCount = XR_BODY_JOINT_COUNT_FB;
-locations.jointLocations = jointLocations;
+XrBodyJointLocationsFB locations{
+    .type = XR_TYPE_BODY_JOINT_LOCATIONS_FB,
+    .next = nullptr,
+    .jointCount = XR_BODY_JOINT_COUNT_FB,
+    .jointLocations = jointLocations,
+};
 
 // Get function pointer for xrLocateBodyJointsFB.
-PFN_xrLocateBodyJointsFB pfnLocateBodyJointsFB;
+PFN_xrLocateBodyJointsFB pfnLocateBodyJointsFB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateBodyJointsFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnLocateBodyJointsFB)));
@@ -418,9 +427,12 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
-    locateInfo.baseSpace = baseSpace;
-    locateInfo.time = time;
+    XrBodyJointsLocateInfoFB locateInfo{
+        .type = XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB,
+        .next = nullptr,
+        .baseSpace = baseSpace,
+        .time = time,
+    };
 
     CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &locations));
 

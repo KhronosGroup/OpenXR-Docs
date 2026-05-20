@@ -65,7 +65,9 @@ uint32_t viewCountOutput; // Previously initialized.
 XrViewConfigurationType viewConfigType;
 
 // Poll events for recommended resolution changes.
-XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event = {
+  .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
   switch (event.type) {

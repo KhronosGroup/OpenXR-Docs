@@ -77,9 +77,12 @@ The following code illustrates how to enable depth testing:
 ----
 XrCompositionLayerProjection layer; // previously populated
 
-XrCompositionLayerDepthTestVARJO depthTest{XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO, layer.next};
-depthTest.depthTestRangeNearZ = 0.0f; // in meters
-depthTest.depthTestRangeFarZ = 1.0f; // in meters
+XrCompositionLayerDepthTestVARJO depthTest {
+    .type = XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO,
+    .next = layer.next,
+    .depthTestRangeNearZ = 0.0f, // in meters
+    .depthTestRangeFarZ = 1.0f, // in meters
+};
 layer.next = &depthTest;
 ----
 

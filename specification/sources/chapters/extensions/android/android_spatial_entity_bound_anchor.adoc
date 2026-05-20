@@ -67,9 +67,9 @@ include::{generated}/api/protos/xrEnumerateSpatialAnchorAttachableComponentsANDR
   pname:attachableComponentCapacityInput is insufficient.
 * pname:attachableComponents is an array of elink:XrSpatialComponentTypeEXT.
   It can: be code:NULL if pname:attachableComponentCapacityInput is 0.
-* See <<buffer-size-parameters, Buffer Size Parameters>> chapter for a
-  detailed description of retrieving the required pname:attachableComponents
-  size.
+* See <<fundamentals-buffer-size-parameters, Buffer Size Parameters>>
+  chapter for a detailed description of retrieving the required
+  pname:attachableComponents size.
 ****
 
 Runtimes must: always return identical buffer contents from this enumeration
@@ -133,7 +133,7 @@ and attach it to a spatial plane tracking entity.
 
 [source,cpp]
 ----
-XrFutureEXT future = XR_NULL_FUTURE_EXT;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
 
 std::vector<XrSpatialEntityEXT> entityBoundAnchorEntities;
 
@@ -144,27 +144,37 @@ std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
 };
 
 auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
 
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = snapshotComponents.size();
-    queryCond.componentTypes = snapshotComponents.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -175,9 +185,11 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrSpatialBounded2DDataEXT> bounded2D(queryResult.entityIdCountOutput);
-    XrSpatialComponentBounded2DListEXT bounded2DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
-    bounded2DList.boundCount = bounded2D.size();
-    bounded2DList.bounds = bounded2D.data();
+    XrSpatialComponentBounded2DListEXT bounded2DList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT,
+      .boundCount = static_cast<uint32_t>(bounded2D.size()),
+      .bounds = bounded2D.data(),
+    };
     queryResult.next = &bounded2DList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -191,20 +203,23 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
       }
 
       // Parent ID info the chained to spatial anchor create info next
-      XrSpatialAnchorParentANDROID parentIdCreateInfo{XR_TYPE_SPATIAL_ANCHOR_PARENT_ANDROID};
-      parentIdCreateInfo.parentId = entityIds[i];
+      XrSpatialAnchorParentANDROID parentIdCreateInfo{
+        .type = XR_TYPE_SPATIAL_ANCHOR_PARENT_ANDROID,
+        .parentId = entityIds[i],
+      };
 
       // spatial anchor create info
-      XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
+      XrSpatialAnchorCreateInfoEXT createInfo{
+        .type = XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT,
+        // assign Parent ID to anchor create info next, and the pose to the bounded2D center
+        .next = &parentIdCreateInfo,
+        .baseSpace = localSpace,
+        .time = time,
+        .pose = bounded2D[i].center,
+      };
 
-      // assign Parent ID to anchor create info next, and the pose to the bounded2D center
-      createInfo.next = &parentIdCreateInfo;
-      createInfo.baseSpace = localSpace;
-      createInfo.time = time;
-      createInfo.pose = bounded2D[i].center;
-
-      XrSpatialEntityIdEXT entityBoundAnchorEntityId;
-      XrSpatialEntityEXT entityBoundAnchorEntity;
+      XrSpatialEntityIdEXT entityBoundAnchorEntityId {XR_NULL_SPATIAL_ENTITY_ID_EXT};
+      XrSpatialEntityEXT entityBoundAnchorEntity {XR_NULL_HANDLE};
       CHK_XR(xrCreateSpatialAnchorEXT(spatialContext, &createInfo, &entityBoundAnchorEntityId, &entityBoundAnchorEntity));
 
       entityBoundAnchorEntities.push_back(entityBoundAnchorEntity);
@@ -223,7 +238,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event = {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
       if (event.type == XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT) {
@@ -254,22 +271,28 @@ std::vector<XrSpatialEntityEXT> entities;
 
 auto updateEntityBoundAnchorInfo = [&](XrSpatialContextEXT spatialContext, XrTime time) {
     // We want to get updated data for all components of the entities, so skip specifying componentTypes.
-    XrSpatialUpdateSnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT};
-    snapshotCreateInfo.entityCount = entities.size();
-    snapshotCreateInfo.entities = entities.data();
-    snapshotCreateInfo.baseSpace = localSpace;
-    snapshotCreateInfo.time = time;
+    XrSpatialUpdateSnapshotCreateInfoEXT snapshotCreateInfo{
+      .type = XR_TYPE_SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT,
+      .entityCount = static_cast<uint32_t>(entities.size()),
+      .entities = entities.data(),
+      .baseSpace = localSpace,
+      .time = time,
+    };
 
-    XrSpatialSnapshotEXT snapshot;
+    XrSpatialSnapshotEXT snapshot {XR_NULL_HANDLE};
     CHK_XR(xrCreateSpatialUpdateSnapshotEXT(spatialContext, &snapshotCreateInfo, &snapshot));
 
     // Query for the entities that have the anchor component and parent component on them.
     std::array<XrSpatialComponentTypeEXT, 2> componentsToQuery {XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT, XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT};
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = componentsToQuery.size();
-    queryCond.componentTypes = componentsToQuery.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = componentsToQuery.size(),
+      .componentTypes = componentsToQuery.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -281,16 +304,20 @@ auto updateEntityBoundAnchorInfo = [&](XrSpatialContextEXT spatialContext, XrTim
 
     // query for the pose data
     std::vector<XrPosef> locations(queryResult.entityIdCountOutput);
-    XrSpatialComponentAnchorListEXT locationList{XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT};
-    locationList.locationCount = locations.size();
-    locationList.locations = locations.data();
+    XrSpatialComponentAnchorListEXT locationList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT,
+      .locationCount = static_cast<uint32_t>(locations.size()),
+      .locations = locations.data(),
+    };
     queryResult.next = &locationList;
 
     // query for the parent entity ID data
     std::vector<XrSpatialEntityIdEXT> parentIds(queryResult.entityIdCountOutput);
-    XrSpatialComponentParentListEXT parentList{XR_TYPE_SPATIAL_COMPONENT_PARENT_LIST_EXT};
-    parentList.parentCount = parentIds.size();
-    parentList.parents = parentIds.data();
+    XrSpatialComponentParentListEXT parentList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_PARENT_LIST_EXT,
+      .parentCount = static_cast<uint32_t>(parentIds.size()),
+      .parents = parentIds.data(),
+    };
     queryResult.next = &parentList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
@@ -330,7 +357,7 @@ components and check if the runtime supports entity bound anchor capability.
 [source,cpp]
 ----
 // Check spatial capability
-uint32_t capabilityCount;
+uint32_t capabilityCount = 0;
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
 std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
@@ -349,7 +376,9 @@ if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_PL
 std::vector<XrSpatialComponentTypeEXT> spatialTrackingCapabilityComponents;
 
 // Enumerate supported components for plane tracking capability
-XrSpatialCapabilityComponentTypesEXT planeComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+XrSpatialCapabilityComponentTypesEXT planeComponents{
+  .type = XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
+};
 CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
 std::vector<XrSpatialComponentTypeEXT> planeCapabilityComponents(planeComponents.componentTypeCountOutput);
 planeComponents.componentTypes = planeCapabilityComponents.data();
@@ -359,7 +388,7 @@ CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPAT
 spatialTrackingCapabilityComponents.insert(spatialTrackingCapabilityComponents.end(), planeCapabilityComponents.begin(), planeCapabilityComponents.end());
 
 // Enumerate supported attachable components for anchor
-uint32_t attachableComponentCount;
+uint32_t attachableComponentCount = 0;
 CHK_XR(xrEnumerateSpatialAnchorAttachableComponentsANDROID(instance, systemId, 0, &attachableComponentCount, nullptr));
 std::vector<XrSpatialComponentTypeEXT> attachableComponents(attachableComponentCount);
 CHK_XR(xrEnumerateSpatialAnchorAttachableComponentsANDROID(instance, systemId, attachableComponentCount, &attachableComponentCount, attachableComponents.data()));

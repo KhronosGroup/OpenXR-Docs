@@ -170,9 +170,10 @@ PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previo
 XrTime updateTime; // Time used for the current frame's simulation update.
 XrSpace appSpace; // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
 
-XrTrackableTrackerCreateInfoANDROID
-  createInfo{XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID};
-createInfo.trackableType = XR_TRACKABLE_TYPE_OBJECT_ANDROID;
+XrTrackableTrackerCreateInfoANDROID createInfo {
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .trackableType = XR_TRACKABLE_TYPE_OBJECT_ANDROID,
+};
 XrTrackableTrackerANDROID objectTrackableTracker;
 XrResult result = xrCreateTrackableTrackerANDROID(
   session,
@@ -205,12 +206,13 @@ if (result == XR_SUCCESS) {
     for (XrTrackableANDROID trackable : allObjectTrackables) {
 
       // Object trackable query information
-      XrTrackableGetInfoANDROID objectGetInfo;
-      objectGetInfo.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID;
-      objectGetInfo.next = nullptr;
-      objectGetInfo.trackable = trackable;
-      objectGetInfo.baseSpace = appSpace;
-      objectGetInfo.time = updateTime;
+      XrTrackableGetInfoANDROID objectGetInfo {
+        .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+        .next = nullptr,
+        .trackable = trackable,
+        .baseSpace = appSpace,
+        .time = updateTime,
+      };
 
       // Get the object trackable. Note that the tracker only returns object types.
       XrTrackableObjectANDROID object = { XR_TYPE_TRACKABLE_OBJECT_ANDROID };

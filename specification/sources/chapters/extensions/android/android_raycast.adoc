@@ -252,20 +252,24 @@ XrTrackableTrackerANDROID trackers[] = {
   planeTracker,
   depthTracker,
 };
-XrRaycastInfoANDROID rayInfo = {XR_TYPE_RAYCAST_INFO_ANDROID};
-rayInfo.trackerCount = sizeof(trackers) / sizeof(XrTrackableTrackerANDROID);
-rayInfo.trackers = trackers;
-rayInfo.origin = headPose.position;
-rayInfo.trajectory = CalculateForwardDirectionFromHeadPose(headPose);
-rayInfo.space = appSpace;
-rayInfo.time = updateTime;
-rayInfo.maxResults = NUM_DESIRED_RESULTS;
+XrRaycastInfoANDROID rayInfo = {
+  .type = XR_TYPE_RAYCAST_INFO_ANDROID,
+  .maxResults = NUM_DESIRED_RESULTS,
+  .trackerCount = sizeof(trackers) / sizeof(XrTrackableTrackerANDROID),
+  .trackers = trackers,
+  .origin = headPose.position,
+  .trajectory = CalculateForwardDirectionFromHeadPose(headPose),
+  .space = appSpace,
+  .time = updateTime,
+};
 
 uint32_t totalHitResults = 0;
-XrRaycastHitResultANDROID hitResult[NUM_DESIRED_RESULTS];
-XrRaycastHitResultsANDROID hitResults = {XR_TYPE_RAYCAST_HIT_RESULTS_ANDROID};
-hitResults.resultsCapacityInput = NUM_DESIRED_RESULTS;
-hitResults.results = hitResult;
+XrRaycastHitResultANDROID hitResult[NUM_DESIRED_RESULTS]{};
+XrRaycastHitResultsANDROID hitResults = {
+  .type = XR_TYPE_RAYCAST_HIT_RESULTS_ANDROID,
+  .resultsCapacityInput = NUM_DESIRED_RESULTS,
+  .results = hitResult,
+};
 XrResult result = xrRaycastANDROID(session, &rayInfo, &hitResults);
 
 if (result == XR_SUCCESS && hitResults.resultsCountOutput >= 1) {

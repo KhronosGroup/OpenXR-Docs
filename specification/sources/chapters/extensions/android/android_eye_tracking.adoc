@@ -350,6 +350,14 @@ The enums have the following meanings:
 include::{generated}/api/enums/XrEyeTrackingModeANDROID.comments.adoc[]
 --
 
+[open,refpage='XR_EYE_MAX_ANDROID',desc='Maximum number of eyes',type='enums',xrefs='XrEyesANDROID']
+--
+include::{generated}/api/enums/XR_EYE_MAX_ANDROID.adoc[]
+
+ename:XR_EYE_MAX_ANDROID is the maximum number of eyes that the
+slink:XrEyeANDROID data is reported for.
+--
+
 ==== Example code for eye tracking
 
 The following example code demonstrates how to get eyes information relative

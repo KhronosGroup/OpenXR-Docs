@@ -78,13 +78,13 @@ XrAction indexTouchAction;     // previously initialized
 //  Bind actions to trigger/proximity_fb and trigger/touch
 //  ----------
 
-XrPath indexProximityPath, indexTouchPath;
+XrPath indexProximityPath, indexTouchPath{XR_NULL_PATH};
 // New component exposed by this extension:
 CHK_XR(xrStringToPath(instance, "/user/hand/right/input/trigger/proximity_fb", &indexProximityPath));
 // Existing component that is useful together with proximity_fb
 CHK_XR(xrStringToPath(instance, "/user/hand/right/input/trigger/touch", &indexTouchPath))
 
-XrPath interactionProfilePath;
+XrPath interactionProfilePath{XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance, "/interaction_profiles/oculus/touch_controller", &interactionProfilePath));
 
 XrActionSuggestedBinding bindings[2];

@@ -285,9 +285,12 @@ XrSpace worldSpace;  // previously initialized, e.g. from
                      // XR_REFERENCE_SPACE_TYPE_LOCAL
 
 XrSystemEyeTrackingPropertiesFB eyeTrackingSystemProperties{
-    XR_TYPE_SYSTEM_EYE_TRACKING_PROPERTIES_FB};
+    .type = XR_TYPE_SYSTEM_EYE_TRACKING_PROPERTIES_FB,
+};
 XrSystemProperties systemProperties{
-    XR_TYPE_SYSTEM_PROPERTIES, &eyeTrackingSystemProperties};
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &eyeTrackingSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!eyeTrackingSystemProperties.supportsEyeTracking) {
     // The system does not support eye tracking.
@@ -295,25 +298,29 @@ if (!eyeTrackingSystemProperties.supportsEyeTracking) {
 }
 
 // Get function pointer for xrCreateEyeTrackerFB.
-PFN_xrCreateEyeTrackerFB pfnCreateEyeTrackerFB;
+PFN_xrCreateEyeTrackerFB pfnCreateEyeTrackerFB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateEyeTrackerFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateEyeTrackerFB)));
 
 // Create an eye tracker.
-XrEyeTrackerFB eyeTracker{};
+XrEyeTrackerFB eyeTracker{XR_NULL_HANDLE};
 {
-    XrEyeTrackerCreateInfoFB createInfo{XR_TYPE_EYE_TRACKER_CREATE_INFO_FB};
+    XrEyeTrackerCreateInfoFB createInfo{
+        .type = XR_TYPE_EYE_TRACKER_CREATE_INFO_FB,
+    };
     CHK_XR(pfnCreateEyeTrackerFB(session, &createInfo, &eyeTracker));
 }
 
 // Allocate buffers to receive eyes pose and confidence data before frame
 // the loop starts.
-XrEyeGazesFB eyeGazes{XR_TYPE_EYE_GAZES_FB};
-eyeGazes.next = nullptr;
+XrEyeGazesFB eyeGazes{
+    .type = XR_TYPE_EYE_GAZES_FB,
+    .next = nullptr,
+};
 
 // Get function pointer for xrGetEyeGazesFB.
-PFN_xrGetEyeGazesFB pfnGetEyeGazesFB;
+PFN_xrGetEyeGazesFB pfnGetEyeGazesFB = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrGetEyeGazesFB",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnGetEyeGazesFB)));
@@ -324,9 +331,12 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrEyeGazesInfoFB gazesInfo{XR_TYPE_EYE_GAZES_INFO_FB};
-    gazesInfo.baseSpace = worldSpace;
-    gazesInfo.time = time;
+    XrEyeGazesInfoFB gazesInfo{
+        .type = XR_TYPE_EYE_GAZES_INFO_FB,
+        .next = nullptr,
+        .baseSpace = worldSpace,
+        .time = time,
+    };
 
     CHK_XR(pfnGetEyeGazesFB(eyeTracker, &gazesInfo, &eyeGazes));
 

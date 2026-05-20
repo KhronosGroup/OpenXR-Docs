@@ -54,6 +54,55 @@ functions:
 (protection level: dangerous)
 ====
 
+==== Deprecation note
+
+The apiext:XR_ANDROID_trackables extension is now deprecated.
+Unlike typical OpenXR deprecations, its features are not replaced by a
+single successor.
+Instead, its functionality has been distributed across several different
+extensions.
+
+Trackable foundations are replaced by apiext:XR_EXT_spatial_entity:
+
+[width="100%",options="header"]
+|====
+| apiext:XR_ANDROID_trackables functionality      | Now available in
+| elink:XrTrackableTypeANDROID                    | elink:XrSpatialCapabilityEXT
+| flink:xrEnumerateSupportedTrackableTypesANDROID | flink:xrEnumerateSpatialCapabilitiesEXT
+| slink:XrTrackableTrackerANDROID                 | slink:XrSpatialContextEXT
+| flink:xrCreateTrackableTrackerANDROID           | flink:xrCreateSpatialContextAsyncEXT & flink:xrCreateSpatialContextCompleteEXT
+| flink:xrDestroyTrackableTrackerANDROID          | flink:xrDestroySpatialContextEXT
+| basetype:XrTrackableANDROID                     | basetype:XrSpatialEntityIdEXT
+| elink:XrTrackingStateANDROID                    | elink:XrSpatialEntityTrackingStateEXT
+| flink:xrGetAllTrackablesANDROID                 | flink:xrCreateSpatialDiscoverySnapshotAsyncEXT, flink:xrCreateSpatialDiscoverySnapshotCompleteEXT, & flink:xrQuerySpatialComponentDataEXT (slink:XrSpatialComponentDataQueryResultEXT::pname:entityIds)
+|====
+
+Plane trackables are replaced by apiext:XR_EXT_spatial_plane_tracking and
+apiext:XR_ANDROID_spatial_component_subsumed_by:
+
+[width="100%",options="header"]
+|====
+| apiext:XR_ANDROID_trackables functionality           | Now available in
+| elink:XrPlaneTypeANDROID                             | elink:XrSpatialPlaneAlignmentEXT
+| elink:XrPlaneLabelANDROID                            | elink:XrSpatialPlaneSemanticLabelEXT
+| flink:xrGetTrackablePlaneANDROID                     | flink:xrQuerySpatialComponentDataEXT
+| slink:XrTrackablePlaneANDROID::pname:centerPose & slink:XrTrackablePlaneANDROID::pname:extents | Provided by <<ext_spatial_entity_bounded2D_component>> component
+| slink:XrTrackablePlaneANDROID::pname:vertices        | Provided by <<ext_spatial_plane_tracking_polygon_2d_component>>
+| slink:XrTrackablePlaneANDROID::pname:subsumedByPlane | Provided by <<android_spatial_component_subsumed_by>>
+|====
+
+Anchors are replaced by apiext:XR_EXT_spatial_anchor,
+apiext:XR_ANDROID_spatial_entity_bound_anchor, and
+apiext:XR_ANDROID_spatial_anchor_space:
+
+[width="100%",options="header"]
+|====
+| apiext:XR_ANDROID_trackables functionality            | Now available in
+| flink:xrEnumerateSupportedAnchorTrackableTypesANDROID | flink:xrEnumerateSpatialAnchorAttachableComponentsANDROID
+| flink:xrCreateAnchorSpaceANDROID                      | flink:xrCreateSpatialAnchorEXT or flink:xrCreateSpatialAnchorSpaceANDROID
+| slink:XrAnchorSpaceCreateInfoANDROID::pname:trackable | slink:XrSpatialAnchorParentANDROID::pname:parentId
+|====
+
 ==== Inspect system capability
 
 [open,refpage='XrSystemTrackablesPropertiesANDROID',type='structs',desc='System property for trackables',xrefs='']
@@ -545,9 +594,11 @@ PFN_xrCreateTrackableTrackerANDROID xrCreateTrackableTrackerANDROID; // previous
 PFN_xrGetAllTrackablesANDROID xrGetAllTrackablesANDROID; // previously initialized
 PFN_xrDestroyTrackableTrackerANDROID xrDestroyTrackableTrackerANDROID; // previously initialized
 
-XrTrackableTrackerCreateInfoANDROID createInfo{XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID};
-createInfo.trackableType = XR_TRACKABLE_TYPE_PLANE_ANDROID;
-XrTrackableTrackerANDROID planeTrackableTracker;
+XrTrackableTrackerCreateInfoANDROID createInfo{
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .trackableType = XR_TRACKABLE_TYPE_PLANE_ANDROID,
+};
+XrTrackableTrackerANDROID planeTrackableTracker {XR_NULL_HANDLE};
 XrResult result = xrCreateTrackableTrackerANDROID(
   session,
   &createInfo,
@@ -603,14 +654,18 @@ XrTime updateTime; // Time used for the current frame's simulation update.
 XrSpace appSpace; // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
 XrTrackableANDROID planeTrackable; // Acquired from a hit result or xrGetAllTrackablesANDROID().
 
-XrTrackableGetInfoANDROID planeGetInfo;
-planeGetInfo.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID;
-planeGetInfo.next = nullptr;
-planeGetInfo.trackable = planeTrackable;
-planeGetInfo.baseSpace = appSpace;
-planeGetInfo.time = updateTime;
+XrTrackableGetInfoANDROID planeGetInfo {
+  .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+  .next = nullptr,
+  .trackable = planeTrackable,
+  .baseSpace = appSpace,
+  .time = updateTime,
+};
 
-XrTrackablePlaneANDROID plane = { XR_TYPE_TRACKABLE_PLANE_ANDROID };
+XrTrackablePlaneANDROID plane {
+  .type = XR_TYPE_TRACKABLE_PLANE_ANDROID,
+};
+
 XrResult result = xrGetTrackablePlaneANDROID(
   planeTracker,
   &planeGetInfo,
@@ -637,14 +692,15 @@ XrTrackableANDROID planeTrackable; // Acquired from a hit result or xrGetAllTrac
 PFN_xrCreateAnchorSpaceANDROID xrCreateAnchorSpaceANDROID; // Previously initialized.
 
 // Create an anchor at (2, 2, 2) world-coordinates.
-XrAnchorSpaceCreateInfoANDROID spatialAnchorCreateInfo;
-spatialAnchorCreateInfo.type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID;
-spatialAnchorCreateInfo.next = nullptr;
-spatialAnchorCreateInfo.space = appSpace;
-spatialAnchorCreateInfo.time = updateTime;
-spatialAnchorCreateInfo.pose = { { 0, 0, 0, 1 }, { 2, 2, 2 } };
+XrAnchorSpaceCreateInfoANDROID spatialAnchorCreateInfo {
+  .type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID,
+  .next = nullptr,
+  .space = appSpace,
+  .time = updateTime,
+  .pose = { { 0, 0, 0, 1 }, { 2, 2, 2 } },
+};
 
-XrSpace spatialAnchor = XR_NULL_HANDLE;
+XrSpace spatialAnchor {XR_NULL_HANDLE};
 XrResult result = xrCreateAnchorSpaceANDROID(
   session,
   &spatialAnchorCreateInfo,
@@ -653,12 +709,13 @@ XrResult result = xrCreateAnchorSpaceANDROID(
 
 // Create an anchor attached to a trackable.
 XrTrackablePlaneANDROID plane;
-XrAnchorSpaceCreateInfoANDROID trackableAnchorCreateInfo;
-trackableAnchorCreateInfo.type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID;
-trackableAnchorCreateInfo.next = nullptr;
-trackableAnchorCreateInfo.space = appSpace;
-trackableAnchorCreateInfo.pose = plane.centerPose;
-trackableAnchorCreateInfo.trackable = planeTrackable;
+XrAnchorSpaceCreateInfoANDROID trackableAnchorCreateInfo {
+  .type = XR_TYPE_ANCHOR_SPACE_CREATE_INFO_ANDROID,
+  .next = nullptr,
+  .space = appSpace,
+  .pose = plane.centerPose,
+  .trackable = planeTrackable,
+};
 
 XrSpace trackableAnchor = XR_NULL_HANDLE;
 result = xrCreateAnchorSpaceANDROID(
@@ -673,7 +730,9 @@ while (true) {
   // ...
 
   // Get the current location of the anchor's space w.r.t the world.
-  XrSpaceLocation anchorLocation = { XR_TYPE_SPACE_LOCATION };
+  XrSpaceLocation anchorLocation {
+    .type = XR_TYPE_SPACE_LOCATION,
+  };
   result = xrLocateSpace(trackableAnchor, appSpace, updateTime, &anchorLocation);
 
   if (plane.trackingState == XR_TRACKING_STATE_TRACKING_ANDROID) {

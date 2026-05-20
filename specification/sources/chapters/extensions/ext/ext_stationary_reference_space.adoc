@@ -154,7 +154,7 @@ include::{generated}/api/protos/xrGetStationaryReferenceSpaceGenerationIdEXT.ado
   current ID for the `STATIONARY` reference space.
 ****
 
-During <<session_running, a running session>>, the application can: call
+During <<session-running, a running session>>, the application can: call
 flink:xrGetStationaryReferenceSpaceGenerationIdEXT to get the slink:XrUuid
 corresponding to the current `STATIONARY` reference space.
 

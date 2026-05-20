@@ -235,10 +235,14 @@ XrTime updateTime; // Time used for the current frame's simulation update.
 XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
 
 // Inspect system capability
-XrSystemQrCodeTrackingPropertiesANDROID qrCodeProperty =
-        {.type = XR_TYPE_SYSTEM_QR_CODE_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
-XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
-                                       .next = &qrCodeProperty};
+XrSystemQrCodeTrackingPropertiesANDROID qrCodeProperty {
+  .type = XR_TYPE_SYSTEM_QR_CODE_TRACKING_PROPERTIES_ANDROID,
+  .next = nullptr,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &qrCodeProperty,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!qrCodeProperty.supportsQrCodeTracking) {
     // QR code tracking is not supported.
@@ -247,15 +251,17 @@ if (!qrCodeProperty.supportsQrCodeTracking) {
 
 // Create a trackable tracker for QR code tracking.
 // If the runtime does not support size estimation, configures QR code edge size of 0.1m.
-XrTrackableQrCodeConfigurationANDROID configuration =
-        {.type = XR_TYPE_TRACKABLE_QR_CODE_CONFIGURATION_ANDROID,
-         .next = nullptr,
-         .trackingMode = XR_QR_CODE_TRACKING_MODE_DYNAMIC_ANDROID,
-         .qrCodeEdgeSize = qrCodeProperty.supportsQrCodeSizeEstimation ? 0.0f : 0.1f};
-XrTrackableTrackerCreateInfoANDROID createInfo =
-        {.type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
-         .next = &configuration,
-         .trackableType = XR_TRACKABLE_TYPE_QR_CODE_ANDROID};
+XrTrackableQrCodeConfigurationANDROID configuration {
+  .type = XR_TYPE_TRACKABLE_QR_CODE_CONFIGURATION_ANDROID,
+  .next = nullptr,
+  .trackingMode = XR_QR_CODE_TRACKING_MODE_DYNAMIC_ANDROID,
+  .qrCodeEdgeSize = qrCodeProperty.supportsQrCodeSizeEstimation ? 0.0f : 0.1f,
+};
+XrTrackableTrackerCreateInfoANDROID createInfo {
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .next = &configuration,
+  .trackableType = XR_TRACKABLE_TYPE_QR_CODE_ANDROID
+};
 XrTrackableTrackerANDROID qrCodeTracker;
 auto res = xrCreateTrackableTrackerANDROID(session, &createInfo, &qrCodeTracker);
 if (res == XR_ERROR_PERMISSION_INSUFFICIENT) {
@@ -265,19 +271,22 @@ CHK_XR(res);
 
 // Get QR codes.
 std::vector<XrTrackableANDROID> trackables(qrCodeProperty.maxQrCodeCount);
-std::vector<XrTrackableQrCodeANDROID> qrCodes(qrCodeProperty.maxQrCodeCount);
+std::vector<XrTrackableQrCodeANDROID> qrCodes(qrCodeProperty.maxQrCodeCount, {
+  .type = XR_TYPE_TRACKABLE_QR_CODE_ANDROID,
+  .next = nullptr,
+  .bufferCountOutput = 0,
+});
 uint32_t qrCodeSize = 0;
 CHK_XR(xrGetAllTrackablesANDROID(qrCodeTracker, qrCodeProperty.maxQrCodeCount, &qrCodeSize,
                                  trackables.data()));
 for (int i = 0; i < qrCodeSize; i++) {
-    qrCodes[i].type = XR_TYPE_TRACKABLE_QR_CODE_ANDROID;
-    qrCodes[i].next = nullptr;
-    qrCodes[i].bufferCountOutput = 0;
-    XrTrackableGetInfoANDROID getInfo = {.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
-                                         .next = nullptr,
-                                         .trackable = trackables.at(i),
-                                         .baseSpace = appSpace,
-                                         .time = updateTime};
+    XrTrackableGetInfoANDROID getInfo {
+      .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+      .next = nullptr,
+      .trackable = trackables.at(i),
+      .baseSpace = appSpace,
+      .time = updateTime,
+    };
     CHK_XR(xrGetTrackableQrCodeANDROID(qrCodeTracker, &getInfo, &qrCodes[i]));
     if (qrCodes[i].bufferCountOutput > 0) {
         // Allocate the buffer if it is not already allocated.

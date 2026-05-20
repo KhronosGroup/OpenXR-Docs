@@ -314,7 +314,9 @@ XrSpaceLocation location; // previously initialized
 // Collection of tracked markers and their space handlers
 std::unordered_map<uint64_t, XrSpace> markerSpaces;
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event{XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
     switch (event.type) {
@@ -327,11 +329,16 @@ if (result == XR_SUCCESS) {
             // If marker appeared for the first time then set some settings and
             // add it to collection
             if(0 == markerSpaces.count(id)) {
-                XrMarkerSpaceCreateInfoVARJO spaceInfo{XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO};
-                spaceInfo.markerId = id;
-                spaceInfo.poseInMarkerSpace = XrPosef{0};
-                spaceInfo.poseInMarkerSpace.orientation.w = 1.0f;
-                XrSpace markerSpace;
+                XrMarkerSpaceCreateInfoVARJO spaceInfo {
+                    .type = XR_TYPE_MARKER_SPACE_CREATE_INFO_VARJO,
+                    .markerId = id,
+                    .poseInMarkerSpace = {
+                        .orientation = {
+                            .w = 1.0f,
+                        },
+                    },
+                };
+                XrSpace markerSpace {XR_NULL_HANDLE};
                 // Set 1 second timeout
                 if(XR_SUCCESS != xrSetMarkerTrackingTimeoutVARJO(
                                     session, id, 1000000000))

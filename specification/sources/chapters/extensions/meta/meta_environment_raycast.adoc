@@ -421,28 +421,35 @@ PFN_xrPerformEnvironmentRaycastMETA xrPerformEnvironmentRaycastMETA;
 PFN_xrPollFutureEXT xrPollFutureEXT;
 
 // Check device support
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES};
 XrSystemEnvironmentRaycastPropertiesMETA environmentRaycastProperties{
-    XR_TYPE_SYSTEM_ENVIRONMENT_RAYCAST_PROPERTIES_META};
-systemProperties.next = &environmentRaycastProperties;
+    .type = XR_TYPE_SYSTEM_ENVIRONMENT_RAYCAST_PROPERTIES_META
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &environmentRaycastProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (environmentRaycastProperties.supportsEnvironmentRaycast == XR_FALSE) {
     return;
 }
 
 // Create a new environment raycaster
-XrFutureEXT createFuture = XR_NULL_HANDLE;
+XrFutureEXT createFuture{XR_NULL_HANDLE};
 XrEnvironmentRaycasterCreateInfoMETA createInfo = {
-    XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_INFO_META, nullptr};
-CHK_XR(xrCreateEnvironmentRaycasterAsyncMETA(
-    session, &createInfo, &createFuture));
+    .type = XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_INFO_META,
+};
+CHK_XR(xrCreateEnvironmentRaycasterAsyncMETA(session, &createInfo, &createFuture));
 
 // Wait for the future to be ready
 bool futureReady = false;
 while (!futureReady) {
-    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-    pollInfo.future = createFuture;
+    XrFuturePollInfoEXT pollInfo{
+        .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+        .future = createFuture,
+    };
+    XrFuturePollResultEXT pollResult{
+        .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    };
     CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
     if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
@@ -454,7 +461,8 @@ while (!futureReady) {
 
 // Complete future and get creation result
 XrEnvironmentRaycasterCreateCompletionMETA completion = {
-    XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_COMPLETION_META};
+    .type = XR_TYPE_ENVIRONMENT_RAYCASTER_CREATE_COMPLETION_META,
+};
 CHK_XR(xrCreateEnvironmentRaycasterCompleteMETA(session, createFuture, &completion));
 CHK_XR(completion.futureResult); // Return code of the create function
 XrEnvironmentRaycasterMETA raycaster = completion.environmentRaycaster;
@@ -467,21 +475,24 @@ XrVector3f rayDirection; // previously initialized
 
 // Perform an environment raycast operation
 XrEnvironmentRaycastFilterDistanceMETA distanceFilter = {
-    XR_TYPE_ENVIRONMENT_RAYCAST_FILTER_DISTANCE_META};
-distanceFilter.maxDistance = 5.0f;
+    .type = XR_TYPE_ENVIRONMENT_RAYCAST_FILTER_DISTANCE_META,
+    .maxDistance = 5.0f,
+};
 XrEnvironmentRaycastFilterBaseHeaderMETA* filters[] = {
     reinterpret_cast<XrEnvironmentRaycastFilterBaseHeaderMETA*>(&distanceFilter)};
 XrEnvironmentRaycastHitGetInfoMETA info = {
-    XR_TYPE_ENVIRONMENT_RAYCAST_HIT_GET_INFO_META};
-info.baseSpace = localSpace;
-info.time = time;
-info.origin = rayOrigin;
-info.direction = rayDirection;
-info.filterCount = 1;
-info.filters = filters;
-XrEnvironmentRaycastHitMETA hitPoint = {XR_TYPE_ENVIRONMENT_RAYCAST_HIT_META};
-CHK_XR(xrPerformEnvironmentRaycastMETA(
-    raycaster, &info, &hitPoint));
+    .type = XR_TYPE_ENVIRONMENT_RAYCAST_HIT_GET_INFO_META,
+    .baseSpace = localSpace,
+    .time = time,
+    .origin = rayOrigin,
+    .direction = rayDirection,
+    .filterCount = 1,
+    .filters = filters,
+};
+XrEnvironmentRaycastHitMETA hitPoint = {
+    .type = XR_TYPE_ENVIRONMENT_RAYCAST_HIT_META,
+};
+CHK_XR(xrPerformEnvironmentRaycastMETA(raycaster, &info, &hitPoint));
 if (hitPoint.status == XR_ENVIRONMENT_RAYCAST_HIT_STATUS_HIT_META) {
     // Do something with hitPoint, e.g. place a virtual object
 }

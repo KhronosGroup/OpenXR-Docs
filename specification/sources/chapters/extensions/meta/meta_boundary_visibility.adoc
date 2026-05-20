@@ -106,12 +106,12 @@ pname:boundaryVisibility, so that the application is in sync on the value of
 the boundary visibility when a session begins running.
 
 The runtime must: return a valid slink:XrSession handle for a
-<<session_running, running session>>.
+<<session-running, running session>>.
 
-After the application calls flink:xrEndSession, a <<session_running, running
+After the application calls flink:xrEndSession, a <<session-running, running
 session>> is ended and the runtime must: not enqueue this event anymore.
 Therefore, the application will no longer observe any changes of the
-pname:boundaryVisibility until another <<session_running, running session>>.
+pname:boundaryVisibility until another <<session-running, running session>>.
 
 include::{generated}/validity/structs/XrEventDataBoundaryVisibilityChangedMETA.adoc[]
 --

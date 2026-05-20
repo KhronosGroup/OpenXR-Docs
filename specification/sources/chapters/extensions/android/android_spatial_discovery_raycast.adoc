@@ -432,7 +432,7 @@ std::vector<const XrSpatialCapabilityConfigurationBaseHeaderEXT*> capabilityConf
 capabilityConfigs.push_back(reinterpret_cast<const XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&depthRaycastConfig));
 if(isRaycastSupportedViaPlaneTracking) capabilityConfigs.push_back(reinterpret_cast<const XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&planeTrackingConfig));
 
-XrSpatialContextCreateInfoEXT contextCreateInfo{
+XrSpatialContextCreateInfoEXT contextCreateInfo {
   .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
   .next = nullptr,
   .capabilityConfigCount = (uint32_t)capabilityConfigs.size(),

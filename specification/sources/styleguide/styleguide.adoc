@@ -188,3 +188,6 @@ include::schema.adoc[]
 * 2025-06-30 - Add an informative chapter on API design principles.
 * 2025-10-23 - Bring extension guidelines up to date with current practice,
   including interface include, ordering, and possible example code.
+* 2026-05-20 - In XML schema, allow deprecation expressions to be `+`
+  delimited lists of extension names, and add an element to permit
+  extensions to extend the list of valid return codes for a function.

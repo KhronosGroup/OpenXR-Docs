@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type requires="openxr_platform_defines" name="uint64_t"/>
+        <type category="basetype">typedef <type>uint64_t</type> <name>XrFlags64</name>;</type>
+        <type bitvalues="XrMyFlagBitsEXT" category="bitmask">typedef <type>XrFlags64</type> <name>XrMyFlagsEXT</name>;</type>
+        <type name="XrMyFlagBitsEXT" category="enum"/>
+
+        <type category="struct" name="XrMyStructEXT">
+            <member><type>XrMyFlagsEXT</type> <name>createFlags</name></member>
+        </type>
+    </types>
+
+    <enums name="XrMyFlagBitsEXT" type="bitmask">
+    </enums>
+</registry>

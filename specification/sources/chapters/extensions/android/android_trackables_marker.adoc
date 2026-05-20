@@ -283,10 +283,14 @@ XrTime updateTime; // Time used for the current frame's simulation update.
 XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
 
 // Inspect system capability
-XrSystemMarkerTrackingPropertiesANDROID markerProperty =
-        {.type = XR_TYPE_SYSTEM_MARKER_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
-XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
-                                       .next = &markerProperty};
+XrSystemMarkerTrackingPropertiesANDROID markerProperty {
+  .type = XR_TYPE_SYSTEM_MARKER_TRACKING_PROPERTIES_ANDROID,
+  .next = nullptr,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &markerProperty,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!markerProperty.supportsMarkerTracking) {
     // Marker tracking is not supported.
@@ -295,22 +299,27 @@ if (!markerProperty.supportsMarkerTracking) {
 
 // Create a trackable tracker for marker tracking.
 // If the runtime does not support size estimation, configures marker edge size of 0.1m.
-XrTrackableMarkerDatabaseEntryANDROID markerEntries =
-        {.id = 0, .edgeSize = markerProperty.supportsMarkerSizeEstimation ? 0.0f : 0.1f};
-XrTrackableMarkerDatabaseANDROID markerDatabases =
-        {.dictionary = XR_TRACKABLE_MARKER_DICTIONARY_ARUCO_4X4_50_ANDROID,
-         .entryCount = 1,
-         .entries = &markerEntries};
-XrTrackableMarkerConfigurationANDROID configuration =
-        {.type = XR_TYPE_TRACKABLE_MARKER_CONFIGURATION_ANDROID,
-         .next = nullptr,
-         .trackingMode = XR_TRACKABLE_MARKER_TRACKING_MODE_DYNAMIC_ANDROID,
-         .databaseCount = 1,
-         .databases = &markerDatabases};
-XrTrackableTrackerCreateInfoANDROID createInfo =
-        {.type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
-         .next = &configuration,
-         .trackableType = XR_TRACKABLE_TYPE_MARKER_ANDROID};
+XrTrackableMarkerDatabaseEntryANDROID markerEntries {
+  .id = 0,
+  .edgeSize = markerProperty.supportsMarkerSizeEstimation ? 0.0f : 0.1f,
+};
+XrTrackableMarkerDatabaseANDROID markerDatabases {
+  .dictionary = XR_TRACKABLE_MARKER_DICTIONARY_ARUCO_4X4_50_ANDROID,
+  .entryCount = 1,
+  .entries = &markerEntries,
+};
+XrTrackableMarkerConfigurationANDROID configuration {
+  .type = XR_TYPE_TRACKABLE_MARKER_CONFIGURATION_ANDROID,
+  .next = nullptr,
+  .trackingMode = XR_TRACKABLE_MARKER_TRACKING_MODE_DYNAMIC_ANDROID,
+  .databaseCount = 1,
+  .databases = &markerDatabases,
+};
+XrTrackableTrackerCreateInfoANDROID createInfo {
+  .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
+  .next = &configuration,
+  .trackableType = XR_TRACKABLE_TYPE_MARKER_ANDROID,
+};
 XrTrackableTrackerANDROID markerTracker;
 auto res = xrCreateTrackableTrackerANDROID(session, &createInfo, &markerTracker);
 if (res == XR_ERROR_PERMISSION_INSUFFICIENT) {
@@ -320,18 +329,21 @@ CHK_XR(res);
 
 // Get markers.
 std::vector<XrTrackableANDROID> trackables(markerProperty.maxMarkerCount);
-std::vector<XrTrackableMarkerANDROID> markers(markerProperty.maxMarkerCount);
+std::vector<XrTrackableMarkerANDROID> markers(markerProperty.maxMarkerCount, {
+  .type = XR_TYPE_TRACKABLE_MARKER_ANDROID,
+  .next = nullptr,
+});
 uint32_t markerSize = 0;
 CHK_XR(xrGetAllTrackablesANDROID(markerTracker, markerProperty.maxMarkerCount, &markerSize,
                                  trackables.data()));
 for (int i = 0; i < markerSize; i++) {
-    markers[i].type = XR_TYPE_TRACKABLE_MARKER_ANDROID;
-    markers[i].next = nullptr;
-    XrTrackableGetInfoANDROID getInfo = {.type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
-                                         .next = nullptr,
-                                         .trackable = trackables[i],
-                                         .baseSpace = appSpace,
-                                         .time = updateTime};
+    XrTrackableGetInfoANDROID getInfo {
+      .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
+      .next = nullptr,
+      .trackable = trackables[i],
+      .baseSpace = appSpace,
+      .time = updateTime,
+    };
     CHK_XR(xrGetTrackableMarkerANDROID(markerTracker, &getInfo, &markers[i]));
     // Handle markers.
 }

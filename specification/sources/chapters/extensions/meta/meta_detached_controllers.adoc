@@ -147,7 +147,9 @@ XrInteractionProfileState currentState[NUM_HANDS];  // previously initialized fo
 // In event polling code
 
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event = {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
 
@@ -156,7 +158,9 @@ if (result == XR_SUCCESS) {
   switch (event.type) {
     case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED: {
       for (int handIndex = 0; handIndex < NUM_HANDS; ++handIndex) {
-        XrInteractionProfileState profileState;
+        XrInteractionProfileState profileState {
+            .type = XR_TYPE_INTERACTION_PROFILE_STATE,
+        };
         CHK_XR(xrGetCurrentInteractionProfile(session, path, &profileState));
 
         // Inspect profileState to understand if this hand is now holding a
@@ -204,13 +208,14 @@ with slink:XrInteractionProfileSuggestedBinding:
 ----
 XrSpace leftControllerSpace = XR_NULL_HANDLE;
 XrSpace detachedLeftControllerSpace = XR_NULL_HANDLE;
-XrActionSpaceCreateInfo asci{XR_TYPE_ACTION_SPACE_CREATE_INFO};
-asci.action = LeftControllerPose;
-CHK_XR(xrCreateActionSpace(session,
-  &asci, &leftControllerSpace));
+XrActionSpaceCreateInfo asci{
+    .type = XR_TYPE_ACTION_SPACE_CREATE_INFO,
+    .next = nullptr,
+    .action = LeftControllerPose,
+};
+CHK_XR(xrCreateActionSpace(session, &asci, &leftControllerSpace));
 asci.action = LeftControllerDetachedOnly;
-CHK_XR(xrCreateActionSpace(session,
-  &asci, &detachedLeftControllerSpace));
+CHK_XR(xrCreateActionSpace(session, &asci, &detachedLeftControllerSpace));
 
 // Will follow controller whether in hand or detached
 CHK_XR(xrLocateSpace(leftControllerSpace, /* ... */));

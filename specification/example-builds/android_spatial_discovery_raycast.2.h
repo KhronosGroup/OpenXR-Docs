@@ -17,9 +17,13 @@ PFN_xrDestroySpatialSnapshotEXT xrDestroySpatialSnapshotEXT;
 PFN_xrPollFutureEXT xrPollFutureEXT;
 
 void waitUntilReady(XrFutureEXT future) {
-  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-  pollInfo.future = future;
+  XrFuturePollInfoEXT pollInfo{
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+  };
+  XrFuturePollResultEXT pollResult{
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
   do {
     // sleep(1);
     CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));

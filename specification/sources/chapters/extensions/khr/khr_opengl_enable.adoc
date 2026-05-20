@@ -37,10 +37,10 @@ slink:XrSwapchainImageOpenGLKHR structures to populate.
 
 In order to expose the structures, types, and functions of this extension,
 the application source code must: define dlink:XR_USE_GRAPHICS_API_OPENGL,
-as well as an appropriate <<window-system-header-control,window system
-define>> supported by this extension, before including the OpenXR platform
-header `openxr_platform.h`, in all portions of the library or application
-that interact with the types, values, and functions it defines.
+as well as an appropriate <<appendix-window-system-header-control,window
+system define>> supported by this extension, before including the OpenXR
+platform header `openxr_platform.h`, in all portions of the library or
+application that interact with the types, values, and functions it defines.
 The window system defines currently supported by this extension are:
 
 * dlink:XR_USE_PLATFORM_WIN32
@@ -146,8 +146,8 @@ include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLKHR.adoc[]
 ==== Graphics Binding Structure
 
 These structures are only available when the corresponding
-`XR_USE_PLATFORM_` <<window-system-header-control,window system/platform
-macro>> is defined before including `openxr_platform.h`.
+`XR_USE_PLATFORM_` <<appendix-window-system-header-control,window
+system/platform macro>> is defined before including `openxr_platform.h`.
 
 [open,refpage='XrGraphicsBindingOpenGLWin32KHR',type='structs',desc='The graphics binding structure to be passed at session creation to use OpenGL on Windows',xrefs='xrCreateSession']
 --

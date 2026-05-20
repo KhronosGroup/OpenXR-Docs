@@ -97,9 +97,12 @@ XrSpace stageSpace; // previously initialized
 
 // Confirm full body tracking system support.
 XrSystemPropertiesBodyTrackingFullBodyMETA bodyTrackingFullBodySystemProperties{
-    XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FULL_BODY_META};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &bodyTrackingFullBodySystemProperties};
+    .type = XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FULL_BODY_META,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &bodyTrackingFullBodySystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!bodyTrackingFullBodySystemProperties.supportsFullBodyTracking) {
   // The system does not support full body tracking.
@@ -107,10 +110,13 @@ if (!bodyTrackingFullBodySystemProperties.supportsFullBodyTracking) {
 }
 
 
-XrBodyTrackerCreateInfoFB createInfo{XR_TYPE_BODY_TRACKER_CREATE_INFO_FB};
-createInfo.bodyJointSet = XR_BODY_JOINT_SET_FULL_BODY_META;
-XrBodyTrackerFB bodyTracker = XR_NULL_HANDLE;
-pfnCreateBodyTrackerFB(session, &createInfo, &bodyTracker);
+XrBodyTrackerCreateInfoFB createInfo{
+    .type = XR_TYPE_BODY_TRACKER_CREATE_INFO_FB,
+    .next =  nullptr,
+    .bodyJointSet = XR_BODY_JOINT_SET_FULL_BODY_META,
+};
+XrBodyTrackerFB bodyTracker{XR_NULL_HANDLE};
+CHK_XR(pfnCreateBodyTrackerFB(session, &createInfo, &bodyTracker));
 
 while (1) {
   // ...
@@ -119,13 +125,19 @@ while (1) {
   XrFrameState frameState; // previously returned from xrWaitFrame
   const XrTime time = frameState.predictedDisplayTime;
 
-  XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
-  locateInfo.baseSpace = stageSpace;
-  locateInfo.time = time;
-  XrBodyJointLocationsFB bodyLocations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
-  bodyLocations.jointCount = XR_FULL_BODY_JOINT_COUNT_META;
   XrBodyJointLocationFB jointLocations[XR_FULL_BODY_JOINT_COUNT_META];
-  bodyLocations.jointLocations = jointLocations;
+  XrBodyJointsLocateInfoFB locateInfo{
+      .type = XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB,
+      .next = nullptr,
+      .baseSpace = stageSpace,
+      .time = time,
+  };
+  XrBodyJointLocationsFB bodyLocations{
+      .type = XR_TYPE_BODY_JOINT_LOCATIONS_FB,
+      .next = nullptr,
+      .jointCount = XR_FULL_BODY_JOINT_COUNT_META,
+      .jointLocations = jointLocations,
+  };
 
   CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &bodyLocations));
 }

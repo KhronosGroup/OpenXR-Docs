@@ -641,9 +641,9 @@ include::{generated}/api/protos/xrGetRenderModelAssetDataEXT.adoc[]
 The application can: use the flink:xrGetRenderModelAssetDataEXT function to
 populate application-allocated memory with the glTF 2.0 binary data and
 animatable node names of a render model asset.
-The application uses a <<buffer-size-parameters, two-call idiom>> with
-flink:xrGetRenderModelAssetDataEXT to allocate the memory required for the
-binary asset data.
+The application uses a <<fundamentals-buffer-size-parameters, two-call
+idiom>> with flink:xrGetRenderModelAssetDataEXT to allocate the memory
+required for the binary asset data.
 
 The binary data copied by the flink:xrGetRenderModelAssetDataEXT function
 must: conform to the {uri-gltf2-glb}[glTF 2.0 binary format (GLB)] and must:

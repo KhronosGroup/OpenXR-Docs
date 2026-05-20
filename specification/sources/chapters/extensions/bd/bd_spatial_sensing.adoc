@@ -686,8 +686,8 @@ The application can: get queried sense data from the
 slink:XrSenseDataSnapshotBD using flink:xrGetQueriedSenseDataBD.
 pname:queriedSenseData contains an application-allocated array that is
 populated by the runtime, after capacity negotiation using the
-<<fundaments-buffer-size,two-call idiom>>, with entity ID, UUID, and last
-update times for each entity in the snapshot.
+<<fundamentals-buffer-size-parameters,two-call idiom>>, with entity ID,
+UUID, and last update times for each entity in the snapshot.
 
 include::{generated}/validity/protos/xrGetQueriedSenseDataBD.adoc[]
 --

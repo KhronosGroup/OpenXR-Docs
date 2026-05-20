@@ -18,8 +18,9 @@ include::{generated}/meta/XR_ANDROID_anchor_sharing_export.adoc[]
 
 ==== Overview
 
-Anchors created by an application via apiext:XR_ANDROID_trackables are tied
-to a specific session and are thus not visible to other applications.
+Anchors created by an application via apiext:XR_ANDROID_trackables,
+apiext:XR_EXT_spatial_anchor, and apiext:XR_ANDROID_spatial_anchor_space are
+tied to a specific session and are thus not visible to other applications.
 This extension allows applications to share anchors with other running
 applications.
 
@@ -127,8 +128,9 @@ include::{generated}/api/structs/XrAnchorSharingInfoANDROID.adoc[]
 ****
 
 slink:XrAnchorSharingInfoANDROID::pname:anchor must: be a valid
-slink:XrSpace created previously by calling flink:xrCreateAnchorSpaceANDROID
-or flink:xrCreatePersistedAnchorSpaceANDROID.
+slink:XrSpace created previously by calling
+flink:xrCreateAnchorSpaceANDROID, flink:xrCreatePersistedAnchorSpaceANDROID,
+or flink:xrCreateSpatialAnchorSpaceANDROID.
 
 include::{generated}/validity/structs/XrAnchorSharingInfoANDROID.adoc[]
 --
@@ -210,10 +212,10 @@ XrSpace anchor; // created via xrCreateAnchorSpaceANDROID() or xrCreatePersisted
 PFN_xrShareAnchorANDROID xrShareAnchorANDROID; // previously initialized
 PFN_xrUnshareAnchorANDROID xrUnshareAnchorANDROID; // previously initialized
 
-XrAnchorSharingInfoANDROID sharingInfo = {
-	.type = XR_TYPE_ANCHOR_SHARING_INFO_ANDROID,
-	.next = nullptr,
-	.anchor = anchor,
+XrAnchorSharingInfoANDROID sharingInfo {
+  .type = XR_TYPE_ANCHOR_SHARING_INFO_ANDROID,
+  .next = nullptr,
+  .anchor = anchor,
 };
 
 AIBinder* anchorToken;

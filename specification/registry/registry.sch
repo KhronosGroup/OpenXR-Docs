@@ -966,6 +966,20 @@
         </sch:rule>
     </sch:pattern>
 
+    <!-- Flags members with no initially-defined bits must be optional -->
+    <sch:pattern name="Flags members with no initially-defined bits must be optional">
+        <sch:rule context="types/type[@category='struct']/member[type/text() = //types/type[@category='bitmask']/name/text()]">
+            <sch:let name="member_type" value="type/text()" />
+            <sch:let name="struct_name" value="ancestor::type/@name" />
+            <sch:let name="member_name" value="name/text()" />
+            <sch:let name="bitvalues_name" value="//types/type[@category='bitmask' and name/text() = $member_type]/@bitvalues" />
+
+            <sch:assert test="//enums[@name=$bitvalues_name]/enum or @optional = 'true'">
+                <sch:value-of select="$struct_name" />::<sch:value-of select="$member_name" />: Member of type <sch:value-of select="$member_type" /> must be marked optional="true" because the corresponding flags type <sch:value-of select="$bitvalues_name" /> has no bits initially defined.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
     <!-- Two call functions -->
     <sch:pattern>
         <sch:rule context="commands/command/param[ends-with(name/text(), 'CountOutput')]">

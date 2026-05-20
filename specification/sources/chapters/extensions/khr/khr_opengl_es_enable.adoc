@@ -126,8 +126,8 @@ include::{generated}/validity/structs/XrGraphicsRequirementsOpenGLESKHR.adoc[]
 ==== Graphics Binding Structure
 
 These structures are only available when the corresponding
-`XR_USE_PLATFORM_` <<window-system-header-control,window system/platform
-macro>> is defined before including `openxr_platform.h`.
+`XR_USE_PLATFORM_` <<appendix-window-system-header-control,window
+system/platform macro>> is defined before including `openxr_platform.h`.
 
 [open,refpage='XrGraphicsBindingOpenGLESAndroidKHR',type='structs',desc='The graphics binding structure to be passed at session creation to use OpenGL ES on Android',xrefs='xrCreateSession']
 --

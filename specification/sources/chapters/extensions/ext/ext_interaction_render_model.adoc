@@ -32,7 +32,7 @@ subaction path as a second lookup step.
 // Non-normative note: should not contain any normative macros
 [NOTE]
 .Note
-****
+====
 This extension is used for showing __the exact devices in use__.
 It returns models that may not have been available at the time of
 application creation, and thus not included in the suggested bindings.
@@ -52,7 +52,7 @@ flink:xrGetCurrentInteractionProfile rather than using this extension.
   application.
   The example code in this extension demonstrates intended generic
   application behavior and should be followed closely.
-****
+====
 // End of non-normative note: normative macros may resume
 
 ==== Getting Models

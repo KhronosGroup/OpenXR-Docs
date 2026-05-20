@@ -531,9 +531,9 @@ ename:XR_COLOCATION_DISCOVERY_ALREADY_DISCOVERING_META.
 ifndef::doctype-manpage[]
 // These links break when extracted to a manpage without additional magic
 
-See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
-xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
-sample flows incorporating use of flink:xrStartColocationDiscoveryMETA.
+See xref:XR_META_colocation_discovery-discovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-discovery-runtime-stop[xrefstyle=short]
+for sample flows incorporating use of flink:xrStartColocationDiscoveryMETA.
 
 endif::doctype-manpage[]
 
@@ -631,10 +631,10 @@ on the advertising device.
 ifndef::doctype-manpage[]
 // These links break when extracted to a manpage without additional magic
 
-See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
-xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
-sample flows that show how slink:XrEventDataColocationDiscoveryResultMETA is
-used.
+See xref:XR_META_colocation_discovery-discovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-discovery-runtime-stop[xrefstyle=short]
+for sample flows that show how
+slink:XrEventDataColocationDiscoveryResultMETA is used.
 
 endif::doctype-manpage[]
 
@@ -680,10 +680,10 @@ advertisements started from the same slink:XrSession.
 ifndef::doctype-manpage[]
 // These links break when extracted to a manpage without additional magic
 
-See xref:XR_META_colocation_discovery-dicovery-normal[xrefstyle=short] and
-xref:XR_META_colocation_discovery-dicovery-runtime-stop[xrefstyle=short] for
-sample flows that show how slink:XrEventDataColocationDiscoveryCompleteMETA
-is used.
+See xref:XR_META_colocation_discovery-discovery-normal[xrefstyle=short] and
+xref:XR_META_colocation_discovery-discovery-runtime-stop[xrefstyle=short]
+for sample flows that show how
+slink:XrEventDataColocationDiscoveryCompleteMETA is used.
 
 endif::doctype-manpage[]
 

@@ -217,7 +217,7 @@ capability when creating a spatial context.
 [source,cpp]
 ----
 // Check if object tracking capability is supported
-uint32_t capabilityCount;
+uint32_t capabilityCount = 0;
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
 std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
@@ -227,7 +227,9 @@ if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_OB
 }
 
 // Enumerate supported components for object tracking capability
-XrSpatialCapabilityComponentTypesEXT objectComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+XrSpatialCapabilityComponentTypesEXT objectComponents{
+  .type = XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
+};
 CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID, &objectComponents));
 std::vector<XrSpatialComponentTypeEXT> objectCapabilityComponents(objectComponents.componentTypeCountOutput);
 objectComponents.componentTypeCapacityInput = objectCapabilityComponents.size();
@@ -235,7 +237,7 @@ objectComponents.componentTypes = objectCapabilityComponents.data();
 CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID, &objectComponents));
 
 // Create a spatial context
-XrSpatialContextEXT spatialContext{};
+XrSpatialContextEXT spatialContext{XR_NULL_HANDLE};
 
 // Enable the 2 guaranteed components (bounded 3D, semantic label) of the object tracking capability
 std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
@@ -250,30 +252,36 @@ std::vector<XrSpatialObjectSemanticLabelANDROID> activeSemanticLabels =
     XR_SPATIAL_OBJECT_SEMANTIC_LABEL_MOUSE_ANDROID,
 };
 
-XrSpatialCapabilityConfigurationObjectTrackingANDROID objectTrackingConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_OBJECT_TRACKING_ANDROID};
-objectTrackingConfig.capability = XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID;
-objectTrackingConfig.enabledComponentCount = enabledComponents.size();
-objectTrackingConfig.enabledComponents = enabledComponents.data();
-// Specify the count of active semantic labels and the pointer to the array of
-// active semantic labels.
-// If the `activeSemanticLabelCount` is 0 and `activeSemanticLabels` is NULL,
-// all labels will be set to active by default.
-objectTrackingConfig.activeSemanticLabelCount = activeSemanticLabels.size();
-objectTrackingConfig.activeSemanticLabels = activeSemanticLabels.data();
+XrSpatialCapabilityConfigurationObjectTrackingANDROID objectTrackingConfig{
+  .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_OBJECT_TRACKING_ANDROID,
+  .capability = XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID,
+  .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+  .enabledComponents = enabledComponents.data(),
+  // Specify the count of active semantic labels and the pointer to the array of
+  // active semantic labels.
+  // If the `activeSemanticLabelCount` is 0 and `activeSemanticLabels` is NULL,
+  // all labels will be set to active by default.
+  .activeSemanticLabelCount = static_cast<uint32_t>(activeSemanticLabels.size()),
+  .activeSemanticLabels = activeSemanticLabels.data(),
+};
 
 std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
   reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&objectTrackingConfig),
 };
 
-XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
-spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
-spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
-XrFutureEXT createContextFuture;
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo{
+  .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+  .capabilityConfigCount = capabilityConfigs.size(),
+  .capabilityConfigs = capabilityConfigs.data(),
+};
+XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
 CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
 
 waitUntilReady(createContextFuture);
 
-XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+XrCreateSpatialContextCompletionEXT completion{
+  .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+};
 CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
 if (completion.futureResult != XR_SUCCESS) {
   return;
@@ -306,28 +314,38 @@ std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
 };
 
 auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
 
     // Query for the semantic label component data
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = snapshotComponents.size();
-    queryCond.componentTypes = snapshotComponents.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult{
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -338,17 +356,19 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrBoxf> bounded3D(queryResult.entityIdCountOutput);
-    XrSpatialComponentBounded3DListEXT bounded3DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT};
-    bounded3DList.boundCount = bounded3D.size();
-    bounded3DList.bounds = bounded3D.data();
+    XrSpatialComponentBounded3DListEXT bounded3DList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT,
+      .boundCount = static_cast<uint32_t>(bounded3D.size()),
+      .bounds = bounded3D.data(),
+    };
     queryResult.next = &bounded3DList;
 
-    std::vector<XrSpatialObjectSemanticLabelANDROID> semanticLabels;
-    XrSpatialComponentObjectSemanticLabelListANDROID semanticLabelsList{XR_TYPE_SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_ANDROID};
-    semanticLabels.resize(queryResult.entityIdCountOutput);
-    semanticLabelsList.semanticLabelCount = semanticLabels.size();
-    semanticLabelsList.semanticLabels = semanticLabels.data();
-    semanticLabelsList.next = queryResult.next;
+    std::vector<XrSpatialObjectSemanticLabelANDROID> semanticLabels(queryResult.entityIdCountOutput);
+    XrSpatialComponentObjectSemanticLabelListANDROID semanticLabelsList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_OBJECT_SEMANTIC_LABEL_LIST_ANDROID,
+      .semanticLabelCount = static_cast<uint32_t>(semanticLabels.size()),
+      .semanticLabels = semanticLabels.data(),
+    };
     queryResult.next = &semanticLabelsList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -377,7 +397,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event = {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
     if (event.type == XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT) {

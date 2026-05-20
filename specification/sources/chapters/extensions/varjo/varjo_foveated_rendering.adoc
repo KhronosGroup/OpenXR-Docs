@@ -127,21 +127,34 @@ XrInstance instance; // previously populated
 XrSystemId systemId; // previously populated
 XrViewConfigurationType viewConfigType; // Select XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO
 
-XrSystemFoveatedRenderingPropertiesVARJO foveatedRenderingProperties{XR_TYPE_SYSTEM_FOVEATED_RENDERING_PROPERTIES_VARJO};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES, &foveatedRenderingProperties};
+XrSystemFoveatedRenderingPropertiesVARJO foveatedRenderingProperties {
+  .type = XR_TYPE_SYSTEM_FOVEATED_RENDERING_PROPERTIES_VARJO,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &foveatedRenderingProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 
-uint32_t viewCount;
+uint32_t viewCount = 0;
 CHK_XR(xrEnumerateViewConfigurationViews(instance, systemId, viewConfigType, 0, &viewCount, nullptr));
 // Non-foveated rendering views dimensions
-std::vector<XrViewConfigurationView> configViews(viewCount, {XR_TYPE_VIEW_CONFIGURATION_VIEW});
+std::vector<XrViewConfigurationView> configViews(viewCount, {
+  .type = XR_TYPE_VIEW_CONFIGURATION_VIEW,
+});
 CHK_XR(xrEnumerateViewConfigurationViews(instance, systemId, viewConfigType, viewCount, &viewCount, configViews.data()));
 
 // Foveated rendering views dimensions
 std::vector<XrViewConfigurationView> foveatedViews;
 if (foveatedRenderingProperties.supportsFoveatedRendering && viewConfigType == XR_VIEW_CONFIGURATION_TYPE_PRIMARY_QUAD_VARJO) {
-  std::vector<XrFoveatedViewConfigurationViewVARJO> requestFoveatedConfig{4, {XR_TYPE_FOVEATED_VIEW_CONFIGURATION_VIEW_VARJO, nullptr, XR_TRUE}};
-  foveatedViews = std::vector<XrViewConfigurationView>{4, {XR_TYPE_VIEW_CONFIGURATION_VIEW}};
+  std::vector<XrFoveatedViewConfigurationViewVARJO> requestFoveatedConfig(4, {
+    .type = XR_TYPE_FOVEATED_VIEW_CONFIGURATION_VIEW_VARJO,
+    .next = nullptr,
+    .foveatedRenderingActive = XR_TRUE,
+  });
+  foveatedViews = std::vector<XrViewConfigurationView>(4, {
+    .type = XR_TYPE_VIEW_CONFIGURATION_VIEW,
+  });
   for (size_t i = 0; i < 4; i++) {
     foveatedViews[i].next = &requestFoveatedConfig[i];
   }
@@ -175,16 +188,28 @@ If it's set, rendering gaze is available otherwise not.
 XrSession session; // previously populated
 
 // Create needed spaces
-XrSpace viewSpace;
-XrReferenceSpaceCreateInfo createViewSpaceInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-createViewSpaceInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
-createViewSpaceInfo.poseInReferenceSpace.orientation.w = 1.0f;
+XrSpace viewSpace {XR_NULL_HANDLE};
+XrReferenceSpaceCreateInfo createViewSpaceInfo {
+  .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+  .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW,
+  .poseInReferenceSpace = {
+    .orientation = {
+      .w = 1.0f,
+    },
+  },
+};
 CHK_XR(xrCreateReferenceSpace(session, &createViewSpaceInfo, &viewSpace));
 
-XrSpace renderGazeSpace;
-XrReferenceSpaceCreateInfo createReferenceSpaceInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-createReferenceSpaceInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_COMBINED_EYE_VARJO;
-createReferenceSpaceInfo.poseInReferenceSpace.orientation.w = 1.0f;
+XrSpace renderGazeSpace {XR_NULL_HANDLE};
+XrReferenceSpaceCreateInfo createReferenceSpaceInfo {
+  .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+  .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_COMBINED_EYE_VARJO,
+  .poseInReferenceSpace = {
+    .orientation = {
+      .w = 1.0f,
+    },
+  },
+};
 CHK_XR(xrCreateReferenceSpace(session, &createReferenceSpaceInfo, &renderGazeSpace));
 
 // ...
@@ -194,7 +219,9 @@ CHK_XR(xrCreateReferenceSpace(session, &createReferenceSpaceInfo, &renderGazeSpa
 XrFrameState frameState; // previously populated by xrWaitFrame
 
 // Query rendering gaze status
-XrSpaceLocation renderGazeLocation{XR_TYPE_SPACE_LOCATION};
+XrSpaceLocation renderGazeLocation {
+  .type = XR_TYPE_SPACE_LOCATION,
+};
 CHK_XR(xrLocateSpace(renderGazeSpace, viewSpace, frameState.predictedDisplayTime, &renderGazeLocation));
 
 const bool foveationActive = (renderGazeLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_TRACKED_BIT) != 0;
@@ -246,16 +273,24 @@ XrViewConfigurationType viewConfigType; // previously populated
 std::vector<XrView> views; // previously populated/resized to the correct size
 bool foveationActive; // previously populated, as in the previous example
 
-XrViewState viewState{XR_TYPE_VIEW_STATE};
+XrViewState viewState {
+  .type = XR_TYPE_VIEW_STATE,
+};
 uint32_t viewCapacityInput = static_cast<uint32_t>(views.size());
 uint32_t viewCountOutput;
-XrViewLocateInfo viewLocateInfo{XR_TYPE_VIEW_LOCATE_INFO};
-viewLocateInfo.viewConfigurationType = viewConfigType;
-viewLocateInfo.displayTime = frameState.predictedDisplayTime;
-viewLocateInfo.space = appSpace;
-XrViewLocateFoveatedRenderingVARJO viewLocateFoveatedRendering{XR_TYPE_VIEW_LOCATE_FOVEATED_RENDERING_VARJO};
-viewLocateFoveatedRendering.foveatedRenderingActive = foveationActive;
-viewLocateInfo.next = &viewLocateFoveatedRendering;
+
+XrViewLocateFoveatedRenderingVARJO viewLocateFoveatedRendering {
+  .type = XR_TYPE_VIEW_LOCATE_FOVEATED_RENDERING_VARJO,
+  .foveatedRenderingActive = foveationActive,
+};
+
+XrViewLocateInfo viewLocateInfo {
+  .type = XR_TYPE_VIEW_LOCATE_INFO,
+  .next = &viewLocateFoveatedRendering,
+  .viewConfigurationType = viewConfigType,
+  .displayTime = frameState.predictedDisplayTime,
+  .space = appSpace,
+};
 
 CHK_XR(xrLocateViews(session, &viewLocateInfo, &viewState, viewCapacityInput, &viewCountOutput, views.data()));
 ----

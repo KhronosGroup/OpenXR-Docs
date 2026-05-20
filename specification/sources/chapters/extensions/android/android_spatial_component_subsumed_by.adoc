@@ -60,6 +60,7 @@ All the component data of the
 ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID attached entity must: be
 identical to the entity that subsumes it.
 
+[[android_spatial_component_subsumed_by]]
 ==== Subsumed By Component
 
 ===== Component data
@@ -168,7 +169,7 @@ ename:XR_SPATIAL_COMPONENT_TYPE_SUBSUMED_BY_ANDROID.
 [source,cpp]
 ----
 // Check runtime supported capabilities
-uint32_t capabilityCount;
+uint32_t capabilityCount = 0;
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
 std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
 CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
@@ -178,7 +179,9 @@ if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_PL
 }
 
 // Enumerate supported components for plane tracking capability
-XrSpatialCapabilityComponentTypesEXT planeComponents{XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT};
+XrSpatialCapabilityComponentTypesEXT planeComponents{
+  .type = XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
+};
 CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, &planeComponents));
 std::vector<XrSpatialComponentTypeEXT> planeCapabilityComponents(planeComponents.componentTypeCountOutput);
 planeComponents.componentTypeCapacityInput = planeCapabilityComponents.size();
@@ -212,7 +215,7 @@ XrSpatialCapabilityConfigurationPlaneTrackingEXT planeTrackingConfig {
 std::vector<const XrSpatialCapabilityConfigurationBaseHeaderEXT*> capabilityConfigs;
 capabilityConfigs.push_back(reinterpret_cast<const XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&planeTrackingConfig));
 
-XrSpatialContextCreateInfoEXT contextCreateInfo{
+XrSpatialContextCreateInfoEXT contextCreateInfo {
   .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
   .next = nullptr,
   .capabilityConfigCount = (uint32_t)capabilityConfigs.size(),
@@ -301,7 +304,7 @@ XrSpatialDiscoverySnapshotCreateInfoEXT discoverySnapshotCreateInfo {
   .next = &filter
 };
 
-XrFutureEXT future;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
 CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &discoverySnapshotCreateInfo, &future))
 
 waitUntilReady(future);
@@ -316,7 +319,8 @@ XrCreateSpatialDiscoverySnapshotCompletionInfoEXT
   };
 
 XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
-  XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+};
 
 CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(
            spatialContext, &createSnapshotCompletionInfo,

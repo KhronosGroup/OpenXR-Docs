@@ -639,12 +639,12 @@ XrSceneMeshingTrackerCreateInfoANDROID trackerCreateInfo = {
 XrSceneMeshingTrackerANDROID tracker = XR_NULL_HANDLE;
 CHK_XR(xrCreateSceneMeshingTrackerANDROID(session, &trackerCreateInfo, &tracker));
 
-XrSceneMeshSnapshotCreationResultANDROID snapshotResult = {
+XrSceneMeshSnapshotCreationResultANDROID snapshotResult {
   .type = XR_TYPE_SCENE_MESH_SNAPSHOT_CREATION_RESULT_ANDROID,
   .snapshot = XR_NULL_HANDLE
 };
 XrSceneMeshSnapshotANDROID& snapshot = snapshotResult.snapshot;
-XrSceneMeshSnapshotCreateInfoANDROID createInfo = {
+XrSceneMeshSnapshotCreateInfoANDROID createInfo {
   .type = XR_TYPE_SCENE_MESH_SNAPSHOT_CREATE_INFO_ANDROID
 };
 
@@ -687,13 +687,11 @@ while (true) {
   }
 
   // 2-call idiom for getting submesh states
-  std::vector<XrSceneSubmeshStateANDROID> states;
   uint32_t submeshCount = 0;
   CHK_XR(xrGetAllSubmeshStatesANDROID(snapshot, 0, &submeshCount, nullptr));
-  states.resize(submeshCount);
-  for (XrSceneSubmeshStateANDROID& state : states) {
-    state = {.type = XR_TYPE_SCENE_SUBMESH_STATE_ANDROID};
-  }
+  std::vector<XrSceneSubmeshStateANDROID> states(submeshCount, {
+    .type = XR_TYPE_SCENE_SUBMESH_STATE_ANDROID,
+  });
   CHK_XR(xrGetAllSubmeshStatesANDROID(snapshot, submeshCount, &submeshCount, states.data()));
 
   // To store the poses for the selected submeshes
@@ -711,7 +709,7 @@ while (true) {
     if (needed) {
       // Add the selected submesh to the submeshes list. Set the capacity
       // zero for now since the size of the buffer will be determined later.
-      XrSceneSubmeshDataANDROID submesh = {
+      XrSceneSubmeshDataANDROID submesh {
         .type = XR_TYPE_SCENE_SUBMESH_DATA_ANDROID,
         .submeshId = state.submeshId,
         .vertexCapacityInput = 0,

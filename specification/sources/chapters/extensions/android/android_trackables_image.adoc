@@ -497,10 +497,14 @@ XrTime updateTime; // Time used for the current frame's simulation update.
 XrSpace appSpace;  // Space created for XR_REFERENCE_SPACE_TYPE_LOCAL.
 
 // Inspect system capability
-XrSystemImageTrackingPropertiesANDROID imageProperty =
-        {.type = XR_TYPE_SYSTEM_IMAGE_TRACKING_PROPERTIES_ANDROID, .next = nullptr};
-XrSystemProperties systemProperties = {.type = XR_TYPE_SYSTEM_PROPERTIES,
-                                       .next = &imageProperty};
+XrSystemImageTrackingPropertiesANDROID imageProperty {
+  .type = XR_TYPE_SYSTEM_IMAGE_TRACKING_PROPERTIES_ANDROID,
+  .next = nullptr,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &imageProperty,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!imageProperty.supportsImageTracking) {
     // image tracking is not supported.
@@ -524,7 +528,7 @@ XrTrackableImageDatabaseEntryANDROID imageDatabaseEntries[1] = {
   }
 };
 
-XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo{
+XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo {
   .type = XR_TYPE_TRACKABLE_IMAGE_DATABASE_CREATE_INFO_ANDROID,
   .next = nullptr,
   .entryCount = 1,
@@ -537,9 +541,13 @@ CHK_XR(xrCreateTrackableImageDatabaseAsyncANDROID(session, &imageDatabaseCreateI
 bool keepLooping = true;
 bool futureReady = false;
 while (keepLooping) {
-  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-  pollInfo.future = imageDatabaseFuture;
+  XrFuturePollInfoEXT pollInfo{
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = imageDatabaseFuture,
+  };
+  XrFuturePollResultEXT pollResult{
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
   CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
   if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
@@ -554,23 +562,24 @@ while (keepLooping) {
 XrTrackableImageDatabaseANDROID imageDatabase;
 
 if (futureReady) {
-  XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion;
-  imageDatabaseCompletion.type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID;
-  imageDatabaseCompletion.next = nullptr;
+  XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion {
+    .type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID,
+    .next = nullptr,
+  };
 
   CHK_XR(xrCreateTrackableImageDatabaseCompleteANDROID(session, imageDatabaseFuture, &imageDatabaseCompletion));
   CHK_XR(imageDatabaseCompletion.futureResult);
   imageDatabase = imageDatabaseCompletion.database;
 }
 
-XrTrackableImageConfigurationANDROID imageConfig{
+XrTrackableImageConfigurationANDROID imageConfig {
   .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
   .next = nullptr,
   .databaseCount = 1,
   .databases = &imageDatabase
 };
 
-XrTrackableTrackerCreateInfoANDROID createInfo{
+XrTrackableTrackerCreateInfoANDROID createInfo {
   .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
   .next = &imageConfig,
   .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
@@ -595,7 +604,7 @@ while (1) {
   CHK_XR(xrGetAllTrackablesANDROID(imageTrackableTracker, 0, &trackableCountOutput, allImageTrackables.data()));
 
   for (XrTrackableANDROID trackable : allImageTrackables) {
-    XrTrackableGetInfoANDROID imageGetInfo{
+    XrTrackableGetInfoANDROID imageGetInfo {
       .type = XR_TYPE_TRACKABLE_GET_INFO_ANDROID,
       .next = nullptr,
       .trackable = trackable,
@@ -603,7 +612,9 @@ while (1) {
       .time = updateTime
     };
 
-    XrTrackableImageANDROID trackableImage{XR_TYPE_TRACKABLE_IMAGE_ANDROID};
+    XrTrackableImageANDROID trackableImage{
+      .type = XR_TYPE_TRACKABLE_IMAGE_ANDROID,
+    };
     CHK_XR(xrGetTrackableImageANDROID(imageTrackableTracker, &imageGetInfo, &trackableImage));
 
     // Use XrTrackableImageANDROID data.
@@ -660,14 +671,14 @@ XrTrackableImageDatabaseANDROID imageDatabases[2]; // Previously initialized.
 XrTrackableImageDatabaseANDROID anotherImageDatabase; // Previously initialized.
 
 // Create the image tracker config with two input databases to track.
-XrTrackableImageConfigurationANDROID imageConfig{
+XrTrackableImageConfigurationANDROID imageConfig {
   .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
   .next = nullptr,
   .databaseCount = 2,
   .databases = imageDatabases
 };
 
-XrTrackableTrackerCreateInfoANDROID createInfo{
+XrTrackableTrackerCreateInfoANDROID createInfo {
   .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
   .next = &imageConfig,
   .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
@@ -708,14 +719,14 @@ CHK_XR(xrDestroyTrackableTrackerANDROID(imageTrackableTracker));
 // The 'imageDatabases[0]' and 'anotherImageDatabase' database handles are still valid.
 
 // Create another the image tracker config to re-create the image tracker.
-XrTrackableImageConfigurationANDROID anotherImageConfig{
+XrTrackableImageConfigurationANDROID anotherImageConfig {
   .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
   .next = nullptr,
   .databaseCount = 1,
   .databases = &anotherImageDatabase
 };
 
-XrTrackableTrackerCreateInfoANDROID anotherCreateInfo{
+XrTrackableTrackerCreateInfoANDROID anotherCreateInfo {
   .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
   .next = &anotherImageConfig,
   .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID
@@ -752,7 +763,9 @@ XrTrackableImageDatabaseANDROID imageDatabase; // Previously initialized.
 XrTrackableTrackerANDROID imageTrackableTracker; // Previously initialized.
 
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event = {
+  .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
   switch (event.type) {
@@ -766,7 +779,7 @@ if (result == XR_SUCCESS) {
 
       // To resume image tracking, the database(s) and the tracker need to be re-created.
 
-      XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo{
+      XrTrackableImageDatabaseCreateInfoANDROID imageDatabaseCreateInfo {
         .type = XR_TYPE_TRACKABLE_IMAGE_DATABASE_CREATE_INFO_ANDROID,
         .next = nullptr,
         .entryCount = 1,
@@ -777,9 +790,13 @@ if (result == XR_SUCCESS) {
       CHK_XR(xrCreateTrackableImageDatabaseAsyncANDROID(session, &imageDatabaseCreateInfo, &imageDatabaseFuture));
 
       while (true) {
-        XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-        XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-        pollInfo.future = imageDatabaseFuture;
+        XrFuturePollInfoEXT pollInfo{
+          .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+          .future = imageDatabaseFuture,
+        };
+        XrFuturePollResultEXT pollResult{
+          .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+        };
         CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
         if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
@@ -790,22 +807,23 @@ if (result == XR_SUCCESS) {
         }
       }
 
-      XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion;
-      imageDatabaseCompletion.type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID;
-      imageDatabaseCompletion.next = nullptr;
+      XrCreateTrackableImageDatabaseCompletionANDROID imageDatabaseCompletion {
+        .type = XR_TYPE_CREATE_TRACKABLE_IMAGE_DATABASE_COMPLETION_ANDROID,
+        .next = nullptr,
+      };
 
       CHK_XR(xrCreateTrackableImageDatabaseCompleteANDROID(session, imageDatabaseFuture, &imageDatabaseCompletion));
       CHK_XR(imageDatabaseCompletion.futureResult);
       imageDatabase = imageDatabaseCompletion.database;
 
-      XrTrackableImageConfigurationANDROID imageConfig{
+      XrTrackableImageConfigurationANDROID imageConfig {
        .type = XR_TYPE_TRACKABLE_IMAGE_CONFIGURATION_ANDROID,
        .next = nullptr,
        .databaseCount = 1,
        .databases = &imageDatabase
       };
 
-      XrTrackableTrackerCreateInfoANDROID createInfo{
+      XrTrackableTrackerCreateInfoANDROID createInfo {
         .type = XR_TYPE_TRACKABLE_TRACKER_CREATE_INFO_ANDROID,
         .next = &imageConfig,
         .trackableType = XR_TRACKABLE_TYPE_IMAGE_ANDROID

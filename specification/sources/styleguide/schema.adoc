@@ -95,6 +95,11 @@ It is incorporated here by reference, with the following changes.
 ** `enum` tags inside `enums` blocks may (and are encouraged to) have a
    `comment=""` attribute, which is extracted for automatic use in the spec
    and which may be used by other tools operating on the XML.
+* Modify section 18 ("API Extensions (`extension` Tag)")
+** In "Attributes of extension Tags", for attributes `promotedto`,
+   `deprecatedby`, `obsoletedby`, replace "a name of an extension" with "the
+   name or names of one or more extensions, in a list delimited by `+`", to
+   account for functionality replaced by a combinations of extensions
 * Modify section 19 ("Required and Removed Interfaces (`require` and
   `remove` tags)")
 // Some new sections are listed here, if they are direct children of `require` tags.
@@ -361,5 +366,33 @@ Identified as `ExtendInteractionProfileUserPathElt` in the Relax-NG schema.
   to the subset plus the `path` attribute named by this tag.
 
 ==== Contents of `user_path` tags in interaction profile `extend` blocks
+
+None.
+
+
+[[xml-require-extend-return-codes]]
+=== Contents of `require`: `extend` Tags for command return codes
+
+Specifies additional return codes to accept for a command previously
+included in the specification by a dependency of this block's parent.
+Valid only in `require` blocks.
+
+Identified as `ExtendCommandReturnCodesElt` in the Relax-NG schema.
+
+At least one of `errorcodes` or `successcodes` is usually expected for this
+tag to have any effect, though both are technically optional.
+
+==== Attributes of command return code `extend` tags in `require` blocks
+
+* `type` - required.
+  Value must be `"command"`.
+* `name` - required.
+  Value is the command name to extend.
+* `errorcodes` - optional.
+  Value is a comma-delimited sequence of error codes.
+* `successcodes` - optional.
+  Value is a comma-delimited sequence of success codes.
+
+==== Contents of command return code `extend` tags in `require` blocks
 
 None.

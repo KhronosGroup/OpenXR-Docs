@@ -178,9 +178,12 @@ XrSpace stageSpace; // previously initialized
 
 // Confirm body tracking fidelity system support.
 XrSystemPropertiesBodyTrackingFidelityMETA bodyTrackingFidelitySystemProperties{
-    XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FIDELITY_META};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &bodyTrackingFidelitySystemProperties};
+    .type = XR_TYPE_SYSTEM_PROPERTIES_BODY_TRACKING_FIDELITY_META,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &bodyTrackingFidelitySystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!bodyTrackingFidelitySystemProperties.supportsBodyTrackingFidelity) {
     // The system does not support body tracking fidelity.
@@ -188,7 +191,7 @@ if (!bodyTrackingFidelitySystemProperties.supportsBodyTrackingFidelity) {
 }
 
 // Get function pointer for xrRequestBodyTrackingFidelityMETA.
-PFN_xrRequestBodyTrackingFidelityMETA pfnRequestBodyTrackingFidelity;
+PFN_xrRequestBodyTrackingFidelityMETA pfnRequestBodyTrackingFidelity = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrRequestBodyTrackingFidelityMETA",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnRequestBodyTrackingFidelity)));
@@ -202,17 +205,24 @@ while (1) {
     const XrTime time = frameState.predictedDisplayTime;
 
     // input
-    XrBodyJointsLocateInfoFB locateInfo{XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB};
-    locateInfo.baseSpace = stageSpace;
-    locateInfo.time = time;
+    XrBodyJointsLocateInfoFB locateInfo{
+        .type = XR_TYPE_BODY_JOINTS_LOCATE_INFO_FB,
+        .next = nullptr,
+        .baseSpace = stageSpace,
+        .time = time,
+    };
 
     // output
-    XrBodyTrackingFidelityStatusMETA bodyFidelityStatus{XR_TYPE_BODY_TRACKING_FIDELITY_STATUS_META};
+    XrBodyTrackingFidelityStatusMETA bodyFidelityStatus{
+        .type = XR_TYPE_BODY_TRACKING_FIDELITY_STATUS_META,
+    };
     XrBodyJointLocationFB jointLocations[XR_BODY_JOINT_COUNT_FB];
-    XrBodyJointLocationsFB bodyLocations{XR_TYPE_BODY_JOINT_LOCATIONS_FB};
-    bodyLocations.next = &bodyFidelityStatus;
-    bodyLocations.jointCount = XR_BODY_JOINT_COUNT_FB;
-    bodyLocations.jointLocations = jointLocations;
+    XrBodyJointLocationsFB bodyLocations{
+        .type = XR_TYPE_BODY_JOINT_LOCATIONS_FB,
+        .next = &bodyFidelityStatus,
+        .jointCount = XR_BODY_JOINT_COUNT_FB,
+        .jointLocations = jointLocations,
+    };
 
     CHK_XR(pfnLocateBodyJointsFB(bodyTracker, &locateInfo, &bodyLocations));
     if (bodyFidelityStatus.fidelity != XR_BODY_TRACKING_FIDELITY_HIGH_META) {

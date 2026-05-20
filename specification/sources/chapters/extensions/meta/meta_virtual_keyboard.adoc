@@ -867,48 +867,59 @@ XrSpace localSpace;   // previously initialized
 XrPosef poseIdentity; // previously initialized
 
 // XR_FB_render_model API previously initialized with xrGetInstanceProcAddr
-PFN_xrEnumerateRenderModelPathsFB xrEnumerateRenderModelPathsFB;
-PFN_xrGetRenderModelPropertiesFB xrGetRenderModelPropertiesFB;
-PFN_xrLoadRenderModelFB xrLoadRenderModelFB;
+PFN_xrEnumerateRenderModelPathsFB xrEnumerateRenderModelPathsFB = nullptr;
+PFN_xrGetRenderModelPropertiesFB xrGetRenderModelPropertiesFB = nullptr;
+PFN_xrLoadRenderModelFB xrLoadRenderModelFB = nullptr;
 
 // XR_META_virtual_keyboard API previously initialized with xrGetInstanceProcAddr
-PFN_xrCreateVirtualKeyboardMETA xrCreateVirtualKeyboardMETA;
-PFN_xrDestroyVirtualKeyboardMETA xrDestroyVirtualKeyboardMETA;
-PFN_xrCreateVirtualKeyboardSpaceMETA xrCreateVirtualKeyboardSpaceMETA;
-PFN_xrSuggestVirtualKeyboardLocationMETA xrSuggestVirtualKeyboardLocationMETA;
-PFN_xrGetVirtualKeyboardScaleMETA xrGetVirtualKeyboardScaleMETA;
-PFN_xrSetVirtualKeyboardModelVisibilityMETA xrSetVirtualKeyboardModelVisibilityMETA;
-PFN_xrGetVirtualKeyboardModelAnimationStatesMETA xrGetVirtualKeyboardModelAnimationStatesMETA;
-PFN_xrGetVirtualKeyboardDirtyTexturesMETA xrGetVirtualKeyboardDirtyTexturesMETA;
-PFN_xrGetVirtualKeyboardTextureDataMETA xrGetVirtualKeyboardTextureDataMETA;
-PFN_xrSendVirtualKeyboardInputMETA xrSendVirtualKeyboardInputMETA;
+PFN_xrCreateVirtualKeyboardMETA xrCreateVirtualKeyboardMETA = nullptr;
+PFN_xrDestroyVirtualKeyboardMETA xrDestroyVirtualKeyboardMETA = nullptr;
+PFN_xrCreateVirtualKeyboardSpaceMETA xrCreateVirtualKeyboardSpaceMETA = nullptr;
+PFN_xrSuggestVirtualKeyboardLocationMETA xrSuggestVirtualKeyboardLocationMETA = nullptr;
+PFN_xrGetVirtualKeyboardScaleMETA xrGetVirtualKeyboardScaleMETA = nullptr;
+PFN_xrSetVirtualKeyboardModelVisibilityMETA xrSetVirtualKeyboardModelVisibilityMETA = nullptr;
+PFN_xrGetVirtualKeyboardModelAnimationStatesMETA xrGetVirtualKeyboardModelAnimationStatesMETA = nullptr;
+PFN_xrGetVirtualKeyboardDirtyTexturesMETA xrGetVirtualKeyboardDirtyTexturesMETA = nullptr;
+PFN_xrGetVirtualKeyboardTextureDataMETA xrGetVirtualKeyboardTextureDataMETA = nullptr;
+PFN_xrSendVirtualKeyboardInputMETA xrSendVirtualKeyboardInputMETA = nullptr;
 
 XrVirtualKeyboardMETA keyboardHandle{XR_NULL_HANDLE};
 XrSpace keyboardSpace{XR_NULL_HANDLE};
 XrRenderModelKeyFB keyboardModelKey{XR_NULL_RENDER_MODEL_KEY_FB};
 
 /// Check virtual keyboard support
-XrSystemVirtualKeyboardPropertiesMETA virtualKeyboardProps{XR_TYPE_SYSTEM_VIRTUAL_KEYBOARD_PROPERTIES_META};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES, &virtualKeyboardProps};
+XrSystemVirtualKeyboardPropertiesMETA virtualKeyboardProps{
+    .type = XR_TYPE_SYSTEM_VIRTUAL_KEYBOARD_PROPERTIES_META,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &virtualKeyboardProps,
+};
 CHK_XR(xrGetSystemProperties(instance, system, &systemProperties));
 if (virtualKeyboardProps.supportsVirtualKeyboard == XR_FALSE) {
   return; // Virtual keyboard not supported
 }
 
 /// Create virtual keyboard and space
-XrVirtualKeyboardCreateInfoMETA createInfo{XR_TYPE_VIRTUAL_KEYBOARD_CREATE_INFO_META};
+XrVirtualKeyboardCreateInfoMETA createInfo{
+    .type = XR_TYPE_VIRTUAL_KEYBOARD_CREATE_INFO_META,
+};
 CHK_XR(xrCreateVirtualKeyboardMETA(session, &createInfo, &keyboardHandle));
 
-XrVirtualKeyboardSpaceCreateInfoMETA spaceCreateInfo{XR_TYPE_VIRTUAL_KEYBOARD_SPACE_CREATE_INFO_META};
-spaceCreateInfo.locationType = XR_VIRTUAL_KEYBOARD_LOCATION_TYPE_CUSTOM_META;
-spaceCreateInfo.space = localSpace;
-spaceCreateInfo.poseInSpace = poseIdentity;
+XrVirtualKeyboardSpaceCreateInfoMETA spaceCreateInfo{
+    .type = XR_TYPE_VIRTUAL_KEYBOARD_SPACE_CREATE_INFO_META,
+    .locationType = XR_VIRTUAL_KEYBOARD_LOCATION_TYPE_CUSTOM_META,
+    .space = localSpace,
+    .poseInSpace = poseIdentity,
+};
 CHK_XR(xrCreateVirtualKeyboardSpaceMETA(session, keyboardHandle, &spaceCreateInfo, &keyboardSpace));
 
 /// Get render model key
 uint32_t pathCount = 0;
 CHK_XR(xrEnumerateRenderModelPathsFB(session, pathCount, &pathCount, nullptr));
-std::vector<XrRenderModelPathInfoFB> pathInfos(pathCount, {XR_TYPE_RENDER_MODEL_PATH_INFO_FB});
+std::vector<XrRenderModelPathInfoFB> pathInfos(pathCount, {
+    .type = XR_TYPE_RENDER_MODEL_PATH_INFO_FB,
+});
 CHK_XR(xrEnumerateRenderModelPathsFB(session, pathCount, &pathCount, pathInfos.data()));
 
 for (const auto& info : pathInfos) {
@@ -917,10 +928,14 @@ for (const auto& info : pathInfos) {
   CHK_XR(xrPathToString(instance, info.path, XR_MAX_PATH_LENGTH, &countOutput, pathString));
 
   if (strcmp(pathString, "/model_meta/keyboard/virtual") == 0) {
-    XrRenderModelPropertiesFB prop{XR_TYPE_RENDER_MODEL_PROPERTIES_FB};
-    XrRenderModelCapabilitiesRequestFB capReq{XR_TYPE_RENDER_MODEL_CAPABILITIES_REQUEST_FB};
-    capReq.flags = XR_RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_2_BIT_FB;
-    prop.next = &capReq;
+    XrRenderModelCapabilitiesRequestFB capReq{
+        .type = XR_TYPE_RENDER_MODEL_CAPABILITIES_REQUEST_FB,
+        .flags = XR_RENDER_MODEL_SUPPORTS_GLTF_2_0_SUBSET_2_BIT_FB,
+    };
+    XrRenderModelPropertiesFB prop{
+        .type = XR_TYPE_RENDER_MODEL_PROPERTIES_FB,
+        .next = &capReq,
+    };
     CHK_XR(xrGetRenderModelPropertiesFB(session, info.path, &prop));
     keyboardModelKey = prop.modelKey;
     break;
@@ -932,9 +947,13 @@ if (keyboardModelKey == XR_NULL_RENDER_MODEL_KEY_FB) {
 }
 
 /// Load render model
-XrRenderModelLoadInfoFB loadInfo{XR_TYPE_RENDER_MODEL_LOAD_INFO_FB};
-loadInfo.modelKey = keyboardModelKey;
-XrRenderModelBufferFB renderModelbuffer{XR_TYPE_RENDER_MODEL_BUFFER_FB};
+XrRenderModelLoadInfoFB loadInfo{
+    .type = XR_TYPE_RENDER_MODEL_LOAD_INFO_FB,
+    .modelKey = keyboardModelKey,
+};
+XrRenderModelBufferFB renderModelbuffer{
+    .type = XR_TYPE_RENDER_MODEL_BUFFER_FB,
+};
 CHK_XR((xrLoadRenderModelFB(session, &loadInfo, &renderModelbuffer)));
 std::vector<uint8_t> modelBuffer(renderModelbuffer.bufferCountOutput);
 renderModelbuffer.buffer = modelBuffer.data();
@@ -943,8 +962,10 @@ CHK_XR((xrLoadRenderModelFB(session, &loadInfo, &renderModelbuffer)));
 // >>> Application loads the glTF model in `modelBuffer`, keeping a reference to the model animations and any textures with a URI texture id. See `Extend glTF render model support`.
 
 /// Show render model
-XrVirtualKeyboardModelVisibilitySetInfoMETA modelVisibility{XR_TYPE_VIRTUAL_KEYBOARD_MODEL_VISIBILITY_SET_INFO_META};
-modelVisibility.visible = XR_TRUE;
+XrVirtualKeyboardModelVisibilitySetInfoMETA modelVisibility{
+    .type = XR_TYPE_VIRTUAL_KEYBOARD_MODEL_VISIBILITY_SET_INFO_META,
+    .visible = XR_TRUE,
+};
 CHK_XR(xrSetVirtualKeyboardModelVisibilityMETA(keyboardHandle, &modelVisibility));
 
 while (!quit) {
@@ -954,13 +975,17 @@ while (!quit) {
   XrFrameState frameState; // previously returned from xrWaitFrame
   const XrTime time = frameState.predictedDisplayTime;
 
-  XrVirtualKeyboardLocationInfoMETA locationInfo{XR_TYPE_VIRTUAL_KEYBOARD_LOCATION_INFO_META};
+  XrVirtualKeyboardLocationInfoMETA locationInfo{
+      .type = XR_TYPE_VIRTUAL_KEYBOARD_LOCATION_INFO_META,
+  };
   // >>> Application sets desired location and scale in `locationInfo`
   CHK_XR(xrSuggestVirtualKeyboardLocationMETA(keyboardHandle, &locationInfo));
 
   // For each input source:
   {
-    XrVirtualKeyboardInputInfoMETA inputInfo{XR_TYPE_VIRTUAL_KEYBOARD_INPUT_INFO_META};
+    XrVirtualKeyboardInputInfoMETA inputInfo{
+        .type = XR_TYPE_VIRTUAL_KEYBOARD_INPUT_INFO_META,
+    };
     // >>> Application sets input source data in `inputInfo`
     XrPosef interactorRootPose;
     CHK_XR(xrSendVirtualKeyboardInputMETA(keyboardHandle, &inputInfo, &interactorRootPose));
@@ -972,7 +997,9 @@ while (!quit) {
   std::vector<uint64_t> dirtyTextureIds(textureIdCountOutput);
   CHK_XR(xrGetVirtualKeyboardDirtyTexturesMETA(keyboardHandle, textureIdCountOutput, &textureIdCountOutput, dirtyTextureIds.data()));
   for (const uint64_t textureId : dirtyTextureIds) {
-    XrVirtualKeyboardTextureDataMETA textureData{XR_TYPE_VIRTUAL_KEYBOARD_TEXTURE_DATA_META};
+    XrVirtualKeyboardTextureDataMETA textureData{
+        .type = XR_TYPE_VIRTUAL_KEYBOARD_TEXTURE_DATA_META,
+    };
     CHK_XR(xrGetVirtualKeyboardTextureDataMETA(keyboardHandle, textureId, &textureData));
     std::vector<uint8_t> textureDataBuffer(textureData.bufferCountOutput);
     textureData.bufferCapacityInput = textureData.bufferCountOutput;
@@ -981,9 +1008,13 @@ while (!quit) {
     // >>> Application applies `textureData` to the glTF texture referenced by `textureId`
   }
 
-  XrVirtualKeyboardModelAnimationStatesMETA animationStates{XR_TYPE_VIRTUAL_KEYBOARD_MODEL_ANIMATION_STATES_META};
+  XrVirtualKeyboardModelAnimationStatesMETA animationStates{
+      .type = XR_TYPE_VIRTUAL_KEYBOARD_MODEL_ANIMATION_STATES_META,
+  };
   CHK_XR(xrGetVirtualKeyboardModelAnimationStatesMETA(keyboardHandle, &animationStates));
-  std::vector<XrVirtualKeyboardAnimationStateMETA> animationStatesBuffer(animationStates.stateCountOutput, {XR_TYPE_VIRTUAL_KEYBOARD_ANIMATION_STATE_META});
+  std::vector<XrVirtualKeyboardAnimationStateMETA> animationStatesBuffer(animationStates.stateCountOutput, {
+      .type = XR_TYPE_VIRTUAL_KEYBOARD_ANIMATION_STATE_META,
+  });
   animationStates.stateCapacityInput = animationStates.stateCountOutput;
   animationStates.states = animationStatesBuffer.data();
   CHK_XR(xrGetVirtualKeyboardModelAnimationStatesMETA(keyboardHandle, &animationStates));
@@ -992,7 +1023,9 @@ while (!quit) {
     // >>> Application applies `animationState` to the corresponding glTF model animation
   }
 
-  XrSpaceLocation keyboardLocation{XR_TYPE_SPACE_LOCATION};
+  XrSpaceLocation keyboardLocation{
+      .type = XR_TYPE_SPACE_LOCATION,
+  };
   CHK_XR(xrLocateSpace(keyboardSpace, localSpace, time, &keyboardLocation));
   float keyboardScale;
   CHK_XR(xrGetVirtualKeyboardScaleMETA(keyboardHandle, &keyboardScale));

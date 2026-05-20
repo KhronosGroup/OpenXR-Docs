@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type requires="openxr_platform_defines" name="uint64_t"/>
+        <type category="basetype">typedef <type>uint64_t</type> <name>XrFlags64</name>;</type>
+
+        <type bitvalues="XrEmptyFlagBitsEXT" category="bitmask">typedef <type>XrFlags64</type> <name>XrEmptyFlagsEXT</name>;</type>
+        <type name="XrEmptyFlagBitsEXT" category="enum"/>
+
+        <type bitvalues="XrNonEmptyFlagBitsEXT" category="bitmask">typedef <type>XrFlags64</type> <name>XrNonEmptyFlagsEXT</name>;</type>
+        <type name="XrNonEmptyFlagBitsEXT" category="enum"/>
+
+        <!-- Empty flags with optional - should pass -->
+        <type category="struct" name="XrEmptyFlagStructEXT">
+            <member optional="true"><type>XrEmptyFlagsEXT</type> <name>flags</name></member>
+        </type>
+
+        <!-- Non-empty flags without optional - should also pass -->
+        <type category="struct" name="XrNonEmptyFlagStructEXT">
+            <member><type>XrNonEmptyFlagsEXT</type> <name>flags</name></member>
+        </type>
+        <!-- Non-empty flags with optional - should also pass -->
+        <type category="struct" name="XrNonEmptyFlagOptionalStructEXT">
+            <member optional="true"><type>XrNonEmptyFlagsEXT</type> <name>flags</name></member>
+        </type>
+    </types>
+
+    <enums name="XrEmptyFlagBitsEXT" type="bitmask">
+    </enums>
+
+    <enums name="XrNonEmptyFlagBitsEXT" type="bitmask">
+        <enum bitpos="0" name="XR_NON_EMPTY_SOMETHING_BIT_EXT" comment="Some bit"/>
+    </enums>
+</registry>
