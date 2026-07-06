@@ -523,7 +523,7 @@ include::{generated}/interfaces/XR_EXT_spatial_persistence.adoc[leveloffset=1]
 [source,cpp]
 ----
 // Check if the required persistence scope supported
-uint32_t scopeCount;
+uint32_t scopeCount = 0;
 CHK_XR(xrEnumerateSpatialPersistenceScopesEXT(instance, systemId, 0, &scopeCount, nullptr));
 std::vector<XrSpatialPersistenceScopeEXT> persistenceScopes(scopeCount);
 CHK_XR(xrEnumerateSpatialPersistenceScopesEXT(instance, systemId, scopeCount, &scopeCount, persistenceScopes.data()));
@@ -532,16 +532,20 @@ if (std::find(persistenceScopes.begin(), persistenceScopes.end(), XR_SPATIAL_PER
   return;
 }
 
-XrSpatialPersistenceContextEXT persistenceContext{};
+XrSpatialPersistenceContextEXT persistenceContext {XR_NULL_HANDLE};
 
-XrSpatialPersistenceContextCreateInfoEXT persistenceContextCreateInfo{XR_TYPE_SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT};
-persistenceContextCreateInfo.scope = XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT;
-XrFutureEXT createContextFuture;
+XrSpatialPersistenceContextCreateInfoEXT persistenceContextCreateInfo{
+  .type = XR_TYPE_SPATIAL_PERSISTENCE_CONTEXT_CREATE_INFO_EXT,
+  .scope = XR_SPATIAL_PERSISTENCE_SCOPE_SYSTEM_MANAGED_EXT,
+};
+XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
 CHK_XR(xrCreateSpatialPersistenceContextAsyncEXT(session, &persistenceContextCreateInfo, &createContextFuture));
 
 waitUntilReady(createContextFuture);
 
-XrCreateSpatialPersistenceContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT};
+XrCreateSpatialPersistenceContextCompletionEXT completion{
+  .type = XR_TYPE_CREATE_SPATIAL_PERSISTENCE_CONTEXT_COMPLETION_EXT,
+};
 CHK_XR(xrCreateSpatialPersistenceContextCompleteEXT(session, createContextFuture, &completion));
 if (completion.futureResult != XR_SUCCESS || completion.createResult != XR_SPATIAL_PERSISTENCE_CONTEXT_RESULT_SUCCESS_EXT) {
   return;
@@ -581,33 +585,41 @@ XrSpatialContextEXT spatialContext{};
     enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT);
   }
 
-  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT};
-  anchorConfig.capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT;
-  anchorConfig.enabledComponentCount = enabledComponents.size();
-  anchorConfig.enabledComponents = enabledComponents.data();
+  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig {
+    .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT,
+    .capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT,
+    .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+    .enabledComponents = enabledComponents.data(),
+  };
 
   std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
     reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&anchorConfig),
   };
 
-  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
-  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
-  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{
+    .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+    .capabilityConfigCount = capabilityConfigs.size(),
+    .capabilityConfigs = capabilityConfigs.data(),
+  };
 
-  XrSpatialContextPersistenceConfigEXT persistenceConfig{XR_TYPE_SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT};
-  persistenceConfig.persistenceContextCount = 1;
-  persistenceConfig.persistenceContexts = &persistenceContext;
+  XrSpatialContextPersistenceConfigEXT persistenceConfig{
+    .type = XR_TYPE_SPATIAL_CONTEXT_PERSISTENCE_CONFIG_EXT,
+    .persistenceContextCount = 1,
+    .persistenceContexts = &persistenceContext,
+  };
 
   if (supportsPersistenceComponent) {
     spatialContextCreateInfo.next = &persistenceConfig;
   }
 
-  XrFutureEXT createContextFuture;
+  XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
   CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
 
   waitUntilReady(createContextFuture);
 
-  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  XrCreateSpatialContextCompletionEXT completion{
+    .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
   if (completion.futureResult != XR_SUCCESS) {
     return;
@@ -635,28 +647,38 @@ std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
 };
 
 auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
 
     // Query for the semantic label component data
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = snapshotComponents.size();
-    queryCond.componentTypes = snapshotComponents.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -667,9 +689,11 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrSpatialPersistenceDataEXT> persistenceData(queryResult.entityIdCountOutput);
-    XrSpatialComponentPersistenceListEXT persistenceDataList{XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT};
-    persistenceDataList.persistDataCount = persistenceData.size();
-    persistenceDataList.persistData = persistenceData.data();
+    XrSpatialComponentPersistenceListEXT persistenceDataList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT,
+      .persistDataCount = static_cast<uint32_t>(persistenceData.size()),
+      .persistData = persistenceData.data(),
+    };
     queryResult.next = &persistenceDataList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -693,7 +717,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
       switch (event.type) {
@@ -718,7 +744,7 @@ while (1) {
 
 [source,cpp]
 ----
-XrFutureEXT future = XR_NULL_FUTURE_EXT;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
 
 // Load up the uuids that the app has stored on its own i.e. the uuids it is interested in.
 std::vector<XrUuid> uuidsStoredByApp = loadPersistedUuids();
@@ -729,34 +755,46 @@ std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
 };
 
 auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
-  XrSpatialDiscoveryPersistenceUuidFilterEXT persistenceFilter{XR_TYPE_SPATIAL_DISCOVERY_PERSISTENCE_UUID_FILTER_EXT};
-  persistenceFilter.persistedUuidCount = uuidsStoredByApp.size();
-  persistenceFilter.persistedUuids = uuidsStoredByApp.data();
+  XrSpatialDiscoveryPersistenceUuidFilterEXT persistenceFilter {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_PERSISTENCE_UUID_FILTER_EXT,
+    .persistedUuidCount = static_cast<uint32_t>(uuidsStoredByApp.size()),
+    .persistedUuids = uuidsStoredByApp.data(),
+  };
 
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
-  snapshotCreateInfo.next = &persistenceFilter;
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .next = &persistenceFilter,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
 
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
 
     // Query for the semantic label component data
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = snapshotComponents.size();
-    queryCond.componentTypes = snapshotComponents.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -767,9 +805,11 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrSpatialPersistenceDataEXT> persistenceData(queryResult.entityIdCountOutput);
-    XrSpatialComponentPersistenceListEXT persistenceDataList{XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT};
-    persistenceDataList.persistDataCount = persistenceData.size();
-    persistenceDataList.persistData = persistenceData.data();
+    XrSpatialComponentPersistenceListEXT persistenceDataList{
+      .type = XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT,
+      .persistDataCount = static_cast<uint32_t>(persistenceData.size()),
+      .persistData = persistenceData.data(),
+    };
     queryResult.next = &persistenceDataList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -798,7 +838,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
       switch (event.type) {

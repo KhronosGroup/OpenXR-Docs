@@ -104,22 +104,30 @@ extern bool supportsStageSpace;
 extern bool supportsLocalFloorExtension;
 extern XrTime curtime; // previously initialized
 
-XrSpace localFloorSpace = XR_NULL_HANDLE;
+XrSpace localFloorSpace {XR_NULL_HANDLE};
 
 if (supportsLocalFloorExtension)
 {
-    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f}};
-    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT;
+    XrReferenceSpaceCreateInfo localFloorCreateInfo {
+        .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+        .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL_FLOOR_EXT,
+        .poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, 0.f, 0.f}},
+    };
     CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
 }
 else if (supportsStageSpace)
 {
-    XrSpace localSpace = XR_NULL_HANDLE;
-    XrSpace stageSpace = XR_NULL_HANDLE;
+    XrSpace localSpace {XR_NULL_HANDLE};
+    XrSpace stageSpace {XR_NULL_HANDLE};
 
-    XrReferenceSpaceCreateInfo createInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-    createInfo.poseInReferenceSpace.orientation.w = 1.f;
+    XrReferenceSpaceCreateInfo createInfo {
+        .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+        .poseInReferenceSpace = {
+            .orientation = {
+                .w = 1.f,
+            },
+        },
+    };
 
     createInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
     CHK_XR(xrCreateReferenceSpace(session, &createInfo, &localSpace));
@@ -127,7 +135,9 @@ else if (supportsStageSpace)
     createInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
     CHK_XR(xrCreateReferenceSpace(session, &createInfo, &stageSpace));
 
-    XrSpaceLocation stageLoc{XR_TYPE_SPACE_LOCATION};
+    XrSpaceLocation stageLoc {
+        .type = XR_TYPE_SPACE_LOCATION,
+    };
     CHK_XR(xrLocateSpace(stageSpace, localSpace, curtime, &stageLoc));
 
     CHK_XR(xrDestroySpace(localSpace));
@@ -135,9 +145,11 @@ else if (supportsStageSpace)
 
     float floorOffset = stageLoc.pose.position.y;
 
-    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
-    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}};
+    XrReferenceSpaceCreateInfo localFloorCreateInfo {
+        .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+        .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL,
+        .poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}},
+    };
     CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
 }
 else
@@ -145,9 +157,11 @@ else
     // We do not support local floor or stage - make an educated guess
     float floorOffset = -1.5;
 
-    XrReferenceSpaceCreateInfo localFloorCreateInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
-    localFloorCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
-    localFloorCreateInfo.poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}};
+    XrReferenceSpaceCreateInfo localFloorCreateInfo {
+        .type = XR_TYPE_REFERENCE_SPACE_CREATE_INFO,
+        .referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL,
+        .poseInReferenceSpace = {{0.f, 0.f, 0.f, 1.f}, {0.f, floorOffset, 0.f}},
+    };
     CHK_XR(xrCreateReferenceSpace(session, &localFloorCreateInfo, &localFloorSpace));
 }
 

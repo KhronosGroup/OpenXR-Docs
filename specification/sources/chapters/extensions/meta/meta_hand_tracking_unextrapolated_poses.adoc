@@ -1,0 +1,148 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_hand_tracking_unextrapolated_poses.adoc[]
+
+*Last Modified Date*::
+    2025-09-30
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Robert Memmott, Meta +
+    John Kearney, Meta +
+    Andreas Selvik, Meta +
+
+==== Overview
+
+This extension augments the apiext:XR_EXT_hand_tracking extension.
+If the application passes apiext:XR_META_hand_tracking_unextrapolated_poses
+but does not pass apiext:XR_EXT_hand_tracking then flink:xrCreateInstance
+must: return ename:XR_ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED.
+
+This extension allows applications to request unextrapolated hand tracking
+poses and obtain information about the capture time of the data used to
+generate the hand poses.
+This is useful for applications that want to perform their own extrapolation
+using additional context information that is not available to the runtime.
+
+When the application chains the
+slink:XrHandTrackingUnextrapolatedPosesRequestMETA structure to the
+slink:XrHandJointsLocateInfoEXT structure when calling
+flink:xrLocateHandJointsEXT, the runtime must: provide the latest calculated
+hand poses without temporal extrapolation.
+The pname:time parameter in slink:XrHandJointsLocateInfoEXT is still used
+for determining the reference space transformation, but must: be ignored for
+determining the hand joint locations themselves.
+
+[open,refpage='XrHandTrackingUnextrapolatedPosesRequestMETA',type='structs',desc='Request unextrapolated hand tracking poses',xrefs='XrHandJointsLocateInfoEXT xrLocateHandJointsEXT']
+--
+The slink:XrHandTrackingUnextrapolatedPosesRequestMETA structure can: be
+used to request unextrapolated hand tracking poses.
+
+include::{generated}/api/structs/XrHandTrackingUnextrapolatedPosesRequestMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+The slink:XrHandTrackingUnextrapolatedPosesRequestMETA is a structure that
+an application can: chain to slink:XrHandJointsLocateInfoEXT::pname:next
+when calling flink:xrLocateHandJointsEXT to request that the runtime provide
+unextrapolated hand tracking poses.
+
+include::{generated}/validity/structs/XrHandTrackingUnextrapolatedPosesRequestMETA.adoc[]
+--
+
+[open,refpage='XrHandTrackingUnextrapolatedPosesMETA',type='structs',desc='Receive unextrapolated hand tracking pose information',xrefs='XrHandJointLocationsEXT xrLocateHandJointsEXT']
+--
+The slink:XrHandTrackingUnextrapolatedPosesMETA is a structure that an
+application can: chain to slink:XrHandJointLocationsEXT::pname:next when
+calling flink:xrLocateHandJointsEXT to receive information about the
+unextrapolated hand tracking poses.
+
+include::{generated}/api/structs/XrHandTrackingUnextrapolatedPosesMETA.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:captureTime is an basetype:XrTime representing when the data used to
+  generate the returned hand poses were captured.
+****
+
+The runtime must: populate this structure when the
+slink:XrHandTrackingUnextrapolatedPosesRequestMETA structure is chained to
+the slink:XrHandJointsLocateInfoEXT input structure.
+The runtime must: not modify this structure if the
+slink:XrHandTrackingUnextrapolatedPosesRequestMETA structure is not chained
+to the slink:XrHandJointsLocateInfoEXT input structure.
+
+The pname:captureTime field indicates when the source data used to generate
+the hand poses were captured by the tracking system.
+This timestamp can: be used by applications to understand the age of the
+tracking data and implement appropriate extrapolation or prediction
+algorithms.
+If there are no valid poses the pname:captureTime must: be zero.
+
+include::{generated}/validity/structs/XrHandTrackingUnextrapolatedPosesMETA.adoc[]
+--
+
+==== Sample code
+[source,cpp]
+----
+XrSession session; // previously initialized
+XrSpace worldSpace; // previously initialized, e.g. from
+  // XR_REFERENCE_SPACE_TYPE_LOCAL
+XrFrameState frameState; // previously returned from xrWaitFrame
+XrHandTrackerEXT handTracker; // previously initialized
+PFN_xrLocateHandJointsEXT locateHandJoints; // previously initialized
+
+
+/// unextrapolated poses request variable
+XrHandTrackingUnextrapolatedPosesRequestMETA unextrapolatedPosesRequestMETA{
+    XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_REQUEST_META};
+
+XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
+locateInfo.baseSpace = worldSpace;
+locateInfo.time = frameState.predictedDisplayTime;
+locateInfo.next = &unextrapolatedPosesRequestMETA;
+
+/// unextrapolated poses response variable
+XrHandTrackingUnextrapolatedPosesMETA unextrapolatedPosesMETA{
+    XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_META};
+
+XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
+
+locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
+locations.jointLocations = jointLocations;
+locations.next = &unextrapolatedPosesMETA;
+
+CHK_XR(locateHandJoints(handTracker, &locateInfo, &locations));
+
+// jointLocations contains the unextrapolated hand poses
+// unextrapolatedPosesMETA.captureTime the capture time of the hand poses
+----
+
+==== Issues
+
+1) Should the extension validate that both request and response structures
+are chained together?
+
+*RESOLVED*: No strict validation required.
+The runtime will populate the response structure when the request structure
+is present, but applications may: choose to chain only the request structure
+if they do not need the capture time information.
+
+==== Version History
+
+* Revision 1, 2025-09-30 (Robert Memmott)
+** Initial extension description

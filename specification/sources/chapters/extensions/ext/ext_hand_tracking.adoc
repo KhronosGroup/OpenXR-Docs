@@ -427,10 +427,13 @@ XrSpace worldSpace;  // previously initialized, e.g. from
                      // XR_REFERENCE_SPACE_TYPE_LOCAL
 
 // Inspect hand tracking system properties
-XrSystemHandTrackingPropertiesEXT handTrackingSystemProperties{
-    XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &handTrackingSystemProperties};
+XrSystemHandTrackingPropertiesEXT handTrackingSystemProperties {
+    .type = XR_TYPE_SYSTEM_HAND_TRACKING_PROPERTIES_EXT,
+};
+XrSystemProperties systemProperties {
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &handTrackingSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!handTrackingSystemProperties.supportsHandTracking) {
     // The system does not support hand tracking
@@ -438,17 +441,19 @@ if (!handTrackingSystemProperties.supportsHandTracking) {
 }
 
 // Get function pointer for xrCreateHandTrackerEXT
-PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateHandTrackerEXT)));
 
 // Create a hand tracker for left hand that tracks default set of hand joints.
-XrHandTrackerEXT leftHandTracker{};
+XrHandTrackerEXT leftHandTracker {XR_NULL_HANDLE};
 {
-    XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
-    createInfo.hand = XR_HAND_LEFT_EXT;
-    createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+    XrHandTrackerCreateInfoEXT createInfo {
+        .type = XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT,
+        .hand = XR_HAND_LEFT_EXT,
+        .handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT,
+    };
     CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
 }
 
@@ -457,17 +462,21 @@ XrHandTrackerEXT leftHandTracker{};
 XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
 XrHandJointVelocityEXT jointVelocities[XR_HAND_JOINT_COUNT_EXT];
 
-XrHandJointVelocitiesEXT velocities{XR_TYPE_HAND_JOINT_VELOCITIES_EXT};
-velocities.jointCount = XR_HAND_JOINT_COUNT_EXT;
-velocities.jointVelocities = jointVelocities;
+XrHandJointVelocitiesEXT velocities {
+    .type = XR_TYPE_HAND_JOINT_VELOCITIES_EXT,
+    .jointCount = XR_HAND_JOINT_COUNT_EXT,
+    .jointVelocities = jointVelocities,
+};
 
-XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
-locations.next = &velocities;
-locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
-locations.jointLocations = jointLocations;
+XrHandJointLocationsEXT locations {
+    .type = XR_TYPE_HAND_JOINT_LOCATIONS_EXT,
+    .next = &velocities,
+    .jointCount = XR_HAND_JOINT_COUNT_EXT,
+    .jointLocations = jointLocations,
+};
 
 // Get function pointer for xrLocateHandJointsEXT
-PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT;
+PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateHandJointsEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnLocateHandJointsEXT)));
@@ -478,9 +487,11 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
-    locateInfo.baseSpace = worldSpace;
-    locateInfo.time = time;
+    XrHandJointsLocateInfoEXT locateInfo {
+        .type = XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT,
+        .baseSpace = worldSpace,
+        .time = time,
+    };
 
     CHK_XR(pfnLocateHandJointsEXT(leftHandTracker, &locateInfo, &locations));
 

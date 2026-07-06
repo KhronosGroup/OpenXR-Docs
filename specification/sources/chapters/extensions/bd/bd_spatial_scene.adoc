@@ -179,7 +179,7 @@ Use flink:xrEnumerateSpatialEntityComponentTypesBD to get the types of
 components contained within these entities, such as location, semantics, and
 bounding boxes.
 To further retrieve component information, call
-flink:xrGetSpatialEntityComponentDataBD
+flink:xrGetSpatialEntityComponentDataBD.
 
 When the scene information changes, the runtime must: queue an
 slink:XrEventDataSenseDataUpdatedBD event with the handle of the spatial

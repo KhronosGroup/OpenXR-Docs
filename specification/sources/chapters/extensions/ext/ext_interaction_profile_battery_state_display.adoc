@@ -101,8 +101,13 @@ include::{generated}/api/enums/XrBatteryStateDisplayStateFlagBitsEXT.comments.ad
 extern XrSession session;
 extern XrPath topLevelUserPath;
 
-XrBatteryStateDisplayEXT batteryStateDisplay{XR_TYPE_BATTERY_STATE_DISPLAY_EXT};
-XrInteractionProfileState ipState{XR_TYPE_INTERACTION_PROFILE_STATE, &batteryStateDisplay};
+XrBatteryStateDisplayEXT batteryStateDisplay {
+  .type = XR_TYPE_BATTERY_STATE_DISPLAY_EXT,
+};
+XrInteractionProfileState ipState {
+  .type = XR_TYPE_INTERACTION_PROFILE_STATE,
+  .next = &batteryStateDisplay,
+};
 CHK_XR(xrGetCurrentInteractionProfile(session, topLevelUserPath, &ipState));
 if ((batteryStateDisplay.stateFlags & XR_BATTERY_STATE_DISPLAY_STATE_VALID_BIT_EXT) != 0) {
   // use value of batteryStateDisplay.batteryLevel

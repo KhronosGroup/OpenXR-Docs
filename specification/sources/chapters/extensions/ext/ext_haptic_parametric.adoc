@@ -617,23 +617,62 @@ XrSession session;                   // previously initialized
 XrHapticActionInfo hapticActionInfo; // previously initialized
 
 std::vector<XrHapticParametricPointEXT> amplitudePoints{{
-   {0, 0.0}, {100000000, 1.0}, {270000000, 1.0}, {480000000, 0.7}, {750000000, 0.6},
-   {1000000000, 1.0}}};
+  {
+    .time = 0,
+    .value = 0.0,
+  },
+  {
+    .time = 100000000,
+    .value = 1.0,
+  },
+  {
+    .time = 270000000,
+    .value = 1.0,
+  },
+  {
+    .time = 480000000,
+    .value = 0.7,
+  },
+  {
+    .time = 750000000,
+    .value = 0.6,
+  },
+  {
+    .time = 1000000000,
+    .value = 1.0,
+  },
+}};
 std::vector<XrHapticParametricPointEXT> frequencyPoints{{
-    {0, 1.0}, {1000000000, 0.0}}};
+  {
+    .time = 0,
+    .value = 1.0,
+  },
+  {
+    .time = 1000000000,
+    .value = 0.0,
+  },
+}};
 std::vector<XrHapticParametricTransientEXT> transients{{
-    {600000000, 1.0, 1.0}}};
+  {
+    .time = 600000000,
+    .amplitude = 1.0,
+    .frequency = 1.0,
+  }
+}};
 
-XrHapticParametricVibrationEXT parametricVibration{XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT};
-parametricVibration.amplitudePointCount = amplitudePoints.size();
-parametricVibration.amplitudePoints = amplitudePoints.data();
-parametricVibration.frequencyPointCount = frequencyPoints.size();
-parametricVibration.frequencyPoints = frequencyPoints.data();
-parametricVibration.transientCount = transients.size();
-parametricVibration.transients = transients.data();
-parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-parametricVibration.streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT;
+XrHapticParametricVibrationEXT parametricVibration{
+  .type = XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT,
+  .amplitudePointCount = static_cast<uint32_t>(amplitudePoints.size()),
+  .amplitudePoints = amplitudePoints.data(),
+  .frequencyPointCount = static_cast<uint32_t>(frequencyPoints.size()),
+  .frequencyPoints = frequencyPoints.data(),
+  .transientCount = static_cast<uint32_t>(transients.size()),
+  .transients = transients.data(),
+  .minFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+  .maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+  .streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_NONE_EXT,
+};
+
 CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
     reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
 ----
@@ -673,7 +712,9 @@ CHK_XR(xrGetInstanceProcAddr(
     instance, "xrHapticParametricGetPropertiesEXT",
     (PFN_xrVoidFunction*)(&xrHapticParametricGetPropertiesEXT)));
 
-XrHapticParametricPropertiesEXT properties{XR_TYPE_HAPTIC_PARAMETRIC_PROPERTIES_EXT};
+XrHapticParametricPropertiesEXT properties {
+  .type = XR_TYPE_HAPTIC_PARAMETRIC_PROPERTIES_EXT,
+};
 CHK_XR(xrHapticParametricGetPropertiesEXT(session, &hapticActionInfo, &properties));
 // The runtime may: populate properties with 0, use a reasonable default in that case
 if (properties.idealFrameSubmissionRate == 0) {
@@ -687,14 +728,16 @@ int64_t endOfFrameNs = properties.minimumFirstFrameDuration;
 std::vector<XrHapticParametricPointEXT> amplitudePoints{{{0, 0.5}, {endOfFrameNs, 0.5}}};
 std::vector<XrHapticParametricPointEXT> frequencyPoints{{{0, 0.5}, {endOfFrameNs, 0.5}}};
 
-XrHapticParametricVibrationEXT parametricVibration{XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT};
-parametricVibration.amplitudePointCount = amplitudePoints.size();
-parametricVibration.amplitudePoints = amplitudePoints.data();
-parametricVibration.frequencyPointCount = frequencyPoints.size();
-parametricVibration.frequencyPoints = frequencyPoints.data();
-parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-parametricVibration.streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT;
+XrHapticParametricVibrationEXT parametricVibration{
+  .type = XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT,
+  .amplitudePointCount = static_cast<uint32_t>(amplitudePoints.size()),
+  .amplitudePoints = amplitudePoints.data(),
+  .frequencyPointCount = static_cast<uint32_t>(frequencyPoints.size()),
+  .frequencyPoints = frequencyPoints.data(),
+  .minFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+  .maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+  .streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_FIRST_FRAME_EXT,
+};
 CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
     reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
 
@@ -711,16 +754,19 @@ for (int frameNum = 1;; frameNum++) {
     XrHapticParametricPointEXT amplitudePoint{endOfFrameNs, getDynamicAmplitude()};
     XrHapticParametricPointEXT frequencyPoint{endOfFrameNs, getDynamicFrequency()};
 
-    parametricVibration.amplitudePointCount = 1;
-    parametricVibration.amplitudePoints = &amplitudePoint;
-    parametricVibration.frequencyPointCount = 1;
-    parametricVibration.frequencyPoints = &frequencyPoint;
-    parametricVibration.minFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-    parametricVibration.maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED;
-    parametricVibration.streamFrameType =
-        XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT;
+    XrHapticParametricVibrationEXT parametricVibrationInt{
+      .type = XR_TYPE_HAPTIC_PARAMETRIC_VIBRATION_EXT,
+      .amplitudePointCount = 1,
+      .amplitudePoints = &amplitudePoint,
+      .frequencyPointCount = 1,
+      .frequencyPoints = &frequencyPoint,
+      .minFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+      .maxFrequencyHz = XR_FREQUENCY_UNSPECIFIED,
+      .streamFrameType = XR_HAPTIC_PARAMETRIC_STREAM_FRAME_TYPE_INTERMEDIATE_FRAME_EXT,
+    };
+
     CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo,
-        reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibration)));
+        reinterpret_cast<const XrHapticBaseHeader*>(&parametricVibrationInt)));
 }
 ----
 

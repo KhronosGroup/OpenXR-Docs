@@ -1,0 +1,246 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_spatial_discovery_bounds.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Yin Li, Microsoft +
+    Ron Bessems, Meta +
+    Karthik Kadappan, Magic Leap +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension adds definitions for spatial bounds that allows applications
+to filter discovered spatial entities when calling
+flink:xrCreateSpatialDiscoverySnapshotAsyncEXT.
+
+==== Spatial Bounds
+
+[open,refpage='XrSpatialBoundsSpherefANDROID',type='structs',desc='Spherical bounds for spatial entity discovery',xrefs='XrSpatialDiscoverySnapshotCreateInfoEXT']
+--
+The slink:XrSpatialBoundsSpherefANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBoundsSpherefANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:space is the slink:XrSpace that any poses for the bounds are defined
+  in.
+* pname:time is an basetype:XrTime at which the poses for the bounds are
+  defined.
+* pname:sphere is an slink:XrSpheref which describes the spherical volume
+  within which the runtime must: constrain its discovery of spatial
+  entities.
+****
+
+Spatial capabilities that support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_SPHERE_BOUNDS_FILTER_ANDROID (as
+enumerated by flink:xrEnumerateSpatialCapabilityFeaturesEXT) allow the
+application to restrict the discovery to spatial entities whose location or
+bounds are within or intersecting with pname:sphere by chaining
+slink:XrSpatialBoundsSpherefANDROID to
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:next.
+For a discovery snapshot in which the applicable capability supports
+ename:XR_SPATIAL_CAPABILITY_FEATURE_SPHERE_BOUNDS_FILTER_ANDROID, if this
+structure is present in the pname:next chain, the runtime must: not include
+any spatial entities whose location or bounds are entirely outside of
+pname:sphere.
+
+It is important to note that the inclusion of
+slink:XrSpatialBoundsSpherefANDROID in the next chain of
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT acts as an 'AND' condition
+with the other filters provided.
+Entities coming from spatial capabilities that do not support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_SPHERE_BOUNDS_FILTER_ANDROID must: not
+be included in the discovery snapshot.
+This behavior is different from the rest of the OpenXR specification where
+unrecognized or unsupported structures in the next pointer chain are ignored
+by the runtime.
+Also, as described in the <<fundamentals-next-chain-structure-uniqueness>>
+section, the runtime will only process the first occurrence of the
+slink:XrSpatialBoundsSpherefANDROID structure in the next chain.
+
+include::{generated}/validity/structs/XrSpatialBoundsSpherefANDROID.adoc[]
+--
+
+[open,refpage='XrSpatialBoundsBoxfANDROID',type='structs',desc='Box bounds for spatial entity discovery',xrefs='XrSpatialDiscoverySnapshotCreateInfoEXT']
+--
+The slink:XrSpatialBoundsBoxfANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBoundsBoxfANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:space is the slink:XrSpace that any poses for the bounds are defined
+  in.
+* pname:time is an basetype:XrTime at which the poses for the bounds are
+  defined.
+* pname:box is an slink:XrBoxf which describes the box volume within which
+  the runtime must: constrain its discovery of spatial entities.
+****
+
+Spatial capabilities that support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_BOX_BOUNDS_FILTER_ANDROID (as enumerated
+by flink:xrEnumerateSpatialCapabilityFeaturesEXT) allow the application to
+restrict the discovery to spatial entities whose location or bounds are
+within or intersecting with pname:box by chaining
+slink:XrSpatialBoundsBoxfANDROID to
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:next.
+For a discovery snapshot in which the applicable capability supports
+ename:XR_SPATIAL_CAPABILITY_FEATURE_BOX_BOUNDS_FILTER_ANDROID, if this
+structure is present in the pname:next chain, the runtime must: not include
+any spatial entities whose location or bounds are entirely outside of
+pname:box.
+
+It is important to note that the inclusion of
+slink:XrSpatialBoundsBoxfANDROID in the next chain of
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT acts as an 'AND' condition
+with the other filters provided.
+Entities coming from spatial capabilities that do not support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_BOX_BOUNDS_FILTER_ANDROID must: not be
+included in the discovery snapshot.
+This behavior is different from the rest of the OpenXR specification where
+unrecognized or unsupported structures in the next pointer chain are ignored
+by the runtime.
+Also, as described in the <<fundamentals-next-chain-structure-uniqueness>>
+section, the runtime will only process the first occurrence of the
+slink:XrSpatialBoundsBoxfANDROID structure in the next chain.
+
+include::{generated}/validity/structs/XrSpatialBoundsBoxfANDROID.adoc[]
+--
+
+[open,refpage='XrSpatialBoundsFrustumfANDROID',type='structs',desc='Frustum bounds for spatial entity discovery',xrefs='XrSpatialDiscoverySnapshotCreateInfoEXT']
+--
+The slink:XrSpatialBoundsFrustumfANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSpatialBoundsFrustumfANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:space is the slink:XrSpace that any poses for the bounds are defined
+  in.
+* pname:time is an basetype:XrTime at which the poses for the bounds are
+  defined.
+* pname:frustum is an slink:XrFrustumf which describes the frustum volume
+  within which the runtime must: constrain its discovery of spatial
+  entities.
+****
+
+Spatial capabilities that support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_FRUSTUM_BOUNDS_FILTER_ANDROID (as
+enumerated by flink:xrEnumerateSpatialCapabilityFeaturesEXT) allow the
+application to restrict the discovery to spatial entities whose location or
+bounds are within or intersecting with pname:frustum by chaining
+slink:XrSpatialBoundsFrustumfANDROID to
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:next.
+For a discovery snapshot in which the applicable capability supports
+ename:XR_SPATIAL_CAPABILITY_FEATURE_FRUSTUM_BOUNDS_FILTER_ANDROID, if this
+structure is present in the pname:next chain, the runtime must: not include
+any spatial entities whose location or bounds are entirely outside of
+pname:frustum.
+
+It is important to note that the inclusion of
+slink:XrSpatialBoundsFrustumfANDROID in the next chain of
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT acts as an 'AND' condition
+with the other filters provided.
+Entities coming from spatial capabilities that do not support
+ename:XR_SPATIAL_CAPABILITY_FEATURE_FRUSTUM_BOUNDS_FILTER_ANDROID must: not
+be included in the discovery snapshot.
+This behavior is different from the rest of the OpenXR specification where
+unrecognized or unsupported structures in the next pointer chain are ignored
+by the runtime.
+Also, as described in the <<fundamentals-next-chain-structure-uniqueness>>
+section, the runtime will only process the first occurrence of the
+slink:XrSpatialBoundsFrustumfANDROID structure in the next chain.
+
+include::{generated}/validity/structs/XrSpatialBoundsFrustumfANDROID.adoc[]
+--
+
+==== Example
+
+The following code demonstrates how to use spatial bounds to filter the
+discovery of spatial entities.
+
+[source,cpp]
+----
+// previously initialized & configured with the XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT capability.
+XrSpatialContextEXT spatialContext;
+
+// Enumerate supported features for XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT capability
+uint32_t featureCount = 0;
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, 0, &featureCount, nullptr));
+std::vector<XrSpatialCapabilityFeatureEXT> fooFeatures(featureCount);
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, featureCount, &featureCount, fooFeatures.data()));
+
+// Check if spatial sphere bounds filter is supported
+const auto supportsFeature = [&fooFeatures](XrSpatialCapabilityFeatureEXT feature) {
+  return std::find(fooFeatures.begin(), fooFeatures.end(), feature) != fooFeatures.end();
+};
+
+const bool supportsSphereBoundsFilter = supportsFeature(XR_SPATIAL_CAPABILITY_FEATURE_SPHERE_BOUNDS_FILTER_ANDROID);
+
+// We want to look for entities in a sphere around the head with a radius of 2m.
+XrSpatialBoundsSpherefANDROID sphereBounds {
+  .type = XR_TYPE_SPATIAL_BOUNDS_SPHEREF_ANDROID,
+  .space = viewSpace,
+  .time = predictedDisplayTime,
+  .sphere = {
+    .center = {
+      .orientation = {
+        .w = 1.0f,
+      },
+    },
+    .radius = 2.0f,
+  },
+};
+
+// We want to look for entities that have the following components.
+std::array<XrSpatialComponentTypeEXT, 1> snapshotComponents{XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT};
+
+XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{
+  .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+  .next = supportsSphereBoundsFilter ? &sphereBounds : nullptr,
+  .componentTypeCount = snapshotComponents.size(),
+  .componentTypes = snapshotComponents.data(),
+};
+
+XrFutureEXT future = XR_NULL_FUTURE_EXT;
+CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+----
+
+include::{generated}/interfaces/XR_ANDROID_spatial_discovery_bounds.adoc[leveloffset=1]
+
+==== Issues
+
+* Why is the support for spatial bounds dependent on an
+  elink:XrSpatialCapabilityFeatureEXT definition?
+** Resolved
+** Answer: Not every spatial capability is capable of supporting spatial
+   bounds.
+   An example of this is a hypothetical global container entity that does
+   not have any spatial position or bounds of its own but merely helps
+   collect and organize the other entities inside it.
+   The elink:XrSpatialCapabilityFeatureEXT values enumerated by the
+   capability helps inform the app about the support for spatial bounds
+   filtering.
+
+==== Version History
+
+* Revision 1, 2025-05-03 (Nihav Jain, Google)
+** Initial extension description

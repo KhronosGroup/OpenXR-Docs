@@ -637,8 +637,9 @@ XrPath rightHandPath;
 CHK_XR(xrStringToPath(instance, "/user/hand/right", &rightHandPath));
 
 // Enumerate the render model IDs
-XrInteractionRenderModelIdsEnumerateInfoEXT renderModelGetInfo{
-    XR_TYPE_INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT};
+XrInteractionRenderModelIdsEnumerateInfoEXT renderModelGetInfo {
+    .type = XR_TYPE_INTERACTION_RENDER_MODEL_IDS_ENUMERATE_INFO_EXT,
+};
 
 uint32_t numModels{0};
 CHK_XR(pfnEnumerateInteractionRenderModelIdsEXT(session, NULL, 0, &numModels,
@@ -658,15 +659,14 @@ std::vector<const char *> appSupportedGltfExtensions{"KHR_texture_basisu",
 
 std::vector<XrRenderModelEXT> interactionModels;
 for (XrRenderModelIdEXT id : interactionModelIds) {
-  XrRenderModelEXT renderModel;
-  XrRenderModelCreateInfoEXT renderModelCreateInfo{
-      XR_TYPE_RENDER_MODEL_CREATE_INFO_EXT};
-  renderModelCreateInfo.renderModelId = id;
-  renderModelCreateInfo.gltfExtensionCount =
-      (uint32_t)appSupportedGltfExtensions.size();
-  renderModelCreateInfo.gltfExtensions = appSupportedGltfExtensions.data();
-  CHK_XR(
-      pfnCreateRenderModelEXT(session, &renderModelCreateInfo, &renderModel));
+  XrRenderModelEXT renderModel {XR_NULL_HANDLE};
+  XrRenderModelCreateInfoEXT renderModelCreateInfo {
+    .type = XR_TYPE_RENDER_MODEL_CREATE_INFO_EXT,
+    .renderModelId = id,
+    .gltfExtensionCount = static_cast<uint32_t>(appSupportedGltfExtensions.size()),
+    .gltfExtensions = appSupportedGltfExtensions.data(),
+  };
+  CHK_XR(pfnCreateRenderModelEXT(session, &renderModelCreateInfo, &renderModel));
   interactionModels.push_back(renderModel);
 }
 
@@ -674,34 +674,41 @@ std::vector<XrSpace> modelSpaces;
 std::vector<XrRenderModelPropertiesEXT> modelProperties;
 for (XrRenderModelEXT renderModel : interactionModels) {
   // Create a space for locating the render model.
-  XrRenderModelSpaceCreateInfoEXT spaceCreateInfo{
-      XR_TYPE_RENDER_MODEL_SPACE_CREATE_INFO_EXT};
-  spaceCreateInfo.renderModel = renderModel;
-  XrSpace modelSpace;
+  XrRenderModelSpaceCreateInfoEXT spaceCreateInfo {
+    .type = XR_TYPE_RENDER_MODEL_SPACE_CREATE_INFO_EXT,
+    .renderModel = renderModel,
+  };
+  XrSpace modelSpace {XR_NULL_HANDLE};
   CHK_XR(pfnCreateRenderModelSpaceEXT(session, &spaceCreateInfo, &modelSpace));
   modelSpaces.push_back(modelSpace);
 
   // Get the model properties: UUID and number of animatable nodes
-  XrRenderModelPropertiesGetInfoEXT propertiesGetInfo{
-      XR_TYPE_RENDER_MODEL_PROPERTIES_GET_INFO_EXT};
-  XrRenderModelPropertiesEXT properties{XR_TYPE_RENDER_MODEL_PROPERTIES_EXT};
+  XrRenderModelPropertiesGetInfoEXT propertiesGetInfo {
+    .type = XR_TYPE_RENDER_MODEL_PROPERTIES_GET_INFO_EXT,
+  };
+  XrRenderModelPropertiesEXT properties {
+    .type = XR_TYPE_RENDER_MODEL_PROPERTIES_EXT,
+  };
   CHK_XR(pfnGetRenderModelPropertiesEXT(renderModel, &propertiesGetInfo,
                                         &properties));
 
   modelProperties.push_back(properties);
   {
     // Create the asset handle to request the data.
-    XrRenderModelAssetCreateInfoEXT assetCreateInfo{
-        XR_TYPE_RENDER_MODEL_ASSET_CREATE_INFO_EXT};
-    assetCreateInfo.cacheId = properties.cacheId;
-    XrRenderModelAssetEXT asset;
+    XrRenderModelAssetCreateInfoEXT assetCreateInfo {
+      .type = XR_TYPE_RENDER_MODEL_ASSET_CREATE_INFO_EXT,
+      .cacheId = properties.cacheId,
+    };
+    XrRenderModelAssetEXT asset {XR_NULL_HANDLE};
     CHK_XR(pfnCreateRenderModelAssetEXT(session, &assetCreateInfo, &asset));
 
     // Copy the binary glTF (GLB) asset data using two-call idiom.
-    XrRenderModelAssetDataGetInfoEXT assetGetInfo{
-        XR_TYPE_RENDER_MODEL_ASSET_DATA_GET_INFO_EXT};
-    XrRenderModelAssetDataEXT assetData{
-        XR_TYPE_RENDER_MODEL_ASSET_DATA_EXT};
+    XrRenderModelAssetDataGetInfoEXT assetGetInfo {
+      .type = XR_TYPE_RENDER_MODEL_ASSET_DATA_GET_INFO_EXT,
+    };
+    XrRenderModelAssetDataEXT assetData {
+      .type = XR_TYPE_RENDER_MODEL_ASSET_DATA_EXT,
+    };
     CHK_XR(pfnGetRenderModelAssetDataEXT(asset, &assetGetInfo, &assetData));
     std::vector<uint8_t> glbData(assetData.bufferCountOutput);
     assetData.bufferCapacityInput = (uint32_t)glbData.size();
@@ -712,14 +719,16 @@ for (XrRenderModelEXT renderModel : interactionModels) {
     // but do it here.
 
   // Get the unique names of the animatable nodes
-    XrRenderModelAssetPropertiesGetInfoEXT assetPropertiesGetInfo{
-        XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT};
-    XrRenderModelAssetPropertiesEXT assetProperties{
-        XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_EXT};
+    XrRenderModelAssetPropertiesGetInfoEXT assetPropertiesGetInfo {
+      .type = XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_GET_INFO_EXT,
+    };
     std::vector<XrRenderModelAssetNodePropertiesEXT> nodeProperties(
         properties.animatableNodeCount);
-    assetProperties.nodePropertyCount = (uint32_t)nodeProperties.size();
-    assetProperties.nodeProperties = nodeProperties.data();
+    XrRenderModelAssetPropertiesEXT assetProperties {
+      .type = XR_TYPE_RENDER_MODEL_ASSET_PROPERTIES_EXT,
+      .nodePropertyCount = (uint32_t)nodeProperties.size(),
+      .nodeProperties = nodeProperties.data(),
+    };
     CHK_XR(pfnGetRenderModelAssetPropertiesEXT(asset, &assetPropertiesGetInfo,
                                                &assetProperties));
 
@@ -750,7 +759,9 @@ for (size_t modelIndex = 0; modelIndex < interactionModels.size();
   XrSpace modelSpace = modelSpaces[modelIndex];
 
   // Use xrLocateSpace to locate the model's space
-  XrSpaceLocation modelLocation{XR_TYPE_SPACE_LOCATION};
+  XrSpaceLocation modelLocation {
+    .type = XR_TYPE_SPACE_LOCATION,
+  };
   CHK_XR(xrLocateSpace(modelSpace, baseSpace, predictedDisplayTime, &modelLocation));
 
   bool orientationTracked = (modelLocation.locationFlags &
@@ -768,9 +779,10 @@ for (size_t modelIndex = 0; modelIndex < interactionModels.size();
     continue;
   }
 
-  XrRenderModelStateGetInfoEXT stateGetInfo{
-      XR_TYPE_RENDER_MODEL_STATE_GET_INFO_EXT};
-  stateGetInfo.displayTime = predictedDisplayTime;
+  XrRenderModelStateGetInfoEXT stateGetInfo {
+    .type = XR_TYPE_RENDER_MODEL_STATE_GET_INFO_EXT,
+    .displayTime = predictedDisplayTime,
+  };
 
   // In practice, you do not want to re-allocate this array of
   // node state every frame, but it is clearer for illustration.
@@ -779,9 +791,11 @@ for (size_t modelIndex = 0; modelIndex < interactionModels.size();
   // our app-specific references to those nodes in the model.
   std::vector<XrRenderModelNodeStateEXT> nodeStates(
       properties.animatableNodeCount);
-  XrRenderModelStateEXT state{XR_TYPE_RENDER_MODEL_STATE_EXT};
-  state.nodeStateCount = (uint32_t)nodeStates.size();
-  state.nodeStates = nodeStates.data();
+  XrRenderModelStateEXT state {
+    .type = XR_TYPE_RENDER_MODEL_STATE_EXT,
+    .nodeStateCount = static_cast<uint32_t>(nodeStates.size()),
+    .nodeStates = nodeStates.data(),
+  };
   // xrGetRenderModelStateEXT does not use the two-call idiom. The size is
   // determined by xrGetRenderModelAssetPropertiesEXT.
   CHK_XR(pfnGetRenderModelStateEXT(renderModel, &stateGetInfo, &state));

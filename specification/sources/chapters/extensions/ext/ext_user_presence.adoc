@@ -150,9 +150,13 @@ XrInstance instance;  // previously initialized
 XrSystemId systemId;  // previously initialized
 XrSession session;  // previously initialized
 
-XrSystemUserPresencePropertiesEXT userPresenceProperties{XR_TYPE_SYSTEM_USER_PRESENCE_PROPERTIES_EXT};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &userPresenceProperties};
+XrSystemUserPresencePropertiesEXT userPresenceProperties {
+    .type = XR_TYPE_SYSTEM_USER_PRESENCE_PROPERTIES_EXT,
+};
+XrSystemProperties systemProperties{
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &userPresenceProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 bool supportsUserPresence = userPresenceProperties.supportsUserPresence;
 
@@ -162,7 +166,9 @@ bool supportsUserPresence = userPresenceProperties.supportsUserPresence;
 bool isUserPresent = true;
 
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
     switch (event.type) {
@@ -174,7 +180,9 @@ if (result == XR_SUCCESS) {
             {
               case XR_SESSION_STATE_READY: {
                   isUserPresent = true;
-                  XrSessionBeginInfo beginInfo{XR_TYPE_SESSION_BEGIN_INFO};
+                  XrSessionBeginInfo beginInfo {
+                      .type = XR_TYPE_SESSION_BEGIN_INFO,
+                  };
                   CHK_XR(xrBeginSession(session, &beginInfo));
                   break;
               }

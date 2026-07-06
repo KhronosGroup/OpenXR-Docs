@@ -1,0 +1,133 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_hand_tracking_frequency_hint.adoc[]
+
+*Last Modified Date*::
+    2025-09-30
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Robert Memmott, Meta +
+    John Kearney, Meta +
+    Andreas Selvik, Meta +
+
+==== Overview
+
+This extension augments the apiext:XR_EXT_hand_tracking extension.
+If the application passes apiext:XR_META_hand_tracking_frequency_hint but
+does not pass apiext:XR_EXT_hand_tracking then flink:xrCreateInstance must:
+return ename:XR_ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED.
+
+This extension allows applications to provide a frequency hint to the
+runtime to indicate the desired hand tracking update frequency.
+Applications can: suggest that the runtime use a higher tracking frequency
+when needed for low-latency scenarios, or use the default frequency for
+normal operation.
+
+==== Setting the hand tracking frequency hint
+
+[open,refpage='xrSetHandTrackingFrequencyHintMETA',type='protos',desc='Set hand tracking frequency hint for a session',xrefs='XrHandTrackingFrequencyHintMETA']
+--
+The flink:xrSetHandTrackingFrequencyHintMETA function provides a frequency
+hint to the runtime to suggest the desired hand tracking update frequency
+for the session.
+
+include::{generated}/api/protos/xrSetHandTrackingFrequencyHintMETA.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession handle previously created with
+  flink:xrCreateSession.
+* pname:frequencyHint is the frequency hint that the application suggests to
+  the runtime.
+****
+
+flink:xrSetHandTrackingFrequencyHintMETA provides a frequency hint to the
+runtime to suggest the desired hand tracking update frequency for the
+session.
+This is a suggestion mechanism only, and the runtime may: choose to ignore
+the hint based on user preferences, system constraints, power management
+policies, or other considerations.
+Applications should: not rely on the runtime honoring the frequency hint and
+should: be prepared to handle hand tracking data at any supported frequency.
+
+The frequency hint remains active until changed by another call to
+flink:xrSetHandTrackingFrequencyHintMETA or until the session is destroyed.
+
+Applications can: call this function multiple times during a session to
+adjust the frequency hint based on changing application requirements.
+
+The runtime may: change the actual hand tracking frequency at any time,
+regardless of the frequency hint, and applications should: be prepared to
+handle hand tracking data at any supported frequency.
+
+include::{generated}/validity/protos/xrSetHandTrackingFrequencyHintMETA.adoc[]
+--
+
+==== Hand Tracking Frequency Hint
+
+[open,refpage='XrHandTrackingFrequencyHintMETA',type='enums',desc='Hand tracking frequency hint',xrefs='xrSetHandTrackingFrequencyHintMETA']
+--
+The elink:XrHandTrackingFrequencyHintMETA enumerates the frequency hints
+that applications can: provide to suggest the desired hand tracking update
+frequency to the runtime.
+
+include::{generated}/api/enums/XrHandTrackingFrequencyHintMETA.adoc[]
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_TRACKING_FREQUENCY_HINT_DEFAULT_META - This value indicates
+  that the application suggests the runtime use the default hand tracking
+  frequency.
+  This is typically the most power-efficient frequency that provides
+  adequate tracking quality for general use cases.
+* ename:XR_HAND_TRACKING_FREQUENCY_HINT_HIGH_META - This value indicates
+  that the application suggests the runtime use a higher hand tracking
+  frequency when possible.
+  This may: provide more responsive tracking for performance-critical
+  applications, but at higher framerates, the effectiveness of temporal
+  smoothing algorithms is reduced, which can: result in increased jitter and
+  less visually smooth hand tracking.
+****
+--
+
+==== Sample code
+
+[source,cpp]
+----
+XrSession session; // previously initialized
+PFN_xrSetHandTrackingFrequencyHintMETA setHandTrackingFrequencyHint; // previously initialized
+
+/// request the default hand tracking frequency
+CHK_XR(setHandTrackingFrequencyHint(session, XR_HAND_TRACKING_FREQUENCY_HINT_DEFAULT_META));
+
+/// request a high hand tracking frequency
+CHK_XR(setHandTrackingFrequencyHint(session, XR_HAND_TRACKING_FREQUENCY_HINT_HIGH_META));
+----
+
+==== Issues
+
+1) Should the frequency hint be per-handTracker or per-session?
+
+*RESOLVED*: Per-session.
+Most applications that require high-frequency hand tracking will need it for
+both hands simultaneously.
+A per-session approach simplifies the API and reduces the complexity for
+both applications and runtimes.
+
+2) Should there be more granular frequency levels beyond DEFAULT and HIGH?
+
+*RESOLVED*: No.
+A simple two-level hint system provides sufficient flexibility for most use
+cases while keeping the API simple.
+More granular control could be added in future extensions if needed.
+
+==== Version History
+
+* Revision 1, 2025-09-30 (Robert Memmott)
+** Initial extension description

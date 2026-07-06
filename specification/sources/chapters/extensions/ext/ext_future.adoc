@@ -550,19 +550,25 @@ PFN_xrPollFutureEXT xrPollFutureEXT; // previously initialized
 XrInstance instance;                 // previously initialized
 XrSession session;                   // previously initialized
 
-XrFutureEXT futureFooObject;
+XrFutureEXT futureFooObject {XR_NULL_FUTURE_EXT};
 XrResult result;
 
-XrFooObjectCreateInfo createInfo{XR_TYPE_FOO_OBJECT_CREATE_INFO};
+XrFooObjectCreateInfo createInfo{
+  .type = XR_TYPE_FOO_OBJECT_CREATE_INFO,
+};
 result = xrCreateFooObjectAsync(session, &createInfo, &futureFooObject);
 CHK_XR(result);
 
 bool keepLooping = true;
 bool futureReady = false;
 while (keepLooping) {
-  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-  pollInfo.future = futureFooObject;
+  XrFuturePollInfoEXT pollInfo{
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = futureFooObject,
+  };
+  XrFuturePollResultEXT pollResult{
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
   CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
   if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
@@ -575,7 +581,8 @@ while (keepLooping) {
 
 if (futureReady) {
   XrFooObjectCreateCompletionEXT completion{
-      XR_TYPE_FOO_OBJECT_CREATE_COMPLETION};
+    .type = XR_TYPE_FOO_OBJECT_CREATE_COMPLETION,
+  };
   result = xrCreateFooObjectComplete(session, futureFooObject, &completion);
   CHK_XR(result);                  // Result of the complete function
   CHK_XR(completion.futureResult); // Return code of the create function
@@ -628,16 +635,22 @@ XrSession session;                   // previously initialized
 XrFutureEXT futureFooObjects;
 XrResult result;
 
-XrFooObjectCreateInfo createInfo{XR_TYPE_FOO_OBJECTS_CREATE_INFO};
+XrFooObjectCreateInfo createInfo{
+  .type = XR_TYPE_FOO_OBJECTS_CREATE_INFO,
+};
 result = xrCreateFooObjectsAsync(session, &createInfo, &futureFooObjects);
 CHK_XR(result);
 
 bool keepLooping = true;
 bool futureReady = false;
 while (keepLooping) {
-  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-  pollInfo.future = futureFooObjects;
+  XrFuturePollInfoEXT pollInfo{
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = futureFooObjects,
+  };
+  XrFuturePollResultEXT pollResult{
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
   CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
   if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
@@ -650,7 +663,8 @@ while (keepLooping) {
 
 if (futureReady) {
   XrFooObjectsCreateCompletionEXT completion{
-      XR_TYPE_FOO_OBJECTS_CREATE_COMPLETION};
+    .type = XR_TYPE_FOO_OBJECTS_CREATE_COMPLETION
+  };
   result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
   CHK_XR(result); // Result of the complete function
   CHK_XR(completion.futureResult);
@@ -658,7 +672,7 @@ if (futureReady) {
   // If elementCapacityOutput is 0, then the future is now complete / invalid
   if (completion.elementCapacityOutput != 0) {
     std::vector<float> floatValues(completion.elementCapacityOutput);
-    completion.elementCapacityInput = (uint32_t)floatValues.size();
+    completion.elementCapacityInput = static_cast<uint32_t>(floatValues.size());
     completion.elements = floatValues.data();
 
     result = xrCreateFooObjectsComplete(session, futureFooObjects, &completion);
@@ -705,7 +719,9 @@ class MyGame {
   void OnSlowFooRequest() {
     if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
       // Make initial request.
-      XrSlowFooInfoEXT fooInfo{XR_TYPE_SLOW_FOO_INFO_EXT};
+      XrSlowFooInfoEXT fooInfo{
+        .type = XR_TYPE_SLOW_FOO_INFO_EXT,
+      };
       XrResult result = xrSlowFooAsyncEXT(session, fooInfo, &m_slowFooFuture);
       CHK_XR(result);
     }
@@ -719,16 +735,21 @@ class MyGame {
     }
 
     // Poll for state of future
-    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-    pollInfo.future = m_slowFooFuture;
+    XrFuturePollInfoEXT pollInfo{
+      .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+      .future = m_slowFooFuture,
+    };
+    XrFuturePollResultEXT pollResult{
+      .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    };
     CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
     if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
       // Complete the future, consuming the result
-      XrSlowFooCompletionEXT completion{XR_TYPE_SLOW_FOO_COMPLETION_EXT};
-      XrResult result =
-          xrSlowFooCompleteEXT(session, m_slowFooFuture, &completion);
+      XrSlowFooCompletionEXT completion{
+        .type = XR_TYPE_SLOW_FOO_COMPLETION_EXT,
+      };
+      XrResult result = xrSlowFooCompleteEXT(session, m_slowFooFuture, &completion);
       // Check XrResult from the completion function
       CHK_XR(result);
       // Check XrResult from the async operation
@@ -738,7 +759,7 @@ class MyGame {
     }
   }
 
-  XrFutureEXT m_slowFooFuture{XR_NULL_FUTURE_EXT};
+  XrFutureEXT m_slowFooFuture {XR_NULL_FUTURE_EXT};
   float m_fooValue{0.0f};
 
   PFN_xrSlowFooAsyncEXT xrSlowFooAsyncEXT;       // previously initialized
@@ -771,7 +792,9 @@ class MyThreadedGame {
     std::unique_lock<std::mutex> lock(m_mutex);
     if (m_slowFooFuture == XR_NULL_FUTURE_EXT) {
       // Make initial request.
-      XrSlowFooInfoEXT fooInfo{XR_TYPE_SLOW_FOO_INFO_EXT};
+      XrSlowFooInfoEXT fooInfo{
+        .type = XR_TYPE_SLOW_FOO_INFO_EXT,
+      };
       XrResult result = xrSlowFooAsyncEXT(session, fooInfo, &m_slowFooFuture);
       CHK_XR(result);
     }
@@ -780,8 +803,10 @@ class MyThreadedGame {
   void CancelSlowFooRequestFuture() {
     std::unique_lock<std::mutex> lock(m_mutex);
     if (m_slowFooFuture != XR_NULL_FUTURE_EXT) {
-      XrFutureCancelInfoEXT cancel_info{XR_TYPE_FUTURE_CANCEL_INFO_EXT};
-      cancel_info.future = m_slowFooFuture;
+      XrFutureCancelInfoEXT cancel_info{
+        .type = XR_TYPE_FUTURE_CANCEL_INFO_EXT,
+        .future = m_slowFooFuture,
+      };
       xrCancelFutureEXT(instance, &cancel_info);
       m_slowFooFuture = XR_NULL_FUTURE_EXT;
     }
@@ -796,14 +821,20 @@ class MyThreadedGame {
     }
 
     // Poll for state of future
-    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-    pollInfo.future = m_slowFooFuture;
+    XrFuturePollInfoEXT pollInfo{
+      .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+      .future = m_slowFooFuture,
+    };
+    XrFuturePollResultEXT pollResult{
+      .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    };
     CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 
     if (pollResult.state == XR_FUTURE_STATE_READY_EXT) {
       // Complete the future, consuming the result
-      XrSlowFooCompletionEXT completion{XR_TYPE_SLOW_FOO_COMPLETION_EXT};
+      XrSlowFooCompletionEXT completion{
+        .type = XR_TYPE_SLOW_FOO_COMPLETION_EXT,
+      };
       XrResult result =
           xrSlowFooCompleteEXT(session, m_slowFooFuture, &completion);
       // Check XrResult from the completion function

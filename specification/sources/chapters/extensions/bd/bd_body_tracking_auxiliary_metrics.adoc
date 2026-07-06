@@ -1,0 +1,265 @@
+// Copyright (c) 2025 Bytedance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_body_tracking_auxiliary_metrics.adoc[]
+
+
+*Last Modified Date*::
+    2025-3-14
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Shanliang Xu, Bytedance +
+    Shuai Liu, Bytedance +
+    Chenxi Bao, Bytedance +
+    Chen Han, Bytedance
+
+==== Overview
+
+This extension enables applications to start the system's body tracking
+calibration process, and to obtain additional status values and information
+about body tracking.
+
+Applications should: also enable the apiext:XR_BD_body_tracking extension to
+get more data associated with body tracking.
+
+==== Start body tracking calibration
+
+[open,refpage='xrStartBodyTrackingCalibrationAppBD',type='protos',desc='Starts body tracking calibration',xrefs='']
+--
+The flink:xrStartBodyTrackingCalibrationAppBD function is defined as:
+
+include::{generated}/api/protos/xrStartBodyTrackingCalibrationAppBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the body tracker will be
+  active.
+****
+
+The application can: invoke the body tracking calibration app at any time
+during any session's lifecycle.
+
+The resulting body tracking calibration is managed in an implementation
+defined way by the system.
+
+Typically there is one current calibration applied globally to the entire
+system.
+
+
+include::{generated}/validity/protos/xrStartBodyTrackingCalibrationAppBD.adoc[]
+--
+
+==== Get body tracking state
+
+[open,refpage='xrGetBodyTrackingStateBD',type='protos',desc='Gets body tracking state',xrefs='']
+--
+The flink:xrGetBodyTrackingStateBD function is defined as:
+
+include::{generated}/api/protos/xrGetBodyTrackingStateBD.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the body tracker will be
+  active.
+* pname:state is a pointer to slink:XrBodyTrackingStateBD describing the
+  state of body tracking.
+****
+
+
+include::{generated}/validity/protos/xrGetBodyTrackingStateBD.adoc[]
+--
+
+
+[open,refpage='XrBodyTrackingStateBD',type='structs',desc='Body tracking state',xrefs='']
+--
+The slink:XrBodyTrackingStateBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackingStateBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:status is the elink:XrBodyTrackingStatusBD.
+* pname:message is the elink:XrBodyTrackingMessageBD.
+****
+
+include::{generated}/validity/structs/XrBodyTrackingStateBD.adoc[]
+--
+
+[open,refpage='XrBodyTrackingStatusBD',type='enums',desc='Body tracking status enumeration',xrefs='']
+--
+The elink:XrBodyTrackingStatusBD enum describes the body tracking status
+values.
+
+include::{generated}/api/enums/XrBodyTrackingStatusBD.adoc[]
+
+include::{generated}/api/enums/XrBodyTrackingStatusBD.comments.adoc[]
+--
+
+[open,refpage='XrBodyTrackingMessageBD',type='enums',desc='Body tracking message',xrefs='']
+--
+The elink:XrBodyTrackingMessageBD enum describes the body tracking status
+messages.
+
+include::{generated}/api/enums/XrBodyTrackingMessageBD.adoc[]
+
+include::{generated}/api/enums/XrBodyTrackingMessageBD.comments.adoc[]
+--
+
+
+==== Get more body tracking data
+
+
+[open,refpage='XrBodyTrackingPostureDataBD',type='structs',desc='Specific body tracking posture state on body joints',xrefs='']
+--
+The slink:XrBodyTrackingPostureDataBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyTrackingPostureDataBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:postureCount is a code:uint32_t describing the element count in the
+  pname:postureData array.
+* pname:postureData is an application-allocated array of
+  elink:XrBodyTrackingPostureBD describing the availability and state of
+  other signals.
+****
+
+slink:XrBodyTrackingPostureDataBD can: be provided in the pname:next chain
+of slink:XrBodyJointLocationsBD when calling flink:xrLocateBodyJointsBD to
+get the specific posture state on the body joints.
+
+include::{generated}/validity/structs/XrBodyTrackingPostureDataBD.adoc[]
+--
+
+
+[open,refpage='XrBodyTrackingPostureBD',type='enums',desc='Body tracking posture',xrefs='']
+--
+include::{generated}/api/enums/XrBodyTrackingPostureBD.adoc[]
+
+include::{generated}/api/enums/XrBodyTrackingPostureBD.comments.adoc[]
+
+Currently elink:XrBodyTrackingPostureBD is applicable to
+ename:XR_BODY_JOINT_LEFT_ANKLE_BD and ename:XR_BODY_JOINT_RIGHT_ANKLE_BD (in
+elink:XrBodyJointBD).
+
+The runtime must: populate the data corresponding to the indices of
+ename:XR_BODY_JOINT_LEFT_ANKLE_BD and ename:XR_BODY_JOINT_RIGHT_ANKLE_BD
+with valid data and set all others to 0.
+--
+
+[open,refpage='XrBodyJointVelocitiesBD',type='structs',desc='Body tracking joint velocities',xrefs='xrLocateBodyJointsBD XrBodyJointLocationsBD']
+--
+The slink:XrBodyJointVelocitiesBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyJointVelocitiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:velocityCount is a code:uint32_t describing the count of elements in
+  pname:velocities array.
+* pname:velocities is an application-allocated array of
+  slink:XrBodyJointVelocityBD to be filled with body joints velocities.
+****
+
+slink:XrBodyJointVelocitiesBD can: be provided in the pname:next chain of
+slink:XrBodyJointLocationsBD when calling flink:xrLocateBodyJointsBD to get
+an array of body joints velocities.
+
+include::{generated}/validity/structs/XrBodyJointVelocitiesBD.adoc[]
+--
+
+[open,refpage='XrBodyJointVelocityBD',type='structs',desc='Body tracking joint velocity',xrefs='']
+--
+include::{generated}/api/structs/XrBodyJointVelocityBD.adoc[]
+--
+
+[open,refpage='XrBodyJointAccelerationsBD',type='structs',desc='Body tracking joint accelerations',xrefs='xrLocateBodyJointsBD XrBodyJointLocationsBD']
+--
+The slink:XrBodyJointAccelerationsBD structure is defined as:
+
+include::{generated}/api/structs/XrBodyJointAccelerationsBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:accelerationCount is a code:uint32_t describing the count of
+  elements in pname:accelerations array.
+* pname:accelerations is an application-allocated array of
+  slink:XrBodyJointAccelerationBD describing body joints accelerations.
+****
+
+slink:XrBodyJointAccelerationsBD can: be provided in the pname:next chain of
+slink:XrBodyJointLocationsBD when calling flink:xrLocateBodyJointsBD to
+populate an array of body joints accelerations.
+
+include::{generated}/validity/structs/XrBodyJointAccelerationsBD.adoc[]
+--
+
+
+[open,refpage='XrBodyJointAccelerationBD',type='structs',desc='Body tracking joint acceleration',xrefs='']
+--
+The slink:XrBodyJointAccelerationBD structure is defined as:
+
+.Member Descriptions
+****
+* pname:accelerationFlags is a bitfield, with bit masks defined in
+  elink:XrSpaceAccelerationFlagBitsBD, to indicate which members contain
+  valid data.
+  If none of the bits are set, no other fields in this structure should: be
+  considered to be valid or meaningful.
+* pname:linearAcceleration is the linear acceleration of
+  slink:XrBodyJointLocationsBD::pname:jointLocations with respect to and
+  expressed in the reference frame of
+  slink:XrBodyJointsLocateInfoBD::pname:baseSpace.
+* pname:angularAcceleration is the relative angular acceleration of
+  slink:XrBodyJointLocationsBD::pname:jointLocations with respect to
+  slink:XrBodyJointsLocateInfoBD::pname:baseSpace.
+****
+
+include::{generated}/api/structs/XrBodyJointAccelerationBD.adoc[]
+--
+
+
+[open,refpage='XrSpaceAccelerationFlagsBD',type='flags',desc='Contains info about a space's linear and angular acceleration',xrefs='']
+--
+include::{generated}/api/flags/XrSpaceAccelerationFlagsBD.adoc[]
+--
+
+[open,refpage='XrSpaceAccelerationFlagBitsBD',type='enums',desc='Contains info about a space's linear and angular acceleration',xrefs='']
+--
+include::{generated}/api/enums/XrSpaceAccelerationFlagBitsBD.adoc[]
+include::{generated}/api/enums/XrSpaceAccelerationFlagBitsBD.comments.adoc[]
+--
+
+The output results of velocity and acceleration data for each body joint are
+not necessarily the same.
+
+Not every body joint necessarily provide valid values for linear velocity,
+angular velocity, linear acceleration, and angular acceleration.
+
+include::{generated}/interfaces/XR_BD_body_tracking_auxiliary_metrics.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-3-14 (Shanliang Xu)
+
+** Initial extension description

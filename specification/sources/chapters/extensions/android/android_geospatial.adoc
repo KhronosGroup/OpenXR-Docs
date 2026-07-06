@@ -1,0 +1,683 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_geospatial.adoc[]
+
+*Last Modified Date*::
+    2025-12-18
+*IP Status*::
+    No known IP claims.
+*Contributors*::
+    John Ullman, Google +
+    Ben King, Google +
+    Nihav Jain, Google +
+    Jared Finder, Google +
+
+==== Overview
+
+This extension provides the Geospatial tracking for Google's Geospatial API,
+which provides precise geo-location and orientation, and allows the
+application to place content with respect to the Earth.
+It does this using a combination of motion tracking, GPS and other sensors,
+and Google's Visual Positioning System (VPS).
+VPS compares images from a device's camera to Street View imagery in order
+to determine a precise location and orientation.
+The Geospatial API often provides sub-meter positional accuracy (orders of
+magnitude better than GPS) and sub-degree orientation accuracy.
+
+To successfully use the APIs in this extension (other than checking for
+extension support), the application must: have successfully set
+authentication credentials via some mechanism, such as
+apiext:XR_ANDROID_google_cloud_auth.
+See the auth extension's documentation for more details about setup and
+error results.
+
+
+[IMPORTANT]
+.Permissions
+====
+Android applications must: have the
+`android.permission.ACCESS_FINE_LOCATION` permission listed in their
+manifest to use this extension.
+The `android.permission.ACCESS_FINE_LOCATION` permission is considered a
+dangerous permission.
+The application must: request the permission at runtime to use these
+functions:
+
+* flink:xrCreateGeospatialTrackerANDROID
+
+(protection level: dangerous)
+====
+
+==== Inspect system capability
+
+[open,refpage='XrSystemGeospatialPropertiesANDROID',type='structs',desc='System property for geospatial',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemGeospatialPropertiesANDROID structure is defined as:
+
+include::{generated}/api/structs/XrSystemGeospatialPropertiesANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+  For more details about the structure chain, see the structure being
+  extended (slink:XrSystemProperties).
+* pname:supportsGeospatial is an basetype:XrBool32, indicating if the
+  current system supports geospatial features.
+****
+
+An application can: inspect whether the system supports geospatial features
+by chaining an slink:XrSystemGeospatialPropertiesANDROID structure to the
+slink:XrSystemProperties when calling flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsGeospatial, the system
+does not support geospatial features, and therefore must: return
+ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateGeospatialTrackerANDROID.
+The application should: avoid using geospatial functionality when
+pname:supportsGeospatial is ename:XR_FALSE.
+
+include::{generated}/validity/structs/XrSystemGeospatialPropertiesANDROID.adoc[]
+--
+
+==== Create a Geospatial Tracker handle
+
+[open,refpage='XrGeospatialTrackerANDROID',type='handles',desc='Represents a geospatial tracker']
+--
+include::{generated}/api/handles/XrGeospatialTrackerANDROID.adoc[]
+--
+
+[open,refpage='xrCreateGeospatialTrackerANDROID',type='protos',desc='Create a geospatial tracker handle',xrefs='XrGeospatialTrackerCreateInfoANDROID xrDestroyGeospatialTrackerANDROID']
+--
+The flink:xrCreateGeospatialTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrCreateGeospatialTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the geospatial tracker will
+  be active.
+* pname:createInfo is a pointer to an
+  slink:XrGeospatialTrackerCreateInfoANDROID structure specifying initial
+  geospatial tracker parameters.
+* pname:geospatialTrackerOutput is a pointer to a handle in which the
+  created slink:XrGeospatialTrackerANDROID is returned.
+****
+
+An application can: create an slink:XrGeospatialTrackerANDROID handle by
+calling flink:xrCreateGeospatialTrackerANDROID.
+The returned slink:XrGeospatialTrackerANDROID handle can: be subsequently
+used in API calls.
+If the application has not obtained the required permissions, the runtime
+must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT.
+Only one slink:XrGeospatialTrackerANDROID can: exist at a time for a
+particular slink:XrSession.
+The application must: ensure that any previous
+slink:XrGeospatialTrackerANDROID objects have been destroyed before calling
+this function again, otherwise the runtime must: return
+ename:XR_ERROR_LIMIT_REACHED.
+If the tracker is successfully created, it will initially enter the state
+ename:XR_GEOSPATIAL_TRACKER_STATE_STOPPED_ANDROID, and the application must:
+wait until the state changes to
+ename:XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID before using the tracker.
+See slink:XrEventDataGeospatialTrackerStateChangedANDROID.
+If the application passes an slink:XrGeospatialTrackerANDROID which is not
+in the state ename:XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID to a function
+which requires it, the runtime must: return
+ename:XR_ERROR_GEOSPATIAL_TRACKER_NOT_RUNNING_ANDROID.
+
+If pname:geospatialTrackerOutput is valid, it remains so only within the
+lifecycle of pname:session or until the application destroys it using
+flink:xrDestroyGeospatialTrackerANDROID, whichever comes first.
+
+include::{generated}/validity/protos/xrCreateGeospatialTrackerANDROID.adoc[]
+--
+
+[open,refpage='XrGeospatialTrackerCreateInfoANDROID',type='structs',desc='Information to create a geospatial tracker handle',xrefs='xrCreateGeospatialTrackerANDROID']
+--
+The slink:XrGeospatialTrackerCreateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGeospatialTrackerCreateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+include::{generated}/validity/structs/XrGeospatialTrackerCreateInfoANDROID.adoc[]
+--
+
+[open,refpage='xrDestroyGeospatialTrackerANDROID',type='protos',desc='Destroy a geospatial tracker handle',xrefs='XrGeospatialTrackerANDROID xrCreateGeospatialTrackerANDROID']
+--
+The flink:xrDestroyGeospatialTrackerANDROID function is defined as:
+
+include::{generated}/api/protos/xrDestroyGeospatialTrackerANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:geospatialTracker is the slink:XrGeospatialTrackerANDROID to be
+  destroyed.
+****
+
+An application can: use flink:xrDestroyGeospatialTrackerANDROID function to
+release the geospatial tracker and the underlying resources.
+
+include::{generated}/validity/protos/xrDestroyGeospatialTrackerANDROID.adoc[]
+--
+
+==== Geospatial Tracker State
+
+[open,refpage='XrGeospatialTrackerStateANDROID',type='enums',desc='State of a geospatial tracker',xrefs='XrEventDataGeospatialTrackerStateChangedANDROID']
+--
+The elink:XrGeospatialTrackerStateANDROID enumeration is defined as:
+
+include::{generated}/api/enums/XrGeospatialTrackerStateANDROID.adoc[]
+
+The elink:XrGeospatialTrackerStateANDROID enumeration identifies the
+different states of a geospatial tracker.
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrGeospatialTrackerStateANDROID.comments.adoc[]
+--
+
+[open,refpage='XrEventDataGeospatialTrackerStateChangedANDROID',type='structs',desc='Event notifying change of geospatial tracker state',xrefs='XrGeospatialTrackerStateANDROID']
+--
+The slink:XrEventDataGeospatialTrackerStateChangedANDROID structure is
+defined as:
+
+include::{generated}/api/structs/XrEventDataGeospatialTrackerStateChangedANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:geospatialTracker is the slink:XrGeospatialTrackerANDROID whose
+  state has changed.
+* pname:state is the new elink:XrGeospatialTrackerStateANDROID.
+* pname:initializationResult is the error result if pname:state is
+  ename:XR_GEOSPATIAL_TRACKER_STATE_INITIALIZATION_FAILED_ANDROID, otherwise
+  ename:XR_SUCCESS.
+* pname:time is the basetype:XrTime at which the state change occurred.
+****
+
+The slink:XrEventDataGeospatialTrackerStateChangedANDROID structure is sent
+when the geospatial tracker state changes.
+If the application has a valid slink:XrGeospatialTrackerANDROID, it should:
+poll for this event.
+The first event received for a tracker will have pname:state
+ename:XR_GEOSPATIAL_TRACKER_STATE_STOPPED_ANDROID.
+After a runtime-determined amount of time, the state must: change to either
+ename:XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID or
+ename:XR_GEOSPATIAL_TRACKER_STATE_INITIALIZATION_FAILED_ANDROID.
+This transition will take an arbitrary amount of time.
+If pname:state changes to
+ename:XR_GEOSPATIAL_TRACKER_STATE_INITIALIZATION_FAILED_ANDROID, it must: be
+the last event received for this tracker, and the pname:initializationResult
+field will hold the error code.
+It may: take several seconds for an error to occur.
+The application should: destroy the tracker in this case.
+If pname:state changes to ename:XR_GEOSPATIAL_TRACKER_STATE_STOPPED_ANDROID,
+all previously created geospatial anchors must: permanently stop tracking
+and should: be destroyed by the application.
+The state may: change back and forth between
+ename:XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID and
+ename:XR_GEOSPATIAL_TRACKER_STATE_STOPPED_ANDROID arbitrarily many times.
+
+include::{generated}/validity/structs/XrEventDataGeospatialTrackerStateChangedANDROID.adoc[]
+--
+
+==== Geospatial Pose
+
+[open,refpage='XrGeospatialPoseANDROID',type='structs',desc='A geospatial pose',xrefs='']
+--
+The slink:XrGeospatialPoseANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGeospatialPoseANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:eastUpSouthOrientation is an slink:XrQuaternionf defining the
+  orientation with respect to a coordinate system where +X=East, +Y=Up and
+  +Z=South.
+* pname:latitude is the latitude in degrees, between -90 and +90.
+* pname:longitude is the longitude in degrees, between -180 and +180.
+* pname:altitude is the altitude in meters above the WGS84 ellipsoid.
+****
+
+The slink:XrGeospatialPoseANDROID structure represents a position and
+orientation relative to the Earth using the WGS84 ellipsoid.
+
+include::{generated}/validity/structs/XrGeospatialPoseANDROID.adoc[]
+--
+
+[open,refpage='XrGeospatialPoseFlagBitsANDROID',type='enums',desc='Geospatial pose flag bits',xrefs='XrGeospatialPoseFlagsANDROID']
+--
+The elink:XrGeospatialPoseFlagBitsANDROID enumeration is defined as:
+
+include::{generated}/api/enums/XrGeospatialPoseFlagBitsANDROID.adoc[]
+
+The elink:XrGeospatialPoseFlagBitsANDROID enumeration specifies flags for
+geospatial poses.
+
+The flag bits have the following meanings:
+
+include::{generated}/api/enums/XrGeospatialPoseFlagBitsANDROID.comments.adoc[]
+--
+
+[open,refpage='XrGeospatialPoseFlagsANDROID',type='flags',desc='Bitmask of geospatial pose flags',xrefs='XrGeospatialPoseFlagBitsANDROID']
+--
+The elink:XrGeospatialPoseFlagsANDROID type is a bitmask of
+elink:XrGeospatialPoseFlagBitsANDROID.
+
+include::{generated}/api/flags/XrGeospatialPoseFlagsANDROID.adoc[]
+--
+
+==== Converting XrPosef to Geospatial Pose
+
+[open,refpage='xrLocateGeospatialPoseFromPoseANDROID',type='protos',desc='Converts a pose to a geospatial pose',xrefs='XrGeospatialPoseFromPoseLocateInfoANDROID XrGeospatialPoseResultANDROID']
+--
+The flink:xrLocateGeospatialPoseFromPoseANDROID function is defined as:
+
+include::{generated}/api/protos/xrLocateGeospatialPoseFromPoseANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:geospatialTracker is the slink:XrGeospatialTrackerANDROID to use for
+  conversion.
+* pname:locateInfo is a pointer to
+  slink:XrGeospatialPoseFromPoseLocateInfoANDROID containing query
+  parameters.
+* pname:geospatialPoseResult is a pointer to
+  slink:XrGeospatialPoseResultANDROID that receives the result.
+****
+
+The flink:xrLocateGeospatialPoseFromPoseANDROID function converts a pose in
+slink:XrGeospatialPoseFromPoseLocateInfoANDROID::pname:space to a geospatial
+pose.
+If the state of pname:geospatialTracker is not
+ename:XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID, the runtime must: return
+ename:XR_ERROR_GEOSPATIAL_TRACKER_NOT_RUNNING_ANDROID.
+If the function returns ename:XR_SUCCESS, the
+slink:XrGeospatialPoseResultANDROID::pname:poseFlags field of
+pname:geospatialPoseResult determines which output fields are valid.
+If ename:XR_GEOSPATIAL_POSE_POSITION_VALID_BIT_ANDROID is not set in
+slink:XrGeospatialPoseResultANDROID::pname:poseFlags, the application must:
+not read the fields slink:XrGeospatialPoseANDROID::pname:latitude,
+slink:XrGeospatialPoseANDROID::pname:longitude,
+slink:XrGeospatialPoseANDROID::pname:altitude,
+slink:XrGeospatialPoseResultANDROID::pname:horizontalAccuracy or
+slink:XrGeospatialPoseResultANDROID::pname:verticalAccuracy in
+slink:XrGeospatialPoseResultANDROID.
+If ename:XR_GEOSPATIAL_POSE_ORIENTATION_VALID_BIT_ANDROID is not set in
+slink:XrGeospatialPoseResultANDROID::pname:poseFlags, the application must:
+not read slink:XrGeospatialPoseANDROID::pname:eastUpSouthOrientation or
+slink:XrGeospatialPoseResultANDROID::pname:orientationYawAccuracy.
+If ename:XR_GEOSPATIAL_POSE_POSITION_VALID_BIT_ANDROID is not set,
+ename:XR_GEOSPATIAL_POSE_ORIENTATION_VALID_BIT_ANDROID must: also not be
+set.
+
+If the accuracy is lower than expected, this may: be an indication that the
+device is not utilizing VPS localization.
+The application can: instruct the user to point their device at signs and
+buildings to improve localization.
+
+include::{generated}/validity/protos/xrLocateGeospatialPoseFromPoseANDROID.adoc[]
+--
+
+[open,refpage='XrGeospatialPoseFromPoseLocateInfoANDROID',type='structs',desc='Information to locate a geospatial pose from a pose',xrefs='xrLocateGeospatialPoseFromPoseANDROID']
+--
+The slink:XrGeospatialPoseFromPoseLocateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGeospatialPoseFromPoseLocateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:space is the slink:XrSpace in which pname:pose is defined.
+* pname:time is the basetype:XrTime at which to evaluate pname:pose.
+* pname:pose is the slink:XrPosef in pname:space to convert to a geospatial
+  pose.
+****
+
+include::{generated}/validity/structs/XrGeospatialPoseFromPoseLocateInfoANDROID.adoc[]
+--
+
+[open,refpage='XrGeospatialPoseResultANDROID',type='structs',desc='Result of converting a pose to a geospatial pose',xrefs='xrLocateGeospatialPoseFromPoseANDROID']
+--
+The slink:XrGeospatialPoseResultANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGeospatialPoseResultANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:poseFlags is a bitmask of elink:XrGeospatialPoseFlagsANDROID
+  indicating validity of pose components.
+* pname:geospatialPose is the resulting slink:XrGeospatialPoseANDROID.
+* pname:horizontalAccuracy is the estimated horizontal accuracy of the
+  Geospatial pose position, defined as the radius in meters of the circle of
+  68% confidence level around the given latitude and longitude.
+* pname:verticalAccuracy is the estimated vertical accuracy of the
+  Geospatial pose position, defined as the distance in meters of 68%
+  confidence level around the given altitude.
+  In other words, there is a 68% chance that the true altitude is in the
+  range [slink:XrGeospatialPoseANDROID::pname:altitude -
+  pname:verticalAccuracy, slink:XrGeospatialPoseANDROID::pname:altitude \+
+  pname:verticalAccuracy].
+* pname:orientationYawAccuracy is the estimated yaw accuracy of the
+  Geospatial pose orientation, defined as the radius in degrees of 68%
+  confidence level around the given orientation.
+****
+
+include::{generated}/validity/structs/XrGeospatialPoseResultANDROID.adoc[]
+--
+
+==== Converting a Geospatial Pose to an XrPosef
+
+[open,refpage='xrLocateGeospatialPoseANDROID',type='protos',desc='Converts a geospatial pose to a pose',xrefs='XrGeospatialPoseLocateInfoANDROID']
+--
+The flink:xrLocateGeospatialPoseANDROID function is defined as:
+
+include::{generated}/api/protos/xrLocateGeospatialPoseANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:geospatialTracker is the slink:XrGeospatialTrackerANDROID to use for
+  conversion.
+* pname:locateInfo is a pointer to slink:XrGeospatialPoseLocateInfoANDROID
+  containing query parameters.
+* pname:location is a pointer to slink:XrSpaceLocation that receives the
+  resulting pose.
+****
+
+The flink:xrLocateGeospatialPoseANDROID function converts a geospatial pose
+to an slink:XrSpaceLocation.
+If the slink:XrGeospatialTrackerANDROID is not running, the runtime must:
+return ename:XR_ERROR_GEOSPATIAL_TRACKER_NOT_RUNNING_ANDROID.
+If the function returns ename:XR_SUCCESS, the
+slink:XrSpaceLocation::pname:locationFlags field of pname:location
+determines which output fields are valid.
+
+
+include::{generated}/validity/protos/xrLocateGeospatialPoseANDROID.adoc[]
+--
+
+[open,refpage='XrGeospatialPoseLocateInfoANDROID',type='structs',desc='Information to locate a pose from a geospatial pose',xrefs='xrLocateGeospatialPoseANDROID']
+--
+The slink:XrGeospatialPoseLocateInfoANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGeospatialPoseLocateInfoANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:space is the slink:XrSpace in which the resulting pose will be
+  represented.
+* pname:time is the basetype:XrTime at which to locate the pose.
+* pname:geospatialPose is the slink:XrGeospatialPoseANDROID to convert.
+****
+
+include::{generated}/validity/structs/XrGeospatialPoseLocateInfoANDROID.adoc[]
+--
+
+==== VPS Availability
+
+[open,refpage='XrVPSAvailabilityANDROID',type='enums',desc='VPS availability',xrefs='XrVPSAvailabilityCheckCompletionANDROID']
+--
+The elink:XrVPSAvailabilityANDROID enumeration is defined as:
+
+include::{generated}/api/enums/XrVPSAvailabilityANDROID.adoc[]
+
+The elink:XrVPSAvailabilityANDROID enumeration indicates VPS availability.
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrVPSAvailabilityANDROID.comments.adoc[]
+--
+
+[open,refpage='xrCheckVpsAvailabilityAsyncANDROID',type='protos',desc='Asynchronously check VPS availability',xrefs='']
+--
+The flink:xrCheckVpsAvailabilityAsyncANDROID function is defined as:
+
+include::{generated}/api/protos/xrCheckVpsAvailabilityAsyncANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession to use for the check.
+* pname:latitude is the latitude in degrees.
+* pname:longitude is the longitude in degrees.
+* pname:future is a pointer to basetype:XrFutureEXT that will hold the
+  result of the asynchronous operation.
+****
+
+Visual Positioning Service (VPS) availability indicates whether VPS can: be
+used to improve geospatial accuracy at a given location.
+
+The flink:xrCheckVpsAvailabilityAsyncANDROID function begins an asynchronous
+check for VPS availability at a given location.
+The application does not need an slink:XrGeospatialTrackerANDROID to call
+this function, and can: use the result of this operation to decide whether
+to create one.
+If the application has not obtained the required permissions, the runtime
+must: return ename:XR_ERROR_PERMISSION_INSUFFICIENT.
+
+include::{generated}/validity/protos/xrCheckVpsAvailabilityAsyncANDROID.adoc[]
+--
+
+[open,refpage='xrCheckVpsAvailabilityCompleteANDROID',type='protos',desc='Complete asynchronous VPS availability check',xrefs='XrVPSAvailabilityCheckCompletionANDROID']
+--
+The flink:xrCheckVpsAvailabilityCompleteANDROID function is defined as:
+
+include::{generated}/api/protos/xrCheckVpsAvailabilityCompleteANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession used for the check.
+* pname:future is the basetype:XrFutureEXT returned by
+  flink:xrCheckVpsAvailabilityAsyncANDROID.
+* pname:completion is a pointer to
+  slink:XrVPSAvailabilityCheckCompletionANDROID that receives the result.
+****
+
+include::{generated}/validity/protos/xrCheckVpsAvailabilityCompleteANDROID.adoc[]
+--
+
+[open,refpage='XrVPSAvailabilityCheckCompletionANDROID',type='structs',desc='Result of VPS availability check',xrefs='xrCheckVpsAvailabilityCompleteANDROID']
+--
+The slink:XrVPSAvailabilityCheckCompletionANDROID structure is defined as:
+
+include::{generated}/api/structs/XrVPSAvailabilityCheckCompletionANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:futureResult is the elink:XrResult of the check operation.
+  If pname:futureResult is
+  ename:XR_ERROR_GEOSPATIAL_CLOUD_AUTH_FAILED_ANDROID, a structure in the
+  pname:next chain may: provide more information about the failure.
+* pname:availability is the resulting elink:XrVPSAvailabilityANDROID.
+  The application must: not read this field unless pname:futureResult is
+  ename:XR_SUCCESS.
+****
+
+.Future Return Codes
+****
+pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS
+* ename:XR_SESSION_LOSS_PENDING
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_RUNTIME_FAILURE
+* ename:XR_ERROR_INSTANCE_LOST
+* ename:XR_ERROR_SESSION_LOST
+
+* ename:XR_ERROR_GEOSPATIAL_CLOUD_AUTH_FAILED_ANDROID
+****
+
+include::{generated}/validity/structs/XrVPSAvailabilityCheckCompletionANDROID.adoc[]
+--
+
+==== Example
+
+===== Setup Geospatial Tracker
+[source,cpp]
+----
+PFN_xrCheckVpsAvailabilityAsyncANDROID xrCheckVpsAvailabilityAsyncANDROID;
+PFN_xrPollFutureEXT xrPollFutureEXT;
+PFN_xrCheckVpsAvailabilityCompleteANDROID xrCheckVpsAvailabilityCompleteANDROID;
+PFN_xrCreateGeospatialTrackerANDROID xrCreateGeospatialTrackerANDROID;
+XrInstance instance = XR_NULL_HANDLE;
+XrSystemId systemId = XR_NULL_SYSTEM_ID;
+XrSession session = XR_NULL_HANDLE;
+double lat = 37.422, lng = -122.084;
+
+// Check for support.
+XrSystemGeospatialPropertiesANDROID geospatialSystemProperties{
+  .type = XR_TYPE_SYSTEM_GEOSPATIAL_PROPERTIES_ANDROID,
+};
+XrSystemProperties systemProperties{
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &geospatialSystemProperties,
+};
+CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
+if (!geospatialSystemProperties.supportsGeospatial) {
+  return;
+}
+
+// Check VPS Availability.
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
+CHK_XR(xrCheckVpsAvailabilityAsyncANDROID(session, lat, lng, &future));
+
+XrFuturePollInfoEXT pollInfo{
+  .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+  .future = future
+};
+XrFuturePollResultEXT pollResult{
+  .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  .state = XR_FUTURE_STATE_PENDING_EXT,
+};
+
+while (pollResult.state == XR_FUTURE_STATE_PENDING_EXT) {
+  // Do in render loop/state loop.
+  CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
+}
+
+XrVPSAvailabilityCheckCompletionANDROID vpsCompletion{
+  .type = XR_TYPE_VPS_AVAILABILITY_CHECK_COMPLETION_ANDROID,
+};
+CHK_XR(xrCheckVpsAvailabilityCompleteANDROID(session, future, &vpsCompletion));
+if (vpsCompletion.futureResult == XR_SUCCESS) {
+  if (vpsCompletion.availability == XR_VPS_AVAILABILITY_UNAVAILABLE_ANDROID) {
+    // Visual Positioning Service is not available. Accuracy of positions and
+    // orientations from Geospatial APIs are expected to be lower at this location.
+  } else {
+    // Visual Positioning Service is available. Higher accuracy of position and
+    // orientation is achievable at this location.
+  }
+}
+
+// Create Geospatial Tracker.
+XrGeospatialTrackerCreateInfoANDROID createInfo{
+  .type = XR_TYPE_GEOSPATIAL_TRACKER_CREATE_INFO_ANDROID,
+};
+XrGeospatialTrackerANDROID geospatialTracker {XR_NULL_HANDLE};
+CHK_XR(xrCreateGeospatialTrackerANDROID(session, &createInfo, &geospatialTracker));
+
+// In application main event loop:
+while (true) {
+  XrEventDataBuffer event = {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
+  if (xrPollEvent(instance, &event) != XR_SUCCESS) {
+    continue;
+  }
+  switch (event.type) {
+    case XR_TYPE_EVENT_DATA_GEOSPATIAL_TRACKER_STATE_CHANGED_ANDROID:
+      const XrEventDataGeospatialTrackerStateChangedANDROID& eventData =
+          *reinterpret_cast<XrEventDataGeospatialTrackerStateChangedANDROID*>(&event);
+      switch (eventData.state) {
+        case XR_GEOSPATIAL_TRACKER_STATE_STOPPED_ANDROID:
+          // Destroy existing anchors, if any.
+          break;
+        case XR_GEOSPATIAL_TRACKER_STATE_RUNNING_ANDROID:
+          // Start adding content.
+          break;
+        case XR_GEOSPATIAL_TRACKER_STATE_INITIALIZATION_FAILED_ANDROID:
+          // Handle eventData.initializationResult error result.
+          break;
+      }
+  }
+}
+----
+
+===== Call Geospatial Pose APIs
+[source,cpp]
+----
+// previously initialized
+PFN_xrLocateGeospatialPoseFromPoseANDROID xrLocateGeospatialPoseFromPoseANDROID;
+PFN_xrLocateGeospatialPoseANDROID xrLocateGeospatialPoseANDROID;
+XrTime nextFrameTimestamp;
+
+XrGeospatialTrackerANDROID geospatialTracker {XR_NULL_HANDLE};
+
+// Get pose from view space.
+XrSpace viewSpace {XR_NULL_HANDLE};
+XrPosef identityPose = {{0,0,0,1},{0,0,0}};
+XrGeospatialPoseFromPoseLocateInfoANDROID poseGetInfo{
+  .type = XR_TYPE_GEOSPATIAL_POSE_FROM_POSE_LOCATE_INFO_ANDROID,
+  .space = viewSpace,
+  .time = nextFrameTimestamp,
+  .pose = identityPose,
+};
+XrGeospatialPoseResultANDROID poseResult{
+  .type = XR_TYPE_GEOSPATIAL_POSE_RESULT_ANDROID,
+};
+CHK_XR(xrLocateGeospatialPoseFromPoseANDROID(geospatialTracker, &poseGetInfo, &poseResult));
+if ((poseResult.poseFlags & XR_GEOSPATIAL_POSE_ORIENTATION_VALID_BIT_ANDROID) &&
+    (poseResult.poseFlags & XR_GEOSPATIAL_POSE_POSITION_VALID_BIT_ANDROID)) {
+  // poseResult.geospatialPose is valid.
+}
+
+// Convert Geospatial pose to an XrSpaceLocation.
+XrGeospatialPoseLocateInfoANDROID poseLocateInfo{
+  .type = XR_TYPE_GEOSPATIAL_POSE_LOCATE_INFO_ANDROID,
+  .space = viewSpace,
+  .time = nextFrameTimestamp,
+  .geospatialPose = poseResult.geospatialPose,
+};
+XrSpaceLocation location{
+  .type = XR_TYPE_SPACE_LOCATION,
+};
+CHK_XR(xrLocateGeospatialPoseANDROID(geospatialTracker, &poseLocateInfo, &location));
+if ((location.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) &&
+    (location.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT)) {
+  // location.pose is valid.
+}
+----
+
+include::{generated}/interfaces/XR_ANDROID_geospatial.adoc[leveloffset=1]
+
+*Issues*
+
+*Version History*
+
+* Revision 1, 2025-12-18 (Ben King)
+** Initial extension description.

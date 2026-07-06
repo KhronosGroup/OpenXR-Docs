@@ -93,10 +93,12 @@ bindings[0].binding = indexProximityPath;
 bindings[1].action = indexTouchAction;
 bindings[1].binding = indexTouchPath;
 
-XrInteractionProfileSuggestedBinding suggestedBindings{XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
-suggestedBindings.interactionProfile = interactionProfilePath;
-suggestedBindings.suggestedBindings = bindings;
-suggestedBindings.countSuggestedBindings = 2;
+XrInteractionProfileSuggestedBinding suggestedBindings{
+  .type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING,
+  .interactionProfile = interactionProfilePath,
+  .countSuggestedBindings = 2,
+  .suggestedBindings = bindings,
+};
 CHK_XR(xrSuggestInteractionProfileBindings(instance, &suggestedBindings));
 
 //  ----------

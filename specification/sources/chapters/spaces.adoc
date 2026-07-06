@@ -765,8 +765,13 @@ XrSpace space;      // previously initialized
 XrSpace baseSpace;  // previously initialized
 XrTime time;        // previously initialized
 
-XrSpaceVelocity velocity {XR_TYPE_SPACE_VELOCITY};
-XrSpaceLocation location {XR_TYPE_SPACE_LOCATION, &velocity};
+XrSpaceVelocity velocity {
+    .type = XR_TYPE_SPACE_VELOCITY,
+};
+XrSpaceLocation location {
+    .type = XR_TYPE_SPACE_LOCATION,
+    .next = &velocity,
+};
 xrLocateSpace(space, baseSpace, time, &location);
 ----
 
@@ -1135,21 +1140,27 @@ while (1) {
     // Typically the time is the predicted display time returned from xrWaitFrame.
     XrTime displayTime; // previously initialized.
 
-    XrSpacesLocateInfo locateInfo{XR_TYPE_SPACES_LOCATE_INFO};
-    locateInfo.baseSpace = baseSpace;
-    locateInfo.time = displayTime;
-    locateInfo.spaceCount = (uint32_t)spacesToLocate.size();
-    locateInfo.spaces = spacesToLocate.data();
+    XrSpacesLocateInfo locateInfo {
+        .type = XR_TYPE_SPACES_LOCATE_INFO,
+        .baseSpace = baseSpace,
+        .time = displayTime,
+        .spaceCount = static_cast<uint32_t>(spacesToLocate.size()),
+        .spaces = spacesToLocate.data(),
+    };
 
-    XrSpaceLocations locations{XR_TYPE_SPACE_LOCATIONS};
-    locations.locationCount = (uint32_t)locationBuffer.size();
-    locations.locations = locationBuffer.data();
+    XrSpaceVelocities velocities {
+        .type = XR_TYPE_SPACE_VELOCITIES,
+        .velocityCount = static_cast<uint32_t>(velocityBuffer.size()),
+        .velocities = velocityBuffer.data(),
+    };
 
-    XrSpaceVelocities velocities{XR_TYPE_SPACE_VELOCITIES};
-    velocities.velocityCount = (uint32_t)velocityBuffer.size();
-    velocities.velocities = velocityBuffer.data();
+    XrSpaceLocations locations {
+        .type = XR_TYPE_SPACE_LOCATIONS,
+        .next = &velocities,
+        .locationCount = static_cast<uint32_t>(locationBuffer.size()),
+        .locations = locationBuffer.data(),
+    };
 
-    locations.next = &velocities;
     CHK_XR(xrLocateSpaces(session, &locateInfo, &locations));
 
     for (uint32_t i = 0; i < spacesToLocate.size(); i++) {

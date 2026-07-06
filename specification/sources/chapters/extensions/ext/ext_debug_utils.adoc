@@ -684,45 +684,42 @@ happens and the third will log warnings to stdout.
     extern XrInstance instance;  // previously initialized
 
     // Must call extension functions through a function pointer:
-    PFN_xrCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT;
+    PFN_xrCreateDebugUtilsMessengerEXT pfnCreateDebugUtilsMessengerEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateDebugUtilsMessengerEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnCreateDebugUtilsMessengerEXT)));
 
-    PFN_xrDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT;
+    PFN_xrDestroyDebugUtilsMessengerEXT pfnDestroyDebugUtilsMessengerEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrDestroyDebugUtilsMessengerEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnDestroyDebugUtilsMessengerEXT)));
 
-    XrDebugUtilsMessengerCreateInfoEXT callback1 = {
-        XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,   // type
-        NULL,                                            // next
-        XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |  // messageSeverities
-            XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
-        XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |  // messageTypes
-            XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-        myOutputDebugString,  // userCallback
-        NULL                  // userData
+    XrDebugUtilsMessengerCreateInfoEXT callback1 {
+        .type = XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+        .next = nullptr,
+        .messageSeverities = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+        .messageTypes = XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+        .userCallback = myOutputDebugString,
+        .userData = nullptr,
     };
-    XrDebugUtilsMessengerEXT messenger1 = XR_NULL_HANDLE;
+    XrDebugUtilsMessengerEXT messenger1 {XR_NULL_HANDLE};
     CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger1));
 
     callback1.messageSeverities = XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
     callback1.userCallback = myDebugBreak;
-    callback1.userData = NULL;
-    XrDebugUtilsMessengerEXT messenger2 = XR_NULL_HANDLE;
+    callback1.userData = nullptr;
+    XrDebugUtilsMessengerEXT messenger2 {XR_NULL_HANDLE};
     CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback1, &messenger2));
 
-    XrDebugUtilsMessengerCreateInfoEXT callback3 = {
-        XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,    // type
-        NULL,                                             // next
-        XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,  // messageSeverities
-        XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |     // messageTypes
-            XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
-        myStdOutLogger,  // userCallback
-        NULL             // userData
+    XrDebugUtilsMessengerCreateInfoEXT callback3 {
+        .type = XR_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+        .next = nullptr,
+        .messageSeverities = XR_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT,
+        .messageTypes = XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | XR_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT,
+        .userCallback = myStdOutLogger,
+        .userData = nullptr,
     };
-    XrDebugUtilsMessengerEXT messenger3 = XR_NULL_HANDLE;
+    XrDebugUtilsMessengerEXT messenger3 {XR_NULL_HANDLE};
     CHK_XR(pfnCreateDebugUtilsMessengerEXT(instance, &callback3, &messenger3));
 
     // ...
@@ -745,18 +742,18 @@ referring to objects in error messages.
     extern XrSpace space;        // previously initialized
 
     // Must call extension functions through a function pointer:
-    PFN_xrSetDebugUtilsObjectNameEXT pfnSetDebugUtilsObjectNameEXT;
+    PFN_xrSetDebugUtilsObjectNameEXT pfnSetDebugUtilsObjectNameEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrSetDebugUtilsObjectNameEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnSetDebugUtilsObjectNameEXT)));
 
     // Set a name on the space
-    const XrDebugUtilsObjectNameInfoEXT spaceNameInfo = {
-        XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,  // type
-        NULL,                                      // next
-        XR_OBJECT_TYPE_SPACE,                      // objectType
-        (uint64_t)space,                           // objectHandle
-        "My Object-Specific Space",                // objectName
+    const XrDebugUtilsObjectNameInfoEXT spaceNameInfo {
+        .type = XR_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+        .next = nullptr,
+        .objectType = XR_OBJECT_TYPE_SPACE,
+        .objectHandle = (uint64_t)space,
+        .objectName = "My Object-Specific Space",
     };
 
     pfnSetDebugUtilsObjectNameEXT(instance, &spaceNameInfo);
@@ -779,32 +776,32 @@ lifetime of a session.
 
     // Must call extension functions through a function pointer:
 
-    PFN_xrSessionBeginDebugUtilsLabelRegionEXT pfnSessionBeginDebugUtilsLabelRegionEXT;
+    PFN_xrSessionBeginDebugUtilsLabelRegionEXT pfnSessionBeginDebugUtilsLabelRegionEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionBeginDebugUtilsLabelRegionEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnSessionBeginDebugUtilsLabelRegionEXT)));
 
-    PFN_xrSessionEndDebugUtilsLabelRegionEXT pfnSessionEndDebugUtilsLabelRegionEXT;
+    PFN_xrSessionEndDebugUtilsLabelRegionEXT pfnSessionEndDebugUtilsLabelRegionEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionEndDebugUtilsLabelRegionEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnSessionEndDebugUtilsLabelRegionEXT)));
 
-    PFN_xrSessionInsertDebugUtilsLabelEXT pfnSessionInsertDebugUtilsLabelEXT;
+    PFN_xrSessionInsertDebugUtilsLabelEXT pfnSessionInsertDebugUtilsLabelEXT = nullptr;
     CHK_XR(xrGetInstanceProcAddr(instance, "xrSessionInsertDebugUtilsLabelEXT",
                                  reinterpret_cast<PFN_xrVoidFunction*>(
                                      &pfnSessionInsertDebugUtilsLabelEXT)));
 
-    XrSessionBeginInfo session_begin_info = {
-        XR_TYPE_SESSION_BEGIN_INFO,
-        nullptr,
-        XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO
+    XrSessionBeginInfo session_begin_info {
+        .type = XR_TYPE_SESSION_BEGIN_INFO,
+        .next = nullptr,
+        .primaryViewConfigurationType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
     };
     xrBeginSession(session, &session_begin_info);
 
-    const XrDebugUtilsLabelEXT session_active_region_label = {
-        XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
-        NULL,                           // next
-        "Session active",               // labelName
+    const XrDebugUtilsLabelEXT session_active_region_label {
+        .type = XR_TYPE_DEBUG_UTILS_LABEL_EXT,
+        .next = nullptr,
+        .labelName = "Session active",
     };
 
     // Start an annotated region of calls under the 'Session Active' name
@@ -812,25 +809,30 @@ lifetime of a session.
 
     // Brackets added for clarity
     {
-        XrDebugUtilsLabelEXT individual_label = {
-            XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
-            NULL,                           // next
-            "WaitFrame",                    // labelName
+        XrDebugUtilsLabelEXT individual_label {
+            .type = XR_TYPE_DEBUG_UTILS_LABEL_EXT,
+            .next = nullptr,
+            .labelName = "WaitFrame",
         };
 
         const char wait_frame_label[] = "WaitFrame";
         individual_label.labelName = wait_frame_label;
         pfnSessionInsertDebugUtilsLabelEXT(session, &individual_label);
-        XrFrameWaitInfo wait_frame_info;  // initialization omitted for readability
-        XrFrameState frame_state = {XR_TYPE_FRAME_STATE, nullptr};
+        XrFrameWaitInfo wait_frame_info {
+            .type = XR_TYPE_FRAME_WAIT_INFO,
+        };
+        XrFrameState frame_state {
+            .type = XR_TYPE_FRAME_STATE,
+            .next = nullptr,
+        };
         xrWaitFrame(session, &wait_frame_info, &frame_state);
 
         // Do stuff 1
 
-        const XrDebugUtilsLabelEXT session_frame_region_label = {
-            XR_TYPE_DEBUG_UTILS_LABEL_EXT,  // type
-            NULL,                           // next
-            "Session Frame 123",            // labelName
+        const XrDebugUtilsLabelEXT session_frame_region_label {
+            .type = XR_TYPE_DEBUG_UTILS_LABEL_EXT,
+            .next = nullptr,
+            .labelName = "Session Frame 123",
         };
 
         // Start an annotated region of calls under the 'Session Frame 123' name
@@ -843,7 +845,9 @@ lifetime of a session.
             individual_label.labelName = begin_frame_label;
             pfnSessionInsertDebugUtilsLabelEXT(session, &individual_label);
 
-            XrFrameBeginInfo begin_frame_info;  // initialization omitted for readability
+            XrFrameBeginInfo begin_frame_info {
+                .type = XR_TYPE_FRAME_BEGIN_INFO,
+            };
             xrBeginFrame(session, &begin_frame_info);
 
             // Do stuff 2

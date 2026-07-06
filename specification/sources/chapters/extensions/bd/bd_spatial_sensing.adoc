@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_BD_spatial_sensing.adoc[]
 
 *Last Modified Date*::
-    2025-03-26
+    2025-08-05
 
 *IP Status*::
     No known IP claims.
@@ -1094,6 +1094,29 @@ by the spatial entity's coordinate space.
 include::{generated}/validity/structs/XrSpatialEntityComponentDataBoundingBox3DBD.adoc[]
 --
 
+[open,refpage='XrSpatialEntityComponentDataSphereBD',type='structs',desc='Spatial entity sphere component data.',xrefs='']
+--
+The slink:XrSpatialEntityComponentDataSphereBD structure is defined as:
+include::{generated}/api/structs/XrSpatialEntityComponentDataSphereBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:sphere is an slink:XrSpheref defining the center position and
+  orientation and the radius of a sphere bounds relative to the spatial
+  entity.
+****
+
+The slink:XrSpatialEntityComponentDataSphereBD is an output struct for
+getting the sphere component data from an entity in the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_SPHERE_BD.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataSphereBD.adoc[]
+--
+
 [open,refpage='XrSpatialEntityComponentDataTriangleMeshBD',desc='Spatial entity triangle mesh component data information.',type='structs',xrefs='xrGetSpatialEntityComponentDataBD']
 --
 The slink:XrSpatialEntityComponentDataTriangleMeshBD structure is defined
@@ -1803,3 +1826,6 @@ if (queriedSenseData.stateCountOutput > 0)
 
 ** Initial extension description
 
+* Revision 2, 2025-08-05 (Zijian Wang)
+
+** Add the sphere component data struct

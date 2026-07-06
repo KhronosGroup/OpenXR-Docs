@@ -1,0 +1,307 @@
+// Copyright (c) 2024 ByteDance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_dynamic_object_tracking.adoc[]
+
+*Last Modified Date*::
+    2025-08-05
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zijian Wang, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Shuai Liu, ByteDance +
+
+==== Overview
+
+This extension allows applications to track different types of dynamic
+objects in the physical environment, such as keyboard and mouse.
+The tracked objects are represented by spatial entities (from
+apiext:XR_BD_spatial_sensing), and information is obtained in the form of
+components, such as the position, orientation, and bounding box of a dynamic
+object.
+Each dynamic object is continuously tracked by the runtime and its
+information is queried as defined in apiext:XR_BD_spatial_sensing.
+
+This extension requires apiext:XR_BD_spatial_sensing to be enabled.
+
+
+==== Permission
+
+
+:bd-spatial-permission-capability: dynamic object tracking
+include::{config}/bd_spatial_data_perm.adoc[]
+
+ifdef::XR_BD_spatial_anchor[]
+This permission is also used by apiext:XR_BD_spatial_anchor.
+endif::XR_BD_spatial_anchor[]
+
+ifdef::XR_BD_spatial_mesh[]
+This permission is also used by apiext:XR_BD_spatial_mesh.
+endif::XR_BD_spatial_mesh[]
+
+ifdef::XR_BD_spatial_scene[]
+This permission is also used by apiext:XR_BD_spatial_scene.
+endif::XR_BD_spatial_scene[]
+
+
+ifdef::XR_BD_spatial_plane[]
+This permission is also used by apiext:XR_BD_spatial_plane.
+endif::XR_BD_spatial_plane[]
+
+==== Inspect System Capability
+[open,refpage='XrSystemDynamicObjectTrackingPropertiesBD',type='structs',desc='System property for dynamic object tracking.',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemDynamicObjectTrackingPropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemDynamicObjectTrackingPropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsDynamicObjectTracking is an basetype:XrBool32, indicating if
+  the current system is capable of dynamic object tracking.
+****
+
+An application can: inspect whether the system is capable of dynamic object
+tracking by chaining an slink:XrSystemDynamicObjectTrackingPropertiesBD
+structure to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If a runtime returns ename:XR_FALSE for pname:supportsDynamicObjectTracking,
+the system does not support dynamic object tracking, and the runtime must:
+return ename:XR_ERROR_FEATURE_UNSUPPORTED from
+flink:xrCreateSenseDataProviderBD when passing the
+elink:XrSenseDataProviderTypeBD value
+ename:XR_SENSE_DATA_PROVIDER_TYPE_DYNAMIC_OBJECT_BD.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE, then pname:supportsDynamicObjectTracking must: also be
+ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsDynamicObjectTracking,
+the system supports dynamic object tracking.
+This implies that
+slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing must:
+also be ename:XR_TRUE.
+
+Note that pname:supportsDynamicObjectTracking may: be ename:XR_TRUE even if
+running on an Android-based platform and the application does not have the
+required com.picovr.permission.SPATIAL_DATA permission both declared in the
+manifest and granted at runtime.
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemDynamicObjectTrackingPropertiesBD.adoc[]
+--
+
+==== Create Dynamic Object Provider
+[open,refpage='XrSenseDataProviderCreateInfoDynamicObjectBD',type='structs',desc='Create info for dynamic object tracking.',xrefs='xrCreateSenseDataProviderBD']
+--
+The slink:XrSenseDataProviderCreateInfoDynamicObjectBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSenseDataProviderCreateInfoDynamicObjectBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:trackingTypeCount is the number of elink:XrDynamicObjectTypeBD
+  elements in pname:trackingTypes.
+* pname:trackingTypes is a pointer to the elink:XrDynamicObjectTypeBD array.
+****
+
+The slink:XrSenseDataProviderCreateInfoDynamicObjectBD structure defines the
+information required for dynamic object tracking, including a list of
+trackable types and all the details required to track them.
+
+An application creates an slink:XrSenseDataProviderBD handle representing a
+dynamic object tracking provider by calling
+flink:xrCreateSenseDataProviderBD, setting
+slink:XrSenseDataProviderCreateInfoBD::pname:providerType to
+ename:XR_SENSE_DATA_PROVIDER_TYPE_DYNAMIC_OBJECT_BD, and chaining
+slink:XrSenseDataProviderCreateInfoDynamicObjectBD to
+slink:XrSenseDataProviderCreateInfoBD::pname:next.
+
+Both the elink:XrSenseDataProviderTypeBD value and the chained
+slink:XrSenseDataProviderCreateInfoDynamicObjectBD structure are required.
+If slink:XrSenseDataProviderCreateInfoBD::pname:providerType is
+ename:XR_SENSE_DATA_PROVIDER_TYPE_DYNAMIC_OBJECT_BD but
+slink:XrSenseDataProviderCreateInfoDynamicObjectBD is not in the pname:next
+chain, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/structs/XrSenseDataProviderCreateInfoDynamicObjectBD.adoc[]
+--
+
+[open,refpage='XrDynamicObjectTypeBD',desc='dynamic object type',type='enums']
+--
+elink:XrDynamicObjectTypeBD represents the dynamic object categories
+supported by the runtime for detection and can: be set when creating the
+slink:XrSenseDataProviderBD.
+
+The elink:XrDynamicObjectTypeBD enumeration is defined as:
+
+include::{generated}/api/enums/XrDynamicObjectTypeBD.adoc[]
+include::{generated}/api/enums/XrDynamicObjectTypeBD.comments.adoc[]
+--
+
+==== Start Dynamic Object Tracking Provider
+
+Applications start the dynamic object tracking data provider by calling
+flink:xrStartSenseDataProviderAsyncBD after it has been successfully
+created.
+To check the data provider state, call flink:xrGetSenseDataProviderStateBD.
+
+Subsequent application operations using this provider handle must: not be
+performed unless the data provider state is
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD.
+If the data provider state is not
+ename:XR_SENSE_DATA_PROVIDER_STATE_RUNNING_BD and the application needs to
+use the provider, the application must: take appropriate action and try to
+call flink:xrStartSenseDataProviderAsyncBD again before using the handle.
+
+Detailed definitions and usage details are described in
+apiext:XR_BD_spatial_sensing.
+
+==== Query Dynamic Object Data
+
+Applications query the latest detected dynamic objects from the data
+provider by calling flink:xrQuerySenseDataAsyncBD.
+The runtime generates a snapshot of the dynamic object, from which the
+application can: obtain detailed information.
+The dynamic object information is presented in the form of spatial entities
+which the application queries by calling flink:xrGetQueriedSenseDataBD.
+Use flink:xrEnumerateSpatialEntityComponentTypesBD to get the types of
+components contained within these entities, such as location, semantics, and
+bounding boxes.
+To further retrieve component information, call
+flink:xrGetSpatialEntityComponentDataBD.
+
+The slink:XrSpatialEntityComponentDataDynamicObjectBD structure describes
+dynamic object detail data.
+This structure may: be attached to a spatial entity via the
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_DYNAMIC_OBJECT_BD component type.
+
+When the runtime's understanding of the detected dynamic objects changes,
+the runtime must: queue an slink:XrEventDataSenseDataUpdatedBD event with
+the handle of the dynamic object tracking provider.
+
+Receiving this event signals to the application that updated dynamic object
+data is available to query from the sense data provider.
+A new query request for this sense data provider will get the latest,
+updated data.
+This is the recommended way to get updated data.
+
+The application may: also initiate a new query request at any time without
+receiving this event, but the queried data may: be unmodified.
+
+All the functions to get dynamic object info are defined in
+apiext:XR_BD_spatial_sensing.
+
+[open,refpage='XrSpatialEntityComponentDataDynamicObjectBD',type='structs',desc='dynamic object component data.',xrefs='']
+--
+The slink:XrSpatialEntityComponentDataDynamicObjectBD structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialEntityComponentDataDynamicObjectBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:data is the slink:XrDynamicObjectDataBD of the dynamic object.
+****
+
+slink:XrSpatialEntityComponentDataDynamicObjectBD is an output struct for
+getting the dynamic object component data from an entity in the snapshot.
+This corresponds to an elink:XrSpatialEntityComponentTypeBD value of
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_DYNAMIC_OBJECT_BD.
+
+All spatial entities describing dynamic objects must: have the
+ename:XR_SPATIAL_ENTITY_COMPONENT_TYPE_DYNAMIC_OBJECT_BD component enabled
+by the runtime.
+
+include::{generated}/validity/structs/XrSpatialEntityComponentDataDynamicObjectBD.adoc[]
+--
+
+[open,refpage='XrDynamicObjectDataBD',type='structs',desc='dynamic object data.',xrefs='']
+--
+The slink:XrDynamicObjectDataBD structure is defined as:
+
+include::{generated}/api/structs/XrDynamicObjectDataBD.adoc[]
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:objectType is the elink:XrDynamicObjectTypeBD of the dynamic object.
+****
+
+include::{generated}/validity/structs/XrDynamicObjectDataBD.adoc[]
+--
+
+==== Dynamic Object Type Filter
+
+[open,refpage='XrSenseDataFilterDynamicObjectTypeBD',type='structs',desc='dynamic object type filter.',xrefs='']
+--
+The slink:XrSenseDataFilterDynamicObjectTypeBD structure is defined as:
+
+include::{generated}/api/structs/XrSenseDataFilterDynamicObjectTypeBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:typeCount is the number of elink:XrDynamicObjectTypeBD elements in
+  pname:types.
+* pname:types is a pointer to an array of elink:XrDynamicObjectTypeBD.
+****
+
+The slink:XrSenseDataFilterDynamicObjectTypeBD structure contains a list of
+dynamic object types.
+When the application passes this filter, only sense data that matches the
+criteria in the filter is included in the result returned.
+The runtime must: not include sense data that does not match the provided
+filter.
+
+When the application initiates a query request, it can: chain an
+slink:XrSenseDataFilterDynamicObjectTypeBD structure to
+slink:XrSenseDataQueryInfoBD::pname:next to filter dynamic object data.
+
+include::{generated}/validity/structs/XrSenseDataFilterDynamicObjectTypeBD.adoc[]
+--
+
+[[bd_dynamic_object_tracking-locate-dynamic-object]]
+==== Locate Dynamic Object
+
+Locating a dynamic object relative to a base space is performed by creating
+anchor objects, then through use of an slink:XrSpace handle created from the
+anchor and functions like flink:xrLocateSpace and flink:xrLocateSpaces.
+To locate a dynamic object in a base space, first create an slink:XrAnchorBD
+from a dynamic object spatial entity by calling
+flink:xrCreateSpatialEntityAnchorBD.
+Then use this anchor handle to create an slink:XrSpace by calling
+flink:xrCreateAnchorSpaceBD, and obtain the location of the dynamic object
+by calling flink:xrLocateSpace and flink:xrLocateSpaces.
+
+The function and related behaviors are defined in
+apiext:XR_BD_spatial_sensing.
+
+include::{generated}/interfaces/XR_BD_dynamic_object_tracking.adoc[leveloffset=1]
+
+===== Issues
+
+===== Version History
+
+* Revision 1, 2025-08-05 (Zijian Wang)
+
+** Initial extension description

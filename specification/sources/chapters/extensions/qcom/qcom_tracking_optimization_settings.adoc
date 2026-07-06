@@ -11,6 +11,7 @@ include::{generated}/meta/XR_QCOM_tracking_optimization_settings.adoc[]
     Daniel Guttenberg, Qualcomm +
     Martin Renschler, Qualcomm +
     Karthik Nagarajan, Qualcomm +
+    Kurtis Eveleigh, Qualcomm +
 
 ==== Overview
 
@@ -97,7 +98,7 @@ CHK_XR(xrGetInstanceProcAddr(instance, "xrSetTrackingOptimizationSettingsHintQCO
 
 pfnSetTrackingOptimizationSettingsHintQCOM(session,
     XR_TRACKING_OPTIMIZATION_SETTINGS_DOMAIN_ALL_QCOM,
-    XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_LONG_RANGE_PRIORIZATION_QCOM);
+    XR_TRACKING_OPTIMIZATION_SETTINGS_HINT_LONG_RANGE_PRIORITIZATION_QCOM);
 
 // perform tracking while prioritizing long range tracking
 ----
@@ -110,3 +111,7 @@ include::{generated}/interfaces/XR_QCOM_tracking_optimization_settings.adoc[leve
 
 * Revision 1, 2022-06-02
 ** Initial extension description
+* Revision 2, 2025-02-20 (Kurtis Eveleigh)
+** Fix typos: rename elink:XrTrackingOptimizationSettingsHintQCOM enum
+   values to `PRIORITIZATION`, providing the old names as compatibility
+   aliases.

@@ -478,32 +478,39 @@ std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
   XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT,
   XR_SPATIAL_COMPONENT_TYPE_MARKER_EXT,
 };
-XrSpatialCapabilityConfigurationQrCodeEXT markerConfiguration{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_QR_CODE_EXT};
-markerConfiguration.capability = XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT;
-markerConfiguration.enabledComponentCount = static_cast<uint32_t>(enabledComponents.size());
-markerConfiguration.enabledComponents = enabledComponents.data();
+XrSpatialCapabilityConfigurationQrCodeEXT markerConfiguration {
+  .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_QR_CODE_EXT,
+  .capability = XR_SPATIAL_CAPABILITY_MARKER_TRACKING_QR_CODE_EXT,
+  .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+  .enabledComponents = enabledComponents.data(),
+};
 
 // only chained if features.markerSideLength is true.
-XrSpatialMarkerSizeEXT markerSize{XR_TYPE_SPATIAL_MARKER_SIZE_EXT};
-markerSize.markerSideLength = 0.10f;
+XrSpatialMarkerSizeEXT markerSize {
+  .type = XR_TYPE_SPATIAL_MARKER_SIZE_EXT,
+  .markerSideLength = 0.10f,
+};
 if (supportsFixedMarkerSize) {
   markerConfiguration.next = &markerSize;
 }
-
 
 std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
   reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&markerConfiguration),
 };
 
-XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
-spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
-spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
-XrFutureEXT createContextFuture;
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo {
+  .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+  .capabilityConfigCount = capabilityConfigs.size(),
+  .capabilityConfigs = capabilityConfigs.data(),
+};
+XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
 CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
 
 waitUntilReady(createContextFuture);
 
-XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+XrCreateSpatialContextCompletionEXT completion {
+  .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+};
 CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
 if (completion.futureResult != XR_SUCCESS) {
   return;
@@ -536,28 +543,38 @@ std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
 };
 
 auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
 
     // Query for the bounded2D and marker component data
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypeCount = snapshotComponents.size();
-    queryCond.componentTypes = snapshotComponents.data();
+    XrSpatialComponentDataQueryConditionEXT queryCond {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+    XrSpatialComponentDataQueryResultEXT queryResult {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -568,16 +585,19 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrSpatialBounded2DDataEXT> bounded2D(queryResult.entityIdCountOutput);
-    XrSpatialComponentBounded2DListEXT bounded2DList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
-    bounded2DList.boundCount = bounded2D.size();
-    bounded2DList.bounds = bounded2D.data();
+    XrSpatialComponentBounded2DListEXT bounded2DList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT,
+      .boundCount = static_cast<uint32_t>(bounded2D.size()),
+      .bounds = bounded2D.data(),
+    };
     queryResult.next = &bounded2DList;
 
-    std::vector<XrSpatialMarkerDataEXT> markers;
-    XrSpatialComponentMarkerListEXT markerList{XR_TYPE_SPATIAL_COMPONENT_MARKER_LIST_EXT};
-    markers.resize(queryResult.entityIdCountOutput);
-    markerList.markerCount = markers.size();
-    markerList.markers = markers.data();
+    std::vector<XrSpatialMarkerDataEXT> markers(queryResult.entityIdCountOutput);
+    XrSpatialComponentMarkerListEXT markerList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_MARKER_LIST_EXT,
+      .markerCount = static_cast<uint32_t>(markers.size()),
+      .markers = markers.data(),
+    };
     bounded2DList.next = &markerList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -594,13 +614,17 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
         if (markers[i].data.bufferId != XR_NULL_SPATIAL_BUFFER_ID_EXT) {
           if (markers[i].data.bufferType == XR_SPATIAL_BUFFER_TYPE_STRING_EXT) {
             // Qr Code data can be queried using
-            // XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
-            // info.bufferId = markers[i].data.bufferId;
+            // XrSpatialBufferGetInfoEXT getInfo {
+            //   .type = XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT,
+            //   .bufferId = markers[i].data.bufferId,
+            // };
             // xrGetSpatialBufferStringEXT(completion.snapshot, &getInfo, ...)
           } else if (markers[i].data.bufferType == XR_SPATIAL_BUFFER_TYPE_UINT8_EXT) {
             // Qr Code data can be queried using
-            // XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
-            // info.bufferId = markers[i].data.bufferId;
+            // XrSpatialBufferGetInfoEXT getInfo {
+            //   .type = XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT,
+            //   .bufferId = markers[i].data.bufferId,
+            // };
             // xrGetSpatialBufferUint8(completion.snapshot, &getInfo, ...)
           }
         }
@@ -620,7 +644,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
       switch (event.type) {

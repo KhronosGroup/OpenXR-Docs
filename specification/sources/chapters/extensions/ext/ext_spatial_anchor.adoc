@@ -262,31 +262,37 @@ when creating a spatial context.
 [source,cpp]
 ----
 // Create a spatial spatial context
-XrSpatialContextEXT spatialContext{};
+XrSpatialContextEXT spatialContext {XR_NULL_HANDLE};
 {
 
   std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
     XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT,
   };
 
-  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT};
-  anchorConfig.capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT;
-  anchorConfig.enabledComponentCount = enabledComponents.size();
-  anchorConfig.enabledComponents = enabledComponents.data();
+  XrSpatialCapabilityConfigurationAnchorEXT anchorConfig {
+    .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_ANCHOR_EXT,
+    .capability = XR_SPATIAL_CAPABILITY_ANCHOR_EXT,
+    .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+    .enabledComponents = enabledComponents.data(),
+  };
 
   std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
     reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&anchorConfig),
   };
 
-  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
-  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
-  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
-  XrFutureEXT createContextFuture;
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo {
+    .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+    .capabilityConfigCount = capabilityConfigs.size(),
+    .capabilityConfigs = capabilityConfigs.data(),
+  };
+  XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
   CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
 
   waitUntilReady(createContextFuture);
 
-  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  XrCreateSpatialContextCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
   if (completion.futureResult != XR_SUCCESS) {
     return;
@@ -309,33 +315,41 @@ pose every frame.
 
 [source,cpp]
 ----
-XrSpatialAnchorCreateInfoEXT createInfo{XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT};
-createInfo.baseSpace = localSpace;
-createInfo.time = predictedDisplayTime;
-createInfo.pose = {{0, 0, 0, 1}, {1, 1, 1}};
+XrSpatialAnchorCreateInfoEXT createInfo {
+  .type = XR_TYPE_SPATIAL_ANCHOR_CREATE_INFO_EXT,
+  .baseSpace = localSpace,
+  .time = predictedDisplayTime,
+  .pose = {{0, 0, 0, 1}, {1, 1, 1}},
+};
 
 XrSpatialEntityIdEXT spatialAnchorEntityId;
-XrSpatialEntityEXT spatialAnchorEntity;
+XrSpatialEntityEXT spatialAnchorEntity {XR_NULL_HANDLE};
 CHK_XR(xrCreateSpatialAnchorEXT(spatialContext, &createInfo, &spatialAnchorEntityId, &spatialAnchorEntity));
 
 auto updateAnchorLocation = [&](XrTime time) {
   // We want to get updated data for all components of the entities, so skip specifying componentTypes.
-  XrSpatialUpdateSnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.entityCount = 1;
-  snapshotCreateInfo.entities = &spatialAnchorEntity;
-  snapshotCreateInfo.baseSpace = localSpace;
-  snapshotCreateInfo.time = time;
+  XrSpatialUpdateSnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_UPDATE_SNAPSHOT_CREATE_INFO_EXT,
+    .entityCount = 1,
+    .entities = &spatialAnchorEntity,
+    .baseSpace = localSpace,
+    .time = time,
+  };
 
-  XrSpatialSnapshotEXT snapshot;
+  XrSpatialSnapshotEXT snapshot {XR_NULL_HANDLE};
   CHK_XR(xrCreateSpatialUpdateSnapshotEXT(spatialContext, &snapshotCreateInfo, &snapshot));
 
   // Query for the entities that have the anchor component on them.
   std::array<XrSpatialComponentTypeEXT, 1> componentsToQuery {XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT};
-  XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-  queryCond.componentTypeCount = componentsToQuery.size();
-  queryCond.componentTypes = componentsToQuery.data();
+  XrSpatialComponentDataQueryConditionEXT queryCond {
+    .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+    .componentTypeCount = componentsToQuery.size(),
+    .componentTypes = componentsToQuery.data(),
+  };
 
-  XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+  XrSpatialComponentDataQueryResultEXT queryResult {
+    .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+  };
   CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
 
   std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -347,9 +361,11 @@ auto updateAnchorLocation = [&](XrTime time) {
 
   // query for the pose data
   std::vector<XrPosef> locations(queryResult.entityIdCountOutput);
-  XrSpatialComponentAnchorListEXT locationList{XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT};
-  locationList.locationCount = locations.size();
-  locationList.locations = locations.data();
+  XrSpatialComponentAnchorListEXT locationList {
+    .type = XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT,
+    .locationCount = static_cast<uint32_t>(locations.size()),
+    .locations = locations.data(),
+  };
   queryResult.next = &locationList;
 
   CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));

@@ -2118,9 +2118,13 @@ typedef struct XrSpatialCapabilityConfigurationFooEXT {
 /******************************/
 
 auto waitUntilReady = [](XrFutureEXT future) {
-  XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-  XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-  pollInfo.future = future;
+  XrFuturePollInfoEXT pollInfo {
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+  };
+  XrFuturePollResultEXT pollResult {
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
   do {
     // sleep(1);
     CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
@@ -2135,23 +2139,29 @@ XrSpatialContextEXT spatialContext{};
   };
 
   // Configure Foo capability for the spatial context
-  XrSpatialCapabilityConfigurationFooEXT fooConfig{XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_FOO_EXT};
-  fooConfig.capability = XR_SPATIAL_CAPABILITY_FOO;
-  fooConfig.enabledComponentCount = enabledComponents.size();
-  fooConfig.enabledComponents = enabledComponents.data();
+  XrSpatialCapabilityConfigurationFooEXT fooConfig {
+    .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_FOO_EXT,
+    .capability = XR_SPATIAL_CAPABILITY_FOO,
+    .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+    .enabledComponents = enabledComponents.data(),
+  };
 
   std::vector<XrSpatialCapabilityConfigurationBaseHeaderEXT*> capabilityConfigs;
   capabilityConfigs.push_back(reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&fooConfig));
 
-  XrSpatialContextCreateInfoEXT spatialContextCreateInfo{XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT};
-  spatialContextCreateInfo.capabilityConfigCount = capabilityConfigs.size();
-  spatialContextCreateInfo.capabilityConfigs = capabilityConfigs.data();
-  XrFutureEXT createContextFuture;
+  XrSpatialContextCreateInfoEXT spatialContextCreateInfo {
+    .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+    .capabilityConfigCount = static_cast<uint32_t>(capabilityConfigs.size()),
+    .capabilityConfigs = capabilityConfigs.data(),
+  };
+  XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
   CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
 
   waitUntilReady(createContextFuture);
 
-  XrCreateSpatialContextCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  XrCreateSpatialContextCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
   if (completion.futureResult != XR_SUCCESS) {
     return;
@@ -2164,32 +2174,42 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
   // We want to look for entities that have the following components.
   std::array<XrSpatialComponentTypeEXT, 1> snapshotComponents {XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT};
 
-  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo{XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT};
-  snapshotCreateInfo.componentTypeCount = snapshotComponents.size();
-  snapshotCreateInfo.componentTypes = snapshotComponents.data();
-  XrFutureEXT future = XR_NULL_FUTURE_EXT;
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = snapshotComponents.size(),
+    .componentTypes = snapshotComponents.data(),
+  };
+  XrFutureEXT future {XR_NULL_FUTURE_EXT};
   CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
 
   waitUntilReady(future);
 
-  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT};
-  completionInfo.baseSpace = localSpace;
-  completionInfo.time = time;
-  completionInfo.future = future;
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
 
-  XrCreateSpatialDiscoverySnapshotCompletionEXT completion{XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
   CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
   if (completion.futureResult == XR_SUCCESS) {
     // Query for the bounded2d component data
     XrSpatialComponentTypeEXT componentToQuery = XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT;
-    XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-    queryCond.componentTypes = &componentToQuery;
+    XrSpatialComponentDataQueryConditionEXT queryCond {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypes = &componentToQuery,
+    };
 
-    XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
-    queryResult.entityIdCapacityInput = 0;
-    queryResult.entityIds = nullptr;
-    queryResult.entityStateCapacityInput = 0;
-    queryResult.entityStates = nullptr;
+    XrSpatialComponentDataQueryResultEXT queryResult {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+      .entityIdCapacityInput = 0,
+      .entityIds = nullptr,
+      .entityStateCapacityInput = 0,
+      .entityStates = nullptr,
+    };
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
 
     std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -2200,9 +2220,11 @@ auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime ti
     queryResult.entityStates = entityStates.data();
 
     std::vector<XrSpatialBounded2DDataEXT> bounded2d(queryResult.entityIdCountOutput);
-    XrSpatialComponentBounded2DListEXT boundsList{XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT};
-    boundsList.boundCount = bounded2d.size();
-    boundsList.bounds = bounded2d.data();
+    XrSpatialComponentBounded2DListEXT boundsList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_BOUNDED_2D_LIST_EXT,
+      .boundCount = static_cast<uint32_t>(bounded2d.size()),
+      .bounds = bounded2d.data(),
+    };
     queryResult.next = &boundsList;
 
     CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
@@ -2226,7 +2248,9 @@ while (1) {
   const XrTime time = frameState.predictedDisplayTime;
 
   // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
-  XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+  XrEventDataBuffer event = {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
   XrResult result = xrPollEvent(instance, &event);
   if (result == XR_SUCCESS) {
       switch (event.type) {
@@ -2278,11 +2302,15 @@ typedef struct XrSpatialComponentFooListEXT {
 
 // Query for the foo component data
 XrSpatialComponentTypeEXT componentToQuery = XR_SPATIAL_COMPONENT_TYPE_FOO_EXT;
-XrSpatialComponentDataQueryConditionEXT queryCond{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT};
-queryCond.componentTypeCount = 1;
-queryCond.componentTypes = &componentToQuery;
+XrSpatialComponentDataQueryConditionEXT queryCond{
+  .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+  .componentTypeCount = 1,
+  .componentTypes = &componentToQuery,
+};
 
-XrSpatialComponentDataQueryResultEXT queryResult{XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT};
+XrSpatialComponentDataQueryResultEXT queryResult{
+  .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+};
 CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
 
 std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
@@ -2290,9 +2318,11 @@ queryResult.entityIdCapacityInput = entityIds.size();
 queryResult.entityIds = entityIds.data();
 
 std::vector<XrSpatialBufferEXT> fooBuffers(queryResult.entityIdCountOutput);
-XrSpatialComponentFooListEXT fooList{XR_TYPE_SPATIAL_COMPONENT_FOO_LIST_EXT};
-fooList.fooCount = fooBuffers.size();
-fooList.foo = fooBuffers.data();
+XrSpatialComponentFooListEXT fooList {
+  .type = XR_TYPE_SPATIAL_COMPONENT_FOO_LIST_EXT,
+  .fooCount = static_cast<uint32_t>(fooBuffers.size()),
+  .foo = fooBuffers.data(),
+};
 queryResult.next = &fooList;
 
 CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
@@ -2300,9 +2330,11 @@ CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
 for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
   // foo component data for entity entityIds[i]
   if (fooBuffers[i].bufferType == XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT) {
-    XrSpatialBufferGetInfoEXT getInfo{XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT};
-    getInfo.bufferId = fooBuffers[i].bufferId;
-    uint32_t bufferCountOutput;
+    XrSpatialBufferGetInfoEXT getInfo {
+      .type = XR_TYPE_SPATIAL_BUFFER_GET_INFO_EXT,
+      .bufferId = fooBuffers[i].bufferId,
+    };
+    uint32_t bufferCountOutput = 0;
     CHK_XR(xrGetSpatialBufferVector3fEXT(snapshot, &getInfo, 0, &bufferCountOutput, nullptr));
     std::vector<XrVector3f> vertexBuffer(bufferCountOutput);
     CHK_XR(xrGetSpatialBufferVector3fEXT(snapshot, &getInfo, bufferCountOutput, &bufferCountOutput, vertexBuffer.data()));
@@ -2316,24 +2348,24 @@ for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
 [[ext_spatial_entity_extension_guidelines]]
 ==== Extension guidelines
 
-* If an extension is defining a new elink:XrSpatialComponentTypeEXT which
+* If an extension defines a new elink:XrSpatialComponentTypeEXT which
   provides additional data about a spatial entity,
-** the extension must: also define a list structure for that component which
+** The extension must: also define a list structure for that component which
    allows the application to pass an array to the runtime to fill out with
    the data for each of the spatial entities that satisfy
    flink:xrQuerySpatialComponentDataEXT::pname:queryCondition.
-   Some examples of such list structures are
+   Examples of such list structures are
    slink:XrSpatialComponentParentListEXT and
    slink:XrSpatialComponentBounded2DListEXT.
    If the component data size is variable and requires the application to
    use <<fundamentals-buffer-size-parameters,the two-call idiom>> to query
    it, the component data should: provide an slink:XrSpatialBufferEXT for
-   each variable-sized data in the list structure and it must: specify the
-   elink:XrSpatialBufferTypeEXT for each buffer.
-   Application can: then query the buffer data using functions defined in
+   each variable-sized data in the list structure and for each such buffer
+   it must: specify the elink:XrSpatialBufferTypeEXT.
+   Applications can: then query the buffer data using functions defined in
    <<ext_spatial_entity_two_call_component_data>>.
    An example of such a structure is slink:XrSpatialMeshDataEXT which is
-   included slink:XrSpatialComponentMesh3DListEXT.
+   included in slink:XrSpatialComponentMesh3DListEXT.
 ** The extension can: also provide structures that the application can:
    chain to slink:XrSpatialComponentDataQueryConditionEXT::pname:next to
    provide additional filters for the query pertaining to the data of this
@@ -2342,37 +2374,39 @@ for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
   slink:XrSpatialDiscoverySnapshotCreateInfoEXT to provide additional
   filters for discovery.
   The filters for creating the snapshot must: not affect the configuration
-  of the spatial context, but instead are to be used to provide hints to the
-  runtime on what entities and data are to be included in the snapshot as
-  tracked by the current configuration of the spatial context (and therefore
-  the current configuration of the underlying services).
+  of the spatial context, but instead provide hints to the runtime on what
+  entities and data to include in the snapshot as tracked by the current
+  configuration of the spatial context (and therefore the current
+  configuration of the underlying services).
 * If an extension defines a new elink:XrSpatialCapabilityEXT,
-** it should: also specify the list of elink:XrSpatialComponentTypeEXT that
-   the runtimes must: provide on entities for that capability.
-** it must: also provide structures derived from
-   slink:XrSpatialCapabilityConfigurationBaseHeaderEXT that will allow the
+** The extension should: also specify the list of
+   elink:XrSpatialComponentTypeEXT that the runtimes must: provide on
+   entities for that capability.
+** The extension must: also provide structures derived from
+   slink:XrSpatialCapabilityConfigurationBaseHeaderEXT that allow the
    configuration of that capability.
-* If an extension defines a new elink:XrSpatialCapabilityFeatureEXT, it
-  must: also define a corresponding configuration structure that can: be
-  chained to the next pointer of
-  slink:XrSpatialCapabilityConfigurationBaseHeaderEXT, that the application
-  can: use to enable the feature when creating an slink:XrSpatialContextEXT.
+* If an extension defines a new elink:XrSpatialCapabilityFeatureEXT,
+** The extension must: also define a corresponding configuration structure
+   that can: be chained to the next pointer of
+   slink:XrSpatialCapabilityConfigurationBaseHeaderEXT, that the application
+   can: use to enable the feature when creating an
+   slink:XrSpatialContextEXT.
 * An extension defining a new elink:XrSpatialCapabilityEXT should: follow
-  this template for the specification -
+  this template for the specification:
 ** Overview
 ** Runtime support
 ** Configuration
 ** Guaranteed components
 ** Example Code
 * An extension defining a new elink:XrSpatialComponentTypeEXT should: follow
-  this template for the specification -
+  this template for the specification:
 ** Component data
 ** Component list structure to query data
 ** Configuration
 * When writing an api that provides the application with a
-  basetype:XrSpatialBufferIdEXT, it must: be accompanied with a
-  elink:XrSpatialBufferTypeEXT to inform the application what the data type
-  of the buffer is and the application can: use an appropriate
+  basetype:XrSpatialBufferIdEXT, it must: be accompanied by a
+  elink:XrSpatialBufferTypeEXT to inform the application of the data type of
+  the buffer, so that the application can: use an appropriate
   ftext:xrGetSpatialBuffer* function to retrieve the actual contents of the
   buffer.
 
@@ -2436,8 +2470,8 @@ application using the API.
   the other set, in addition to the newly added enumerants.
   The specification of the newly defined semantic label set must: also
   establish the mapping between the old label set and the new one.
-  See example <<ext_spatial_entity_example_semantic_label_extension,
-  below>>.
+  See the Spatial Semantic Label Extension example
+  <<ext_spatial_entity_example_semantic_label_extension, below>>.
 
 [[ext_spatial_entity_example_feature_semantic_label_subset]]
 ====== Example Spatial Feature Definition for Semantic Label Subset
@@ -2490,8 +2524,8 @@ Consider the above example where an extension defines an enumeration
 stext:XrSpatialExamplePlaneSemanticLabelExtensionEXT in order to extend the
 existing elink:XrSpatialPlaneSemanticLabelEXT with values to represent doors
 and windows.
-The specification for the new enumeration must: include text for the
-following form -
+The specification for the new enumeration must: include text of the
+following form:
 
 [source,asciidoc]
 ----
@@ -2501,7 +2535,7 @@ label enumerant from elink:XrSpatialExamplePlaneSemanticLabelExtensionEXT with t
 i.e.
 the ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT value for that entity must:
 correspond with the ename:XR_SPATIAL_COMPONENT_TYPE_EXAMPLE_PLANE_SEMANTIC_LABEL_EXTENSION_EXT values
-according to the following table -
+according to the following table:
 
 [width="100%",options="header"]
 |====

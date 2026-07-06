@@ -1,0 +1,386 @@
+// Copyright (c) 2023-2026, Google LLC
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_ANDROID_google_cloud_auth.adoc[]
+
+*Last Modified Date*::
+    2025-12-18
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    John Ullman, Google +
+    Ben King, Google +
+    Nihav Jain, Google +
+    Jared Finder, Google +
+
+==== Overview
+
+This extension enables the use of Google Cloud-based extensions by allowing
+the application to provide auth credentials for Google Cloud APIs.
+The developer must: use the Google Cloud Console
+(https://console.cloud.google.com/) to create a Google Cloud project for the
+application.
+This extension requires the extension apiext:XR_EXT_future.
+
+During development, the application can: debug issues with their Google
+Cloud setup using the extension apiext:XR_EXT_debug_utils.
+If the application has a Debug Messenger, and a potentially actionable error
+occurs in the runtime when sending a request to Google Cloud on behalf of
+the application, the runtime invokes the messenger's callback with an error
+message.
+In this case, the developer should: consult the error message and all
+available documentation, and then ensure that the application and Google
+Cloud project are properly setup to use Google Cloud APIs.
+The runtime must: use message type
+ename:XR_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT, severity
+ename:XR_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT, and messageId
+"`GoogleCloudError`".
+
+
+==== Authentication
+
+[open,refpage='XrGoogleCloudAuthInfoBaseHeaderANDROID',type='structs',desc='Base structure for Google Cloud authentication',xrefs='xrSetGoogleCloudAuthAsyncANDROID']
+--
+The slink:XrGoogleCloudAuthInfoBaseHeaderANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGoogleCloudAuthInfoBaseHeaderANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+This structure is not intended to be explicitly constructed but is extended
+by other structures that can: be used with
+flink:xrSetGoogleCloudAuthAsyncANDROID to provide authentication
+credentials.
+
+include::{generated}/validity/structs/XrGoogleCloudAuthInfoBaseHeaderANDROID.adoc[]
+--
+
+[open,refpage='XrGoogleCloudAuthInfoApiKeyANDROID',type='structs',desc='Google Cloud authentication via API key',xrefs='xrSetGoogleCloudAuthAsyncANDROID']
+--
+The slink:XrGoogleCloudAuthInfoApiKeyANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGoogleCloudAuthInfoApiKeyANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:apiKey is a pointer to a string representing the API key.
+****
+
+When this structure is passed to flink:xrSetGoogleCloudAuthAsyncANDROID, the
+pname:apiKey member must: be a nonempty ASCII string with no spaces or
+control characters, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+pname:apiKey must: further satisfy the following conditions:
+
+* It must: be a valid API Key generated for your Google Cloud project.
+* Your Google Cloud project must: enable the relevant Google Cloud APIs
+  (specified by the depending extensions).
+* If the API Key has restrictions, the restrictions must: allow the relevant
+  Google Cloud APIs and your application.
+
+Otherwise, the call to flink:xrSetGoogleCloudAuthAsyncANDROID will succeed
+but all calls to functions that depend on cloud authorization will act as
+documented for cloud failures in the extension that defines those functions.
+If such a function reports a failure and the application chains
+slink:XrGoogleCloudAuthErrorResultANDROID to the output parameter of that
+function, the runtime must: set
+slink:XrGoogleCloudAuthErrorResultANDROID::pname:error to
+ename:XR_GOOGLE_CLOUD_AUTH_ERROR_ANDROID to indicate this error.
+
+The asynchronous operation will complete with ename:XR_SUCCESS once the API
+key is validated for formatting and stored by the runtime.
+
+The application does not need to keep pname:apiKey alive after the function
+returns.
+The runtime must: make a copy of the pname:apiKey for its asynchronous
+processing.
+
+include::{generated}/validity/structs/XrGoogleCloudAuthInfoApiKeyANDROID.adoc[]
+--
+
+[open,refpage='XrGoogleCloudAuthInfoTokenANDROID',type='structs',desc='Google Cloud authentication via auth token',xrefs='xrSetGoogleCloudAuthAsyncANDROID']
+--
+The slink:XrGoogleCloudAuthInfoTokenANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGoogleCloudAuthInfoTokenANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:authToken is a pointer to a string representing the auth token.
+****
+
+When this structure is passed to flink:xrSetGoogleCloudAuthAsyncANDROID, the
+pname:authToken member must: be a nonempty ASCII string with no spaces or
+control characters, otherwise the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+pname:authToken must: further satisfy the following conditions:
+
+* It must: be a valid and unexpired credential generated for your Google
+  Cloud project.
+* Your Google Cloud project must: enable the relevant Google Cloud APIs
+  (specified by the depending extensions).
+* The credential must: be one of:
+** An OAuth2 access token with the relevant scopes, generated by signing
+   into a Google account with your application, OR
+** A Signed JWT token with the relevant claims, generated by a Service
+   Account from your Google Cloud project.
+
+The requirements in each case are specified by the depending extensions.
+Otherwise, the call to flink:xrSetGoogleCloudAuthAsyncANDROID will succeed
+but all calls to functions that depend on cloud authorization will act as
+documented for cloud failures in the extension that defines those functions.
+If such a function reports a failure and the application chains
+slink:XrGoogleCloudAuthErrorResultANDROID to the output parameter of that
+function, the runtime must: set
+slink:XrGoogleCloudAuthErrorResultANDROID::pname:error to
+ename:XR_GOOGLE_CLOUD_AUTH_ERROR_ANDROID to indicate this error.
+
+The application must: proactively pass in a new token via
+flink:xrSetGoogleCloudAuthAsyncANDROID before the old token expires
+otherwise the runtime must: report ename:XR_GOOGLE_CLOUD_AUTH_ERROR_ANDROID
+via slink:XrGoogleCloudAuthErrorResultANDROID from the functions that
+require Google Cloud authentication.
+The runtime must: use the latest token passed in by the application when
+starting a new network request.
+
+The asynchronous operation will complete with ename:XR_SUCCESS once the
+token is validated for formatting and stored by the runtime.
+
+The application does not need to keep pname:authToken alive after the
+function returns.
+The runtime must: make a copy of the pname:authToken for its asynchronous
+processing.
+
+include::{generated}/validity/structs/XrGoogleCloudAuthInfoTokenANDROID.adoc[]
+--
+
+[open,refpage='XrGoogleCloudAuthInfoKeylessANDROID',type='structs',desc='Google Cloud keyless authentication',xrefs='xrSetGoogleCloudAuthAsyncANDROID']
+--
+The slink:XrGoogleCloudAuthInfoKeylessANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGoogleCloudAuthInfoKeylessANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+When this structure is passed to flink:xrSetGoogleCloudAuthAsyncANDROID, the
+runtime may: generate credentials dynamically (e.g. on Android, the runtime
+communicates with Google Play Services from the application process).
+If Keyless Auth is not properly setup, the runtime may: return
+ename:XR_ERROR_KEYLESS_AUTH_NOT_SETUP_ANDROID synchronously.
+
+The asynchronous operation will perform the necessary network requests to
+fetch credentials.
+The result of this operation will be returned in the
+slink:XrFutureCompletionEXT::pname:futureResult from
+flink:xrSetGoogleCloudAuthCompleteANDROID.
+If the future result is ename:XR_SUCCESS, Keyless Auth credentials were
+successfully applied.
+If the future result is ename:XR_ERROR_KEYLESS_AUTH_FAILED_ANDROID, the
+application may: try again later.
+
+include::{generated}/validity/structs/XrGoogleCloudAuthInfoKeylessANDROID.adoc[]
+--
+
+[open,refpage='xrSetGoogleCloudAuthAsyncANDROID',type='protos',desc='Set Google Cloud authentication credentials',xrefs='xrSetGoogleCloudAuthCompleteANDROID XrGoogleCloudAuthInfoBaseHeaderANDROID XrGoogleCloudAuthInfoApiKeyANDROID XrGoogleCloudAuthInfoTokenANDROID XrGoogleCloudAuthInfoKeylessANDROID']
+--
+The flink:xrSetGoogleCloudAuthAsyncANDROID function is defined as:
+
+include::{generated}/api/protos/xrSetGoogleCloudAuthAsyncANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession that will use the credentials.
+* pname:authInfo is a pointer to a struct specifying the authentication
+  method and parameters, with its
+  slink:XrGoogleCloudAuthInfoBaseHeaderANDROID::pname:type field indicating
+  the specific struct.
+* pname:future is a pointer to an basetype:XrFutureEXT handle in which the
+  created future is returned, or dlink:XR_NULL_HANDLE if the function did
+  not return ename:XR_SUCCESS.
+****
+
+Set the credentials used to authenticate with Google Cloud.
+This operation is asynchronous.
+Call flink:xrPollFutureEXT to check the ready state on the future.
+Once the future is in the ready state, call
+flink:xrSetGoogleCloudAuthCompleteANDROID to retrieve the result.
+
+The pname:authInfo parameter must: be a pointer to a struct whose
+slink:XrGoogleCloudAuthInfoBaseHeaderANDROID::pname:type member identifies
+the authentication method to be used, and which extends
+slink:XrGoogleCloudAuthInfoBaseHeaderANDROID (e.g.
+slink:XrGoogleCloudAuthInfoApiKeyANDROID).
+
+The specific requirements, behaviors, and error conditions (both synchronous
+and asynchronous) for each authentication method are described in the
+documentation for their respective data structs.
+
+include::{generated}/validity/protos/xrSetGoogleCloudAuthAsyncANDROID.adoc[]
+--
+
+[open,refpage='xrSetGoogleCloudAuthCompleteANDROID',type='protos',desc='Complete setting Google Cloud authentication credentials',xrefs='xrSetGoogleCloudAuthAsyncANDROID']
+--
+The flink:xrSetGoogleCloudAuthCompleteANDROID function is defined as:
+
+include::{generated}/api/protos/xrSetGoogleCloudAuthCompleteANDROID.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the slink:XrSession used to start the operation.
+* pname:future is the basetype:XrFutureEXT to complete.
+* pname:completion is a pointer to an slink:XrFutureCompletionEXT filled in
+  by the runtime.
+****
+
+.Future Return Codes
+****
+slink:XrFutureCompletionEXT::pname:futureResult values:
+
+<<fundamentals-successcodes,Success>>::
+* ename:XR_SUCCESS: Credentials were successfully applied.
+
+<<fundamentals-errorcodes,Failure>>::
+* ename:XR_ERROR_KEYLESS_AUTH_FAILED_ANDROID: Keyless Auth failed.
+  The application can: try again later.
+  The application or developer may: also check certain preconditions for
+  success (e.g. on Android, the device must: have an up-to-date installation
+  of Google Play Services and these services must: be functioning properly).
+****
+
+include::{generated}/validity/protos/xrSetGoogleCloudAuthCompleteANDROID.adoc[]
+--
+
+==== Google Cloud Auth Errors
+
+[open,refpage='XrGoogleCloudAuthErrorANDROID',type='enums',desc='The cause of the error of an operation accessing Google Cloud',xrefs='XrGoogleCloudAuthErrorResultANDROID']
+--
+The elink:XrGoogleCloudAuthErrorANDROID enumeration is defined as:
+
+include::{generated}/api/enums/XrGoogleCloudAuthErrorANDROID.adoc[]
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrGoogleCloudAuthErrorANDROID.comments.adoc[]
+--
+
+[open,refpage='XrGoogleCloudAuthErrorResultANDROID',type='structs',desc='Struct to provide more information about Google Cloud authentication errors',xrefs='XrGoogleCloudAuthErrorANDROID']
+--
+The slink:XrGoogleCloudAuthErrorResultANDROID structure is defined as:
+
+include::{generated}/api/structs/XrGoogleCloudAuthErrorResultANDROID.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:error is the elink:XrGoogleCloudAuthErrorANDROID detailing the cause
+  of the error of an operation accessing Google Cloud.
+****
+
+If an operation fails due to Google Cloud Authentication, this struct may:
+be chained to the operational result struct to provide more information
+about the error.
+
+include::{generated}/validity/structs/XrGoogleCloudAuthErrorResultANDROID.adoc[]
+--
+
+==== Example code
+
+[source,cpp]
+----
+XrSession session; // previously initialized
+XrInstance instance; // previously initialized
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
+
+// The function pointers are previously initialized using
+// xrGetInstanceProcAddr.
+PFN_xrPollFutureEXT xrPollFutureEXT; // previously initialized
+PFN_xrSetGoogleCloudAuthAsyncANDROID xrSetGoogleCloudAuthAsyncANDROID; // previously initialized
+PFN_xrSetGoogleCloudAuthCompleteANDROID xrSetGoogleCloudAuthCompleteANDROID; // previously initialized
+
+auto waitUntilReady = [&](XrFutureEXT future) {
+  XrFuturePollInfoEXT pollInfo {
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+  };
+  XrFuturePollResultEXT pollResult {
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+  };
+  do {
+    // sleep(1);
+    xrPollFutureEXT(instance, &pollInfo, &pollResult);
+  } while (pollResult.state != XR_FUTURE_STATE_READY_EXT);
+};
+
+// Set Google Cloud auth via API key.
+XrGoogleCloudAuthInfoApiKeyANDROID authApiKey{
+  .type = XR_TYPE_GOOGLE_CLOUD_AUTH_INFO_API_KEY_ANDROID,
+  .apiKey = "MYAPIKEY",
+};
+XrResult result = xrSetGoogleCloudAuthAsyncANDROID(
+    session, reinterpret_cast<XrGoogleCloudAuthInfoBaseHeaderANDROID*>(&authApiKey), &future);
+
+// Or, set Google Cloud auth via auth token:
+XrGoogleCloudAuthInfoTokenANDROID authToken{
+  .type = XR_TYPE_GOOGLE_CLOUD_AUTH_INFO_TOKEN_ANDROID,
+  .authToken = "MYAUTHTOKEN",
+};
+result = xrSetGoogleCloudAuthAsyncANDROID(
+    session, reinterpret_cast<XrGoogleCloudAuthInfoBaseHeaderANDROID*>(&authToken), &future);
+
+// Or, set Google Cloud auth via keyless auth:
+XrGoogleCloudAuthInfoKeylessANDROID authKeyless {
+  .type = XR_TYPE_GOOGLE_CLOUD_AUTH_INFO_KEYLESS_ANDROID,
+};
+result = xrSetGoogleCloudAuthAsyncANDROID(
+    session, reinterpret_cast<XrGoogleCloudAuthInfoBaseHeaderANDROID*>(&authKeyless),
+    &future);
+
+// Check the result of the auth setup.
+if (result == XR_ERROR_VALIDATION_FAILURE) {
+  // The credentials were invalid.
+} else if (result == XR_ERROR_KEYLESS_AUTH_NOT_SETUP_ANDROID) {
+  // Keyless auth was not properly setup.
+} else if (result == XR_SUCCESS) {
+  waitUntilReady(future);
+  XrFutureCompletionEXT completion{
+    .type = XR_TYPE_FUTURE_COMPLETION_EXT,
+  };
+  xrSetGoogleCloudAuthCompleteANDROID(session, future, &completion);
+
+  if (completion.futureResult == XR_SUCCESS) {
+    // Credentials were successfully applied.
+  } else if (completion.futureResult == XR_ERROR_KEYLESS_AUTH_FAILED_ANDROID) {
+    // An error occurred when setting keyless auth credentials. OK to retry.
+  }
+}
+----
+
+include::{generated}/interfaces/XR_ANDROID_google_cloud_auth.adoc[leveloffset=1]
+
+==== Issues
+
+
+* Revision 1, 2025-12-18 (Ben King)
+** Initial extension description.

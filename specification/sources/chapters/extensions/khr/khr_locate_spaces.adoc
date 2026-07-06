@@ -252,21 +252,27 @@ while (1) {
     // Typically the time is the predicted display time returned from xrWaitFrame.
     XrTime displayTime; // previously initialized.
 
-    XrSpacesLocateInfoKHR locateInfo{XR_TYPE_SPACES_LOCATE_INFO_KHR};
-    locateInfo.baseSpace = baseSpace;
-    locateInfo.time = displayTime;
-    locateInfo.spaceCount = (uint32_t)spacesToLocate.size();
-    locateInfo.spaces = spacesToLocate.data();
+    XrSpacesLocateInfoKHR locateInfo {
+        .type = XR_TYPE_SPACES_LOCATE_INFO_KHR,
+        .baseSpace = baseSpace,
+        .time = displayTime,
+        .spaceCount = static_cast<uint32_t>(spacesToLocate.size()),
+        .spaces = spacesToLocate.data(),
+    };
 
-    XrSpaceLocationsKHR locations{XR_TYPE_SPACES_LOCATE_INFO_KHR};
-    locations.locationCount = (uint32_t)locationBuffer.size();
-    locations.locations = locationBuffer.data();
+    XrSpaceVelocitiesKHR velocities {
+        .type = XR_TYPE_SPACE_VELOCITIES_KHR,
+        .velocityCount = static_cast<uint32_t>(velocityBuffer.size()),
+        .velocities = velocityBuffer.data(),
+    };
 
-    XrSpaceVelocitiesKHR velocities{XR_TYPE_SPACE_VELOCITIES_KHR};
-    velocities.velocityCount = (uint32_t)velocityBuffer.size();
-    velocities.velocities = velocityBuffer.data();
+    XrSpaceLocationsKHR locations {
+        .type = XR_TYPE_SPACES_LOCATE_INFO_KHR,
+        .next = &velocities,
+        .locationCount = static_cast<uint32_t>(locationBuffer.size()),
+        .locations = locationBuffer.data(),
+    };
 
-    locations.next = &velocities;
     CHK_XR(xrLocateSpacesKHR(session, &locateInfo, &locations));
 
     for (uint32_t i = 0; i < spacesToLocate.size(); i++) {

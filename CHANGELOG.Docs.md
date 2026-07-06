@@ -17,6 +17,93 @@ any public pull requests that have been accepted.
 This changelog only lists changes that affect the registry,
 headers, and/or specification text.
 
+## OpenXR Specification 1.1.61 (2026-07-02)
+
+This release primarily features a number of new vendor extensions, plus one
+vendor extension fix, clarifications for spatial entities, and additional sample
+code cleanup. A small addition to the reflection headers is also included.
+
+- Specification
+  - Fix: Typos in enum value names for `XrTrackingOptimizationSettingsHintQCOM`.
+    ([internal MR 4186](https://gitlab.khronos.org/openxr/openxr/merge_requests/4186))
+  - Fix: Miscellaneous non-normative fixes to the `XR_EXT_spatial_entity` spec
+    language.
+    ([internal MR 4355](https://gitlab.khronos.org/openxr/openxr/merge_requests/4355))
+  - Improvement: Improve consistency of struct initialization patterns in adoc
+    sample code, using designated initializers for clarity in additional sample
+    code not converted in the last release.
+    ([internal MR 4248](https://gitlab.khronos.org/openxr/openxr/merge_requests/4248),
+    [internal MR 4247](https://gitlab.khronos.org/openxr/openxr/merge_requests/4247),
+    [internal MR 4246](https://gitlab.khronos.org/openxr/openxr/merge_requests/4246),
+    [internal MR 4374](https://gitlab.khronos.org/openxr/openxr/merge_requests/4374))
+  - New vendor extension specification: `XR_ANDROID_spatial_discovery_bounds` to
+    enable limiting discovery of spatial entities to within a sphere, box, or
+    frustum.
+    ([internal MR 3520](https://gitlab.khronos.org/openxr/openxr/merge_requests/3520))
+  - New vendor extension specification: `XR_BD_body_tracking_auxiliary_metrics`
+    provides additional data about body tracking state and the ability to trigger
+    the runtime to begin its calibration process.
+    ([internal MR 3756](https://gitlab.khronos.org/openxr/openxr/merge_requests/3756))
+  - New vendor extension specification: `XR_META_hand_tracking_frequency_hint`
+    providing a way for applications to inform the runtime they would prefer higher
+    frequency, lower latency tracking with tradeoffs.
+    ([internal MR 4110](https://gitlab.khronos.org/openxr/openxr/merge_requests/4110))
+  - New vendor extension specification:
+    `XR_META_hand_tracking_unextrapolated_poses` for use by specialized
+    applications that may have additional context for hand tracking extrapolation
+    not available to the runtime.
+    ([internal MR 4113](https://gitlab.khronos.org/openxr/openxr/merge_requests/4113))
+  - New vendor extension specification: `XR_META_hand_tracking_wide_motion_mode2`
+    adding another hand tracking data source that performs wider-range tracking
+    even outside of the view of the cameras.
+    ([internal MR 4114](https://gitlab.khronos.org/openxr/openxr/merge_requests/4114))
+  - New vendor extension specification: `XR_ANDROID_google_cloud_auth` to give a
+    way for apps to send their Google Cloud auth info to the runtime.
+    ([internal MR 4200](https://gitlab.khronos.org/openxr/openxr/merge_requests/4200))
+  - New vendor extension specification: `XR_ANDROID_geospatial` to convert a WGS84
+    GeoPose to an `XrPosef` and vice-versa using vendor cloud services.
+    ([internal MR 4201](https://gitlab.khronos.org/openxr/openxr/merge_requests/4201))
+  - New vendor extension specification: `XR_ANDROID_geospatial_anchor` to provide
+    geospatial & surface anchors.
+    ([internal MR 4214](https://gitlab.khronos.org/openxr/openxr/merge_requests/4214))
+  - New vendor extension specifications: `XR_BD_dynamic_object_tracking` vendor
+    spatial sensing related extension, with related `XR_BD_dynamic_object_keyboard`
+    (for tracking a computer keyboard) and `XR_BD_dynamic_object_mouse` (for
+    tracking a computer mouse) extensions.
+    ([internal MR 3944](https://gitlab.khronos.org/openxr/openxr/merge_requests/3944))
+- Registry
+  - Fix: Typos in enum value names for `XrTrackingOptimizationSettingsHintQCOM`.
+    Original names left as aliases for source compatibility.
+    ([internal MR 4186](https://gitlab.khronos.org/openxr/openxr/merge_requests/4186))
+  - Improvement: `XR_LIST_FUNCTIONS_` macros in the reflection header are now
+    generated for all features, even those lacking functions.
+    ([internal MR 4329](https://gitlab.khronos.org/openxr/openxr/merge_requests/4329))
+  - New vendor extension: `XR_ANDROID_spatial_discovery_bounds`
+    ([internal MR 3520](https://gitlab.khronos.org/openxr/openxr/merge_requests/3520))
+  - New vendor extension: `XR_BD_body_tracking_auxiliary_metrics`
+    ([internal MR 3756](https://gitlab.khronos.org/openxr/openxr/merge_requests/3756))
+  - New vendor extension: `XR_BD_dynamic_object_tracking`
+    ([internal MR 3944](https://gitlab.khronos.org/openxr/openxr/merge_requests/3944))
+  - New vendor extension: `XR_BD_dynamic_object_keyboard`
+    ([internal MR 3944](https://gitlab.khronos.org/openxr/openxr/merge_requests/3944))
+  - New vendor extension: `XR_BD_dynamic_object_mouse`
+    ([internal MR 3944](https://gitlab.khronos.org/openxr/openxr/merge_requests/3944))
+  - New vendor extension: `XR_META_hand_tracking_frequency_hint`
+    ([internal MR 4110](https://gitlab.khronos.org/openxr/openxr/merge_requests/4110))
+  - New vendor extension: `XR_META_hand_tracking_unextrapolated_poses`
+    ([internal MR 4113](https://gitlab.khronos.org/openxr/openxr/merge_requests/4113))
+  - New vendor extension: `XR_META_hand_tracking_wide_motion_mode2`
+    ([internal MR 4114](https://gitlab.khronos.org/openxr/openxr/merge_requests/4114))
+  - New vendor extension: `XR_ANDROID_google_cloud_auth`
+    ([internal MR 4200](https://gitlab.khronos.org/openxr/openxr/merge_requests/4200))
+  - New vendor extension: `XR_ANDROID_geospatial`
+    ([internal MR 4201](https://gitlab.khronos.org/openxr/openxr/merge_requests/4201))
+  - New vendor extension: `XR_ANDROID_geospatial_anchor`
+    ([internal MR 4214](https://gitlab.khronos.org/openxr/openxr/merge_requests/4214))
+  - Schematron: Add exception for the comments of a behavior-only
+    `XrSpatialComponentTypeEXT`.
+    ([internal MR 4353](https://gitlab.khronos.org/openxr/openxr/merge_requests/4353))
+
 ## OpenXR Specification 1.1.60 (2026-05-20)
 
 This release features a new multi-vendor extension and a number of quality and

@@ -1506,37 +1506,40 @@
         <!-- XrSpatialCapabilityFeature enum extensions -->
         <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatialCapabilityFeature')]">
             <sch:let name="config_struct_phrase" value="'Corresponding config structure is slink:'"/>
-            <sch:let name="has_config_struct" value="contains(@comment, $config_struct_phrase)"/>
+            <sch:let name="no_config_struct_phrase" value="'does not require any configuration structure'"/>
+            <sch:let name="has_config_struct" value="contains(@comment, $config_struct_phrase) or contains(@comment, $no_config_struct_phrase)"/>
             <sch:assert test="$has_config_struct">
-                XrSpatialCapabilityFeature extension value's ('<sch:value-of select="@name"/>') comment must reference its config structure using the phrase '<sch:value-of select="$config_struct_phrase"/>'.
+                XrSpatialCapabilityFeature extension value's ('<sch:value-of select="@name"/>') comment must reference its config structure using the phrase '<sch:value-of select="$config_struct_phrase"/>' or mention '<sch:value-of select="$no_config_struct_phrase"/>'.
             </sch:assert>
         </sch:rule>
     </sch:pattern>
 
     <sch:pattern name="Spatial Component Types comment format">
+        <sch:let name="no_list_or_data_struct_comment_regex" value="'.*There is no corresponding list or data structure for this component type.*'"/>
+
         <!-- XrSpatialComponentType enum -->
         <sch:rule context="enums[starts-with(@name, 'XrSpatialComponentType')]/enum">
-            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:')"/>
+            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:') or matches(@comment, $no_list_or_data_struct_comment_regex)"/>
             <sch:assert test="$has_list_struct">
-                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:'.
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:' or the phrase 'There is no corresponding list or data structure for this component type.'.
             </sch:assert>
 
             <sch:let name="data_struct_comment_regex" value="'.*Corresponding data structure is \w+:.*$'"/>
-            <sch:assert test="matches(@comment, $data_struct_comment_regex)">
-                XrSpatialComponentType value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:'.
+            <sch:assert test="matches(@comment, $data_struct_comment_regex) or matches(@comment, $no_list_or_data_struct_comment_regex)">
+                XrSpatialComponentType value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:' or the phrase 'There is no corresponding list or data structure for this component type.'.
             </sch:assert>
         </sch:rule>
 
         <!-- XrSpatialComponentType enum extensions -->
         <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatialComponentType')]">
-            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:')"/>
+            <sch:let name="has_list_struct" value="contains(@comment, 'Corresponding list structure is slink:') or matches(@comment, $no_list_or_data_struct_comment_regex)"/>
             <sch:assert test="$has_list_struct">
-                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:'.
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its list structure using the phrase 'Corresponding list structure is slink:' or the phrase 'There is no corresponding list or data structure for this component type.'.
             </sch:assert>
 
             <sch:let name="data_struct_comment_regex" value="'.*Corresponding data structure is \w+:.*$'"/>
-            <sch:assert test="matches(@comment, $data_struct_comment_regex)">
-                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:'.
+            <sch:assert test="matches(@comment, $data_struct_comment_regex) or matches(@comment, $no_list_or_data_struct_comment_regex)">
+                XrSpatialComponentType extension value's ('<sch:value-of select="@name"/>') comment must reference its data structure using the phrase 'Corresponding data structure is slink|elink|basetype:' or the phrase 'There is no corresponding list or data structure for this component type.'.
             </sch:assert>
         </sch:rule>
     </sch:pattern>

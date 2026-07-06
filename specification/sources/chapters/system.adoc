@@ -144,10 +144,12 @@ include::{generated}/validity/structs/XrSystemGetInfo.adoc[]
 ----
 XrInstance instance; // previously initialized
 
-XrSystemGetInfo system_get_info = {XR_TYPE_SYSTEM_GET_INFO};
-system_get_info.formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
+XrSystemGetInfo system_get_info {
+    .type = XR_TYPE_SYSTEM_GET_INFO,
+    .formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY,
+};
 
-XrSystemId systemId;
+XrSystemId systemId {XR_NULL_SYSTEM_ID};
 CHK_XR(xrGetSystem(instance, &system_get_info, &systemId));
 
 // create session

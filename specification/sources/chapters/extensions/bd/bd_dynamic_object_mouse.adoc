@@ -1,0 +1,93 @@
+// Copyright (c) 2024 ByteDance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+include::{generated}/meta/XR_BD_dynamic_object_mouse.adoc[]
+
+*Last Modified Date*::
+    2025-08-05
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Zijian Wang, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Shuai Liu, ByteDance +
+
+==== Overview
+
+The apiext:XR_BD_dynamic_object_mouse extension enables a computer mouse to
+be tracked as a type of dynamic object by the
+apiext:XR_BD_dynamic_object_tracking extension.
+
+==== Inspect System Capability
+
+[open,refpage='XrSystemDynamicObjectMousePropertiesBD',type='structs',desc='System property for dynamic object mouse.',xrefs='XrSystemProperties xrGetSystemProperties']
+--
+The slink:XrSystemDynamicObjectMousePropertiesBD structure is defined as:
+
+include::{generated}/api/structs/XrSystemDynamicObjectMousePropertiesBD.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:supportsDynamicObjectMouse is an basetype:XrBool32, with
+  ename:XR_TRUE indicating that the system supports tracking a computer
+  mouse, and ename:XR_FALSE indicating that the system does not support
+  tracking a computer mouse.
+****
+
+An application can: inspect whether the system is capable of tracking a
+computer mouse by chaining an slink:XrSystemDynamicObjectMousePropertiesBD
+structure to the slink:XrSystemProperties::pname:next chain when calling
+flink:xrGetSystemProperties.
+
+If slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing is
+ename:XR_FALSE or
+slink:XrSystemDynamicObjectTrackingPropertiesBD::pname:supportsDynamicObjectTracking
+is ename:XR_FALSE, then pname:supportsDynamicObjectMouse must: also be
+ename:XR_FALSE.
+
+If a runtime returns ename:XR_TRUE for pname:supportsDynamicObjectMouse, the
+system supports dynamic computer mouse tracking.
+This implies that
+slink:XrSystemDynamicObjectTrackingPropertiesBD::pname:supportsDynamicObjectTracking
+and slink:XrSystemSpatialSensingPropertiesBD::pname:supportsSpatialSensing
+must: also be ename:XR_TRUE.
+
+Note that pname:supportsDynamicObjectMouse may: be ename:XR_TRUE, even if
+the application has not obtained the permission required by the system.
+
+Evaluation of permissions takes place later, in the asynchronous operation
+started by flink:xrStartSenseDataProviderAsyncBD.
+
+include::{generated}/validity/structs/XrSystemDynamicObjectMousePropertiesBD.adoc[]
+--
+
+==== The Mouse Dynamic Object
+
+Applications can: obtain component data through
+flink:xrGetSpatialEntityComponentDataBD from the spatial entity of a
+computer mouse, such as location, semantic label, or bounding sphere.
+
+The origin of the mouse space is located at the center of the sphere, and no
+direction is distinguished.
+Applications can: create an slink:XrSpace for the spatial entity of the
+mouse and obtain location through flink:xrLocateSpace or
+flink:xrLocateSpaces.
+
+See more details in <<bd_dynamic_object_tracking-locate-dynamic-object>>.
+
+
+include::{generated}/interfaces/XR_BD_dynamic_object_mouse.adoc[leveloffset=1]
+
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2025-08-05 (Zijian Wang)
+
+** Initial extension description

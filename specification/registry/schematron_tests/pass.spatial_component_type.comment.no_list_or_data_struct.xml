@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+    </tags>
+
+    <enums name="XrSpatialComponentTypeEXT" type="enum">
+        <!-- component type comment specifies that this component has no list or data struct. -->
+        <enum value="1"   name="XR_SPATIAL_COMPONENT_TYPE_ATTACHABLE_EXT" comment="Component that indicates anchors can be attached to the spatial entity. There is no corresponding list or data structure for this component type. Its presence describes a behaviour of the entity without adding any data."/>
+    </enums>
+
+</registry>

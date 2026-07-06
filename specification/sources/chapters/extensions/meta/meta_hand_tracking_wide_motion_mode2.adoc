@@ -1,0 +1,116 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_META_hand_tracking_wide_motion_mode2.adoc[]
+
+*Last Modified Date*::
+    2025-09-30
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Robert Memmott, Meta +
+    John Kearney, Meta +
+    Andreas Selvik, Meta +
+
+==== Overview
+
+This extension augments the apiext:XR_EXT_hand_tracking_data_source
+extension.
+If the application passes apiext:XR_META_hand_tracking_wide_motion_mode2 but
+does not pass apiext:XR_EXT_hand_tracking_data_source then
+flink:xrCreateInstance must: return
+ename:XR_ERROR_EXTENSION_DEPENDENCY_NOT_ENABLED.
+
+This extension adds a new data source value to
+elink:XrHandTrackingDataSourceEXT, which applications can: use to request
+hand tracking poses that utilize wide motion mode inference when hands are
+not directly visible to the tracking cameras.
+This data source represents inferred hand poses generated when the hands are
+outside the normal camera tracking volume.
+When active, the runtime employs inference algorithms to provide hand pose
+estimates based on previous tracking data, body motion, or other contextual
+information when the hands are not directly observable by the tracking
+system.
+Applications can: use this data source both to request wide motion mode
+tracking and to query whether returned hand poses were generated using the
+wide motion inference system.
+
+.Enumerant Descriptions
+****
+* ename:XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_WIDE_MOTION_META - This
+  data source value indicates that the hand tracking system should: use wide
+  motion mode inference to provide hand poses when the hands are not
+  directly visible to the tracking cameras.
+  When this data source is active, the runtime is providing inferred hand
+  poses based on contextual information such as previous tracking data, body
+  motion, or other available sensors when hands are outside the normal
+  tracking volume.
+  Applications can: use this data source value in
+  slink:XrHandTrackingDataSourceInfoEXT to request wide motion mode
+  tracking, and can: query slink:XrHandTrackingDataSourceStateEXT to
+  determine if returned poses were generated using the wide motion inference
+  system.
+  The quality and accuracy of poses returned via this data source may: be
+  reduced compared to direct optical tracking, particularly when hands have
+  been out of view for extended periods.
+****
+
+==== Sample Code
+
+[source,cpp]
+----
+XrSession session; // previously initialized
+XrSpace worldSpace; // previously initialized, e.g. from
+  // XR_REFERENCE_SPACE_TYPE_LOCAL
+PFN_xrCreateHandTrackerEXT pfnCreateHandTracker; // previously initialized
+PFN_xrLocateHandJointsEXT pfnLocateHandJoints; // previously initialized
+
+/// create hand tracker that contains the unobstructed wide motion mode data source
+XrHandTrackerEXT handTracker = XR_NULL_HANDLE;
+
+XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
+createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+createInfo.hand = XR_HAND_LEFT_EXT;
+
+std::array<XrHandTrackingDataSourceEXT, 2> dataSourcesWMM = {
+    XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_EXT,
+    XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_WIDE_MOTION_META,
+};
+
+XrHandTrackingDataSourceInfoEXT usageInfo{XR_TYPE_HAND_TRACKING_DATA_SOURCE_INFO_EXT};
+usageInfo.requestedDataSourceCount = dataSourcesWMM.size();
+usageInfo.requestedDataSources = dataSourcesWMM.data();
+
+createInfo.next = &usageInfo;
+CHK_XR(pfnCreateHandTracker(session, &createInfo, &handTracker));
+
+XrFrameState frameState; // previously returned from xrWaitFrame
+const XrTime time = frameState.predictedDisplayTime;
+
+/// locate hand tracker using the unobstructed wide motion mode data source
+XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
+locateInfo.baseSpace = worldSpace;
+locateInfo.time = time;
+
+XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
+XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
+locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
+locations.jointLocations = jointLocations;
+
+XrHandTrackingDataSourceStateEXT dataSourceState{XR_TYPE_HAND_TRACKING_DATA_SOURCE_STATE_EXT};
+locations.next = &dataSourceState;
+
+CHK_XR(pfnLocateHandJoints(handTracker, &locateInfo, &locations));
+if(dataSourceState.dataSource == XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_WIDE_MOTION_META){
+    // the hand poses were generated using the wide motion mode inference system
+}
+----
+
+*Version History*
+
+* Revision 1, 2025-09-30 (Robert Memmott)
+** Initial extension description

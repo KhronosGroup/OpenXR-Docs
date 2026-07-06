@@ -1723,7 +1723,9 @@ such structure beginning with an slink:XrEventDataBaseHeader.
 XrInstance instance; // previously initialized
 
 // Initialize an event buffer to hold the output.
-XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+};
 XrResult result = xrPollEvent(instance, &event);
 if (result == XR_SUCCESS) {
     switch (event.type) {

@@ -618,9 +618,13 @@ PFN_xrGetPlaneDetectionsEXT xrGetPlaneDetectionsEXT; // previously initialized
 PFN_xrGetPlanePolygonBufferEXT xrGetPlanePolygonBufferEXT; // previously initialized
 
 
-XrSystemPlaneDetectionPropertiesEXT planeDetectionProperties{XR_TYPE_SYSTEM_PLANE_DETECTION_PROPERTIES_EXT};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &planeDetectionProperties};
+XrSystemPlaneDetectionPropertiesEXT planeDetectionProperties {
+  .type = XR_TYPE_SYSTEM_PLANE_DETECTION_PROPERTIES_EXT,
+};
+XrSystemProperties systemProperties {
+  .type = XR_TYPE_SYSTEM_PROPERTIES,
+  .next = &planeDetectionProperties,
+};
 
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!(planeDetectionProperties.supportedFeatures & XR_PLANE_DETECTION_CAPABILITY_PLANE_DETECTION_BIT_EXT )) {
@@ -631,8 +635,10 @@ if (!(planeDetectionProperties.supportedFeatures & XR_PLANE_DETECTION_CAPABILITY
 // Create a plane detection
 XrPlaneDetectorEXT planeDetector{};
 {
-    XrPlaneDetectorCreateInfoEXT createInfo{ XR_TYPE_PLANE_DETECTOR_CREATE_INFO_EXT };
-    createInfo.flags = XR_PLANE_DETECTOR_ENABLE_CONTOUR_BIT_EXT;
+    XrPlaneDetectorCreateInfoEXT createInfo {
+      .type = XR_TYPE_PLANE_DETECTOR_CREATE_INFO_EXT,
+      .flags = XR_PLANE_DETECTOR_ENABLE_CONTOUR_BIT_EXT,
+    };
     CHK_XR(xrCreatePlaneDetectorEXT(session, &createInfo, &planeDetector));
 }
 
@@ -648,17 +654,23 @@ std::vector<XrPlaneDetectorLocationEXT> cachedPlaneLocations;
 auto processPlanes = [&](const XrTime time) {
 
     if (!queryRunning) {
-        XrPlaneDetectorBeginInfoEXT beginInfo{ XR_TYPE_PLANE_DETECTOR_BEGIN_INFO_EXT };
-        XrPosef pose{};
-        XrExtent3DfEXT extents = {10.0f, 10.0f, 10.0f};
-        pose.orientation.w = 1.0f;
-        beginInfo.baseSpace = viewSpace;
-        beginInfo.time = time;
-        beginInfo.boundingBoxPose = pose;
-        beginInfo.boundingBoxExtent = extents;
-        beginInfo.orientationCount = (uint32_t)orientations.size();
-        beginInfo.orientations = orientations.data();
-
+        XrPlaneDetectorBeginInfoEXT beginInfo{
+          .type = XR_TYPE_PLANE_DETECTOR_BEGIN_INFO_EXT,
+          .baseSpace = viewSpace,
+          .time = time,
+          .orientationCount = static_cast<uint32_t>(orientations.size()),
+          .orientations = orientations.data(),
+          .boundingBoxPose = {
+            .orientation = {
+              .w = 1.0f,
+            },
+          },
+          .boundingBoxExtent = {
+            .width = 10.0f,
+            .height = 10.0f,
+            .depth = 10.0f,
+          }
+        };
         CHK_XR(xrBeginPlaneDetectionEXT(planeDetector, &beginInfo));
         queryRunning = true;
         return;
@@ -693,15 +705,17 @@ auto processPlanes = [&](const XrTime time) {
         }
 
 
-        XrPlaneDetectorGetInfoEXT planeGetInfo{};
-        planeGetInfo.type = XR_TYPE_PLANE_DETECTOR_GET_INFO_EXT;
-        planeGetInfo.time = time;
-        planeGetInfo.baseSpace = localSpace;
+        XrPlaneDetectorGetInfoEXT planeGetInfo{
+          .type = XR_TYPE_PLANE_DETECTOR_GET_INFO_EXT,
+          .baseSpace = localSpace,
+          .time = time,
+        };
 
-        XrPlaneDetectorLocationsEXT planeLocations{};
-        planeLocations.type = XR_TYPE_PLANE_DETECTOR_LOCATIONS_EXT;
-        planeLocations.planeLocationCapacityInput = 0;
-        planeLocations.planeLocations = nullptr;
+        XrPlaneDetectorLocationsEXT planeLocations{
+          .type = XR_TYPE_PLANE_DETECTOR_LOCATIONS_EXT,
+          .planeLocationCapacityInput = 0,
+          .planeLocations = nullptr,
+        };
 
         if (xrGetPlaneDetectionsEXT(planeDetector, &planeGetInfo, &planeLocations) != XR_SUCCESS ) {
           queryRunning = false;
@@ -712,7 +726,9 @@ auto processPlanes = [&](const XrTime time) {
             queryRunning = false;
             std::vector<XrPlaneDetectorLocationEXT>
                 locationsBuffer(planeLocations.planeLocationCountOutput,
-                { XR_TYPE_PLANE_DETECTOR_LOCATION_EXT });
+                {
+                  .type = XR_TYPE_PLANE_DETECTOR_LOCATION_EXT,
+                });
             planeLocations.planeLocationCapacityInput =
                 planeLocations.planeLocationCountOutput;
             planeLocations.planeLocations = locationsBuffer.data();

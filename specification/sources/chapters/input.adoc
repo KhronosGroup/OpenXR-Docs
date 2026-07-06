@@ -34,78 +34,106 @@ XrInstance instance; // previously initialized
 XrSession session; // previously initialized
 
 // Create an action set
-XrActionSetCreateInfo actionSetInfo{XR_TYPE_ACTION_SET_CREATE_INFO};
-strcpy(actionSetInfo.actionSetName, "gameplay");
-strcpy(actionSetInfo.localizedActionSetName, "Gameplay");
-actionSetInfo.priority = 0;
-XrActionSet inGameActionSet;
+XrActionSetCreateInfo actionSetInfo {
+    .type = XR_TYPE_ACTION_SET_CREATE_INFO,
+    .actionSetName = "gameplay",
+    .localizedActionSetName = "Gameplay",
+    .priority = 0,
+};
+XrActionSet inGameActionSet {XR_NULL_HANDLE};
 CHK_XR(xrCreateActionSet(instance, &actionSetInfo, &inGameActionSet));
 
 // create a "teleport" input action
-XrActionCreateInfo actioninfo{XR_TYPE_ACTION_CREATE_INFO};
-strcpy(actioninfo.actionName, "teleport");
-actioninfo.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
-strcpy(actioninfo.localizedActionName, "Teleport");
-XrAction teleportAction;
+XrActionCreateInfo actioninfo {
+    .type = XR_TYPE_ACTION_CREATE_INFO,
+    .actionName = "teleport",
+    .actionType = XR_ACTION_TYPE_BOOLEAN_INPUT,
+    .localizedActionName = "Teleport",
+};
+XrAction teleportAction {XR_NULL_HANDLE};
 CHK_XR(xrCreateAction(inGameActionSet, &actioninfo, &teleportAction));
 
 // create a "player_hit" output action
-XrActionCreateInfo hapticsactioninfo{XR_TYPE_ACTION_CREATE_INFO};
-strcpy(hapticsactioninfo.actionName, "player_hit");
-hapticsactioninfo.actionType = XR_ACTION_TYPE_VIBRATION_OUTPUT;
-strcpy(hapticsactioninfo.localizedActionName, "Player hit");
-XrAction hapticsAction;
+XrActionCreateInfo hapticsactioninfo {
+    .type = XR_TYPE_ACTION_CREATE_INFO,
+    .actionName = "player_hit",
+    .actionType = XR_ACTION_TYPE_VIBRATION_OUTPUT,
+    .localizedActionName = "Player hit",
+};
+XrAction hapticsAction {XR_NULL_HANDLE};
 CHK_XR(xrCreateAction(inGameActionSet, &hapticsactioninfo, &hapticsAction));
 
-XrPath triggerClickPath, hapticPath;
+XrPath triggerClickPath {XR_NULL_PATH}, hapticPath {XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance, "/user/hand/right/input/trigger/click", &triggerClickPath));
 CHK_XR(xrStringToPath(instance, "/user/hand/right/output/haptic", &hapticPath))
 
-XrPath interactionProfilePath;
+XrPath interactionProfilePath {XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance, "/interaction_profiles/vendor_x/profile_x", &interactionProfilePath));
 
-XrActionSuggestedBinding bindings[2];
-bindings[0].action = teleportAction;
-bindings[0].binding = triggerClickPath;
-bindings[1].action = hapticsAction;
-bindings[1].binding = hapticPath;
+XrActionSuggestedBinding bindings[2] = {
+    {
+        .action = teleportAction,
+        .binding = triggerClickPath,
+    },
+    {
+        .action = hapticsAction,
+        .binding = hapticPath,
+    },
+};
 
-XrInteractionProfileSuggestedBinding suggestedBindings{XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
-suggestedBindings.interactionProfile = interactionProfilePath;
-suggestedBindings.suggestedBindings = bindings;
-suggestedBindings.countSuggestedBindings = 2;
+XrInteractionProfileSuggestedBinding suggestedBindings {
+    .type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING,
+    .interactionProfile = interactionProfilePath,
+    .countSuggestedBindings = 2,
+    .suggestedBindings = bindings,
+};
 CHK_XR(xrSuggestInteractionProfileBindings(instance, &suggestedBindings));
 
-XrSessionActionSetsAttachInfo attachInfo{XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO};
-attachInfo.countActionSets = 1;
-attachInfo.actionSets = &inGameActionSet;
+XrSessionActionSetsAttachInfo attachInfo {
+    .type = XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO,
+    .countActionSets = 1,
+    .actionSets = &inGameActionSet,
+};
 CHK_XR(xrAttachSessionActionSets(session, &attachInfo));
 
 // application main loop
 while (1)
 {
     // sync action data
-    XrActiveActionSet activeActionSet{inGameActionSet, XR_NULL_PATH};
-    XrActionsSyncInfo syncInfo{XR_TYPE_ACTIONS_SYNC_INFO};
-    syncInfo.countActiveActionSets = 1;
-    syncInfo.activeActionSets = &activeActionSet;
+    XrActiveActionSet activeActionSet {
+        .actionSet = inGameActionSet,
+        .subactionPath = XR_NULL_PATH,
+    };
+    XrActionsSyncInfo syncInfo {
+        .type = XR_TYPE_ACTIONS_SYNC_INFO,
+        .countActiveActionSets = 1,
+        .activeActionSets = &activeActionSet,
+    };
     CHK_XR(xrSyncActions(session, &syncInfo));
 
     // query input action state
-    XrActionStateBoolean teleportState{XR_TYPE_ACTION_STATE_BOOLEAN};
-    XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
-    getInfo.action = teleportAction;
+    XrActionStateBoolean teleportState {
+        .type = XR_TYPE_ACTION_STATE_BOOLEAN,
+    };
+    XrActionStateGetInfo getInfo {
+        .type = XR_TYPE_ACTION_STATE_GET_INFO,
+       .action = teleportAction,
+    };
     CHK_XR(xrGetActionStateBoolean(session, &getInfo, &teleportState));
 
     if (teleportState.changedSinceLastSync && teleportState.currentState)
     {
         // fire haptics using output action
-        XrHapticVibration vibration{XR_TYPE_HAPTIC_VIBRATION};
-        vibration.amplitude = 0.5;
-        vibration.duration = 300000; // 300 ms
-        vibration.frequency = 3000;
-        XrHapticActionInfo hapticActionInfo{XR_TYPE_HAPTIC_ACTION_INFO};
-        hapticActionInfo.action = hapticsAction;
+        XrHapticVibration vibration {
+            .type = XR_TYPE_HAPTIC_VIBRATION,
+            .duration = 300000, // 300 ms
+            .frequency = 3000,
+            .amplitude = 0.5,
+        };
+        XrHapticActionInfo hapticActionInfo {
+            .type = XR_TYPE_HAPTIC_ACTION_INFO,
+            .action = hapticsAction,
+        };
         CHK_XR(xrApplyHapticFeedback(session, &hapticActionInfo, (const XrHapticBaseHeader*)&vibration));
     }
 }
