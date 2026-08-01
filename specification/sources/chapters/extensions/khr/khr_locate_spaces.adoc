@@ -5,7 +5,7 @@
 include::{generated}/meta/XR_KHR_locate_spaces.adoc[]
 
 *Last Modified Date*::
-    2024-01-19
+    2026-07-10
 
 *IP Status*::
     No known IP claims.
@@ -267,7 +267,7 @@ while (1) {
     };
 
     XrSpaceLocationsKHR locations {
-        .type = XR_TYPE_SPACES_LOCATE_INFO_KHR,
+        .type = XR_TYPE_SPACE_LOCATIONS_KHR,
         .next = &velocities,
         .locationCount = static_cast<uint32_t>(locationBuffer.size()),
         .locations = locationBuffer.data(),
