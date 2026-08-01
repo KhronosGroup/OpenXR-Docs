@@ -469,8 +469,13 @@ XrSystemId systemId; // previously initialized
 XrSession session;   // previously initialized
 
 // Inspect hand tracking mesh system properties
-XrSystemHandTrackingMeshPropertiesMSFT handMeshSystemProperties{XR_TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES, &handMeshSystemProperties};
+XrSystemHandTrackingMeshPropertiesMSFT handMeshSystemProperties {
+    .type = XR_TYPE_SYSTEM_HAND_TRACKING_MESH_PROPERTIES_MSFT,
+};
+XrSystemProperties systemProperties {
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &handMeshSystemProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!handMeshSystemProperties.supportsHandTrackingMesh) {
     // the system does not support hand mesh tracking
@@ -478,7 +483,7 @@ if (!handMeshSystemProperties.supportsHandTrackingMesh) {
 }
 
 // Get function pointer for xrCreateHandTrackerEXT
-PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateHandTrackerEXT)));
@@ -486,14 +491,16 @@ CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
 // Create a tracker for left hand.
 XrHandTrackerEXT leftHandTracker{};
 {
-    XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
-    createInfo.hand = XR_HAND_LEFT_EXT;
-    createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
+    XrHandTrackerCreateInfoEXT createInfo {
+        .type = XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT,
+        .hand = XR_HAND_LEFT_EXT,
+        .handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT,
+    };
     CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &leftHandTracker));
 }
 
 // Get function pointer for xrCreateHandMeshSpaceMSFT
-PFN_xrCreateHandMeshSpaceMSFT pfnCreateHandMeshSpaceMSFT;
+PFN_xrCreateHandMeshSpaceMSFT pfnCreateHandMeshSpaceMSFT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandMeshSpaceMSFT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateHandMeshSpaceMSFT)));
@@ -501,8 +508,10 @@ CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandMeshSpaceMSFT",
 // Create the hand mesh spaces
 XrSpace leftHandMeshSpace{};
 {
-    XrHandMeshSpaceCreateInfoMSFT createInfo{XR_TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT};
-    createInfo.poseInHandMeshSpace = {{0, 0, 0, 1}, {0, 0, 0}};
+    XrHandMeshSpaceCreateInfoMSFT createInfo {
+        .type = XR_TYPE_HAND_MESH_SPACE_CREATE_INFO_MSFT,
+        .poseInHandMeshSpace = {{0, 0, 0, 1}, {0, 0, 0}},
+    };
     CHK_XR(pfnCreateHandMeshSpaceMSFT(leftHandTracker, &createInfo, &leftHandMeshSpace));
 }
 
@@ -510,14 +519,20 @@ XrSpace leftHandMeshSpace{};
 std::vector<uint32_t> handMeshIndices(handMeshSystemProperties.maxHandMeshIndexCount);
 std::vector<XrHandMeshVertexMSFT> handMeshVertices(handMeshSystemProperties.maxHandMeshVertexCount);
 
-XrHandMeshMSFT leftHandMesh{XR_TYPE_HAND_MESH_MSFT};
-leftHandMesh.indexBuffer.indexCapacityInput = (uint32_t)handMeshIndices.size();
-leftHandMesh.indexBuffer.indices = handMeshIndices.data();
-leftHandMesh.vertexBuffer.vertexCapacityInput = (uint32_t)handMeshVertices.size();
-leftHandMesh.vertexBuffer.vertices = handMeshVertices.data();
+XrHandMeshMSFT leftHandMesh {
+    .type = XR_TYPE_HAND_MESH_MSFT,
+    .indexBuffer = {
+        .indexCapacityInput = (uint32_t)handMeshIndices.size(),
+        .indices = handMeshIndices.data(),
+    },
+    .vertexBuffer = {
+        .vertexCapacityInput = (uint32_t)handMeshVertices.size(),
+        .vertices = handMeshVertices.data(),
+    },
+};
 
 // Get function pointer for xrUpdateHandMeshMSFT
-PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT;
+PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateHandMeshMSFT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnUpdateHandMeshMSFT)));
@@ -528,8 +543,10 @@ while(1){
     XrFrameState frameState;    // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
-    updateInfo.time = time;
+    XrHandMeshUpdateInfoMSFT updateInfo {
+        .type = XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT,
+        .time = time,
+    };
     CHK_XR(pfnUpdateHandMeshMSFT(leftHandTracker, &updateInfo, &leftHandMesh));
     if (!leftHandMesh.isActive) {
         // Hand input is not focused or user's hand is out of tracking range.
@@ -646,19 +663,19 @@ XrSpace handMeshReferenceSpace;     // previously initialized with handPoseType 
 XrHandMeshMSFT referenceHandMesh;   // previously initialized with preallocated buffers
 
 // Get function pointer for xrUpdateHandMeshMSFT
-PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT;
+PFN_xrUpdateHandMeshMSFT pfnUpdateHandMeshMSFT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateHandMeshMSFT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnUpdateHandMeshMSFT)));
 
 // Get function pointer for xrCreateHandTrackerEXT
-PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT;
+PFN_xrCreateHandTrackerEXT pfnCreateHandTrackerEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateHandTrackerEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateHandTrackerEXT)));
 
 // Get function pointer for xrLocateHandJointsEXT
-PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT;
+PFN_xrLocateHandJointsEXT pfnLocateHandJointsEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrLocateHandJointsEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnLocateHandJointsEXT)));
@@ -669,35 +686,45 @@ while(1){
     XrFrameState frameState;    // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrHandMeshUpdateInfoMSFT updateInfo{XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT};
-    updateInfo.time = time;
-    updateInfo.handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT;
+    XrHandMeshUpdateInfoMSFT updateInfo {
+        .type = XR_TYPE_HAND_MESH_UPDATE_INFO_MSFT,
+        .time = time,
+        .handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT,
+    };
     CHK_XR(pfnUpdateHandMeshMSFT(handTracker, &updateInfo, &referenceHandMesh));
 
     // Detect if reference hand mesh is changed.
     if (referenceHandMesh.indexBufferChanged || referenceHandMesh.vertexBufferChanged) {
 
         // Query the joint location using "open palm" reference hand pose.
-        XrHandPoseTypeInfoMSFT handPoseTypeInfo{XR_TYPE_HAND_POSE_TYPE_INFO_MSFT};
-        handPoseTypeInfo.handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT;
+        XrHandPoseTypeInfoMSFT handPoseTypeInfo {
+            .type = XR_TYPE_HAND_POSE_TYPE_INFO_MSFT,
+            .handPoseType = XR_HAND_POSE_TYPE_REFERENCE_OPEN_PALM_MSFT,
+        };
 
-        XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
-        createInfo.hand = XR_HAND_LEFT_EXT;
-        createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
-        createInfo.next = &handPoseTypeInfo;
+        XrHandTrackerCreateInfoEXT createInfo {
+            .type = XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT,
+            .next = &handPoseTypeInfo,
+            .hand = XR_HAND_LEFT_EXT,
+            .handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT,
+        };
 
-        XrHandTrackerEXT referenceHandTracker;
+        XrHandTrackerEXT referenceHandTracker {XR_NULL_HANDLE};
         CHK_XR(pfnCreateHandTrackerEXT(session, &createInfo, &referenceHandTracker));
 
-        XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
-        locateInfo.next = &handPoseTypeInfo;
-        locateInfo.baseSpace = handMeshReferenceSpace;  // Query joint location relative to hand mesh reference space
-        locateInfo.time = time;
+        XrHandJointsLocateInfoEXT locateInfo {
+            .type = XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT,
+            .next = &handPoseTypeInfo,
+            .baseSpace = handMeshReferenceSpace,  // Query joint location relative to hand mesh reference space
+            .time = time,
+        };
 
         std::array<XrHandJointLocationEXT, XR_HAND_JOINT_COUNT_EXT> jointLocations;
-        XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
-        locations.jointCount = jointLocations.size();
-        locations.jointLocations = jointLocations.data();
+        XrHandJointLocationsEXT locations {
+            .type = XR_TYPE_HAND_JOINT_LOCATIONS_EXT,
+            .jointCount = jointLocations.size(),
+            .jointLocations = jointLocations.data(),
+        };
 
         CHK_XR(pfnLocateHandJointsEXT(referenceHandTracker, &locateInfo, &locations));
 

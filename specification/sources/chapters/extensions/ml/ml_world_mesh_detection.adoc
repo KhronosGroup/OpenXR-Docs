@@ -650,7 +650,14 @@ class MeshDetector {
     std::vector<XrWorldMeshBlockStateML> m_MeshBlocks;
 
     std::array<uint32_t,2> m_MaxBlockCounts{0};
-    std::array<XrWorldMeshBufferML,2> m_WorldMeshBuffers{XR_TYPE_WORLD_MESH_BUFFER_ML};
+    std::array<XrWorldMeshBufferML, 2> m_WorldMeshBuffers{{
+      {
+        .type = XR_TYPE_WORLD_MESH_BUFFER_ML,
+      },
+      {
+        .type = XR_TYPE_WORLD_MESH_BUFFER_ML,
+      },
+    }};
     uint32_t m_QueryBuffer{0};
     std::vector<XrWorldMeshBlockML> m_WorldMeshBlocks;
 
@@ -658,26 +665,33 @@ class MeshDetector {
 
 
     bool StartInfoQuery(XrTime displayTime) {
-      XrWorldMeshStateRequestInfoML requestInfo{XR_TYPE_WORLD_MESH_STATE_REQUEST_INFO_ML};
-      requestInfo.baseSpace = m_ViewSpace;
-      requestInfo.time = displayTime;
-      requestInfo.boundingBoxCenter.orientation.w = 1.0f;
-      requestInfo.boundingBoxExtents = {10.0f, 10.0f, 10.0f};
+      XrWorldMeshStateRequestInfoML requestInfo {
+        .type = XR_TYPE_WORLD_MESH_STATE_REQUEST_INFO_ML,
+        .baseSpace = m_ViewSpace,
+        .time = displayTime,
+        .boundingBoxCenter = {
+          .orientation = {
+            .w = 1.0f,
+          },
+        },
+        .boundingBoxExtents = {10.0f, 10.0f, 10.0f},
+      };
       return xrRequestWorldMeshStateAsyncML(m_Detector, &requestInfo, &m_Future)==XR_SUCCESS;
     }
 
     bool CompleteInfoQuery() {
-      XrWorldMeshStateRequestCompletionML completion{XR_TYPE_WORLD_MESH_STATE_REQUEST_COMPLETION_ML};
-      if (xrRequestWorldMeshStateCompleteML(m_Detector, m_Future, &completion)!=XR_SUCCESS) {
+      XrWorldMeshStateRequestCompletionML completion {
+        .type = XR_TYPE_WORLD_MESH_STATE_REQUEST_COMPLETION_ML,
+      };
+      if (xrRequestWorldMeshStateCompleteML(m_Detector, m_Future, &completion) != XR_SUCCESS) {
         return false;
       }
       if (completion.futureResult!=XR_SUCCESS) {
         return false;
       }
-      m_MeshBlocks.resize(completion.meshBlockStateCountOutput);
-      for (auto &mb:m_MeshBlocks) {
-        mb.type = XR_TYPE_WORLD_MESH_BLOCK_STATE_ML;
-      }
+      m_MeshBlocks.resize(completion.meshBlockStateCountOutput, {
+        .type = XR_TYPE_WORLD_MESH_BLOCK_STATE_ML,
+      });
       completion.meshBlockStateCapacityInput = completion.meshBlockStateCountOutput;
       completion.meshBlockStates = m_MeshBlocks.data();
       CHK_XR(xrRequestWorldMeshStateCompleteML(m_Detector, m_Future, &completion));
@@ -692,8 +706,12 @@ class MeshDetector {
       if (completion.meshBlockStateCountOutput>m_MaxBlockCounts[m_QueryBuffer]) {
         m_MaxBlockCounts[m_QueryBuffer] = completion.meshBlockStateCountOutput;
 
-        XrWorldMeshBufferRecommendedSizeInfoML sizeInfo{XR_TYPE_WORLD_MESH_BUFFER_RECOMMENDED_SIZE_INFO_ML};
-        XrWorldMeshBufferSizeML bufferSize{XR_TYPE_WORLD_MESH_BUFFER_SIZE_ML};
+        XrWorldMeshBufferRecommendedSizeInfoML sizeInfo {
+          .type = XR_TYPE_WORLD_MESH_BUFFER_RECOMMENDED_SIZE_INFO_ML,
+        };
+        XrWorldMeshBufferSizeML bufferSize {
+          .type = XR_TYPE_WORLD_MESH_BUFFER_SIZE_ML,
+        };
 
         sizeInfo.maxBlockCount = m_MaxBlockCounts[m_QueryBuffer];
         CHK_XR(xrGetWorldMeshBufferRecommendSizeML(m_Detector, &sizeInfo, &bufferSize ));
@@ -713,32 +731,38 @@ class MeshDetector {
     }
 
     bool StartMeshQuery() {
-      std::vector<XrWorldMeshBlockRequestML> blockRequests;
-      blockRequests.resize(m_MeshBlocks.size());
+      std::vector<XrWorldMeshBlockRequestML> blockRequests(m_MeshBlocks.size());
       for (size_t i = 0; i< m_MeshBlocks.size();i++) {
         blockRequests[i].type = XR_TYPE_WORLD_MESH_BLOCK_REQUEST_ML;
+        blockRequests[i].next = nullptr;
         blockRequests[i].uuid = m_MeshBlocks[i].uuid;
         blockRequests[i].lod = XR_WORLD_MESH_DETECTOR_LOD_MEDIUM_ML;
       }
 
-      XrWorldMeshGetInfoML getInfo{XR_TYPE_WORLD_MESH_GET_INFO_ML};
-      getInfo.flags = 0;
-      getInfo.fillHoleLength = 0.5f;
-      getInfo.disconnectedComponentArea = 1.0f;
-      getInfo.blockCount = static_cast<uint32_t>(blockRequests.size());
-      getInfo.blocks = blockRequests.data();
+      XrWorldMeshGetInfoML getInfo {
+        .type = XR_TYPE_WORLD_MESH_GET_INFO_ML,
+        .flags = 0,
+        .fillHoleLength = 0.5f,
+        .disconnectedComponentArea = 1.0f,
+        .blockCount = static_cast<uint32_t>(blockRequests.size()),
+        .blocks = blockRequests.data(),
+      };
       CHK_XR(xrRequestWorldMeshAsyncML(m_Detector, &getInfo, &m_WorldMeshBuffers[m_QueryBuffer], &m_Future));
       return true;
     }
 
     bool CompleteMeshQuery(XrTime displayTime) {
-      XrWorldMeshRequestCompletionML completion{XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_ML};
       m_WorldMeshBlocks.resize(m_MeshBlocks.size());
-      completion.blockCount = static_cast<uint32_t>(m_WorldMeshBlocks.size());
-      completion.blocks = m_WorldMeshBlocks.data();
-      XrWorldMeshRequestCompletionInfoML completionInfo{XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_INFO_ML};
-      completionInfo.meshSpace = m_LocalSpace;
-      completionInfo.meshSpaceLocateTime = displayTime;
+      XrWorldMeshRequestCompletionML completion {
+        .type = XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_ML,
+        .blockCount = static_cast<uint32_t>(m_WorldMeshBlocks.size()),
+        .blocks = m_WorldMeshBlocks.data(),
+      };
+      XrWorldMeshRequestCompletionInfoML completionInfo {
+        .type = XR_TYPE_WORLD_MESH_REQUEST_COMPLETION_INFO_ML,
+        .meshSpace = m_LocalSpace,
+        .meshSpaceLocateTime = displayTime,
+      };
       CHK_XR(xrRequestWorldMeshCompleteML(m_Detector, &completionInfo, m_Future, &completion));
       CHK_XR(completion.futureResult);
 
@@ -753,7 +777,9 @@ class MeshDetector {
   public:
 
     MeshDetector() {
-      XrWorldMeshDetectorCreateInfoML createInfo{XR_TYPE_WORLD_MESH_DETECTOR_CREATE_INFO_ML};
+      XrWorldMeshDetectorCreateInfoML createInfo {
+        .type = XR_TYPE_WORLD_MESH_DETECTOR_CREATE_INFO_ML,
+      };
       CHK_XR(xrCreateWorldMeshDetectorML(m_Session,&createInfo, &m_Detector));
     }
 
@@ -779,8 +805,10 @@ class MeshDetector {
 
     void RequestShutdown() {
       if ( m_Future != XR_NULL_FUTURE_EXT) {
-        XrFutureCancelInfoEXT cancelInfo{XR_TYPE_FUTURE_CANCEL_INFO_EXT};
-        cancelInfo.future = m_Future;
+        XrFutureCancelInfoEXT cancelInfo {
+          .type = XR_TYPE_FUTURE_CANCEL_INFO_EXT,
+          .future = m_Future,
+        };
         xrCancelFutureEXT(m_Instance, &cancelInfo);
         m_State = DONE;
       } else {
@@ -798,11 +826,15 @@ class MeshDetector {
         return;
       }
 
-      XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-      pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+      XrFuturePollResultEXT pollResult {
+        .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+        .state = XR_FUTURE_STATE_PENDING_EXT,
+      };
 
-      XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-      pollInfo.future = m_Future;
+      XrFuturePollInfoEXT pollInfo {
+        .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+        .future = m_Future,
+      };
       CHK_XR(xrPollFutureEXT(m_Instance, &pollInfo, &pollResult));
 
       switch (m_State) {

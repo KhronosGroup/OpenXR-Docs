@@ -732,23 +732,31 @@ XrSpace anchor2; // previously initialized
 
 std::vector<XrSpace> anchors{anchor1, anchor2};
 
-XrSpatialAnchorsCreateStorageInfoML storageCreateInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML};
+XrSpatialAnchorsCreateStorageInfoML storageCreateInfo {
+    .type = XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML,
+};
 XrSpatialAnchorsStorageML storage;
 
 CHK_XR(xrCreateSpatialAnchorsStorageML(session, &storageCreateInfo, &storage));
 
-XrSpatialAnchorsPublishInfoML publishInfo{XR_TYPE_SPATIAL_ANCHORS_PUBLISH_INFO_ML};
-publishInfo.anchorCount = static_cast<uint32_t>(anchors.size());
-publishInfo.anchors = anchors.data();
-publishInfo.expiration = 0;
+XrSpatialAnchorsPublishInfoML publishInfo {
+    .type = XR_TYPE_SPATIAL_ANCHORS_PUBLISH_INFO_ML,
+    .anchorCount = static_cast<uint32_t>(anchors.size()),
+    .anchors = anchors.data(),
+    .expiration = 0,
+};
 
-XrFutureEXT future;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
 CHK_XR(xrPublishSpatialAnchorsAsyncML(storage, &publishInfo, &future));
 
-XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-pollInfo.future = future;
-pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+XrFuturePollInfoEXT pollInfo {
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+};
+XrFuturePollResultEXT pollResult {
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    .state = XR_FUTURE_STATE_PENDING_EXT,
+};
 
 // Ideally this is done once in your
 // game loop instead of a busy wait.
@@ -756,10 +764,12 @@ while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
   CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 }
 
-XrSpatialAnchorsPublishCompletionML completion{XR_TYPE_SPATIAL_ANCHORS_PUBLISH_COMPLETION_ML};
 std::vector<XrUuidEXT> uuids(anchors.size());
-completion.uuidCount = static_cast<uint32_t>(uuids.size());
-completion.uuids = uuids.data();
+XrSpatialAnchorsPublishCompletionML completion {
+    .type = XR_TYPE_SPATIAL_ANCHORS_PUBLISH_COMPLETION_ML,
+    .uuidCount = static_cast<uint32_t>(uuids.size()),
+    .uuids = uuids.data(),
+};
 CHK_XR(xrPublishSpatialAnchorsCompleteML(storage, future, &completion));
 CHK_XR(completion.futureResult);
 
@@ -775,25 +785,33 @@ This example shows how to query for anchors.
 XrTime currentTime;                 // previously initialized
 XrVector3f center;                       // previously initialized
 
-XrSpatialAnchorsCreateStorageInfoML storageCreateInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML};
+XrSpatialAnchorsCreateStorageInfoML storageCreateInfo {
+    .type = XR_TYPE_SPATIAL_ANCHORS_CREATE_STORAGE_INFO_ML,
+};
 XrSpatialAnchorsStorageML storage;
 
 CHK_XR(xrCreateSpatialAnchorsStorageML(session, &storageCreateInfo, &storage));
 
 // set up a query around a previously initialized center position with a radius of 10 meters.
-XrSpatialAnchorsQueryInfoRadiusML queryInfo{XR_TYPE_SPATIAL_ANCHORS_QUERY_INFO_RADIUS_ML};
-queryInfo.baseSpace = viewSpace; // using viewspace, but can: be any space.
-queryInfo.center = center;
-queryInfo.time = currentTime;
-queryInfo.radius = 10.0f;
+XrSpatialAnchorsQueryInfoRadiusML queryInfo {
+    .type = XR_TYPE_SPATIAL_ANCHORS_QUERY_INFO_RADIUS_ML,
+    .baseSpace = viewSpace, // using viewspace, but can: be any space.
+    .center = center,
+    .time = currentTime,
+    .radius = 10.0f,
+};
 
-XrFutureEXT future;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
 CHK_XR(xrQuerySpatialAnchorsAsyncML(storage, reinterpret_cast<XrSpatialAnchorsQueryInfoBaseHeaderML*>(&queryInfo), &future));
 
-XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-pollInfo.future = future;
-pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+XrFuturePollInfoEXT pollInfo {
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+};
+XrFuturePollResultEXT pollResult {
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    .state = XR_FUTURE_STATE_PENDING_EXT,
+};
 
 // Ideally this is done once in your
 // frame loop instead of a busy wait.
@@ -801,7 +819,9 @@ while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
   CHK_XR(xrPollFutureEXT(instance, &pollInfo, &pollResult));
 }
 
-XrSpatialAnchorsQueryCompletionML completion{XR_TYPE_SPATIAL_ANCHORS_QUERY_COMPLETION_ML};
+XrSpatialAnchorsQueryCompletionML completion {
+    .type = XR_TYPE_SPATIAL_ANCHORS_QUERY_COMPLETION_ML,
+};
 CHK_XR(xrQuerySpatialAnchorsCompleteML(storage, future, &completion));
 CHK_XR(completion.futureResult);
 

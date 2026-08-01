@@ -108,23 +108,29 @@ PFN_xrLocateHandJointsEXT locateHandJoints; // previously initialized
 
 /// unextrapolated poses request variable
 XrHandTrackingUnextrapolatedPosesRequestMETA unextrapolatedPosesRequestMETA{
-    XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_REQUEST_META};
+    .type = XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_REQUEST_META,
+};
 
-XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
-locateInfo.baseSpace = worldSpace;
-locateInfo.time = frameState.predictedDisplayTime;
-locateInfo.next = &unextrapolatedPosesRequestMETA;
+XrHandJointsLocateInfoEXT locateInfo{
+    .type = XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT,
+    .next = &unextrapolatedPosesRequestMETA,
+    .baseSpace = worldSpace,
+    .time = frameState.predictedDisplayTime,
+};
 
 /// unextrapolated poses response variable
 XrHandTrackingUnextrapolatedPosesMETA unextrapolatedPosesMETA{
-    XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_META};
+    .type = XR_TYPE_HAND_TRACKING_UNEXTRAPOLATED_POSES_META,
+};
 
-XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
 XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
+XrHandJointLocationsEXT locations{
+    .type = XR_TYPE_HAND_JOINT_LOCATIONS_EXT,
+    .next = &unextrapolatedPosesMETA,
+    .jointCount = XR_HAND_JOINT_COUNT_EXT,
+    .jointLocations = jointLocations,
+};
 
-locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
-locations.jointLocations = jointLocations;
-locations.next = &unextrapolatedPosesMETA;
 
 CHK_XR(locateHandJoints(handTracker, &locateInfo, &locations));
 

@@ -113,9 +113,15 @@ while (1)
     //  Query input state
     //  ----------
 
-    XrActionStateBoolean indexTouchState{XR_TYPE_ACTION_STATE_BOOLEAN};
-    XrActionStateBoolean indexProximityState{XR_TYPE_ACTION_STATE_BOOLEAN};
-    XrActionStateGetInfo getInfo{XR_TYPE_ACTION_STATE_GET_INFO};
+    XrActionStateBoolean indexTouchState{
+        .type = XR_TYPE_ACTION_STATE_BOOLEAN,
+    };
+    XrActionStateBoolean indexProximityState{
+        .type = XR_TYPE_ACTION_STATE_BOOLEAN,
+    };
+    XrActionStateGetInfo getInfo{
+        .type = XR_TYPE_ACTION_STATE_GET_INFO,
+    };
 
     getInfo.action = indexTouchAction;
     CHK_XR(xrGetActionStateBoolean(session, &getInfo, &indexTouchState));

@@ -228,50 +228,52 @@ extern XrSession session;  // previously initialized
 extern XrActionSet actionSet;  // previously initialized
 
 // Create the action with subaction path
-XrPath chestTrackerRolePath;
+XrPath chestTrackerRolePath {XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance, "/user/vive_tracker_htcx/role/chest",
     &chestTrackerRolePath));
 
-XrAction chestPoseAction;
-XrActionCreateInfo actionInfo{XR_TYPE_ACTION_CREATE_INFO};
-actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
-actionInfo.countSubactionPaths = 1;
-actionInfo.subactionPaths = &chestTrackerRolePath;
+XrAction chestPoseAction {XR_NULL_HANDLE};
+XrActionCreateInfo actionInfo {
+    .type = XR_TYPE_ACTION_CREATE_INFO,
+    .actionType = XR_ACTION_TYPE_POSE_INPUT,
+    .countSubactionPaths = 1,
+    .subactionPaths = &chestTrackerRolePath,
+};
 CHK_XR(xrCreateAction(actionSet, &actionInfo, &chestPoseAction));
 
 // Describe a suggested binding for that action and subaction path.
-XrPath suggestedBindingPath;
+XrPath suggestedBindingPath {XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance,
     "/user/vive_tracker_htcx/role/chest/input/grip/pose",
     &suggestedBindingPath));
 
 std::vector<XrActionSuggestedBinding> actionSuggBindings;
-XrActionSuggestedBinding actionSuggBinding;
-actionSuggBinding.action = chestPoseAction;
-actionSuggBinding.binding = suggestedBindingPath;
+XrActionSuggestedBinding actionSuggBinding {
+    .action = chestPoseAction,
+    .binding = suggestedBindingPath,
+};
 actionSuggBindings.push_back(actionSuggBinding);
 
 // Suggest that binding for the VIVE tracker interaction profile
-XrPath viveTrackerInteractionProfilePath;
+XrPath viveTrackerInteractionProfilePath {XR_NULL_PATH};
 CHK_XR(xrStringToPath(instance, "/interaction_profiles/htc/vive_tracker_htcx",
     &viveTrackerInteractionProfilePath));
 
-XrInteractionProfileSuggestedBinding profileSuggBindings{
-    XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING};
-profileSuggBindings.interactionProfile =
-    viveTrackerInteractionProfilePath;
-profileSuggBindings.suggestedBindings =
-    actionSuggBindings.data();
-profileSuggBindings.countSuggestedBindings =
-    (uint32_t)actionSuggBindings.size();
-
+XrInteractionProfileSuggestedBinding profileSuggBindings {
+    .type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING,
+    .interactionProfile = viveTrackerInteractionProfilePath,
+    .countSuggestedBindings = static_cast<uint32_t>(actionSuggBindings.size()),
+    .suggestedBindings = actionSuggBindings.data(),
+};
 CHK_XR(xrSuggestInteractionProfileBindings(instance, &profileSuggBindings));
 
 // Create action space for locating tracker
-XrSpace chestTrackerSpace;
-XrActionSpaceCreateInfo actionSpaceInfo{XR_TYPE_ACTION_SPACE_CREATE_INFO};
-actionSpaceInfo.action = chestPoseAction;
-actionSpaceInfo.subactionPath = chestTrackerRolePath;
+XrSpace chestTrackerSpace {XR_NULL_HANDLE};
+XrActionSpaceCreateInfo actionSpaceInfo {
+    .type = XR_TYPE_ACTION_SPACE_CREATE_INFO,
+    .action = chestPoseAction,
+    .subactionPath = chestTrackerRolePath,
+};
 CHK_XR(xrCreateActionSpace(session, &actionSpaceInfo, &chestTrackerSpace));
 ----
 
@@ -321,9 +323,10 @@ switch ( xrEvent.type )
     }
 
     case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED: {
-        XrPath chestTrackerRolePath;
+        XrPath chestTrackerRolePath {XR_NULL_PATH};
         XrInteractionProfileState xrInteractionProfileState {
-            XR_TYPE_INTERACTION_PROFILE_STATE};
+            .type = XR_TYPE_INTERACTION_PROFILE_STATE,
+        };
 
         CHK_XR(xrStringToPath(instance, "/user/vive_tracker_htcx/role/chest",
             &chestTrackerRolePath));

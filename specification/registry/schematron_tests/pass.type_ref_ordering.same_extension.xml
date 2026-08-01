@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <!-- Both types from the same extension — always allowed -->
         <type category="struct" name="XrFooKHR">
-            <member><type>uint32_t</type> <name>dummy</name></member>
+            <member><type>uint32_t</type> <name>placeholder</name></member>
         </type>
 
         <type category="struct" name="XrBarKHR">

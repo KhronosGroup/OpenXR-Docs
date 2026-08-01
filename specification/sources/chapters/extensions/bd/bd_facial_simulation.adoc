@@ -430,40 +430,50 @@ XrInstance instance; // previously initialized
 XrSystemId systemId; // previously initialized
 XrSession session;   // previously initialized
 
-XrSystemFacialSimulationPropertiesBD facialSimulationProperties{
-    XR_TYPE_SYSTEM_FACIAL_SIMULATION_PROPERTIES_BD};
-XrSystemProperties sysProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                 &facialSimulationProperties};
+XrSystemFacialSimulationPropertiesBD facialSimulationProperties {
+    .type = XR_TYPE_SYSTEM_FACIAL_SIMULATION_PROPERTIES_BD,
+};
+XrSystemProperties sysProperties {
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &facialSimulationProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &sysProperties));
 
 if (facialSimulationProperties.supportsFaceTracking == false) {
   return;
 }
 
-uint32_t modeCount;
+uint32_t modeCount = 0;
 CHK_XR(xrEnumerateFacialSimulationModesBD(session, 0, &modeCount, nullptr));
 std::vector<XrFacialSimulationModeBD> facialSimulationModes(modeCount);
 CHK_XR(xrEnumerateFacialSimulationModesBD(session, modeCount, &modeCount,
                                           facialSimulationModes.data()));
 
 XrFaceTrackerBD faceTracker{XR_NULL_HANDLE};
-XrFaceTrackerCreateInfoBD info{XR_TYPE_FACE_TRACKER_CREATE_INFO_BD};
-info.mode = XR_FACIAL_SIMULATION_MODE_DEFAULT_BD;
+XrFaceTrackerCreateInfoBD info {
+    .type = XR_TYPE_FACE_TRACKER_CREATE_INFO_BD,
+    .mode = XR_FACIAL_SIMULATION_MODE_DEFAULT_BD,
+};
 CHK_XR(xrCreateFaceTrackerBD(session, &info, &faceTracker));
 
 XrFrameState frameState; // previously returned from xrWaitFrame
 const XrTime time = frameState.predictedDisplayTime;
 
-XrFacialSimulationDataGetInfoBD infoBd;
-infoBd.type = XR_TYPE_FACIAL_SIMULATION_DATA_GET_INFO_BD;
-infoBd.time = time;
+XrFacialSimulationDataGetInfoBD infoBd {
+  .type = XR_TYPE_FACIAL_SIMULATION_DATA_GET_INFO_BD,
+  .time = time,
+};
 
-XrFacialSimulationDataGetInfoBD getInfo{
-    XR_TYPE_FACIAL_SIMULATION_DATA_GET_INFO_BD};
-getInfo.time = time;
+XrFacialSimulationDataGetInfoBD getInfo {
+    .type = XR_TYPE_FACIAL_SIMULATION_DATA_GET_INFO_BD,
+    .time = time,
+};
 std::vector<float> faceExpressionWeights(XR_FACE_EXPRESSION_COUNT_BD);
-XrFacialSimulationDataBD facedata{XR_TYPE_FACIAL_SIMULATION_DATA_BD};
-facedata.faceExpressionWeights = faceExpressionWeights.data();
+XrFacialSimulationDataBD facedata {
+    .type = XR_TYPE_FACIAL_SIMULATION_DATA_BD,
+    .faceExpressionWeightCount = XR_FACE_EXPRESSION_COUNT_BD,
+    .faceExpressionWeights = faceExpressionWeights.data(),
+};
 
 CHK_XR(xrGetFacialSimulationDataBD(faceTracker, &getInfo, &facedata));
 assert(facedata.isUpperFaceDataValid == true);
@@ -478,8 +488,11 @@ CHK_XR(xrSetFacialSimulationModeBD(
     faceTracker, XR_FACIAL_SIMULATION_MODE_COMBINED_AUDIO_WITH_LIP_BD));
 
 std::vector<float> lipExpressionWeights(XR_LIP_EXPRESSION_COUNT_BD);
-XrLipExpressionDataBD lipdata{XR_TYPE_LIP_EXPRESSION_DATA_BD};
-lipdata.lipsyncExpressionWeights = lipExpressionWeights.data();
+XrLipExpressionDataBD lipdata {
+    .type = XR_TYPE_LIP_EXPRESSION_DATA_BD,
+    .lipsyncExpressionWeightCount = XR_LIP_EXPRESSION_COUNT_BD,
+    .lipsyncExpressionWeights = lipExpressionWeights.data(),
+};
 
 facedata.next = &lipdata;
 CHK_XR(xrGetFacialSimulationDataBD(faceTracker, &getInfo, &facedata));

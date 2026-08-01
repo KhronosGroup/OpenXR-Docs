@@ -263,6 +263,7 @@
                     'XR_FB_spatial_entity_container:XR_EXT_uuid',
                     'XR_FB_spatial_entity_query:XR_EXT_uuid',
                     'XR_FB_spatial_entity_query:XR_FB_spatial_entity_storage',
+                    'XR_FB_spatial_entity_sharing:XR_FB_spatial_entity_user',
                     'XR_FB_spatial_entity_storage:XR_EXT_uuid',
                     'XR_META_headset_id:XR_EXT_uuid',
                     'XR_META_spatial_entity_discovery:XR_EXT_uuid',

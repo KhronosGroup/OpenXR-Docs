@@ -1485,17 +1485,25 @@ typedef struct XrSpatialEntityComponentDataBarBD
 XrSenseDataProviderBD fooProvider;
 XrFutureEXT providerCreateFuture;
 
-XrSenseDataProviderCreateInfoFooBD providerCreateInfoFoo{XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_FOO_BD};
-XrSenseDataProviderCreateInfoBD
-    providerCreateInfo{XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_BD, &providerCreateInfoFoo};
+XrSenseDataProviderCreateInfoFooBD providerCreateInfoFoo {
+    .type = XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_FOO_BD,
+};
+XrSenseDataProviderCreateInfoBD providerCreateInfo {
+    .type = XR_TYPE_SENSE_DATA_PROVIDER_CREATE_INFO_BD,
+    .next = &providerCreateInfoFoo,
+};
 
 CHK_XR(xrCreateSenseDataProviderBD(session, &providerCreateInfo, &fooProvider));
 
 auto waitUntilFutureReady = [&](XrFutureEXT future)
 {
-    XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-    XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-    pollInfo.future = future;
+    XrFuturePollInfoEXT pollInfo {
+        .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+        .future = future,
+    };
+    XrFuturePollResultEXT pollResult {
+        .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    };
     do
     {
         // sleep(1);
@@ -1504,13 +1512,17 @@ auto waitUntilFutureReady = [&](XrFutureEXT future)
 };
 
 // Start foo provider
-XrFutureEXT providerStartFuture;
-XrSenseDataProviderStartInfoBD startInfo{XR_TYPE_SENSE_DATA_PROVIDER_START_INFO_BD};
+XrFutureEXT providerStartFuture {XR_NULL_FUTURE_EXT};
+XrSenseDataProviderStartInfoBD startInfo {
+    .type = XR_TYPE_SENSE_DATA_PROVIDER_START_INFO_BD,
+};
 CHK_XR(xrStartSenseDataProviderAsyncBD(fooProvider, &startInfo, &providerStartFuture));
 
 waitUntilFutureReady(providerStartFuture);
 
-XrFutureCompletionEXT completion{XR_TYPE_FUTURE_COMPLETION_EXT};
+XrFutureCompletionEXT completion {
+    .type = XR_TYPE_FUTURE_COMPLETION_EXT,
+};
 
 XrResult result = xrStartSenseDataProviderCompleteBD(session, providerStartFuture, &completion);
 CHK_XR(result); // Result of the complete function
@@ -1532,13 +1544,17 @@ auto queryFooSpatialEntities = [&]()
     XrSenseDataSnapshotBD querySnapshotHandle{XR_NULL_HANDLE};
 
     XrFutureEXT queryFuture;
-    XrSenseDataQueryInfoBD queryInfo{XR_TYPE_SENSE_DATA_QUERY_INFO_BD};
+    XrSenseDataQueryInfoBD queryInfo {
+        .type = XR_TYPE_SENSE_DATA_QUERY_INFO_BD,
+    };
 
     CHK_XR(xrQuerySenseDataAsyncBD(fooProvider, &queryInfo, &queryFuture));
 
     waitUntilFutureReady(queryFuture);
 
-    XrSenseDataQueryCompletionBD completion{XR_TYPE_SENSE_DATA_QUERY_COMPLETION_BD};
+    XrSenseDataQueryCompletionBD completion {
+        .type = XR_TYPE_SENSE_DATA_QUERY_COMPLETION_BD,
+    };
 
     result = xrQuerySenseDataCompleteBD(fooProvider, queryFuture, &completion);
     CHK_XR(result); // Result of the complete function
@@ -1547,13 +1563,17 @@ auto queryFooSpatialEntities = [&]()
     querySnapshotHandle = completion.snapshot;
 
     // Retrieve queried sense data
-    XrQueriedSenseDataGetInfoBD queriedDataGetInfo{XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD};
+    XrQueriedSenseDataGetInfoBD queriedDataGetInfo {
+        .type = XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD,
+    };
 
-    XrQueriedSenseDataBD queriedSenseData{XR_TYPE_QUERIED_SENSE_DATA_BD,
-                                          nullptr,
-                                          0,
-                                          0,
-                                          nullptr};
+    XrQueriedSenseDataBD queriedSenseData {
+        .type = XR_TYPE_QUERIED_SENSE_DATA_BD,
+        .next = nullptr,
+        .stateCapacityInput = 0,
+        .stateCountOutput = 0,
+        .states = nullptr,
+    };
 
     // First call to get spatial entity count
     CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
@@ -1590,11 +1610,15 @@ auto queryFooSpatialEntities = [&]()
                 {
                     if (entityComponentTypes[j] == XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD)
                     {
-                        XrSpatialEntityComponentGetInfoBD componentBarGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
-                                                                              nullptr,
-                                                                              entityId,
-                                                                              XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD};
-                        XrSpatialEntityComponentDataBarBD componentBarData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BAR_BD};
+                        XrSpatialEntityComponentGetInfoBD componentBarGetInfo {
+                            .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+                            .next = nullptr,
+                            .entityId = entityId,
+                            .componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_BAR_BD,
+                        };
+                        XrSpatialEntityComponentDataBarBD componentBarData {
+                            .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BAR_BD,
+                        };
 
                         CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentBarGetInfo,
                                                                  reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentBarData)));
@@ -1613,7 +1637,9 @@ auto processSenseDataEvent = [&]()
 {
     while (true)
     {
-        XrEventDataBuffer event = {XR_TYPE_EVENT_DATA_BUFFER};
+        XrEventDataBuffer event {
+            .type = XR_TYPE_EVENT_DATA_BUFFER,
+        };
         XrResult result = xrPollEvent(instance, &event);
         if (result == XR_EVENT_UNAVAILABLE)
         {
@@ -1700,9 +1726,13 @@ auto hasComponentType = [&](std::vector<XrSpatialEntityComponentTypeBD>& typeLis
     return false;
 };
 
-XrQueriedSenseDataGetInfoBD queriedDataGetInfo{XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD};
+XrQueriedSenseDataGetInfoBD queriedDataGetInfo {
+    .type = XR_TYPE_QUERIED_SENSE_DATA_GET_INFO_BD,
+};
 
-XrQueriedSenseDataBD queriedSenseData{XR_TYPE_QUERIED_SENSE_DATA_BD};
+XrQueriedSenseDataBD queriedSenseData {
+    .type = XR_TYPE_QUERIED_SENSE_DATA_BD,
+};
 
 // First call to get spatial entity count
 CHK_XR(xrGetQueriedSenseDataBD(querySnapshotHandle, &queriedDataGetInfo, &queriedSenseData));
@@ -1737,16 +1767,22 @@ if (queriedSenseData.stateCountOutput > 0)
             // Check the entity component types and get the location component data
             if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD))
             {
-                XrSpatialEntityLocationGetInfoBD locationGetInfo{XR_TYPE_SPATIAL_ENTITY_LOCATION_GET_INFO_BD};
-                locationGetInfo.baseSpace = localSpace;
+                XrSpatialEntityLocationGetInfoBD locationGetInfo {
+                    .type = XR_TYPE_SPATIAL_ENTITY_LOCATION_GET_INFO_BD,
+                    .baseSpace = localSpace,
+                };
 
                 // Chain the XrSpatialEntityLocationGetInfoBD struct to XrSpatialEntityComponentGetInfoBD when getting location component data.
-                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
-                componentGetInfo.next = &locationGetInfo;
-                componentGetInfo.entityId = entityId;
-                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD;
+                XrSpatialEntityComponentGetInfoBD componentGetInfo {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+                    .next = &locationGetInfo,
+                    .entityId = entityId,
+                    .componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_LOCATION_BD,
+                };
 
-                XrSpatialEntityComponentDataLocationBD componentLocationData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_LOCATION_BD};
+                XrSpatialEntityComponentDataLocationBD componentLocationData {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_LOCATION_BD,
+                };
 
                 CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
                                                             reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentLocationData)));
@@ -1757,12 +1793,16 @@ if (queriedSenseData.stateCountOutput > 0)
             // Check the entity component types and get the bounding box 2D component data
             if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD))
             {
-                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
-                componentGetInfo.next = nullptr;
-                componentGetInfo.entityId = entityId;
-                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD;
+                XrSpatialEntityComponentGetInfoBD componentGetInfo {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+                    .next = nullptr,
+                    .entityId = entityId,
+                    .componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_BOUNDING_BOX_2D_BD,
+                };
 
-                XrSpatialEntityComponentDataBoundingBox2DBD componentBoundingBox2DData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_2D_BD};
+                XrSpatialEntityComponentDataBoundingBox2DBD componentBoundingBox2DData {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_BOUNDING_BOX_2D_BD,
+                };
 
                 CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,
                                                             reinterpret_cast<XrSpatialEntityComponentDataBaseHeaderBD *>(&componentBoundingBox2DData)));
@@ -1775,15 +1815,19 @@ if (queriedSenseData.stateCountOutput > 0)
             // Check the entity component types and get the triangle mesh component data
             if(hasComponentType(entityComponentTypes, XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD))
             {
-                XrSpatialEntityComponentGetInfoBD componentGetInfo{XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD};
-                componentGetInfo.next = nullptr;
-                componentGetInfo.entityId = entityId;
-                componentGetInfo.componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD;
+                XrSpatialEntityComponentGetInfoBD componentGetInfo {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_GET_INFO_BD,
+                    .next = nullptr,
+                    .entityId = entityId,
+                    .componentType = XR_SPATIAL_ENTITY_COMPONENT_TYPE_TRIANGLE_MESH_BD,
+                };
 
-                XrSpatialEntityComponentDataTriangleMeshBD componentTriangleMeshData{XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_TRIANGLE_MESH_BD};
-                componentTriangleMeshData.next = nullptr;
-                componentTriangleMeshData.vertexCapacityInput = 0;
-                componentTriangleMeshData.indexCapacityInput = 0;
+                XrSpatialEntityComponentDataTriangleMeshBD componentTriangleMeshData {
+                    .type = XR_TYPE_SPATIAL_ENTITY_COMPONENT_DATA_TRIANGLE_MESH_BD,
+                    .next = nullptr,
+                    .vertexCapacityInput = 0,
+                    .indexCapacityInput = 0,
+                };
 
                 // First call to get vertex and index counts.
                 CHK_XR(xrGetSpatialEntityComponentDataBD(querySnapshotHandle, &componentGetInfo,

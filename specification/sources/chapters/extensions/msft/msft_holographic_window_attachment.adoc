@@ -85,16 +85,20 @@ struct AppView : implements<AppView, IFrameworkView> {
 
         // [xrCreateInstance, xrGetSystem, and create a graphics binding]
 
-        XrHolographicWindowAttachmentMSFT holographicWindowAttachment{XR_TYPE_ATTACHED_CORE_WINDOW_MSFT};
-        holographicWindowAttachment.next = &graphicsBinding;
-        holographicWindowAttachment.coreWindow = window.as<IUnknown>().get();
-        holographicWindowAttachment.holographicSpace = holographicSpace.as<IUnknown>().get();
+        XrHolographicWindowAttachmentMSFT holographicWindowAttachment {
+            .type = XR_TYPE_ATTACHED_CORE_WINDOW_MSFT,
+            .next = &graphicsBinding,
+            .coreWindow = window.as<IUnknown>().get(),
+            .holographicSpace = holographicSpace.as<IUnknown>().get(),
+        };
 
-        XrSessionCreateInfo sessionCreateInfo{XR_TYPE_SESSION_CREATE_INFO};
-        sessionCreateInfo.next = &holographicWindowAttachment;
-        sessionCreateInfo.systemId = systemId;
+        XrSessionCreateInfo sessionCreateInfo {
+            .type = XR_TYPE_SESSION_CREATE_INFO,
+            .next = &holographicWindowAttachment,
+            .systemId = systemId,
+        };
 
-        XrSession session;
+        XrSession session {XR_NULL_HANDLE};
         CHECK_XRCMD(xrCreateSession(instance, &sessionCreateInfo, &session));
 
         while (!m_windowClosed) {

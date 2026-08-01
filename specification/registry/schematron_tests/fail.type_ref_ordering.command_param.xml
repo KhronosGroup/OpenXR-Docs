@@ -33,7 +33,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <!-- Type defined by higher-numbered extension (100) -->
         <type category="struct" name="XrFooKHR">
-            <member><type>uint32_t</type> <name>dummy</name></member>
+            <member><type>uint32_t</type> <name>placeholder</name></member>
         </type>
     </types>
 

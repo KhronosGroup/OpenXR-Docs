@@ -330,10 +330,13 @@ XrSystemId systemId; // previously initialized
 XrSession session;   // previously initialized
 
 // Confirm face tracking system support.
-XrSystemFacialExpressionPropertiesML systemFacialExpressionClientProperties{
-    XR_TYPE_SYSTEM_FACIAL_EXPRESSION_PROPERTIES_ML};
-XrSystemProperties systemProperties{XR_TYPE_SYSTEM_PROPERTIES,
-                                    &systemFacialExpressionClientProperties};
+XrSystemFacialExpressionPropertiesML systemFacialExpressionClientProperties {
+    .type = XR_TYPE_SYSTEM_FACIAL_EXPRESSION_PROPERTIES_ML,
+};
+XrSystemProperties systemProperties {
+    .type = XR_TYPE_SYSTEM_PROPERTIES,
+    .next = &systemFacialExpressionClientProperties,
+};
 CHK_XR(xrGetSystemProperties(instance, systemId, &systemProperties));
 if (!systemFacialExpressionClientProperties.supportsFacialExpression) {
     // The system does not support face tracking
@@ -341,14 +344,16 @@ if (!systemFacialExpressionClientProperties.supportsFacialExpression) {
 }
 
 // Get function pointer for xrCreateFacialExpressionClientML.
-PFN_xrCreateFacialExpressionClientML pfnCreateFacialExpressionClientML;
+PFN_xrCreateFacialExpressionClientML pfnCreateFacialExpressionClientML = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateFacialExpressionClientML",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnCreateFacialExpressionClientML)));
 
 // Create a client that queries for default set of facial expressions.
 XrFacialExpressionClientML facialExpressionClient = {};
-  XrFacialExpressionClientCreateInfoML createInfo{XR_TYPE_FACIAL_EXPRESSION_CLIENT_CREATE_INFO_ML};
+  XrFacialExpressionClientCreateInfoML createInfo {
+      .type = XR_TYPE_FACIAL_EXPRESSION_CLIENT_CREATE_INFO_ML,
+  };
   CHK_XR(pfnCreateFacialExpressionClientML(session, &createInfo, &facialExpressionClient));
 
 // Allocate buffers to receive facial expression data before frame
@@ -360,7 +365,7 @@ blendShapes[0].requestedFacialBlendShape = XR_FACIAL_BLEND_SHAPE_BROW_LOWERER_L_
 blendShapes[1].requestedFacialBlendShape = XR_FACIAL_BLEND_SHAPE_BROW_LOWERER_R_ML;
 
 // Get function pointer for xrGetFacialExpressionBlendShapePropertiesML.
-PFN_xrGetFacialExpressionBlendShapePropertiesML pfnGetFacialExpressionBlendShapesML;
+PFN_xrGetFacialExpressionBlendShapePropertiesML pfnGetFacialExpressionBlendShapesML = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrGetFacialExpressionBlendShapePropertiesML",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &pfnGetFacialExpressionBlendShapesML)));
@@ -371,7 +376,9 @@ while (1) {
     XrFrameState frameState; // previously returned from xrWaitFrame
     const XrTime time = frameState.predictedDisplayTime;
 
-    XrFacialExpressionBlendShapeGetInfoML expressionInfo{XR_TYPE_FACIAL_EXPRESSION_BLEND_SHAPE_GET_INFO_ML};
+    XrFacialExpressionBlendShapeGetInfoML expressionInfo {
+        .type = XR_TYPE_FACIAL_EXPRESSION_BLEND_SHAPE_GET_INFO_ML,
+    };
 
     CHK_XR(pfnGetFacialExpressionBlendShapesML(facialExpressionClient, &expressionInfo, num_blend_shapes, blendShapes));
 

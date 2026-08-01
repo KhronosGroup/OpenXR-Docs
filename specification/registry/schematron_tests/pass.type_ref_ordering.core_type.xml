@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <!-- Core type defined in a feature, not an extension -->
         <type category="struct" name="XrCoreStruct">
-            <member><type>uint32_t</type> <name>dummy</name></member>
+            <member><type>uint32_t</type> <name>placeholder</name></member>
         </type>
 
         <!-- Extension type referencing a core type — always allowed -->

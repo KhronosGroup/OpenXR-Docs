@@ -21,7 +21,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <type category="struct" name="XrFooKHR">
             <member><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>* <name>next</name></member>
-            <member><type>uint32_t</type> <name>dummy</name></member>
+            <member><type>uint32_t</type> <name>placeholder</name></member>
         </type>
 
         <!-- Type from lower-numbered extension (50) extends XrFooKHR from extension 100 — wrong order -->

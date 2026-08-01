@@ -265,37 +265,42 @@ XrTime time;                        // previously initialized
 XrPosef pose;                       // previously initialized
 
 // Get function pointer for xrCreateSpatialAnchorsAsyncML
-PFN_xrCreateSpatialAnchorsAsyncML xrCreateSpatialAnchorsAsyncML;
+PFN_xrCreateSpatialAnchorsAsyncML xrCreateSpatialAnchorsAsyncML = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAnchorsAsyncML",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSpatialAnchorsAsyncML)))
 
 // Get function pointer for xrCreateSpatialAnchorsCompleteML
-PFN_xrCreateSpatialAnchorsCompleteML xrCreateSpatialAnchorsCompleteML;
+PFN_xrCreateSpatialAnchorsCompleteML xrCreateSpatialAnchorsCompleteML = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAnchorsCompleteML",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSpatialAnchorsCompleteML)));
 
 
 // Get function pointer for xrPollFutureEXT
-PFN_xrPollFutureEXT xrPollFutureEXT;
+PFN_xrPollFutureEXT xrPollFutureEXT = nullptr;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrPollFutureEXT",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrPollFutureEXT)));
 
-XrSpatialAnchorsCreateInfoFromPoseML createInfo{XR_TYPE_SPATIAL_ANCHORS_CREATE_INFO_FROM_POSE_ML};
-XrFutureEXT future;
-createInfo.baseSpace = baseSpace;
-createInfo.poseInBaseSpace = pose;
-createInfo.time = time;
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
+XrSpatialAnchorsCreateInfoFromPoseML createInfo {
+    .type = XR_TYPE_SPATIAL_ANCHORS_CREATE_INFO_FROM_POSE_ML,
+    .baseSpace = baseSpace,
+    .poseInBaseSpace = pose,
+    .time = time,
+};
 
 CHK_XR(xrCreateSpatialAnchorsAsyncML(session, reinterpret_cast<const XrSpatialAnchorsCreateInfoBaseHeaderML*>(&createInfo), &future));
 
-XrFuturePollInfoEXT pollInfo{XR_TYPE_FUTURE_POLL_INFO_EXT};
-XrFuturePollResultEXT pollResult{XR_TYPE_FUTURE_POLL_RESULT_EXT};
-
-pollInfo.future = future;
-pollResult.state = XR_FUTURE_STATE_PENDING_EXT;
+XrFuturePollInfoEXT pollInfo {
+    .type = XR_TYPE_FUTURE_POLL_INFO_EXT,
+    .future = future,
+};
+XrFuturePollResultEXT pollResult {
+    .type = XR_TYPE_FUTURE_POLL_RESULT_EXT,
+    .state = XR_FUTURE_STATE_PENDING_EXT,
+};
 
 while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
   // Ideally this check is done in your game loop
@@ -307,9 +312,11 @@ while(pollResult.state==XR_FUTURE_STATE_PENDING_EXT) {
 }
 
 XrSpace anchor;
-XrCreateSpatialAnchorsCompletionML completion{XR_TYPE_CREATE_SPATIAL_ANCHORS_COMPLETION_ML};
-completion.spaceCount = 1;
-completion.spaces = &anchor;
+XrCreateSpatialAnchorsCompletionML completion {
+    .type = XR_TYPE_CREATE_SPATIAL_ANCHORS_COMPLETION_ML,
+    .spaceCount = 1,
+    .spaces = &anchor,
+};
 
 CHK_XR(xrCreateSpatialAnchorsCompleteML(session, future, &completion));
 // Check the future completion result as well!

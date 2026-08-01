@@ -72,18 +72,22 @@ PFN_xrLocateHandJointsEXT pfnLocateHandJoints; // previously initialized
 /// create hand tracker that contains the unobstructed wide motion mode data source
 XrHandTrackerEXT handTracker = XR_NULL_HANDLE;
 
-XrHandTrackerCreateInfoEXT createInfo{XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT};
-createInfo.handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT;
-createInfo.hand = XR_HAND_LEFT_EXT;
+XrHandTrackerCreateInfoEXT createInfo{
+    .type = XR_TYPE_HAND_TRACKER_CREATE_INFO_EXT,
+    .hand = XR_HAND_LEFT_EXT,
+    .handJointSet = XR_HAND_JOINT_SET_DEFAULT_EXT,
+};
 
 std::array<XrHandTrackingDataSourceEXT, 2> dataSourcesWMM = {
     XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_EXT,
     XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_WIDE_MOTION_META,
 };
 
-XrHandTrackingDataSourceInfoEXT usageInfo{XR_TYPE_HAND_TRACKING_DATA_SOURCE_INFO_EXT};
-usageInfo.requestedDataSourceCount = dataSourcesWMM.size();
-usageInfo.requestedDataSources = dataSourcesWMM.data();
+XrHandTrackingDataSourceInfoEXT usageInfo{
+    .type = XR_TYPE_HAND_TRACKING_DATA_SOURCE_INFO_EXT,
+    .requestedDataSourceCount = static_cast<uint32_t>(dataSourcesWMM.size()),
+    .requestedDataSources = dataSourcesWMM.data(),
+};
 
 createInfo.next = &usageInfo;
 CHK_XR(pfnCreateHandTracker(session, &createInfo, &handTracker));
@@ -92,17 +96,23 @@ XrFrameState frameState; // previously returned from xrWaitFrame
 const XrTime time = frameState.predictedDisplayTime;
 
 /// locate hand tracker using the unobstructed wide motion mode data source
-XrHandJointsLocateInfoEXT locateInfo{XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT};
-locateInfo.baseSpace = worldSpace;
-locateInfo.time = time;
+XrHandJointsLocateInfoEXT locateInfo{
+    .type = XR_TYPE_HAND_JOINTS_LOCATE_INFO_EXT,
+    .baseSpace = worldSpace,
+    .time = time,
+};
 
-XrHandJointLocationsEXT locations{XR_TYPE_HAND_JOINT_LOCATIONS_EXT};
 XrHandJointLocationEXT jointLocations[XR_HAND_JOINT_COUNT_EXT];
-locations.jointCount = XR_HAND_JOINT_COUNT_EXT;
-locations.jointLocations = jointLocations;
+XrHandTrackingDataSourceStateEXT dataSourceState{
+    .type = XR_TYPE_HAND_TRACKING_DATA_SOURCE_STATE_EXT,
+};
+XrHandJointLocationsEXT locations{
+    .type = XR_TYPE_HAND_JOINT_LOCATIONS_EXT,
+    .next = &dataSourceState,
+    .jointCount = XR_HAND_JOINT_COUNT_EXT,
+    .jointLocations = jointLocations,
+};
 
-XrHandTrackingDataSourceStateEXT dataSourceState{XR_TYPE_HAND_TRACKING_DATA_SOURCE_STATE_EXT};
-locations.next = &dataSourceState;
 
 CHK_XR(pfnLocateHandJoints(handTracker, &locateInfo, &locations));
 if(dataSourceState.dataSource == XR_HAND_TRACKING_DATA_SOURCE_UNOBSTRUCTED_WIDE_MOTION_META){

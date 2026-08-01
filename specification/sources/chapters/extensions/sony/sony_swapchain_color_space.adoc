@@ -1,0 +1,153 @@
+// Copyright (c) 2026 Sony Corporation
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_SONY_swapchain_color_space.adoc[]
+
+*Last Modified Date*::
+    2026-02-10
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Kota Suzuki, Sony Corporation +
+    Kenji Tokutake, Sony Corporation
+
+==== Overview
+
+This extension allows applications to specify the color space of swapchain
+images and to enumerate the color spaces supported by the session.
+
+==== Enumerating Color Spaces
+
+[open,refpage='xrEnumerateColorSpacesSONY',desc='Enumerates supported color spaces',type='protos',xrefs='XrColorSpacesEnumerateInfoSONY XrSwapchainCreateInfoColorSpaceSONY']
+--
+The flink:xrEnumerateColorSpacesSONY function is defined as:
+
+include::{generated}/api/protos/xrEnumerateColorSpacesSONY.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that enumerates the supported color spaces.
+* pname:enumerateInfo is a pointer to an
+  slink:XrColorSpacesEnumerateInfoSONY that specifies the swapchain format
+  to query.
+* pname:colorSpaceCapacityInput is the capacity of the pname:colorSpaces
+  array, or 0 to retrieve the required capacity.
+* pname:colorSpaceCountOutput is a pointer to the count of
+  elink:XrColorSpaceSONY pname:colorSpaces written, or a pointer to the
+  required capacity in the case that pname:colorSpaceCapacityInput is
+  insufficient.
+* pname:colorSpaces is a pointer to an array of elink:XrColorSpaceSONY color
+  spaces, but can: be code:NULL if pname:colorSpaceCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:colorSpaces size.
+****
+
+flink:xrEnumerateColorSpacesSONY enumerates the color spaces that the
+session supports for the swapchain format specified in the
+slink:XrColorSpacesEnumerateInfoSONY.
+
+The runtime may: return different color spaces depending on the swapchain
+format.
+
+The runtime must: not return any color space other than
+ename:XR_COLOR_SPACE_SRGB_NONLINEAR_SONY for API-specific sRGB formats (e.g.
+ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, ename:GL_SRGB8_ALPHA8,
+ename:VK_FORMAT_R8G8B8A8_SRGB).
+
+The runtime must: return 0 in pname:colorSpaceCountOutput for swapchain
+image formats that do not have a meaningful color space (e.g. depth or
+stencil image formats).
+
+The runtime must: return ename:XR_ERROR_SWAPCHAIN_FORMAT_UNSUPPORTED if the
+swapchain format is unsupported.
+
+The runtime must: always return identical buffer contents for a given
+swapchain format from this enumeration for the lifetime of the session.
+
+include::{generated}/validity/protos/xrEnumerateColorSpacesSONY.adoc[]
+--
+
+[open,refpage='XrColorSpacesEnumerateInfoSONY',type='structs',desc='Describes information to enumerate color spaces',xrefs='xrEnumerateColorSpacesSONY']
+--
+The slink:XrColorSpacesEnumerateInfoSONY structure is defined as:
+
+include::{generated}/api/structs/XrColorSpacesEnumerateInfoSONY.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:format is the swapchain image format to query.
+  pname:format must: be one of the formats enumerated by
+  flink:xrEnumerateSwapchainFormats.
+****
+
+slink:XrColorSpacesEnumerateInfoSONY specifies the swapchain image format
+when calling flink:xrEnumerateColorSpacesSONY.
+
+include::{generated}/validity/structs/XrColorSpacesEnumerateInfoSONY.adoc[]
+--
+
+[open,refpage='XrColorSpaceSONY',desc='Color Space Type',type='enums']
+--
+The possible color spaces are specified by the elink:XrColorSpaceSONY
+enumeration.
+
+include::{generated}/api/enums/XrColorSpaceSONY.adoc[]
+
+The enumerants have the following values:
+
+include::{generated}/api/enums/XrColorSpaceSONY.comments.adoc[]
+--
+
+==== Specifying Swapchain Color Space
+
+[open,refpage='XrSwapchainCreateInfoColorSpaceSONY',type='structs',desc='Describes swapchain image color space',xrefs='xrEnumerateColorSpacesSONY xrCreateSwapchain']
+--
+The slink:XrSwapchainCreateInfoColorSpaceSONY structure is defined as:
+
+include::{generated}/api/structs/XrSwapchainCreateInfoColorSpaceSONY.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:colorSpace is the color space of this swapchain.
+  pname:colorSpace must: be one of the color spaces enumerated by
+  flink:xrEnumerateColorSpacesSONY for the swapchain image format specified
+  by slink:XrSwapchainCreateInfo::pname:format.
+****
+
+slink:XrSwapchainCreateInfoColorSpaceSONY can: be provided in the next chain
+of slink:XrSwapchainCreateInfo when calling flink:xrCreateSwapchain to
+specify the color space and encoding for the new swapchain.
+
+The color space specified by slink:XrSwapchainCreateInfoColorSpaceSONY does
+not affect the encoding of the alpha component.
+
+The color space specified at creation time is constant for the lifetime of
+the swapchain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateSwapchain if the pname:colorSpace is not enumerated by
+flink:xrEnumerateColorSpacesSONY for the swapchain image format specified by
+slink:XrSwapchainCreateInfo::pname:format.
+
+include::{generated}/validity/structs/XrSwapchainCreateInfoColorSpaceSONY.adoc[]
+--
+
+include::{generated}/interfaces/XR_SONY_swapchain_color_space.adoc[leveloffset=1]
+
+==== Issues
+
+==== Version History
+
+* Revision 1, 2026-02-10 (Kota Suzuki)
+** Initial draft
