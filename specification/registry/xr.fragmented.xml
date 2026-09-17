@@ -25255,6 +25255,174 @@ typedef XrResult (XRAPI_PTR *<name>PFN_xrCreateApiLayerInstance</name>)(
         </require>
     </extension>
 
+    <extension name="XR_DXR_android_surface_binding" number="1011" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                          name="XR_DXR_android_surface_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_android_surface_binding&quot;" name="XR_DXR_ANDROID_SURFACE_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_atlas_capture" number="1012" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_DXR_atlas_capture_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_atlas_capture&quot;" name="XR_DXR_ATLAS_CAPTURE_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_cocoa_window_binding" number="1013" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                       name="XR_DXR_cocoa_window_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_cocoa_window_binding&quot;" name="XR_DXR_COCOA_WINDOW_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_depth_budget" number="1014" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                               name="XR_DXR_depth_budget_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_depth_budget&quot;" name="XR_DXR_DEPTH_BUDGET_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_display_info" number="1015" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                               name="XR_DXR_display_info_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_display_info&quot;" name="XR_DXR_DISPLAY_INFO_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_display_zones" number="1016" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_DXR_display_zones_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_display_zones&quot;" name="XR_DXR_DISPLAY_ZONES_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_local_3d_zone" number="1017" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                name="XR_DXR_local_3d_zone_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_local_3d_zone&quot;" name="XR_DXR_LOCAL_3D_ZONE_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_macos_gl_binding" number="1018" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                   name="XR_DXR_macos_gl_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_macos_gl_binding&quot;" name="XR_DXR_MACOS_GL_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_mcp_tools" number="1019" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                            name="XR_DXR_mcp_tools_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_mcp_tools&quot;" name="XR_DXR_MCP_TOOLS_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_spatial_workspace" number="1020" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                    name="XR_DXR_spatial_workspace_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_spatial_workspace&quot;" name="XR_DXR_SPATIAL_WORKSPACE_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_view_rig" number="1021" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                           name="XR_DXR_view_rig_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_view_rig&quot;" name="XR_DXR_VIEW_RIG_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_wayland_surface_binding" number="1022" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                          name="XR_DXR_wayland_surface_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_wayland_surface_binding&quot;" name="XR_DXR_WAYLAND_SURFACE_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_weave" number="1023" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                        name="XR_DXR_weave_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_weave&quot;" name="XR_DXR_WEAVE_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_win32_window_binding" number="1024" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                       name="XR_DXR_win32_window_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_win32_window_binding&quot;" name="XR_DXR_WIN32_WINDOW_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_workspace_file_dialog" number="1025" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                        name="XR_DXR_workspace_file_dialog_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_workspace_file_dialog&quot;" name="XR_DXR_WORKSPACE_FILE_DIALOG_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_xlib_window_binding" number="1026" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                      name="XR_DXR_xlib_window_binding_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_xlib_window_binding&quot;" name="XR_DXR_XLIB_WINDOW_BINDING_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1027" number="1027" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1027_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1027&quot;" name="XR_DXR_EXTENSION_1027_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1028" number="1028" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1028_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1028&quot;" name="XR_DXR_EXTENSION_1028_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1029" number="1029" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1029_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1029&quot;" name="XR_DXR_EXTENSION_1029_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1030" number="1030" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1030_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1030&quot;" name="XR_DXR_EXTENSION_1030_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1031" number="1031" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1031_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1031&quot;" name="XR_DXR_EXTENSION_1031_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1032" number="1032" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1032_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1032&quot;" name="XR_DXR_EXTENSION_1032_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1033" number="1033" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1033_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1033&quot;" name="XR_DXR_EXTENSION_1033_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_DXR_extension_1034" number="1034" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                 name="XR_DXR_extension_1034_SPEC_VERSION"/>
+            <enum value="&quot;XR_DXR_extension_1034&quot;" name="XR_DXR_EXTENSION_1034_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
     </extensions>
 
 </registry>
