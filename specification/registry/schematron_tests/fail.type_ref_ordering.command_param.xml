@@ -38,8 +38,8 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </types>
 
     <enums name="XrResult" type="enum">
-        <enum value="0" name="XR_SUCCESS"/>
-        <enum value="-1" name="XR_ERROR_VALIDATION_FAILURE"/>
+        <enum value="0"    name="XR_SUCCESS"/>
+        <enum value="-1"   name="XR_ERROR_VALIDATION_FAILURE"/>
     </enums>
 
     <commands>
@@ -61,20 +61,20 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </feature>
 
     <extensions>
-        <!-- xrDoBarKHR (number 50) takes XrFooKHR (number 100) as param — wrong order -->
-        <extension name="XR_KHR_bar" number="50" type="instance" supported="openxr" ratified="openxr">
-            <require>
-                <enum value="1" name="XR_KHR_bar_SPEC_VERSION"/>
-                <enum value="&quot;XR_KHR_bar&quot;" name="XR_KHR_BAR_EXTENSION_NAME"/>
-                <command name="xrDoBarKHR"/>
-            </require>
-        </extension>
-        <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
-            <require>
-                <enum value="1" name="XR_KHR_foo_SPEC_VERSION"/>
-                <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
-                <type name="XrFooKHR"/>
-            </require>
-        </extension>
+    <!-- xrDoBarKHR (number 50) takes XrFooKHR (number 100) as param — wrong order -->
+    <extension name="XR_KHR_bar" number="50" type="instance" supported="openxr" ratified="openxr">
+        <require>
+            <enum value="1"                      name="XR_KHR_bar_SPEC_VERSION"/>
+            <enum value="&quot;XR_KHR_bar&quot;" name="XR_KHR_BAR_EXTENSION_NAME"/>
+            <command name="xrDoBarKHR"/>
+        </require>
+    </extension>
+    <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
+        <require>
+            <enum value="1"                      name="XR_KHR_foo_SPEC_VERSION"/>
+            <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
+            <type name="XrFooKHR"/>
+        </require>
+    </extension>
     </extensions>
 </registry>

@@ -50,8 +50,8 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </types>
 
     <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
-        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
-        <enum value="1"    name="XR_TYPE_COMPOSITION_LAYER_DEPTH_FB"/>
+        <enum value="0"   name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"   name="XR_TYPE_COMPOSITION_LAYER_DEPTH_FB"/>
     </enums>
 
     <commands>

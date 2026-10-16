@@ -15,7 +15,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
     <!-- enums starting with 'XrSpatial' but not containing 'SemanticLabel' dont need to have 'UNCATEGORIZED' -->
     <enums name="XrSpatialSomeOtherEnumEXT" type="enum">
-        <enum value="2"   name="XR_SPATIAL_SOME_OTHER_ENUM_FLOOR_EXT"         comment="The entity is a floor."/>
+        <enum value="2"   name="XR_SPATIAL_SOME_OTHER_ENUM_FLOOR_EXT" comment="The entity is a floor."/>
     </enums>
 
 </registry>

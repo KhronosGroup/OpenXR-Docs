@@ -32,10 +32,10 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </types>
 
     <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
-        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
-        <enum value="1"    name="XR_TYPE_FIRST_STRUCT"/>
-        <enum value="2"    name="XR_TYPE_SECOND_STRUCT"/>
-        <enum value="3"    name="XR_TYPE_EXTEND_STRUCT"/>
+        <enum value="0"   name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"   name="XR_TYPE_FIRST_STRUCT"/>
+        <enum value="2"   name="XR_TYPE_SECOND_STRUCT"/>
+        <enum value="3"   name="XR_TYPE_EXTEND_STRUCT"/>
     </enums>
 
 </registry>
