@@ -32,13 +32,13 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </feature>
 
     <extensions>
-        <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
-            <require>
-                <enum value="1" name="XR_KHR_foo_SPEC_VERSION"/>
-                <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
-                <type name="XrFooKHR"/>
-                <type name="XrBarKHR"/>
-            </require>
-        </extension>
+    <extension name="XR_KHR_foo" number="100" type="instance" supported="openxr" ratified="openxr">
+        <require>
+            <enum value="1"                      name="XR_KHR_foo_SPEC_VERSION"/>
+            <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
+            <type name="XrFooKHR"/>
+            <type name="XrBarKHR"/>
+        </require>
+    </extension>
     </extensions>
 </registry>
