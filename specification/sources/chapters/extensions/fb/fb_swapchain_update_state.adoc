@@ -9,7 +9,7 @@ include::{generated}/meta/XR_FB_swapchain_update_state.adoc[]
     Gloria Kennickell, Facebook +
 
 
-*Overview*
+==== Overview
 
 This extension enables the application to modify and query specific mutable
 state associated with a swapchain.
@@ -85,7 +85,7 @@ specific mutable state associated with an slink:XrSwapchain.
 include::{generated}/validity/protos/xrGetSwapchainStateFB.adoc[]
 --
 
-*Issues*
+==== Issues
 
 * Should we add a method to query the current state?
 
@@ -94,7 +94,7 @@ include::{generated}/validity/protos/xrGetSwapchainStateFB.adoc[]
    useful to have a query mechanism to get the current state for all state
    structures.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2021-04-16 (Gloria Kennickell)
 ** Initial extension description

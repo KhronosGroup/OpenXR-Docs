@@ -11,7 +11,7 @@ include::{generated}/meta/XR_HTC_vive_focus3_controller_interaction.adoc[]
 *Contributors*::
     Ria Hsu, HTC
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the VIVE Focus 3
 Controller.
@@ -23,7 +23,7 @@ Interaction profile path:
 * pathname:/interaction_profiles/htc/vive_focus3_controller
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/htc/vive_focus3_controller
 :properly-suffixed-path: /interaction_profiles/htc/vive_focus3_controller_htc
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -45,8 +45,7 @@ Supported component paths:
 * On pathname:/user/hand/right only:
 ** subpathname:/input/a/click
 ** subpathname:/input/b/click
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/click
 * subpathname:/input/squeeze/touch
 * subpathname:/input/squeeze/value
@@ -78,9 +77,7 @@ include::{config}/ext_hand_interaction_notice.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-01-03 (Ria Hsu)
 

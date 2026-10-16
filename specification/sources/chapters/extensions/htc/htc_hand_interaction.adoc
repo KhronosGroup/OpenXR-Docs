@@ -12,7 +12,7 @@ include::{generated}/meta/XR_HTC_hand_interaction.adoc[]
     Ria Hsu, HTC +
     Bill Chang, HTC
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for tracked hands.
 
@@ -23,7 +23,7 @@ Interaction profile path:
 * pathname:/interaction_profiles/htc/hand_interaction
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/htc/hand_interaction
 :properly-suffixed-path: /interaction_profiles/htc/hand_interaction_htc
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -69,7 +69,7 @@ interaction behavior in content.
 
 ====
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-05-27 (Ria Hsu)
 

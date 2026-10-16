@@ -1,0 +1,346 @@
+// Copyright (c) 2017-2026, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_entity_archetypes.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Andy Biar, Unity Technologies +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Bastiaan Olij, Godot Engine +
+
+==== Overview
+
+The flink:xrQuerySpatialComponentDataEXT function offers applications a way
+to query entities and component data using a simple filter of the component
+types that must: be present on an entity.
+While a component type-based query is suitable for some use cases, it poses
+a challenge for applications that want to read all component data on an
+entity (regardless of how many optional components the entity contains).
+
+For example, imagine an application wants to query all component data for
+all anchors in a spatial context that is configured with persistence
+enabled.
+Some anchors might have the optional
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT component, while others will
+not have this component.
+To get all the component data, the application needs to query for all
+entities that have ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT (this returns
+all entities that have this component, regardless of what other components
+this entity may: have), then query for all entities that have the
+ename:XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT, and then perform a set
+difference themselves to remove the persisted anchors from the set of all
+anchors.
+Only then does the application have access to all component data for all
+anchor entities without duplication.
+The complexity of application logic required to deduplicate entities from
+such queries scales with the number of optional components that are
+supported for a capability.
+
+This extension introduces the concept of archetypes (unique component
+combinations) as a solution for entity-centric query use cases.
+Instead of querying all possible optional components individually, then
+calculating set intersection to deduplicate entities from multiple query
+results, an application is able to query for all entities of each archetype
+instead.
+Archetypes enable applications to read all component data for all entities
+without duplication.
+
+Archetypes form a
+link:https://en.wikipedia.org/wiki/Partition_of_a_set[partition] of the set
+of spatial entities in a snapshot.
+A spatial entity in a snapshot belongs to exactly one subset of spatial
+entities associated with an archetype.
+The union of all subsets associated with archetypes is the set of all
+spatial entities in a snapshot.
+
+===== Spatial Archetype ID
+
+[open,refpage='XrSpatialArchetypeIdEXT',type='basetypes',desc='ID referring to a spatial archetype']
+--
+include::{generated}/api/basetypes/XrSpatialArchetypeIdEXT.adoc[]
+
+basetype:XrSpatialArchetypeIdEXT is used to represent a spatial archetype
+which is a unique combination of components that exist on an entity.
+For the same unique combination of components, the runtime must: use the
+same basetype:XrSpatialArchetypeIdEXT in all the spatial snapshots created
+under an slink:XrSpatialContextEXT.
+The runtime must: not reuse the same basetype:XrSpatialArchetypeIdEXT across
+multiple slink:XrSpatialContextEXT for different combinations of component
+types.
+The runtime may: reuse the same basetype:XrSpatialArchetypeIdEXT across
+multiple slink:XrSpatialContextEXT if it represents the same unique
+combination of component types.
+
+Consider the following entities -
+
+* Entity 1 has components A, B
+* Entity 2 has components A, B, C
+* Entity 3 has components D, E
+* Entity 4 has components A, B
+
+In the above example, the runtime enumerates three archetype ids, one for
+each unique combination of components - (A, B), (A, B, C), (D, E).
+
+Archetypes are different from spatial capabilities and their list of
+guaranteed components because the unique combination of component types that
+make up an archetype may: include component types that are optional:
+components for a given capability, and may: even span more than one
+capability.
+
+Consider this real world example of a physical table, where that entity may:
+have ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT because of the
+ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT because of a hypothetical
+object tracking capability.
+A wall, on the other hand, may: only have
+ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_ALIGNMENT_EXT.
+So while both the table and wall are seemingly being discovered by
+ename:XR_SPATIAL_CAPABILITY_PLANE_TRACKING_EXT, their set of components are
+different and will therefore be represented by different
+basetype:XrSpatialArchetypeIdEXT.
+
+--
+
+[open,refpage='XR_NULL_SPATIAL_ARCHETYPE_ID_EXT',desc='Invalid spatial archetype ID',type='defines',xrefs='XrSpatialArchetypeIdEXT']
+--
+include::{generated}/api/defines/XR_NULL_SPATIAL_ARCHETYPE_ID_EXT.adoc[]
+
+dlink:XR_NULL_SPATIAL_ARCHETYPE_ID_EXT is a reserved value representing an
+invalid basetype:XrSpatialArchetypeIdEXT.
+It may: be passed to and returned from API functions only when specifically
+allowed.
+--
+
+===== Enumerate Spatial Archetypes in a Snapshot
+
+[open,refpage='xrEnumerateSpatialArchetypesEXT',type='protos',desc='Enumerate the spatial archetypes in a snapshot.',xrefs='XrSpatialSnapshotEXT XrSpatialArchetypeIdEXT']
+--
+The flink:xrEnumerateSpatialArchetypesEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSpatialArchetypesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:archetypeCapacityInput is the capacity of the pname:archetypes
+  array, or 0 to indicate a request to retrieve the required capacity.
+* pname:archetypeCountOutput is the number of archetype ids, or the required
+  capacity in the case that pname:archetypeCapacityInput is insufficient.
+* pname:archetypes is an array of basetype:XrSpatialArchetypeIdEXT.
+  It can: be code:NULL if pname:archetypeCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:archetypes size.
+****
+
+The application can: enumerate the list of spatial archetypes in
+pname:snapshot using flink:xrEnumerateSpatialArchetypesEXT.
+
+The runtime must: only enumerate basetype:XrSpatialArchetypeIdEXT in
+pname:archetypes for which pname:snapshot contains at least one entity of
+that archetype.
+
+include::{generated}/validity/protos/xrEnumerateSpatialArchetypesEXT.adoc[]
+--
+
+[open,refpage='xrEnumerateSpatialArchetypeComponentTypesEXT',type='protos',desc='Enumerate the spatial component types in a archetype.',xrefs='XrSpatialSnapshotEXT XrSpatialArchetypeIdEXT XrSpatialComponentTypeEXT']
+--
+The flink:xrEnumerateSpatialArchetypeComponentTypesEXT function is defined
+as:
+
+include::{generated}/api/protos/xrEnumerateSpatialArchetypeComponentTypesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:snapshot is a handle to an slink:XrSpatialSnapshotEXT.
+* pname:archetype is an basetype:XrSpatialArchetypeIdEXT for which the
+  component types are enumerated.
+* pname:componentTypeCapacityInput is the capacity of the
+  pname:componentTypes array, or 0 to indicate a request to retrieve the
+  required capacity.
+* pname:componentTypeCountOutput is the number of component types, or the
+  required capacity in the case that pname:componentTypeCapacityInput is
+  insufficient.
+* pname:componentTypes is an array of elink:XrSpatialComponentTypeEXT.
+  It can: be code:NULL if pname:componentTypeCapacityInput is 0.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:componentTypes size.
+****
+
+The application can: enumerate the spatial component types associated with
+an basetype:XrSpatialArchetypeIdEXT using
+flink:xrEnumerateSpatialArchetypeComponentTypesEXT.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:archetype is a value that was not enumerated by
+flink:xrEnumerateSpatialArchetypesEXT.
+
+The runtime must: return a subset of the component types that were supplied
+by the application in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT::pname:componentTypes or
+slink:XrSpatialUpdateSnapshotCreateInfoEXT::pname:componentTypes when
+creating pname:snapshot.
+If the application does not provide a list of component types in
+slink:XrSpatialDiscoverySnapshotCreateInfoEXT or
+slink:XrSpatialUpdateSnapshotCreateInfoEXT, the runtime must: return only
+the component types which are enumerated in
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+for the capabilities configured for the spatial context that pname:snapshot
+was created from.
+
+The runtime must: always return a non-zero value for
+pname:componentTypeCountOutput.
+This means an basetype:XrSpatialArchetypeIdEXT must: always have at least
+one component type associated with it, it cannot: correspond to zero
+component types.
+
+For a certain value of pname:archetype, the runtime must: always return the
+same list of pname:componentTypes for all the pname:snapshot handles created
+by the slink:XrSpatialContextEXT parent of pname:snapshot.
+
+include::{generated}/validity/protos/xrEnumerateSpatialArchetypeComponentTypesEXT.adoc[]
+--
+
+===== Query Entities & Component Data of Archetypes
+
+[open,refpage='XrSpatialFilterArchetypeEXT',type='structs',desc='Structure used to get the discovered spatial entities by archetype.',xrefs='xrQuerySpatialComponentDataEXT XrSpatialComponentTypeEXT XrSpatialArchetypeIdEXT xrEnumerateSpatialArchetypesEXT']
+--
+The slink:XrSpatialFilterArchetypeEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialFilterArchetypeEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:archetype is an basetype:XrSpatialArchetypeIdEXT for which to get
+  the data from the snapshot.
+****
+
+To query the entities and component data associated with a given
+pname:archetype, chain the slink:XrSpatialFilterArchetypeEXT structure to
+slink:XrSpatialComponentDataQueryConditionEXT when calling
+flink:xrQuerySpatialComponentDataEXT.
+
+When using slink:XrSpatialFilterArchetypeEXT in the pname:next chain of
+slink:XrSpatialComponentDataQueryConditionEXT, the effective contents of the
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes array
+are implicitly the set of component types associated with pname:archetype.
+That is, the component types queried are implied to be the component types
+enumerated by flink:xrEnumerateSpatialArchetypeComponentTypesEXT for
+pname:archetype.
+Accordingly, the actual
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes array
+must: be left empty, and
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount
+must: be set to 0 by the application.
+If an application chains a valid slink:XrSpatialFilterArchetypeEXT structure
+to slink:XrSpatialComponentDataQueryConditionEXT, but
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount is
+not 0, the runtime must: return ename:XR_ERROR_VALIDATION_FAILURE.
+The rest of the behavior of flink:xrQuerySpatialComponentDataEXT is
+unmodified.
+
+If pname:archetype is a value that was not enumerated by
+flink:xrEnumerateSpatialArchetypesEXT, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from flink:xrQuerySpatialComponentDataEXT.
+
+include::{generated}/validity/structs/XrSpatialFilterArchetypeEXT.adoc[]
+--
+
+==== Example Code
+
+[source,cpp]
+----
+// previously initialized using xrCreateSpatialDiscoverySnapshotCompleteEXT
+// or xrCreateSpatialUpdateSnapshotEXT.
+XrSpatialSnapshotEXT snapshot;
+
+uint32_t archetypeCountOutput = 0;
+CHK_XR(xrEnumerateSpatialArchetypesEXT(snapshot, 0, &archetypeCountOutput, nullptr));
+std::vector<XrSpatialArchetypeIdEXT> archetypes(archetypeCountOutput);
+CHK_XR(xrEnumerateSpatialArchetypesEXT(snapshot, archetypes.size(), &archetypeCountOutput, archetypes.data()));
+
+for (uint32_t i = 0; i < archetypes.size(); ++i) {
+  XrSpatialFilterArchetypeEXT archetypeFilter {
+    .type = XR_TYPE_SPATIAL_FILTER_ARCHETYPE_EXT,
+    .archetype = archetypes[i],
+  };
+  XrSpatialComponentDataQueryConditionEXT queryCond {
+    .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+    .next = &archetypeFilter,
+  };
+
+  XrSpatialComponentDataQueryResultEXT queryResult {
+    .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+  };
+
+  CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+
+  std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+  std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityStateCountOutput);
+  queryResult.entityIdCapacityInput = entityIds.size();
+  queryResult.entityIds = entityIds.data();
+  queryResult.entityStateCapacityInput = entityStates.size();
+  queryResult.entityStates = entityStates.data();
+
+  uint32_t componentTypeCountOutput = 0;
+  CHK_XR(xrEnumerateSpatialArchetypeComponentTypesEXT(snapshot, archetypes[i], 0, &componentTypeCountOutput, nullptr));
+  std::vector<XrSpatialComponentTypeEXT> componentTypes(componentTypeCountOutput);
+  CHK_XR(xrEnumerateSpatialArchetypeComponentTypesEXT(snapshot, archetypes[i], componentTypes.size(), &componentTypeCountOutput, componentTypes.data()));
+
+  std::vector<XrPosef> locations;
+  XrSpatialComponentAnchorListEXT locationList {
+    .type = XR_TYPE_SPATIAL_COMPONENT_ANCHOR_LIST_EXT,
+  };
+  std::vector<XrSpatialPersistenceDataEXT> persistenceData;
+  XrSpatialComponentPersistenceListEXT persistenceDataList {
+    .type = XR_TYPE_SPATIAL_COMPONENT_PERSISTENCE_LIST_EXT,
+  };
+
+  const auto archetypeContainsComponent = [&](XrSpatialComponentTypeEXT componentType) {
+    return std::find(componentTypes.begin(), componentTypes.end(), componentType) != componentTypes.end();
+  };
+
+  XrBaseOutStructure* queryResultNext = reinterpret_cast<XrBaseOutStructure*>(&queryResult);
+
+  if (archetypeContainsComponent(XR_SPATIAL_COMPONENT_TYPE_ANCHOR_EXT)) {
+    locations.resize(queryResult.entityIdCountOutput);
+    locationList.locationCount = locations.size();
+    locationList.locations = locations.data();
+
+    queryResultNext->next = reinterpret_cast<XrBaseOutStructure*>(&locationList);
+    queryResultNext = queryResultNext->next;
+  }
+  if (archetypeContainsComponent(XR_SPATIAL_COMPONENT_TYPE_PERSISTENCE_EXT)) {
+    persistenceData.resize(queryResult.entityIdCountOutput);
+    persistenceDataList.persistDataCount = persistenceData.size();
+    persistenceDataList.persistData = persistenceData.data();
+
+    queryResultNext->next = reinterpret_cast<XrBaseOutStructure*>(&persistenceDataList);
+    queryResultNext = queryResultNext->next;
+  }
+  // ...
+  // similar conditions for other component types
+  // ...
+
+  CHK_XR(xrQuerySpatialComponentDataEXT(snapshot, &queryCond, &queryResult));
+  // ... read entity ids and component data ...
+}
+----
+
+include::{generated}/interfaces/XR_EXT_spatial_entity_archetypes.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-10-21 (Nihav Jain, Google)
+** Initial extension description

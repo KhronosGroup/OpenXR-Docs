@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <enums name="XrResult" type="enum" comment="Error and return codes">
+        <!-- Return codes for successful operation execution (positive values) -->
+        <enum value="0"     name="XR_SUCCESS"                                   comment="Function successfully completed."/>
+    </enums>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <!-- Core Handle missing XrObjectType -->
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+    </types>
+
+    <!-- XrObjectType defines XR_OBJECT_TYPE_UNKNOWN but missing XR_OBJECT_TYPE_INSTANCE -->
+    <enums name="XrObjectType" type="enum" comment="Enums to track objects of various types">
+        <enum value="0"   name="XR_OBJECT_TYPE_UNKNOWN"/>
+    </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require comment="Types defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+        </require>
+    </feature>
+</registry>

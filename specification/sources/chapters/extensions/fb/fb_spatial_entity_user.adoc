@@ -9,7 +9,7 @@ include::{generated}/meta/XR_FB_spatial_entity_user.adoc[]
     Andrew Kim, Facebook +
     Andreas Selvik, Facebook
 
-*Overview*
+==== Overview
 
 This extension enables creation and management of user objects which can: be
 used by the application to reference a user other than the current user.
@@ -129,9 +129,7 @@ the user.
 include::{generated}/validity/protos/xrDestroySpaceUserFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-07-28 (John Schofield)
 ** Initial draft

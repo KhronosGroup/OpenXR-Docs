@@ -17,7 +17,7 @@ include::{generated}/meta/XR_MNDX_force_feedback_curl.adoc[]
     Jakob Bornecrantz (Collabora, Ltd.) +
 
 
-*Overview*
+==== Overview
 
 This extension provides APIs for force feedback devices capable of
 restricting physical movement in a single direction along a single
@@ -180,9 +180,7 @@ force feedback is still desired.
 include::{generated}/validity/protos/xrApplyForceFeedbackCurlMNDX.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-09-07 (Daniel Willmott)
 ** Initial version

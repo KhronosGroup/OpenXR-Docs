@@ -10,7 +10,7 @@ include::{generated}/meta/XR_OPPO_controller_interaction.adoc[]
     Buyi Xu, OPPO +
     Yebao Cai, OPPO +
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the OPPO Controller,
 including but not limited to OPPO MR Glasses Controller.
@@ -44,7 +44,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/home/click (may: not be available for application use)
+** subpathname:/input/home/click (may: be unavailable for application use)
 
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/touch
@@ -75,7 +75,7 @@ include::{config}/grip_surface_notice.adoc[]
 include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
-*Version History*
+==== Version History
 
 * Revision 1, Haomiao Jiang
 ** Initial extension description

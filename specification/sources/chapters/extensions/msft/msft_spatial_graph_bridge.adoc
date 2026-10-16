@@ -10,7 +10,7 @@ include::{generated}/meta/XR_MSFT_spatial_graph_bridge.adoc[]
     Alex Turner, Microsoft +
     David Fields, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension enables applications to interop between slink:XrSpace handles
 and other Windows Mixed Reality device platform libraries or APIs.
@@ -290,9 +290,7 @@ elink:XrStructureType enumeration is extended with:
 * flink:xrDestroySpatialGraphNodeBindingMSFT
 * flink:xrGetSpatialGraphNodeBindingPropertiesMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-10-31 (Yin LI)
 ** Initial extension description

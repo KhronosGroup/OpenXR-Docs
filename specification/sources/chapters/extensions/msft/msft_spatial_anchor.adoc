@@ -4,7 +4,7 @@
 
 include::{generated}/meta/XR_MSFT_spatial_anchor.adoc[]
 
-*Overview*
+==== Overview
 
 [open,refpage='XrSpatialAnchorMSFT',type='handles',desc='Represents a spatial anchor']
 --
@@ -208,9 +208,7 @@ flink:xrCreateSpatialAnchorSpaceMSFT
 
 flink:xrDestroySpatialAnchorMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-07-30 (Alex Turner)
 ** Initial extension description

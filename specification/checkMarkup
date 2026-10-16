@@ -27,6 +27,12 @@ list_sources() {
     (
         cd "$(dirname "$0")"
         find sources/chapters -name "*.adoc"
+        if [ -f "registry/xr.fragmented.xml" ]; then
+            echo "registry/xr.fragmented.xml"
+        fi
+        if [ -d "registry/fragments" ]; then
+            find registry/fragments -name "[!.]*.xml"
+        fi
     )
 }
 

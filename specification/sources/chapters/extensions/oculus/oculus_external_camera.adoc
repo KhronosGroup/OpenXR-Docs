@@ -4,7 +4,7 @@
 
 include::{generated}/meta/XR_OCULUS_external_camera.adoc[]
 
-*Overview*
+==== Overview
 
 This extension enables the querying of external camera information for a
 session.
@@ -163,9 +163,7 @@ include::{generated}/api/protos/xrEnumerateExternalCamerasOCULUS.adoc[]
 include::{generated}/validity/protos/xrEnumerateExternalCamerasOCULUS.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-08-31 (John Kearney)
 ** Initial extension description

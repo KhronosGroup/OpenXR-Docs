@@ -17,7 +17,7 @@ include::{generated}/meta/XR_FB_touch_controller_pro.adoc[]
     Tony Targonski, Meta +
     Federico Schliemann, Meta
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the Meta Quest Touch
 Pro Controller.
@@ -27,7 +27,7 @@ Meta Quest Touch Pro Controller Profile Path:
 * pathname:/interaction_profiles/facebook/touch_controller_pro
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/facebook/touch_controller_pro
 :properly-suffixed-path: /interaction_profiles/facebook/touch_controller_pro_fb
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -58,8 +58,7 @@ enabled by Meta Quest Touch Pro Controller profile exclusively):
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 
 * On both:
 ** subpathname:/input/squeeze/value
@@ -132,7 +131,7 @@ touchpad.
   the touchpad
 ****
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-06-29 (Aanchal Dalmia)
 ** Initial extension proposal

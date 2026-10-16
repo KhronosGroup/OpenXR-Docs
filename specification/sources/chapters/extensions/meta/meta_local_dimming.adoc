@@ -15,7 +15,7 @@ include::{generated}/meta/XR_META_local_dimming.adoc[]
     Xiang Wei, Meta Platforms
 
 
-*Overview*
+==== Overview
 
 Local dimming allows to adjust backlight intensity of dark areas on the
 screen in order to increase content dynamic range.
@@ -82,9 +82,7 @@ include::{generated}/validity/structs/XrLocalDimmingFrameEndInfoMETA.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-05-05 (Ross Ning)
 ** Initial draft

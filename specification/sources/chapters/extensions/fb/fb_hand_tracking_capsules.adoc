@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_hand_tracking_capsules.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
 poses which include a collision sphere for each joint.
@@ -88,9 +88,7 @@ include::{generated}/validity/structs/XrHandTrackingCapsulesStateFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description

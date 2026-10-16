@@ -52,4 +52,15 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <param><type>XrStructTest1</type>* <name>structTest</name></param>
         </command>
     </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type    name="openxr_platform_defines"/>
+            <type    name="XrStructureType"/>
+            <type    name="XR_DEFINE_HANDLE"/>
+            <type    name="XrInstance"/>
+            <type    name="XrStructTest1"/>
+            <command name="xrTest1"/>
+        </require>
+    </feature>
 </registry>

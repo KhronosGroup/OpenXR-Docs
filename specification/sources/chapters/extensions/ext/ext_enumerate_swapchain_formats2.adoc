@@ -1,0 +1,117 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_enumerate_swapchain_formats2.adoc[]
+
+*Contributors*::
+    Rylie Pavlik, Collabora +
+
+
+==== Overview
+
+This extension is intended for use in combination with another extension
+that builds on it.
+It provides a replacement for flink:xrEnumerateSwapchainFormats that
+contains an extensible input structure, to parameterize that call.
+
+==== Enumerate Swapchain Formats
+
+[open,refpage='xrEnumerateSwapchainFormats2EXT',desc='Enumerates swapchain formats',type='protos',xrefs='xrCreateSwapchain']
+--
+The flink:xrEnumerateSwapchainFormats2EXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateSwapchainFormats2EXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is the session that enumerates the supported formats.
+* pname:enumerateInfo is the input parameters to the function.
+* pname:formatCapacityInput is the capacity of the pname:formats, or 0 to
+  retrieve the required capacity.
+* pname:formatCountOutput is a pointer to the count of code:uint64_t formats
+  written, or a pointer to the required capacity in the case that
+  pname:formatCapacityInput is insufficient.
+* pname:formats is a pointer to an array of code:int64_t format IDs, but
+  can: be code:NULL if pname:formatCapacityInput is `0`.
+  The meanings of the format IDs are specific to the specified graphics API
+  for the session.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:formats size.
+****
+
+flink:xrEnumerateSwapchainFormats2EXT enumerates the texture formats
+supported by the current session.
+It serves as a compatible but extensible replacement for
+flink:xrEnumerateSwapchainFormats.
+For any call to flink:xrEnumerateSwapchainFormats, an equivalent call to
+flink:xrEnumerateSwapchainFormats2EXT with a default pname:enumerateInfo
+structure and no chained structures must: behave the same.
+However, some use cases with input parameters require using
+flink:xrEnumerateSwapchainFormats2EXT and are not convertible to the
+original function.
+
+The type of formats returned are dependent on the graphics API specified by
+the graphics binding structure passed to flink:xrCreateSession (unless a
+structure in the pname:enumerateInfo chain modifies this behavior).
+For example, if a DirectX graphics API was specified, then the enumerated
+formats correspond to the DXGI formats, such as
+ename:DXGI_FORMAT_R8G8B8A8_UNORM_SRGB.
+Texture formats should: be in order from highest to lowest runtime
+preference.
+The application should: use the highest preference format that it supports
+for optimal performance and quality.
+
+Runtimes should: support code:R8G8B8A8 and code:R8G8B8A8 formats with
+non-linear ("sRGB") encoding if possible.
+
+ifdef::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
+With an OpenGL-based graphics API, the texture formats correspond to OpenGL
+internal formats.
+endif::XR_KHR_opengl_enable,XR_KHR_opengles_enable[]
+
+ifdef::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
+With a Direct3D-based graphics API, flink:xrEnumerateSwapchainFormats2EXT
+never returns typeless formats (e.g. ename:DXGI_FORMAT_R8G8B8A8_TYPELESS).
+Only concrete formats are returned, and only concrete formats may: be
+specified by applications for swapchain creation.
+endif::XR_KHR_d3d11_enable,XR_KHR_d3d12_enable[]
+
+Runtimes must: always return identical buffer contents from this enumeration
+for a given pname:enumerateInfo structure chain for the lifetime of the
+session.
+
+include::{generated}/validity/protos/xrEnumerateSwapchainFormats2EXT.adoc[]
+--
+
+[open,refpage='XrSwapchainFormatsEnumerateInfoEXT',type='structs',desc='Parameters for flink:xrEnumerateSwapchainFormats2EXT',xrefs='xrEnumerateSwapchainFormats2EXT']
+--
+The slink:XrSwapchainFormatsEnumerateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrSwapchainFormatsEnumerateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+The slink:XrSwapchainFormatsEnumerateInfoEXT structure serves to allow
+creation of a chain of input structures to parameterize
+flink:xrEnumerateSwapchainFormats2EXT.
+
+If no other valid structures are in the same structure chain when passed to
+flink:xrEnumerateSwapchainFormats2EXT, that function must: behave exactly
+the same as flink:xrEnumerateSwapchainFormats.
+
+include::{generated}/validity/structs/XrSwapchainFormatsEnumerateInfoEXT.adoc[]
+--
+
+
+include::{generated}/interfaces/XR_EXT_enumerate_swapchain_formats2.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2026-03-13 (Rylie Pavlik, Collabora)
+** Initial extension description, based on the core function.

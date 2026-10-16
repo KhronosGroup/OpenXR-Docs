@@ -13,7 +13,7 @@ include::{generated}/meta/XR_VALVE_analog_threshold.adoc[]
     Rune Berg, Valve +
     Andres Rodriguez, Valve +
 
-*Overview*
+==== Overview
 
 This extension allows the application to control the threshold and haptic
 feedback applied to an analog to digital conversion.
@@ -106,9 +106,7 @@ include::{generated}/validity/structs/XrInteractionProfileAnalogThresholdVALVE.a
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-06-29 (Joe Ludwig)
 ** Initial version.

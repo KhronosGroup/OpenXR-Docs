@@ -871,8 +871,6 @@ XrSpatialContainerEndInfoEXT endInfoB {
 CHK_XR(xrEndSpatialContainerRenderingEXT(session, &endInfoB));
 ----
 
-==== Issues
-
 ==== Version History
 * Revision 1, 2026-08-06 (Lachlan Ford)
 ** Initial extension description

@@ -11,7 +11,7 @@ include::{generated}/meta/XR_KHR_loader_init_android.adoc[]
 *Contributors*::
     Cass Everitt, Facebook
 
-*Overview*
+==== Overview
 
 On Android, some loader implementations need the application to provide
 additional information on initialization.
@@ -63,9 +63,7 @@ include::{generated}/validity/structs/XrLoaderInitInfoAndroidKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-05-07 (Cass Everitt)
 ** Initial draft

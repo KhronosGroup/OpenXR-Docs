@@ -9,7 +9,7 @@ include::{generated}/meta/XR_FB_composition_layer_image_layout.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension does not define a new composition layer type, but rather it
 defines parameters that change the interpretation of the image layout, where
@@ -76,9 +76,7 @@ include::{generated}/validity/structs/XrCompositionLayerImageLayoutFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-07-06 (Gloria Kennickell)
 ** Initial draft

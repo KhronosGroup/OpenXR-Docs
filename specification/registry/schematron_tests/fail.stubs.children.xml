@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="NV" author="NVIDIA" contact="NVIDIA"/>
+    </tags>
+
+    <extensions>
+        <extension name="XR_NV_extension_524" number="524" type="instance" stubs="true">
+            <require>
+                <enum value="1" name="XR_NV_extension_524_SPEC_VERSION"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_android_surface_swapchain_create.adoc[]
     Tomislav Novak, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension provides support for the specification of Android Surface
 specific swapchain create flags.
@@ -90,9 +90,7 @@ include::{generated}/validity/structs/XrAndroidSurfaceSwapchainCreateInfoFB.adoc
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-12-10 (Gloria Kennickell)
 ** Initial draft

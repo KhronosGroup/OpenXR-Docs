@@ -1,0 +1,513 @@
+// Copyright (c) 2017-2026, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_mesh_tracking.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and defines spatial
+capabilities for tracking the triangle mesh of the environment.
+The triangle mesh provided by the capability defined in this extension is
+intended to be used by applications for determining collisions of the
+virtual content with the environment.
+
+If the runtime enumerates apiext:XR_EXT_spatial_mesh_tracking in
+flink:xrEnumerateInstanceExtensionProperties, it must: also enumerate
+apiext:XR_EXT_spatial_entity_archetypes.
+However, the runtime must: not return any error from flink:xrCreateInstance
+if the application enables apiext:XR_EXT_spatial_mesh_tracking without
+enabling apiext:XR_EXT_spatial_entity_archetypes.
+
+==== Spatial Mesh Tracking Capability
+
+This extension defines ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT as a
+spatial capability for tracking the triangle mesh of the environment.
+Tracking the mesh of entities like planes and objects is not covered by this
+capability and must: instead be indicated by the enumeration of the
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component for the respective
+capabilities that track those entities.
+
+ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT is used to provide both a
+watertight and a non-watertight mesh to the application, depending on the
+runtime's abilities and the configuration selected by the application.
+
+A watertight mesh is one where gaps and unscanned regions of all sizes have
+been filled and it forms a tight mesh within a certain volumetric block.
+As the name suggests, if an application fills up water inside a watertight
+mesh, there should: be no water that leaks out of the watertight volume.
+Making a scanned mesh watertight often requires very high compute, though
+some runtimes offset that cost by processing the mesh beforehand.
+
+===== Runtime Support
+
+If the runtime supports tracking for the triangle mesh of the environment,
+it must: indicate this by enumerating
+ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT in
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+There are 3 possible abilities of a runtime that supports
+ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT -
+
+* The runtime supports only non-watertight mesh tracking.
+  In this case the runtime enumerates
+  ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT in
+  flink:xrEnumerateSpatialCapabilitiesEXT but must: not enumerate
+  ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT in
+  flink:xrEnumerateSpatialCapabilityFeaturesEXT (see
+  <<ext_spatial_mesh_tracking_watertight_feature>>).
+* The runtime supports both watertight and non-watertight mesh tracking.
+  In this case the runtime enumerates
+  ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT in
+  flink:xrEnumerateSpatialCapabilitiesEXT and must: also enumerate
+  ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT in
+  flink:xrEnumerateSpatialCapabilityFeaturesEXT (see
+  <<ext_spatial_mesh_tracking_watertight_feature>>) in order to enable
+  watertight mesh tracking requests from the application.
+* The runtime supports only watertight mesh tracking.
+  In this case the runtime enumerates
+  ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT in
+  flink:xrEnumerateSpatialCapabilitiesEXT and must: also enumerate
+  ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT in
+  flink:xrEnumerateSpatialCapabilityFeaturesEXT (see
+  <<ext_spatial_mesh_tracking_watertight_feature>>) to indicate to the
+  application that it supports watertight mesh tracking.
+  In this particular case, the runtime always returns a watertight mesh to
+  the application regardless of the configuration for
+  ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT.
+
+===== Configuration
+
+[open,refpage='XrSpatialCapabilityConfigurationMeshTrackingEXT',type='structs',desc='Config structure for the mesh tracking capability',xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationMeshTrackingEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationMeshTrackingEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT and must: be
+  ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+****
+
+Applications can: enable the ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT
+spatial capability by including a pointer to an
+slink:XrSpatialCapabilityConfigurationMeshTrackingEXT structure in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:capability is not ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationMeshTrackingEXT.adoc[]
+--
+
+[[ext_spatial_mesh_tracking_watertight_feature]]
+===== Tracking a Watertight Mesh
+
+[open,refpage='XrSpatialFeatureTrackWatertightMeshEXT',type='structs',desc='Allows applications to enable watertight mesh tracking',xrefs='XrSpatialCapabilityConfigurationMeshTrackingEXT XrSpatialCapabilityFeatureEXT xrEnumerateSpatialCapabilityFeaturesEXT']
+--
+
+The slink:XrSpatialFeatureTrackWatertightMeshEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialFeatureTrackWatertightMeshEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:enableWatertightMeshTracking indicates if the runtime must: compute
+  a watertight mesh for the scanned environment.
+****
+
+Runtimes that support watertight mesh tracking must: enumerate
+ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT in
+flink:xrEnumerateSpatialCapabilityFeaturesEXT.
+The ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT feature
+allows the applications to optionally enable watertight mesh tracking and
+explicitly opt-into any additional compute that the watertight mesh
+generation may: incur.
+
+If ename:XR_SPATIAL_CAPABILITY_FEATURE_TRACK_WATERTIGHT_MESH_EXT is
+enumerated by flink:xrEnumerateSpatialCapabilityFeaturesEXT for a certain
+capability, the application can: chain
+slink:XrSpatialFeatureTrackWatertightMeshEXT to the corresponding
+configuration structure of that capability to indicate whether it wants the
+tracked mesh to be watertight or not.
+If the application sets pname:enableWatertightMeshTracking to ename:XR_TRUE,
+the runtime must: compute and provide the application with a watertight mesh
+of the environment.
+If the application sets pname:enableWatertightMeshTracking to
+ename:XR_FALSE, the tracked mesh may: still be watertight if the runtime
+only supports watertight mesh tracking, e.g. in cases where the runtime is
+providing a processed mesh from a prescanned environment.
+
+include::{generated}/validity/structs/XrSpatialFeatureTrackWatertightMeshEXT.adoc[]
+--
+
+===== Application Flow
+
+The diagram below shows how an application configures the spatial context if
+it wants to track a watertight mesh of the environment.
+
+[[fig-EXT_spatial_mesh_tracking-app-flow-watertight]]
+image::images/ext_spatial_mesh_tracking_app_flow_watertight.svg[opts="inline", align="center", title="App flow for requesting watertight mesh"]
+
+[[ext_spatial_mesh_tracking_guaranteed_components]]
+===== Guaranteed Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT must:
+provide the following spatial components as guaranteed components of all
+entities discovered by this capability and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT
+* ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT
+
+====== Bounded 3D Component
+
+The bounded 3D component provides the center and extents of the entity it is
+on.
+The data provided by this component makes it easier for applications to cull
+the entities that are outside its view frustum.
+
+See <<ext_spatial_entity_bounded3D_component>> for more details.
+
+====== Mesh 3D Component
+
+The mesh 3D component provides the 3D mesh of the entity it is on.
+See <<ext_spatial_entity_mesh3d_component>> for more details.
+
+===== Volumetric Segmentation (Chunking)
+
+The runtime may: segment the mesh into volumetric blocks (chunks) to make it
+easier for applications to cull the mesh blocks outside of its view frustum.
+In such a case the runtime must: treat each such volumetric block as a
+separate entity and have the set of
+<<ext_spatial_mesh_tracking_guaranteed_components>> on each such entity
+(volumetric block).
+If the runtime is providing a watertight mesh in this manner, each
+volumetric block individually is not watertight, but a group of blocks
+together form a watertight mesh.
+In such a scenario, the runtime must: add the
+ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT component on each entity
+(volumetric block), and the value of the parent entity across the blocks
+that together form a watertight mesh must: be the same.
+This enables the application to identify which chunks together form a
+watertight mesh.
+In this scenario the runtime must: also enumerate
+ename:XR_SPATIAL_COMPONENT_TYPE_PARENT_EXT in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT for
+ename:XR_SPATIAL_CAPABILITY_MESH_TRACKING_EXT, so that the application can:
+enable the component and read the grouping.
+
+Meshes of adjacent volumetric blocks may: share vertices, but the triangles
+of one volumetric block must: not overlap with the triangles of its adjacent
+volume.
+
+==== Optional Components
+
+[[ext_spatial_entity_mesh_normals_component]]
+===== Mesh Normals
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_NORMALS_EXT uses
+slink:XrSpatialBufferEXT for its data.
+slink:XrSpatialBufferEXT::pname:bufferId represents the buffer containing
+the vertex normals of the mesh of the entity this component is on.
+The slink:XrSpatialBufferEXT::pname:bufferType must: be
+ename:XR_SPATIAL_BUFFER_TYPE_VECTOR3F_EXT.
+An entity that has ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_NORMALS_EXT must:
+also have the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT on it.
+The normals provided by this component must: correspond to the vertices
+provided in the slink:XrSpatialMeshDataEXT::pname:vertexBuffer of the
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMesh3DNormalsListEXT',type='structs',desc='List structure for the mesh 3D normals component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialBufferEXT XrSpatialMeshDataEXT']
+--
+The slink:XrSpatialComponentMesh3DNormalsListEXT structure is defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMesh3DNormalsListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:meshNormalsCount is a code:uint32_t describing the count of elements
+  in the pname:meshNormals array.
+* pname:meshNormals is an array of slink:XrSpatialBufferEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMesh3DNormalsListEXT is in the next chain of
+slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount is
+not zero and ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_NORMALS_EXT is not
+included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:meshNormalsCount is less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentMesh3DNormalsListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_NORMALS_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+However, applications are encouraged to use this component and its data in
+conjunction with the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+
+===== Mesh Semantic Labels
+
+[open,refpage='XrSpatialMeshSemanticLabelEXT',type='enums',desc='Mesh semantic labels',xrefs='XrSpatialComponentMesh3DVertexSemanticLabelsListEXT XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT']
+--
+include::{generated}/api/enums/XrSpatialMeshSemanticLabelEXT.adoc[]
+
+The elink:XrSpatialMeshSemanticLabelEXT enumeration describes a set of
+semantic labels for a mesh.
+This is used by different spatial components to give meaning to the
+code:uint8_t values from an slink:XrSpatialBufferEXT for per-vertex or
+per-triangle semantic labels.
+See <<ext_spatial_entity_mesh_vertex_semantic_labels_component>> and
+<<ext_spatial_entity_mesh_triangle_semantic_labels_component>>.
+
+Extensions that want to extend either this semantic label set or add their
+own new set for meshes should: follow the guidelines given in
+<<ext_spatial_entity_semantic_labels_guidelines>>.
+
+include::{generated}/api/enums/XrSpatialMeshSemanticLabelEXT.comments.adoc[]
+--
+
+[[ext_spatial_entity_mesh_vertex_semantic_labels_component]]
+===== Mesh Vertex Semantic Labels
+
+====== Component Overview
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT provides
+a single semantic label for each vertex of the mesh of a spatial entity.
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT uses
+slink:XrSpatialBufferEXT for its data.
+slink:XrSpatialBufferEXT::pname:bufferId represents the buffer containing
+the vertex semantic labels of the mesh of the entity this component is on.
+The slink:XrSpatialBufferEXT::pname:bufferType must: be
+ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT.
+The values in the buffer correspond to the values of the
+elink:XrSpatialMeshSemanticLabelEXT enumeration.
+An entity that has
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT must:
+also have the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component on it.
+The semantic labels provided by this component must: correspond to the
+vertices provided in the slink:XrSpatialMeshDataEXT::pname:vertexBuffer of
+the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+This implies that the semantic label at a given index of the spatial buffer
+data provided by this component corresponds to the vertex at the same index
+provided by slink:XrSpatialMeshDataEXT::pname:vertexBuffer.
+This also implies that
+flink:xrGetSpatialBufferUint8EXT::pname:bufferCountOutput must: be the same
+value for the vertex semantic label buffer and
+slink:XrSpatialMeshDataEXT::pname:vertexBuffer.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMesh3DVertexSemanticLabelsListEXT',type='structs',desc='List structure for the mesh 3D vertex semantic labels component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialBufferEXT XrSpatialMeshSemanticLabelEXT']
+--
+The slink:XrSpatialComponentMesh3DVertexSemanticLabelsListEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMesh3DVertexSemanticLabelsListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:meshSemanticLabelsCount is a code:uint32_t describing the count of
+  elements in the pname:meshSemanticLabels array.
+* pname:meshSemanticLabels is an array of slink:XrSpatialBufferEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMesh3DVertexSemanticLabelsListEXT is in the next
+chain of slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount is
+not zero and
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT is not
+included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:meshSemanticLabelsCount is
+less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentMesh3DVertexSemanticLabelsListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT is
+enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+However, applications are encouraged to use this component and its data in
+conjunction with the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+
+This component cannot: be enabled together with
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT.
+If an application adds both
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT to
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents,
+the runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT.
+The runtime must: also return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT if the
+application attempts to enable both components in separate
+slink:XrSpatialContextEXT.
+
+[[ext_spatial_entity_mesh_triangle_semantic_labels_component]]
+===== Mesh Triangle Semantic Labels
+
+====== Component Overview
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT
+provides a single semantic label for each triangle of the mesh of a spatial
+entity.
+
+====== Component data
+
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT uses
+slink:XrSpatialBufferEXT for its data.
+slink:XrSpatialBufferEXT::pname:bufferId represents the buffer containing
+the triangle semantic labels of the mesh of the entity this component is on.
+The slink:XrSpatialBufferEXT::pname:bufferType must: be
+ename:XR_SPATIAL_BUFFER_TYPE_UINT8_EXT.
+The values in the buffer correspond to the values of the
+elink:XrSpatialMeshSemanticLabelEXT enumeration.
+An entity that has
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT must:
+also have the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component on it.
+The semantic labels provided by this component must: correspond to the
+triangles provided in the slink:XrSpatialMeshDataEXT of the
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+The element count of the spatial buffer containing the triangle semantic
+labels is the same as the element count of the
+slink:XrSpatialMeshDataEXT::pname:indexBuffer divided by 3.
+This implies that the semantic label at a given index of the spatial buffer
+data provided by this component corresponds to the triangle represented by
+[eq]#[index * 3], [index * 3 + 1], [index * 3 + 2]# in the
+slink:XrSpatialMeshDataEXT::pname:indexBuffer.
+
+====== Component list structure to query data
+
+[open,refpage='XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT',type='structs',desc='List structure for the mesh 3D triangle semantic labels component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialBufferEXT XrSpatialMeshSemanticLabelEXT']
+--
+The slink:XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:meshSemanticLabelsCount is a code:uint32_t describing the count of
+  elements in the pname:meshSemanticLabels array.
+* pname:meshSemanticLabels is an array of slink:XrSpatialBufferEXT.
+****
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT is in the next
+chain of slink:XrSpatialComponentDataQueryResultEXT::pname:next but
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypeCount is
+not zero and
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT is not
+included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:meshSemanticLabelsCount is
+less than
+slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentMesh3DTriangleSemanticLabelsListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT is
+enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, the application can: enable it by including the enum in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list.
+This component does not require any special configuration to be included in
+the next chain of slink:XrSpatialCapabilityConfigurationBaseHeaderEXT.
+However, applications are encouraged to use this component and its data in
+conjunction with the ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT component.
+
+This component cannot: be enabled together with
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT.
+If an application adds both
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_VERTEX_SEMANTIC_LABELS_EXT and
+ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_TRIANGLE_SEMANTIC_LABELS_EXT to
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents,
+the runtime must: return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT.
+The runtime must: also return
+ename:XR_ERROR_SPATIAL_CAPABILITY_CONFIGURATION_INVALID_EXT if the
+application attempts to enable both components in separate
+slink:XrSpatialContextEXT.
+
+
+include::{generated}/interfaces/XR_EXT_spatial_mesh_tracking.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-11-02 (Nihav Jain, Google)
+** Initial extension description

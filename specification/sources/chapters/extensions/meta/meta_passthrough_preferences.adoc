@@ -13,7 +13,7 @@ include::{generated}/meta/XR_META_passthrough_preferences.adoc[]
 *Contributors*::
     Johannes Schmid, Meta Platforms +
 
-*Overview*
+==== Overview
 
 This extension provides applications with access to system preferences
 concerning passthrough.
@@ -96,7 +96,7 @@ passthrough-related preferences from the system.
 include::{generated}/validity/protos/xrGetPassthroughPreferencesMETA.adoc[]
 --
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-04-25 (Johannes Schmid)
 ** Initial extension description

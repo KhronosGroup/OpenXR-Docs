@@ -87,6 +87,16 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <command name="xrPollEvent"/>
             <command name="xrCreateAction"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+            <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XrEventDataBaseHeader"/>
+            <type name="XrEventDataFoo"/>
+            <type name="XrActionCreateInfo"/>
+            <type name="XrActionCreateInfoExtensionKHR"/>
+        </require>
     </feature>
 
 </registry>

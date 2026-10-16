@@ -17,8 +17,9 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <interaction_profile name="/interaction_profiles/khr/simple_controller" title="Simple Controller">
             <user_path path="/user/hand/left"/>
             <user_path path="/user/hand/right"/>
-            <component subpath="/input/grip/pose"   type="XR_ACTION_TYPE_POSE_INPUT"/>
-            <component subpath="/input/aim/pose"    type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component subpath="/input/grip/pose"           type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component subpath="/input/aim/pose"            type="XR_ACTION_TYPE_POSE_INPUT"/>
+            <component subpath="/input/grip_surface/pose"   type="XR_ACTION_TYPE_POSE_INPUT"/>
         </interaction_profile>
     </interaction_profiles>
 
@@ -29,16 +30,6 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <enum value="&quot;XR_EXT_palm_pose&quot;" name="XR_EXT_PALM_POSE_EXTENSION_NAME"/>
             <extend interaction_profile_path="/interaction_profiles/khr/simple_controller">
                 <component subpath="/input/palm_ext/pose"   type="XR_ACTION_TYPE_POSE_INPUT"/>
-            </extend>
-        </require>
-    </extension>
-
-    <extension name="XR_KHR_maintenance1" number="51" type="instance" supported="openxr" ratified="openxr">
-        <require>
-            <enum value="1"                               name="XR_KHR_maintenance1_SPEC_VERSION"/>
-            <enum value="&quot;XR_KHR_maintenance1&quot;" name="XR_KHR_MAINTENANCE1_EXTENSION_NAME"/>
-            <extend interaction_profile_path="/interaction_profiles/khr/simple_controller">
-                <component subpath="/input/grip_surface/pose"   type="XR_ACTION_TYPE_POSE_INPUT"/>
             </extend>
         </require>
     </extension>

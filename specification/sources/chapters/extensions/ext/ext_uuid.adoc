@@ -17,7 +17,7 @@ include::{generated}/meta/XR_EXT_uuid.adoc[]
     Alex Turner, Microsoft +
     David Fields, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension defines a Universally Unique Identifier that follows
 link:https://www.rfc-editor.org/rfc/rfc4122.html[RFC 4122].
@@ -58,9 +58,7 @@ include::{generated}/validity/structs/XrUuidEXT.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-10-27 (Darryl Gough)
 ** Initial extension description

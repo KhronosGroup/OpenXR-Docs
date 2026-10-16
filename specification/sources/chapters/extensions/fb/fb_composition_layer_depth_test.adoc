@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_composition_layer_depth_test.adoc[]
     Cass Everitt, Meta +
     Jian Zhang, Meta
 
-*Overview*
+==== Overview
 
 This extension enables depth-tested layer composition.
 The compositor will maintain a depth buffer in addition to a color buffer.
@@ -86,9 +86,7 @@ include::{generated}/validity/structs/XrCompositionLayerDepthTestFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-02-17 (Cass Everitt)
 ** Initial draft

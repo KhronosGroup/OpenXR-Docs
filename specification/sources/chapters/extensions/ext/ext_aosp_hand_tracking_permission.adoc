@@ -1,0 +1,279 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_aosp_hand_tracking_permission.adoc[]
+
+
+*Last Modified Date*::
+    2025-07-03
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+    Rylie Pavlik, Collabora +
+    Ron Bessems, Meta +
+    Bastiaan Olij, Godot +
+    Charlton Rodda, Collabora +
+    David Snopek, Godot +
+    Denny Rönngren, Varjo +
+    Jakob Bornecrantz, NVIDIA +
+    Jared Finder, Google +
+    John Kearney, Meta +
+    Kurtis Eveleigh, Qualcomm +
+    Nihav Jain, Google +
+    Nikita Lutsenko, Meta +
+    Shuai Liu, ByteDance +
+    Xiang Wei, Meta +
+    Yin Li, Microsoft +
+    Zhipeng Liu, ByteDance
+
+==== Overview
+
+On platforms based on the Android Open Source Project (AOSP), some runtimes
+protect hand tracking data using the permission system.
+This extension standardizes a permission string and corresponding feature
+string to reduce vendor-specific permission fragmentation across OpenXR
+runtimes on AOSP-derived platforms.
+
+If a runtime enumerates apiext:XR_EXT_aosp_hand_tracking_permission in
+flink:xrEnumerateInstanceExtensionProperties, the runtime must: accept the
+permission named <<org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA,
+`org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA`>> as described in
+this extension.
+
+This extension relates to at least the following other extensions:
+
+* apiext:XR_EXT_hand_tracking
+* apiext:XR_EXT_hand_tracking_data_source
+* apiext:XR_EXT_hand_joints_motion_range
+* apiext:XR_EXT_hand_interaction - discussed and behavior clarified, but not
+  affected by the permission.
+
+==== Permission
+
+[open,refpage='org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA',type='freeform',desc='Platform permission string for detailed hand tracking.',xrefs='XrSystemHandTrackingPropertiesEXT xrGetSystemProperties']
+--
+Hand tracking data has the potential to be detailed and therefore privacy
+sensitive.
+
+For the purposes of this extension, "detailed hand tracking data" means
+joint pose data returned by flink:xrLocateHandJointsEXT that provides finer
+detail than could reasonably be inferred from controller interaction using
+the action system.
+Such data is typically derived from optical or other non-controller sensing.
+
+Platforms derived from AOSP have a permission system based on
+reverse-domain-style strings identifying permissions, application manifests
+declaring intent to use permissions, and runtime granting of permissions.
+If a given runtime on such a platform both:
+
+* requires an application to declare and be granted a specific permission in
+  order to access **joint-level** hand tracking data from a
+  **non-controller** source ("detailed hand tracking data"), and
+* advertises support for apiext:XR_EXT_aosp_hand_tracking_permission,
+
+then that runtime must: accept the following permission string, declared in
+the manifest and granted, as being sufficient and equivalent to any other
+(vendor-specific) permission string used to provide access to this data.
+
+
+[source]
+----
+org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA
+----
+
+An application targeting AOSP-based platforms uses this permission in its
+manifest as follows:
+
+[source,xml]
+----
+<uses-permission android:name="org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA"/>
+----
+
+A runtime must: not require any additional application manifest elements or
+attributes (e.g. `<uses-feature>`, `<meta-data>`) to access joint-level hand
+tracking when the `org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA`
+permission is listed in an application manifest.
+
+The requirements in this section apply to any runtime that outputs the name
+of this extension when enumerating with
+flink:xrEnumerateInstanceExtensionProperties, even if the application does
+not enable the extension when creating an instance.
+
+For clarity, a runtime that does **not** require any permissions to be
+requested or granted to access detailed joint-level hand tracking data
+already contains a conformant implementation of
+apiext:XR_EXT_aosp_hand_tracking_permission, as it treats the string
+specified above as sufficient and equivalent to the existing string
+required, which is no string at all.
+Such a runtime may: enumerate this extension without other changes.
+
+Applications must: not rely on the permission being automatically granted.
+Applications on relevant platforms must: therefore explicitly request this
+permission dynamically during execution, even if it is automatically granted
+on devices used for testing.
+This is necessary to ensure compatibility across runtimes and correct
+handling of potential future policy changes.
+
+Failure of the application to declare, request, or be granted the permission
+must: not affect the value of
+slink:XrSystemHandTrackingPropertiesEXT::pname:supportsHandTracking, which
+must: be set to the same value as if the permission were declared and
+granted.
+If the application uses apiext:XR_EXT_hand_tracking but lacks permission for
+detailed hand tracking data, and does not also enable
+apiext:XR_EXT_hand_tracking_data_source, apiext:XR_EXT_hand_tracking
+functions without errors but returns no detailed hand tracking data.
+
+This extension clarifies that enabling
+apiext:XR_EXT_hand_tracking_data_source is a signal that the application
+supports controller-derived hand tracking data and acknowledges that
+slink:XrSystemHandTrackingPropertiesEXT::pname:supportsHandTracking may: be
+true even in the absence of detailed hand tracking data.
+Therefore, if apiext:XR_EXT_hand_tracking_data_source is enabled on a system
+that accepts physical controller input, the runtime must: provide joint pose
+data derived from controller inputs.
+Further, it must: set
+slink:XrSystemHandTrackingPropertiesEXT::pname:supportsHandTracking to
+ename:XR_TRUE.
+Both requirements hold _regardless_ of whether the permission is declared
+and granted.
+That is, an application enabling apiext:XR_EXT_hand_tracking_data_source is
+an affirmative signal of support for controller-derived hand tracking data
+in the application.
+Further, access to such data is not gated by the permission as it is not
+"detailed" as defined earlier.
+Note that a runtime with controller input must: not expose
+apiext:XR_EXT_hand_tracking_data_source without the ability to provide
+estimated hand joint locations from those controllers, as defined in
+apiext:XR_EXT_hand_tracking_data_source and apiext:XR_EXT_hand_tracking.
+
+If both extensions are enabled but the permission is not declared or not
+granted, the runtime must: choose one of the following ways to handle
+situations in which the user is not holding controllers but the runtime is
+still able to perform hand tracking:
+
+* Return no hand tracking data during these situations.
+* Reduce the fidelity of non-controller hand tracking data to be equivalent
+  to controller-based hand tracking data, from a privacy perspective, during
+  these situations.
+
+This permission is _only_ for accessing detailed hand tracking data:
+joint-level poses with finer detail than could be inferred from controller
+interactions through the action system.
+Runtimes must: not restrict action input due to lacking this permission,
+even when that input is derived by the runtime from hand tracking data.
+That is, the runtime must: not consider this permission when providing
+hand-based input via the action system and suggested bindings, e.g. for the
+interaction profiles pathname:/interaction_profiles/khr/simple_controller or
+pathname:/interaction_profiles/ext/hand_interaction (from
+apiext:XR_EXT_hand_interaction).
+
+Accessing hand-related data with more privacy-sensitive detail than joint
+poses (e.g. meshes) may: require an additional permission, which is out of
+scope for this extension.
+
+Note that on AOSP-based platforms, if the user revokes permission after the
+hand tracker is created, the runtime may: terminate the application's
+process.
+On some runtimes, there are other ways of disabling hand tracking input
+without affecting the permission system, which prevent hand tracking data
+from flowing.
+
+
+**Permission Definition and Policy**
+
+The protection level and platform policy for the
+`org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA` permission may:
+differ across runtimes and between revisions of a single runtime.
+Whether this permission is defined as "dangerous" or "normal" is a policy
+decision reserved for the platform where possible.
+
+Permission definitions in AOSP-derived platforms are owned by a package.
+If there is a permission in use with no owner on a given system, any
+installed package is able to take ownership of that permission by declaring
+it in its own manifest.
+To avoid permission squatting or denial of service in this way, platforms
+must: define the permission.
+For existing platforms that do not define this permission, the working group
+publishes a build variant of the official OpenXR installable runtime broker
+that defines it as a "dangerous" permission.
+(Another published variant of the broker omits the permission definition for
+use on platforms where it is already declared.)
+
+An installable runtime must: not define this permission.
+
+--
+
+==== Feature
+
+[open,refpage='org.khronos.openxr.detailed_hand_data',type='freeform',desc='AOSP feature string for detailed hand tracking.',xrefs='XrSystemHandTrackingPropertiesEXT xrGetSystemProperties']
+--
+To allow application storefronts to detect application characteristics to
+filter for compatibility, AOSP-derived platforms use an application manifest
+that contains references to "features" named with strings in a
+reverse-domain-style format.
+
+The following string is defined as the "feature" string on such systems
+corresponding to the availability of detailed hand tracking data, as gated
+by the reflink:org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA
+permission string:
+
+[source]
+----
+org.khronos.openxr.detailed_hand_data
+----
+
+On such a platform, if storefronts query any feature string to investigate
+support for detailed hand tracking data, they must: query at least this
+string.
+
+When filtering or highlighting applications that use specific features, a
+storefront must: treat this string as equivalent to any vendor-specific or
+non-standard string(s) used for the same purpose, if any exist.
+
+On such a platform, an application manifest may: apply this feature string
+through inclusion of a `<uses-feature>` tag like the following:
+
+[source,xml]
+----
+<uses-feature
+    android:name="org.khronos.openxr.detailed_hand_data"
+    android:required="false"/>
+----
+
+Note that storefront evaluation of available features is often based on the
+as-shipped configuration for a device, therefore excluding devices with an
+add-on OpenXR runtime for a connected headset purchased separately (e.g. a
+plug-in viewer-style headset).
+To maximize application availability across multiple storefronts,
+application authors should: specify `android:required="false"` in the
+application manifest.
+This avoids hiding an application on storefronts that do not know if OpenXR
+hand tracking is available or not at install time, such as if hand tracking
+is provided by an optional peripheral.
+Such an application must: include logic to detect and handle the case where
+hand tracking is not available.
+
+Applications including this feature string must: also include the permission
+reflink:org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA in their
+application manifest, and should: request it during execution as described.
+A runtime advertising an implementation of
+apiext:XR_EXT_aosp_hand_tracking_permission must: not use the presence or
+absence of this feature string in the application manifest to control access
+to joint-level hand tracking when the
+reflink:org.khronos.openxr.permission.ACCESS_DETAILED_HAND_DATA permission
+is listed in an application manifest.
+
+--
+
+==== Issues
+
+include::{generated}/interfaces/XR_EXT_aosp_hand_tracking_permission.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-07-03 (Rylie Pavlik, Ron Bessems)
+** Initial extension description

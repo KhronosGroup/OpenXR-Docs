@@ -4,7 +4,6 @@
 
 include::{generated}/meta/XR_VARJO_view_offset.adoc[]
 
-
 *Last Modified Date*::
     2021-09-30
 *IP Status*::
@@ -19,7 +18,7 @@ include::{generated}/meta/XR_VARJO_view_offset.adoc[]
 // Khronos may elect to exercise its Copyright  license to incorporate this submission into
 // other works it controls as it desires."
 
-*Overview*
+==== Overview
 
 Varjo headsets use video pass-through cameras to create the mixed reality
 (MR) image.
@@ -60,19 +59,19 @@ changes.
 
 In some cases, moving the VR content to match the real-world position may
 not be desirable.
-This extension enable the application to control where the VR content is
+This extension enables the application to control where the VR content is
 rendered from the location of the user's eyes while the video pass-through
 image uses the camera locations.
-For example, if the virtual object is close the user, or if the application
-is switching between VR and MR modes.
+For example, if the virtual object is close to the user, or if the
+application is switching between VR and MR modes.
 Offset values between 0.0 and 1.0 are supported.
 You can use this to create a smooth, animated transition between the two
 rendering positions in case you need to change from one to the other during
 a session.
 
-*New Functions*
+==== Setting a view offset
 
-[open,refpage='xrSetViewOffsetVARJO',desc='Set view offest',type='protos',xrefs='']
+[open,refpage='xrSetViewOffsetVARJO',desc='Set view offset',type='protos',xrefs='']
 --
 The flink:xrSetViewOffsetVARJO function is defined as:
 
@@ -102,9 +101,11 @@ in MR (ename:XR_ENVIRONMENT_BLEND_MODE_ALPHA_BLEND or
 ename:XR_ENVIRONMENT_BLEND_MODE_ADDITIVE).
 
 include::{generated}/validity/protos/xrSetViewOffsetVARJO.adoc[]
+--
 
-*Version History*
+include::{generated}/interfaces/XR_VARJO_view_offset.adoc[leveloffset=1]
+
+==== Version History
 
 * Revision 1, 2022-02-08 (Remi Arnaud)
 ** extension specification
---

@@ -11,7 +11,7 @@ include::{generated}/meta/XR_FB_scene_capture.adoc[]
     Cass Everitt, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension allows an application to request that the system begin
 capturing information about what is in the environment around the user.
@@ -105,9 +105,7 @@ This is an asynchronous operation.
 include::{generated}/validity/protos/xrRequestSceneCaptureFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-03-09 (John Schofield)
 ** Initial draft

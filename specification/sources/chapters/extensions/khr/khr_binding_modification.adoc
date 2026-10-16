@@ -13,7 +13,7 @@ include::{generated}/meta/XR_KHR_binding_modification.adoc[]
 *Contacts*::
     Joe Ludwig, Valve
 
-*Overview*
+==== Overview
 
 This extension adds an optional structure that can be included on the
 slink:XrInteractionProfileSuggestedBinding::pname:next chain passed to
@@ -84,9 +84,7 @@ include::{generated}/validity/structs/XrBindingModificationBaseHeaderKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-08-06 (Joe Ludwig)
 ** Initial draft.

@@ -4,8 +4,6 @@
 ** SPDX-License-Identifier: Apache-2.0
 */
 
-#include <openxr/openxr.h>
-
 XrBool32
 myOutputDebugString(XrDebugUtilsMessageSeverityFlagsEXT messageSeverity,
                     XrDebugUtilsMessageTypeFlagsEXT messageType,

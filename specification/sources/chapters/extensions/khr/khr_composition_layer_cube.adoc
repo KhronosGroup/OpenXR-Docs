@@ -20,7 +20,7 @@ include::{generated}/meta/XR_KHR_composition_layer_cube.adoc[]
     Cass Everitt, Oculus +
     Paul Pedriana, Oculus
 
-*Overview*
+==== Overview
 
 This extension adds an additional layer type that enables direct sampling
 from cubemaps.
@@ -78,9 +78,7 @@ include::{generated}/validity/structs/XrCompositionLayerCubeKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 0, 2017-02-01 (Johannes van Waveren)
 ** Initial draft.

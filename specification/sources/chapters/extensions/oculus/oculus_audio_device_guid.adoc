@@ -4,7 +4,7 @@
 
 include::{generated}/meta/XR_OCULUS_audio_device_guid.adoc[]
 
-*Overview*
+==== Overview
 
 This extension enables the querying of audio device information associated
 with an OpenXR instance.
@@ -63,7 +63,7 @@ include::{generated}/validity/protos/xrGetAudioInputDeviceGuidOculus.adoc[]
 
 --
 
-*Issues*
+==== Issues
 
 . The intent of flink:xrGetAudioInputDeviceGuidOculus and
   flink:xrGetAudioOutputDeviceGuidOculus is to provide GUIDs associated with
@@ -79,7 +79,7 @@ include::{generated}/validity/protos/xrGetAudioInputDeviceGuidOculus.adoc[]
   If these commands were to be reimplemented, `Oculus` should be replaced by
   `OCULUS`.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2021-05-13 (John Kearney)
 ** Initial extension description

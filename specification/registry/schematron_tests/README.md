@@ -45,10 +45,18 @@ those that depend on it, if required): each assertion should get at least one
 "fail" test.
 
 In general, construct the name of a test out of `.`-delimited descriptions of
-increasing levels of specialization. This might just be `section_name.number`,
-or it could be like `require.command.core` (to test that requires of a command
-from the core spec are verified correctly - there are also requires from
-extensions, and there are other things to require).
+increasing levels of specialization, like `require.command.core` (to test that
+requires of a command from the core spec are verified correctly - there are also
+requires from extensions, and there are other things to require).
+
+Give the assertion under test a matching `id` - here `require.command`, with
+`core` and `ext` as variants - and name the fixture `fail.<id>.xml` or
+`fail.<id>.<variant>.xml`. The id is echoed into the report as
+`<svrl:failed-assert id="...">`, and a fixture named after one should fail that
+assertion and no other; the longest matching id wins, so one id may be a prefix
+of another. A trailing number makes a fine variant, but it should separate cases
+of a single rule rather than one rule from another. Not every assertion has an
+id yet; add one whenever you touch a rule.
 
 ## How it works
 
@@ -63,3 +71,7 @@ found using two `$(wildcard)` expressions.
 To ensure consistency with the main script, the Makefile rules source the same
 shell script and use the same function to invoke SchXslt and process the `srvl`
 as `checkSchematron.sh`.
+
+In addition, the runner enforces that `fail.*.xml` tests do not cascade. Each test
+must trigger at most 1 failure (or at most `N` failures if explicitly annotated with
+an XML comment like `<!-- expected-failures: N -->`).

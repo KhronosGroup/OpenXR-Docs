@@ -13,7 +13,7 @@ include::{generated}/meta/XR_KHR_android_create_instance.adoc[]
     Martin Renschler, Qualcomm +
     Krzysztof Kosiński, Google
 
-*Overview*
+==== Overview
 
 When the application creates an slink:XrInstance object on Android systems,
 additional information from the application has to be provided to the XR
@@ -71,9 +71,7 @@ include::{generated}/validity/structs/XrInstanceCreateInfoAndroidKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2017-05-26 (Robert Menzel)
 ** Initial draft

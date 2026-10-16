@@ -8,7 +8,7 @@ include::{generated}/meta/XR_META_performance_metrics.adoc[]
     Xiang Wei, Meta Platforms +
 
 
-*Overview*
+==== Overview
 
 This extension provides APIs to enumerate and query performance metrics
 counters of the current XR device and XR application.
@@ -243,9 +243,7 @@ ename:XR_ERROR_PATH_UNSUPPORTED.
 include::{generated}/validity/protos/xrQueryPerformanceMetricsCounterMETA.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-04-28 (Xiang Wei)
 ** Initial extension description

@@ -135,5 +135,16 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <command name="xrGetVertices"/>
             <command name="xrGetChildren"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+            <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XrStructBuffer"/>
+            <type name="XrStructNum"/>
+            <type name="XrStructY"/>
+            <type name="XrStructEx"/>
+            <type name="XrStructChild"/>
+        </require>
     </feature>
 </registry>

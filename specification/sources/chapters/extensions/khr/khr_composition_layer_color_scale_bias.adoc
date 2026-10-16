@@ -13,7 +13,7 @@ include::{generated}/meta/XR_KHR_composition_layer_color_scale_bias.adoc[]
     Cass Everitt, Oculus +
     Martin Renschler, Qualcomm
 
-*Overview*
+==== Overview
 
 Color scale and bias are applied to a layer color during composition, after
 its conversion to premultiplied alpha representation.
@@ -79,9 +79,7 @@ include::{generated}/validity/structs/XrCompositionLayerColorScaleBiasKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2017-09-13 (Paul Pedriana)
 ** Initial implementation.

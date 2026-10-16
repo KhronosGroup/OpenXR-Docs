@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_hand_tracking_mesh.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
 poses but no mechanism to render a skinned hand mesh.
@@ -185,9 +185,7 @@ this call is constant during the lifetime of an slink:XrInstance.
 include::{generated}/validity/protos/xrGetHandMeshFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description

@@ -10,7 +10,7 @@ include::{generated}/meta/XR_MSFT_controller_model.adoc[]
     Yin Li, Microsoft +
     Lachlan Ford, Microsoft
 
-*Overview*
+==== Overview
 
 This extension provides a mechanism to load a GLTF model for controllers.
 An application can: render the controller model using the real time pose
@@ -374,9 +374,7 @@ include::{generated}/validity/structs/XrControllerModelNodeStateMSFT.adoc[]
 * flink:xrGetControllerModelPropertiesMSFT
 * flink:xrGetControllerModelStateMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-03-12 (Yin Li)
 ** Initial extension description

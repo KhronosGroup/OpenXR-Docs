@@ -21,43 +21,29 @@
     <sch:pattern name="Extension uniqueness and basic requirements">
         <!-- https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#extensions -->
         <sch:rule context="extensions/extension">
-            <sch:assert test="@name">
+            <sch:assert id="extension_validity_and_uniqueness.name_required" test="@name">
                 Extension <sch:value-of select="@number" /> must have a name
             </sch:assert>
 
-            <sch:assert test="starts-with(@name, 'XR_')">
+            <sch:assert id="extension_validity_and_uniqueness.prefix" test="starts-with(@name, 'XR_')">
                 Extension <sch:value-of select="@number" /> (<sch:value-of select="@name" />) must start with XR_
             </sch:assert>
 
             <sch:let name="vendor-tags" value="//tags/tag/@name"/>
             <sch:let name="extension-vendor-tag" value="@name/tokenize(., '_')[2]"/>
             <sch:let name="experimental-base-tag" value="replace($extension-vendor-tag, 'X[0-9]*$', '')"/>
-            <sch:assert test="($extension-vendor-tag = $vendor-tags) or ($experimental-base-tag = $vendor-tags)">
+            <sch:assert id="extension_validity_and_uniqueness.vendor_tag" test="($extension-vendor-tag = $vendor-tags) or ($experimental-base-tag = $vendor-tags)">
                 Extension <sch:value-of select="@number" /> (<sch:value-of select="@name" />) must start with XR_ and vendor tag (but we got '<sch:value-of select="$extension-vendor-tag" />').
             </sch:assert>
 
             <sch:let name="extname" value="@name" />
-            <sch:assert test="not(preceding::extension[@name = $extname])">
+            <sch:assert id="extension_validity_and_uniqueness.duplicate_name" test="not(preceding::extension[@name = $extname])">
                 Extension <sch:value-of select="@number" />: duplicate name "<sch:value-of select="$extname"/>" (count = <sch:value-of select="count(//extensions/extension[@name = $extname])"/>)
             </sch:assert>
 
             <sch:let name="extnum" value="@number" />
-            <sch:assert test="not(preceding::extension[@number = $extnum])">
+            <sch:assert id="extension_validity_and_uniqueness.duplicate_number" test="not(preceding::extension[@number = $extnum])">
                 <sch:value-of select="$extname"/> extension: duplicate number "<sch:value-of select="$extnum"/>" (count = <sch:value-of select="count(//extensions/extension[@number = $extnum])"/>)
-            </sch:assert>
-
-            <sch:let name="specver_name" value="concat($extname, '_SPEC_VERSION')"/>
-            <sch:assert test="descendant::enum[@name = $specver_name]">
-                <sch:value-of select="$extname"/> extension: missing version enum with name "<sch:value-of select="$specver_name"/>".
-            </sch:assert>
-
-            <sch:let name="extname_value" value="concat('&quot;', $extname, '&quot;')"/>
-            <sch:assert test="descendant::enum[@value = $extname_value]">
-                <sch:value-of select="$extname"/> extension: missing name enum with value "<sch:value-of select="$extname_value"/>".
-            </sch:assert>
-            <sch:let name="extname_name" value="concat(upper-case($extname), '_EXTENSION_NAME')"/>
-            <sch:assert test="descendant::enum[ $extname_name]" >
-                <sch:value-of select="$extname"/> extension: missing name enum with name "<sch:value-of select="$extname_name"/>".
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -86,9 +72,24 @@
                 Function name <sch:value-of select="@name"/> should end with the author ID (<sch:value-of select="$extension-vendor-tag"/> in the extension name).
             </sch:assert>
         </sch:rule>
+
+        <!-- Bitmask values live in a standalone <enums> block and are never listed
+             in <require>, so the rules above never see them. Derive the author ID
+             from the FlagBits type name instead of the extension name. -->
+        <sch:rule id="naming.bitmask" context="enums[@type = 'bitmask']/enum[@name]">
+            <sch:let name="vendor-tags" value="//tags/tag/@name"/>
+            <sch:let name="bits-vendor-tag" value="replace(../@name, '^.*?([A-Z]+[0-9]*)$', '$1')"/>
+            <sch:let name="experimental-base-tag" value="replace($bits-vendor-tag, 'X[0-9]*$', '')"/>
+            <sch:let name="is-vendor-bitmask" value="$bits-vendor-tag = $vendor-tags or $experimental-base-tag = $vendor-tags"/>
+            <sch:assert id="naming.bitmask.value" test="not($is-vendor-bitmask) or ends-with(@name, concat('_', $bits-vendor-tag))">
+                Bitmask value <sch:value-of select="@name"/> should end with the author ID (<sch:value-of select="$bits-vendor-tag"/> in <sch:value-of select="../@name"/>).
+            </sch:assert>
+        </sch:rule>
     </sch:pattern>
 
     <sch:pattern name="Extension basic requirements">
+        <sch:rule id="extension-stub-fragment-exclusions-basic"
+                  context="extensions/extension[@stubs='true' or @fragment='true']"/>
         <sch:rule context="extensions/extension[@name]">
 
             <sch:let name="extname" value="@name" />
@@ -96,19 +97,41 @@
             <sch:let name="first_child_element" value="require/*[1]"/>
             <sch:let name="first_child_element_is_enum" value="require/*[1][name() = 'enum']"/>
             <sch:let name="first_child_element_named_spec_version" value="require/*[1][@name = $specver_name]"/>
-            <sch:assert test="$first_child_element_is_enum and $first_child_element_named_spec_version">
+            <sch:assert id="extension_validity_and_uniqueness.spec_version" test="$first_child_element_is_enum and $first_child_element_named_spec_version">
                 <sch:value-of select="$extname"/> extension: First child element of 'require' should be a version enum named "<sch:value-of select="$specver_name"/>".
             </sch:assert>
             <sch:let name="second_child_element" value="require/*[2]"/>
             <sch:let name="extname_value" value="concat('&quot;', $extname, '&quot;')"/>
             <sch:let name="second_child_element_is_enum" value="require/*[2][name() = 'enum']"/>
-            <sch:let name="first_child_element_named_ext_name" value="require/*[1][@name = $specver_name]"/>
 
-            <sch:assert test="$second_child_element[name() = 'enum']">
+            <sch:assert id="extension_validity_and_uniqueness.extension_name" test="if ($first_child_element_named_spec_version or count(require/*) &gt;= 2) then $second_child_element[name() = 'enum'] else true()">
                 <sch:value-of select="$extname"/> extension: Second child element of 'require' should be a string enum (define) for the extension name.
             </sch:assert>
-            <sch:assert test="$second_child_element[@value = $extname_value]">
+            <sch:assert id="extension_validity_and_uniqueness.extension_name_value" test="if ($second_child_element[name() = 'enum']) then $second_child_element[@value = $extname_value] else true()">
                 <sch:value-of select="$extname"/> extension: Second child element of 'require' should be a name enum with value "<sch:value-of select="$extname_value"/>"  instead of "<sch:value-of select="$second_child_element/attribute::value"/>".
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Stub extension placeholders">
+        <sch:rule context="extensions/extension[@stubs='true']">
+            <sch:assert test="@name">
+                Stub extension placeholder must have a name
+            </sch:assert>
+            <sch:assert test="@number">
+                Stub extension placeholder <sch:value-of select="@name"/> must have a number
+            </sch:assert>
+            <sch:assert test="@type">
+                Stub extension placeholder <sch:value-of select="@name"/> must have a type
+            </sch:assert>
+            <sch:assert test="not(@fragment='true')">
+                Stub extension placeholder <sch:value-of select="@name"/> cannot also have fragment='true'
+            </sch:assert>
+            <sch:assert test="not(@supported='openxr')">
+                Stub extension placeholder <sch:value-of select="@name"/> cannot be supported='openxr'
+            </sch:assert>
+            <sch:assert test="not(*)">
+                Stub extension placeholder <sch:value-of select="@name"/> must not have child elements
             </sch:assert>
         </sch:rule>
     </sch:pattern>
@@ -119,7 +142,7 @@
             <sch:let name="extname" value="@name" />
             <sch:let name="extname_name" value="concat(upper-case($extname), '_EXTENSION_NAME')"/>
             <sch:let name="second_child_element" value="require/*[2]"/>
-            <sch:assert test="$second_child_element[attribute::name = $extname_name]" >
+            <sch:assert id="extension_validity_and_uniqueness.extension_name_identifier" test="if ($second_child_element[name() = 'enum']) then $second_child_element[attribute::name = $extname_name] else true()" >
                 <sch:value-of select="$extname"/> extension: Second child element of enabled extension's 'require' should be a name enum with name "<sch:value-of select="$extname_name"/>" instead of "<sch:value-of select="$second_child_element/attribute::name"/>"
             </sch:assert>
         </sch:rule>
@@ -129,7 +152,7 @@
         <!-- Verify that any KHR extensions have the ratified="openxr" attribute. -->
         <sch:rule context="extensions/extension[@supported = 'openxr' and starts-with(@name, 'XR_KHR_')]">
             <sch:let name="is_ratified" value="@ratified = 'openxr'"/>
-            <sch:assert test="$is_ratified" >
+            <sch:assert id="khr.ratified" test="$is_ratified" >
                 <sch:value-of select="@name"/> KHR extension must be ratified.
             </sch:assert>
         </sch:rule>
@@ -273,7 +296,7 @@
                 )
             "/>
 
-            <sch:assert test="
+            <sch:assert id="type_ref_ordering.higher_number" test="
                 not($struct_ext) or not($ref_ext)
                 or $struct_ext/@name = $ref_ext/@name
                 or $struct_ext_base = $ref_ext_base
@@ -317,7 +340,7 @@
                 )
             "/>
 
-            <sch:assert test="
+            <sch:assert id="type_ref_ordering.command_param" test="
                 not($cmd_ext) or not($ref_ext)
                 or $cmd_ext/@name = $ref_ext/@name
                 or $cmd_ext_base = $ref_ext_base
@@ -489,7 +512,7 @@
             )"/>
 
             <!-- If struct does not appear in any function or other struct and has neither parentstruct nor structextends, raise error -->
-            <sch:assert test="$appears_in_function or $appears_in_struct or $has_parentstruct or $has_structextends or $is_base_header or $is_temporary_exception">
+            <sch:assert id="struct.next.missing_attributes" test="$appears_in_function or $appears_in_struct or $has_parentstruct or $has_structextends or $is_base_header or $is_temporary_exception">
                 <sch:value-of select="$struct_name"/>: Struct has a 'next' member but does not appear as a parameter to any function or as a member in another struct, and is missing both 'parentstruct' and 'structextends' attributes. Structs with 'next' members that are not used as function parameters or struct members should have at least one of these attributes to indicate their role in the type hierarchy.
             </sch:assert>
         </sch:rule>
@@ -586,12 +609,6 @@
 
     <!-- Naming of composition layer types -->
     <sch:pattern>
-        <sch:rule context="types/type[@category = 'struct' and @parentstruct = 'XrCompositionLayerBaseHeader']">
-            <sch:assert test="starts-with(@name, 'XrCompositionLayer')">
-                <sch:value-of select="current()/@name"/>: Parented by XrCompositionLayerBaseHeader, but the name doesn't start with XrCompositionLayer. Should be named XrCompositionLayer...AUTHOR.
-            </sch:assert>
-        </sch:rule>
-
         <sch:rule context="types/type[@category = 'struct' and starts-with(@name, 'XrCompositionLayer')]">
             <!-- Previously we have used the `XrCompositionLayer` prefix for structextends and parentstruct XrCompositionLayerBaseHeader -->
             <!-- This type of usage leads to confusion and should be discouraged in future -->
@@ -610,7 +627,7 @@
                 'XrCompositionLayerSettingsFB',
                 'XrCompositionLayerDepthTestFB'
             )"/>
-            <sch:assert test="@parentstruct = 'XrCompositionLayerBaseHeader' or $is_exception">
+            <sch:assert id="struct.compositionlayer.wrongpolymorphism" test="@parentstruct = 'XrCompositionLayerBaseHeader' or $is_exception">
                 <sch:value-of select="current()/@name"/>: Looks like XrCompositionLayer...AUTHOR, but missing parentstruct=XrCompositionLayerBaseHeader: Add that, or rename.
             </sch:assert>
         </sch:rule>
@@ -793,6 +810,7 @@
                                                     'XrSwapchainCreateInfo',
                                                     'XrSpaceQueryInfoFB',
                                                     'XrEventDataEventsLost',
+                                                    'XrAppConsumedSwapchainPropertiesEXT',
                                                     'XrPlaneDetectorLocationEXT',
                                                     'XrRenderModelPropertiesEXT',
                                                     'XrSystemMarkerTrackingPropertiesANDROID',
@@ -877,6 +895,15 @@
             <sch:assert test="$handle_type_name = 'XrInstance' or current()/@parent">
                 <sch:value-of select="$handle_type_name" /> handle: No parent handle specified. The only handle without a parent handle is XrInstance.
             </sch:assert>
+
+            <!-- Validate that an XrObjectType exists for every handle -->
+            <sch:let name="removed_prefix" value="replace($handle_type_name, '^Xr', '')" />
+            <sch:let name="snake_case1" value="replace($removed_prefix, '(.)([A-Z][a-z]+)', '$1_$2')" />
+            <sch:let name="snake_case2" value="replace($snake_case1, '([a-z0-9])([A-Z])', '$1_$2')" />
+            <sch:let name="expected_object_type" value="concat('XR_OBJECT_TYPE_', upper-case($snake_case2))" />
+            <sch:assert test="not(//enums[@name='XrObjectType']) or //enums[@name='XrObjectType']/enum[@name = $expected_object_type] or //enum[@extends = 'XrObjectType' and @name = $expected_object_type]">
+                <sch:value-of select="$handle_type_name" /> handle: Expected XrObjectType enum <sch:value-of select="$expected_object_type" /> to be defined.
+            </sch:assert>
         </sch:rule>
     </sch:pattern>
 
@@ -920,7 +947,7 @@
             <sch:let name="first_param_type" value="current()/param[1]/type/text()" />
 
             <!-- All other commands should take a handle as their first argument. -->
-            <sch:assert test="//types/type[@category = 'handle' and ./name[text() = $first_param_type]]">
+            <sch:assert id="command.paramorder.handle" test="//types/type[@category = 'handle' and ./name[text() = $first_param_type]]">
                 <sch:value-of select="$command_name" />: takes a first parameter that is not a handle: it is a <sch:value-of select="$first_param_type" />
             </sch:assert>
         </sch:rule>
@@ -934,7 +961,7 @@
 
             <!-- TODO fix exceptions -->
             <sch:let name="is_exception" value="$type_name = 'XrApiLayerCreateInfo'"/>
-            <sch:assert test="$is_exception or matches($member_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
+            <sch:assert id="naming.camelcase.member" test="$is_exception or matches($member_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
                 <sch:value-of select="$type_name" /> member naming: The <sch:value-of select="$member_name" /> member does not match the struct camelCase convention.
             </sch:assert>
         </sch:rule>
@@ -943,7 +970,7 @@
             <sch:let name="command_name" value="current()/ancestor::command/proto/name/text()" />
             <sch:let name="param_name" value="current()/name/text()" />
 
-            <sch:assert test="matches($param_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
+            <sch:assert id="naming.camelcase.param" test="matches($param_name, '^[a-z]([a-z0-9]*)([A-Z][a-z0-9]*)*$')">
                 <sch:value-of select="$command_name" /> param naming: The <sch:value-of select="$param_name" /> parameter does not match the param camelCase convention.
             </sch:assert>
         </sch:rule>
@@ -963,10 +990,10 @@
             <sch:let name="is_exception" value="$bitvalues_name = ('XrCompositionLayerSettingsFlagBitsFB', 'XrFacialExpressionBlendShapePropertiesFlagBitsML')
                                                 or $flags_name = ('XrCompositionLayerSettingsFlagsFB', 'XrFacialExpressionBlendShapePropertiesFlagsML')"/>
 
-            <sch:assert test="$is_exception or $not_plural or not(matches($bitvalues_name, 'sFlagBits'))">
+            <sch:assert id="naming.bitmask.flagbits" test="$is_exception or $not_plural or not(matches($bitvalues_name, 'sFlagBits'))">
                 <sch:value-of select="$bitvalues_name" /> naming: The type name should be singular before "FlagBits". Remove the pluralization or add to the "not_plural" set if this is a false positive.
             </sch:assert>
-            <sch:assert test="$is_exception or $not_plural or not(matches($flags_name, 'sFlags'))">
+            <sch:assert id="naming.bitmask" test="$is_exception or $not_plural or not(matches($flags_name, 'sFlags'))">
                 <sch:value-of select="$flags_name" /> naming: The type name should be singular before "Flags". Remove the pluralization or add to the "not_plural" set if this is a false positive.
             </sch:assert>
         </sch:rule>
@@ -980,7 +1007,7 @@
             <sch:let name="member_name" value="name/text()" />
             <sch:let name="bitvalues_name" value="//types/type[@category='bitmask' and name/text() = $member_type]/@bitvalues" />
 
-            <sch:assert test="//enums[@name=$bitvalues_name]/enum or @optional = 'true'">
+            <sch:assert id="struct.flags_optional" test="//enums[@name=$bitvalues_name]/enum or @optional = 'true'">
                 <sch:value-of select="$struct_name" />::<sch:value-of select="$member_name" />: Member of type <sch:value-of select="$member_type" /> must be marked optional="true" because the corresponding flags type <sch:value-of select="$bitvalues_name" /> has no bits initially defined.
             </sch:assert>
         </sch:rule>
@@ -1146,7 +1173,7 @@
             )"/>
 
             <!-- One apparent array: Must be named $array_name -->
-            <sch:assert test="if ($num_matching_arrays = 1 and not($is_exception)) then
+            <sch:assert id="naming.twocallpartialprefix.struct" test="if ($num_matching_arrays = 1 and not($is_exception)) then
                                 $matching_arrays/text() = $array_name
                               else
                                 true()">
@@ -1154,7 +1181,7 @@
             </sch:assert>
 
             <!-- More than one apparent array: Must be named starting with $basename and ending in 's' -->
-            <sch:assert test="if ($num_matching_arrays > 1 and not($is_exception)) then
+            <sch:assert id="naming.twocallpartialprefix.struct.multiple" test="if ($num_matching_arrays > 1 and not($is_exception)) then
                                 every $matching_array in $matching_arrays satisfies ((starts-with($matching_array/text(), $basename) and ends-with($matching_array/text(), 's')) or $matching_array/text() = $array_name)
                               else
                                 true()">
@@ -1162,19 +1189,19 @@
             </sch:assert>
 
             <!-- no apparent arrays is an error... -->
-            <sch:assert test="$num_matching_arrays > 0 or $is_exception">
+            <sch:assert id="naming.twocall.struct" test="$num_matching_arrays > 0 or $is_exception">
                 <sch:value-of select="$matching_arrays"/>
                 <sch:value-of select="$type_name" /> two call idiom struct, no apparent arrays: Has a member named <sch:value-of select="$member_name" /> but no array member named <sch:value-of select="$array_name" /> as expected by the style guide for two call idiom. Your array member may be named incorrectly.
             </sch:assert>
 
-            <!-- the "if($array)" keeps us from spamming about arrays we can't find -->
+            <!-- the "if ($array)" keeps us from spamming about arrays we can't find -->
             <sch:let name="array" value="current()/../member[(name/text() = $array_name) or (starts-with(name/text(), $basename) and ends-with(name/text(), 's'))]" />
             <sch:let name="array_names" value="$array/name" />
 
-            <sch:assert test="$array/@len = $member_name">
+            <sch:assert id="naming.twocall.struct.len" test="if ($array) then $array/@len = $member_name else true()">
                 <sch:value-of select="$type_name" /> two call idiom struct: Array member(s) <sch:value-of select="$array_names" separator=", " /> must have len="<sch:value-of select="$member_name" />"
             </sch:assert>
-            <sch:assert test="$array/@optional = 'true'">
+            <sch:assert id="naming.twocall.struct.optional" test="if ($array) then $array/@optional = 'true' else true()">
                 <sch:value-of select="$type_name" /> two call idiom struct: Array member(s) <sch:value-of select="$array_names" separator=", " /> must have the attribute optional="true"
             </sch:assert>
 
@@ -1205,7 +1232,7 @@
                                                 concat(current()/../../name(), ' ', current()/../../@name, ' (', current()/../@comment, ')')
                                                 else
                                                 concat(current()/../../name(), ' ', current()/../../@name)"/>
-            <sch:assert test="$candidates[@name=$name_attr_val] or $candidates/descendant::name[text()=$name_attr_val]">
+            <sch:assert id="require.command" test="$candidates[@name=$name_attr_val] or $candidates/descendant::name[text()=$name_attr_val]">
                 <sch:value-of select="$context_name"/>: Cannot require <sch:value-of select="$tag"/> item <sch:value-of select="$name_attr_val"/> which does not exist.
             </sch:assert>
         </sch:rule>
@@ -1220,6 +1247,31 @@
         <sch:param name="contextElement" value="//require/command"/>
         <sch:param name="tag" value="'type'"/>
         <sch:param name="candidates" value="/registry/commands/command"/>
+    </sch:pattern>
+
+    <!--
+         The converse of the two patterns above: everything defined in <types> or
+         <commands> must also be pulled in by the <require> of at least one
+         <feature> or <extension>.
+    -->
+    <sch:pattern name="Defined types must be required by a feature or extension">
+        <sch:let name="required_type_names" value="//require/type/@name"/>
+        <sch:rule context="types/type[@category][@name or name]">
+            <sch:let name="defined_type_name" value="if (@name) then @name else name/text()"/>
+            <sch:assert id="defined.type.unrequired" test="$required_type_names = $defined_type_name">
+                Type <sch:value-of select="$defined_type_name"/> is defined but is not named in the &lt;require&gt; of any feature or extension, so genxr cannot tell what provides it.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Defined commands must be required by a feature or extension">
+        <sch:let name="required_command_names" value="//require/command/@name"/>
+        <sch:rule context="commands/command[@name or proto/name]">
+            <sch:let name="defined_command_name" value="if (@name) then @name else proto/name/text()"/>
+            <sch:assert id="defined.command.unrequired" test="$required_command_names = $defined_command_name">
+                Command <sch:value-of select="$defined_command_name"/> is defined but is not named in the &lt;require&gt; of any feature or extension, so genxr cannot tell what provides it.
+            </sch:assert>
+        </sch:rule>
     </sch:pattern>
 
     <sch:pattern abstract="true" id="requiredRefNameAttr">
@@ -1350,7 +1402,7 @@
                 '/interaction_profiles/varjo/xr-4_controller'
                 )"/>
             <sch:let name="is_khr" value="$vendor-tag = '_khr'"/>
-            <sch:assert test="ends-with(@name, $vendor-tag) or $is_exception or $is_khr">
+            <sch:assert id="interaction_profile_name.ext" test="ends-with(@name, $vendor-tag) or $is_exception or $is_khr">
                 Interaction Profile name must end with vendor tag _vendor ('<sch:value-of select="$vendor-tag" />'). '<sch:value-of select="@name" />' if it is introduced in a non-KHR extension.
             </sch:assert>
         </sch:rule>
@@ -1399,7 +1451,7 @@
 
             <!-- XR_EXT_palm_pose requires the path for left/right exists -->
             <!-- It does not explicitly specify that it only should be used when grip is available but... -->
-            <sch:assert test="not($has_left_or_right_hand) or $has_extend_palm_pose">
+            <sch:assert id="grip_surface_palm_pose.missing_palm_pose" test="not($has_left_or_right_hand) or $has_extend_palm_pose">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths but is missing XR_EXT_palm_pose input/palm_ext/pose pose.
             </sch:assert>
 
@@ -1410,7 +1462,7 @@
 
             <!-- XR_KHR_maintenance1 -->
 
-            <sch:assert test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_khr_maint1_extend">
+            <sch:assert id="grip_surface_palm_pose.missing_grip_surface" test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_khr_maint1_extend">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths, but is missing input/grip_surface/pose (through XR_KHR_maintenance1 or directly).
             </sch:assert>
 
@@ -1421,7 +1473,7 @@
 
             <!-- XR_VERSION_1_1 -->
 
-            <sch:assert test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_openxr_1_1_extend">
+            <sch:assert id="grip_surface_palm_pose.missing_grip_surface_1_1" test="not($has_left_or_right_hand) or $has_grip_surface_direct or $has_grip_surface_openxr_1_1_extend">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' exposes grip pose for left/right hand top level paths, but is missing OpenXR 1.1 input/grip_surface/pose pose.
             </sch:assert>
 
@@ -1434,10 +1486,10 @@
             <sch:assert test="not($has_left_or_right_hand) or ($has_grip_direct and $has_aim_direct)">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/aim/pose, required by XR_EXT_hand_interaction.
             </sch:assert>
-            <sch:assert test="not($has_left_or_right_hand) or ($has_poke_ext_direct or $has_extend_poke_ext_pose)">
+            <sch:assert id="grip_surface_palm_pose.missing_poke_ext" test="not($has_left_or_right_hand) or ($has_poke_ext_direct or $has_extend_poke_ext_pose)">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/poke_ext/pose, required by XR_EXT_hand_interaction.
             </sch:assert>
-            <sch:assert test="not($has_left_or_right_hand) or ($has_pinch_ext_direct or $has_extend_pinch_ext_pose)">
+            <sch:assert id="grip_surface_palm_pose.missing_pinch_ext" test="not($has_left_or_right_hand) or ($has_pinch_ext_direct or $has_extend_pinch_ext_pose)">
                 Interaction Profile '<sch:value-of select="$profile_name"/>' supports left/right hand top level paths, but is missing input/pinch_ext/pose, required by XR_EXT_hand_interaction.
             </sch:assert>
         </sch:rule>
@@ -1514,7 +1566,7 @@
             <sch:let name="config_struct_phrase" value="'Corresponding config structure is slink:'"/>
             <sch:let name="no_config_struct_phrase" value="'does not require any configuration structure'"/>
             <sch:let name="has_config_struct" value="contains(@comment, $config_struct_phrase) or contains(@comment, $no_config_struct_phrase)"/>
-            <sch:assert test="$has_config_struct">
+            <sch:assert id="spatial_feature.comment.extends.no_config_struct" test="$has_config_struct">
                 XrSpatialCapabilityFeature extension value's ('<sch:value-of select="@name"/>') comment must reference its config structure using the phrase '<sch:value-of select="$config_struct_phrase"/>' or mention '<sch:value-of select="$no_config_struct_phrase"/>'.
             </sch:assert>
         </sch:rule>
@@ -1600,6 +1652,47 @@
         <sch:rule context="extensions/extension/require/enum[starts-with(@extends, 'XrSpatial') and contains(@extends, 'SemanticLabel')]">
             <sch:assert test="false()">
                 Extending spatial entities semantic label enumerations ('<sch:value-of select="@extends"/>') is not allowed. Create a new enumeration and spatial component type instead.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Enumerant comment requirements">
+        <sch:rule context="enums[@type='enum' or @type='bitmask']">
+            <sch:let name="group" value="@name"/>
+            <sch:let name="members" value="enum | //require/enum[@extends = $group]"/>
+            <sch:let name="exempt" value="$members[@alias or (ends-with(@name, '_UNKNOWN') and (@value = '0' or not(@value or @offset or @bitpos)))]"/>
+            <sch:let name="documented" value="$members[@comment and normalize-space(@comment) != ''][not(@alias)]"/>
+            <sch:let name="undocumented" value="$members[not(@comment) or normalize-space(@comment) = ''] except $exempt"/>
+            <sch:assert id="enum.comment" test="not($documented) or not($undocumented)">
+                <sch:value-of select="$group"/> is partly documented, so genxr.py will omit its uncommented value(s) from the generated enum table. Add a comment attribute to: <sch:value-of select="string-join($undocumented/@name, ', ')"/>
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="XrResult code sign">
+        <sch:rule context="require/enum[@extends = 'XrResult' and @offset]">
+            <sch:let name="is_error_name" value="starts-with(@name, 'XR_ERROR_')"/>
+            <sch:let name="is_negative" value="@dir = '-'"/>
+
+            <sch:let name="is_exception" value="@name = 'XR_ERROR_FACIAL_EXPRESSION_PERMISSION_DENIED_ML'"/>
+
+            <sch:assert id="result.error_negative" test="not($is_error_name) or $is_negative or $is_exception">
+                <sch:value-of select="@name"/> is an XR_ERROR_ code but has no dir="-", so it is generated as a positive XrResult and XR_SUCCEEDED() reports the failure as a success. Add dir="-".
+            </sch:assert>
+
+            <sch:assert id="result.success_nonnegative" test="$is_error_name or not($is_negative)">
+                <sch:value-of select="@name"/> has dir="-", so it is generated as a negative XrResult and XR_FAILED() reports it as a failure, but it is not named XR_ERROR_. Drop dir="-" if it is a success code, or rename it XR_ERROR_... if it is not.
+            </sch:assert>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern name="Enumerant declaration uniqueness">
+        <!-- an enumerant name must be introduced exactly once in the whole registry -->
+        <sch:rule context="/registry">
+            <sch:let name="declarations" value="(//enums/enum | //feature/require/enum | //extensions/extension/require/enum)[@name][@value or @offset or @bitpos or @alias]"/>
+            <sch:let name="names" value="$declarations/@name"/>
+            <sch:assert id="enum.value" test="count($names) = count(distinct-values($names))">
+                Enumerant(s) declared more than once: <sch:value-of select="string-join(distinct-values(for $n in $names return if (count($names[. = $n]) &gt; 1) then string($n) else ()), ', ')"/>. Enumerant names share a single C namespace, so each must be declared exactly once.
             </sch:assert>
         </sch:rule>
     </sch:pattern>

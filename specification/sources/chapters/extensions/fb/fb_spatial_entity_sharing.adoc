@@ -8,7 +8,7 @@ include::{generated}/meta/XR_FB_spatial_entity_sharing.adoc[]
     John Schofield, Facebook +
     Andrew Kim, Facebook
 
-*Overview*
+==== Overview
 
 This extension enables spatial entities to be shared between users.
 If the ename:XR_SPACE_COMPONENT_TYPE_SHARABLE_FB component has been enabled
@@ -143,9 +143,7 @@ slink:XrEventDataSpaceShareCompleteFB is posted to the event queue.
 include::{generated}/validity/protos/xrShareSpacesFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-06-08 (John Schofield)
 ** Initial draft

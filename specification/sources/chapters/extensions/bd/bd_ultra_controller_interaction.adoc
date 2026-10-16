@@ -43,8 +43,7 @@ Supported component paths for pico_ultra_controller_bd:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -68,8 +67,6 @@ include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
 include::{generated}/interfaces/XR_BD_ultra_controller_interaction.adoc[leveloffset=1]
-
-==== Issues
 
 ==== Version History
 

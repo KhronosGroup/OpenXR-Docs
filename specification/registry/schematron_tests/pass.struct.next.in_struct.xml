@@ -32,4 +32,13 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <enum value="1"   name="XR_TYPE_RECT_2DI"/>
     </enums>
 
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type name="openxr_platform_defines"/>
+            <type name="XrStructureType"/>
+            <type name="XrRect2Di"/>
+            <type name="XrSwapchainSubImage"/>
+        </require>
+    </feature>
 </registry>

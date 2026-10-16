@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_spatial_entity.adoc[]
     Curtis Arink, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension enables applications to use spatial entities to specify
 world-locked frames of reference.
@@ -380,9 +380,7 @@ if the slink:XrSpace does not support the specified component type.
 include::{generated}/validity/protos/xrGetSpaceComponentStatusFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-01-22 (John Schofield)
 ** Initial draft

@@ -16,7 +16,7 @@ include::{generated}/meta/XR_KHR_composition_layer_cylinder.adoc[]
     Paul Pedriana, Oculus +
     Cass Everitt, Oculus
 
-*Overview*
+==== Overview
 
 This extension adds an additional layer type where the XR runtime must: map
 a texture stemming from a swapchain onto the inside of a cylinder section.
@@ -109,9 +109,7 @@ include::{generated}/validity/structs/XrCompositionLayerCylinderKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2017-05-19 (Paul Pedriana)
 ** Initial version.

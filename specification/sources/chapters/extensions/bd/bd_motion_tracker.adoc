@@ -1,0 +1,194 @@
+// Copyright (c) 2026 ByteDance
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_BD_motion_tracker.adoc[]
+
+*Last Modified Date*::
+    2026-08-26
+
+*IP Status*::
+    No known IP claims.
+
+*Contributors*::
+  Chuanqiang Zhang, ByteDance +
+  Shuai Liu, ByteDance +
+  Shanliang Xu, ByteDance +
+
+
+==== Overview
+
+This extension allows applications to retrieve the pose of the ByteDance
+motion tracker via flink:xrLocateSpace and acquire button state data of the
+tracker through flink:xrGetActionStateBoolean.
+
+==== The interaction profile for ByteDance motion tracker
+
+This extension defines a new interaction profile for the ByteDance motion
+tracker, which is a 6-degree-of-freedom (6DoF) tracker that supports primary
+button input functionality.
+
+ByteDance motion tracker interaction profile path:
+
+* pathname:/interaction_profiles/bytedance/motion_tracker_bd
+
+Valid for user paths:
+
+* /user/motion_tracker_bd/tracker1
+* /user/motion_tracker_bd/tracker2
+* /user/motion_tracker_bd/tracker3
+* /user/motion_tracker_bd/tracker4
+* /user/motion_tracker_bd/tracker5
+
+These paths are all independent.
+The presence or absence of a current interaction profile on one of them does
+not imply anything about the other paths.
+That is, tracker2 being in use does not mean there is a tracker1
+necessarily.
+
+Supported component paths for motion_tracker_bd:
+
+* subpathname:/input/primary/click Description: Represents the boolean state
+  of the motion tracker's primary button (pressed/released).
+* subpathname:/input/centroid_bd/pose Description: Represents the
+  6-degree-of-freedom (6DoF) pose of the motion tracker, with the origin
+  point at the centroid of the tracker.
+
+image::images/bd_motion_tracker.svg[align="center"]
+
+The local coordinate system axes are defined as follows, based on the
+diagram: The Z-axis is perpendicular to the circular flat surface, pointing
+toward the back side of the device.
+The Y-axis is perpendicular to the plane of the primary button surface,
+pointing away from the primary button.
+The X-axis is determined by the right-hand rule, remaining mutually
+perpendicular to the Y and Z axes.
+
+==== Example code
+
+[source,cpp]
+----
+XrInstance instance; // previously initialized
+XrSession session; // previously initialized
+XrSpace appSpace; // previously initialized
+XrActionSet actionSet; // previously initialized
+XrAction poseAction, primaryBtnAction;
+
+XrPath motionTracker1UserPath;
+xrStringToPath(instance, "/user/motion_tracker_bd/tracker1", &motionTracker1UserPath);
+
+std::vector<XrPath> motionTrackerSubactionPaths;
+motionTrackerSubactionPaths.push_back(motionTracker1UserPath);
+
+XrActionCreateInfo actionInfo{
+  .type = XR_TYPE_ACTION_CREATE_INFO,
+  .actionName = "motion_tracker_primary_button",
+  .actionType = XR_ACTION_TYPE_BOOLEAN_INPUT,
+  .countSubactionPaths = static_cast<uint32_t>(motionTrackerSubactionPaths.size()),
+  .subactionPaths = motionTrackerSubactionPaths.data(),
+  .localizedActionName = "Motion Tracker Primary Button",
+};
+CHK_XR(xrCreateAction(actionSet, &actionInfo, &primaryBtnAction));
+
+actionInfo.actionType = XR_ACTION_TYPE_POSE_INPUT;
+strcpy(actionInfo.actionName, "motion_tracker_pose");
+strcpy(actionInfo.localizedActionName, "Motion Tracker Pose");
+actionInfo.countSubactionPaths = (uint32_t)motionTrackerSubactionPaths.size();
+actionInfo.subactionPaths = motionTrackerSubactionPaths.data();
+CHK_XR(xrCreateAction(actionSet, &actionInfo, &poseAction));
+
+XrPath motionTrackerInteractionProfilePath {XR_NULL_PATH};
+xrStringToPath(instance, "/interaction_profiles/bytedance/motion_tracker_bd",
+               &motionTrackerInteractionProfilePath);
+
+std::vector<XrActionSuggestedBinding> bindings;
+
+XrPath motionTracker1PosePath, motionTracker1PrimaryBtnPath;
+CHK_XR(xrStringToPath(instance, "/user/motion_tracker_bd/tracker1/input/centroid_bd/pose",
+                           &motionTracker1PosePath));
+CHK_XR(xrStringToPath(instance, "/user/motion_tracker_bd/tracker1/input/primary/click",
+                           &motionTracker1PrimaryBtnPath));
+bindings.push_back({poseAction, motionTracker1PosePath});
+bindings.push_back({primaryBtnAction, motionTracker1PrimaryBtnPath});
+
+XrInteractionProfileSuggestedBinding suggestedBindings {
+  .type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING,
+  .interactionProfile = motionTrackerInteractionProfilePath,
+  .countSuggestedBindings = static_cast<uint32_t>(bindings.size()),
+  .suggestedBindings = bindings.data(),
+};
+CHK_XR(xrSuggestInteractionProfileBindings(instance, &suggestedBindings));
+
+XrActionSpaceCreateInfo actionSpaceInfo {
+  .type = XR_TYPE_ACTION_SPACE_CREATE_INFO,
+  .action = poseAction,
+  .subactionPath = motionTrackerSubactionPaths[0],
+  .poseInActionSpace = {
+    .orientation = {
+      .w = 1.f,
+    },
+  },
+};
+
+std::array<XrSpace, 1> actionSpace;
+CHK_XR(xrCreateActionSpace(session, &actionSpaceInfo, &actionSpace[0]));
+
+// Get Motion Tracker1 Primary Button Click State
+XrActionStateGetInfo getInfo {
+  .type = XR_TYPE_ACTION_STATE_GET_INFO,
+  .action = primaryBtnAction,
+  .subactionPath = motionTracker1UserPath,
+};
+XrActionStateBoolean primaryBtnState {
+  .type = XR_TYPE_ACTION_STATE_BOOLEAN,
+};
+CHK_XR(xrGetActionStateBoolean(session, &getInfo, &primaryBtnState));
+if (primaryBtnState.isActive) {
+    // do something with Motion Tracker1 primary button State
+}
+
+// Get Motion Tracker1 Pose State
+getInfo.subactionPath = motionTracker1UserPath;
+getInfo.action = poseAction;
+XrActionStatePose poseState{
+  .type = XR_TYPE_ACTION_STATE_POSE,
+};
+CHK_XR(xrGetActionStatePose(session, &getInfo, &poseState));
+if (poseState.isActive) {
+    // do something with Motion Tracker1 poseState
+}
+
+// Motion Tracker1 LocateSpace
+XrSpaceVelocity velocity {
+  .type = XR_TYPE_SPACE_VELOCITY,
+};
+XrSpaceLocation spaceLocation {
+  .type = XR_TYPE_SPACE_LOCATION,
+  .next = &velocity,
+};
+XrTime predictedTime;        // previously initialized
+CHK_XR(xrLocateSpace(actionSpace[0], appSpace,predictedTime, &spaceLocation));
+
+if (spaceLocation.locationFlags & (XR_SPACE_LOCATION_POSITION_VALID_BIT |
+                                 XR_SPACE_LOCATION_ORIENTATION_VALID_BIT)) {
+    XrPosef pose = spaceLocation.pose;
+    // do something with motion tracker1 pose
+
+    if (velocity.velocityFlags & XR_SPACE_VELOCITY_LINEAR_VALID_BIT) {
+        XrVector3f linearVelocity = velocity.linearVelocity;
+        // do something with motion tracker1 linear velocity
+    }
+    if (velocity.velocityFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT) {
+        XrVector3f angularVelocity = velocity.angularVelocity;
+        // do something with motion tracker1 angular velocity
+    }
+}
+
+----
+
+include::{generated}/interfaces/XR_BD_motion_tracker.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2026-01-12 (Chuanqiang Zhang)
+** Initial extension description

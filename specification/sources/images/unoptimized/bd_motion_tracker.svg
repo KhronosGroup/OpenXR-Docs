@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="900" viewBox="0 0 2400 900">
+  <defs>
+    <style>
+      .outline { fill: #fff; stroke: #111; stroke-width: 4; }
+      .flat-face { fill: #fff; stroke: #111; stroke-width: 4; }
+      .side-body { fill: #fff; stroke: #111; stroke-width: 4; }
+      .button { fill: #fff; stroke: #111; stroke-width: 4; }
+      .axis-x { stroke: #c23b3b; stroke-width: 3; fill: none; }
+      .axis-y { stroke: #2d8b57; stroke-width: 3; fill: none; }
+      .axis-z { stroke: #2f64ad; stroke-width: 3; fill: none; }
+      .label { font-family: Arial, Helvetica, sans-serif; font-size: 34px; fill: #111; }
+      .small-label { font-family: Arial, Helvetica, sans-serif; font-size: 22px; fill: #111; }
+      .axis-label-x { font-family: Arial, Helvetica, sans-serif; font-size: 38px; fill: #c23b3b; }
+      .axis-label-y { font-family: Arial, Helvetica, sans-serif; font-size: 38px; fill: #2d8b57; }
+      .axis-label-z { font-family: Arial, Helvetica, sans-serif; font-size: 38px; fill: #2f64ad; }
+      .centroid { fill: #111; stroke: #fff; stroke-width: 2; }
+      .dash { stroke-dasharray: 7 7; opacity: 0.55; }
+    </style>
+    <marker id="arrow-x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c23b3b"/>
+    </marker>
+    <marker id="arrow-y" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2d8b57"/>
+    </marker>
+    <marker id="arrow-z" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f64ad"/>
+    </marker>
+    <marker id="arrow-black" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111"/>
+    </marker>
+  </defs>
+
+  <rect width="2400" height="900" fill="#fff"/>
+
+  <!-- Front side -->
+  <g id="front-side">
+    <circle class="flat-face" cx="260" cy="390" r="210"/>
+    <rect class="button" x="210" y="163" width="120" height="22" rx="11"/>
+    <text class="small-label" x="180" y="145">primary button</text>
+
+    <circle class="centroid" cx="260" cy="390" r="5"/>
+    <line class="axis-x" x1="260" y1="390" x2="505" y2="390" marker-end="url(#arrow-x)"/>
+    <line class="axis-y" x1="260" y1="390" x2="260" y2="690" marker-end="url(#arrow-y)"/>
+    <line class="axis-z" x1="260" y1="390" x2="325" y2="322" marker-end="url(#arrow-z)"/>
+
+    <text class="axis-label-x" x="515" y="402">x:right</text>
+    <text class="axis-label-y" x="278" y="700">y:down</text>
+    <text class="axis-label-z" x="288" y="325">z:back</text>
+    <text class="label" x="196" y="413">PICO</text>
+    <text class="label" x="165" y="800">Front Side</text>
+  </g>
+
+  <!-- Transition hints -->
+  <g id="transition">
+    <line x1="700" y1="423" x2="825" y2="423" stroke="#111" stroke-width="3" marker-end="url(#arrow-black)"/>
+    <text class="small-label" x="720" y="487">Side View</text>
+  </g>
+
+  <!-- Side view inserted between front and back -->
+  <g id="side-view">
+    <path class="side-body" d="M 1000 305
+                              C 955 305 920 342 920 390
+                              C 920 438 955 475 1000 475
+                              L 1280 475
+                              C 1325 475 1360 438 1360 390
+                              C 1360 342 1325 305 1280 305
+                              Z"/>
+    <rect class="button" x="1360" y="348" width="24" height="84" rx="12"/>
+    <text class="small-label" x="1308" y="330">primary button</text>
+
+    <line class="dash axis-z" x1="1140" y1="305" x2="1140" y2="475"/>
+    <line class="dash axis-y" x1="920" y1="390" x2="1360" y2="390"/>
+    <circle class="centroid" cx="1140" cy="390" r="6"/>
+
+    <line class="axis-z" x1="1140" y1="390" x2="1140" y2="95" marker-end="url(#arrow-z)"/>
+    <line class="axis-y" x1="1140" y1="390" x2="820" y2="390" marker-end="url(#arrow-y)"/>
+
+    <line class="axis-x" x1="1140" y1="390" x2="1210" y2="320" marker-end="url(#arrow-x)"/>
+    <text class="axis-label-x" x="1222" y="318">x:right</text>
+
+    <text class="axis-label-z" x="1160" y="92">z:up</text>
+    <text class="axis-label-y" x="690" y="402">y:left</text>
+    <text class="small-label" x="1005" y="445">centroid / origin</text>
+    <text class="label" x="1070" y="800">Side View</text>
+  </g>
+
+  <g id="transition-2">
+    <line x1="1535" y1="423" x2="1620" y2="423" stroke="#111" stroke-width="3" marker-end="url(#arrow-black)"/>
+    <text class="small-label" x="1534" y="487">Vertical Flip</text>
+  </g>
+
+  <!-- Back side -->
+  <g id="back-side">
+    <circle class="flat-face" cx="1970" cy="390" r="210"/>
+    <rect class="button" x="1910" y="595" width="120" height="22" rx="11"/>
+    <text class="small-label" x="1880" y="662">primary button</text>
+
+    <circle class="centroid" cx="1970" cy="390" r="5"/>
+    <line class="axis-x" x1="1970" y1="390" x2="2215" y2="390" marker-end="url(#arrow-x)"/>
+    <line class="axis-y" x1="1970" y1="390" x2="1970" y2="80" marker-end="url(#arrow-y)"/>
+    <line class="axis-z" x1="1970" y1="390" x2="1928" y2="434" marker-end="url(#arrow-z)"/>
+
+    <text class="axis-label-x" x="2225" y="402">x:right</text>
+    <text class="axis-label-y" x="1988" y="76">y:up</text>
+    <text class="axis-label-z" x="1885" y="462">z:front</text>
+    <text class="label" x="1890" y="800">Back Side</text>
+  </g>
+</svg>

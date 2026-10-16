@@ -819,34 +819,39 @@ PFN_xrCreateMarkerSpaceML xrCreateMarkerSpaceML; // previously initialized
 
 
 // Initialize marker detector handle
-XrMarkerDetectorML markerDetector = XR_NULL_HANDLE;
-
-XrMarkerDetectorCreateInfoML createInfo{ XR_TYPE_MARKER_DETECTOR_CREATE_INFO_ML };
-createInfo.profile = XR_MARKER_DETECTOR_PROFILE_CUSTOM_ML;
-createInfo.markerType = XR_MARKER_TYPE_ARUCO_ML;
-
-// Passing a non-custom profile allows you to leave next == nullptr
-XrMarkerDetectorCustomProfileInfoML customProfile{ XR_TYPE_MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML };
-customProfile.fpsHint = XR_MARKER_DETECTOR_FPS_LOW_ML;
-customProfile.resolutionHint = XR_MARKER_DETECTOR_RESOLUTION_HIGH_ML;
-customProfile.cameraHint = XR_MARKER_DETECTOR_CAMERA_RGB_CAMERA_ML;
-customProfile.cornerRefineMethod = XR_MARKER_DETECTOR_CORNER_REFINE_METHOD_CONTOUR_ML;
-customProfile.useEdgeRefinement = true;
-customProfile.fullAnalysisIntervalHint = XR_MARKER_DETECTOR_FULL_ANALYSIS_INTERVAL_SLOW_ML;
-
-createInfo.next = &customProfile;
-
-// Elect to use ArUco marker tracking, providing required dictionary
-XrMarkerDetectorArucoInfoML arucoCreateInfo{ XR_TYPE_MARKER_DETECTOR_ARUCO_INFO_ML };
-arucoCreateInfo.arucoDict = XR_MARKER_ARUCO_DICT_6X6_100_ML;
-
-customProfile.next = &arucoCreateInfo;
+XrMarkerDetectorML markerDetector {XR_NULL_HANDLE};
 
 // Specify the size of the marker to improve tracking quality
-XrMarkerDetectorSizeInfoML sizeCreateInfo{ XR_TYPE_MARKER_DETECTOR_SIZE_INFO_ML };
-sizeCreateInfo.markerLength = 0.2f;
+XrMarkerDetectorSizeInfoML sizeCreateInfo {
+  .type = XR_TYPE_MARKER_DETECTOR_SIZE_INFO_ML,
+  .markerLength = 0.2f,
+};
 
-arucoCreateInfo.next = &sizeCreateInfo;
+// Elect to use ArUco marker tracking, providing required dictionary
+XrMarkerDetectorArucoInfoML arucoCreateInfo {
+  .type = XR_TYPE_MARKER_DETECTOR_ARUCO_INFO_ML,
+  .next = &sizeCreateInfo,
+  .arucoDict = XR_MARKER_ARUCO_DICT_6X6_100_ML,
+};
+
+// Passing a non-custom profile allows you to leave next == nullptr
+XrMarkerDetectorCustomProfileInfoML customProfile {
+  .type = XR_TYPE_MARKER_DETECTOR_CUSTOM_PROFILE_INFO_ML,
+  .next = &arucoCreateInfo,
+  .fpsHint = XR_MARKER_DETECTOR_FPS_LOW_ML,
+  .resolutionHint = XR_MARKER_DETECTOR_RESOLUTION_HIGH_ML,
+  .cameraHint = XR_MARKER_DETECTOR_CAMERA_RGB_CAMERA_ML,
+  .cornerRefineMethod = XR_MARKER_DETECTOR_CORNER_REFINE_METHOD_CONTOUR_ML,
+  .useEdgeRefinement = true,
+  .fullAnalysisIntervalHint = XR_MARKER_DETECTOR_FULL_ANALYSIS_INTERVAL_SLOW_ML,
+};
+
+XrMarkerDetectorCreateInfoML createInfo {
+  .type = XR_TYPE_MARKER_DETECTOR_CREATE_INFO_ML,
+  .next = &customProfile,
+  .profile = XR_MARKER_DETECTOR_PROFILE_CUSTOM_ML,
+  .markerType = XR_MARKER_TYPE_ARUCO_ML,
+};
 
 CHK_XR(xrCreateMarkerDetectorML(session, &createInfo, &markerDetector));
 
@@ -870,10 +875,12 @@ auto processMarkers = [&]() {
         {
             // New entry
             XrSpace space;
-            XrMarkerSpaceCreateInfoML spaceCreateInfo{ XR_TYPE_MARKER_SPACE_CREATE_INFO_ML };
-            spaceCreateInfo.markerDetector = markerDetector;
-            spaceCreateInfo.marker = markers[i];
-            spaceCreateInfo.poseInMarkerSpace = { {0, 0, 0, 1}, {0, 0, 0} };
+            XrMarkerSpaceCreateInfoML spaceCreateInfo {
+              .type = XR_TYPE_MARKER_SPACE_CREATE_INFO_ML,
+              .markerDetector = markerDetector,
+              .marker = markers[i],
+              .poseInMarkerSpace = { {0, 0, 0, 1}, {0, 0, 0} },
+            };
 
             CHK_XR(xrCreateMarkerSpaceML(session, &spaceCreateInfo, &space));
             markerSpaceMap[number] = space;
@@ -903,11 +910,15 @@ while (1) {
     // might still be in the midst of being processed by the runtime
     if (isReadyForSnapshot) {
       // Call the first snapshot
-      XrMarkerDetectorSnapshotInfoML detectorInfo{ XR_TYPE_MARKER_DETECTOR_SNAPSHOT_INFO_ML };
+      XrMarkerDetectorSnapshotInfoML detectorInfo {
+        .type = XR_TYPE_MARKER_DETECTOR_SNAPSHOT_INFO_ML,
+      };
       CHK_XR(xrSnapshotMarkerDetectorML(markerDetector, &detectorInfo));
       isReadyForSnapshot = false;
     } else {
-      XrMarkerDetectorStateML state{ XR_TYPE_MARKER_DETECTOR_STATE_ML };
+      XrMarkerDetectorStateML state {
+        .type = XR_TYPE_MARKER_DETECTOR_STATE_ML,
+      };
       CHK_XR(xrGetMarkerDetectorStateML(markerDetector, &state));
       // For simplicity, this example will assume that the marker detector will not
       // be in an erroneous state
@@ -972,7 +983,7 @@ include::{generated}/api/structs/XrSystemMarkerUnderstandingPropertiesML.adoc[]
 include::{generated}/validity/structs/XrSystemMarkerUnderstandingPropertiesML.adoc[]
 --
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-05-18 (Robbie Bridgewater)
 

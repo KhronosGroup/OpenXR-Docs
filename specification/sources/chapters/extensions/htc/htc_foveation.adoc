@@ -13,7 +13,7 @@ include::{generated}/meta/XR_HTC_foveation.adoc[]
     Billy Chang, HTC +
     Bill Chang, HTC
 
-*Overview*
+==== Overview
 
 This extension enables an application to gain rendering performance
 improvement by reducing the pixel density of areas in the peripheral vision.
@@ -259,9 +259,7 @@ slink:XrFoveationCustomModeInfoHTC
 
 flink:xrApplyFoveationHTC
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-09-14 (Billy Chang)
 ** Initial extension description

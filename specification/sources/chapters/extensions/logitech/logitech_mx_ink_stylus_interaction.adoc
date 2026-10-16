@@ -16,7 +16,7 @@ include::{generated}/meta/XR_LOGITECH_mx_ink_stylus_interaction.adoc[]
     Aidan Kehoe, Logitech +
     Fabien Zellweger, Logitech +
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the Logitech MX Ink, a
 6-DOF tracked stylus.
@@ -47,8 +47,7 @@ device.
 
 Supported component paths:
 
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 ** subpathname:/input/grip/pose
 ** subpathname:/input/aim/pose
 ** subpathname:/input/cluster_front_logitech/click

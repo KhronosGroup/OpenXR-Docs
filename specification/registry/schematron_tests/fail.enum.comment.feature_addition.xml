@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <enums name="XrTestEnum" type="enum">
+        <enum value="1"   name="XR_TEST_ENUM_DOCUMENTED" comment="A documented value."/>
+    </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require>
+            <enum value="2" extends="XrTestEnum" name="XR_TEST_ENUM_CORE_ADDED"/>
+        </require>
+    </feature>
+
+</registry>

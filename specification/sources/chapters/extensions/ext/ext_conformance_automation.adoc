@@ -13,7 +13,7 @@ include::{generated}/meta/XR_EXT_conformance_automation.adoc[]
     Rylie Pavlik, Collabora +
 
 
-*Overview*
+==== Overview
 
 The +XR_EXT_conformance_automation+ allows conformance test and runtime
 developers to provide hints to the underlying runtime as to what input the
@@ -217,11 +217,7 @@ include::{generated}/validity/protos/xrSetInputDeviceLocationEXT.adoc[]
 
 *New Function Pointers*
 
-*Issues*
-
-None
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-10-01 (Lachlan Ford)
 ** Initial draft

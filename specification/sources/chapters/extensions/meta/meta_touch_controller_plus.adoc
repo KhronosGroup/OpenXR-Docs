@@ -14,7 +14,7 @@ include::{generated}/meta/XR_META_touch_controller_plus.adoc[]
     Aanchal Dalmia, Meta Platforms +
     Adam Bengis, Meta Platforms +
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the Meta Quest Touch
 Plus Controller.
@@ -23,8 +23,11 @@ Meta Quest Touch Plus Controller interaction profile path:
 
 * pathname:/interaction_profiles/meta/touch_controller_plus
 
-// NOTE: This path does not meet the latest style guide requirements,
-// as the interaction profile path is not suffixed by the vendor tag.
+// This extension does not meet the current style guide requirements:
+// the path name is required to be vendor-suffixed in new extensions.
+:legacy-path: /interaction_profiles/meta/touch_controller_plus
+:properly-suffixed-path: /interaction_profiles/meta/touch_controller_plus_meta
+include::{config}/interaction_profile_missing_suffix_warning.adoc[]
 
 Valid for user paths:
 
@@ -49,8 +52,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 
 * On both:
 ** subpathname:/input/squeeze/value
@@ -103,7 +105,7 @@ include::{config}/ext_hand_interaction_notice.adoc[]
   pressure applied.
 ****
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-04-10 (Adam Bengis)
 ** Initial extension proposal

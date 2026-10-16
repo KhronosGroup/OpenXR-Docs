@@ -28,5 +28,9 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require comment="Bitmask">
             <type name="XrSwapchainCreateFeatureFlags"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XrFlags64"/>
+            <type name="XrSwapchainCreateFeatureFlagBits"/>
+        </require>
     </feature>
 </registry>

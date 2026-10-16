@@ -39,6 +39,43 @@ dangerous permission.
 (protection level: dangerous)
 ====
 
+==== Compatibility with apiext:XR_EXT_spatial_object_tracking
+
+If an application enables both apiext:XR_EXT_spatial_object_tracking and
+apiext:XR_ANDROID_spatial_object_tracking extensions, the runtime must:
+enumerate ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID for
+ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT, if it also supports the
+same for ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID.
+However, if the application enables
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID when
+configuring ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT, the runtime
+must: use ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID
+component only for discovering entities that have the
+ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_LAPTOP_BASE_ANDROID label.
+The other labels that are part of
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID must: be
+reported via their equivalents defined in
+apiext:XR_EXT_spatial_object_tracking -
+
+[width="100%",options="header"]
+|====
+| ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID label | Equivalent in apiext:XR_EXT_spatial_object_tracking
+| ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_KEYBOARD_ANDROID             | ename:XR_SPATIAL_KEYBOARD_SEMANTIC_LABEL_KEYBOARD_EXT in the label set for ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT
+| ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_MOUSE_ANDROID                | ename:XR_SPATIAL_MOUSE_SEMANTIC_LABEL_MOUSE_EXT in the label set for ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT
+|====
+
+Treating ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_ANDROID as a
+component that provides just a single label
+(ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_LAPTOP_BASE_ANDROID) also helps
+replace
+slink:XrSpatialCapabilityConfigurationObjectTrackingANDROID::pname:activeSemanticLabels
+when the application uses ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT
+instead of ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_ANDROID.
+The active semantic labels are determined simply based on the components
+enabled in
+slink:XrSpatialCapabilityConfigurationObjectTrackingEXT::pname:enabledComponents.
+
 ==== Runtime Support
 
 If the runtime supports object tracking, it must: indicate this by
@@ -418,8 +455,6 @@ while (1) {
 ----
 
 include::{generated}/interfaces/XR_ANDROID_spatial_object_tracking.adoc[leveloffset=1]
-
-==== Issues
 
 ==== Version History
 

@@ -94,6 +94,13 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require comment="Instance">
             <command name="xrGetInstanceProcAddr"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XrInstance"/>
+            <type name="XrSession"/>
+            <type name="XrResult"/>
+            <type name="XrStructureType"/>
+            <type name="PFN_xrVoidFunction"/>
+        </require>
     </feature>
     <extensions>
     <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr" ratified="openxr">

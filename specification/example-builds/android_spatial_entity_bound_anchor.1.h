@@ -3,7 +3,6 @@
 **
 ** SPDX-License-Identifier: Apache-2.0
 */
-#include <algorithm>
 
 XrSpatialContextEXT spatialContext; // Will be created with capabilities
 XrSpace localSpace;   // previously initialized, e.g. from

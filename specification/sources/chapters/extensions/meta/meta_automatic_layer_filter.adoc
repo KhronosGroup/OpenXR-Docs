@@ -8,7 +8,7 @@ include::{generated}/meta/XR_META_automatic_layer_filter.adoc[]
     Rohit Rao Padebettu, Meta +
     Grant Yang, Meta +
 
-*Overview*
+==== Overview
 
 This extension defines a new flag in
 elink:XrCompositionLayerSettingsFlagBitsFB that allows applications to
@@ -41,7 +41,7 @@ flink:xrEndFrame when an slink:XrCompositionLayerSettingsFB structure is
 submitted with one or more of the layers if no other flag bits are supplied
 with ename:XR_COMPOSITION_LAYER_SETTINGS_AUTO_LAYER_FILTER_BIT_META.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-04-21 (Rohit Rao Padebettu)
 ** Initial extension description

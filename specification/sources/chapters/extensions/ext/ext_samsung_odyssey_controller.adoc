@@ -16,7 +16,7 @@ include::{generated}/meta/XR_EXT_samsung_odyssey_controller.adoc[]
     Yin Li, Microsoft +
     Philippe Harscoet, Samsung Electronics +
 
-*Overview*
+==== Overview
 
 This extension enables the application to differentiate the newer form
 factor of motion controller released with the Samsung Odyssey headset.
@@ -34,7 +34,7 @@ pathname:/interaction_profiles/microsoft/motion_controller>> in terms of
 valid user paths and supported input and output component paths.
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/samsung/odyssey_controller
 :properly-suffixed-path: /interaction_profiles/samsung/odyssey_controller_samsung
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -62,7 +62,7 @@ include::{config}/grip_surface_notice.adoc[]
 include::{config}/ext_palm_pose_notice.adoc[]
 include::{config}/ext_hand_interaction_notice.adoc[]
 
-*Version History*
+==== Version History
 
 * Revision 1, 2020-06-08 (Yin Li)
 ** Initial extension proposal

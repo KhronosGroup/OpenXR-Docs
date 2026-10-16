@@ -4,7 +4,7 @@
 
 include::{generated}/meta/XR_MSFT_unbounded_reference_space.adoc[]
 
-*Overview*
+==== Overview
 
 This extension allows an application to create an `UNBOUNDED_MSFT` reference
 space.
@@ -94,9 +94,7 @@ elink:XrReferenceSpaceType enumeration is extended with:
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-07-30 (Alex Turner)
 ** Initial extension description

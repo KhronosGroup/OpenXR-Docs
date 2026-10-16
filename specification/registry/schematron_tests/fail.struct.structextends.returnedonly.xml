@@ -7,11 +7,28 @@ Copyright (c) 2017-2026 The Khronos Group Inc.
 SPDX-License-Identifier: Apache-2.0 OR MIT
     </comment>
 
-    <types>
+    <enums name="XrResult" type="enum" comment="Error and return codes">
+        <enum value="0"    name="XR_SUCCESS"                  comment="Function successfully completed."/>
+        <enum value="-1"   name="XR_ERROR_VALIDATION_FAILURE" comment="The function usage was invalid in some way."/>
+    </enums>
 
+    <types>
         <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
         <type requires="openxr_platform_defines" name="void"/>
 
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <type name="XrResult" category="enum"/>
         <type name="XrStructureType" category="enum"/>
 
         <type category="struct" name="XrFirstStruct">
@@ -19,16 +36,16 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <member>const <type>void</type>* <name>next</name></member>
         </type>
 
+        <!-- XrSecondStruct is marked returnedonly="true", while XrExtendStruct is not -->
         <type category="struct" name="XrSecondStruct" returnedonly="true">
             <member values="XR_TYPE_SECOND_STRUCT"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>* <name>next</name></member>
-        </type>
-
-        <type category="struct" name="XrExtendStruct" structextends="XrFirstStruct,XrSecondStruct,XrThirdStruct">
-            <member values="XR_TYPE_EXTEND_STRUCT"><type>XrStructureType</type> <name>type</name></member>
             <member><type>void</type>* <name>next</name></member>
         </type>
 
+        <type category="struct" name="XrExtendStruct" structextends="XrFirstStruct,XrSecondStruct">
+            <member values="XR_TYPE_EXTEND_STRUCT"><type>XrStructureType</type> <name>type</name></member>
+            <member><type>void</type>* <name>next</name></member>
+        </type>
     </types>
 
     <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
@@ -38,4 +55,27 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <enum value="3"   name="XR_TYPE_EXTEND_STRUCT"/>
     </enums>
 
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrTestCmd</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrFirstStruct</type>* <name>first</name></param>
+            <param><type>XrSecondStruct</type>* <name>second</name></param>
+            <param><type>XrExtendStruct</type>* <name>extend</name></param>
+        </command>
+    </commands>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type    name="openxr_platform_defines"/>
+            <type    name="XrResult"/>
+            <type    name="XrStructureType"/>
+            <type    name="XR_DEFINE_HANDLE"/>
+            <type    name="XrInstance"/>
+            <type    name="XrFirstStruct"/>
+            <type    name="XrSecondStruct"/>
+            <type    name="XrExtendStruct"/>
+            <command name="xrTestCmd"/>
+        </require>
+    </feature>
 </registry>

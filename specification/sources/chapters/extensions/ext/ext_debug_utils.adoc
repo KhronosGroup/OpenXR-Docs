@@ -14,7 +14,7 @@ include::{generated}/meta/XR_EXT_debug_utils.adoc[]
     Karl Schultz, LunarG +
     Rylie Pavlik, Collabora +
 
-*Overview*
+==== Overview
 
 Due to the nature of the OpenXR interface, there is very little error
 information available to the developer and application.
@@ -420,6 +420,15 @@ slink:XrDebugUtilsMessengerEXT objects are created.
 A callback will always be executed in the same thread as the originating
 OpenXR call.
 
+To capture events that occur while creating or destroying an instance an
+application can: link an slink:XrDebugUtilsMessengerCreateInfoEXT structure
+to the next element of the slink:XrInstanceCreateInfo structure given to
+flink:xrCreateInstance.
+This callback is only valid for the duration of the flink:xrCreateInstance
+and the flink:xrDestroyInstance call.
+Use flink:xrCreateDebugUtilsMessengerEXT to create persistent callback
+objects.
+
 [NOTE]
 .Note
 ====
@@ -664,15 +673,6 @@ An application can: register callbacks even when no validation layers are
 enabled, but they will only be called for loader and, if implemented, driver
 events.
 
-To capture events that occur while creating or destroying an instance an
-application can: link an slink:XrDebugUtilsMessengerCreateInfoEXT structure
-to the next element of the slink:XrInstanceCreateInfo structure given to
-flink:xrCreateInstance.
-This callback is only valid for the duration of the flink:xrCreateInstance
-and the flink:xrDestroyInstance call.
-Use flink:xrCreateDebugUtilsMessengerEXT to create persistent callback
-objects.
-
 Example uses: Create three callback objects.
 One will log errors and warnings to the debug console using Windows
 code:OutputDebugString.
@@ -889,11 +889,7 @@ pname:sessionLabels array:
 You'll notice that "WaitFrame" is no longer available as soon as the next
 call to another function like flink:xrSessionBeginDebugUtilsLabelRegionEXT.
 
-*Issues*
-
-None
-
-*Version History*
+==== Version History
 
 * Revision 1, 2018-02-19 (Mark Young / Karl Schultz)
 ** Initial draft, based on +VK_EXT_debug_utils+.

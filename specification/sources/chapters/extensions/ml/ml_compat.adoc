@@ -10,7 +10,7 @@ include::{generated}/meta/XR_ML_compat.adoc[]
 *Contributors*::
     Ron Bessems, Magic Leap
 
-*Overview*
+==== Overview
 
 This extension provides functionality to facilitate transitioning from Magic
 Leap SDK to OpenXR SDK, most notably interoperability between Coordinate
@@ -82,9 +82,7 @@ slink:XrSpace handles are destroyed using flink:xrDestroySpace.
 include::{generated}/validity/protos/xrCreateSpaceFromCoordinateFrameUIDML.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-11-08 (Ron Bessems)
 

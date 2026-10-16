@@ -8,7 +8,7 @@ include::{generated}/meta/XR_FB_composition_layer_settings.adoc[]
     Grant Yang, Meta Platforms
 
 
-*Overview*
+==== Overview
 
 This extension allows applications to request the use of processing options
 such as sharpening or super-sampling on a composition layer.
@@ -82,9 +82,7 @@ include::{generated}/validity/structs/XrCompositionLayerSettingsFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-03-08 (Grant Yang)
 ** Initial draft

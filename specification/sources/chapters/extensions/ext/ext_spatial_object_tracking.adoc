@@ -1,0 +1,658 @@
+// Copyright (c) 2017-2026, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_object_tracking.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Ron Bessems, Meta +
+    Yin Li, Microsoft +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Jun Yan, ByteDance +
+    Andy Biar, Unity Technologies +
+    Rebecca Nordhauser, Unity Technologies
+
+==== Overview
+
+This extension builds on apiext:XR_EXT_spatial_entity and defines a spatial
+capability for tracking a set of predefined objects without requiring an
+input dataset from the application.
+
+==== Runtime Support
+
+If the runtime supports object tracking, it must: indicate this by
+enumerating ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT in
+flink:xrEnumerateSpatialCapabilitiesEXT.
+
+If the runtime enumerates apiext:XR_EXT_spatial_object_tracking in
+flink:xrEnumerateInstanceExtensionProperties, it must: also enumerate
+apiext:XR_EXT_spatial_entity_archetypes.
+However, the runtime must: not return any error from flink:xrCreateInstance
+if the application enables apiext:XR_EXT_spatial_object_tracking without
+enabling apiext:XR_EXT_spatial_entity_archetypes.
+
+==== Configuration
+
+[open,refpage='XrSpatialCapabilityConfigurationObjectTrackingEXT',type='structs',desc='Config struct for the object tracking capability',xrefs='XrSpatialCapabilityConfigurationBaseHeaderEXT XrSpatialContextCreateInfoEXT xrCreateSpatialContextAsyncEXT']
+--
+
+The slink:XrSpatialCapabilityConfigurationObjectTrackingEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialCapabilityConfigurationObjectTrackingEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:capability is an elink:XrSpatialCapabilityEXT and must: be
+  ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT.
+* pname:enabledComponentCount is a code:uint32_t describing the count of
+  elements in the pname:enabledComponents array.
+* pname:enabledComponents is a pointer to an array of
+  elink:XrSpatialComponentTypeEXT.
+****
+
+Applications can: enable the ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT
+spatial capability by adding a pointer to the
+slink:XrSpatialCapabilityConfigurationObjectTrackingEXT structure in
+slink:XrSpatialContextCreateInfoEXT::pname:capabilityConfigs.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE if
+pname:capability is not ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT.
+
+include::{generated}/validity/structs/XrSpatialCapabilityConfigurationObjectTrackingEXT.adoc[]
+--
+
+[[ext_spatial_object_tracking_guaranteed_components]]
+==== Guaranteed Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT,
+must: support the following spatial components as guaranteed components of
+the entities discovered by this capability and must: enumerate them in
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT:
+
+* ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT
+* At least one component type that provides a set of semantic label for the
+  tracked objects.
+  An object tracking capability is meaningless without a semantic label
+  component.
+  While this extension defines
+  ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT,
+  ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT, and
+  ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT as possible
+  semantic label components for runtimes to support, other extensions may:
+  define new component types to provide different classes of semantic labels
+  that describe a tracked object.
+  See <<ext_spatial_entity_semantic_labels_guidelines>> for details about
+  the semantic label sets and component types design.
+  Runtimes are not required to support either of
+  ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT,
+  ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT, or
+  ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT for the object
+  tracking capability but must: support at least one component type that
+  provides a semantic label.
+
+===== Bounded 3D Component
+
+The bounded 3D component provides the center and extents of the object
+represented by the entity it is on.
+See <<ext_spatial_entity_bounded3D_component>> for more details.
+
+==== Optional Components
+
+A runtime that supports ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT,
+may: support spatial components in addition to the ones listed in the
+<<ext_spatial_object_tracking_guaranteed_components>> section.
+The application can: use flink:xrEnumerateSpatialCapabilityComponentTypesEXT
+to get the full list of components that a runtime supports and can: then
+configure the ones it is interested in when creating the spatial context.
+
+[[ext_spatial_object_semanticlabel_component]]
+===== Object Semantic Label
+
+====== Component data
+
+[open,refpage='XrSpatialObjectSemanticLabelEXT',type='enums',desc='Object semantic label',xrefs='XrSpatialComponentObjectSemanticLabelListEXT']
+--
+include::{generated}/api/enums/XrSpatialObjectSemanticLabelEXT.adoc[]
+
+The elink:XrSpatialObjectSemanticLabelEXT enumeration describes a set of
+semantic labels for objects.
+
+For entities with the
+ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_DISPLAY_SCREEN_EXT label, the +Z axis
+of the <<ext_spatial_entity_bounded3D_component>> component must: roughly
+match the surface normal of the screen.
+
+For entities with the ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_WALL_ART_EXT
+label, the +Z axis of the <<ext_spatial_entity_bounded3D_component>>
+component must: match the surface normal of the wall the art is discovered
+on.
+
+For entities with the ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_TABLE_EXT
+label, the +Z axis of the <<ext_spatial_entity_bounded3D_component>>
+component must: match the surface normal of the table.
+
+For all the other labels in elink:XrSpatialObjectSemanticLabelEXT, the
+application must: not make any assumptions about how the
+slink:XrBoxf::pname:center::pname:orientation provided by the
+<<ext_spatial_entity_bounded3D_component>> component on the entity aligns
+with the physical attributes of that object.
+
+The enumeration values have the following meanings:
+
+include::{generated}/api/enums/XrSpatialObjectSemanticLabelEXT.comments.adoc[]
+--
+
+====== Component List Structure to Query Data
+
+[open,refpage='XrSpatialComponentObjectSemanticLabelListEXT',type='structs',desc='List struct for the object semantic label component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialObjectSemanticLabelEXT']
+--
+The slink:XrSpatialComponentObjectSemanticLabelListEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialComponentObjectSemanticLabelListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialObjectSemanticLabelEXT.
+****
+
+To query the object semantic label component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentObjectSemanticLabelListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentObjectSemanticLabelListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentObjectSemanticLabelListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT is enumerated
+in slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain
+but does offer an optional configuration for applications to provide.
+
+[open,refpage='XrSpatialFeatureObjectSemanticLabelSubsetEXT',type='structs',desc='Provide subset of elink:XrSpatialObjectSemanticLabelEXT for runtime to track.',xrefs='XrSpatialCapabilityFeatureEXT xrEnumerateSpatialCapabilityFeaturesEXT XrSpatialObjectSemanticLabelEXT XrSpatialCapabilityConfigurationObjectTrackingEXT']
+--
+
+The slink:XrSpatialFeatureObjectSemanticLabelSubsetEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialFeatureObjectSemanticLabelSubsetEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialObjectSemanticLabelEXT.
+****
+
+If the runtime enumerates
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT from
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT for a given capability,
+it must: also enumerate
+ename:XR_SPATIAL_CAPABILITY_FEATURE_OBJECT_SEMANTIC_LABEL_SUBSET_EXT from
+flink:xrEnumerateSpatialCapabilityFeaturesEXT for the same capability.
+If an application enables
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT when configuring
+that capability, it can: optionally chain
+slink:XrSpatialFeatureObjectSemanticLabelSubsetEXT to the corresponding
+configuration structure of that capability to provide the runtime with a
+subset of labels defined in elink:XrSpatialObjectSemanticLabelEXT.
+The runtime may: use this subset of labels to optimize its tracking
+pipelines.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateSpatialContextAsyncEXT if pname:semanticLabels contains any
+label that is not defined in elink:XrSpatialObjectSemanticLabelEXT or if
+pname:semanticLabels contains
+ename:XR_SPATIAL_OBJECT_SEMANTIC_LABEL_UNCATEGORIZED_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT
+from flink:xrCreateSpatialContextAsyncEXT if the application provides a
+valid list of labels in pname:semanticLabels but
+ename:XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT is not included in
+the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+array of the configuration structure that
+slink:XrSpatialFeatureObjectSemanticLabelSubsetEXT is chained to.
+
+If the application configures a capability with a valid
+slink:XrSpatialFeatureObjectSemanticLabelSubsetEXT, the runtime must: not
+include entities that have semantic labels which are not listed in
+pname:semanticLabels in any discovery snapshot created for the configured
+spatial context.
+
+include::{generated}/validity/structs/XrSpatialFeatureObjectSemanticLabelSubsetEXT.adoc[]
+--
+
+[[ext_spatial_keyboard_semanticlabel_component]]
+===== Keyboard Semantic Label
+
+====== Component data
+
+[open,refpage='XrSpatialKeyboardSemanticLabelEXT',type='enums',desc='Keyboard semantic label',xrefs='XrSpatialComponentKeyboardSemanticLabelListEXT']
+--
+include::{generated}/api/enums/XrSpatialKeyboardSemanticLabelEXT.adoc[]
+
+The elink:XrSpatialKeyboardSemanticLabelEXT enumeration describes a semantic
+label for a keyboard.
+
+The extents and orientation of
+ename:XR_SPATIAL_KEYBOARD_SEMANTIC_LABEL_KEYBOARD_EXT represented by the
+<<ext_spatial_entity_bounded3D_component>> component on the same entity is
+shown in the <<fig-spatial_object_tracking-keyboard-orientation, following
+image>> (with xyz = rgb) originating at the center of the object.
+
+[[fig-spatial_object_tracking-keyboard-orientation]]
+image::images/ext_spatial_object_tracking-keyboard-orientation.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Keyboard orientation."]
+
+include::{generated}/api/enums/XrSpatialKeyboardSemanticLabelEXT.comments.adoc[]
+--
+
+====== Component List Struct to Query Data
+
+[open,refpage='XrSpatialComponentKeyboardSemanticLabelListEXT',type='structs',desc='List struct for the keyboard semantic label component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentKeyboardSemanticLabelListEXT structure is
+defined as:
+
+include::{generated}/api/structs/XrSpatialComponentKeyboardSemanticLabelListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of
+  elink:XrSpatialKeyboardSemanticLabelEXT.
+****
+
+To query the keyboard semantic label component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentKeyboardSemanticLabelListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentKeyboardSemanticLabelListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT is not included
+in slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentKeyboardSemanticLabelListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT is enumerated
+in slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+[[ext_spatial_mouse_semanticlabel_component]]
+===== Mouse Semantic Label
+
+====== Component data
+
+[open,refpage='XrSpatialMouseSemanticLabelEXT',type='enums',desc='Mouse semantic label',xrefs='XrSpatialComponentMouseSemanticLabelListEXT']
+--
+include::{generated}/api/enums/XrSpatialMouseSemanticLabelEXT.adoc[]
+
+The elink:XrSpatialMouseSemanticLabelEXT enumeration describes a semantic
+label for a mouse.
+
+include::{generated}/api/enums/XrSpatialMouseSemanticLabelEXT.comments.adoc[]
+--
+
+====== Component List Struct to Query Data
+
+[open,refpage='XrSpatialComponentMouseSemanticLabelListEXT',type='structs',desc='List struct for the mouse semantic label component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT']
+--
+The slink:XrSpatialComponentMouseSemanticLabelListEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialComponentMouseSemanticLabelListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialMouseSemanticLabelEXT.
+****
+
+To query the mouse semantic label component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentMouseSemanticLabelListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentMouseSemanticLabelListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and
+slink:XrSpatialComponentDataQueryConditionEXT::componentTypeCount is not
+zero.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentMouseSemanticLabelListEXT.adoc[]
+--
+
+====== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_MOUSE_SEMANTIC_LABEL_EXT is enumerated in
+slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain.
+
+==== Example code
+
+===== Configure Object Tracking Capability
+
+The following example code demonstrates how to configure object tracking
+capability when creating a spatial context.
+
+[source,cpp]
+----
+// Check if object tracking capability is supported
+uint32_t capabilityCount = 0;
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, 0, &capabilityCount, nullptr));
+std::vector<XrSpatialCapabilityEXT> capabilities(capabilityCount);
+CHK_XR(xrEnumerateSpatialCapabilitiesEXT(instance, systemId, capabilityCount, &capabilityCount, capabilities.data()));
+
+if (std::find(capabilities.begin(), capabilities.end(), XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT) == capabilities.end()) {
+  return;
+}
+
+// Enumerate supported components for object tracking capability
+XrSpatialCapabilityComponentTypesEXT objectComponents {
+  .type = XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
+};
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT, &objectComponents));
+std::vector<XrSpatialComponentTypeEXT> objectCapabilityComponents(objectComponents.componentTypeCountOutput);
+objectComponents.componentTypeCapacityInput = objectCapabilityComponents.size();
+objectComponents.componentTypes = objectCapabilityComponents.data();
+CHK_XR(xrEnumerateSpatialCapabilityComponentTypesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT, &objectComponents));
+
+// Check if the object & keyboard semantic labels component is supported
+const auto supportsComponent = [&objectCapabilityComponents](XrSpatialComponentTypeEXT component) {
+  return std::find(objectCapabilityComponents.begin(), objectCapabilityComponents.end(), component) != objectCapabilityComponents.end();
+};
+
+const bool supportsObjectSemanticLabel = supportsComponent(XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT);
+const bool supportsKeyboardSemanticLabel = supportsComponent(XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT);
+
+// Enumerate supported features for object tracking capability
+uint32_t featureCount;
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT, 0, &featureCount, nullptr));
+std::vector<XrSpatialCapabilityFeatureEXT> features(featureCount);
+CHK_XR(xrEnumerateSpatialCapabilityFeaturesEXT(instance, systemId, XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT, featureCount, &featureCount, features.data()));
+
+const bool supportsObjectSemanticLabelSubsetFeature = std::find(features.begin(), features.end(), XR_SPATIAL_CAPABILITY_FEATURE_OBJECT_SEMANTIC_LABEL_SUBSET_EXT) != features.end();
+
+// Create a spatial context
+XrSpatialContextEXT spatialContext{};
+
+// Enable the guaranteed components of the object tracking capability
+std::vector<XrSpatialComponentTypeEXT> enabledComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT,
+};
+// Optionally enable the supported semantic labels
+if (supportsObjectSemanticLabel) {
+  enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_OBJECT_SEMANTIC_LABEL_EXT);
+}
+if (supportsKeyboardSemanticLabel) {
+  enabledComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT);
+}
+
+// We only want to track sofa and table.
+std::vector<XrSpatialObjectSemanticLabelEXT> objectSemanticLabelSubset = {
+  XR_SPATIAL_OBJECT_SEMANTIC_LABEL_SOFA_EXT,
+  XR_SPATIAL_OBJECT_SEMANTIC_LABEL_TABLE_EXT
+};
+XrSpatialFeatureObjectSemanticLabelSubsetEXT subsetFeature {
+  .type = XR_TYPE_SPATIAL_FEATURE_OBJECT_SEMANTIC_LABEL_SUBSET_EXT,
+  .semanticLabelCount = static_cast<uint32_t>(objectSemanticLabelSubset.size()),
+  .semanticLabels = objectSemanticLabelSubset.data(),
+};
+
+XrSpatialCapabilityConfigurationObjectTrackingEXT objectTrackingConfig {
+  .type = XR_TYPE_SPATIAL_CAPABILITY_CONFIGURATION_OBJECT_TRACKING_EXT,
+  .next = supportsObjectSemanticLabelSubsetFeature ? &subsetFeature : nullptr,
+  .capability = XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT,
+  .enabledComponentCount = static_cast<uint32_t>(enabledComponents.size()),
+  .enabledComponents = enabledComponents.data(),
+};
+
+std::array<XrSpatialCapabilityConfigurationBaseHeaderEXT*, 1> capabilityConfigs = {
+  reinterpret_cast<XrSpatialCapabilityConfigurationBaseHeaderEXT*>(&objectTrackingConfig),
+};
+
+XrSpatialContextCreateInfoEXT spatialContextCreateInfo {
+  .type = XR_TYPE_SPATIAL_CONTEXT_CREATE_INFO_EXT,
+  .capabilityConfigCount = static_cast<uint32_t>(capabilityConfigs.size()),
+  .capabilityConfigs = capabilityConfigs.data(),
+};
+XrFutureEXT createContextFuture {XR_NULL_FUTURE_EXT};
+CHK_XR(xrCreateSpatialContextAsyncEXT(session, &spatialContextCreateInfo, &createContextFuture));
+
+waitUntilReady(createContextFuture);
+
+XrCreateSpatialContextCompletionEXT completion {
+  .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+};
+CHK_XR(xrCreateSpatialContextCompleteEXT(session, createContextFuture, &completion));
+if (completion.futureResult != XR_SUCCESS) {
+  return;
+}
+
+spatialContext = completion.spatialContext;
+
+// ...
+// Discover entities with the spatial context
+// ...
+
+CHK_XR(xrDestroySpatialContextEXT(spatialContext));
+----
+
+===== Discover Spatial Entities & Query Component Data
+
+The following example code demonstrates how to discover spatial entities for
+a context configured with ename:XR_SPATIAL_CAPABILITY_OBJECT_TRACKING_EXT
+and query its component data.
+
+[source,cpp]
+----
+XrFutureEXT future {XR_NULL_FUTURE_EXT};
+
+// We want to look for entities that have the following components.
+std::vector<XrSpatialComponentTypeEXT> snapshotComponents = {
+  XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT,
+};
+if (supportsKeyboardSemanticLabel) {
+  snapshotComponents.push_back(XR_SPATIAL_COMPONENT_TYPE_KEYBOARD_SEMANTIC_LABEL_EXT);
+}
+
+auto discoverSpatialEntities = [&](XrSpatialContextEXT spatialContext, XrTime time) {
+  XrSpatialDiscoverySnapshotCreateInfoEXT snapshotCreateInfo {
+    .type = XR_TYPE_SPATIAL_DISCOVERY_SNAPSHOT_CREATE_INFO_EXT,
+    .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+    .componentTypes = snapshotComponents.data(),
+  };
+  CHK_XR(xrCreateSpatialDiscoverySnapshotAsyncEXT(spatialContext, &snapshotCreateInfo, &future));
+
+  waitUntilReady(future);
+
+  XrCreateSpatialDiscoverySnapshotCompletionInfoEXT completionInfo {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .baseSpace = localSpace,
+    .time = time,
+    .future = future,
+  };
+
+  XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
+    .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+  };
+  CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(spatialContext, &completionInfo, &completion));
+  if (completion.futureResult == XR_SUCCESS) {
+
+    // Query for the semantic label component data
+    XrSpatialComponentDataQueryConditionEXT queryCond {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_CONDITION_EXT,
+      .componentTypeCount = static_cast<uint32_t>(snapshotComponents.size()),
+      .componentTypes = snapshotComponents.data(),
+    };
+
+    XrSpatialComponentDataQueryResultEXT queryResult {
+      .type = XR_TYPE_SPATIAL_COMPONENT_DATA_QUERY_RESULT_EXT,
+    };
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    std::vector<XrSpatialEntityIdEXT> entityIds(queryResult.entityIdCountOutput);
+    std::vector<XrSpatialEntityTrackingStateEXT> entityStates(queryResult.entityIdCountOutput);
+    queryResult.entityIdCapacityInput = entityIds.size();
+    queryResult.entityIds = entityIds.data();
+    queryResult.entityStateCapacityInput = entityStates.size();
+    queryResult.entityStates = entityStates.data();
+
+    std::vector<XrBoxf> bounded3D(queryResult.entityIdCountOutput);
+    XrSpatialComponentBounded3DListEXT bounded3DList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_BOUNDED_3D_LIST_EXT,
+      .boundCount = static_cast<uint32_t>(bounded3D.size()),
+      .bounds = bounded3D.data(),
+    };
+    queryResult.next = &bounded3DList;
+
+    std::vector<XrSpatialKeyboardSemanticLabelEXT> semanticLabels;
+    XrSpatialComponentKeyboardSemanticLabelListEXT semanticLabelsList {
+      .type = XR_TYPE_SPATIAL_COMPONENT_KEYBOARD_SEMANTIC_LABEL_LIST_EXT,
+    };
+    if (supportsKeyboardSemanticLabel) {
+      semanticLabels.resize(queryResult.entityIdCountOutput);
+      semanticLabelsList.semanticLabelCount = semanticLabels.size();
+      semanticLabelsList.semanticLabels = semanticLabels.data();
+      semanticLabelsList.next = queryResult.next;
+      queryResult.next = &semanticLabelsList;
+    }
+
+    CHK_XR(xrQuerySpatialComponentDataEXT(completion.snapshot, &queryCond, &queryResult));
+
+    for (int32_t i = 0; i < queryResult.entityIdCountOutput; ++i) {
+      if (entityStates[i] != XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT) {
+        continue;
+      }
+
+      // 3D bounds for entity entityIds[i] is bounded3D[i].extents centered on bounded3D[i].center.
+
+      if (supportsKeyboardSemanticLabel) {
+        // semantic label for entity entityIds[i] is semanticLabels[i].
+      }
+    }
+
+    CHK_XR(xrDestroySpatialSnapshotEXT(completion.snapshot));
+  }
+};
+
+while (1) {
+  // ...
+  // For every frame in frame loop
+  // ...
+
+  XrFrameState frameState;  // previously returned from xrWaitFrame
+  const XrTime time = frameState.predictedDisplayTime;
+
+  // Poll for the XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT event
+  XrEventDataBuffer event {
+    .type = XR_TYPE_EVENT_DATA_BUFFER,
+  };
+  XrResult result = xrPollEvent(instance, &event);
+  if (result == XR_SUCCESS) {
+      switch (event.type) {
+          case XR_TYPE_EVENT_DATA_SPATIAL_DISCOVERY_RECOMMENDED_EXT: {
+              const XrEventDataSpatialDiscoveryRecommendedEXT& eventdata =
+                  *reinterpret_cast<XrEventDataSpatialDiscoveryRecommendedEXT*>(&event);
+              // Discover spatial entities for the context that we received the "discovery
+              // recommended" event for.
+              discoverSpatialEntities(eventdata.spatialContext, time);
+              break;
+          }
+      }
+  }
+
+  // ...
+  // Finish frame loop
+  // ...
+}
+----
+
+include::{generated}/interfaces/XR_EXT_spatial_object_tracking.adoc[leveloffset=1]
+
+==== Version History
+
+* Revision 1, 2025-06-03 (Nihav Jain, Google)
+** Initial extension description

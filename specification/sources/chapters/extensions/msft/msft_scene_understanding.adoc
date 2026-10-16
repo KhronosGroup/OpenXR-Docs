@@ -16,7 +16,7 @@ include::{generated}/meta/XR_MSFT_scene_understanding.adoc[]
     Simon Stachniak, Microsoft +
     David Fields, Microsoft +
 
-*Overview*
+==== Overview
 
 Scene understanding provides applications with a structured, high-level
 representation of the planes, meshes, and objects in the user's environment,
@@ -1595,9 +1595,7 @@ elink:XrResult enumeration is extended with:
 * flink:xrLocateSceneComponentsMSFT
 * flink:xrGetSceneMeshBuffersMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-05-03 (Darryl Gough)
 ** Initial extension description

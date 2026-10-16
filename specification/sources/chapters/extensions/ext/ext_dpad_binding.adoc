@@ -17,7 +17,7 @@ include::{generated}/meta/XR_EXT_dpad_binding.adoc[]
     Rylie Pavlik, Collabora +
     Jules Blok, Epic Games +
 
-*Overview*
+==== Overview
 
 This extension allows the application to bind one or more digital actions to
 a trackpad or thumbstick as though it were a dpad by defining additional
@@ -318,7 +318,7 @@ include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.adoc[]
 
 *New Functions*
 
-*Issues*
+==== Issues
 
 * What if an interaction profile is added that contains a _trackpad_
   identifier, for which there is neither a subpathname:/click or a
@@ -340,70 +340,72 @@ include::{generated}/validity/structs/XrInteractionProfileDpadBindingEXT.adoc[]
 The following sample code shows how to create dpad bindings using this
 extension.
 
-[source,cpp,suppress-build]
+[source,cpp]
 ----
-	// Create dpad paths
-	XrPath pathThumbstick, pathDpadUp, pathDpadDown;
-	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick", &pathThumbstick);
-	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick/dpad_up", &pathDpadUp );
-	xrStringToPath( pInstance, "/user/hand/left/input/thumbstick/dpad_down", &pathDpadDown );
+  // Create dpad paths
+  XrPath pathThumbstick, pathDpadUp, pathDpadDown;
+  xrStringToPath(instance, "/user/hand/left/input/thumbstick", &pathThumbstick);
+  xrStringToPath(instance, "/user/hand/left/input/thumbstick/dpad_up", &pathDpadUp);
+  xrStringToPath(instance, "/user/hand/left/input/thumbstick/dpad_down", &pathDpadDown);
 
-	// Set dpad binding modifiers
-	XrInteractionProfileDpadBindingEXT xrDpadModification { XR_TYPE_INTERACTION_PROFILE_DPAD_BINDING_EXT };
-	xrDpadModification.actionSet = xrActionSet_Main;
-	xrDpadModification.binding = pathThumbstick;
-	xrDpadModification.centerRegion = 0.25f;
-	xrDpadModification.wedgeAngle = 2.0f;
-	// A gap between these next two members creates hysteresis, to avoid rapid toggling
-	xrDpadModification.forceThreshold = 0.8f;
-	xrDpadModification.forceThresholdReleased = 0.2f;
+  // Set dpad binding modifiers
+  XrInteractionProfileDpadBindingEXT xrDpadModification {
+    .type = XR_TYPE_INTERACTION_PROFILE_DPAD_BINDING_EXT,
+    // A gap between these next two members creates hysteresis, to avoid rapid toggling
+    .forceThreshold = 0.8f,
+    .forceThresholdReleased = 0.2f,
+  };
 
-	// Add dpad binding modifiers to binding modifications vector
-	std::vector< XrInteractionProfileDpadBindingEXT > vBindingModifs;
-	vBindingModifs.push_back( xrDpadModification );
+  // Add dpad binding modifiers to binding modifications vector
+  std::vector<XrInteractionProfileDpadBindingEXT> vBindingModifs;
+  vBindingModifs.push_back( xrDpadModification );
 
-	std::vector< XrBindingModificationBaseHeaderKHR* > vBindingModifsBase;
-	for ( XrInteractionProfileDpadBindingEXT &modif : vBindingModifs )
-	{
-		vBindingModifsBase.push_back( reinterpret_cast< XrBindingModificationBaseHeaderKHR* >( &modif) );
-	}
+  std::vector<XrBindingModificationBaseHeaderKHR*> vBindingModifsBase;
+  for ( XrInteractionProfileDpadBindingEXT &modif : vBindingModifs )
+  {
+    vBindingModifsBase.push_back(reinterpret_cast<XrBindingModificationBaseHeaderKHR*>(&modif));
+  }
 
-	XrBindingModificationsKHR xrBindingModifications { XR_TYPE_BINDING_MODIFICATIONS_KHR };
-	xrBindingModifications.bindingModifications = vBindingModifsBase.data();
-	xrBindingModifications.bindingModificationCount = ( uint32_t )vBindingModifsBase.size();
+  XrBindingModificationsKHR xrBindingModifications {
+    .type = XR_TYPE_BINDING_MODIFICATIONS_KHR,
+    .bindingModificationCount = static_cast<uint32_t>(vBindingModifsBase.size()),
+    .bindingModifications = vBindingModifsBase.data(),
+  };
 
-	// Set dpad input path as suggested binding for an action
-	XrActionSuggestedBinding xrActionBindingTeleport, xrActionBindingMenu;
+  // Set dpad input path as suggested binding for an action
+  XrActionSuggestedBinding xrActionBindingTeleport, xrActionBindingMenu;
 
-	xrActionBindingTeleport.action = xrAction_Teleport;
-	xrActionBindingTeleport.binding = pathDpadUp;
+  xrActionBindingTeleport.action = xrAction_Teleport;
+  xrActionBindingTeleport.binding = pathDpadUp;
 
-	xrActionBindingMenu.action = xrAction_Menu;
-	xrActionBindingMenu.binding = pathDpadDown;
+  xrActionBindingMenu.action = xrAction_Menu;
+  xrActionBindingMenu.binding = pathDpadDown;
 
-	std::vector< XrActionSuggestedBinding > vActionBindings;
-	vActionBindings.push_back( xrActionBindingTeleport );
-	vActionBindings.push_back( xrActionBindingMenu );
+  std::vector< XrActionSuggestedBinding > vActionBindings;
+  vActionBindings.push_back(xrActionBindingTeleport);
+  vActionBindings.push_back(xrActionBindingMenu);
 
-	// Create interaction profile/controller path
-	XrPath xrInteractionProfilePath;
-	xrStringToPath( pInstance, "/interaction_profiles/valve/index_controller", &xrInteractionProfilePath );
+  // Create interaction profile/controller path
+  XrPath xrInteractionProfilePath;
+  xrStringToPath(instance, "/interaction_profiles/valve/index_controller", &xrInteractionProfilePath);
 
-	// Set suggested binding to interaction profile
-	XrInteractionProfileSuggestedBinding xrInteractionProfileSuggestedBinding { XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING };
-	xrInteractionProfileSuggestedBinding.interactionProfile = xrInteractionProfilePath;
-	xrInteractionProfileSuggestedBinding.suggestedBindings = vActionBindings.data();
-	xrInteractionProfileSuggestedBinding.countSuggestedBindings = ( uint32_t )vActionBindings.size();
+  // Set suggested binding to interaction profile
+  XrInteractionProfileSuggestedBinding xrInteractionProfileSuggestedBinding {
+    .type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING,
+    .interactionProfile = xrInteractionProfilePath,
+    .countSuggestedBindings = static_cast<uint32_t>(vActionBindings.size()),
+    .suggestedBindings = vActionBindings.data(),
+  };
 
-	// Set binding modifications to interaction profile's suggested binding
-	xrInteractionProfileSuggestedBinding.next = &xrBindingModifications;
+  // Set binding modifications to interaction profile's suggested binding
+  xrInteractionProfileSuggestedBinding.next = &xrBindingModifications;
 
-	// Finally, suggest interaction profile bindings to runtime
-	xrSuggestInteractionProfileBindings( pInstance, &xrInteractionProfileSuggestedBinding );
+  // Finally, suggest interaction profile bindings to runtime
+  xrSuggestInteractionProfileBindings(instance, &xrInteractionProfileSuggestedBinding);
 ----
 
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-02-18 (Rune Berg)
 ** Initial extension description

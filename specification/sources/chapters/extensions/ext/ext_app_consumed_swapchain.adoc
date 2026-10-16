@@ -1,0 +1,606 @@
+// Copyright (c) 2017-2026 The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_app_consumed_swapchain.adoc[]
+
+*Contributors*::
+    Rylie Pavlik, Collabora +
+    Guodong Rong, Meta Platforms +
+    Jakob Bornecrantz, NVIDIA +
+    Nihav Jain, Google +
+    Andreas Selvik, Meta Platforms +
+    Cass Everitt, Meta Platforms +
+    Daniel Henell, Meta Platforms +
+    John Kearney, Meta Platforms +
+    Urs Niesen, Meta Platforms +
+
+
+
+==== Overview
+
+This extension is intended for use in combination with another extension
+that builds on it.
+This extension provides a base mechanism for the runtime to allocate a small
+collection of images into which some defined image or data is rendered and
+is accessible through the graphics API by the application, typically for
+sampling during the application render process.
+
+While some aspects of these swapchains resemble the usage of
+slink:XrSwapchain, other aspects differ by necessity due to the data flow
+direction.
+A typical slink:XrSwapchain single frame usage pattern is as follows:
+
+* The application calls flink:xrWaitFrame to prepare for the new frame and
+  receive rendering-related per-frame data from the runtime for the frame.
+** **Parameters flow from runtime to application.**
+* An image index is acquired from the runtime.
+  (flink:xrAcquireSwapchainImage)
+* The application waits on the image to ensure it is actually available,
+  typically a negligible amount of time.
+  (flink:xrWaitSwapchainImage)
+** **Application waits for image to be unused by runtime**
+* The application submits command buffers rendering into the image
+  associated with the acquired index, or issues graphics commands to
+  rendering in that image, depending on the graphics API.
+  This rendering makes use of application state as well as the per-frame
+  data from flink:xrWaitFrame.
+  (Command buffer construction, but not submission, might be permitted
+  between flink:xrAcquireSwapchainImage and flink:xrWaitSwapchainImage.)
+** **Application writes to image.**
+* The application releases the swapchain image back to the runtime.
+  (flink:xrReleaseSwapchainImage)
+* The application indicates to use the most recently released image from the
+  swapchain by passing the swapchain handle in a composition layer to
+  flink:xrEndFrame, along with data required to interpret the contents of
+  the image.
+** **Image and associated data pass from application to runtime.**
+** **Runtime rendering depends on completion of application rendering, and
+   samples from output.**
+
+On the other hand, data tends to flow in the opposite direction in uses of
+an app-consumed swapchain.
+
+* The application provides per-frame data affecting the contents of the
+  image, if any, to the runtime before calling
+  flink:xrAcquireAppConsumedSwapchainImageEXT.
+** **Parameters flow from application to runtime**.
+* The runtime renders into the image associated with the returned image
+  index, using its state and the parameters from the application.
+** **Runtime writes to image.**
+* The call to flink:xrAcquireAppConsumedSwapchainImageEXT returns the image
+  index to use as an input to the application, as well as data required to
+  interpret the image.
+** **Runtime provides access to latest available image, and data associated
+   with the image passes from runtime to application.**
+** The runtime is allowed to report that it is not done producing an image
+   yet, by setting slink:XrAppConsumedSwapchainImageStateEXT::pname:ready to
+   ename:XR_FALSE.
+   It also is allowed to return the most recently released image if no newer
+   image is yet available.
+   When it does, it must: set
+   slink:XrAppConsumedSwapchainImageStateEXT::pname:unchanged to
+   ename:XR_TRUE, so the application is able to distinguish a re-returned
+   previous image from a newly synchronized one.
+* Application issues rendering commands that use the data from the provided
+  image.
+** **Image data effectively passes from runtime to application.**
+* An application only calls flink:xrReleaseAppConsumedSwapchainImageEXT when
+  it is done submitting commands using it.
+
+
+===== Details Specified by Associated Extensions
+
+Some use cases fix the format, flags, size, and/or other properties of these
+images by specification, while others allow the application to specify some
+or all of these properties.
+
+* Relating to slink:XrAppConsumedSwapchainCreateInfoEXT and/or
+  slink:XrAppConsumedSwapchainPropertiesEXT fields
+** Valid swapchain format or formats
+** Permitted and forbidden swapchain usage flags
+** Permitted sample count values
+** Permitted mip counts
+** Any additional data or handles required for creation
+// These are fixed
+** Dimensions and array depth of images
+* Number of elements in a swapchain (may: be left unspecified)
+* Cadence of producing a new frame (every application frame or less
+  frequently)
+
+
+==== App-Consumed Swapchain Handle
+
+[open,refpage='XrAppConsumedSwapchainEXT',type='handles',desc='Handle to an app-consumed swapchain providing images/buffers to the application to consume']
+--
+The slink:XrAppConsumedSwapchainEXT handle is defined as:
+
+include::{generated}/api/handles/XrAppConsumedSwapchainEXT.adoc[]
+
+An app-consumed swapchain handle slink:XrAppConsumedSwapchainEXT represents
+a limited collection of images or buffers, provided from the runtime to the
+application.
+If slink:XrSwapchain is considered an output from the application,
+slink:XrAppConsumedSwapchainEXT is effectively the "input" counterpart.
+Like slink:XrSwapchain, slink:XrAppConsumedSwapchainEXT images are
+accessible as handles in the current graphics binding API for a given
+session, and their accessibility depends on the environment and requirements
+defined by that graphics binding.
+They are broadly intended for use as resources in the rendering pipeline,
+rather than for use in CPU computations.
+
+The resolution, number of images, format, and flags depend on the particular
+use case and are typically defined by the runtime and/or the extension
+building on this one that makes use of the app-consumed swapchain primitive.
+
+--
+
+[open,refpage='xrCreateAppConsumedSwapchainEXT',type='protos',desc='Create an app-consumed swapchain handle.',xrefs='']
+--
+The flink:xrCreateAppConsumedSwapchainEXT function is defined as:
+
+include::{generated}/api/protos/xrCreateAppConsumedSwapchainEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:session is an slink:XrSession in which the swapchain will be active.
+* pname:createInfo is the slink:XrAppConsumedSwapchainCreateInfoEXT used to
+  configure the swapchain.
+* pname:appConsumedSwapchain is populated with the returned
+  slink:XrAppConsumedSwapchainEXT handle.
+****
+
+This common creation function is customized by use case and associated
+extensions.
+
+For some associated extensions, the
+slink:XrAppConsumedSwapchainCreateInfoEXT::pname:next chain of
+pname:createInfo must: contain an additional structure from that extension,
+in addition to the appropriate value for
+slink:XrAppConsumedSwapchainCreateInfoEXT::pname:kind.
+
+The number of images in an app-consumed swapchain is at least one.
+
+Unless otherwise specified, if the application destroys a handle used in the
+additional creation data, after app-consumed swapchain creation but before
+the corresponding swapchain is destroyed, that swapchain continues to
+function as if the handle were not destroyed.
+This mirrors the behavior of actions and action spaces, among other examples
+in the specification.
+
+include::{generated}/validity/protos/xrCreateAppConsumedSwapchainEXT.adoc[]
+--
+
+[open,refpage='XrAppConsumedSwapchainCreateInfoEXT',type='structs',desc='Information to create an app-consumed swapchain handle',xrefs='']
+--
+The slink:XrAppConsumedSwapchainCreateInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrAppConsumedSwapchainCreateInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:kind is the specific kind of app-consumed swapchain to create, as
+  specified by the associated derived extension.
+* pname:usageFlags is a bitmask of elink:XrSwapchainUsageFlagBits describing
+  the intended usage of the swapchain's images.
+  The usage flags define how the corresponding graphics API objects are
+  created.
+  A mismatch may: result in swapchain images that do not support the
+  application's usage.
+  Acceptable values depend on the derived extension.
+* pname:format is a graphics API-specific texture format identifier.
+  For example, if the graphics API specified in flink:xrCreateSession is
+  Vulkan, then this format is a Vulkan format such as
+  ename:VK_FORMAT_R8G8B8A8_SRGB.
+  The format identifies the format in which the application will interpret
+  the texture upon acquire.
+  Valid formats are enumerated as specified by the associated extension
+  providing the swapchain images.
+  The intended pattern is for such extensions to extend the input to
+  flink:xrEnumerateSwapchainFormats2EXT.
+****
+
+The slink:XrAppConsumedSwapchainCreateInfoEXT structure describes the
+information to create an slink:XrAppConsumedSwapchainEXT handle.
+
+If the value of pname:usageFlags does not match the valid usage requirements
+of the associated extension, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+If the value of pname:format does not match the valid usage requirements of
+the associated extension, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE.
+
+Some elink:XrAppConsumedSwapchainKindEXT values need additional data at
+creation time, beyond that provided in this structure.
+If the associated extension specifies a required additional data structure
+for the value of pname:kind, the runtime must: return
+ename:XR_ERROR_VALIDATION_FAILURE from flink:xrCreateAppConsumedSwapchainEXT
+if such a structure is not found on the pname:next chain.
+
+
+include::{generated}/validity/structs/XrAppConsumedSwapchainCreateInfoEXT.adoc[]
+--
+
+
+[open,refpage='XrAppConsumedSwapchainKindEXT',desc='Kinds of app-consumed swapchain.',type='enums',xrefs='xrCreateAppConsumedSwapchainEXT XrAppConsumedSwapchainCreateInfoEXT']
+--
+Available kinds of app-consumed swapchains include:
+
+include::{generated}/api/enums/XrAppConsumedSwapchainKindEXT.adoc[]
+
+// Uncomment when a first consuming extension exists
+// include::{generated}/api/enums/XrAppConsumedSwapchainKindEXT.comments-box.adoc[]
+--
+
+
+[open,refpage='xrDestroyAppConsumedSwapchainEXT',desc='Destroys an app-consumed swapchain.',type='protos',xrefs='XrAppConsumedSwapchainEXT']
+--
+The flink:xrDestroyAppConsumedSwapchainEXT function is defined as:
+
+include::{generated}/api/protos/xrDestroyAppConsumedSwapchainEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:appConsumedSwapchain is the slink:XrAppConsumedSwapchainEXT to be
+  destroyed.
+****
+
+The flink:xrDestroyAppConsumedSwapchainEXT function destroys an app-consumed
+swapchain.
+
+All graphics API commands submitted by the application that refer to
+pname:appConsumedSwapchain must: have completed execution.
+This requires that the application release any acquired image, as well as
+possibly wait for a synchronization primitive to be signaled indicating
+completion of associated commands.
+
+Because of these requirements, the runtime does not need access to the
+graphics API context or queue during destroy.
+See <<ext_app_consumed_swapchain-queue_access>>.
+
+include::{generated}/validity/protos/xrDestroyAppConsumedSwapchainEXT.adoc[]
+--
+
+
+==== Retrieving Information to Use Images
+
+[open,refpage='xrGetAppConsumedSwapchainPropertiesEXT',desc='Returns the immutable of the app-consumed swapchain.',type='protos',xrefs='']
+--
+The flink:xrGetAppConsumedSwapchainPropertiesEXT function is defined as:
+
+include::{generated}/api/protos/xrGetAppConsumedSwapchainPropertiesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:appConsumedSwapchain is an slink:XrAppConsumedSwapchainEXT handle.
+* pname:properties is a pointer to an
+  slink:XrAppConsumedSwapchainPropertiesEXT.
+****
+
+flink:xrGetAppConsumedSwapchainPropertiesEXT retrieves information about the
+slink:XrAppConsumedSwapchainEXT.
+This information is constant throughout the lifetime of the
+slink:XrAppConsumedSwapchainEXT.
+
+This data returned is (potentially) redundant with input parameters in
+slink:XrAppConsumedSwapchainCreateInfoEXT.
+This divergence from typical API design practices for this specification is
+made because, regardless of kind or creation method, all app-consumed
+swapchains have these properties, and providing a uniform way to access
+these properties allows applications to share code between various kinds of
+app-consumed swapchains.
+
+include::{generated}/validity/protos/xrGetAppConsumedSwapchainPropertiesEXT.adoc[]
+--
+
+[open,refpage='XrAppConsumedSwapchainPropertiesEXT',type='structs',desc='XrAppConsumedSwapchainPropertiesEXT',xrefs='']
+--
+The slink:XrAppConsumedSwapchainPropertiesEXT structure is defined as:
+
+include::{generated}/api/structs/XrAppConsumedSwapchainPropertiesEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:usageFlags is a bitmask of elink:XrSwapchainUsageFlagBits describing
+  the intended usage of the swapchain's images.
+  The usage flags define how the corresponding graphics API objects are
+  created.
+  A mismatch may: result in swapchain images that do not support the
+  application's usage.
+* pname:format is a graphics API-specific texture format identifier.
+  For example, if the graphics API specified in flink:xrCreateSession is
+  Vulkan, then this format is a Vulkan format such as
+  ename:VK_FORMAT_R8G8B8A8_SRGB.
+  The format identifies the format that the runtime will interpret the
+  texture as upon submission.
+  Valid formats are indicated by flink:xrEnumerateSwapchainFormats.
+* pname:sampleCount is the number of sub-data element samples in the image,
+  must: not be `0` or greater than the graphics API's maximum limit.
+* pname:width is the width of each image.
+* pname:height is the height of each image.
+* pname:faceCount is the number of faces, which must: be either `6` (for
+  cubemaps) or `1`.
+* pname:arraySize is the number of array layers in the image or `1` for a 2D
+  image, must: not be `0` or greater than the graphics API's maximum limit.
+* pname:mipCount describes the number of levels of detail available for
+  minified sampling of the image, must: not be `0` or greater than the
+  graphics API's maximum limit.
+****
+
+include::{generated}/validity/structs/XrAppConsumedSwapchainPropertiesEXT.adoc[]
+--
+
+==== Accessing the App-Consumed Swapchain During Rendering
+
+[open,refpage='xrEnumerateAppConsumedSwapchainImagesEXT',desc='Gets images from an app-consumed swapchain.',type='protos',xrefs='']
+--
+The flink:xrEnumerateAppConsumedSwapchainImagesEXT function is defined as:
+
+include::{generated}/api/protos/xrEnumerateAppConsumedSwapchainImagesEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:appConsumedSwapchain is the slink:XrAppConsumedSwapchainEXT to get
+  images from.
+* pname:imageCapacityInput is the capacity of the pname:images array, or `0`
+  to indicate a request to retrieve the required capacity.
+* pname:imageCountOutput is a pointer to the count of pname:images written,
+  or a pointer to the required capacity in the case that
+  pname:imageCapacityInput is insufficient.
+* pname:images is a pointer to an array of graphics API-specific
+  XrSwapchainImage structures, all of the same type, based on
+  slink:XrSwapchainImageBaseHeader.
+  It can: be ename:NULL if pname:imageCapacityInput is `0`.
+* See the <<fundamentals-buffer-size-parameters>> section for a detailed
+  description of retrieving the required pname:images size.
+****
+
+flink:xrEnumerateAppConsumedSwapchainImagesEXT fills an array of graphics
+API-specific stext:XrSwapchainImage* structures derived from
+slink:XrSwapchainImageBaseHeader.
+The resources must: be constant and valid for the lifetime of the
+slink:XrAppConsumedSwapchainEXT.
+This function behaves analogously to flink:xrEnumerateSwapchainImages.
+
+Runtimes must: always return identical buffer contents from this enumeration
+for the lifetime of the swapchain.
+
+Note: pname:images is a pointer to an array of structures of graphics
+API-specific type, not an array of structure pointers.
+
+The pointer submitted as pname:images will be treated as an array of the
+expected graphics API-specific type based on the graphics API used at
+session creation time.
+If the slink:XrSwapchainImageBaseHeader::pname:type member of any array
+element accessed in this way does not match the expected value, the runtime
+must: return ename:XR_ERROR_VALIDATION_FAILURE.
+
+include::{generated}/validity/protos/xrEnumerateAppConsumedSwapchainImagesEXT.adoc[]
+--
+
+[open,refpage='xrAcquireAppConsumedSwapchainImageEXT',desc='Returns an image index in an app-consumed swapchain and associated metadata.',type='protos',xrefs='']
+--
+The flink:xrAcquireAppConsumedSwapchainImageEXT function is defined as:
+
+include::{generated}/api/protos/xrAcquireAppConsumedSwapchainImageEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:appConsumedSwapchain is an slink:XrAppConsumedSwapchainEXT handle
+  for the swapchain.
+* pname:acquireInfo is an slink:XrAppConsumedSwapchainImageAcquireInfoEXT
+  containing parameters for populating the image.
+* pname:image is a pointer to an slink:XrAppConsumedSwapchainImageStateEXT
+  structure which is populated with information about the acquired image.
+****
+
+This function retrieves the index of the currently available app-consumed
+swapchain image that was populated by the runtime.
+This also ensures the image is ready to be accessed by the application.
+The application may: access the acquired image as well as queue GPU
+operations using it, until the application next calls
+flink:xrReleaseAppConsumedSwapchainImageEXT.
+
+Associated extensions define the rate at which the runtime becomes ready to
+provide new image data.
+If the runtime is not ready when a call is made, it sets
+slink:XrAppConsumedSwapchainImageStateEXT::pname:ready to false and the
+slink:XrAppConsumedSwapchainImageStateEXT::pname:imageIndex to any value
+that is defined to read.
+(For example, setting it to 0 is valid here.)
+
+The runtime must: set
+slink:XrAppConsumedSwapchainImageStateEXT::pname:unchanged to ename:XR_TRUE
+if and only if the latest image that is ready to acquire is the same one
+that was most recently released, with both image data and metadata
+unchanged.
+Otherwise, the runtime must: set
+slink:XrAppConsumedSwapchainImageStateEXT::pname:unchanged to
+ename:XR_FALSE.
+
+When ready, the slink:XrAppConsumedSwapchainImageStateEXT populated by this
+function contains the image index into the array enumerated by
+flink:xrEnumerateAppConsumedSwapchainImagesEXT.
+Structures on the slink:XrAppConsumedSwapchainImageStateEXT::pname:next
+chain, specified by associated extensions, are able to return additional
+metadata needed for interpreting the image, if any.
+
+Unless otherwise specified, the application must: not attempt to acquire an
+image when it already has acquired an image from the same swapchain without
+releasing it.
+That is, the application is allowed to hold at most one image from a given
+app-consumed swapchain.
+If this is violated, the runtime must: return ename:XR_ERROR_LIMIT_REACHED
+from flink:xrAcquireAppConsumedSwapchainImageEXT.
+
+Unless otherwise specified, this call should: not block.
+Instead, the runtime may: return the same image as the last acquire, or
+report that no image is ready.
+
+Unless otherwise specified, once an acquire call returns
+slink:XrAppConsumedSwapchainImageStateEXT::pname:ready as true, all future
+acquire calls for the same swapchain must: also return it as true.
+That is, the application may: re-acquire the most recently released image
+even if there is no new image ready.
+
+See <<ext_app_consumed_swapchain-queue_access>> for graphics context
+accessible by the runtime during this call.
+
+include::{generated}/validity/protos/xrAcquireAppConsumedSwapchainImageEXT.adoc[]
+--
+
+[open,refpage='XrAppConsumedSwapchainImageAcquireInfoEXT',type='structs',desc='XrAppConsumedSwapchainImageAcquireInfoEXT',xrefs='']
+--
+The slink:XrAppConsumedSwapchainImageAcquireInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrAppConsumedSwapchainImageAcquireInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+This structure exists for extension purposes.
+
+include::{generated}/validity/structs/XrAppConsumedSwapchainImageAcquireInfoEXT.adoc[]
+--
+
+[open,refpage='XrAppConsumedSwapchainImageStateEXT',type='structs',desc='XrAppConsumedSwapchainImageStateEXT',xrefs='']
+--
+The slink:XrAppConsumedSwapchainImageStateEXT structure is defined as:
+
+include::{generated}/api/structs/XrAppConsumedSwapchainImageStateEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:ready is an basetype:XrBool32 that is ename:XR_TRUE if and only if
+  the runtime is ready to provide a new images in this app-consumed
+  swapchain.
+* pname:unchanged is an basetype:XrBool32 that is ename:XR_TRUE if and only
+  if the latest image that is ready to acquire is the same one that was most
+  recently released, with both image data and metadata unchanged.
+* pname:imageIndex is the index of the acquired texture in the app-consumed
+  swapchain.
+  If pname:ready is false, this value should: be ignored, though reading it
+  is defined to be valid.
+  (The value is unspecified and meaningless in this case.)
+****
+
+If pname:unchanged is ename:XR_TRUE, this signals that any cached
+computation or rendering performed by the application on the previous image
+is not invalidated by a change of the data from the runtime.
+Typically this implies that a new image is not yet available.
+Even if pname:unchanged is ename:XR_FALSE, the image index may: still be the
+same as the previous call, but content and/or metadata has changed.
+
+
+include::{generated}/validity/structs/XrAppConsumedSwapchainImageStateEXT.adoc[]
+--
+
+
+
+[open,refpage='xrReleaseAppConsumedSwapchainImageEXT',desc='Releases an image in an app-consumed swapchain to the runtime.',type='protos',xrefs='xrAcquireAppConsumedSwapchainImageEXT']
+--
+The flink:xrReleaseAppConsumedSwapchainImageEXT function is defined as:
+
+include::{generated}/api/protos/xrReleaseAppConsumedSwapchainImageEXT.adoc[]
+
+.Parameter Descriptions
+****
+* pname:appConsumedSwapchain is an slink:XrAppConsumedSwapchainEXT handle
+  for the swapchain.
+* pname:releaseInfo is an slink:XrAppConsumedSwapchainImageReleaseInfoEXT
+  for extension purposes.
+****
+
+This function releases control of an app-consumed swapchain image back from
+the application to the runtime.
+The application must: not submit any GPU work associated with the image
+after calling this function, without acquiring an image again.
+The application is **not** required to wait for the conclusion of submitted
+GPU work, however.
+
+See <<ext_app_consumed_swapchain-queue_access>> for graphics context
+accessible by the runtime during this call.
+
+include::{generated}/validity/protos/xrReleaseAppConsumedSwapchainImageEXT.adoc[]
+--
+
+[open,refpage='XrAppConsumedSwapchainImageReleaseInfoEXT',type='structs',desc='XrAppConsumedSwapchainImageReleaseInfoEXT',xrefs='']
+--
+The slink:XrAppConsumedSwapchainImageReleaseInfoEXT structure is defined as:
+
+include::{generated}/api/structs/XrAppConsumedSwapchainImageReleaseInfoEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+****
+
+This structure exists for extension purposes.
+
+include::{generated}/validity/structs/XrAppConsumedSwapchainImageReleaseInfoEXT.adoc[]
+--
+
+[[ext_app_consumed_swapchain-queue_access]]
+==== Access to Graphics API Contexts for App-Consumed Swapchains
+
+A runtime may: use the graphics API specific contexts provided to OpenXR
+during only a limited list of API calls.
+
+In particular:
+
+* For OpenGL, a runtime may: use the OpenGL context specified in the call to
+  flink:xrCreateSession, which needs external synchronization.
+* For Vulkan, a runtime may: use the sname:VkQueue specified in the
+  slink:XrGraphicsBindingVulkan2KHR, which needs external synchronization.
+* For Direct3D12, a runtime may: use the sname:ID3D12CommandQueue specified
+  in the slink:XrGraphicsBindingD3D12KHR.
+
+Access by the runtime to the above contexts must: not occur outside of calls
+to the following:
+
+* flink:xrAcquireAppConsumedSwapchainImageEXT
+* flink:xrReleaseAppConsumedSwapchainImageEXT
+
+flink:xrDestroyAppConsumedSwapchainEXT is not listed because destroy already
+requires the application to have released any acquired image and completed
+all graphics API work that refers to the swapchain, so the runtime does not
+need the graphics API context or queue during destroy.
+
+include::{generated}/interfaces/XR_EXT_app_consumed_swapchain.adoc[leveloffset=1]
+
+==== Issues
+
+* Do we need a CPU-based wait? A call that queues a GPU wait? One that
+  retrieves a GPU sync primitive so the application is able to queue its own
+  wait?
+** As a first solution, we have a CPU-side poll, with the ability to return
+   the same image as was just released.
+* Do we want a unified create function, or fully delegate that?
+** Unified create, akin to the single flink:xrCreateSwapchain shared by all
+   graphics APIs.
+* Do we want to limit the acquire/release between begin/end frame?
+** No, we want this to be potentially fully asynchronous from the frame
+   loop.
+
+==== Version History
+* Revision 1, 2026-01-29 (Rylie Pavlik, Collabora; Guodong Rong, Meta
+  Platforms; Jakob Bornecrantz, NVIDIA; Nihav Jain, Google)
+** Initial extension description

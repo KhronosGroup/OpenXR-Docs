@@ -8,7 +8,7 @@ include::{generated}/meta/XR_FB_spatial_entity_storage_batch.adoc[]
     John Schofield, Facebook +
     Andrew Kim, Facebook
 
-*Overview*
+==== Overview
 
 This extension enables multiple spatial entities at a time to be persisted
 across sessions.
@@ -131,9 +131,7 @@ If this function returns a failure code, no event is posted.
 include::{generated}/validity/protos/xrSaveSpaceListFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-06-08 (John Schofield)
 ** Initial draft

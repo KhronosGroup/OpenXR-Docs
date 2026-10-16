@@ -15,7 +15,7 @@ include::{generated}/meta/XR_MSFT_perception_anchor_interop.adoc[]
     Bryce Hutchings, Microsoft +
     Yin Li, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension supports conversion between slink:XrSpatialAnchorMSFT and
 link:https://docs.microsoft.com/uwp/api/Windows.Perception.Spatial.SpatialAnchor[Windows.Perception.Spatial.SpatialAnchor].
@@ -113,9 +113,7 @@ flink:xrCreateSpatialAnchorFromPerceptionAnchorMSFT
 
 flink:xrTryGetPerceptionAnchorFromSpatialAnchorMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-06-16 (Yin Li)
 ** Initial extension proposal

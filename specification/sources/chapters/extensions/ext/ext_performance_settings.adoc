@@ -330,7 +330,7 @@ Leaving ename:XR_PERF_SETTINGS_NOTIF_LEVEL_IMPAIRED_EXT indicates that any
 mitigating actions by the runtime (e.g. down-clocking the device to stay
 within thermal limits) have ended.
 
-[performance-settings-api]
+[[performance-settings-api]]
 ==== Performance Settings API Reference
 
 '''
@@ -390,7 +390,7 @@ include::{generated}/api/enums/XrPerfSettingsSubDomainEXT.adoc[]
 include::{generated}/api/enums/XrPerfSettingsNotificationLevelEXT.adoc[]
 --
 
-*Version History*
+==== Version History
 
 * Revision 1, 2017-11-30 (Armelle Laine)
 * Revision 2, 2021-04-13 (Rylie Pavlik)

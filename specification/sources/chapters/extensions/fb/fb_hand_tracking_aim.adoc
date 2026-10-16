@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_hand_tracking_aim.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 The apiext:XR_EXT_hand_tracking extension provides a list of hand joint
 poses which represent the current configuration of the tracked hands.
@@ -90,9 +90,7 @@ include::{generated}/validity/structs/XrHandTrackingAimStateFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-07-07 (Federico Schliemann)
 ** Initial extension description

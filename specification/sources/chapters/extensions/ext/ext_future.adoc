@@ -901,7 +901,7 @@ elink:XrResult enumeration is extended with:
 * ename:XR_ERROR_FUTURE_INVALID_EXT
 
 
-*Issues*
+==== Issues
 
 * Should there be a state for completed functions that is separate from
   "invalid"?
@@ -914,7 +914,7 @@ elink:XrResult enumeration is extended with:
    Similarly, invalidated/completed is not formally a "state" for futures in
    the final API.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-02-14 (Andreas Løve Selvik, Meta Platforms and Ron
   Bessems, Magic Leap)

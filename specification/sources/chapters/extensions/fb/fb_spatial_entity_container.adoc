@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_spatial_entity_container.adoc[]
     Yuichi Taguchi, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension expands on the concept of spatial entities to include a way
 for one spatial entity to contain multiple child spatial entities, forming a
@@ -88,9 +88,7 @@ ename:XR_ERROR_SPACE_COMPONENT_NOT_ENABLED_FB.
 include::{generated}/validity/protos/xrGetSpaceContainerFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-03-09 (John Schofield)
 ** Initial draft

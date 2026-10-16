@@ -14,7 +14,7 @@ include::{generated}/meta/XR_HTC_facial_tracking.adoc[]
     Andy Chen, HTC
 
 
-*Overview*
+==== Overview
 
 This extension allows an application to track and integrate users' eye and
 lip movements, empowering developers to read intention and model facial
@@ -768,9 +768,7 @@ elink:XrStructureType enumeration is extended with:
 * flink:xrDestroyFacialTrackerHTC
 * flink:xrGetFacialExpressionsHTC
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-12-16 (Kyle Chen)
 ** Initial extension description

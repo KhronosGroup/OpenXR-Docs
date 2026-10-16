@@ -11,7 +11,7 @@ include::{generated}/meta/XR_MND_swapchain_usage_input_attachment_bit.adoc[]
 *Contributors*::
     Jakob Bornecrantz, Collabora
 
-*Overview*
+==== Overview
 
 This extension enables an application to specify that swapchain images
 should be created in a way so that they can be used as input attachments.
@@ -33,9 +33,7 @@ elink:XrSwapchainUsageFlagBits enumeration is extended with:
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-07-23 (Jakob Bornecrantz)
 ** Initial draft

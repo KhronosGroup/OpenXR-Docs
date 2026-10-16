@@ -10,7 +10,7 @@ include::{generated}/meta/XR_ML_frame_end_info.adoc[]
 *Contributors*::
     Ron Bessems, Magic Leap
 
-*Overview*
+==== Overview
 
 This extension provides access to Magic Leap specific extensions to frame
 settings like focus distance, vignette, and protection.
@@ -70,7 +70,7 @@ include::{generated}/api/structs/XrFrameEndInfoML.adoc[]
 include::{generated}/validity/structs/XrFrameEndInfoML.adoc[]
 --
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-10-26 (Ron Bessems)
 

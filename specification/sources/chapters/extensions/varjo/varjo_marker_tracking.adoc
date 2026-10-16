@@ -284,9 +284,7 @@ elink:XrResult enumeration is extended with:
 * ename:XR_ERROR_MARKER_ID_INVALID_VARJO
 * ename:XR_ERROR_MARKER_NOT_TRACKED_VARJO
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-09-30 (Roman Golovanov)
 ** Initial extension description
@@ -298,7 +296,7 @@ feature and then polls events.
 The event type ename:XR_TYPE_EVENT_DATA_MARKER_TRACKING_UPDATE_VARJO has a
 special handler to process marker state change.
 
-[source,cpp,suppress-build]
+[source,cpp]
 ----
 
 XrSession session; // previously initialized

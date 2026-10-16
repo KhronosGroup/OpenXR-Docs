@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_spatial_entity_storage.adoc[]
     Curtis Arink, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension enables spatial entities to be stored and persisted across
 sessions.
@@ -223,9 +223,7 @@ If this function returns a failure code, no event is posted.
 include::{generated}/validity/protos/xrEraseSpaceFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-01-22 (John Schofield)
 ** Initial draft

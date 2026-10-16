@@ -14,7 +14,7 @@ include::{generated}/meta/XR_KHR_composition_layer_depth.adoc[]
     Andreas Loeve Selvik, Arm +
     Martin Renschler, Qualcomm
 
-*Overview*
+==== Overview
 
 This extension defines an extra layer type which allows applications to
 submit depth images along with color images in projection layers, i.e.
@@ -108,7 +108,7 @@ include::{generated}/validity/structs/XrCompositionLayerDepthInfoKHR.adoc[]
 
 *New Functions*
 
-*Issues*
+==== Issues
 
 . Should the range of pname:minDepth and pname:maxDepth be constrained to [0,1]?
 +
@@ -142,7 +142,7 @@ of depth.
 The resolution of the depth image need not match that of the corresponding
 color image.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2017-08-18 (Paul Pedriana)
 ** Initial proposal.

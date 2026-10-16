@@ -4,7 +4,7 @@
 
 include::{generated}/meta/XR_OCULUS_android_session_state_enable.adoc[]
 
-*Overview*
+==== Overview
 
 This extension enables the integration of the Android session lifecycle and
 an OpenXR runtime session state.
@@ -106,9 +106,7 @@ from surfaceDestroyed() or onPause(), whichever comes first.
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-08-16 (Cass Everitt)
 ** Initial extension description

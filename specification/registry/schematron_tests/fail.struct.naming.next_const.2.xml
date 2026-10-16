@@ -27,7 +27,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <type name="XrResult" category="enum"/>
 
         <!-- An Xr...Properties struct should not have a const next pointer -->
-        <type category="struct" name="XrOutputParamProperties" returnedonly="true">
+        <type category="struct" name="XrOutputParamProperties">
             <member values="XR_TYPE_OUTPUT_PARAM_PROPERTIES"><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>* <name>next</name></member>
         </type>
@@ -55,6 +55,13 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         </require>
         <require>
             <command name="xrGetSomeData"/>
+        </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+            <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XrOutputParamProperties"/>
         </require>
     </feature>
 </registry>

@@ -13,7 +13,7 @@ include::{generated}/meta/XR_MNDX_egl_enable.adoc[]
     Drew DeVault, Individual +
     Simon Ser, Individual
 
-*Overview*
+==== Overview
 
 This extension must be provided by runtimes supporting applications using
 the EGL API to create rendering contexts.
@@ -82,9 +82,7 @@ For details please see
 https://registry.khronos.org/EGL/sdk/docs/man/html/eglGetProcAddress.xhtml
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-05-20 (Jakob Bornecrantz)
 ** Initial draft

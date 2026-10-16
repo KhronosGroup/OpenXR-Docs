@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_passthrough.adoc[]
     Ante Trbojevic, Meta Platforms
 
 
-*Overview*
+==== Overview
 
 Passthrough is a way to show a user their physical environment in a
 light-blocking VR headset.
@@ -734,7 +734,7 @@ slink:XrGeometryInstanceFB geometry instance.
 include::{generated}/validity/protos/xrGeometryInstanceSetTransformFB.adoc[]
 --
 
-*Issues*
+==== Issues
 * Is slink:XrPassthroughFB the parent for slink:XrPassthroughLayerFB?
 ** From OpenXR conventions, it is clear that the slink:XrSession is the
    parent of slink:XrPassthroughLayerFB, however slink:XrPassthroughLayerFB
@@ -754,7 +754,7 @@ include::{generated}/validity/protos/xrGeometryInstanceSetTransformFB.adoc[]
    slink:XrPassthroughLayerFB handles first, by calling
    flink:xrDestroyPassthroughLayerFB for each such handle.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2021-09-01 (Anton Vaneev)
 ** Initial extension description

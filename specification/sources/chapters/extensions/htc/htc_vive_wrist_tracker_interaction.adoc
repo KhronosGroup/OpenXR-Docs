@@ -12,7 +12,7 @@ include::{generated}/meta/XR_HTC_vive_wrist_tracker_interaction.adoc[]
     Ria Hsu, HTC +
     Bill Chang, HTC
 
-*Overview*
+==== Overview
 
 This extension provides an basetype:XrPath for getting device input from a
 VIVE wrist tracker to enable its interactions.
@@ -36,13 +36,12 @@ with supported input subpaths
 ** subpathname:/input/menu/click
 ** subpathname:/input/x/click
 * On pathname:/user/wrist_htc/right only:
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 ** subpathname:/input/a/click
 * subpathname:/input/entity_htc/pose
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/htc/vive_wrist_tracker
 :properly-suffixed-path: /interaction_profiles/htc/vive_wrist_tracker_htc
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -56,7 +55,7 @@ The entity_htc pose is defined as follows:
 * The entity orientation: Oriented with +Y up, +X to the right, and -Z
   forward.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-05-27 (Ria Hsu)
 

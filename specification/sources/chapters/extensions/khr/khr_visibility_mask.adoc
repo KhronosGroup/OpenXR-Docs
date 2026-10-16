@@ -14,7 +14,7 @@ include::{generated}/meta/XR_KHR_visibility_mask.adoc[]
 *Contacts*::
     Paul Pedriana, Oculus
 
-*Overview*
+==== Overview
 
 This extension support the providing of a per-view drawing mask for
 applications.
@@ -183,9 +183,7 @@ and index counts must: be `0`.
 include::{generated}/validity/protos/xrGetVisibilityMaskKHR.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2018-07-05 (Paul Pedriana)
 ** Initial version.

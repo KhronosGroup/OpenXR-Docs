@@ -18,7 +18,7 @@ include::{generated}/meta/XR_KHR_composition_layer_equirect.adoc[]
     Cass Everitt, Oculus +
     Paul Pedriana, Oculus
 
-*Overview*
+==== Overview
 
 This extension adds an additional layer type where the XR runtime must map
 an equirectangular coded image stemming from a swapchain onto the inside of
@@ -91,9 +91,7 @@ include::{generated}/validity/structs/XrCompositionLayerEquirectKHR.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2017-05-19 (Paul Pedriana)
 ** Initial version.

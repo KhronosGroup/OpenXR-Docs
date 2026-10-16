@@ -11,7 +11,7 @@ include::{generated}/meta/XR_KHR_convert_timespec_time.adoc[]
 *Contributors*::
     Paul Pedriana, Oculus
 
-*Overview*
+==== Overview
 
 This extension provides two functions for converting between timespec
 monotonic time and basetype:XrTime.
@@ -82,9 +82,7 @@ runtime must: return ename:XR_ERROR_TIME_INVALID.
 include::{generated}/validity/protos/xrConvertTimeToTimespecTimeKHR.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-01-24 (Paul Pedriana)
 ** Initial draft

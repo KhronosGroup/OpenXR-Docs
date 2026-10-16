@@ -20,7 +20,7 @@ include::{generated}/meta/XR_VARJO_composition_layer_depth_test.adoc[]
 // Khronos may elect to exercise its Copyright  license to incorporate this submission into
 // other works it controls as it desires."
 
-*Overview*
+==== Overview
 
 This extension enables depth-based layer composition inside the compositor.
 
@@ -130,7 +130,7 @@ elink:XrStructureType enumeration is extended with:
 
 * ename:XR_TYPE_COMPOSITION_LAYER_DEPTH_TEST_VARJO
 
-*Version History*
+==== Version History
 
 * Revision 1, 2021-02-16 (Sergiy Dubovik)
 ** Initial extension description

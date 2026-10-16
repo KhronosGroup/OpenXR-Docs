@@ -29,5 +29,5 @@ pass.%.xml.srvl: pass.%.xml $(common_deps)
 
 fail.%.xml.srvl: fail.%.xml $(common_deps)
 	@echo "[check] $<"
-	$(QUIET)export REGISTRY_DIR=.. && . ../schematron.sh && if ! runSchematron $< $(TO_DEV_NULL); then echo "[OK   ] $<"; else echo "[ERROR] $< (unexpected schema-pass)"; rm -f $@; exit 1; fi
+	$(QUIET)export REGISTRY_DIR=.. && . ../schematron.sh && if runSchematronFailTest $< $(TO_DEV_NULL); then echo "[OK   ] $<"; else rm -f $@; exit 1; fi
 

@@ -33,4 +33,13 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <enum value="2"   name="XR_TYPE_FUTURE_COMPLETION_BASE_HEADER_EXT"/>
     </enums>
 
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type name="openxr_platform_defines"/>
+            <type name="XrStructureType"/>
+            <type name="XrEventDataBaseHeader"/>
+            <type name="XrFutureCompletionBaseHeaderEXT"/>
+        </require>
+    </feature>
 </registry>

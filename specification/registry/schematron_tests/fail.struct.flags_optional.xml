@@ -22,4 +22,14 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
     <enums name="XrMyFlagBitsEXT" type="bitmask">
     </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type name="openxr_platform_defines"/>
+            <type name="XrFlags64"/>
+            <type name="XrMyFlagsEXT"/>
+            <type name="XrMyFlagBitsEXT"/>
+            <type name="XrMyStructEXT"/>
+        </require>
+    </feature>
 </registry>

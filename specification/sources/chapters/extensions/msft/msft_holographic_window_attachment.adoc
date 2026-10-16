@@ -9,7 +9,7 @@ include::{generated}/meta/XR_MSFT_holographic_window_attachment.adoc[]
     Yin Li, Microsoft +
     Alex Turner, Microsoft
 
-*Overview*
+==== Overview
 
 This extension enables the runtime to attach to app-provided
 HolographicSpace and CoreWindow WinRT objects when an slink:XrSession is
@@ -64,6 +64,7 @@ the attached CoreWindow to receive keyboard input, use
 sname:CoreTextEditContext to handle text typing experience, and use
 sname:IActivatedEventArgs to handle protocol launching arguments.
 
+// suppress-build due to missing headers
 [source,cpp,suppress-build]
 ----
 struct AppView : implements<AppView, IFrameworkView> {
@@ -157,7 +158,7 @@ int __stdcall wWinMain(HINSTANCE, HINSTANCE, PWSTR, int) {
 }
 ----
 
-*Version History*
+==== Version History
 
 * Revision 1, 2020-05-18 (Bryce Hutchings)
 ** Initial extension description

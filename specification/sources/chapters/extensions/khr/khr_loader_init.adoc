@@ -12,7 +12,7 @@ include::{generated}/meta/XR_KHR_loader_init.adoc[]
     Cass Everitt, Facebook +
     Robert Blenkinsopp, Ultraleap
 
-*Overview*
+==== Overview
 
 On some platforms, before loading can occur the loader must be initialized
 with platform-specific parameters.
@@ -80,9 +80,8 @@ include::{generated}/api/protos/xrInitializeLoaderKHR.adoc[]
   defined by other platform- or implementation-specific extensions.
 ****
 --
-*Issues*
 
-*Version History*
+==== Version History
 
 * Revision 2, 2023-05-08 (Robert Blenkinsoppp)
 ** Explicitly state that the call to flink:xrInitializeLoaderKHR should be

@@ -11,7 +11,7 @@ include::{generated}/meta/XR_FB_triangle_mesh.adoc[]
     Johannes Schmid, Facebook
 
 
-*Overview*
+==== Overview
 
 Meshes may be useful in XR applications when representing parts of the
 environment.
@@ -416,9 +416,7 @@ A successful call moves pname:mesh to state
 include::{generated}/validity/protos/xrTriangleMeshEndVertexBufferUpdateFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-09-01 (Anton Vaneev)
 ** Initial extension description

@@ -1,0 +1,196 @@
+// Copyright (c) 2017-2026, The Khronos Group Inc.
+//
+// SPDX-License-Identifier: CC-BY-4.0
+
+include::{generated}/meta/XR_EXT_spatial_plane_semantic_label2.adoc[]
+
+*Contributors*::
+    Nihav Jain, Google +
+    Natalie Fleury, Meta +
+    Yuichi Taguchi, Meta +
+    Jimmy Alamparambil, ByteDance +
+    Zhipeng Liu, ByteDance +
+    Junfeng She, ByteDance +
+    Andy Biar, Unity Technologies +
+
+==== Overview
+
+This extension follows the <<ext_spatial_entity_semantic_labels_guidelines>>
+to extend elink:XrSpatialPlaneSemanticLabelEXT with the values for door and
+window.
+It does so by defining a new component type
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT and a new
+enumeration elink:XrSpatialPlaneSemanticLabel2EXT.
+
+==== Extension support requirement
+
+If the runtime enumerates apiext:XR_EXT_spatial_plane_semantic_label2 in
+flink:xrEnumerateInstanceExtensionProperties, it must: also enumerate
+apiext:XR_EXT_spatial_entity_archetypes.
+However, the runtime must: not return any error from flink:xrCreateInstance
+if the application enables apiext:XR_EXT_spatial_plane_semantic_label2
+without enabling apiext:XR_EXT_spatial_entity_archetypes.
+
+[[ext_spatial_plane_semanticlabel2_component]]
+==== Plane Semantic Label 2
+
+===== Component data
+
+[open,refpage='XrSpatialPlaneSemanticLabel2EXT',type='enums',desc='Plane semantic label set with door and window',xrefs='XrSpatialComponentPlaneSemanticLabel2ListEXT XrSpatialPlaneSemanticLabelEXT XrSpatialComponentTypeEXT']
+--
+include::{generated}/api/enums/XrSpatialPlaneSemanticLabel2EXT.adoc[]
+
+The elink:XrSpatialPlaneSemanticLabel2EXT enumeration describes a set of
+semantic labels for planes.
+It is an extension of the elink:XrSpatialPlaneSemanticLabelEXT enumeration
+and adds the values of door and window to that label set as per
+<<ext_spatial_entity_semantic_labels_guidelines>>
+
+The enumeration values have the following meanings:
+
+include::{generated}/api/enums/XrSpatialPlaneSemanticLabel2EXT.comments.adoc[]
+
+If an entity that has
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT also has
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT, the semantic
+meaning of the component data must: match.
+i.e. the ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT value for
+that entity must: correspond with the
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT values according
+to the following table:
+
+[width="100%",options="header"]
+|====
+| elink:XrSpatialPlaneSemanticLabel2EXT              | elink:XrSpatialPlaneSemanticLabelEXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_FLOOR_EXT   | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_FLOOR_EXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_WALL_EXT    | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_WALL_EXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_CEILING_EXT | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_CEILING_EXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_TABLE_EXT   | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_TABLE_EXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_DOOR_EXT    | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT
+| ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_WINDOW_EXT  | ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL_UNCATEGORIZED_EXT
+|====
+--
+
+===== Component List Structure to Query Data
+
+[open,refpage='XrSpatialComponentPlaneSemanticLabel2ListEXT',type='structs',desc='List struct for the plane semantic label 2 component',xrefs='XrSpatialComponentTypeEXT xrQuerySpatialComponentDataEXT XrSpatialComponentDataQueryResultEXT XrSpatialPlaneSemanticLabel2EXT']
+--
+The slink:XrSpatialComponentPlaneSemanticLabel2ListEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialComponentPlaneSemanticLabel2ListEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+  No such structures are defined in core OpenXR or this extension.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialPlaneSemanticLabel2EXT.
+****
+
+To query the plane semantic label 2 component of the spatial entities in an
+slink:XrSpatialSnapshotEXT, include
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes and add
+slink:XrSpatialComponentPlaneSemanticLabel2ListEXT to the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrQuerySpatialComponentDataEXT if
+slink:XrSpatialComponentPlaneSemanticLabel2ListEXT is in the
+slink:XrSpatialComponentDataQueryResultEXT::pname:next chain but
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT is not included in
+slink:XrSpatialComponentDataQueryConditionEXT::pname:componentTypes.
+
+The runtime must: return ename:XR_ERROR_SIZE_INSUFFICIENT from
+flink:xrQuerySpatialComponentDataEXT if pname:semanticLabelCount is less
+than slink:XrSpatialComponentDataQueryResultEXT::pname:entityIdCountOutput.
+
+include::{generated}/validity/structs/XrSpatialComponentPlaneSemanticLabel2ListEXT.adoc[]
+--
+
+===== Configuration
+
+If ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT is enumerated
+in slink:XrSpatialCapabilityComponentTypesEXT::pname:componentTypes for some
+capability, an application can: enable it by including the enumerant in the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+list of the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT derived
+structure of the capability that supports this component.
+
+This component does not require any special configuration to be included in
+the slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:next chain
+but does offer an optional configuration for applications to provide.
+
+[open,refpage='XrSpatialFeaturePlaneSemanticLabel2SubsetEXT',type='structs',desc='Provide subset of elink:XrSpatialPlaneSemanticLabel2EXT for runtime to track.',xrefs='XrSpatialCapabilityFeatureEXT xrEnumerateSpatialCapabilityFeaturesEXT XrSpatialPlaneSemanticLabel2EXT XrSpatialCapabilityConfigurationPlaneTrackingEXT']
+--
+
+The slink:XrSpatialFeaturePlaneSemanticLabel2SubsetEXT structure is defined
+as:
+
+include::{generated}/api/structs/XrSpatialFeaturePlaneSemanticLabel2SubsetEXT.adoc[]
+
+.Member Descriptions
+****
+* pname:type is the elink:XrStructureType of this structure.
+* pname:next is code:NULL or a pointer to the next structure in a structure
+  chain.
+* pname:semanticLabelCount is a code:uint32_t describing the count of
+  elements in the pname:semanticLabels array.
+* pname:semanticLabels is an array of elink:XrSpatialPlaneSemanticLabel2EXT.
+****
+
+If the runtime enumerates
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT from
+flink:xrEnumerateSpatialCapabilityComponentTypesEXT for a given capability,
+it must: also enumerate
+ename:XR_SPATIAL_CAPABILITY_FEATURE_PLANE_SEMANTIC_LABEL2_SUBSET_EXT from
+flink:xrEnumerateSpatialCapabilityFeaturesEXT for the same capability.
+If an application enables
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT when configuring
+that capability, it can: chain
+slink:XrSpatialFeaturePlaneSemanticLabel2SubsetEXT to the corresponding
+configuration structure of that capability to provide the runtime with a
+subset of labels defined in elink:XrSpatialPlaneSemanticLabel2EXT.
+The runtime may: use this subset of labels to optimize its tracking
+pipelines.
+
+The runtime must: return ename:XR_ERROR_VALIDATION_FAILURE from
+flink:xrCreateSpatialContextAsyncEXT if pname:semanticLabels contains any
+label that is not defined in elink:XrSpatialPlaneSemanticLabel2EXT or if
+pname:semanticLabels contains
+ename:XR_SPATIAL_PLANE_SEMANTIC_LABEL2_UNCATEGORIZED_EXT.
+
+The runtime must: return ename:XR_ERROR_SPATIAL_COMPONENT_NOT_ENABLED_EXT
+from flink:xrCreateSpatialContextAsyncEXT if the application provides a
+valid list of labels in pname:semanticLabels but
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT is not included in
+the
+slink:XrSpatialCapabilityConfigurationBaseHeaderEXT::pname:enabledComponents
+array of the configuration structure that
+slink:XrSpatialFeaturePlaneSemanticLabel2SubsetEXT is chained to.
+
+If the application configures a capability with a valid
+slink:XrSpatialFeaturePlaneSemanticLabel2SubsetEXT, the runtime must: not
+include entities that have
+ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL2_EXT with a semantic
+label value not listed in pname:semanticLabels in any discovery snapshot
+created for the configured spatial context.
+Since elink:XrSpatialPlaneSemanticLabel2EXT is an extension of
+elink:XrSpatialPlaneSemanticLabelEXT, the runtime must: not include entities
+that have ename:XR_SPATIAL_COMPONENT_TYPE_PLANE_SEMANTIC_LABEL_EXT with a
+semantic label value that does not map to a label in pname:semanticLabels as
+per the mapping provided in the description of
+elink:XrSpatialPlaneSemanticLabel2EXT.
+
+include::{generated}/validity/structs/XrSpatialFeaturePlaneSemanticLabel2SubsetEXT.adoc[]
+--
+
+
+==== Version History
+
+* Revision 1, 2025-12-09 (Nihav Jain, Google)
+** Initial extension description

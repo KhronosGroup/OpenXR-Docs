@@ -1488,7 +1488,7 @@ CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSpatialAudioRendererBD",
                              &xrCreateSpatialAudioRendererBD)));
 
 uint32_t sampleRateCount = 0;
-CHK_XR(xrEnumerateSupportedAudioSampleRateBD(session, 0, &sampleRateCount, NULL));
+CHK_XR(xrEnumerateSupportedAudioSampleRateBD(session, 0, &sampleRateCount, nullptr));
 std::vector<XrAudioSampleRateBD> sampleRates;
 if (sampleRateCount != 0) {
     sampleRates.resize(sampleRateCount);
@@ -1504,15 +1504,15 @@ framePerBuffer = framePerBuffer < minFramePerBuffer ? minFramePerBuffer : frameP
 framePerBuffer = framePerBuffer > maxFramePerBuffer ? maxFramePerBuffer : framePerBuffer;
 
 // Setup context config struct
-XrSpatialAudioRendererCreateInfoBD createInfo{
-    XR_TYPE_SPATIAL_AUDIO_RENDERER_CREATE_INFO_BD,
-    NULL,
-    framePerBuffer,  //  frames_per_buffer
-    sampleRates[0]  //  sample rate
+XrSpatialAudioRendererCreateInfoBD createInfo {
+  .type = XR_TYPE_SPATIAL_AUDIO_RENDERER_CREATE_INFO_BD,
+  .next = nullptr,
+  .framesPerBuffer = framePerBuffer,  //  frames_per_buffer
+  .sampleRate = sampleRates[0],  //  sample rate
 };
 
 // Create and initialize spatial audio renderer for session
-XrSpatialAudioRendererBD renderer;
+XrSpatialAudioRendererBD renderer {XR_NULL_HANDLE};
 CHK_XR(xrCreateSpatialAudioRendererBD(session, &createInfo, &renderer));
 
 /****************************************************************************/
@@ -1524,56 +1524,56 @@ CHK_XR(xrCreateSpatialAudioRendererBD(session, &createInfo, &renderer));
 
 // Setup a 1st order ambisonic sound field config struct
 XrSoundFieldChannelDefinitionAmbixBD ambix {
-    XR_TYPE_SOUND_FIELD_CHANNEL_DEFINITION_AMBIX_BD,
-    nullptr,
-    XR_SOUND_FIELD_CHANNEL_MASK_AMBIX_1ST_ORDER_BD
+    .type = XR_TYPE_SOUND_FIELD_CHANNEL_DEFINITION_AMBIX_BD,
+    .next = nullptr,
+    .channelMask = XR_SOUND_FIELD_CHANNEL_MASK_AMBIX_1ST_ORDER_BD,
 };
 
 XrSoundFieldConfigBD soundFieldConfig{
-    XR_TYPE_SOUND_FIELD_CONFIG_BD,
-    &ambix,
-    true,
-    {0.0f, 0.0f, 0.0f, 1.0f},  // orientation
-    space,
-    1,  //  main volume
-    1  //  LFE gain
+    .type = XR_TYPE_SOUND_FIELD_CONFIG_BD,
+    .next = &ambix,
+    .enabled = true,
+    .orientation = {0.0f, 0.0f, 0.0f, 1.0f},
+    .baseSpace = space,
+    .mainVolume = 1,
+    .lfeGain = 1,
 };
 
 
 // Add sound field to the scene
-PFN_xrCreateSoundFieldBD xrCreateSoundFieldBD;
+PFN_xrCreateSoundFieldBD xrCreateSoundFieldBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundFieldBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSoundFieldBD)));
-XrSoundFieldBD soundField;
+XrSoundFieldBD soundField {XR_NULL_HANDLE};
 CHK_XR(xrCreateSoundFieldBD(renderer, &soundFieldConfig, &soundField));
 
 // Submit a sound field buffer
 /// Wait for the next audio period to begin
-PFN_xrWaitAudioPeriodBD xrWaitAudioPeriodBD;
+PFN_xrWaitAudioPeriodBD xrWaitAudioPeriodBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrWaitAudioPeriodBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrWaitAudioPeriodBD)));
 CHK_XR(xrWaitAudioPeriodBD(renderer, XR_INFINITE_DURATION));
 
 /// Submit a sound field buffer
-PFN_xrSubmitSoundFieldBufferBD xrSubmitSoundFieldBufferBD;
+PFN_xrSubmitSoundFieldBufferBD xrSubmitSoundFieldBufferBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrSubmitSoundFieldBufferBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrSubmitSoundFieldBufferBD)));
 float mcbuffer[4*256];
 XrAudioBufferBD soundFieldBuffer{
-    XR_TYPE_AUDIO_BUFFER_BD,
-    nullptr,
-    XR_AUDIO_BUFFER_CHANNEL_LAYOUT_PLANAR_BD,
-    4,  //  num_channels
-    4*256,  //  buffer_length
-    mcbuffer
+    .type = XR_TYPE_AUDIO_BUFFER_BD,
+    .next = nullptr,
+    .channelLayout = XR_AUDIO_BUFFER_CHANNEL_LAYOUT_PLANAR_BD,
+    .bufferChannels = 4,
+    .bufferLength = 4*256,
+    .buffer = mcbuffer,
 };
 CHK_XR(xrSubmitSoundFieldBufferBD(soundField, &soundFieldBuffer));
 
 /// Signal the end of the current audio period
-PFN_xrEndAudioPeriodBD xrEndAudioPeriodBD;
+PFN_xrEndAudioPeriodBD xrEndAudioPeriodBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrEndAudioPeriodBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrEndAudioPeriodBD)));
@@ -1583,7 +1583,7 @@ CHK_XR(xrEndAudioPeriodBD(renderer));
 
 // Change sound field config
 soundFieldConfig.orientation = {0.0f, 0.38268343f, 0.0f, 0.92387953f}; // rotate 45 degrees around y axis
-PFN_xrUpdateSoundFieldConfigBD xrUpdateSoundFieldConfigBD;
+PFN_xrUpdateSoundFieldConfigBD xrUpdateSoundFieldConfigBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundFieldConfigBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrUpdateSoundFieldConfigBD)));
@@ -1609,48 +1609,50 @@ CHK_XR(xrEndAudioPeriodBD(renderer));
 /****************************************************************************/
 
 // Add object to the scene
-PFN_xrCreateSoundObjectBD xrCreateSoundObjectBD;
+PFN_xrCreateSoundObjectBD xrCreateSoundObjectBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObjectBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSoundObjectBD)));
-XrSoundObjectBD objectId;
+XrSoundObjectBD objectId {XR_NULL_HANDLE};
 // Construct polar pattern
 XrSoundObjectDirectivityCardioidBD objectDirectivityCardioid{
-    XR_TYPE_SOUND_OBJECT_DIRECTIVITY_CARDIOID_BD,
-    NULL,
-    0.5f,    //  alpha
-    1.0f     //  order
+    .type = XR_TYPE_SOUND_OBJECT_DIRECTIVITY_CARDIOID_BD,
+    .next = nullptr,
+    .alpha = 0.5f,
+    .order = 1.0f,
 };
 
 // Construct shape
 XrSoundObjectShapeSphereBD objectShapeSphere{
-    XR_TYPE_SOUND_OBJECT_SHAPE_SPHERE_BD,
-    &objectDirectivityCardioid,
-    0.1f  //  radius of 0.1 meter
+    .type = XR_TYPE_SOUND_OBJECT_SHAPE_SPHERE_BD,
+    .next = &objectDirectivityCardioid,
+    .radius = 0.1f,
 };
 
 // Construct inverse square distance attenuation
 XrSoundObjectDistanceAttenuationBD objectDistanceAttenuation{
-    XR_TYPE_SOUND_OBJECT_DISTANCE_ATTENUATION_BD,
-    NULL,
-    XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_INVERSE_SQUARE_BD,   //  distance attenuation type
-    0.1f,   //  min distance
-    100.0f,    //  max distance
-    1.0f  //  rolloff factor
+    .type = XR_TYPE_SOUND_OBJECT_DISTANCE_ATTENUATION_BD,
+    .next = nullptr,
+    .distanceAttenuationType = XR_SOUND_OBJECT_DISTANCE_ATTENUATION_TYPE_INVERSE_SQUARE_BD,
+    .minAttenuationRange = 0.1f,
+    .maxAttenuationRange = 100.0f,
+    .referenceDistance = 0.f,
+    .rolloffFactor = 1.0f,
+    .customDistanceAttenuationCurve = nullptr,
 };
 
 // Construct object config
 XrSoundObjectConfigBD objectConfig{
-    XR_TYPE_SOUND_OBJECT_CONFIG_BD,
-    &objectShapeSphere,
-    true,
-    {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}, //   Pose
-    space,
-    1.0f,   //  main volume
-    1.0f,   //  reflection gain
-    true,   //  is Doppler enabled
-    &objectDistanceAttenuation,     //  distance attenuation for direct sound
-    &objectDistanceAttenuation      //  distance attenuation for indirect sound
+    .type = XR_TYPE_SOUND_OBJECT_CONFIG_BD,
+    .next = &objectShapeSphere,
+    .enabled = true,
+    .pose = {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    .baseSpace = space,
+    .mainVolume = 1.0f,
+    .reflectionGain = 1.0f,
+    .enableDoppler = true,
+    .directSoundAttenuation = &objectDistanceAttenuation,     //  distance attenuation for direct sound
+    .indirectSoundAttenuation = &objectDistanceAttenuation    //  distance attenuation for indirect sound
 };
 
 // Add object to the scene
@@ -1665,14 +1667,14 @@ PFN_xrSubmitSoundObjectBufferBD xrSubmitSoundObjectBufferBD;
 CHK_XR(xrGetInstanceProcAddr(instance, "xrSubmitSoundObjectBufferBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrSubmitSoundObjectBufferBD)));
-float buffer[256];
+float buffer[256]{};
 XrAudioBufferBD objBuffer{
-    XR_TYPE_AUDIO_BUFFER_BD,
-    nullptr,
-    XR_AUDIO_BUFFER_CHANNEL_LAYOUT_INTERLEAVED_BD,
-    1,  //  num_channels
-    256,  //  buffer_length
-    buffer
+    .type = XR_TYPE_AUDIO_BUFFER_BD,
+    .next = nullptr,
+    .channelLayout = XR_AUDIO_BUFFER_CHANNEL_LAYOUT_INTERLEAVED_BD,
+    .bufferChannels = 1,
+    .bufferLength = 256,
+    .buffer = buffer,
 };
 
 // submit the buffer
@@ -1685,7 +1687,7 @@ CHK_XR(xrEndAudioPeriodBD(renderer));
 
 // Change object config
 objectConfig.pose.position = {1.0f, 0.0f, 1.0f}; // move sound object 1 meter towards positive direction of x axis
-PFN_xrUpdateSoundObjectConfigBD xrUpdateSoundObjectConfigBD;
+PFN_xrUpdateSoundObjectConfigBD xrUpdateSoundObjectConfigBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundObjectConfigBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrUpdateSoundObjectConfigBD)));
@@ -1717,11 +1719,12 @@ XrVector3f vertices[] = {{5.0f, 5.0f, 5.0f}, {-5.0f, 5.0f, 5.0f}, {-5.0f, 5.0f, 
                          {5.0f, -5.0f, 5.0f}, {-5.0f, -5.0f, 5.0f}, {-5.0f, -5.0f, -5.0f}, {5.0f, -5.0f, -5.0f}};
 uint32_t indices[] = {0, 1, 2, 0, 2, 3, 1, 5, 2, 2, 5, 6, 2, 6, 3, 3, 6, 7, 1, 0, 4, 1, 4, 5, 0, 3, 7, 0, 7, 4, 5, 7, 6, 5, 4, 7};
 XrSoundTriangleMeshBD mesh{
-    XR_TYPE_SOUND_TRIANGLE_MESH_BD,NULL,
-    8,    //  vertexCount
-    vertices,
-    12*3,   //  indexCount
-    indices
+    .type = XR_TYPE_SOUND_TRIANGLE_MESH_BD,
+    .next = nullptr,
+    .vertexCount = 8,
+    .vertices = vertices,
+    .indexCount = 12*3,
+    .indices = indices,
 };
 
 // Setup acoustic material
@@ -1730,17 +1733,17 @@ float absorption[] = {0.1f, 0.12f, 0.15f, 0.2f};
 float scattering[] = {0.2f, 0.23f, 0.26f, 0.3f};
 float transmission[] = {0.5f, 0.5f, 0.5f, 0.5f};
 XrSoundObstacleMaterialConfigBD materialConfig{
-    XR_TYPE_SOUND_OBSTACLE_MATERIAL_CONFIG_BD,
-    NULL,
-    XR_SOUND_OBSTACLE_MATERIAL_TYPE_CUSTOM_BD, //  material type
-    4,  //  frequency bandCount
-    freqCenter,       //  bandFrequencies (frequency center of bands)
-    absorption,       //  bandAbsorptions
-    scattering,       //  bandScatterings
-    transmission      //  bandTransmissions
+    .type = XR_TYPE_SOUND_OBSTACLE_MATERIAL_CONFIG_BD,
+    .next = nullptr,
+    .materialType = XR_SOUND_OBSTACLE_MATERIAL_TYPE_CUSTOM_BD,
+    .bandCount = 4,
+    .bandFrequencies = freqCenter,
+    .bandAbsorptions = absorption,
+    .bandScatterings = scattering,
+    .bandTransmissions = transmission,
 };
 
-PFN_xrCreateSoundObstacleMaterialBD xrCreateSoundObstacleMaterialBD;
+PFN_xrCreateSoundObstacleMaterialBD xrCreateSoundObstacleMaterialBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObstacleMaterialBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSoundObstacleMaterialBD)));
@@ -1751,21 +1754,21 @@ CHK_XR(xrCreateSoundObstacleMaterialBD(renderer, &materialConfig, &materialHandl
 XrSoundObstacleMaterialBD materials[8] = {materialHandle, materialHandle, materialHandle, materialHandle,
     materialHandle, materialHandle, materialHandle, materialHandle};
 XrSoundObstacleConfigBD obstacleConfig{
-    XR_TYPE_SOUND_OBSTACLE_CONFIG_BD,
-    NULL,
-    true,   //  sound obstacle enabled
-    {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}, //  Pose
-    space,
-    8,    //  materialCount, which is equal to vertexCount
-    materials    //  material for each vertex
+    .type = XR_TYPE_SOUND_OBSTACLE_CONFIG_BD,
+    .next = nullptr,
+    .enabled = true,
+    .pose = {{0.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+    .baseSpace = space,
+    .materialCount = 8,     //  materialCount, which is equal to vertexCount
+    .materials = materials  //  material for each vertex
 };
 
 //  Submit sound obstacle to the scene
-PFN_xrCreateSoundObstacleBD xrCreateSoundObstacleBD;
+PFN_xrCreateSoundObstacleBD xrCreateSoundObstacleBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrCreateSoundObstacleBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrCreateSoundObstacleBD)));
-XrSoundObstacleBD soundObstacleHandle;
+XrSoundObstacleBD soundObstacleHandle {XR_NULL_HANDLE};
 CHK_XR(xrCreateSoundObstacleBD(renderer, &obstacleConfig, &mesh, &soundObstacleHandle));
 
 
@@ -1784,11 +1787,11 @@ CHK_XR(xrEndAudioPeriodBD(renderer));
 
 // Change sound obstacle config
 obstacleConfig.enabled = false;
-PFN_xrUpdateSoundObstacleConfigBD xrUpdateSoundObstacleConfigBD;
+PFN_xrUpdateSoundObstacleConfigBD xrUpdateSoundObstacleConfigBD {nullptr};
 CHK_XR(xrGetInstanceProcAddr(instance, "xrUpdateSoundObstacleConfigBD",
                              reinterpret_cast<PFN_xrVoidFunction*>(
                              &xrUpdateSoundObstacleConfigBD)));
-CHK_XR(xrUpdateSoundObstacleConfigBD(soundObstacleHandle, &obstacleConfig, NULL, XR_SOUND_OBSTACLE_ENABLED_BIT_BD));
+CHK_XR(xrUpdateSoundObstacleConfigBD(soundObstacleHandle, &obstacleConfig, nullptr, XR_SOUND_OBSTACLE_ENABLED_BIT_BD));
 
 
 // Input object audio

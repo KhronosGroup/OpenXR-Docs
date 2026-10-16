@@ -7,7 +7,7 @@ include::{generated}/meta/XR_EPIC_view_configuration_fov.adoc[]
 *Contributors*::
     Jules Blok, Epic Games
 
-*Overview*
+==== Overview
 
 This extension allows the application to retrieve the recommended and
 maximum field-of-view using flink:xrEnumerateViewConfigurationViews.
@@ -57,9 +57,7 @@ include::{generated}/validity/structs/XrViewConfigurationViewFovEPIC.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 2, 2020-06-04 (Jules Blok)
 ** Fixed incorrect member name.

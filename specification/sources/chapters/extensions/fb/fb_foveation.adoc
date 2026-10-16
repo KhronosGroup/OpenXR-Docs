@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_foveation.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 Foveation in the context of XR is a rendering technique that allows the area
 of an image near the focal point or fovea of the eye to be displayed at
@@ -218,9 +218,7 @@ profile in progress when the foveation profile is destroyed.
 include::{generated}/validity/protos/xrDestroyFoveationProfileFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-05-13 (Kevin Xiao)
 ** Initial extension description

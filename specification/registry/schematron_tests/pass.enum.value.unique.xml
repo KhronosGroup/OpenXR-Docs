@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+    </tags>
+
+    <!-- Left wholly uncommented so the enum-comment rule has nothing to say here. -->
+    <enums name="XrTestEnumEXT" type="enum">
+        <enum value="1"   name="XR_TEST_ENUM_BASE_EXT"/>
+    </enums>
+
+    <extensions>
+        <extension name="XR_EXT_test" number="1" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_test_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_test&quot;" name="XR_EXT_TEST_EXTENSION_NAME"/>
+                <enum offset="0" extends="XrTestEnumEXT" name="XR_TEST_ENUM_FIRST_EXT"/>
+            </require>
+        </extension>
+        <extension name="XR_EXT_other" number="2" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_other_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_other&quot;" name="XR_EXT_OTHER_EXTENSION_NAME"/>
+                <enum offset="0" extends="XrTestEnumEXT" name="XR_TEST_ENUM_SECOND_EXT"/>
+            </require>
+        </extension>
+    </extensions>
+
+</registry>

@@ -26,10 +26,20 @@ makeSchematronReport() {
     java -jar "$SCHXSLT_CLI" --document "$1" --schematron "$SCH" --verbose --output "$1.srvl" --exitcode 1
 }
 
+logFailedAsserts() {
+    tr '\n' ' ' < "$1" |
+    sed -e 's/<svrl:failed-assert/\n<svrl:failed-assert/g' |
+    grep '^<svrl:failed-assert' |
+    sed -e 's/  */ /g' \
+        -e '/id="/   s/.* id="\([^"]*\)".*<svrl:text>\(.*\)<\/svrl:text>.*/  - \1: \2/;t' \
+        -e '/test="/ s/.* test="\([^"]*\)".*<svrl:text>\(.*\)<\/svrl:text>.*/  - (test: \1): \2/'
+}
+
 runSchematron() {
     makeSchematronReport "$1"
     if [ -f "$1.srvl" ]; then
         if grep -q "failed-assert>" "$1.srvl" > /dev/null; then
+            logFailedAsserts "$1.srvl" 1>&2
             return 1
         fi
         if grep -q "invalid" "$1.srvl" > /dev/null; then
@@ -39,6 +49,29 @@ runSchematron() {
         echo "**** ERROR Invalid XML file: $1" 1>&2
         exit 1
     fi
+}
+
+runSchematronFailTest() {
+    makeSchematronReport "$1" || true
+    if [ ! -f "$1.srvl" ]; then
+        echo "**** ERROR Invalid XML file: $1" 1>&2
+        exit 1
+    fi
+    max_fails=1
+    if grep -q "expected-failures:" "$1" 2>/dev/null; then
+        max_fails=$(sed -n -e 's/.*expected-failures:[[:space:]]*\([0-9]*\).*/\1/p' "$1" | head -n 1)
+    fi
+    num_fails=$(grep -o "<svrl:failed-assert" "$1.srvl" 2>/dev/null | wc -l)
+    if [ "$num_fails" -eq 0 ]; then
+        echo "[ERROR] $1: unexpected schema-pass (0 failures)" 1>&2
+        return 1
+    elif [ "$num_fails" -gt "$max_fails" ]; then
+        echo "[ERROR] $1: expected at most $max_fails failure(s), found $num_fails:" 1>&2
+        logFailedAsserts "$1.srvl" 1>&2
+        echo "If this is expected, add '<!-- expected-failures: $num_fails -->' to the test file." 1>&2
+        return 1
+    fi
+    return 0
 }
 
 ensureSchXslt() {

@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_foveation_vulkan.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 The Vulkan graphics API requires an image to be applied to the swapchain to
 apply a foveation pattern.
@@ -70,9 +70,7 @@ include::{generated}/validity/structs/XrSwapchainImageFoveationVulkanFB.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-05-26 (Kevin Xiao)
 ** Initial extension description

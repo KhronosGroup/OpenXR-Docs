@@ -425,6 +425,8 @@ Extension =
         # attribute author { text }?,
         # attribute contact { text }?,
         attribute type { "instance" },
+        attribute fragment { "true" }?,
+        attribute stubs { "true" }?,
         DependsAttr?,
         attribute supported { "openxr" | "disabled" }?,
         attribute promotedto { text }?,

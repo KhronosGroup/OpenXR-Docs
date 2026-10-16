@@ -392,7 +392,7 @@ XrSpatialCapabilityConfigurationDepthRaycastANDROID depthRaycastConfig {
 
 // Enumerate runtime supported components for plane tracking capability
 XrSpatialCapabilityComponentTypesEXT capabilityComponentTypes {
-  XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT
+  .type = XR_TYPE_SPATIAL_CAPABILITY_COMPONENT_TYPES_EXT,
 };
 
 bool isRaycastSupportedViaPlaneTracking;
@@ -443,7 +443,8 @@ CHK_XR(xrCreateSpatialContextAsyncEXT(session, &contextCreateInfo, &future))
 
 // Completes creating spatial context
 XrCreateSpatialContextCompletionEXT contextCompletion{
-XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+};
 
 CHK_XR(xrCreateSpatialContextCompleteEXT(session, future, &contextCompletion))
 ----
@@ -490,7 +491,8 @@ XrCreateSpatialDiscoverySnapshotCompletionInfoEXT
   };
 
 XrCreateSpatialDiscoverySnapshotCompletionEXT completion {
-  XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT};
+  .type = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_EXT,
+};
 
 CHK_XR(xrCreateSpatialDiscoverySnapshotCompleteEXT(
            spatialContext, &createSnapshotCompletionInfo,
@@ -593,8 +595,6 @@ xrDestroySpatialSnapshotEXT(raycastSnapshot);
 ----
 
 include::{generated}/interfaces/XR_ANDROID_spatial_discovery_raycast.adoc[leveloffset=1]
-
-==== Issues
 
 ==== Version History
 

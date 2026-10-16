@@ -11,7 +11,7 @@ include::{generated}/meta/XR_FB_scene.adoc[]
     Cass Everitt, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension expands on the concept of spatial entities to include a way
 for a spatial entity to represent rooms, objects, or other boundaries in a
@@ -368,9 +368,7 @@ and `ceilingUuid` are unspecified and should not be used.
 include::{generated}/validity/protos/xrGetSpaceRoomLayoutFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-03-09 (John Schofield)
 ** Initial draft

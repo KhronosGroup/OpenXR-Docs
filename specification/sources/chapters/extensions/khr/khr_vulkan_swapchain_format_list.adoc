@@ -13,7 +13,7 @@ include::{generated}/meta/XR_KHR_vulkan_swapchain_format_list.adoc[]
     Dan Ginsburg, Valve +
     Jakob Bornecrantz, NVIDIA +
 
-*Overview*
+==== Overview
 
 Vulkan has the ename:VK_KHR_image_format_list extension which allows
 applications to tell the fname:vkCreateImage function which formats the
@@ -74,9 +74,7 @@ include::{generated}/validity/structs/XrVulkanSwapchainFormatListCreateInfoKHR.a
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2017-09-13 (Paul Pedriana)
 ** Initial proposal.

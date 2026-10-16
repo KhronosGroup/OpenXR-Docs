@@ -17,7 +17,7 @@ include::{generated}/meta/XR_EXT_local_floor.adoc[]
 *Contacts*::
     John Kearney, Meta +
 
-*Overview*
+==== Overview
 
 The core OpenXR spec contains two world-locked reference space slink:XrSpace
 types in elink:XrReferenceSpaceType, ename:XR_REFERENCE_SPACE_TYPE_LOCAL and
@@ -167,12 +167,7 @@ else
 
 ----
 
-
-*Issues*
-
-None
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-11-28 (John Kearney)
 ** Initial draft

@@ -371,7 +371,7 @@ examples of input subpaths.
 * system - A button with the specialised meaning that it enables the user to
   access system-level functions and UI.
   Input data from system buttons is generally used internally by runtimes
-  and may: not be available to applications.
+  and may: be unavailable to applications.
 * dpad_up, dpad_down, dpad_left, and dpad_right - A set of buttons arranged
   in a plus shape.
 * diamond_up, diamond_down, diamond_left, and diamond_right - Gamepads often
@@ -713,8 +713,7 @@ ByteDance PICO Neo3 Controller.
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
 * subpathname:/input/menu/click
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -756,8 +755,7 @@ ByteDance PICO 4 Controller.
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-* subpathname:/input/system/click (may: not be available for application
-use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -883,8 +881,7 @@ Vive Controller.
 
 Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/click
 * subpathname:/input/menu/click
 * subpathname:/input/trigger/click
@@ -923,8 +920,7 @@ Supported component paths:
 * On pathname:/user/hand/right only:
 ** subpathname:/input/a/click
 ** subpathname:/input/b/click
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/shoulder/click
 * subpathname:/input/squeeze/click
 * subpathname:/input/trigger/click
@@ -961,8 +957,7 @@ Vive Focus 3 Controller.
 * On pathname:/user/hand/right only:
 ** subpathname:/input/a/click
 ** subpathname:/input/b/click
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/click
 * subpathname:/input/squeeze/touch
 * subpathname:/input/squeeze/value
@@ -995,8 +990,7 @@ headset.
 
 Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/volume_up/click
 * subpathname:/input/volume_down/click
 * subpathname:/input/mute_mic/click
@@ -1017,7 +1011,7 @@ Magic Leap 2 controller.
 Supported component paths:
 
 * subpathname:/input/menu/click
-* subpathname:/input/home/click (may: not be available for application use)
+* subpathname:/input/home/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trackpad/y
@@ -1118,8 +1112,7 @@ controller.
 
 Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/back/click
 * subpathname:/input/trackpad/x
@@ -1159,8 +1152,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1206,8 +1198,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1259,8 +1250,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1310,8 +1300,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1359,8 +1348,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1406,8 +1394,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/squeeze/value
 * subpathname:/input/trigger/value
 * subpathname:/input/trigger/touch
@@ -1481,10 +1468,8 @@ Valve Index controller.
 
 Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application
-  use)
-* subpathname:/input/system/touch (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
+* subpathname:/input/system/touch (may: be unavailable for application use)
 * subpathname:/input/a/click
 * subpathname:/input/a/touch
 * subpathname:/input/b/click

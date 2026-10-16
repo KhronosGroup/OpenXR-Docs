@@ -17,7 +17,7 @@ include::{generated}/meta/XR_EXT_win32_appcontainer_compatible.adoc[]
     Lachlan Ford, Microsoft +
 
 
-*Overview*
+==== Overview
 
 To minimize opportunities for malicious manipulation, a common practice on
 the Windows OS is to isolate the application process in an
@@ -56,9 +56,7 @@ properly in the AppContainer execution environment.
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-12-16 (Yin Li)
 ** Initial proposal.

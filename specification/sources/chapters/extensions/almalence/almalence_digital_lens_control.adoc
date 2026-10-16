@@ -14,7 +14,7 @@ include::{generated}/meta/XR_ALMALENCE_digital_lens_control.adoc[]
     Dmitry Shmunk, Almalence Inc.
 
 
-*Overview*
+==== Overview
 
 Digital Lens for VR (DLVR) is a computational lens aberration correction
 technology enabling high resolution, visual clarity and fidelity in VR head
@@ -115,9 +115,7 @@ Layer
 include::{generated}/validity/protos/xrSetDigitalLensControlALMALENCE.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-11-08 (Ivan Chupakhin)
 ** Initial draft

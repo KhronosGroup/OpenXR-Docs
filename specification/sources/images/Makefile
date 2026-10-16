@@ -360,7 +360,8 @@ DEFAULT_OUTPUTS += $(LESS_SHRUNK_LICENSES)
 ###
 # pngquant (+zopflipng) is the better way to save size for some
 
-PNGQUANT_ZOPFLI_DESTS := bd_body_tracking_joint_convention.png
+PNGQUANT_ZOPFLI_DESTS := bd_body_tracking_joint_convention.png \
+    ext_spatial_object_tracking-keyboard-orientation.png
 
 # first do pngquant
 PNGQUANT_TEMP_DESTS := $(PNGQUANT_ZOPFLI_DESTS:%=$(CONVERSION_TEMP)/%)
@@ -405,6 +406,7 @@ DRAWIO_SOURCES := \
   originals/ext_spatial_entity_query_snapshot_02.drawio \
   originals/ext_spatial_entity_query_snapshot_03.drawio \
   originals/ext_spatial_entity_tracking_states.drawio \
+  originals/ext_spatial_mesh_tracking_app_flow_watertight.drawio \
   originals/fb_trimesh_states.drawio \
   originals/lifecycle.drawio
 

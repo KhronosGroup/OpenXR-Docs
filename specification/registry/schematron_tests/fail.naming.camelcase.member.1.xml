@@ -55,5 +55,9 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require>
             <type name="XrSampleBaseHeader"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XrResult"/>
+            <type name="XrStructureType"/>
+        </require>
     </feature>
 </registry>

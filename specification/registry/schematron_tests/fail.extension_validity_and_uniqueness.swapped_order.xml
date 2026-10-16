@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <!-- expected-failures: 3 -->
+
+    <tags>
+        <tag name="KHR" author="Khronos" contact="Brent Insko @insko"/>
+    </tags>
+
+    <extensions>
+    <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr" ratified="openxr">
+        <require>
+            <!-- Swapped order: name enum 1st, version enum 2nd -->
+            <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
+            <enum value="1"                              name="XR_KHR_loader_init_SPEC_VERSION"/>
+        </require>
+    </extension>
+    </extensions>
+</registry>

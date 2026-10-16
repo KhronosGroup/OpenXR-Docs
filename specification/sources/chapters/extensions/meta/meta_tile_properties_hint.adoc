@@ -128,6 +128,7 @@ include::{generated}/validity/structs/XrExtent3DiMETA.adoc[]
 
 ==== Example code
 
+// suppress-build due to missing headers
 [source,cpp,suppress-build]
 ----
 XrInstance instance; // previously initialized
@@ -155,10 +156,9 @@ vkGetFrameBufferTilePropertiesQCOM(device, framebuffer, &propertyCount, qcomProp
 
 // Convert VkTilePropertiesQCOM to XrTilePropertiesMETA
 std::vector<XrTilePropertiesMETA> xrProperties(propertyCount, {
-    .type = XR_TYPE_TILE_PROPERTIES_META,
+  .type = XR_TYPE_TILE_PROPERTIES_META;
 });
 for (uint32_t i = 0; i < propertyCount; ++i) {
-  xrProperties[i].type = XR_TYPE_TILE_PROPERTIES_META;
   xrProperties[i].tileDimensions.width = qcomProperties[i].tileSize.width;
   xrProperties[i].tileDimensions.height = qcomProperties[i].tileSize.height;
   xrProperties[i].tileDimensions.depth = qcomProperties[i].tileSize.depth;
@@ -169,10 +169,10 @@ for (uint32_t i = 0; i < propertyCount; ++i) {
 }
 
 // Send the hint
-XrTilePropertiesHintMETA hint{
-    .type = XR_TYPE_TILE_PROPERTIES_HINT_META,
-    .propertiesCount = propertyCount,
-    .properties = xrProperties.data(),
+XrTilePropertiesHintMETA hint {
+  .type = XR_TYPE_TILE_PROPERTIES_HINT_META,
+  .propertiesCount = propertyCount,
+  .properties = xrProperties.data(),
 };
 CHK_XR(pfnSetTilePropertiesHintMETA(session, &hint));
 ----

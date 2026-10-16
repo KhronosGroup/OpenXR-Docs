@@ -18,7 +18,7 @@ include::{generated}/meta/XR_EXT_palm_pose.adoc[]
     Peter Kuhn, Unity Technologies +
     Lachlan Ford, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension defines a new "standard pose identifier" for interaction
 profiles, named "palm_ext".
@@ -117,7 +117,7 @@ does not substantially increase the difficulty of providing additional input
 support using an API layer.
 ====
 
-*Version History*
+==== Version History
 
 * Revision 1, 2020-07-26 (Jack Pritz)
 ** Initial extension proposal

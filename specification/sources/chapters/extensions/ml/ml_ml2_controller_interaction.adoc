@@ -14,7 +14,7 @@ include::{generated}/meta/XR_ML_ml2_controller_interaction.adoc[]
     Ron Bessems, Magic Leap +
     Rafael Wiltz, Magic Leap
 
-*Overview*
+==== Overview
 
 This extension defines the interaction profile for the Magic Leap 2
 Controller.
@@ -29,7 +29,7 @@ Interaction profile path:
 * pathname:/interaction_profiles/ml/ml2_controller
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/ml/ml2_controller
 :properly-suffixed-path: /interaction_profiles/ml/ml2_controller_ml
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -42,7 +42,7 @@ Valid for user paths:
 Supported component paths:
 
 * subpathname:/input/menu/click
-* subpathname:/input/home/click (may: not be available for application use)
+* subpathname:/input/home/click (may: be unavailable for application use)
 * subpathname:/input/trigger/click
 * subpathname:/input/trigger/value
 * subpathname:/input/trackpad/y
@@ -71,9 +71,7 @@ include::{config}/ext_hand_interaction_notice.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-07-22 (Ron Bessems)
 

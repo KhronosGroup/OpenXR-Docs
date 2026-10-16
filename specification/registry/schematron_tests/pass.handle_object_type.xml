@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="EXT" author="Khronos"/>
+    </tags>
+
+    <enums name="XrResult" type="enum" comment="Error and return codes">
+        <!-- Return codes for successful operation execution (positive values) -->
+        <enum value="0"     name="XR_SUCCESS"                                   comment="Function successfully completed."/>
+    </enums>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+
+        <!-- Core Handle -->
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
+
+        <!-- Extension Handle -->
+        <type category="handle" parent="XrInstance"><type>XR_DEFINE_HANDLE</type>(<name>XrDebugUtilsMessengerEXT</name>)</type>
+
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type requires="openxr_platform_defines" name="void"/>
+        <type requires="openxr_platform_defines" name="char"/>
+    </types>
+
+    <!-- Core XrObjectType definitions -->
+    <enums name="XrObjectType" type="enum" comment="Enums to track objects of various types">
+        <enum value="1"   name="XR_OBJECT_TYPE_INSTANCE"   comment="XrInstance"/>
+    </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require comment="Types defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+        </require>
+    </feature>
+
+    <!-- Extension XrObjectType definitions -->
+    <extensions>
+        <extension name="XR_EXT_debug_utils" number="1" type="instance" supported="openxr">
+            <require>
+                <enum value="1" name="XR_EXT_debug_utils_SPEC_VERSION"/>
+                <enum value="&quot;XR_EXT_debug_utils&quot;" name="XR_EXT_DEBUG_UTILS_EXTENSION_NAME"/>
+                <type name="XrDebugUtilsMessengerEXT"/>
+                <enum extends="XrObjectType" name="XR_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT" value="1" comment="XrDebugUtilsMessengerEXT"/>
+            </require>
+        </extension>
+    </extensions>
+</registry>

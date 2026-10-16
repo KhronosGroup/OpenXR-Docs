@@ -15,7 +15,7 @@ include::{generated}/meta/XR_META_vulkan_swapchain_create_info.adoc[]
     Ross Ning, Meta Platforms
 
 
-*Overview*
+==== Overview
 
 Using this extension, a Vulkan-based application can: pass through
 additional ename:VkImageCreateFlags or ename:VkImageUsageFlags by chaining
@@ -75,9 +75,7 @@ include::{generated}/validity/structs/XrVulkanSwapchainCreateInfoMETA.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-05-05 (Ross Ning)
 ** Initial draft

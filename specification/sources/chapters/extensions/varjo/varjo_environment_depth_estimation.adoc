@@ -20,7 +20,7 @@ include::{generated}/meta/XR_VARJO_environment_depth_estimation.adoc[]
 // Khronos may elect to exercise its Copyright  license to incorporate this submission into
 // other works it controls as it desires."
 
-*Overview*
+==== Overview
 
 This extension provides a mechanism for enabling depth estimation of the
 environment in the runtime-supplied compositor.
@@ -70,7 +70,7 @@ include::{generated}/validity/protos/xrSetEnvironmentDepthEstimationVARJO.adoc[]
 
 *New Functions*
 
-*Version History*
+==== Version History
 
 * Revision 1, 2021-02-16 (Sergiy Dubovik)
 ** Initial extension description

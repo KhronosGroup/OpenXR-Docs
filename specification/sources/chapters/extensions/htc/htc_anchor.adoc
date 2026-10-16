@@ -12,7 +12,7 @@ include::{generated}/meta/XR_HTC_anchor.adoc[]
     CheHsuan Shu, HTC +
     Bill Chang, HTC
 
-*Overview*
+==== Overview
 
 This extension allows an application to create a spatial anchor to track a
 point in the physical environment.
@@ -169,9 +169,7 @@ elink:XrResult enumeration is extended with:
 * flink:xrCreateSpatialAnchorHTC
 * flink:xrGetSpatialAnchorNameHTC
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2023-09-14 (CheHsuan Shu)
 ** Initial extension description

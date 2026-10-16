@@ -9,7 +9,7 @@ include::{generated}/meta/XR_MSFT_hand_interaction.adoc[]
     Lachlan Ford, Microsoft +
     Alex Turner, Microsoft
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for near interactions and
 far interactions driven by directly-tracked hands.
@@ -21,7 +21,7 @@ Interaction profile path:
 * pathname:/interaction_profiles/microsoft/hand_interaction
 
 // This extension does not meet the current style guide requirements:
-// the path name must be vendor-suffixed in new extensions.
+// the path name is required to be vendor-suffixed in new extensions.
 :legacy-path: /interaction_profiles/microsoft/hand_interaction
 :properly-suffixed-path: /interaction_profiles/microsoft/hand_interaction_msft
 include::{config}/interaction_profile_missing_suffix_warning.adoc[]
@@ -77,9 +77,7 @@ a controller.
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-09-16 (Yin Li)
 ** Initial extension description

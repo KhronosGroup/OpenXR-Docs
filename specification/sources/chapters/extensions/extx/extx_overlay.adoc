@@ -16,7 +16,7 @@ include::{generated}/meta/XR_EXTX_overlay.adoc[]
     Nick Whiting, Epic +
     Brad Grantham, LunarG
 
-*Overview*
+==== Overview
 
 Application developers may desire to implement an OpenXR application that
 renders content on top of another OpenXR application.
@@ -307,11 +307,7 @@ None
 
 None
 
-*Issues*
-
-None
-
-*Version History*
+==== Version History
 
 * Revision 1, 2018-11-05 (Mark Young)
 ** Initial draft

@@ -13,7 +13,7 @@ include::{generated}/meta/XR_HTCX_vive_tracker_interaction.adoc[]
     Chris Kuo, HTC
 
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for HTC VIVE Tracker.
 HTC VIVE Tracker is a generic tracked device which can be attached to
@@ -99,8 +99,7 @@ VIVE Tracker.
 
 Supported component paths:
 
-* subpathname:/input/system/click (may: not be available for application
-  use)
+* subpathname:/input/system/click (may: be unavailable for application use)
 * subpathname:/input/menu/click
 * subpathname:/input/trigger/click
 * subpathname:/input/squeeze/click
@@ -338,9 +337,7 @@ switch ( xrEvent.type )
 ----
 
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-09-23 (Kyle Chen)
 ** Initial extension description.

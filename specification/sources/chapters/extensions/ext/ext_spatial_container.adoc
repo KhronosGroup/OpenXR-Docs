@@ -1131,8 +1131,8 @@ compatibility with earlier AOSP based runtimes.
 
 [source,xml]
 ----
-<property name="org.khronos.openxr.PROPERTY_ACTIVITY_HINT_XR_SPATIAL_CONTAINER_USED_BOUNDS_MODES"
-          value="list of modes" />
+<property android:name="org.khronos.openxr.PROPERTY_ACTIVITY_HINT_XR_SPATIAL_CONTAINER_USED_BOUNDS_MODES"
+          android:value="list of modes" />
 ----
 
 This property hints to runtimes that the bounds modes used by an activity.
@@ -1151,10 +1151,10 @@ Multiple values are separated by `|`, such as `"bounded|immersive"`.
 
 [source,xml]
 ----
-<property name="org.khronos.openxr.PROPERTY_ACTIVITY_HINT_XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE"
-          value="XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_BOUNDED|
-                 XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_IMMERSIVE|
-                 XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_UNDEFINED" />
+<property android:name="org.khronos.openxr.PROPERTY_ACTIVITY_HINT_XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE"
+          android:value="XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_BOUNDED|
+                         XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_IMMERSIVE|
+                         XR_SPATIAL_CONTAINER_INITIAL_BOUNDS_MODE_UNDEFINED" />
 ----
 
 This property hints to runtimes the activity's initial

@@ -82,5 +82,15 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require>
             <command name="xrGetSomeData"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+            <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XrInputParamInfo"/>
+            <type name="XrOutputParam"/>
+            <type name="XrOutputParamState"/>
+            <type name="XrOutputParamProperties"/>
+        </require>
     </feature>
 </registry>

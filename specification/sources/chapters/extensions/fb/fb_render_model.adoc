@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_render_model.adoc[]
     Robert Memmott, Meta +
 
 
-*Overview*
+==== Overview
 
 This extension allows applications to request GLTF models for certain
 connected devices supported by the runtime.
@@ -377,9 +377,7 @@ should: call it from a non-time sensitive thread.
 include::{generated}/validity/protos/xrLoadRenderModelFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-08-17 (Leonard Tsai)
 ** Initial extension description

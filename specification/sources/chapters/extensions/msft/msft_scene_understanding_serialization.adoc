@@ -16,7 +16,7 @@ include::{generated}/meta/XR_MSFT_scene_understanding_serialization.adoc[]
     Simon Stachniak, Microsoft +
     David Fields, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension extends the scene understanding extension and enables scenes
 to be serialized or deserialized.
@@ -226,9 +226,7 @@ elink:XrStructureType enumeration is extended with:
 * flink:xrGetSerializedSceneFragmentDataMSFT
 * flink:xrDeserializeSceneMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-05-03 (Darryl Gough)
 ** Initial extension description

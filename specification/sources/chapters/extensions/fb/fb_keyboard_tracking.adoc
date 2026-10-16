@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_keyboard_tracking.adoc[]
     Cass Everitt, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension allows the application to query the system for a supported
 trackable keyboard type and obtain an slink:XrSpace handle to track it.
@@ -201,9 +201,7 @@ keyboard is located entirely in negative y).
 include::{generated}/validity/protos/xrCreateKeyboardSpaceFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-08-27 (Federico Schliemann)
 ** Initial extension description

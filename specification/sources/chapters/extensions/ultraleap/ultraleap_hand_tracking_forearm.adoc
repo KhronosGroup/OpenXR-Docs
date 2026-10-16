@@ -15,7 +15,7 @@ include::{generated}/meta/XR_ULTRALEAP_hand_tracking_forearm.adoc[]
     Robert Blenkinsopp, Ultraleap +
     Adam Harwood, Ultraleap +
 
-*Overview*
+==== Overview
 
 This extension augments the apiext:XR_EXT_hand_tracking extension to enable
 applications to request the default set of 26 hand joints, with the addition
@@ -80,9 +80,7 @@ elink:XrHandJointSetEXT enumeration is extended with:
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-04-19 (Robert Blenkinsopp)
 ** Initial version

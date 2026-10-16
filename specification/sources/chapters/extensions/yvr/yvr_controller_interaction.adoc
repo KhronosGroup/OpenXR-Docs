@@ -14,7 +14,7 @@ include::{generated}/meta/XR_YVR_controller_interaction.adoc[]
     Pengpeng Zhang, YVR +
     Xuanyu Chen, YVR
 
-*Overview*
+==== Overview
 
 This extension defines a new interaction profile for the YVR Controller,
 including but not limited to YVR1 and YVR2 Controller.
@@ -47,8 +47,7 @@ Supported component paths:
 ** subpathname:/input/a/touch
 ** subpathname:/input/b/click
 ** subpathname:/input/b/touch
-** subpathname:/input/system/click (may: not be available for application
-   use)
+** subpathname:/input/system/click (may: be unavailable for application use)
 
 * On both:
 ** subpathname:/input/squeeze/click
@@ -78,9 +77,7 @@ include::{config}/ext_hand_interaction_notice.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2023-07-12 (Pengpeng Zhang)
 

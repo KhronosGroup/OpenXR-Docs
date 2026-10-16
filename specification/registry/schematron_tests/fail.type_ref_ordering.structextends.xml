@@ -16,6 +16,18 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <type requires="openxr_platform_defines" name="void"/>
         <type requires="openxr_platform_defines" name="uint32_t"/>
         <type name="XrStructureType" category="enum"/>
+        <type name="XrResult" category="enum"/>
+
+        <type category="define">
+#if !defined(XR_DEFINE_HANDLE)
+#if (XR_PTR_SIZE == 8)
+    #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
+#else
+    #define XR_DEFINE_HANDLE(object) typedef uint64_t object;
+#endif
+#endif
+        </type>
+        <type category="handle"><type>XR_DEFINE_HANDLE</type>(<name>XrInstance</name>)</type>
 
         <!-- Type defined by higher-numbered extension (100) with next pointer -->
         <type category="struct" name="XrFooKHR">
@@ -28,18 +40,35 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <type category="struct" name="XrBarKHR" structextends="XrFooKHR">
             <member><type>XrStructureType</type> <name>type</name></member>
             <member>const <type>void</type>* <name>next</name></member>
-            <member><type>XrFooKHR</type> <name>foo</name></member>
+            <member><type>uint32_t</type> <name>placeholder</name></member>
         </type>
     </types>
+
+    <enums name="XrResult" type="enum">
+        <enum value="0"    name="XR_SUCCESS"/>
+        <enum value="-1"   name="XR_ERROR_VALIDATION_FAILURE"/>
+    </enums>
 
     <enums name="XrStructureType" type="enum">
         <enum value="0"   name="XR_TYPE_UNKNOWN"/>
     </enums>
 
+    <commands>
+        <command successcodes="XR_SUCCESS" errorcodes="XR_ERROR_VALIDATION_FAILURE">
+            <proto><type>XrResult</type> <name>xrFooKHR</name></proto>
+            <param><type>XrInstance</type> <name>instance</name></param>
+            <param><type>XrFooKHR</type>* <name>foo</name></param>
+            <param><type>XrBarKHR</type>* <name>bar</name></param>
+        </command>
+    </commands>
+
     <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
         <require>
             <type name="openxr_platform_defines"/>
             <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
         </require>
     </feature>
 
@@ -57,6 +86,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
             <enum value="1"                      name="XR_KHR_foo_SPEC_VERSION"/>
             <enum value="&quot;XR_KHR_foo&quot;" name="XR_KHR_FOO_EXTENSION_NAME"/>
             <type name="XrFooKHR"/>
+            <command name="xrFooKHR"/>
         </require>
     </extension>
     </extensions>

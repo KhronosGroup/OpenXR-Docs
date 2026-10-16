@@ -57,13 +57,19 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require comment="Header boilerplate">
             <type name="openxr_platform_defines"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XrResult"/>
+            <type name="XrStructureType"/>
+        </require>
     </feature>
     <extensions>
     <extension name="XR_KHR_loader_init" number="89" type="instance" supported="openxr" ratified="openxr">
         <require>
             <enum value="1"                              name="XR_KHR_loader_init_SPEC_VERSION"/>
             <enum value="&quot;XR_KHR_loader_init&quot;" name="XR_KHR_LOADER_INIT_EXTENSION_NAME"/>
+            <type name="XrLoaderInitInfoBaseHeaderKHR"/>
             <command name="xrInitializeLoader2KHR"/>
+            <command name="xrInitializeLoaderKHR"/>
         </require>
     </extension>
     </extensions>

@@ -19,7 +19,7 @@ include::{generated}/meta/XR_MND_headless.adoc[]
 // other works it controls as it desires."
 
 
-*Overview*
+==== Overview
 
 Some applications may wish to access XR interaction devices without
 presenting any image content on the display(s).
@@ -73,12 +73,12 @@ resources in a busy-wait loop.
 
 *New Functions*
 
-*Issues*
+==== Issues
 
 * Not all devices with which this would be useful fit into one of the
   existing elink:XrFormFactor values.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2019-07-25 (Rylie Pavlik, Collabora, Ltd.)
 ** Initial version reflecting Monado prototype.

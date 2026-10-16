@@ -989,7 +989,7 @@ elink:XrStructureType enumeration is extended with:
 * flink:xrDestroyFaceTracker2FB
 * flink:xrGetFaceExpressionWeights2FB
 
-*Issues*
+==== Issues
 
 * Should we add the tongue shapes to apiext:XR_FB_face_tracking as a new
   enum value in elink:XrFaceExpressionSetFB?
@@ -997,7 +997,7 @@ elink:XrStructureType enumeration is extended with:
    apiext:XR_FB_face_tracking2 in the future and that
    apiext:XR_FB_face_tracking will ultimately be replaced by this extension.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-10-06 (Jaebong Lee)
 ** Initial extension description

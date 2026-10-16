@@ -13,7 +13,7 @@ include::{generated}/meta/XR_KHR_android_surface_swapchain.adoc[]
     Johannes van Waveren, Oculus +
     Martin Renschler, Qualcomm
 
-*Overview*
+==== Overview
 
 A common activity in XR is to view an image stream.
 Image streams are often the result of camera previews or decoded video
@@ -93,9 +93,8 @@ ename:XR_ERROR_FUNCTION_UNSUPPORTED in case the function is not supported.
 ****
 include::{generated}/validity/protos/xrCreateSwapchainAndroidSurfaceKHR.adoc[]
 --
-*Issues*
 
-*Version History*
+==== Version History
 
 * Revision 1, 2017-01-17 (Johannes van Waveren)
 ** Initial draft

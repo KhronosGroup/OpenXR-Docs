@@ -61,5 +61,12 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <require>
             <command name="xrProcessThird"/>
         </require>
+        <require comment="Types and commands defined by this test fixture">
+            <type name="XR_DEFINE_HANDLE"/>
+            <type name="XrInstance"/>
+            <type name="XrStructureType"/>
+            <type name="XrResult"/>
+            <type name="XrThirdStruct"/>
+        </require>
     </feature>
 </registry>

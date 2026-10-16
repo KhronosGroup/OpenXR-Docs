@@ -13,7 +13,7 @@ include::{generated}/meta/XR_HTC_passthrough.adoc[]
     Sacdar Hsu, HTC +
     Bill Chang, HTC
 
-*Overview*
+==== Overview
 
 This extension enables an application to show the passthrough image to see
 the surrounding environment from the VR headset.
@@ -253,9 +253,7 @@ elink:XrStructureType enumeration is extended with:
 * flink:xrCreatePassthroughHTC
 * flink:xrDestroyPassthroughHTC
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-09-14 (Sacdar Hsu)
 

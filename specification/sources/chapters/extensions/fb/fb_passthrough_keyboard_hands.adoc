@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_passthrough_keyboard_hands.adoc[]
     Johannes Schmid, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension enables applications to show passthrough hands when hands are
 placed over the tracked keyboard.
@@ -109,9 +109,7 @@ slink:XrPassthroughLayerFB layer.
 include::{generated}/validity/protos/xrPassthroughLayerSetKeyboardHandsIntensityFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-11-23 (Ante Trbojevic)
 ** Initial extension description

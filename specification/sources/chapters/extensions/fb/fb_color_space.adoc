@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_color_space.adoc[]
     Gloria Kennickell, Facebook
 
 
-*Overview*
+==== Overview
 
 XR devices may use a color space that is different from many monitors used
 in development.
@@ -213,9 +213,7 @@ Management in Oculus Headsets]
 include::{generated}/validity/protos/xrSetColorSpaceFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-11-09 (Gloria Kennickell)
 ** Initial extension description

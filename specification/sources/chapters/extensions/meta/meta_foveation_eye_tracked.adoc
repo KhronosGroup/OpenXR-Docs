@@ -11,7 +11,7 @@ include::{generated}/meta/XR_META_foveation_eye_tracked.adoc[]
     Jian Zhang, Facebook +
     Neel Bedekar, Facebook
 
-*Overview*
+==== Overview
 
 Eye tracked foveated rendering renders lower pixel density in the periphery
 of the user's gaze, taking advantage of low peripheral acuity.
@@ -179,9 +179,7 @@ for pipeline latency.
 include::{generated}/validity/protos/xrGetFoveationEyeTrackedStateMETA.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-04-08 (Ross Ning)
 ** Initial extension description

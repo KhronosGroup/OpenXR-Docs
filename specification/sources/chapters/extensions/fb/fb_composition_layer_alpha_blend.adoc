@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_composition_layer_alpha_blend.adoc[]
     Johannes Schmid, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension provides explicit control over source and destination blend
 factors, with separate controls for color and alpha.
@@ -89,7 +89,7 @@ include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.adoc[]
 
 *New Functions*
 
-*Issues*
+==== Issues
 
 * Should we add separate blend controls for color and alpha?
 
@@ -97,7 +97,7 @@ include::{generated}/validity/structs/XrCompositionLayerAlphaBlendFB.adoc[]
    New use cases necessitated adding separate blend controls for color and
    alpha.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2020-06-22 (Gloria Kennickell)
 ** Initial draft

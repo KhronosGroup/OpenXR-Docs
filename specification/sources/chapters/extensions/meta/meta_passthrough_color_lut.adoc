@@ -15,7 +15,7 @@ include::{generated}/meta/XR_META_passthrough_color_lut.adoc[]
     Johannes Schmid, Meta Platforms +
     John Kearney, Meta Platforms +
 
-*Overview*
+==== Overview
 
 This extension adds the capability to define and apply RGB to RGB(A) color
 look-up tables (LUTs) to passthrough layers created using
@@ -360,7 +360,7 @@ layers the color LUT is currently applied to.
 include::{generated}/validity/protos/xrUpdatePassthroughColorLutMETA.adoc[]
 --
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-12-08 (Johannes Schmid)
 ** Initial extension description

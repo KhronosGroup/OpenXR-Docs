@@ -39,9 +39,9 @@ int main(int ac, const char **av) {
 
     printf("sum of all struct sizes = 0x%08x\n", (unsigned int)total_size);
 
-#define names(t, e) #t " = " #e " (%d)\n"
-#define values(t, e) , (unsigned int)(e)
-    printf(XR_LIST_STRUCTURE_TYPES(names) XR_LIST_STRUCTURE_TYPES(values));
+#define print_struct(t, e) printf(#t " = " #e " (%d)\n", (unsigned int)(e));
+    XR_LIST_STRUCTURE_TYPES(print_struct)
+#undef print_struct
 
     return 0;
 }

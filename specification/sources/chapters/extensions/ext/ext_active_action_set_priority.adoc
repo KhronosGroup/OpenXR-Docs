@@ -12,7 +12,7 @@ include::{generated}/meta/XR_EXT_active_action_set_priority.adoc[]
     Jules Blok, Epic Games +
     Lachlan Ford, Microsoft
 
-*Overview*
+==== Overview
 
 The properties of an slink:XrActionSet become immutable after it has been
 attached to a session.
@@ -101,14 +101,14 @@ include::{generated}/validity/structs/XrActiveActionSetPriorityEXT.adoc[]
 
 *New Functions*
 
-*Issues*
+==== Issues
 
 * Can the same action set have a different priority on each subaction path?
 ** No.
    To avoid additional complexity each action set can only be specified once
    in the array of priorities which does not include the subaction path.
 
-*Version History*
+==== Version History
 
 * Revision 1, 2022-08-19 (Jules Blok)
 ** Initial proposal.

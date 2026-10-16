@@ -126,8 +126,8 @@ while (1)
         // fire haptics using output action
         XrHapticVibration vibration {
             .type = XR_TYPE_HAPTIC_VIBRATION,
-            .duration = 300000, // 300 ms
-            .frequency = 3000,
+            .duration = 300000000, // 300 ms
+            .frequency = 150,
             .amplitude = 0.5,
         };
         XrHapticActionInfo hapticActionInfo {
@@ -218,9 +218,9 @@ include::{generated}/api/structs/XrActionSetCreateInfo.adoc[]
 
 When multiple actions are bound to the same input source, the pname:priority
 of each action set determines which bindings are suppressed.
-Runtimes must: ignore input sources from action sets with a lower priority
-number if those specific input sources are also present in active actions
-within a higher priority action set.
+Runtimes must: suppress bindings in action sets with a lower priority number
+when those specific input sources are also bound by active actions within a
+higher priority action set.
 If multiple action sets with the same priority are bound to the same input
 source and that is the highest priority number, runtimes must: process all
 those bindings at the same time.
@@ -229,8 +229,8 @@ Two actions are considered to be bound to the same input source if they use
 the same <<semantic-paths-input, identifier and optional location>> path
 segments, even if they have different component segments.
 
-When runtimes are ignoring bindings because of priority, they must: treat
-the binding to that input source as though they do not exist.
+When runtimes suppress bindings because of priority, they must: treat each
+suppressed binding as though it does not exist.
 That means the `isActive` field must: be ename:XR_FALSE when retrieving
 action data, and that the runtime must: not provide any visual, haptic, or
 other feedback related to the binding of that action to that input source.
@@ -423,8 +423,7 @@ include::{generated}/api/enums/XrActionType.adoc[]
   The action can be passed to flink:xrGetActionStateVector2f to retrieve a
   2D float vector.
 * ename:XR_ACTION_TYPE_POSE_INPUT.
-  The action can can be passed to flink:xrCreateActionSpace to create a
-  space.
+  The action can be passed to flink:xrCreateActionSpace to create a space.
 * ename:XR_ACTION_TYPE_VIBRATION_OUTPUT.
   The action can be passed to flink:xrApplyHapticFeedback to send a haptic
   event to the runtime.
@@ -503,8 +502,8 @@ If the runtime is using the values provided by suggested bindings, it must:
 make a best effort to convert the input value to the created action and
 apply certain rules to that use so that suggested bindings function in the
 same way across runtimes.
-If an input value cannot be converted to the type of the action, the value
-must: be ignored and not contribute to the state of the action.
+If an input value cannot be converted to the type of the action, that input
+value must: not contribute to the state of the action.
 
 For actions created with ename:XR_ACTION_TYPE_BOOLEAN_INPUT when the runtime
 is obeying suggested bindings: Boolean input sources must: be bound directly
@@ -592,8 +591,11 @@ If the interaction profile path or binding path (top level pathname:/user
 path plus input subpath) for any of the suggested bindings does not exist in
 the allowlist defined in <<semantic-paths-interaction-profiles, Interaction
 Profile Paths>>, the runtime must: return ename:XR_ERROR_PATH_UNSUPPORTED.
-A runtime must: accept every valid binding in the allowlist though it is
-free to ignore any of them.
+A runtime must: not return an error in the case that a valid binding is
+supplied but the runtime chooses not to use it.
+Accepting a suggested binding as valid does not require the runtime to bind
+the action to that input source; the runtime may: provide an alternate
+binding for the action, or leave the action unbound.
 
 If the action set for any action referenced in the pname:suggestedBindings
 parameter has been included in a call to flink:xrAttachSessionActionSets,
@@ -1214,8 +1216,8 @@ ename:XR_ACTION_TYPE_VIBRATION_OUTPUT.
 The runtime should: deliver this request to the appropriate device, but
 exactly which device, if any, this event is sent to is up to the runtime to
 decide.
-If an appropriate device is unavailable the runtime may: ignore this request
-for haptic feedback.
+If an appropriate device is unavailable, the runtime may: return
+ename:XR_SUCCESS without producing any haptic output.
 
 If pname:session is not focused, the runtime must: return
 ename:XR_SESSION_NOT_FOCUSED, and not trigger a haptic event.

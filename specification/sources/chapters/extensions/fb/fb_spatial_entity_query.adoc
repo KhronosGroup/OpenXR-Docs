@@ -12,7 +12,7 @@ include::{generated}/meta/XR_FB_spatial_entity_query.adoc[]
     Curtis Arink, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension enables an application to discover persistent spatial
 entities in the area and restore them.
@@ -381,9 +381,7 @@ refer to a known request.
 include::{generated}/validity/protos/xrRetrieveSpaceQueryResultsFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2022-01-22 (John Schofield)
 ** Initial draft

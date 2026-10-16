@@ -9,7 +9,7 @@ include::{generated}/meta/XR_META_recommended_layer_resolution.adoc[]
   Remi Palandri, Meta +
   Ben Cumings, Meta +
 
-*Overview*
+==== Overview
 
 The extension allows an application to request a recommended swapchain
 resolution from the runtime, in order to either allocate a swapchain of a
@@ -143,7 +143,7 @@ is directly usable by the application to render its frames without creating
 adverse visual effects for the user.
 --
 
-*Issues*
+==== Issues
 
 . Should this extension be leveraging events instead of being queried potentially every frame?
 +
@@ -156,7 +156,7 @@ To do so with an event system would send an event every frame which we
 preferred to avoid.
 
 
-*Version History*
+==== Version History
 
 * Revision 1, 2023-12-10 (Remi Palandri)
 ** Initial extension description

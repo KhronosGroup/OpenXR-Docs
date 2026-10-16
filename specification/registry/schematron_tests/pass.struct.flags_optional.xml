@@ -40,4 +40,18 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     <enums name="XrNonEmptyFlagBitsEXT" type="bitmask">
         <enum bitpos="0" name="XR_NON_EMPTY_SOMETHING_BIT_EXT" comment="Some bit"/>
     </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Types and commands defined by this test fixture">
+            <type name="openxr_platform_defines"/>
+            <type name="XrFlags64"/>
+            <type name="XrEmptyFlagsEXT"/>
+            <type name="XrEmptyFlagBitsEXT"/>
+            <type name="XrNonEmptyFlagsEXT"/>
+            <type name="XrNonEmptyFlagBitsEXT"/>
+            <type name="XrEmptyFlagStructEXT"/>
+            <type name="XrNonEmptyFlagStructEXT"/>
+            <type name="XrNonEmptyFlagOptionalStructEXT"/>
+        </require>
+    </feature>
 </registry>

@@ -204,24 +204,29 @@ with slink:XrInteractionProfileSuggestedBinding:
 * actionname:LeftControllerDetachedOnly ->
   pathname:/user/detached_controller_meta/left/grip/pose
 
-[source,cpp,suppress-build]
+[source,cpp]
 ----
+XrSession session; // previously initialized
+XrAction LeftControllerPose; // previously initialized
+XrAction LeftControllerDetachedOnly; //previously initialized
+
 XrSpace leftControllerSpace = XR_NULL_HANDLE;
 XrSpace detachedLeftControllerSpace = XR_NULL_HANDLE;
+
 XrActionSpaceCreateInfo asci{
-    .type = XR_TYPE_ACTION_SPACE_CREATE_INFO,
-    .next = nullptr,
-    .action = LeftControllerPose,
+  .type = XR_TYPE_ACTION_SPACE_CREATE_INFO,
+  .next = nullptr,
+  .action = LeftControllerPose,
 };
 CHK_XR(xrCreateActionSpace(session, &asci, &leftControllerSpace));
 asci.action = LeftControllerDetachedOnly;
 CHK_XR(xrCreateActionSpace(session, &asci, &detachedLeftControllerSpace));
 
 // Will follow controller whether in hand or detached
-CHK_XR(xrLocateSpace(leftControllerSpace, /* ... */));
+// CHK_XR(xrLocateSpace(leftControllerSpace, /* ... */));
 
 // Only valid data when controller is detached:
-CHK_XR(xrLocateSpace(detachedLeftControllerSpace, /* ... */));
+// CHK_XR(xrLocateSpace(detachedLeftControllerSpace, /* ... */));
 
 // Note that any bindings that work on /user/hand/left will work
 // for /user/detached_controller_meta/left, and they can be
@@ -270,8 +275,6 @@ you put down the controllers, for example.
 ====
 
 include::{generated}/interfaces/XR_META_detached_controllers.adoc[leveloffset=1]
-
-==== Issues
 
 ==== Version History
 

@@ -16,7 +16,7 @@ include::{generated}/meta/XR_MSFT_composition_layer_reprojection.adoc[]
     Alex Turner, Microsoft +
     Yin Li, Microsoft +
 
-*Overview*
+==== Overview
 
 This extension enables an application to provide additional reprojection
 information for a projection composition layer to help the runtime produce
@@ -230,9 +230,7 @@ elink:XrResult enumeration is extended with:
 
 * flink:xrEnumerateReprojectionModesMSFT
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2020-06-20 (Yin Li)
 ** Initial extension proposal

@@ -17,7 +17,7 @@ include::{generated}/meta/XR_EXT_view_configuration_depth_range.adoc[]
     Bryce Hutchings, Microsoft +
     Yin Li, Microsoft
 
-*Overview*
+==== Overview
 
 For XR systems there may exist a per view recommended min/max depth range at
 which content should be rendered into the virtual world.
@@ -89,9 +89,7 @@ include::{generated}/validity/structs/XrViewConfigurationDepthRangeEXT.adoc[]
 
 *New Functions*
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2019-10-01 (Blake Taylor)
 ** Initial proposal.

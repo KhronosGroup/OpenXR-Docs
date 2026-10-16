@@ -226,7 +226,8 @@ CHK_XR(xrCreateSpatialContextAsyncEXT(session, &contextCreateInfo, &future))
 
 // Completes creating spatial context
 XrCreateSpatialContextCompletionEXT contextCompletion{
-XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT};
+  .type = XR_TYPE_CREATE_SPATIAL_CONTEXT_COMPLETION_EXT,
+};
 
 CHK_XR(xrCreateSpatialContextCompleteEXT(session, future, &contextCompletion))
 ----
@@ -312,7 +313,7 @@ waitUntilReady(future);
 // Complete async operation.
 XrCreateSpatialDiscoverySnapshotCompletionInfoEXT
   createSnapshotCompletionInfo {
-    .type   = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
+    .type      = XR_TYPE_CREATE_SPATIAL_DISCOVERY_SNAPSHOT_COMPLETION_INFO_EXT,
     .baseSpace = space,
     .time      = updateTime,
     .future    = future,
@@ -336,8 +337,6 @@ xrDestroySpatialSnapshotEXT(completion.snapshot);
 ----
 
 include::{generated}/interfaces/XR_ANDROID_spatial_component_subsumed_by.adoc[leveloffset=1]
-
-==== Issues
 
 ==== Version History
 

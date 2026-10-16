@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<registry>
+    <comment>
+Copyright (c) 2017-2026 The Khronos Group Inc.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+    </comment>
+
+    <tags>
+        <tag name="META" author="Meta Platforms" contact="Meta Platforms"/>
+    </tags>
+
+    <types>
+        <type name="openxr_platform_defines" category="include">#include "openxr_platform_defines.h"</type>
+
+        <type requires="openxr_platform_defines" name="uint64_t"/>
+        <type category="basetype">typedef <type>uint64_t</type> <name>XrFlags64</name>;</type>
+        <type bitvalues="XrExampleFlagBitsMETAX1" category="bitmask">typedef <type>XrFlags64</type> <name>XrExampleFlagsMETAX1</name>;</type>
+        <type name="XrExampleFlagBitsMETAX1" category="enum"/>
+        <type bitvalues="XrCoreExampleFlagBits" category="bitmask">typedef <type>XrFlags64</type> <name>XrCoreExampleFlags</name>;</type>
+        <type name="XrCoreExampleFlagBits" category="enum"/>
+    </types>
+
+    <!-- Vendor bitmask: values carry the author ID from the FlagBits type name.
+         The experimental METAX1 tag resolves to the registered META tag. -->
+    <enums name="XrExampleFlagBitsMETAX1" type="bitmask">
+        <enum bitpos="0" name="XR_EXAMPLE_ALPHA_BIT_METAX1" comment="First example bit."/>
+        <enum bitpos="1" name="XR_EXAMPLE_BETA_BIT_METAX1"  comment="Second example bit."/>
+    </enums>
+
+    <!-- Core bitmask: the trailing characters of XrCoreExampleFlagBits are not a
+         registered author ID, so no suffix is required on its values. -->
+    <enums name="XrCoreExampleFlagBits" type="bitmask">
+        <enum bitpos="0" name="XR_CORE_EXAMPLE_ALPHA_BIT" comment="Core bit, no author ID expected."/>
+    </enums>
+
+    <feature api="openxr" name="XR_VERSION_1_0" number="1.0">
+        <require comment="Header boilerplate">
+            <type name="openxr_platform_defines"/>
+        </require>
+        <require comment="Types defined by this test fixture">
+            <type name="XrFlags64"/>
+            <type name="XrCoreExampleFlags"/>
+            <type name="XrCoreExampleFlagBits"/>
+        </require>
+    </feature>
+
+    <extensions>
+    <extension name="XR_METAX1_example" number="100" type="instance" supported="openxr">
+        <require>
+            <enum value="1"                             name="XR_METAX1_example_SPEC_VERSION"/>
+            <enum value="&quot;XR_METAX1_example&quot;" name="XR_METAX1_EXAMPLE_EXTENSION_NAME"/>
+            <type name="XrExampleFlagsMETAX1"/>
+            <type name="XrExampleFlagBitsMETAX1"/>
+        </require>
+    </extension>
+    </extensions>
+</registry>

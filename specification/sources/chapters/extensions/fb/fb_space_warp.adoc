@@ -10,7 +10,7 @@ include::{generated}/meta/XR_FB_space_warp.adoc[]
     Xiang Wei, Facebook
 
 
-*Overview*
+==== Overview
 
 This extension provides support to enable space warp technology on
 application.
@@ -148,9 +148,7 @@ include::{generated}/api/structs/XrSystemSpaceWarpPropertiesFB.adoc[]
 include::{generated}/validity/structs/XrSystemSpaceWarpPropertiesFB.adoc[]
 --
 
-*Issues*
-
-*Version History*
+==== Version History
 
 * Revision 1, 2021-08-04 (Jian Zhang)
 ** Initial extension description

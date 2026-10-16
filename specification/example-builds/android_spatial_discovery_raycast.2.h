@@ -3,7 +3,6 @@
 **
 ** SPDX-License-Identifier: Apache-2.0
 */
-#include <vector>
 
 XrInstance instance; // Created at app startup.
 XrSpace viewSpace;   // Basic view space
