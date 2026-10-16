@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </comment>
 
     <types>
-    <type category="define">
+        <type category="define">
 #if !defined(XR_DEFINE_HANDLE)
 #if (XR_PTR_SIZE == 8)
     #define <name>XR_DEFINE_HANDLE</name>(object) typedef struct object##_T* object;
@@ -39,10 +39,10 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </types>
 
     <enums name="XrStructureType" type="enum" comment="Structure type enumerant">
-        <enum value="0"    name="XR_TYPE_UNKNOWN"/>
-        <enum value="1"    name="XR_TYPE_FIRST_STRUCT"/>
-        <enum value="2"    name="XR_TYPE_SECOND_STRUCT"/>
-        <enum value="3"    name="XR_TYPE_THIRD_STRUCT"/>
+        <enum value="0"   name="XR_TYPE_UNKNOWN"/>
+        <enum value="1"   name="XR_TYPE_FIRST_STRUCT"/>
+        <enum value="2"   name="XR_TYPE_SECOND_STRUCT"/>
+        <enum value="3"   name="XR_TYPE_THIRD_STRUCT"/>
     </enums>
 
     <commands>

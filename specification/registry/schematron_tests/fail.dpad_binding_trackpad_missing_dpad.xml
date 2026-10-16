@@ -16,8 +16,8 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
         <interaction_profile name="/interaction_profiles/khr/simple_controller" title="Simple Controller">
             <user_path path="/user/hand/left"/>
             <user_path path="/user/hand/right"/>
-            <component subpath="/input/trackpad" type="XR_ACTION_TYPE_VECTOR2F_INPUT"/>
-            <component subpath="/input/trackpad/click" type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
+            <component subpath="/input/trackpad"         type="XR_ACTION_TYPE_VECTOR2F_INPUT"/>
+            <component subpath="/input/trackpad/click"   type="XR_ACTION_TYPE_BOOLEAN_INPUT"/>
         </interaction_profile>
     </interaction_profiles>
 </registry>
