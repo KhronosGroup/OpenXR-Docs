@@ -37,7 +37,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <type category="struct" name="XrLoaderInitInfoBaseHeaderKHR">
             <member><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>*                <name>next</name></member>
+            <member>const <type>void</type>*     <name>next</name></member>
         </type>
     </types>
 

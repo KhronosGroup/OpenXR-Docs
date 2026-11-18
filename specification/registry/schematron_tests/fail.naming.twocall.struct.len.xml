@@ -30,9 +30,9 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <type category="struct" name="XrStructTest1" returnedonly="true">
             <member values="XR_TYPE_STRUCT_TEST1"><type>XrStructureType</type> <name>type</name></member>
-            <member><type>void</type>* <name>next</name></member>
-            <member optional="true"><type>uint32_t</type> <name>objectCapacityInput</name></member>
-            <member optional="true"><type>uint32_t</type> <name>objectCountOutput</name></member>
+            <member><type>void</type>*                                             <name>next</name></member>
+            <member optional="true"><type>uint32_t</type>                          <name>objectCapacityInput</name></member>
+            <member optional="true"><type>uint32_t</type>                          <name>objectCountOutput</name></member>
             <!-- In two-call idiom, len must be exactly "objectCapacityInput" -->
             <member optional="true" len="objectCapacityInput,1"><type>char</type>* <name>objects</name></member>
         </type>
