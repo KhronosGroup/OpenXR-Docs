@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </comment>
 
     <tags>
-        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+        <tag name="EXT" author="Multivendor" contact="Rylie Pavlik @rpavlik"/>
     </tags>
 
     <!-- Left wholly uncommented so the enum-comment rule has nothing to say here. -->
@@ -17,14 +17,14 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
     </enums>
 
     <extensions>
-        <extension name="XR_EXT_test" number="1" type="instance" supported="openxr">
-            <require>
-                <enum value="1" name="XR_EXT_test_SPEC_VERSION"/>
-                <enum value="&quot;XR_EXT_test&quot;" name="XR_EXT_TEST_EXTENSION_NAME"/>
-                <enum offset="0" extends="XrTestEnumEXT" name="XR_TEST_ENUM_FIRST_EXT"/>
-                <enum extends="XrTestEnumEXT" name="XR_TEST_ENUM_FIRST_ALIAS_EXT" alias="XR_TEST_ENUM_FIRST_EXT"/>
-            </require>
-        </extension>
+    <extension name="XR_EXT_test" number="1" type="instance" supported="openxr">
+        <require>
+            <enum value="1"                          name="XR_EXT_test_SPEC_VERSION"/>
+            <enum value="&quot;XR_EXT_test&quot;"    name="XR_EXT_TEST_EXTENSION_NAME"/>
+            <enum offset="0" extends="XrTestEnumEXT" name="XR_TEST_ENUM_FIRST_EXT"/>
+            <enum            extends="XrTestEnumEXT" name="XR_TEST_ENUM_FIRST_ALIAS_EXT" alias="XR_TEST_ENUM_FIRST_EXT"/>
+        </require>
+    </extension>
     </extensions>
 
 </registry>

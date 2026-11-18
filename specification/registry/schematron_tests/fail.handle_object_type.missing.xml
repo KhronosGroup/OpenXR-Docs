@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
     <enums name="XrResult" type="enum" comment="Error and return codes">
         <!-- Return codes for successful operation execution (positive values) -->
-        <enum value="0"     name="XR_SUCCESS"                                   comment="Function successfully completed."/>
+        <enum value="0"   name="XR_SUCCESS" comment="Function successfully completed."/>
     </enums>
 
     <types>
