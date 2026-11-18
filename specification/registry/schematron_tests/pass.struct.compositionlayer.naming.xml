@@ -35,22 +35,22 @@ SPDX-License-Identifier: Apache-2.0 OR MIT
 
         <!-- Base header for composition layers -->
         <type category="struct" name="XrCompositionLayerBaseHeader">
-            <member><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>* <name>next</name></member>
+            <member><type>XrStructureType</type>                         <name>type</name></member>
+            <member>const <type>void</type>*                             <name>next</name></member>
             <member optional="true"><type>XrCompositionLayerFlags</type> <name>layerFlags</name></member>
         </type>
 
         <!-- Correctly named struct extending XrCompositionLayerBaseHeader -->
         <type category="struct" name="XrCompositionLayerDepthFB" parentstruct="XrCompositionLayerBaseHeader">
             <member values="XR_TYPE_COMPOSITION_LAYER_DEPTH_FB"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>* <name>next</name></member>
+            <member>const <type>void</type>*                             <name>next</name></member>
             <member optional="true"><type>XrCompositionLayerFlags</type> <name>layerFlags</name></member>
         </type>
 
         <!-- Another correctly named struct -->
         <type category="struct" name="XrCompositionLayerBlendFB" parentstruct="XrCompositionLayerBaseHeader">
             <member values="XR_TYPE_COMPOSITION_LAYER_BLEND_FB"><type>XrStructureType</type> <name>type</name></member>
-            <member>const <type>void</type>* <name>next</name></member>
+            <member>const <type>void</type>*                             <name>next</name></member>
             <member optional="true"><type>XrCompositionLayerFlags</type> <name>layerFlags</name></member>
         </type>
 
