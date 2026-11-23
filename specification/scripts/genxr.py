@@ -23,6 +23,7 @@ from extensionmetadocgenerator import (ExtensionMetaDocGeneratorOptions,
 from generator import write
 from hostsyncgenerator import HostSynchronizationOutputGenerator
 from indexgenerator import DocIndexOutputGenerator
+from jsgenerator import JSOutputGenerator
 from pygenerator import PyOutputGenerator
 from rubygenerator import RubyOutputGenerator
 from reflib import logDiag, logWarn, logErr, setLogFile
@@ -364,8 +365,26 @@ def makeGenOpts(args):
             extEnumerantAdditions = True)
         ]
 
-    # Python and Ruby representations of API information, used by scripts
-    # that do not need to load the full XML.
+    # JavaScript, Python, and Ruby representations of API information, used
+    # by scripts that do not need to load the full XML.
+    genOpts['apimap.cjs'] = [
+        JSOutputGenerator,
+        DocGeneratorOptions(
+            conventions       = conventions,
+            filename          = 'apimap.cjs',
+            directory         = directory,
+            genpath           = None,
+            apiname           = 'openxr',
+            profile           = None,
+            versions          = featuresPat,
+            emitversions      = featuresPat,
+            defaultExtensions = None,
+            addExtensions     = addExtensionsPat,
+            removeExtensions  = removeExtensionsPat,
+            emitExtensions    = emitExtensionsPat,
+            reparentEnums     = False)
+        ]
+
     genOpts['apimap.py'] = [
           PyOutputGenerator,
           DocGeneratorOptions(
