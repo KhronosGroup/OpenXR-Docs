@@ -26337,6 +26337,13 @@ typedef XrResult (XRAPI_PTR *<name>PFN_xrCreateApiLayerInstance</name>)(
         </require>
     </extension>
 
+    <extension name="XR_HYPERVISION_quad_views" number="1011" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_HYPERVISION_quad_views_SPEC_VERSION"/>
+            <enum value="&quot;XR_HYPERVISION_quad_views&quot;" name="XR_HYPERVISION_QUAD_VIEWS_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
     </extensions>
 
 </registry>
