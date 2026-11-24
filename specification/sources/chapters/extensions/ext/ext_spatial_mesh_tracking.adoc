@@ -170,7 +170,7 @@ The diagram below shows how an application configures the spatial context if
 it wants to track a watertight mesh of the environment.
 
 [[fig-EXT_spatial_mesh_tracking-app-flow-watertight]]
-image::images/ext_spatial_mesh_tracking_app_flow_watertight.svg[opts="inline", align="center", title="App flow for requesting watertight mesh"]
+image::{images}/ext_spatial_mesh_tracking_app_flow_watertight.svg[opts="{imageopts}", align="center", title="App flow for requesting watertight mesh"]
 
 [[ext_spatial_mesh_tracking_guaranteed_components]]
 ===== Guaranteed Components

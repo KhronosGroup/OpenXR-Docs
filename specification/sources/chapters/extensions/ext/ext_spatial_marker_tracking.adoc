@@ -428,7 +428,7 @@ towards the +Z direction in the component's space.
 
 A representation of the orientation of the marker is shown below.
 
-image::images/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
+image::{images}/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
 
 ==== Test Codes
 
@@ -438,11 +438,11 @@ The axis origin must: appear at the center of each marker.
 The X-axis must: point to the right, the Y-axis must: point to the top of
 the document.
 
-image::images/ext_marker_tracking_qr.svg[align="center", title="QR code with text 'OpenXR'"]
+image::{images}/ext_marker_tracking_qr.svg[align="center", title="QR code with text 'OpenXR'"]
 
-image::images/ext_marker_tracking_apriltag.svg[align="center", title="AprilTag ename:XR_SPATIAL_MARKER_APRIL_TAG_DICT_36H11_EXT with ID 42"]
+image::{images}/ext_marker_tracking_apriltag.svg[align="center", title="AprilTag ename:XR_SPATIAL_MARKER_APRIL_TAG_DICT_36H11_EXT with ID 42"]
 
-image::images/ext_marker_tracking_aruco.svg[align="center", title="ArUco marker ename:XR_SPATIAL_MARKER_ARUCO_DICT_5X5_50_EXT with ID 43"]
+image::{images}/ext_marker_tracking_aruco.svg[align="center", title="ArUco marker ename:XR_SPATIAL_MARKER_ARUCO_DICT_5X5_50_EXT with ID 43"]
 
 ==== Example Code
 

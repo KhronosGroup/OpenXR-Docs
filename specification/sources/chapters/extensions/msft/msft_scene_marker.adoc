@@ -241,12 +241,12 @@ code image in the XY plane follows the convention in
 The X axis of QR code pose points to the right of the marker image, and the
 Z axis points inward to the marker image, as illustrated in following image.
 
-image::images/marker_pose.png[align="center", title="The pose convention of a QR code marker."]
+image::{images}/marker_pose.png[align="center", title="The pose convention of a QR code marker."]
 
 The QR Code marker's center and size are defined in the XY plane, as
 illustrated in following pictures.
 
-image::images/marker_size.png[align="center", title="The center and size of QR Code marker."]
+image::{images}/marker_size.png[align="center", title="The center and size of QR Code marker."]
 
 ==== Retrieving QRCode marker properties
 

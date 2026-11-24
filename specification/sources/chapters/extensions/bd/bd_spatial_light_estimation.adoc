@@ -532,7 +532,7 @@ and the runtime must:
 
 [#fig-cubemap-buffer-layout]
 .Cubemap face buffer layout
-image::images/bd_spatial_light_estimation_cube_texture_buffer_layout.svg[opts="inline", align="center", title="Cubemap face buffer layout"]
+image::{images}/bd_spatial_light_estimation_cube_texture_buffer_layout.svg[opts="{imageopts}", align="center", title="Cubemap face buffer layout"]
 
 
 Each face buffer must: use a top-left origin where the local U axis

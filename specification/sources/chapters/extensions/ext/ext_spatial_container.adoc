@@ -290,7 +290,7 @@ the {local_space}.
 Runtimes may: set the pose of a container space relative to {local_space} to
 any arbitrary pose when that container becomes visible.
 
-image::images/ext_spatial_container_space_convention.svg[opts=inline, align="center", title="Axes convention of spatial container space"]
+image::{images}/ext_spatial_container_space_convention.svg[opts="{imageopts}", align="center", title="Axes convention of spatial container space"]
 
 The spatial container space is a non-world locked origin.
 Apps that want a world locked origin while in immersive mode can: use a
@@ -1015,7 +1015,7 @@ spatial containers.
 Enabling spatial container support alters core OpenXR APIs in the following
 way.
 
-image::images/ext_spatial_container_session_state_machine.svg[opts=inline, align="center", title="New session state machine"]
+image::{images}/ext_spatial_container_session_state_machine.svg[opts="{imageopts}", align="center", title="New session state machine"]
 
 * The session never enters the states ename:XR_SESSION_STATE_VISIBLE,
   ename:XR_SESSION_STATE_FOCUSED, or ename:XR_SESSION_STATE_EXITING.

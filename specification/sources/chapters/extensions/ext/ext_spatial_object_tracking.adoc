@@ -281,7 +281,7 @@ shown in the <<fig-spatial_object_tracking-keyboard-orientation, following
 image>> (with xyz = rgb) originating at the center of the object.
 
 [[fig-spatial_object_tracking-keyboard-orientation]]
-image::images/ext_spatial_object_tracking-keyboard-orientation.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Keyboard orientation."]
+image::{images}/ext_spatial_object_tracking-keyboard-orientation.png[opts="{imageopts}", width=600, pdfwidth=70%,  align="center", title="Keyboard orientation."]
 
 include::{generated}/api/enums/XrSpatialKeyboardSemanticLabelEXT.comments.adoc[]
 --

@@ -95,7 +95,7 @@ The homogeneous transform from view space z to window space depth is given
 by the following matrix, where a = minDepth, b = maxDepth, n = nearZ, and f
 = farZ.
 
-image::images/windowFromView.png[align="center", title="Homogeneous transform from view space to window space depth"]
+image::{images}/windowFromView.png[align="center", title="Homogeneous transform from view space to window space depth"]
 
 Homogeneous values are constructed from real values by appending a w
 component with value 1.0.

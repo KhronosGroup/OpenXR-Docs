@@ -374,11 +374,10 @@ class DocFile:
             self.dstpath = Path(self.component) / Partials / self.relpath
             self.dstlink = Path(self.component) / Pages / self.relpath
         else:
-            # Images go under images/, not under images/images/
-            # This could fail if there were ever top-level images but as all
-            # images used in the spec are required to be specified relative
-            # to {images}, it is OK.
-            self.dstpath = Path(self.component) / self.relpath
+            # This results in some deeper paths than strictly needed if the
+            # image directory path starts with 'images', but ensure that
+            # images always are copied to the special Atora image$ path.
+            self.dstpath = Path(self.component) / Images / self.relpath
 
     def rewriteXrefs(self, pageMap = {}, xrefMap = {}, module = ''):
         """Rewrite asciidoc <<>> xrefs into Antora xref: xrefs, including
@@ -688,7 +687,7 @@ if __name__ == '__main__':
                          root = args.root,
                          component = args.component)
         if args.log:
-            print('FILE:\n', docFile)
+            print('Processing file:\n', docFile)
 
         # Save information about the file under its relpath
         pageInfo[docFile.relpath] = docFile

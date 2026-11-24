@@ -51,7 +51,7 @@ This is the same "aim" pose defined in
 Every tracked controller profile already supports this pose.
 
 [[fig-ANDROID_mouse_interaction-mouse-aim-pose]]
-image::images/XR_ANDROID_mouse_interaction_aim_pose.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
+image::{images}/XR_ANDROID_mouse_interaction_aim_pose.png[opts="{imageopts}", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
 
 *Position*
 
@@ -78,7 +78,7 @@ The relative X,Y movement of the mouse is used to compute the relative
 movement of the mouse along a sphere around the user's head.
 
 [[fig-ANDROID_mouse_interaction-mouse-aim-drag]]
-image::images/XR_ANDROID_mouse_interaction_aim_drag.png[opts="inline", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
+image::{images}/XR_ANDROID_mouse_interaction_aim_drag.png[opts="{imageopts}", width=600, pdfwidth=70%,  align="center", title="Example aim pose."]
 
 The runtime should: support depth movement using primary click and scroll.
 When an action to move in depth is in process, the position is offset from
