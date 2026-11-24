@@ -695,6 +695,7 @@ CLEAN_GEN_PATHS := \
     $(GENDIR)/api \
     $(GENDIR)/validity \
     $(GENDIR)/hostsynctable \
+    $(GENDIR)/interfaces \
     $(METADIR) \
     $(REFPATH) \
     $(ATTRIBFILE)
@@ -723,8 +724,7 @@ CLEAN_ANTORA_PATHS = \
 	$(ANTORA_FILELIST) \
 	antora/openxr/modules/ROOT/nav.adoc \
 	antora/openxr/modules/ROOT/images \
-	antora/openxr/modules/ROOT/pages/appendices \
-	antora/openxr/modules/ROOT/pages/chapters \
+	antora/openxr/modules/ROOT/pages/sources \
 	antora/openxr/modules/ROOT/pages/partials \
 	antora/openxr/modules/ROOT/pages/$(ANTORA_GENDIR) \
 	antora/openxr/modules/ROOT/partials \
@@ -790,6 +790,7 @@ setup_spec_antora pageMap $(JSPAGEMAP) $(PYPAGEMAP): xrefMap $(JSAPIMAP) spec_na
 	    > $(ANTORA_FILELIST)
 	$(QUIET)ls -1 $(ANTORA_EXTRAFILES) >> $(ANTORA_FILELIST)
 	$(QUIET)$(PYTHON) $(SCRIPTS)/antora-prep.py \
+	    -log \
 	    -root . \
 	    -component $(shell realpath antora/openxr/modules/ROOT) \
 	    -xrefMap $(PYXREFMAP) \
@@ -800,20 +801,22 @@ setup_spec_antora pageMap $(JSPAGEMAP) $(PYPAGEMAP): xrefMap $(JSAPIMAP) spec_na
 	    -filelist $(ANTORA_FILELIST)
 	$(QUIET)$(CP) $(JSPAGEMAP) $(ANTORA_SPECMODULE)/partials/$(ANTORA_GENDIR)
 
-# Construct the spec component nav.adoc from the list of included
+# Construct the openxr component nav.adoc from the list of included
 # chapters in openxr.adoc, so it remains up to date.
 # This is a simple transformation turning include directives into xrefs.
 # Unfortunately we cannot set or use attributes in nav files, so the
-#   {chapters} and {appendices} attributes must be turned into hardcoded
-#   paths in the pages/ directory.
+#   {chapters} and {generated} attributes used in openxr.adoc must be
+#   turned into hardcoded paths in the pages/ directory.
 SPECNAV = antora/openxr/modules/ROOT/nav.adoc
 spec_nav_antora: $(SPECSRC)
 	#@ Probably needs edits for OpenXR directory structure - can't just get rid of the attribute name
 	cat $(SPECSRC) | \
-	    sed -n '/tag::antora-vulkan-nav/,/end::antora-vulkan-nav/p' | \
+	    sed -n '/tag::antora-openxr-nav/,/end::antora-openxr-nav/p' | \
 	    egrep '^include::' | \
 	    tr -d '{}' | \
-	    sed -e 's/include::/* xref:/' > $(SPECNAV)
+	    sed -e 's#include::#* xref:#' \
+		-e 's#chapters/#sources/chapters#' \
+		-e 's#generated/#generated#' > $(SPECNAV)
 
 #TODO
 #TODO# Generate Antora refpages module content by extraction from rewritten

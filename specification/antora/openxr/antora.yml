@@ -10,9 +10,8 @@ asciidoc:
   attributes:
     stem: latexmath
     config: partial$config
-    chapters: partial$chapters
-    appendices: partial$appendices
-    generated: partial$gen
+    chapters: partial$sources/chapters
+    generated: partial$generated
     images: image$
 # Not supported for SVG yet - see https://gitlab.com/antora/antora/-/issues/1001
 #    imageopts: inline

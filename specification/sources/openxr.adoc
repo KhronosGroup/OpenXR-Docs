@@ -37,7 +37,7 @@ toc::[]
 // This tag must surround all chapter includes for the Vulkan Antora spec
 // component (see the 'spec_nav_antora' Makefile target).
 
-// tag::antora-vulkan-nav[]
+// tag::antora-openxr-nav[]
 
 :numbered!:
 include::{chapters}/preamble.adoc[]
@@ -84,7 +84,7 @@ endif::backend-pdf[]
 
 include::{chapters}/appendix.adoc[]
 
-// end::antora-vulkan-nav[]
+// end::antora-openxr-nav[]
 
 // In PDF, use the auto-generated index.
 ifdef::backend-pdf[]

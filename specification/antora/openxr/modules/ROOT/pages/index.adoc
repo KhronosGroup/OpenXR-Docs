@@ -49,14 +49,15 @@ topics.
 
 === OpenXR Reference Pages
 
-xref:refpages::index.adoc[The OpenXR reference pages] are extracted from the
+//@ TBD, target does not exist yet xref:refpages::index.adoc[The OpenXR reference pages]
+are extracted from the
 Specification and document individual APIs.
 They do not contain any information not found in the Specification, but can
 be a quick way to access information on specific APIs.
 
 == Getting Help
 
-// TBD
+//@ TBD
 // The OpenXR communities are there to help with all questions regarding the
 // OpenXR ecosystem.
 // Official channels include https://discord.gg/vulkan[Discord],
@@ -68,8 +69,12 @@ be a quick way to access information on specific APIs.
 If you need to report a problem or want to build the site yourself, start
 with the link:https://github.com/KhronosGroup/Vulkan-Site/[Vulkan-Site]
 repository on GitHub.
-Note that while this repository has "`Vulkan`" in its name, it is also used
-to build the OpenXR documentation site.
+
+[NOTE]
+====
+While this repository has "`Vulkan`" in its name, it is also used to build
+the OpenXR documentation site.
+====
 
 This site is generated using the link:https://docs.antora.org/[Antora]
 static site generator.

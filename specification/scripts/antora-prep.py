@@ -55,8 +55,8 @@ from reflib import loadFile, logDiag, logWarn, logErr, setLogFile, getBranch
 from pathlib import Path
 
 titleAnchorPat = re.compile(r'^\[\[(?P<anchor>[^,]+).*\]\]$')
-titlePat = re.compile(r'^[=#] (?P<title>[A-Z].*)')
-subtitlePat = re.compile(r'^[=#]{2,} (?P<title>[A-Z].*)')
+titlePat = re.compile(r'^[=#] (?P<title>[\w].*)')
+subtitlePat = re.compile(r'^(?P<prefix>[=#]{2,}) (?P<title>[\w].*)')
 
 Pages = 'pages'
 Partials = 'partials'
@@ -219,6 +219,7 @@ class DocFile:
              subdirectory name.
            - title - page title for Pages, else ''
            - titleAnchor - page title anchor for Pages, else ''
+           - titleOffset - page title offset (depth)
            - anchors - asciidoc anchors found in the file
            - includes - asciidoc includes found in the file
            - pageMap - dictionary mapping a page anchor to a source file
@@ -238,6 +239,7 @@ class DocFile:
         self.category = None
         self.title = ''
         self.titleAnchor = ''
+        self.titleOffset = 0
         self.anchors = set()
         self.includes = set()
 
@@ -249,24 +251,44 @@ class DocFile:
         """Find category (Pages or Partials) and title, for Pages, in a
            .adoc markup file.
 
-           Heuristic is to search the beginning of the file for a top-level
-           asciidoc title, preceded immediately by an anchor for the page.
+           For compatibility with files that are intended as pages, but do
+           not start with a top-level title, the 'antora-page-offset'
+           attribute may be set.
 
-           Returns (category, title, titleLine, titleAnchor) with '' for a
-           Partials title and '' if no title anchor is found."""
+           If the attribute is set, the file is treated as a page.
+           The first section title following the attribute begins the page,
+           and is treated as the page title.
+           The page is rewritten with 'leveloffset' attributes that adjust
+           the first section to the level 0 required for Antora pages.
+
+           The file is also treated as a page if the attribute is not set,
+           but the first section found is level 0.
+
+           If present, the asciidoc anchor preceding the page title is
+           returned as the title anchor.
+
+           Returns (category, title, titleLine, titleAnchor, offset), with
+           '' for a Partials title and '' if no title anchor is found."""
 
         """Chapter title block must be within this many lines of start of file"""
-        maxLines = min(30, len(self.lines))
+        maxLines = min(60, len(self.lines))
 
         """Default, if page title and/or page anchor not found"""
         titleAnchor = ''
         title = ''
+        page = False
 
         for lineno in range(0, maxLines):
             line = self.lines[lineno]
 
-            # Look for the first anchor, which must precede the title to
-            # apply to it (really, must precede it by exactly one line).
+            # Look for the antora-page-offset attribute
+            if line.startswith(':antora-page-offset:'):
+                page = True
+                continue
+
+            # Look for an anchor, which must precede the title to apply to
+            # it (it should be on the immediately preceding line, but this
+            # is not checked yet)
             match = titleAnchorPat.match(line)
             if match is not None:
                 titleAnchor = match.group('anchor')
@@ -275,16 +297,23 @@ class DocFile:
             # If we find a top-level title, it is a page.
             match = titlePat.match(line)
             if match is not None:
-                return (Pages, match.group('title'), lineno, titleAnchor)
+                return (Pages, match.group('title'), lineno, titleAnchor, 0)
 
-            # If we find a second-level or above title, it is a partial
+            # If we find a second-level or above title, it is only a page if
+            # the antora-page-offset attribute was previously set.
+            # Otherwise it is a partial.
             match = subtitlePat.match(line)
             if match is not None:
-                return (Partials, match.group('title'), lineno, titleAnchor)
+                title = match.group('title')
+                if page:
+                    offset = len(match.group('prefix')) - 1
+                    return (Pages, title, lineno, titleAnchor, offset)
+                else:
+                    return (Partials, match.group('title'), lineno, titleAnchor, 0)
 
         # If we do not find a match in the first maxLines lines, assume it
         # is a partial.
-        return(Partials, 'NO TITLE FOUND', -1, titleAnchor)
+        return (Partials, 'NO TITLE FOUND', -1, titleAnchor, 0)
 
     def populate(self,
                  filename,
@@ -330,7 +359,8 @@ class DocFile:
                 (self.category,
                  self.title,
                  self.titleLine,
-                 self.titleAnchor) = self.findTitle()
+                 self.titleAnchor,
+                 self.titleOffset) = self.findTitle()
             else:
                 self.category = Partials
 
@@ -431,11 +461,13 @@ class DocFile:
 
     def __str__(self):
         lines = [
-            f'Input file {filename}: {'BINARY' if self.lines is None else len(self.lines)} lines',
+            f'Input file {self.srcpath}: {'BINARY' if self.lines is None else len(self.lines)} lines',
             f'root = {self.root} component = {self.component} relpath = {self.relpath}',
-            f'category = {self.category} dstpath = {self.dstpath}',
+            f'category = {self.category}',
+            f'dstpath = {self.dstpath}',
             f'title = {self.title}',
             f'titleAnchor = {self.titleAnchor}',
+            f'titleOffset = {self.titleOffset}',
         ]
         return '\n'.join(lines)
 
@@ -489,14 +521,16 @@ class DocFile:
         elif self.category == Partials:
             self.writeFile(self.dstpath)
         elif self.category == Pages:
+            if self.titleOffset > 0:
+                # Surround the file with leveloffset attributes, so the page
+                # title appears at the right level for Antora.
+                self.lines.insert(0, f':leveloffset: -{self.titleOffset}\n')
+                self.lines.append(f'\n:leveloffset: +{self.titleOffset}')
+
             if pageHeaders is not None:
                 # Add whitespace after the pageHeaders to avoid
                 # coalescing with file content.
-                lines = pageHeaders + ['\n'] + self.lines
-                #lines = self.lines[0:self.titleLine+1]
-                #lines += ['\n'] + pageHeaders + ['\n']
-                #lines = lines + self.lines[self.titleLine+1:]
-                self.lines = lines
+                self.lines = pageHeaders + ['\n'] + self.lines
 
             # Inject page headers immediately following page title
 
@@ -516,10 +550,6 @@ class DocFile:
         except:
             raise RuntimeError(f'Cannot open output file {path}')
 
-        if self.lines is None:
-            import pdb
-            pdb.set_trace()
-
         for line in self.lines:
             print(line, file=fp, end='')
 
@@ -535,6 +565,9 @@ def testHarness():
     # Test harness
     docFile = DocFile()
     docFile.lines = [
+        '[[pageanchor]]',
+        '= Page',
+        '',
         '<<ext,ext chapter>> <<ext-label,',
         'ext chapter/label>>',
         '<<core>>, <<core-label, core chapter/label',
@@ -560,6 +593,8 @@ def testHarness():
 
     docFile.rewriteXrefs(pageMap, xrefMap, 'module:')
     docFile.rewriteProposalXrefs()
+
+    print('\nParsed File:\n', docFile)
 
     printFile('Edited File', docFile.lines)
 
@@ -597,6 +632,8 @@ if __name__ == '__main__':
                         help='Specify name of a single file to convert')
     parser.add_argument('-debug', action='store_true',
                         help='Run with Python debugger module enabled')
+    parser.add_argument('-log', action='store_true',
+                        help='Log information about transformed files to stdout')
     parser.add_argument('-test', action='store_true',
                         help='Run simple test harness instead of converting targets')
     parser.add_argument('-verbose', action='store_true',
@@ -609,10 +646,6 @@ if __name__ == '__main__':
 
     if args.pageHeaders is not None:
         args.pageHeaders, _ = loadFile(args.pageHeaders)
-
-    if args.debug:
-        import pdb
-        pdb.set_trace()
 
     if args.test:
         testHarness()
@@ -654,6 +687,8 @@ if __name__ == '__main__':
         docFile.populate(filename = filename,
                          root = args.root,
                          component = args.component)
+        if args.log:
+            print('FILE:\n', docFile)
 
         # Save information about the file under its relpath
         pageInfo[docFile.relpath] = docFile

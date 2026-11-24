@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[introduction]]
 == Introduction
 
