@@ -760,7 +760,7 @@ The slink:XrSpace origin must: be located at the marker's center.
 The X-Y plane of the slink:XrSpace must: be aligned with the plane of the
 marker with the positive Z axis coming out of the marker face.
 
-image::images/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
+image::{images}/xr_ml_marker_understanding_axis.png[align="center", title="QR code marker with axis"]
 
 include::{generated}/validity/protos/xrCreateMarkerSpaceML.adoc[]
 --

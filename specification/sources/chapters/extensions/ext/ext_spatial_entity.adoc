@@ -1071,7 +1071,7 @@ contains 5 entities, where -
   ename:XR_SPATIAL_COMPONENT_TYPE_MESH_3D_EXT.
 
 [[fig-EXT_spatial_entity-query-snapshot-01]]
-image::images/ext_spatial_entity_query_snapshot_01.svg[opts="inline", align="center", title="Example snapshot"]
+image::{images}/ext_spatial_entity_query_snapshot_01.svg[opts="{imageopts}", align="center", title="Example snapshot"]
 
 flink:xrQuerySpatialComponentDataEXT on the above snapshot with
 ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_2D_EXT listed in the query condition
@@ -1082,7 +1082,7 @@ chain of slink:XrSpatialComponentDataQueryResultEXT to get the bounded2D
 data.
 
 [[fig-EXT_spatial_entity-query-snapshot-02]]
-image::images/ext_spatial_entity_query_snapshot_02.svg[opts="inline", align="center", title="Example query result"]
+image::{images}/ext_spatial_entity_query_snapshot_02.svg[opts="{imageopts}", align="center", title="Example query result"]
 
 flink:xrQuerySpatialComponentDataEXT on the above snapshot with
 ename:XR_SPATIAL_COMPONENT_TYPE_BOUNDED_3D_EXT and
@@ -1096,7 +1096,7 @@ chain of slink:XrSpatialComponentDataQueryResultEXT to get the component
 data.
 
 [[fig-EXT_spatial_entity-query-snapshot-03]]
-image::images/ext_spatial_entity_query_snapshot_03.svg[opts="inline", align="center", title="Example query result"]
+image::{images}/ext_spatial_entity_query_snapshot_03.svg[opts="{imageopts}", align="center", title="Example query result"]
 
 --
 
@@ -1173,7 +1173,7 @@ The enums have the following meanings:
 include::{generated}/api/enums/XrSpatialEntityTrackingStateEXT.comments.adoc[]
 
 [[fig-EXT_spatial_entity-tracking-states]]
-image::images/ext_spatial_entity_tracking_states.svg[opts="inline", align="center", title="elink:XrSpatialEntityTrackingStateEXT"]
+image::{images}/ext_spatial_entity_tracking_states.svg[opts="{imageopts}", align="center", title="elink:XrSpatialEntityTrackingStateEXT"]
 
 * The runtime may: change the state of the spatial entity from
   ename:XR_SPATIAL_ENTITY_TRACKING_STATE_TRACKING_EXT to
@@ -1731,7 +1731,7 @@ centered at {0, 0, 0} with its front face normal vector pointing towards the
 +Z direction in the component's space.
 
 [[fig-EXT_spatial_entity-bounded2D-coordinate-system]]
-image::images/xr_msft_scene_understanding_plane_coordinate_system.svg[opts="inline", align="center", title="Bounded2D Component Coordinate System"]
+image::{images}/xr_msft_scene_understanding_plane_coordinate_system.svg[opts="{imageopts}", align="center", title="Bounded2D Component Coordinate System"]
 
 [NOTE]
 .Note

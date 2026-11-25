@@ -87,11 +87,11 @@ advertisement before the application requests it.
 
 .XR_META_colocation_discovery Advertisement Process - Normal
 [#XR_META_colocation_discovery-advertisement-normal]
-image::images/XR_META_colocation_discovery-advertisement-normal.svg["Typical Advertisement Process", opts=inline, align="center"]
+image::{images}/XR_META_colocation_discovery-advertisement-normal.svg["Typical Advertisement Process", opts="{imageopts}", align="center"]
 
 .XR_META_colocation_discovery Advertisement Process - runtime needs to stop advertisement
 [#XR_META_colocation_discovery-advertisement-runtime-stop]
-image::images/XR_META_colocation_discovery-advertisement-runtime-stop.svg["Advertisement Process Stopped Early", opts=inline, align="center"]
+image::{images}/XR_META_colocation_discovery-advertisement-runtime-stop.svg["Advertisement Process Stopped Early", opts="{imageopts}", align="center"]
 
 [open,refpage='xrStartColocationAdvertisementMETA',type='protos',desc='Start colocation visibility',xrefs='XrEventDataStartColocationAdvertisementCompleteMETA']
 --
@@ -449,11 +449,11 @@ before the application requests it.
 
 .XR_META_colocation_discovery Discovery Process - Normal
 [#XR_META_colocation_discovery-discovery-normal]
-image::images/XR_META_colocation_discovery-discovery-normal.svg["Typical Discovery Process",opts=inline, align="center"]
+image::{images}/XR_META_colocation_discovery-discovery-normal.svg["Typical Discovery Process",opts="{imageopts}", align="center"]
 
 .XR_META_colocation_discovery Discovery Process - runtime needs to stop discovery
 [#XR_META_colocation_discovery-discovery-runtime-stop]
-image::images/XR_META_colocation_discovery-discovery-runtime-stop.svg["Discovery Process Stopped Early", opts=inline, align="center"]
+image::{images}/XR_META_colocation_discovery-discovery-runtime-stop.svg["Discovery Process Stopped Early", opts="{imageopts}", align="center"]
 
 [open,refpage='xrStartColocationDiscoveryMETA',type='protos',desc='Start colocation discovery',xrefs='XrEventDataStartColocationDiscoveryCompleteMETA']
 --

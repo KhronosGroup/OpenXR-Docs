@@ -346,7 +346,7 @@ The application can: get a sense data provider's state by calling
 flink:xrGetSenseDataProviderStateBD.
 
 [[fig-BD_spatial_sensing-provider-state]]
-image::images/bd_spatial_sensing_provider_state.png[opts="inline", align="center", title="elink:XrSenseDataProviderStateBD"]
+image::{images}/bd_spatial_sensing_provider_state.png[opts="{imageopts}", align="center", title="elink:XrSenseDataProviderStateBD"]
 
 include::{generated}/validity/protos/xrGetSenseDataProviderStateBD.adoc[]
 --

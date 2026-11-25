@@ -67,7 +67,7 @@ intended to be performed in one smooth motion.
 The detection of the gesture happens at the end of the motion, regardless of
 speed.
 
-image::images/microgestures.svg[align="center", title="Microgestures", inline]
+image::{images}/microgestures.svg[align="center", title="Microgestures", inline]
 
 This extension exposes these discrete signals through the <<input, OpenXR
 action system>>.

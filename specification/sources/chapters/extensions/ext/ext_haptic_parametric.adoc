@@ -41,7 +41,7 @@ drive the haptic element in the best possible way, with graceful degradation
 for features not supported by the haptic element.
 
 [[fig-EXT_haptic_parametric-vcm]]
-image::images/XR_EXT_Haptic_Parametric_VCM.png[align="center", title="Example of translating parametric data to a PCM waveform for driving a VCM, using reserved headroom to make the transient stand out."]
+image::{images}/XR_EXT_Haptic_Parametric_VCM.png[align="center", title="Example of translating parametric data to a PCM waveform for driving a VCM, using reserved headroom to make the transient stand out."]
 
 For example, a voice coil motor (VCM) haptic element is driven by pulse-code
 modulation (PCM) data, and the runtime translates the parametric data into
@@ -50,7 +50,7 @@ The amplitude and frequency of the waveform varies according to the
 amplitude and frequency points.
 
 [[fig-EXT_haptic_parametric-lra]]
-image::images/XR_EXT_Haptic_Parametric_LRA.png[align="center", title="Example of translating parametric data to amplitude steps for driving an LRA, using reserved headroom to make the transient stand out."]
+image::{images}/XR_EXT_Haptic_Parametric_LRA.png[align="center", title="Example of translating parametric data to amplitude steps for driving an LRA, using reserved headroom to make the transient stand out."]
 
 For haptic elements that do not support varying the frequency of the
 vibration, like linear resonant actuators (LRAs), the runtime must: ignore

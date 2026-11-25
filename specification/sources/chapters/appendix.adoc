@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[appendix]]
 == Appendix
 
@@ -604,7 +607,7 @@ ifdef::include-dedication-photo[]
 // Only including this in Khronos-built documents subject to the
 // Khronos Specification Copyright license - photo
 // is not CC-BY-4.0 licensed.
-image::images/JP.jpg[align="center",pdfwidth="80%"]
+image::{images}/JP.jpg[align="center",pdfwidth="80%"]
 endif::include-dedication-photo[]
 
 <<<

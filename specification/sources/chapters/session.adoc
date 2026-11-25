@@ -1,6 +1,10 @@
 // Copyright (c) 2016-2026 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
+
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[session]]
 == Session
 
@@ -17,7 +21,7 @@ user.
 === Session Lifecycle
 
 [[fig-session-lifecycle]]
-image::images/lifecycle.svg[opts=inline, align="center", title="Session Lifecycle"]
+image::{images}/lifecycle.svg[opts="{imageopts}", align="center", title="Session Lifecycle"]
 
 [NOTE]
 ====

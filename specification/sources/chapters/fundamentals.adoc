@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: CC-BY-4.0
 
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[fundamentals]]
 == Fundamentals
 
@@ -1242,7 +1245,7 @@ zero.
 
 This API uses a Cartesian right-handed coordinate system.
 
-image::images/right-handed.svg[opts=inline, align="center", title="Right Handed Coordinate System"]
+image::{images}/right-handed.svg[opts="{imageopts}", align="center", title="Right Handed Coordinate System"]
 
 The conventions for mapping coordinate axes of any particular space to
 meaningful directions depend on and are documented with the description of

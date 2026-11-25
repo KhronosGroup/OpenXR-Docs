@@ -277,14 +277,14 @@ include::{generated}/api/enums/XrEyeExpressionHTC.adoc[]
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_WIDE_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_WIDE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_WIDE_HTC.png[width=210]| **Description** +
 This blend shape keeps left eye wide and at that time
 ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 0.
 |====
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_WIDE_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_WIDE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_WIDE_HTC.png[width=210]| **Description** +
 This blend shape keeps right eye wide and at that time
 ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 0.
 |====
@@ -292,7 +292,7 @@ ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 0.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_BLINK_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_BLINK_HTC.png[width=210]| **Description** +
 This blend shape influences blinking of the right eye. When this value
 goes higher, left eye approaches close.
 |====
@@ -300,7 +300,7 @@ goes higher, left eye approaches close.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_BLINK_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_BLINK_HTC.png[width=210]| **Description** +
 This blend shape influences blinking of the right eye. When this value
 goes higher, right eye approaches close.
 |====
@@ -308,7 +308,7 @@ goes higher, right eye approaches close.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_SQUEEZE_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_SQUEEZE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_SQUEEZE_HTC.png[width=210]| **Description** +
 The blend shape closes eye tightly and at that time
 ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 1.
 |====
@@ -316,7 +316,7 @@ ename:XR_EYE_EXPRESSION_LEFT_BLINK_HTC value is 1.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_SQUEEZE_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_SQUEEZE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_SQUEEZE_HTC.png[width=210]| **Description** +
 The blend shape closes eye tightly and at that time
 ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 1.
 |====
@@ -324,7 +324,7 @@ ename:XR_EYE_EXPRESSION_RIGHT_BLINK_HTC value is 1.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_DOWN_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_DOWN.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_DOWN.png[width=210]| **Description** +
 This blendShape influences the muscles around the left eye,
 moving these muscles further downward with a higher value.
 |====
@@ -332,7 +332,7 @@ moving these muscles further downward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_DOWN_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_DOWN.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_DOWN.png[width=210]| **Description** +
 This blendShape influences the muscles around the right eye,
 moving these muscles further downward with a higher value.
 |====
@@ -340,7 +340,7 @@ moving these muscles further downward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_OUT_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_LEFT.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_LEFT.png[width=210]| **Description** +
 This blendShape influences the muscles around the left eye,
 moving these muscles further leftward with a higher value.
 |====
@@ -348,7 +348,7 @@ moving these muscles further leftward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_IN_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_LEFT.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_LEFT.png[width=210]| **Description** +
 This blendShape influences the muscles around the right eye,
 moving these muscles further leftward with a higher value.
 |====
@@ -356,7 +356,7 @@ moving these muscles further leftward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_IN_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_RIGHT.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_RIGHT.png[width=210]| **Description** +
 This blendShape influences the muscles around the left eye,
 moving these muscles further rightward with a higher value.
 |====
@@ -364,7 +364,7 @@ moving these muscles further rightward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_OUT_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_RIGHT.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_RIGHT.png[width=210]| **Description** +
 This blendShape influences the muscles around the right eye,
 moving these muscles further rightward with a higher value.
 |====
@@ -372,7 +372,7 @@ moving these muscles further rightward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_LEFT_UP_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_LEFT_UP.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_LEFT_UP.png[width=210]| **Description** +
 This blendShape influences the muscles around the left eye,
 moving these muscles further upward with a higher value.
 |====
@@ -380,7 +380,7 @@ moving these muscles further upward with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_EYE_EXPRESSION_RIGHT_UP_HTC
-^.^a|image::images/XR_EYE_SHAPE_EYE_RIGHT_UP.png[width=210]| **Description** +
+^.^a|image::{images}/XR_EYE_SHAPE_EYE_RIGHT_UP.png[width=210]| **Description** +
 This blendShape influences the muscles around the right eye,
 moving these muscles further upward with a higher value.
 |====
@@ -400,70 +400,70 @@ include::{generated}/api/enums/XrLipExpressionHTC.adoc[]
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_JAW_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_JAW_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_JAW_LEFT_HTC.png[width=210]| **Description** +
 This blend shape moves the jaw further leftward with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_JAW_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_JAW_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_JAW_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape moves the jaw further rightward with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_JAW_FORWARD_HTC
-^.^a|image::images/XR_LIP_SHAPE_JAW_FORWARD_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_JAW_FORWARD_HTC.png[width=210]| **Description** +
 This blend shape moves the jaw forward with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_JAW_OPEN_HTC
-^.^a|image::images/XR_LIP_SHAPE_JAW_OPEN_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_JAW_OPEN_HTC.png[width=210]| **Description** +
 This blend shape opens the mouth further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_APE_SHAPE_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_APE_SHAPE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_APE_SHAPE_HTC.png[width=210]| **Description** +
 This blend shape stretches the jaw further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape moves your upper lip leftward.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape moves your upper lip rightward.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape moves your lower lip leftward.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape moves your lower lip rightward.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_OVERTURN_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_OVERTURN_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_OVERTURN_HTC.png[width=210]| **Description** +
 This blend shape pouts your upper lip.
 Can be used with ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPRIGHT_HTC and
 ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPLEFT_HTC to complete upper O mouth shape.
@@ -472,7 +472,7 @@ ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPLEFT_HTC to complete upper O mouth shape.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_OVERTURN_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_OVERTURN_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_OVERTURN_HTC.png[width=210]| **Description** +
 This blend shape pouts your lower lip.
 Can be used with ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPRIGHT_HTC and
 ename:XR_LIP_EXPRESSION_MOUTH_LOWER_DOWNRIGHT_HTC to complete upper O mouth shape.
@@ -481,14 +481,14 @@ ename:XR_LIP_EXPRESSION_MOUTH_LOWER_DOWNRIGHT_HTC to complete upper O mouth shap
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_POUT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_POUT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_POUT_HTC.png[width=210]| **Description** +
 This blend shape allows the lips to pout more with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_RAISER_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_RAISER_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_RAISER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape raises the left side of the mouth further with a
 higher value.
 |====
@@ -496,7 +496,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_RAISER_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_RAISER_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_RAISER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape raises the right side of the mouth further with a
 higher value.
 |====
@@ -504,7 +504,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_STRETCHER_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_STRETCHER_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_STRETCHER_LEFT_HTC.png[width=210]| **Description** +
 This blend shape lowers the left side of the mouth further with a
 higher value.
 |====
@@ -512,7 +512,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_STRETCHER_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_STRETCHER_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_STRETCHER_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape lowers the right side of the mouth further with a
 higher value.
 |====
@@ -520,7 +520,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_CHEEK_PUFF_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_CHEEK_PUFF_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_CHEEK_PUFF_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape puffs up the right side of the cheek further with a
 higher value.
 |====
@@ -528,7 +528,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_CHEEK_PUFF_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_CHEEK_PUFF_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_CHEEK_PUFF_LEFT_HTC.png[width=210]| **Description** +
 This blend shape puffs up the left side of the cheek further with a
 higher value.
 |====
@@ -536,7 +536,7 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_CHEEK_SUCK_HTC
-^.^a|image::images/XR_LIP_SHAPE_CHEEK_SUCK_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_CHEEK_SUCK_HTC.png[width=210]| **Description** +
 This blend shape sucks in the cheeks on both sides further with a
 higher value.
 |====
@@ -544,49 +544,49 @@ higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPLEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_UPLEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_UPLEFT_HTC.png[width=210]| **Description** +
 This blend shape raises the left upper lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_UPRIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_UPRIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_UPRIGHT_HTC.png[width=210]| **Description** +
 This blend shape raises the right upper lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_DOWNLEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_DOWNLEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_DOWNLEFT_HTC.png[width=210]| **Description** +
 This blend shape lowers the left lower lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_DOWNRIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_DOWNRIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_DOWNRIGHT_HTC.png[width=210]| **Description** +
 This blend shape lowers the right lower lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_INSIDE_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_INSIDE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_INSIDE_HTC.png[width=210]| **Description** +
 This blend shape rolls in the lower lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_UPPER_INSIDE_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_UPPER_INSIDE_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_UPPER_INSIDE_HTC.png[width=210]| **Description** +
 This blend shape rolls in the upper lip further with a higher value.
 |====
 
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_MOUTH_LOWER_OVERLAY_HTC
-^.^a|image::images/XR_LIP_SHAPE_MOUTH_LOWER_OVERLAY_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_MOUTH_LOWER_OVERLAY_HTC.png[width=210]| **Description** +
 This blend shape stretches the lower lip further and lays it on the
 upper lip further with a higher value.
 |====
@@ -594,7 +594,7 @@ upper lip further with a higher value.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_LONGSTEP1_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_LONGSTEP1_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out slightly. +
 In step 1 of extending the tongue, the main action of the tongue is
 to lift up, and the elongated length only extends to a little bit
@@ -604,7 +604,7 @@ beyond the teeth.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_LONGSTEP2_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_LONGSTEP2_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out extremely. +
 Continuing the step 1, it extends the tongue to the longest.
 |====
@@ -612,7 +612,7 @@ Continuing the step 1, it extends the tongue to the longest.
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_DOWN_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_DOWN_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out and down extremely. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).
@@ -621,7 +621,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UP_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_UP_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out and up extremely. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).
@@ -630,7 +630,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_RIGHT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_RIGHT_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out and right extremely. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).
@@ -639,7 +639,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_LEFT_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_LEFT_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out and left extremely. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).
@@ -648,7 +648,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_ROLL_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_ROLL_HTC.png[width=210]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_ROLL_HTC.png[width=210]| **Description** +
 This blend shape sticks the tongue out with roll type. +
 This example contains (ename:XR_LIP_EXPRESSION_TONGUE_ROLL_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC).
@@ -657,13 +657,13 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_UPRIGHT_MORPH_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UPRIGHT_MORPH_HTC_error.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_UPRIGHT_MORPH_HTC_error.png[width=150]| **Description** +
 This blend shape does not make sense.
 When both the right and up blend shapes appear at the same time,
 the tongue will be deformed. (ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC)
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UPRIGHT_MORPH_HTC_correct.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_UPRIGHT_MORPH_HTC_correct.png[width=150]| **Description** +
 This blend shape fixes the deformation illustrated above.
 (ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
@@ -673,13 +673,13 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC + ename:XR_LIP_EXPRESSION_TONGUE_UP
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_UPLEFT_MORPH_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UPLEFT_MORPH_HTC_error.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_UPLEFT_MORPH_HTC_error.png[width=150]| **Description** +
 This blend shape does not make sense.
 When both the left and up blend shapes appear at the same time,
 the tongue will be deformed. (ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC)
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_UPLEFT_MORPH_HTC_correct.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_UPLEFT_MORPH_HTC_correct.png[width=150]| **Description** +
 This blend shape fixes the deformation illustrated above.
 (ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_UP_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
@@ -689,13 +689,13 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC + ename:XR_LIP_EXPRESSION_TONGUE_UP
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_DOWNRIGHT_MORPH_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_DOWNRIGHT_MORPH_HTC_error.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_DOWNRIGHT_MORPH_HTC_error.png[width=150]| **Description** +
 This blend shape does not make sense.
 When both the right and down blend shapes appear at the same time,
 the tongue will be deformed. (ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC)
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_DOWNRIGHT_MORPH_HTC_correct.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_DOWNRIGHT_MORPH_HTC_correct.png[width=150]| **Description** +
 This blend shape fixes the deformation illustrated above.
 (ename:XR_LIP_EXPRESSION_TONGUE_RIGHT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
@@ -705,13 +705,13 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC + ename:XR_LIP_EXPRESSION_TONGUE_DO
 [width="80%",options="header"]
 |====
 2+|ename:XR_LIP_EXPRESSION_TONGUE_DOWNLEFT_MORPH_HTC
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_DOWNLEFT_MORPH_HTC_error.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_DOWNLEFT_MORPH_HTC_error.png[width=150]| **Description** +
 This blend shape does not make sense.
 When both the left and down blend shapes appear at the same time,
 the tongue will be deformed. (ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC)
-^.^a|image::images/XR_LIP_SHAPE_TONGUE_DOWNLEFT_MORPH_HTC_correct.png[width=150]| **Description** +
+^.^a|image::{images}/XR_LIP_SHAPE_TONGUE_DOWNLEFT_MORPH_HTC_correct.png[width=150]| **Description** +
 This blend shape fixes the deformation illustrated above.
 (ename:XR_LIP_EXPRESSION_TONGUE_LEFT_HTC +
 ename:XR_LIP_EXPRESSION_TONGUE_DOWN_HTC + ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP1_HTC +
@@ -721,7 +721,7 @@ ename:XR_LIP_EXPRESSION_TONGUE_LONGSTEP2_HTC + ename:XR_LIP_EXPRESSION_TONGUE_DO
 [width="80%",options="header"]
 |====
 2+e|O shape
-^.^a|image::images/o_shape.png[width=210]| **Description** +
+^.^a|image::{images}/o_shape.png[width=210]| **Description** +
 The entire O-shaped mouth is formed by the combination of
 6 blend shapes: +
 (ename:XR_LIP_EXPRESSION_MOUTH_UPPER_OVERTURN_HTC +

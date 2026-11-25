@@ -43,7 +43,7 @@ class DocIndexOutputGenerator(OutputGenerator):
         anchor = title.lower().replace(' ', '-')
         write(f'[[index-{anchor}]]', file=self.outFile)
 
-        write(f"### {title}", file=self.outFile)
+        write(f'=== {title}', file=self.outFile)
         write('', file=self.outFile)
 
         for name in sorted(name_dict.keys()):
@@ -72,8 +72,10 @@ class DocIndexOutputGenerator(OutputGenerator):
             ('Handles', self.handles, 'slink:'),
             ('Structures', self.structs, 'slink:'),
         )
+        write('// Needed for Antora rewrite script to treat file as a page, not a partial', file=self.outFile)
+        write(':antora-page-offset:\n', file=self.outFile)
         write('[[index]]', file=self.outFile)
-        write('## Index', file=self.outFile)
+        write('== Index', file=self.outFile)
         write('', file=self.outFile)
 
         for title, name_dict, prefix in pieces:

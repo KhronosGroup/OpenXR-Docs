@@ -1,0 +1,22 @@
+# Copyright 2026 The Khronos Group Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: openxr
+title: OpenXR Specification
+version: latest
+# stem (latexmath) support is provided by the @djencks/asciidoctor-mathjax
+# extension, loaded in the playbook.
+asciidoc:
+  attributes:
+    stem: latexmath
+    config: partial$config
+    appendices: partial$sources/chapters/extensions
+    chapters: partial$sources/chapters
+    generated: partial$generated
+    images: image$sources/images
+# Not supported for SVG yet - see https://gitlab.com/antora/antora/-/issues/1001
+#    imageopts: inline
+    imageopts: ''
+    refprefix: ''
+nav:
+- modules/ROOT/nav.adoc

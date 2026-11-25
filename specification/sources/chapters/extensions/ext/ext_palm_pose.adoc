@@ -68,7 +68,7 @@ were added to the list of <<semantic-paths-standard-pose-identifiers>>.
 ** The palm orientation's +Y axis: orthogonal to +Z and +X using the
    right-hand rule.
 
-image::images/palm_pose.png[align="center", title="Example palm pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar). The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
+image::{images}/palm_pose.png[align="center", title="Example palm pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar). The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
 
 This pose is explicitly static for rigid controller type devices.
 The pose of subpathname:/input/palm_ext/pose and

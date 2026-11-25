@@ -1,6 +1,10 @@
 // Copyright (c) 2016-2026 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
+
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[view_configurations]]
 == View Configurations
 
@@ -103,7 +107,7 @@ ename:XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO view configuration type.
 ****
 --
 
-image::images/view_configurations.png[align="center", title="View configurations. The numbers in the figure is the view indices of the specific view."]
+image::{images}/view_configurations.png[align="center", title="View configurations. The numbers in the figure is the view indices of the specific view."]
 
 [[view_configurations-api]]
 === View Configuration API

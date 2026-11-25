@@ -1,0 +1,80 @@
+// Copyright 2026 The Khronos Group Inc.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= OpenXR Documentation
+
+include::{config}/attribs.adoc[]
+include::{generated}/specattribs.adoc[]
+
+== About
+
+Welcome to the official Documentation site for the cross-platform OpenXR
+API.
+This is your starting point for all things related to
+https://www.openxr.org[OpenXR].
+This site gathers together several key OpenXR documents into a convenient
+single site.This allows searching and cross-linking across documents, to
+help navigate quickly to the information you need for developing
+OpenXR-based applications.
+
+This build of the site includes the OpenXR {SPECREVISION} API specification
+{APITITLE}, generated on {SPECDATE} {SPECREMARK}.
+
+== How to Navigate This Site
+
+The site is organized into "`components`".
+The left navigation sidebar links to pages in the current component.
+The bottom-left button switches between components.
+
+The top navigation also has links to all components and related external
+documentation.
+It also allows for searching within this site.
+If the "`In this component`" box is checked, search will be restricted to
+the current component.
+Otherwise, all components of the site are searched.
+
+On pages with multiple sections, a right navigation sidebar links to
+sections in the current page.
+
+== What is Included
+
+=== OpenXR Specification
+
+xref:openxr::index.adoc[The OpenXR Specification] describes the OpenXR
+Application Programming Interface (API).
+
+The Specification is aimed at implementors of OpenXR and at developers that
+already know the basics of OpenXR and want to read up on more advanced
+topics.
+
+=== OpenXR Reference Pages
+
+//@ TBD, target does not exist yet xref:refpages::index.adoc[The OpenXR reference pages]
+are extracted from the
+Specification and document individual APIs.
+They do not contain any information not found in the Specification, but can
+be a quick way to access information on specific APIs.
+
+== Getting Help
+
+//@ TBD
+// The OpenXR communities are there to help with all questions regarding the
+// OpenXR ecosystem.
+// Official channels include https://discord.gg/vulkan[Discord],
+// https://www.reddit.com/r/vulkan/[Reddit] and a
+// https://community.khronos.org/c/vulkan[OpenXR forum].
+
+== Feedback
+
+If you need to report a problem or want to build the site yourself, start
+with the link:https://github.com/KhronosGroup/Vulkan-Site/[Vulkan-Site]
+repository on GitHub.
+
+[NOTE]
+====
+While this repository has "`Vulkan`" in its name, it is also used to build
+the OpenXR documentation site.
+====
+
+This site is generated using the link:https://docs.antora.org/[Antora]
+static site generator.

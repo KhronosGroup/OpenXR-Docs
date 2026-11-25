@@ -1,6 +1,10 @@
 // Copyright (c) 2016-2026 The Khronos Group Inc.
 //
 // SPDX-License-Identifier: CC-BY-4.0
+
+// Needed for Antora rewrite script to treat file as a page, not a partial
+:antora-page-offset:
+
 [[semantic-paths]]
 == Path Tree and Semantic Paths
 
@@ -421,7 +425,7 @@ identifiers.
 Standard pose identifiers for tracked hands or motion controllers as
 represented by pathname:/user/hand/left and pathname:/user/hand/right are:
 
-image::images/grip_axes_diagram.png[align="center", title="Example grip and aim poses for generic motion controllers"]
+image::{images}/grip_axes_diagram.png[align="center", title="Example grip and aim poses for generic motion controllers"]
 
 [[semantic-paths-grip-pose]]
 * grip - A pose that allows applications to reliably render a virtual object
@@ -486,7 +490,7 @@ image::images/grip_axes_diagram.png[align="center", title="Example grip and aim 
 ** The grip_surface orientation's +Y axis: orthogonal to +Z and +X using the
    right-hand rule.
 
-image::images/palm_pose.png[align="center", title="Example grip_surface pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar. The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
+image::{images}/palm_pose.png[align="center", title="Example grip_surface pose for (from left to right) a generic motion controller, tracked hand, and a digital hand avatar. The X axis is depicted in red. The Y axis is depicted in green. The Z axis is depicted in blue."]
 
 // Linking to the palm pose extension here is a special exception due to its
 // effect on existing interaction profiles and its anticipated widespread
