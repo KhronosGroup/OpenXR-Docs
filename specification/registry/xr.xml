@@ -45,48 +45,49 @@ maintained in the default branch of the Khronos OpenXR GitHub project.
     <!-- SECTION: OpenXR vendor/author tags for extensions and layers -->
     <tags>
         <!--  Sorted alphabetically by tag name -->
-        <tag name="ACER"       author="Acer"                  contact="OC Lin @aceroc"/>
-        <tag name="ALMALENCE"  author="Almalence"             contact="Ivan Chupakhin @ivan.chupakhin, Dmitry Shmunk @dmitry.shmunk"/>
-        <tag name="ANDROID"    author="Google"                contact="Nihav Jain @njain_google"/>
-        <tag name="ANDROIDSYS" author="Google"                contact="Nihav Jain @njain_google"/>
-        <tag name="ARM"        author="Arm Limited"           contact="Andreas Loeve Selvik @selvik, Sam Martin @sammartin"/>
-        <tag name="BD"         author="ByteDance"             contact="Will Fu @willfu, Bangsen Han @Hansenn"/>
-        <tag name="COLLABORA"  author="Collabora"             contact="Rylie Pavlik @rpavlik"/>
-        <tag name="DANWILLM"   author="Daniel Willmott"       contact="Daniel Willmott @danwillm"/>
-        <tag name="DEEPMIRROR" author="Deep Mirror"           contact="Yuhui Lun @lyh-dm"/>
-        <tag name="DXR"        author="The DisplayXR Project" contact="David Fattal @dfattal"/>
-        <tag name="EPIC"       author="Epic"                  contact="Nick Whiting @whitingn"/>
-        <tag name="EXT"        author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
-        <tag name="FB"         author="Facebook"              contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
-        <tag name="FREDEMMOTT" author="Frederick Emmott"      contact="Frederick Emmott @fredemmott"/>
-        <tag name="GOOGLE"     author="Google"                contact="Kaye Mason @chaleur"/>
-        <tag name="HOLOLIGHT"  author="Holo-Light GmbH"       contact="Aidan Howie @aidanhowie, Krzysztof Lesiak @k_lesiak"/>
-        <tag name="HTC"        author="HTC"                   contact="Chris Kuo @ggkuo, Kyle Chen @kylechen76"/>
-        <tag name="HUAWEI"     author="Huawei"                contact="Yihong Huang @rachelhuang, Li jingya @yzljy"/>
-        <tag name="INTEL"      author="Intel"                 contact="Javier Martinez @javier"/>
-        <tag name="KHR"        author="Khronos"               contact="Brent Insko @insko"/>
-        <tag name="LEIA"       author="Leia"                  contact="Cristina Scheibler @cscheibler"/>
-        <tag name="LUNARG"     author="LunarG"                contact="Brad Grantham @bradgrantham-lunarg"/>
-        <tag name="LIV"        author="LIV"                   contact="Arthur Brainville @Ybalrid, Steffan Donal @liv_ruu"/>
-        <tag name="LOGITECH"   author="Logitech"              contact="Mario Gutierrez @mgutierrez1, Fabien Zellweger @fzellweger"/>
-        <tag name="META"       author="Meta Platforms"        contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
-        <tag name="ML"         author="Magic Leap"            contact="Ron Bessems @rbessems"/>
-        <tag name="MND"        author="Monado Project"        contact="Jakob Bornecrantz @wallbraker, Rylie Pavlik @rpavlik"/>
-        <tag name="MSFT"       author="Microsoft"             contact="Alex Turner @alexturn, Yin Li @yl_msft, Bryce Hutchings @brycehutchings, Lachlan Ford @laford_msft, Minmin Gong @gongminmin "/>
-        <tag name="NV"         author="NVIDIA Corporation"    contact="Satish Salian @ssalian, Robert Menzel"/>
-        <tag name="OCULUS"     author="Oculus"                contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
-        <tag name="OPPO"       author="OPPO"                  contact="Buyi Xu @fantastxu, Haomiao Jiang @hjiang36"/>
-        <tag name="PLUTO"      author="Pluto VR"              contact="Jared Cheshier @Jared, Sophia Baldonado @sophia"/>
-        <tag name="QCOM"       author="Qualcomm Technologies" contact="Armelle @alaine_qcom, Martin Renschler @martinr"/>
-        <tag name="RZR"        author="Razer"                 contact="Alexandre Hulsken @ahulsken, Eric Vezzoli @EricVezzoli"/>
-        <tag name="SONY"       author="Sony Corporation"      contact="Kota Suzuki @kotasuzuki"/>
-        <tag name="STARBREEZE" author="Starbreeze"            contact="David Srour @dsrour"/>
-        <tag name="TOBII"      author="Tobii"                 contact="Denny Rönngren @denron"/>
-        <tag name="ULTRALEAP"  author="Ultraleap"             contact="Robert Blenkinsopp @rblenkinsopp"/>
-        <tag name="UNITY"      author="Unity Technologies"    contact="Jack Pritz @jackpritz, Peter Kuhn @peterunity"/>
-        <tag name="VALVE"      author="Valve"                 contact="Joe Ludwig @JoeLudwig"/>
-        <tag name="VARJO"      author="Varjo"                 contact="Denny Rönngren @denron_varjo"/>
-        <tag name="YVR"        author="YVR"                   contact="Pengpeng Zhang @zhangpengpeng"/>
+        <tag name="ACER"        author="Acer"                  contact="OC Lin @aceroc"/>
+        <tag name="ALMALENCE"   author="Almalence"             contact="Ivan Chupakhin @ivan.chupakhin, Dmitry Shmunk @dmitry.shmunk"/>
+        <tag name="ANDROID"     author="Google"                contact="Nihav Jain @njain_google"/>
+        <tag name="ANDROIDSYS"  author="Google"                contact="Nihav Jain @njain_google"/>
+        <tag name="ARM"         author="Arm Limited"           contact="Andreas Loeve Selvik @selvik, Sam Martin @sammartin"/>
+        <tag name="BD"          author="ByteDance"             contact="Will Fu @willfu, Bangsen Han @Hansenn"/>
+        <tag name="COLLABORA"   author="Collabora"             contact="Rylie Pavlik @rpavlik"/>
+        <tag name="DANWILLM"    author="Daniel Willmott"       contact="Daniel Willmott @danwillm"/>
+        <tag name="DEEPMIRROR"  author="Deep Mirror"           contact="Yuhui Lun @lyh-dm"/>
+        <tag name="DXR"         author="The DisplayXR Project" contact="David Fattal @dfattal"/>
+        <tag name="EPIC"        author="Epic"                  contact="Nick Whiting @whitingn"/>
+        <tag name="EXT"         author="Multivendor"           contact="Rylie Pavlik @rpavlik"/>
+        <tag name="FB"          author="Facebook"              contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
+        <tag name="FREDEMMOTT"  author="Frederick Emmott"      contact="Frederick Emmott @fredemmott"/>
+        <tag name="GOOGLE"      author="Google"                contact="Kaye Mason @chaleur"/>
+        <tag name="HOLOLIGHT"   author="Holo-Light GmbH"       contact="Aidan Howie @aidanhowie, Krzysztof Lesiak @k_lesiak"/>
+        <tag name="HTC"         author="HTC"                   contact="Chris Kuo @ggkuo, Kyle Chen @kylechen76"/>
+        <tag name="HUAWEI"      author="Huawei"                contact="Yihong Huang @rachelhuang, Li jingya @yzljy"/>
+        <tag name="HYPERVISION" author="Hypervision"           contact="Michael Kanevsky @mkanevsky"/>
+        <tag name="INTEL"       author="Intel"                 contact="Javier Martinez @javier"/>
+        <tag name="KHR"         author="Khronos"               contact="Brent Insko @insko"/>
+        <tag name="LEIA"        author="Leia"                  contact="Cristina Scheibler @cscheibler"/>
+        <tag name="LUNARG"      author="LunarG"                contact="Brad Grantham @bradgrantham-lunarg"/>
+        <tag name="LIV"         author="LIV"                   contact="Arthur Brainville @Ybalrid, Steffan Donal @liv_ruu"/>
+        <tag name="LOGITECH"    author="Logitech"              contact="Mario Gutierrez @mgutierrez1, Fabien Zellweger @fzellweger"/>
+        <tag name="META"        author="Meta Platforms"        contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
+        <tag name="ML"          author="Magic Leap"            contact="Ron Bessems @rbessems"/>
+        <tag name="MND"         author="Monado Project"        contact="Jakob Bornecrantz @wallbraker, Rylie Pavlik @rpavlik"/>
+        <tag name="MSFT"        author="Microsoft"             contact="Alex Turner @alexturn, Yin Li @yl_msft, Bryce Hutchings @brycehutchings, Lachlan Ford @laford_msft, Minmin Gong @gongminmin "/>
+        <tag name="NV"          author="NVIDIA Corporation"    contact="Satish Salian @ssalian, Robert Menzel"/>
+        <tag name="OCULUS"      author="Oculus"                contact="Cass Everitt @casseveritt, Jonathan Wright @Nelno"/>
+        <tag name="OPPO"        author="OPPO"                  contact="Buyi Xu @fantastxu, Haomiao Jiang @hjiang36"/>
+        <tag name="PLUTO"       author="Pluto VR"              contact="Jared Cheshier @Jared, Sophia Baldonado @sophia"/>
+        <tag name="QCOM"        author="Qualcomm Technologies" contact="Armelle @alaine_qcom, Martin Renschler @martinr"/>
+        <tag name="RZR"         author="Razer"                 contact="Alexandre Hulsken @ahulsken, Eric Vezzoli @EricVezzoli"/>
+        <tag name="SONY"        author="Sony Corporation"      contact="Kota Suzuki @kotasuzuki"/>
+        <tag name="STARBREEZE"  author="Starbreeze"            contact="David Srour @dsrour"/>
+        <tag name="TOBII"       author="Tobii"                 contact="Denny Rönngren @denron"/>
+        <tag name="ULTRALEAP"   author="Ultraleap"             contact="Robert Blenkinsopp @rblenkinsopp"/>
+        <tag name="UNITY"       author="Unity Technologies"    contact="Jack Pritz @jackpritz, Peter Kuhn @peterunity"/>
+        <tag name="VALVE"       author="Valve"                 contact="Joe Ludwig @JoeLudwig"/>
+        <tag name="VARJO"       author="Varjo"                 contact="Denny Rönngren @denron_varjo"/>
+        <tag name="YVR"         author="YVR"                   contact="Pengpeng Zhang @zhangpengpeng"/>
     </tags>
 
     <!-- SECTION: OpenXR type definitions -->
@@ -26333,6 +26334,13 @@ typedef XrResult (XRAPI_PTR *<name>PFN_xrCreateApiLayerInstance</name>)(
         <require>
             <enum value="1"                                     name="XR_ANDROID_extension_1010_SPEC_VERSION"/>
             <enum value="&quot;XR_ANDROID_extension_1010&quot;" name="XR_ANDROID_EXTENSION_1010_EXTENSION_NAME"/>
+        </require>
+    </extension>
+
+    <extension name="XR_HYPERVISION_quad_views" number="1011" type="instance" supported="disabled">
+        <require>
+            <enum value="1"                                     name="XR_HYPERVISION_quad_views_SPEC_VERSION"/>
+            <enum value="&quot;XR_HYPERVISION_quad_views&quot;" name="XR_HYPERVISION_QUAD_VIEWS_EXTENSION_NAME"/>
         </require>
     </extension>
 
